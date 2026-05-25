@@ -19,6 +19,9 @@ if [[ ! -f ".env" ]]; then
 fi
 
 "${COMPOSE[@]}" --env-file .env -f "$COMPOSE_FILE" build
+# docker-compose v1 can fail to recreate containers on newer Docker engines
+# with a stale ContainerConfig error, so remove the API container explicitly.
+"${COMPOSE[@]}" --env-file .env -f "$COMPOSE_FILE" rm -sf api || true
 "${COMPOSE[@]}" --env-file .env -f "$COMPOSE_FILE" up -d
 "${COMPOSE[@]}" --env-file .env -f "$COMPOSE_FILE" ps
 
