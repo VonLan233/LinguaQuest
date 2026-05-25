@@ -1,17 +1,33 @@
-# linguaquest
+# LinguaQuest
 
-A new Flutter project.
+LinguaQuest is a Flutter language-learning app prototype built around image word cards, a guided learning path, spaced review, quiz results, and cloud-ready custom word CRUD.
 
-## Getting Started
+## App
 
-This project is a starting point for a Flutter application.
+Run from this directory:
 
-A few resources to get you started if this is your first Flutter project:
+```bash
+flutter pub get
+flutter run
+```
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+By default the app uses an in-memory/mock repository so the full demo path works offline:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```text
+Register -> Goal Setup -> Home -> Learn -> Lesson -> Quiz -> Result -> Wordbook -> Custom Words -> Review
+```
+
+To point the app at the Dart server API:
+
+```bash
+flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8080
+```
+
+Use `10.0.2.2` for Android emulator access to a host-machine server.
+
+## Checks
+
+```bash
+flutter analyze
+flutter test
+```
