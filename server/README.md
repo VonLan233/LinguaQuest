@@ -34,6 +34,7 @@ flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8080
 - `POST /auth/register`
 - `POST /auth/login`
 - `GET /me`
+- `PATCH /me`
 - `GET /custom-words`
 - `POST /custom-words`
 - `PATCH /custom-words/:id`

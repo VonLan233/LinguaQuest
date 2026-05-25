@@ -69,6 +69,14 @@ Router buildRouter(AppConfig config, AppDatabase database) {
     });
   });
 
+  router.patch('/me', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      final user = await database.updateUser(uid, body);
+      return jsonResponse({'user': userDto(user)});
+    });
+  });
+
   router.get('/custom-words', (Request request) async {
     return _protected(config, request, (uid) async {
       final words = await database.customWords(uid);

@@ -59,8 +59,22 @@ class ApiAuthRepository implements AuthRepository {
 
   @override
   Future<UserProfile> updateProfile(UserProfile profile) async {
-    _profile = profile;
-    return profile;
+    final response = await _client.dio.patch<Map<String, dynamic>>(
+      '/me',
+      data: {
+        'name': profile.name,
+        'targetExam': profile.targetExam,
+        'level': profile.level,
+        'dailyGoal': profile.dailyGoal,
+        'xp': profile.xp,
+        'streak': profile.streak,
+        'lastStudyDate': profile.lastStudyDate?.toIso8601String(),
+      },
+    );
+    _profile = UserProfile.fromJson(
+      response.data!['user'] as Map<String, dynamic>,
+    );
+    return _profile!;
   }
 
   @override

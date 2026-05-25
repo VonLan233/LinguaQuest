@@ -97,6 +97,44 @@ CREATE TABLE IF NOT EXISTS review_events (
     return rows.first.toColumnMap();
   }
 
+  Future<Map<String, dynamic>> updateUser(
+    String uid,
+    Map<String, dynamic> data,
+  ) async {
+    final existing = await userById(uid);
+    if (existing == null) {
+      throw StateError('user not found');
+    }
+    final now = DateTime.now().toUtc();
+    await connection.execute(
+      Sql.named('''
+UPDATE users SET
+  name=@name,
+  target_exam=@targetExam,
+  level=@level,
+  daily_goal=@dailyGoal,
+  xp=@xp,
+  streak=@streak,
+  last_study_date=@lastStudyDate,
+  updated_at=@updatedAt
+WHERE id=@uid
+'''),
+      parameters: {
+        'uid': uid,
+        'name': data['name'] ?? existing['name'],
+        'targetExam': data['targetExam'] ?? existing['target_exam'],
+        'level': data['level'] ?? existing['level'],
+        'dailyGoal': data['dailyGoal'] ?? existing['daily_goal'],
+        'xp': data['xp'] ?? existing['xp'],
+        'streak': data['streak'] ?? existing['streak'],
+        'lastStudyDate':
+            _date(data['lastStudyDate']) ?? existing['last_study_date'],
+        'updatedAt': now,
+      },
+    );
+    return (await userById(uid))!;
+  }
+
   Future<void> insertUser({
     required String id,
     required String email,
