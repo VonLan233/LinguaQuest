@@ -77,26 +77,31 @@ class ProfileScreen extends ConsumerWidget {
           icon: Icons.flag_outlined,
           title: 'Learning target',
           subtitle: user?.targetExam ?? 'Daily English',
+          route: '/goal-setup',
         ),
         const _ProfileAction(
           icon: Icons.notifications_outlined,
           title: 'Daily reminder',
           subtitle: '20:00, local notification placeholder',
+          route: '/settings',
         ),
         const _ProfileAction(
           icon: Icons.dark_mode_outlined,
           title: 'Dark mode',
           subtitle: 'Available through system theme',
+          route: '/settings',
         ),
         const _ProfileAction(
           icon: Icons.help_outline,
           title: 'Help / Support',
           subtitle: 'FAQ and support shell',
+          route: '/help',
         ),
         const _ProfileAction(
           icon: Icons.info_outline,
           title: 'About',
           subtitle: 'LinguaQuest product vision and version 1.0.0',
+          route: '/about',
         ),
         const SizedBox(height: 20),
         OutlinedButton.icon(
@@ -117,11 +122,13 @@ class _ProfileAction extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.subtitle,
+    required this.route,
   });
 
   final IconData icon;
   final String title;
   final String subtitle;
+  final String route;
 
   @override
   Widget build(BuildContext context) {
@@ -131,6 +138,7 @@ class _ProfileAction extends StatelessWidget {
       title: Text(title),
       subtitle: Text(subtitle),
       trailing: const Icon(Icons.chevron_right),
+      onTap: () => context.go(route),
     );
   }
 }

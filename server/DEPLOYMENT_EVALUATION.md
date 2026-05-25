@@ -21,9 +21,18 @@ Best fit:
 ## Production Checklist
 
 - Replace `JWT_SECRET`.
+- Copy `.env.example` to `.env` and set a strong `POSTGRES_PASSWORD`.
 - Put API behind HTTPS.
 - Move PostgreSQL to a persistent managed database or backed-up volume.
 - Add structured logs and request IDs.
 - Add password reset and email verification.
 - Add profile update endpoint before enabling full remote goal sync.
 - Restrict CORS origins for web builds.
+
+## Current Deployment Artifacts
+
+- `Dockerfile`: compiles the Dart server into a deployable executable.
+- `docker-compose.yml`: local development stack.
+- `docker-compose.prod.yml`: VPS/container production stack.
+- `.env.example`: required production environment variables.
+- `deploy/vps_deploy.sh`: repeatable build/start script for a Linux host with Docker Compose.

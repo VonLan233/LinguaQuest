@@ -41,3 +41,16 @@ flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8080
 - `POST /study-sessions`
 - `GET /review/due`
 - `POST /review-events`
+
+## Production VPS Deploy
+
+1. Copy this `server/` directory to the VPS, for example `/opt/linguaquest/server`.
+2. Copy `.env.example` to `.env` and set strong production values.
+3. Run:
+
+```bash
+chmod +x deploy/vps_deploy.sh
+./deploy/vps_deploy.sh
+```
+
+The production compose file is `docker-compose.prod.yml`. It keeps PostgreSQL on a named volume and exposes the API on `PORT`.

@@ -11,6 +11,14 @@ import '../../features/learning/lesson_preview_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/onboarding/splash_screen.dart';
 import '../../features/profile/profile_screen.dart';
+import '../../features/profile/about_screen.dart';
+import '../../features/profile/help_support_screen.dart';
+import '../../features/profile/settings_screen.dart';
+import '../../features/quests/ai_tutor_screen.dart';
+import '../../features/quests/class_mode_screen.dart';
+import '../../features/quests/class_progress_screen.dart';
+import '../../features/quests/leaderboard_screen.dart';
+import '../../features/quests/progress_analytics_screen.dart';
 import '../../features/quests/quest_screen.dart';
 import '../../features/quiz/lesson_result_screen.dart';
 import '../../features/quiz/quiz_session_screen.dart';
@@ -65,6 +73,35 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) =>
             const AppShell(selectedIndex: 4, child: ProfileScreen()),
       ),
+      GoRoute(
+        path: '/leaderboard',
+        builder: (context, state) => const LeaderboardScreen(),
+      ),
+      GoRoute(
+        path: '/progress',
+        builder: (context, state) => const ProgressAnalyticsScreen(),
+      ),
+      GoRoute(
+        path: '/class-mode',
+        builder: (context, state) => const ClassModeScreen(),
+      ),
+      GoRoute(
+        path: '/class-progress',
+        builder: (context, state) => const ClassProgressScreen(),
+      ),
+      GoRoute(
+        path: '/ai-tutor',
+        builder: (context, state) => const AiTutorScreen(),
+      ),
+      GoRoute(
+        path: '/settings',
+        builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: '/help',
+        builder: (context, state) => const HelpSupportScreen(),
+      ),
+      GoRoute(path: '/about', builder: (context, state) => const AboutScreen()),
       GoRoute(
         path: '/wordbook',
         builder: (context, state) => const WordbookScreen(),
