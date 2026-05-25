@@ -53,4 +53,4 @@ chmod +x deploy/vps_deploy.sh
 ./deploy/vps_deploy.sh
 ```
 
-The production compose file is `docker-compose.prod.yml`. It keeps PostgreSQL on a named volume and exposes the API on `PORT`.
+The production compose file is `docker-compose.prod.yml`. It keeps PostgreSQL on a named volume and exposes the API on `PORT`. The deploy script supports both the Docker Compose plugin (`docker compose`) and legacy `docker-compose` v1.
