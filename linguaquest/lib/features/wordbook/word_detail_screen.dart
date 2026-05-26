@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_theme.dart';
 import '../../core/utils/date_formatting.dart';
+import '../../core/widgets/quest_card.dart';
 import '../../data/models/custom_word.dart';
 
 class WordDetailScreen extends ConsumerWidget {
@@ -33,20 +35,19 @@ class WordDetailScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: Theme.of(context).colorScheme.outlineVariant,
-                ),
-              ),
+            QuestCard(
+              color: const Color(0xFFFFFBF2),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  ImageCueBadge(
+                    cue: word.word.characters.first.toUpperCase(),
+                    size: 112,
+                  ),
+                  const SizedBox(height: 16),
                   Text(
                     word.word,
+                    textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.displaySmall?.copyWith(
                       fontWeight: FontWeight.w900,
                     ),
@@ -54,13 +55,18 @@ class WordDetailScreen extends ConsumerWidget {
                   const SizedBox(height: 8),
                   Text(
                     word.meaning,
+                    textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 16),
-                  Text(word.exampleSentence),
+                  Text(
+                    '“${word.exampleSentence}”',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
                   if (word.note.isNotEmpty) ...[
                     const Divider(height: 28),
-                    Text(word.note),
+                    Text(word.note, textAlign: TextAlign.center),
                   ],
                 ],
               ),
@@ -70,13 +76,16 @@ class WordDetailScreen extends ConsumerWidget {
               spacing: 8,
               runSpacing: 8,
               children: [
-                Chip(label: Text(word.tag)),
-                Chip(label: Text(word.difficulty)),
-                Chip(label: Text('Mastery ${word.masteryLevel}/5')),
-                Chip(
-                  label: Text(
-                    'Next ${formatRelativeDue(word.nextReviewAt, DateTime.now())}',
-                  ),
+                PillLabel(label: word.tag),
+                PillLabel(label: word.difficulty, color: AppTheme.coral),
+                PillLabel(
+                  label: 'Mastery ${word.masteryLevel}/5',
+                  icon: Icons.psychology_outlined,
+                ),
+                PillLabel(
+                  label:
+                      'Next ${formatRelativeDue(word.nextReviewAt, DateTime.now())}',
+                  icon: Icons.schedule_outlined,
                 ),
               ],
             ),

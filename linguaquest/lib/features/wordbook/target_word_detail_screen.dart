@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_theme.dart';
+import '../../core/widgets/quest_card.dart';
 import '../../data/models/lesson.dart';
 
 class TargetWordDetailScreen extends ConsumerWidget {
@@ -22,34 +24,65 @@ class TargetWordDetailScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            Center(
-              child: Text(word.imageCue, style: const TextStyle(fontSize: 72)),
+            QuestCard(
+              color: const Color(0xFFFFFBF2),
+              child: Column(
+                children: [
+                  ImageCueBadge(cue: word.imageCue, size: 120),
+                  const SizedBox(height: 16),
+                  Text(
+                    word.word,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.displaySmall,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(word.phonetic),
+                  const SizedBox(height: 12),
+                  Text(
+                    word.meaning,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(word.definition, textAlign: TextAlign.center),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            QuestCard(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(Icons.format_quote, color: AppTheme.coral),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(word.exampleSentence),
+                        const SizedBox(height: 6),
+                        Text(
+                          word.exampleTranslation,
+                          style: TextStyle(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 16),
-            Text(
-              word.word,
-              style: Theme.of(
-                context,
-              ).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w900),
-            ),
-            Text(word.phonetic),
-            const SizedBox(height: 12),
-            Text(word.meaning, style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 12),
-            Text(word.definition),
-            const SizedBox(height: 20),
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: const Icon(Icons.format_quote),
-              title: Text(word.exampleSentence),
-              subtitle: Text(word.exampleTranslation),
-            ),
             Wrap(
               spacing: 8,
+              runSpacing: 8,
               children: [
-                Chip(label: Text(word.partOfSpeech)),
-                Chip(label: Text(word.difficulty)),
-                for (final tag in word.tags) Chip(label: Text(tag)),
+                PillLabel(label: word.partOfSpeech),
+                PillLabel(label: word.difficulty, color: AppTheme.coral),
+                for (final tag in word.tags) PillLabel(label: tag),
               ],
             ),
           ],

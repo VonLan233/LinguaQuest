@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_theme.dart';
+import '../../core/widgets/quest_card.dart';
 import '../../core/widgets/section_header.dart';
 
 class WordbookScreen extends ConsumerWidget {
@@ -19,33 +21,65 @@ class WordbookScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
+            GradientHeroCard(
+              title: 'Visual wordbook',
+              subtitle:
+                  'Image-first cards connect words with scenes, meanings, and example sentences.',
+              icon: Icons.style_outlined,
+              badge: '${words.length} target words',
+              action: FilledButton.icon(
+                style: FilledButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: AppTheme.deepTeal,
+                ),
+                onPressed: () => context.go('/custom-words'),
+                icon: const Icon(Icons.add_card_outlined),
+                label: const Text('My custom cards'),
+              ),
+            ),
+            const SizedBox(height: 22),
             SectionHeader(
               title: 'Target words',
               subtitle:
                   '${words.length} words from your current learning path.',
-              trailing: FilledButton.icon(
-                onPressed: () => context.go('/custom-words'),
-                icon: const Icon(Icons.style_outlined),
-                label: const Text('Custom'),
-              ),
             ),
             const SizedBox(height: 16),
             for (final word in words)
-              Container(
-                margin: const EdgeInsets.only(bottom: 10),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: Theme.of(context).colorScheme.outlineVariant,
-                  ),
-                ),
-                child: ListTile(
-                  leading: CircleAvatar(child: Text(word.imageCue)),
-                  title: Text(word.word),
-                  subtitle: Text('${word.meaning} · ${word.exampleSentence}'),
-                  trailing: Chip(label: Text(word.difficulty)),
-                  onTap: () => context.go('/wordbook/${word.id}'),
+              QuestCard(
+                margin: const EdgeInsets.only(bottom: 12),
+                padding: const EdgeInsets.all(15),
+                onTap: () => context.go('/wordbook/${word.id}'),
+                child: Row(
+                  children: [
+                    ImageCueBadge(cue: word.imageCue, size: 62),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            word.word,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          const SizedBox(height: 3),
+                          Text(word.meaning),
+                          const SizedBox(height: 5),
+                          Text(
+                            word.exampleSentence,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    PillLabel(label: word.difficulty, color: AppTheme.coral),
+                  ],
                 ),
               ),
           ],
