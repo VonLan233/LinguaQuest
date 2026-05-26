@@ -30,19 +30,32 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _LogoMark(),
-            SizedBox(height: 20),
+            const _LogoMark(),
+            const SizedBox(height: 20),
             Text(
               'LinguaQuest',
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800),
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
-            SizedBox(height: 8),
-            Text('Image cards. Guided paths. Smart review.'),
+            const SizedBox(height: 8),
+            Text(
+              'Image cards. Guided paths. Smart review.',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 22),
+            const SizedBox(
+              width: 180,
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(999)),
+                child: LinearProgressIndicator(minHeight: 8),
+              ),
+            ),
           ],
         ),
       ),
@@ -59,8 +72,12 @@ class _LogoMark extends StatelessWidget {
       width: 84,
       height: 84,
       decoration: BoxDecoration(
-        color: AppTheme.teal,
-        borderRadius: BorderRadius.circular(20),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AppTheme.deepTeal, AppTheme.teal, AppTheme.cyan],
+        ),
+        borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
             color: AppTheme.coral.withValues(alpha: 0.24),
@@ -69,7 +86,13 @@ class _LogoMark extends StatelessWidget {
           ),
         ],
       ),
-      child: const Icon(Icons.language, color: Colors.white, size: 42),
+      child: const Stack(
+        alignment: Alignment.center,
+        children: [
+          Icon(Icons.language, color: Colors.white, size: 42),
+          Positioned(right: 12, bottom: 10, child: Text('✨')),
+        ],
+      ),
     );
   }
 }
