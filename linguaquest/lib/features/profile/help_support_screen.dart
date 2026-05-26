@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../core/widgets/fallback_back_button.dart';
+
 class HelpSupportScreen extends StatelessWidget {
   const HelpSupportScreen({super.key});
 
@@ -21,7 +23,10 @@ class HelpSupportScreen extends StatelessWidget {
     ];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Help / Support')),
+      appBar: AppBar(
+        leading: const FallbackBackButton(fallbackLocation: '/profile'),
+        title: const Text('Help / Support'),
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),

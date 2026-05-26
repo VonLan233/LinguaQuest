@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/date_formatting.dart';
+import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/quest_card.dart';
 import '../../data/models/custom_word.dart';
 
@@ -22,11 +23,12 @@ class WordDetailScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: const FallbackBackButton(fallbackLocation: '/custom-words'),
         title: Text(word.word),
         actions: [
           IconButton(
             tooltip: 'Edit',
-            onPressed: () => context.go('/custom-words/${word.id}/edit'),
+            onPressed: () => context.push('/custom-words/${word.id}/edit'),
             icon: const Icon(Icons.edit_outlined),
           ),
         ],
@@ -36,7 +38,7 @@ class WordDetailScreen extends ConsumerWidget {
           padding: const EdgeInsets.all(20),
           children: [
             QuestCard(
-              color: const Color(0xFFFFFBF2),
+              color: AppTheme.warmSurface(context),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
