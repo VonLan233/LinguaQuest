@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
-import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/quest_card.dart';
 import '../../data/models/lesson_result.dart';
 
@@ -22,10 +21,7 @@ class LessonResultScreen extends ConsumerWidget {
 
     final accuracy = (resolved.accuracy * 100).round();
     return Scaffold(
-      appBar: AppBar(
-        leading: const FallbackBackButton(fallbackLocation: '/learn'),
-        title: const Text('Lesson result'),
-      ),
+      appBar: AppBar(title: const Text('Lesson result')),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
@@ -55,7 +51,7 @@ class LessonResultScreen extends ConsumerWidget {
                     child: LinearProgressIndicator(
                       value: resolved.accuracy,
                       minHeight: 12,
-                      backgroundColor: AppTheme.progressTrack(context),
+                      backgroundColor: AppTheme.mint,
                     ),
                   ),
                   const SizedBox(height: 14),

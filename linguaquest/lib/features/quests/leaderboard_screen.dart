@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/state/app_controller.dart';
-import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/section_header.dart';
 
 class LeaderboardScreen extends ConsumerWidget {
@@ -19,10 +18,7 @@ class LeaderboardScreen extends ConsumerWidget {
     ]..sort((a, b) => b.xp.compareTo(a.xp));
 
     return Scaffold(
-      appBar: AppBar(
-        leading: const FallbackBackButton(fallbackLocation: '/quest'),
-        title: const Text('Leaderboard'),
-      ),
+      appBar: AppBar(title: const Text('Leaderboard')),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),

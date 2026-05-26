@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/empty_state.dart';
-import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/quest_card.dart';
 
 class MistakeBookScreen extends ConsumerWidget {
@@ -18,10 +17,7 @@ class MistakeBookScreen extends ConsumerWidget {
     final weakWords = state.weakWords;
 
     return Scaffold(
-      appBar: AppBar(
-        leading: const FallbackBackButton(fallbackLocation: '/review'),
-        title: const Text('Mistake book'),
-      ),
+      appBar: AppBar(title: const Text('Mistake book')),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
@@ -102,7 +98,7 @@ class MistakeBookScreen extends ConsumerWidget {
                   QuestCard(
                     margin: const EdgeInsets.only(bottom: 10),
                     padding: const EdgeInsets.all(14),
-                    onTap: () => context.push('/custom-words/${word.id}'),
+                    onTap: () => context.go('/custom-words/${word.id}'),
                     child: Row(
                       children: [
                         ImageCueBadge(

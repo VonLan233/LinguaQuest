@@ -16,7 +16,7 @@ class ProfileScreen extends ConsumerWidget {
     final state = ref.watch(appControllerProvider);
     final user = state.user;
     return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 110),
       children: [
         GradientHeroCard(
           title: user?.name ?? 'Learner',
@@ -118,16 +118,16 @@ class _ProfileAction extends StatelessWidget {
     return QuestCard(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
-      onTap: () => context.push(route),
+      onTap: () => context.go(route),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: AppTheme.iconBadgeSurface(context),
+              color: AppTheme.mint,
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Icon(icon, color: Theme.of(context).colorScheme.primary),
+            child: Icon(icon, color: AppTheme.deepTeal),
           ),
           const SizedBox(width: 12),
           Expanded(

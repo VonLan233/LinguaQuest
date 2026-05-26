@@ -22,7 +22,7 @@ class ReviewCenterScreen extends ConsumerWidget {
     final lessonMistakes = state.lastResult?.mistakes ?? const [];
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 110),
       children: [
         GradientHeroCard(
           title: due.isEmpty ? 'Review queue clear' : '${due.length} cards due',
@@ -36,7 +36,7 @@ class ReviewCenterScreen extends ConsumerWidget {
               foregroundColor: AppTheme.deepTeal,
             ),
             onPressed: due.isEmpty
-                ? () => context.push('/custom-words/new')
+                ? () => context.go('/custom-words/new')
                 : null,
             icon: const Icon(Icons.add),
             label: Text(due.isEmpty ? 'Add cards' : 'Queue ready below'),
@@ -92,7 +92,7 @@ class ReviewCenterScreen extends ConsumerWidget {
             message:
                 'Add custom words or mark mistakes to create spaced review cards.',
             action: OutlinedButton.icon(
-              onPressed: () => context.push('/custom-words/new'),
+              onPressed: () => context.go('/custom-words/new'),
               icon: const Icon(Icons.add),
               label: const Text('Add custom word'),
             ),
@@ -142,7 +142,7 @@ class ReviewCenterScreen extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: OutlinedButton.icon(
-                onPressed: () => context.push('/mistake-book'),
+                onPressed: () => context.go('/mistake-book'),
                 icon: const Icon(Icons.menu_book_outlined),
                 label: const Text('Open mistake book'),
               ),
@@ -151,7 +151,7 @@ class ReviewCenterScreen extends ConsumerWidget {
             QuestCard(
               margin: const EdgeInsets.only(bottom: 10),
               padding: const EdgeInsets.all(14),
-              onTap: () => context.push('/custom-words/${word.id}'),
+              onTap: () => context.go('/custom-words/${word.id}'),
               child: Row(
                 children: [
                   ImageCueBadge(

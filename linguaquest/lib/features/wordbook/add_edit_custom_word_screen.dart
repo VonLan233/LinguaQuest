@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
-import '../../core/widgets/fallback_back_button.dart';
 import '../../data/models/custom_word.dart';
 
 class AddEditCustomWordScreen extends ConsumerStatefulWidget {
@@ -46,10 +45,7 @@ class _AddEditCustomWordScreenState
     final isEditing = existing != null;
 
     return Scaffold(
-      appBar: AppBar(
-        leading: const FallbackBackButton(fallbackLocation: '/custom-words'),
-        title: Text(isEditing ? 'Edit word' : 'Add word'),
-      ),
+      appBar: AppBar(title: Text(isEditing ? 'Edit word' : 'Add word')),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/section_header.dart';
 
 class ClassProgressScreen extends StatelessWidget {
@@ -15,10 +14,7 @@ class ClassProgressScreen extends StatelessWidget {
     ];
 
     return Scaffold(
-      appBar: AppBar(
-        leading: const FallbackBackButton(fallbackLocation: '/class-mode'),
-        title: const Text('Class progress'),
-      ),
+      appBar: AppBar(title: const Text('Class progress')),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),

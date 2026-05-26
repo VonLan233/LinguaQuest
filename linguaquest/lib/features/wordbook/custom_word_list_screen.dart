@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/empty_state.dart';
-import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/quest_card.dart';
 import '../../data/models/custom_word.dart';
 
@@ -26,12 +25,9 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
     final state = ref.watch(appControllerProvider);
     final words = _filtered(state.customWords);
     return Scaffold(
-      appBar: AppBar(
-        leading: const FallbackBackButton(fallbackLocation: '/wordbook'),
-        title: const Text('Custom words'),
-      ),
+      appBar: AppBar(title: const Text('Custom words')),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push('/custom-words/new'),
+        onPressed: () => context.go('/custom-words/new'),
         icon: const Icon(Icons.add),
         label: const Text('Add'),
       ),
@@ -89,7 +85,7 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
                       title: 'No matching words',
                       message: 'Add a custom card or adjust search filters.',
                       action: FilledButton.icon(
-                        onPressed: () => context.push('/custom-words/new'),
+                        onPressed: () => context.go('/custom-words/new'),
                         icon: const Icon(Icons.add),
                         label: const Text('Add word'),
                       ),
@@ -176,7 +172,7 @@ class _CustomWordTile extends StatelessWidget {
     final mastery = word.masteryLevel / 5;
     return QuestCard(
       padding: const EdgeInsets.all(14),
-      onTap: () => context.push('/custom-words/${word.id}'),
+      onTap: () => context.go('/custom-words/${word.id}'),
       child: Row(
         children: [
           ImageCueBadge(
@@ -207,7 +203,7 @@ class _CustomWordTile extends StatelessWidget {
                   child: LinearProgressIndicator(
                     value: mastery,
                     minHeight: 8,
-                    backgroundColor: AppTheme.progressTrack(context),
+                    backgroundColor: AppTheme.mint,
                   ),
                 ),
               ],

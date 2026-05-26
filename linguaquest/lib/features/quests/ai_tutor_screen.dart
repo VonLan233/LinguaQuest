@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/section_header.dart';
 
 class AiTutorScreen extends StatefulWidget {
@@ -24,10 +23,7 @@ class _AiTutorScreenState extends State<AiTutorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: const FallbackBackButton(fallbackLocation: '/quest'),
-        title: const Text('AI tutor'),
-      ),
+      appBar: AppBar(title: const Text('AI tutor')),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),

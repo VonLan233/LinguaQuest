@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/section_header.dart';
 
 class ClassModeScreen extends StatefulWidget {
@@ -23,10 +22,7 @@ class _ClassModeScreenState extends State<ClassModeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: const FallbackBackButton(fallbackLocation: '/quest'),
-        title: const Text('Teacher / Class mode'),
-      ),
+      appBar: AppBar(title: const Text('Teacher / Class mode')),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
@@ -56,7 +52,7 @@ class _ClassModeScreenState extends State<ClassModeScreen> {
             ),
             const SizedBox(height: 16),
             OutlinedButton.icon(
-              onPressed: () => context.push('/class-progress'),
+              onPressed: () => context.go('/class-progress'),
               icon: const Icon(Icons.query_stats_outlined),
               label: const Text('View class progress'),
             ),

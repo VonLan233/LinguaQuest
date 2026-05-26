@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
-import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/quest_card.dart';
 import '../../core/widgets/section_header.dart';
 
@@ -17,10 +16,7 @@ class WordbookScreen extends ConsumerWidget {
     final words = state.lessons.expand((lesson) => lesson.words).toList();
 
     return Scaffold(
-      appBar: AppBar(
-        leading: const FallbackBackButton(fallbackLocation: '/home'),
-        title: const Text('Wordbook'),
-      ),
+      appBar: AppBar(title: const Text('Wordbook')),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
@@ -36,7 +32,7 @@ class WordbookScreen extends ConsumerWidget {
                   backgroundColor: Colors.white,
                   foregroundColor: AppTheme.deepTeal,
                 ),
-                onPressed: () => context.push('/custom-words'),
+                onPressed: () => context.go('/custom-words'),
                 icon: const Icon(Icons.add_card_outlined),
                 label: const Text('My custom cards'),
               ),
@@ -52,7 +48,7 @@ class WordbookScreen extends ConsumerWidget {
               QuestCard(
                 margin: const EdgeInsets.only(bottom: 12),
                 padding: const EdgeInsets.all(15),
-                onTap: () => context.push('/wordbook/${word.id}'),
+                onTap: () => context.go('/wordbook/${word.id}'),
                 child: Row(
                   children: [
                     ImageCueBadge(cue: word.imageCue, size: 62),
