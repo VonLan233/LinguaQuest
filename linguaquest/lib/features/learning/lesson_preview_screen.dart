@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/quest_card.dart';
 import '../../data/models/lesson.dart';
 
@@ -20,7 +21,10 @@ class LessonPreviewScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text(lesson.title)),
+      appBar: AppBar(
+        leading: const FallbackBackButton(fallbackLocation: '/learn'),
+        title: Text(lesson.title),
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
@@ -35,7 +39,7 @@ class LessonPreviewScreen extends ConsumerWidget {
                   backgroundColor: Colors.white,
                   foregroundColor: AppTheme.deepTeal,
                 ),
-                onPressed: () => context.go('/lesson/$lessonId/quiz'),
+                onPressed: () => context.push('/lesson/$lessonId/quiz'),
                 icon: const Icon(Icons.play_arrow_rounded),
                 label: const Text('Start quiz'),
               ),
@@ -112,7 +116,7 @@ class LessonPreviewScreen extends ConsumerWidget {
               ),
             const SizedBox(height: 20),
             FilledButton.icon(
-              onPressed: () => context.go('/lesson/$lessonId/quiz'),
+              onPressed: () => context.push('/lesson/$lessonId/quiz'),
               icon: const Icon(Icons.play_arrow),
               label: const Text('Start quiz'),
             ),
