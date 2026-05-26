@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/metric_tile.dart';
+import '../../core/widgets/quest_card.dart';
 import '../../core/widgets/section_header.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -14,23 +15,66 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appControllerProvider);
     final user = state.user;
+    final dueCount = state.dueWords.length;
     final dailyProgress = user == null
-        ? 0.0
-        : (state.dueWords.length / user.dailyGoal).clamp(0.0, 1.0);
+        ? 0.35
+        : ((user.dailyGoal - dueCount).clamp(0, user.dailyGoal) /
+                  user.dailyGoal)
+              .clamp(0.0, 1.0);
     final currentLesson = state.lessons.isEmpty ? null : state.lessons.first;
 
     return ListView(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 110),
       children: [
-        Text(
-          'Hi, ${user?.name ?? 'Learner'}',
-          style: Theme.of(
-            context,
-          ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900),
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Hi, ${user?.name ?? 'Learner'} 👋',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${user?.targetExam ?? 'Daily English'} · ${user?.level ?? 'Elementary'}',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            PillLabel(
+              label: '${user?.streak ?? 0} day',
+              icon: Icons.local_fire_department,
+              color: AppTheme.coral,
+            ),
+          ],
         ),
-        const SizedBox(height: 4),
-        Text(
-          '${user?.targetExam ?? 'Daily English'} · ${user?.level ?? 'Elementary'}',
+        const SizedBox(height: 18),
+        GradientHeroCard(
+          title: currentLesson == null
+              ? 'Build your first learning path'
+              : 'Ready for ${currentLesson.title}?',
+          subtitle:
+              'Complete one bite-sized lesson, then clear review cards before they turn weak.',
+          icon: Icons.rocket_launch_outlined,
+          badge: 'Today’s learning pack',
+          action: FilledButton.icon(
+            style: FilledButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: AppTheme.deepTeal,
+            ),
+            onPressed: currentLesson == null
+                ? null
+                : () => context.go('/lesson/${currentLesson.id}'),
+            icon: const Icon(Icons.play_arrow_rounded),
+            label: Text(
+              currentLesson == null ? 'No lesson available' : 'Continue lesson',
+            ),
+          ),
         ),
         const SizedBox(height: 18),
         Row(
@@ -64,15 +108,7 @@ class HomeScreen extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: 18),
-        Container(
-          padding: const EdgeInsets.all(18),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: Theme.of(context).colorScheme.outlineVariant,
-            ),
-          ),
+        QuestCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -81,23 +117,64 @@ class HomeScreen extends ConsumerWidget {
                 subtitle: 'Learn one lesson and clear due review cards.',
               ),
               const SizedBox(height: 16),
-              LinearProgressIndicator(value: dailyProgress),
-              const SizedBox(height: 10),
-              Text(
-                '${state.dueWords.length}/${user?.dailyGoal ?? 10} review words ready',
-              ),
-              const SizedBox(height: 16),
-              FilledButton.icon(
-                onPressed: currentLesson == null
-                    ? null
-                    : () => context.go('/lesson/${currentLesson.id}'),
-                icon: const Icon(Icons.play_arrow),
-                label: Text(
-                  currentLesson == null
-                      ? 'No lesson available'
-                      : 'Continue ${currentLesson.title}',
+              ClipRRect(
+                borderRadius: BorderRadius.circular(999),
+                child: LinearProgressIndicator(
+                  value: dailyProgress,
+                  minHeight: 12,
+                  backgroundColor: AppTheme.mint,
                 ),
               ),
+              const SizedBox(height: 10),
+              Text(
+                '${(dailyProgress * 100).round()}% daily focus · $dueCount words due',
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () => context.go('/review'),
+                      icon: const Icon(Icons.replay_rounded),
+                      label: const Text('Review'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () => context.go('/wordbook'),
+                      icon: const Icon(Icons.style_outlined),
+                      label: const Text('Wordbook'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 22),
+        QuestCard(
+          padding: const EdgeInsets.all(16),
+          onTap: () => context.go('/wordbook'),
+          color: const Color(0xFFFFF7E8),
+          child: Row(
+            children: [
+              const ImageCueBadge(cue: '🌟', size: 58),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Word of the day',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 3),
+                    const Text('priority · 优先事项 · tap to open word cards'),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right_rounded),
             ],
           ),
         ),
@@ -122,17 +199,34 @@ class HomeScreen extends ConsumerWidget {
           ...state.weakWords
               .take(3)
               .map(
-                (word) => ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: CircleAvatar(
-                    child: Text(word.word.characters.first.toUpperCase()),
-                  ),
-                  title: Text(word.word),
-                  subtitle: Text(
-                    '${word.meaning} · mastery ${word.masteryLevel}/5',
-                  ),
-                  trailing: const Icon(Icons.chevron_right),
+                (word) => QuestCard(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.all(14),
                   onTap: () => context.go('/custom-words/${word.id}'),
+                  child: Row(
+                    children: [
+                      ImageCueBadge(
+                        cue: word.word.characters.first.toUpperCase(),
+                        size: 50,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              word.word,
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            Text(
+                              '${word.meaning} · mastery ${word.masteryLevel}/5',
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(Icons.chevron_right_rounded),
+                    ],
+                  ),
                 ),
               ),
       ],
