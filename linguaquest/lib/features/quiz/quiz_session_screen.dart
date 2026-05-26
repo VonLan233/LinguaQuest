@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_theme.dart';
+import '../../core/widgets/quest_card.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
 
@@ -23,6 +25,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
   String? _selected;
   bool _checked = false;
   bool _lastCorrect = false;
+  bool _isSubmitting = false;
 
   @override
   void dispose() {
@@ -43,15 +46,28 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
       appBar: AppBar(title: Text(lesson.title)),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 18),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              LinearProgressIndicator(value: progress),
-              const SizedBox(height: 14),
-              Text(
-                'Question ${_index + 1}/${lesson.questions.length}',
-                style: Theme.of(context).textTheme.labelLarge,
+              Row(
+                children: [
+                  Expanded(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(999),
+                      child: LinearProgressIndicator(
+                        value: progress,
+                        minHeight: 12,
+                        backgroundColor: AppTheme.mint,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  PillLabel(
+                    label: '${_index + 1}/${lesson.questions.length}',
+                    icon: Icons.flag_outlined,
+                  ),
+                ],
               ),
               const SizedBox(height: 14),
               Expanded(
@@ -59,10 +75,35 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text(
-                        question.prompt,
-                        style: Theme.of(context).textTheme.headlineSmall
-                            ?.copyWith(fontWeight: FontWeight.w800),
+                      QuestCard(
+                        color: const Color(0xFFFFFBF2),
+                        child: Column(
+                          children: [
+                            ImageCueBadge(
+                              cue: question.word.imageCue,
+                              size: 112,
+                            ),
+                            const SizedBox(height: 14),
+                            Text(
+                              question.prompt,
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.headlineSmall,
+                            ),
+                            const SizedBox(height: 10),
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              alignment: WrapAlignment.center,
+                              children: [
+                                PillLabel(label: question.word.partOfSpeech),
+                                PillLabel(
+                                  label: question.word.difficulty,
+                                  color: AppTheme.coral,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 18),
                       _QuestionInput(
@@ -86,10 +127,17 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
                 ),
               ),
               FilledButton.icon(
-                onPressed: _canContinue(question)
+                onPressed: _canContinue(question) && !_isSubmitting
                     ? () => _handlePrimary(lesson, question)
                     : null,
-                icon: Icon(_checked ? Icons.arrow_forward : Icons.check),
+                style: FilledButton.styleFrom(
+                  backgroundColor: _checked && !_lastCorrect
+                      ? Theme.of(context).colorScheme.error
+                      : null,
+                ),
+                icon: Icon(
+                  _checked ? Icons.arrow_forward_rounded : Icons.check_rounded,
+                ),
                 label: Text(_checked ? 'Continue' : 'Check'),
               ),
             ],
@@ -134,6 +182,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
     }
 
     if (_index == lesson.questions.length - 1) {
+      if (_isSubmitting) return;
       final result = LessonResult(
         lessonId: lesson.id,
         lessonTitle: lesson.title,
@@ -144,8 +193,15 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
         mistakes: List.unmodifiable(_mistakes),
         completedAt: DateTime.now(),
       );
-      await ref.read(appControllerProvider.notifier).completeLesson(result);
+      setState(() => _isSubmitting = true);
+      final succeeded = await ref
+          .read(appControllerProvider.notifier)
+          .completeLesson(result);
       if (!mounted) return;
+      if (!succeeded) {
+        setState(() => _isSubmitting = false);
+        return;
+      }
       context.go('/lesson/${lesson.id}/result', extra: result);
       return;
     }
@@ -202,12 +258,22 @@ class _QuestionInput extends StatelessWidget {
                 onPressed: checked ? null : () => onSelected(option),
                 style: OutlinedButton.styleFrom(
                   backgroundColor: selected == option
-                      ? Theme.of(context).colorScheme.primaryContainer
-                      : null,
+                      ? AppTheme.mint
+                      : Theme.of(context).colorScheme.surface,
+                  foregroundColor: Theme.of(context).colorScheme.onSurface,
+                  side: BorderSide(
+                    color: selected == option
+                        ? AppTheme.teal
+                        : Theme.of(context).colorScheme.outlineVariant,
+                    width: selected == option ? 2 : 1,
+                  ),
                   alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(18),
                 ),
-                child: Text(option),
+                child: Text(
+                  option,
+                  style: const TextStyle(fontWeight: FontWeight.w900),
+                ),
               ),
             ),
           ),
@@ -227,12 +293,9 @@ class _FeedbackPanel extends StatelessWidget {
     final color = isCorrect
         ? Colors.green
         : Theme.of(context).colorScheme.error;
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(8),
-      ),
+    return QuestCard(
+      color: color.withValues(alpha: 0.10),
+      borderColor: color.withValues(alpha: 0.28),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

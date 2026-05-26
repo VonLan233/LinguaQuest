@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_theme.dart';
+import '../../core/widgets/quest_card.dart';
 import '../../data/models/lesson_result.dart';
 
 class LessonResultScreen extends ConsumerWidget {
@@ -22,24 +24,17 @@ class LessonResultScreen extends ConsumerWidget {
       appBar: AppBar(title: const Text('Lesson result')),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
           children: [
-            Text(
-              'Lesson complete',
-              style: Theme.of(
-                context,
-              ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w900),
+            GradientHeroCard(
+              title: accuracy >= 80 ? 'Brilliant run!' : 'Lesson complete',
+              subtitle:
+                  '${resolved.correctAnswers}/${resolved.totalQuestions} correct · ${resolved.xpEarned} XP earned · mistakes moved into review.',
+              icon: Icons.workspace_premium_outlined,
+              badge: resolved.lessonTitle,
             ),
             const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: Theme.of(context).colorScheme.outlineVariant,
-                ),
-              ),
+            QuestCard(
               child: Column(
                 children: [
                   Text(
@@ -49,11 +44,33 @@ class LessonResultScreen extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 6),
-                  Text(
-                    '${resolved.correctAnswers}/${resolved.totalQuestions} correct · ${resolved.xpEarned} XP earned',
-                  ),
+                  const Text('Accuracy'),
                   const SizedBox(height: 12),
-                  LinearProgressIndicator(value: resolved.accuracy),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(999),
+                    child: LinearProgressIndicator(
+                      value: resolved.accuracy,
+                      minHeight: 12,
+                      backgroundColor: AppTheme.mint,
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      PillLabel(
+                        label: '+${resolved.xpEarned} XP',
+                        icon: Icons.bolt,
+                        color: AppTheme.mango,
+                      ),
+                      const SizedBox(width: 8),
+                      PillLabel(
+                        label: '${resolved.mistakes.length} mistakes',
+                        icon: Icons.replay_rounded,
+                        color: AppTheme.coral,
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -66,19 +83,46 @@ class LessonResultScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             if (resolved.mistakes.isEmpty)
-              const ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: Icon(Icons.verified_outlined),
-                title: Text('Perfect run'),
-                subtitle: Text('No mistakes were added to review.'),
+              const QuestCard(
+                child: Row(
+                  children: [
+                    ImageCueBadge(cue: '🏆', size: 58),
+                    SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Perfect run'),
+                          Text('No mistakes were added to review.'),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               )
             else
               for (final mistake in resolved.mistakes)
-                ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: CircleAvatar(child: Text(mistake.word.imageCue)),
-                  title: Text(mistake.word.word),
-                  subtitle: Text(mistake.explanation),
+                QuestCard(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.all(14),
+                  child: Row(
+                    children: [
+                      ImageCueBadge(cue: mistake.word.imageCue, size: 54),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              mistake.word.word,
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            Text(mistake.explanation),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
             const SizedBox(height: 20),
             FilledButton.icon(
