@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_theme.dart';
+import '../../core/widgets/quest_card.dart';
 import '../../data/models/lesson.dart';
 
 class LessonPreviewScreen extends ConsumerWidget {
@@ -21,28 +23,42 @@ class LessonPreviewScreen extends ConsumerWidget {
       appBar: AppBar(title: Text(lesson.title)),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
           children: [
-            Text(lesson.section, style: Theme.of(context).textTheme.labelLarge),
-            const SizedBox(height: 6),
-            Text(
-              lesson.description,
-              style: Theme.of(context).textTheme.titleMedium,
+            GradientHeroCard(
+              title: lesson.title,
+              subtitle: lesson.description,
+              icon: Icons.auto_stories_outlined,
+              badge: '${lesson.section} · ${lesson.estimatedMinutes} min',
+              action: FilledButton.icon(
+                style: FilledButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: AppTheme.deepTeal,
+                ),
+                onPressed: () => context.go('/lesson/$lessonId/quiz'),
+                icon: const Icon(Icons.play_arrow_rounded),
+                label: const Text('Start quiz'),
+              ),
             ),
             const SizedBox(height: 18),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.secondaryContainer,
-                borderRadius: BorderRadius.circular(8),
-              ),
+            QuestCard(
               child: Row(
                 children: [
-                  const Icon(Icons.bolt),
+                  const ImageCueBadge(cue: '⚡', size: 58),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: Text(
-                      '${lesson.xpReward} XP · ${lesson.estimatedMinutes} minutes · ${lesson.questions.length} questions',
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Reward pack',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '${lesson.xpReward} XP · ${lesson.questions.length} questions · instant explanations',
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -50,18 +66,49 @@ class LessonPreviewScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 22),
             Text(
-              'Words in this lesson',
+              'Image cards in this lesson',
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 10),
             for (final word in lesson.words)
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: CircleAvatar(child: Text(word.imageCue)),
-                title: Text(word.word),
-                subtitle: Text('${word.meaning} · ${word.exampleSentence}'),
+              QuestCard(
+                margin: const EdgeInsets.only(bottom: 12),
+                padding: const EdgeInsets.all(15),
+                child: Row(
+                  children: [
+                    ImageCueBadge(cue: word.imageCue, size: 60),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  word.word,
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.titleMedium,
+                                ),
+                              ),
+                              PillLabel(
+                                label: word.difficulty,
+                                color: AppTheme.coral,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 3),
+                          Text(word.phonetic),
+                          const SizedBox(height: 4),
+                          Text('${word.meaning} · ${word.exampleSentence}'),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             const SizedBox(height: 20),
             FilledButton.icon(
