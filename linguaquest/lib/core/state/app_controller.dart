@@ -88,8 +88,8 @@ class AppController extends Notifier<AppState> {
     }
   }
 
-  Future<void> register(String name, String email, String password) async {
-    await _run(() async {
+  Future<bool> register(String name, String email, String password) async {
+    return _run(() async {
       final user = await _authRepository.register(
         name: name,
         email: email,
@@ -102,8 +102,8 @@ class AppController extends Notifier<AppState> {
     });
   }
 
-  Future<void> login(String email, String password) async {
-    await _run(() async {
+  Future<bool> login(String email, String password) async {
+    return _run(() async {
       final user = await _authRepository.login(
         email: email,
         password: password,
@@ -115,14 +115,14 @@ class AppController extends Notifier<AppState> {
     });
   }
 
-  Future<void> completeGoalSetup({
+  Future<bool> completeGoalSetup({
     required String targetExam,
     required String level,
     required int dailyGoal,
   }) async {
     final user = state.user;
-    if (user == null) return;
-    await _run(() async {
+    if (user == null) return false;
+    return _run(() async {
       final updated = await _authRepository.updateProfile(
         user.copyWith(
           targetExam: targetExam,
@@ -143,7 +143,7 @@ class AppController extends Notifier<AppState> {
     );
   }
 
-  Future<void> addCustomWord({
+  Future<bool> addCustomWord({
     required String word,
     required String meaning,
     required String exampleSentence,
@@ -152,8 +152,8 @@ class AppController extends Notifier<AppState> {
     required String difficulty,
   }) async {
     final user = state.user;
-    if (user == null) return;
-    await _run(() async {
+    if (user == null) return false;
+    return _run(() async {
       final created = await _customWordRepository.create(
         CustomWord.create(
           id: 'word-${DateTime.now().microsecondsSinceEpoch}',
@@ -170,8 +170,8 @@ class AppController extends Notifier<AppState> {
     });
   }
 
-  Future<void> updateCustomWord(CustomWord word) async {
-    await _run(() async {
+  Future<bool> updateCustomWord(CustomWord word) async {
+    return _run(() async {
       final updated = await _customWordRepository.update(
         word.copyWith(updatedAt: DateTime.now()),
       );
@@ -184,10 +184,10 @@ class AppController extends Notifier<AppState> {
     });
   }
 
-  Future<void> deleteCustomWord(String id) async {
+  Future<bool> deleteCustomWord(String id) async {
     final user = state.user;
-    if (user == null) return;
-    await _run(() async {
+    if (user == null) return false;
+    return _run(() async {
       await _customWordRepository.delete(user.uid, id);
       state = state.copyWith(
         customWords: state.customWords.where((word) => word.id != id).toList(),
@@ -195,10 +195,10 @@ class AppController extends Notifier<AppState> {
     });
   }
 
-  Future<void> completeLesson(LessonResult result) async {
+  Future<bool> completeLesson(LessonResult result) async {
     final user = state.user;
-    if (user == null) return;
-    await _run(() async {
+    if (user == null) return false;
+    return _run(() async {
       final now = DateTime.now();
       final lastStudy = user.lastStudyDate;
       final streak = _nextStreak(lastStudy, now, user.streak);
@@ -229,12 +229,12 @@ class AppController extends Notifier<AppState> {
     });
   }
 
-  Future<void> reviewWord(String id, bool isCorrect) async {
+  Future<bool> reviewWord(String id, bool isCorrect) async {
     final user = state.user;
-    if (user == null) return;
+    if (user == null) return false;
     final word = _customWordById(id);
-    if (word == null) return;
-    await _run(() async {
+    if (word == null) return false;
+    return _run(() async {
       final reviewed = word.reviewed(isCorrect: isCorrect);
       await _customWordRepository.update(reviewed);
       await _reviewRepository.recordReviewEvent(
@@ -258,13 +258,15 @@ class AppController extends Notifier<AppState> {
     });
   }
 
-  Future<void> _run(Future<void> Function() action) async {
+  Future<bool> _run(Future<void> Function() action) async {
     state = state.copyWith(isLoading: true, clearError: true);
     try {
       await action();
       state = state.copyWith(isLoading: false);
+      return true;
     } catch (error) {
       state = state.copyWith(isLoading: false, errorMessage: error.toString());
+      return false;
     }
   }
 
