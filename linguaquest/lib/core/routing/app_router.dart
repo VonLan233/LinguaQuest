@@ -22,6 +22,7 @@ import '../../features/quests/progress_analytics_screen.dart';
 import '../../features/quests/quest_screen.dart';
 import '../../features/quiz/lesson_result_screen.dart';
 import '../../features/quiz/quiz_session_screen.dart';
+import '../../features/review/mistake_book_screen.dart';
 import '../../features/review/review_center_screen.dart';
 import '../../features/shell/app_shell.dart';
 import '../../features/wordbook/add_edit_custom_word_screen.dart';
@@ -62,6 +63,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/review',
         builder: (context, state) =>
             const AppShell(selectedIndex: 2, child: ReviewCenterScreen()),
+      ),
+      GoRoute(
+        path: '/mistake-book',
+        builder: (context, state) => const MistakeBookScreen(),
       ),
       GoRoute(
         path: '/quest',

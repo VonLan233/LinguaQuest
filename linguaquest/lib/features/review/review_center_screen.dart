@@ -3,9 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_theme.dart';
 import '../../core/utils/date_formatting.dart';
 import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/metric_tile.dart';
+import '../../core/widgets/quest_card.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/custom_word.dart';
 
@@ -17,10 +19,30 @@ class ReviewCenterScreen extends ConsumerWidget {
     final state = ref.watch(appControllerProvider);
     final due = state.dueWords;
     final weak = state.weakWords;
+    final lessonMistakes = state.lastResult?.mistakes ?? const [];
 
     return ListView(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 110),
       children: [
+        GradientHeroCard(
+          title: due.isEmpty ? 'Review queue clear' : '${due.length} cards due',
+          subtitle:
+              'Spaced repetition brings weak cards back before you forget them.',
+          icon: Icons.replay_rounded,
+          badge: 'Mistake book · Weak words · Due today',
+          action: FilledButton.icon(
+            style: FilledButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: AppTheme.deepTeal,
+            ),
+            onPressed: due.isEmpty
+                ? () => context.go('/custom-words/new')
+                : null,
+            icon: const Icon(Icons.add),
+            label: Text(due.isEmpty ? 'Add cards' : 'Queue ready below'),
+          ),
+        ),
+        const SizedBox(height: 20),
         const SectionHeader(
           title: 'Review center',
           subtitle:
@@ -85,17 +107,75 @@ class ReviewCenterScreen extends ConsumerWidget {
           ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
         ),
         const SizedBox(height: 10),
-        if (weak.isEmpty)
-          const Text('No weak words yet.')
-        else
-          for (final word in weak.take(5))
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: const Icon(Icons.auto_fix_high_outlined),
-              title: Text(word.word),
-              subtitle: Text('${word.wrongCount} wrong · ${word.meaning}'),
-              onTap: () => context.go('/custom-words/${word.id}'),
+        if (lessonMistakes.isEmpty && weak.isEmpty)
+          const Text('No weak words or lesson mistakes yet.')
+        else ...[
+          for (final mistake in lessonMistakes.take(5))
+            QuestCard(
+              margin: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.all(14),
+              child: Row(
+                children: [
+                  ImageCueBadge(cue: mistake.word.imageCue, size: 52),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          mistake.word.word,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        Text(mistake.explanation),
+                      ],
+                    ),
+                  ),
+                  PillLabel(
+                    label: 'Lesson',
+                    icon: Icons.school_outlined,
+                    color: AppTheme.coral,
+                  ),
+                ],
+              ),
             ),
+          if (lessonMistakes.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: OutlinedButton.icon(
+                onPressed: () => context.go('/mistake-book'),
+                icon: const Icon(Icons.menu_book_outlined),
+                label: const Text('Open mistake book'),
+              ),
+            ),
+          for (final word in weak.take(5))
+            QuestCard(
+              margin: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.all(14),
+              onTap: () => context.go('/custom-words/${word.id}'),
+              child: Row(
+                children: [
+                  ImageCueBadge(
+                    cue: word.word.characters.first.toUpperCase(),
+                    size: 52,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          word.word,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        Text('${word.wrongCount} wrong · ${word.meaning}'),
+                      ],
+                    ),
+                  ),
+                  const Icon(Icons.chevron_right_rounded),
+                ],
+              ),
+            ),
+        ],
       ],
     );
   }
@@ -108,19 +188,19 @@ class _ReviewTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
+    return QuestCard(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
+              ImageCueBadge(
+                cue: word.word.characters.first.toUpperCase(),
+                size: 54,
+              ),
+              const SizedBox(width: 12),
               Expanded(
                 child: ListTile(
                   contentPadding: EdgeInsets.zero,
