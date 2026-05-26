@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'quest_card.dart';
+
 class EmptyState extends StatelessWidget {
   const EmptyState({
     required this.icon,
@@ -18,14 +20,21 @@ class EmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Center(
-      child: Padding(
+      child: QuestCard(
+        margin: const EdgeInsets.symmetric(vertical: 8),
         padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 48, color: colorScheme.primary),
+            ImageCueBadge(cue: _iconEmoji(icon), size: 72),
             const SizedBox(height: 12),
-            Text(title, style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900),
+            ),
             const SizedBox(height: 6),
             Text(
               message,
@@ -39,5 +48,12 @@ class EmptyState extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _iconEmoji(IconData icon) {
+    if (icon == Icons.check_circle_outline) return '✅';
+    if (icon == Icons.style_outlined) return '🗂';
+    if (icon == Icons.add) return '➕';
+    return '🌱';
   }
 }
