@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_theme.dart';
 import '../../core/widgets/metric_tile.dart';
+import '../../core/widgets/quest_card.dart';
 import '../../core/widgets/section_header.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -14,33 +16,14 @@ class ProfileScreen extends ConsumerWidget {
     final state = ref.watch(appControllerProvider);
     final user = state.user;
     return ListView(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 110),
       children: [
-        Row(
-          children: [
-            CircleAvatar(
-              radius: 32,
-              child: Text(
-                (user?.name ?? 'L').characters.first.toUpperCase(),
-                style: const TextStyle(fontSize: 28),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    user?.name ?? 'Learner',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                  Text(user?.email ?? 'No email'),
-                ],
-              ),
-            ),
-          ],
+        GradientHeroCard(
+          title: user?.name ?? 'Learner',
+          subtitle:
+              '${user?.email ?? 'No email'}\n${user?.targetExam ?? 'Daily English'} · ${user?.level ?? 'Elementary'}',
+          icon: Icons.person_rounded,
+          badge: 'Profile and progress',
         ),
         const SizedBox(height: 18),
         Row(
@@ -132,13 +115,33 @@ class _ProfileAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      leading: Icon(icon),
-      title: Text(title),
-      subtitle: Text(subtitle),
-      trailing: const Icon(Icons.chevron_right),
+    return QuestCard(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(14),
       onTap: () => context.go(route),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppTheme.mint,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Icon(icon, color: AppTheme.deepTeal),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: Theme.of(context).textTheme.titleMedium),
+                Text(subtitle),
+              ],
+            ),
+          ),
+          const Icon(Icons.chevron_right_rounded),
+        ],
+      ),
     );
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/theme/app_theme.dart';
+import '../../core/widgets/quest_card.dart';
 import '../../core/widgets/section_header.dart';
 
 class QuestScreen extends StatelessWidget {
@@ -9,8 +11,16 @@ class QuestScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 110),
       children: [
+        const GradientHeroCard(
+          title: 'Quest hub',
+          subtitle:
+              'Daily missions, badges, leaderboard, class mode, and AI feedback live here.',
+          icon: Icons.emoji_events_outlined,
+          badge: '20 XP available today',
+        ),
+        const SizedBox(height: 20),
         const SectionHeader(
           title: 'Quest hub',
           subtitle:
@@ -86,42 +96,39 @@ class _QuestCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return QuestCard(
       onTap: route == null ? null : () => context.go(route!),
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: Theme.of(context).colorScheme.outlineVariant,
-          ),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(icon, color: Theme.of(context).colorScheme.secondary),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(body),
-                ],
-              ),
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppTheme.coral.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(16),
             ),
-            const SizedBox(width: 10),
-            Chip(label: Text(value)),
-          ],
-        ),
+            child: Icon(icon, color: Theme.of(context).colorScheme.secondary),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(body),
+              ],
+            ),
+          ),
+          const SizedBox(width: 10),
+          PillLabel(label: value, color: AppTheme.coral),
+        ],
       ),
     );
   }
