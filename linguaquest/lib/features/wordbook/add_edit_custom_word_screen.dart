@@ -147,8 +147,9 @@ class _AddEditCustomWordScreenState
   Future<void> _save(CustomWord? existing) async {
     if (!_formKey.currentState!.validate()) return;
     final controller = ref.read(appControllerProvider.notifier);
+    late final bool succeeded;
     if (existing == null) {
-      await controller.addCustomWord(
+      succeeded = await controller.addCustomWord(
         word: _wordController.text,
         meaning: _meaningController.text,
         exampleSentence: _exampleController.text,
@@ -157,7 +158,7 @@ class _AddEditCustomWordScreenState
         difficulty: _difficulty,
       );
     } else {
-      await controller.updateCustomWord(
+      succeeded = await controller.updateCustomWord(
         existing.copyWith(
           word: _wordController.text.trim(),
           meaning: _meaningController.text.trim(),
@@ -171,6 +172,13 @@ class _AddEditCustomWordScreenState
       );
     }
     if (!mounted) return;
+    if (!succeeded) {
+      final message = ref.read(appControllerProvider).errorMessage;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message ?? 'Could not save this word')),
+      );
+      return;
+    }
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text('Word saved')));
