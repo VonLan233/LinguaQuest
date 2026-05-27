@@ -317,6 +317,9 @@ class _QuestionInput extends StatelessWidget {
               child: OutlinedButton(
                 onPressed: checked ? () {} : () => onSelected(option),
                 style: OutlinedButton.styleFrom(
+                  splashFactory: checked ? NoSplash.splashFactory : null,
+                  overlayColor: checked ? Colors.transparent : null,
+                  enabledMouseCursor: checked ? SystemMouseCursors.basic : null,
                   backgroundColor: selected == option
                       ? AppTheme.selectedSurface(context)
                       : Theme.of(context).colorScheme.surface,
