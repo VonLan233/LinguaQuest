@@ -61,20 +61,24 @@ class _PathNode extends StatelessWidget {
   Widget build(BuildContext context) {
     final locked = lesson.status == 'locked';
     final current = lesson.status == 'current';
-    final color = locked
-        ? Colors.blueGrey
-        : current
-        ? AppTheme.coral
-        : AppTheme.teal;
+    final Color color;
+    if (locked) {
+      color = Colors.blueGrey;
+    } else if (current) {
+      color = AppTheme.coral;
+    } else {
+      color = AppTheme.teal;
+    }
     final theme = Theme.of(context);
+    final lockedCardColor = AppTheme.isDark(context)
+        ? theme.colorScheme.surfaceContainerLow
+        : const Color(0xFFF0F3F2);
+    final cardColor = locked ? lockedCardColor : theme.colorScheme.surface;
+
     return QuestCard(
       onTap: locked ? null : () => _showPreview(context),
       padding: const EdgeInsets.all(16),
-      color: locked
-          ? AppTheme.isDark(context)
-                ? theme.colorScheme.surfaceContainerLow
-                : const Color(0xFFF0F3F2)
-          : theme.colorScheme.surface,
+      color: cardColor,
       borderColor: current ? AppTheme.coral.withValues(alpha: 0.55) : null,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

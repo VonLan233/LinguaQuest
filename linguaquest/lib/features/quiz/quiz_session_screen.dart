@@ -196,6 +196,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
         ),
       );
       if (confirmed != true || !activeContext.mounted) return;
+      setState(() => _isSubmitting = true);
     }
 
     if (activeContext.canPop()) {
