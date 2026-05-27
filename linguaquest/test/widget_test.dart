@@ -126,20 +126,19 @@ void main() {
     expect(tester.getSize(dailyEnglish), dailyEnglishSize);
     expect(tester.getSize(businessEnglish), businessEnglishSize);
 
-    final elementary = find.byKey(const ValueKey('choice-Elementary'));
-    final advanced = find.byKey(const ValueKey('choice-Advanced'));
-
-    await tester.scrollUntilVisible(elementary, 120);
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -520));
     await tester.pumpAndSettle();
 
-    final elementarySize = tester.getSize(elementary);
-    final advancedSize = tester.getSize(advanced);
+    final visibleElementary = find.byKey(const ValueKey('choice-Elementary'));
+    final visibleAdvanced = find.byKey(const ValueKey('choice-Advanced'));
+    final elementarySize = tester.getSize(visibleElementary);
+    final advancedSize = tester.getSize(visibleAdvanced);
 
-    await tester.tap(advanced);
+    await tester.tap(visibleAdvanced);
     await tester.pumpAndSettle();
 
-    expect(tester.getSize(elementary), elementarySize);
-    expect(tester.getSize(advanced), advancedSize);
+    expect(tester.getSize(visibleElementary), elementarySize);
+    expect(tester.getSize(visibleAdvanced), advancedSize);
   });
 
   testWidgets('dark semantic surfaces keep readable contrast', (tester) async {

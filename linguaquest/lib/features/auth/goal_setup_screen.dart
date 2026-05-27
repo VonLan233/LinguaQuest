@@ -178,20 +178,20 @@ class _ChoiceGrid<T> extends StatelessWidget {
         final itemWidth =
             (constraints.maxWidth - spacing * (columns - 1)) / columns;
 
-        return Wrap(
-          spacing: spacing,
-          runSpacing: spacing,
+        return GridView.count(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisCount: columns,
+          mainAxisSpacing: spacing,
+          crossAxisSpacing: spacing,
+          childAspectRatio: itemWidth / 58,
           children: [
             for (final value in values)
-              SizedBox(
+              _StableChoiceButton(
                 key: ValueKey('choice-${labelFor(value)}'),
-                width: itemWidth,
-                height: 58,
-                child: _StableChoiceButton(
-                  label: labelFor(value),
-                  selected: value == selected,
-                  onTap: () => onSelected(value),
-                ),
+                label: labelFor(value),
+                selected: value == selected,
+                onTap: () => onSelected(value),
               ),
           ],
         );
@@ -205,6 +205,7 @@ class _StableChoiceButton extends StatelessWidget {
     required this.label,
     required this.selected,
     required this.onTap,
+    super.key,
   });
 
   final String label;
@@ -225,31 +226,33 @@ class _StableChoiceButton extends StatelessWidget {
         ? (isDark ? theme.colorScheme.onPrimaryContainer : AppTheme.deepTeal)
         : theme.colorScheme.onSurface;
 
-    return Material(
-      color: Colors.transparent,
-      borderRadius: BorderRadius.circular(18),
-      child: InkWell(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 140),
+      curve: Curves.easeOut,
+      decoration: BoxDecoration(
+        color: background,
         borderRadius: BorderRadius.circular(18),
-        onTap: onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 140),
-          curve: Curves.easeOut,
-          alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          decoration: BoxDecoration(
-            color: background,
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: borderColor, width: selected ? 2 : 1),
-          ),
-          child: Text(
-            label,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.labelLarge?.copyWith(
-              color: textColor,
-              fontWeight: FontWeight.w900,
-              height: 1.1,
+        border: Border.all(color: borderColor, width: selected ? 2 : 1),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(18),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(18),
+          onTap: onTap,
+          child: Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+              label,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.labelLarge?.copyWith(
+                color: textColor,
+                fontWeight: FontWeight.w900,
+                height: 1.1,
+              ),
             ),
           ),
         ),

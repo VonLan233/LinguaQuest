@@ -46,14 +46,14 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
       canPop: _canLeaveWithoutConfirmation,
       onPopInvokedWithResult: (didPop, _) async {
         if (didPop) return;
-        await _handleBack();
+        await _handleBack(context);
       },
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
             tooltip: MaterialLocalizations.of(context).backButtonTooltip,
             icon: const BackButtonIcon(),
-            onPressed: _handleBack,
+            onPressed: () => _handleBack(context),
           ),
           title: Text(lesson.title),
         ),
@@ -175,10 +175,10 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
         _mistakes.isEmpty;
   }
 
-  Future<void> _handleBack() async {
+  Future<void> _handleBack(BuildContext activeContext) async {
     if (!_canLeaveWithoutConfirmation) {
       final confirmed = await showDialog<bool>(
-        context: context,
+        context: activeContext,
         builder: (context) => AlertDialog(
           title: const Text('Leave quiz?'),
           content: const Text('Your current quiz progress will be discarded.'),
@@ -195,14 +195,14 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
           ],
         ),
       );
-      if (confirmed != true || !mounted) return;
+      if (confirmed != true || !activeContext.mounted) return;
     }
 
-    if (context.canPop()) {
-      context.pop();
+    if (activeContext.canPop()) {
+      activeContext.pop();
       return;
     }
-    context.go('/learn');
+    activeContext.go('/learn');
   }
 
   Lesson? get _lesson {
