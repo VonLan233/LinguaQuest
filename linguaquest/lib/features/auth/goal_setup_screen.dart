@@ -185,6 +185,7 @@ class _ChoiceGrid<T> extends StatelessWidget {
           mainAxisSpacing: spacing,
           crossAxisSpacing: spacing,
           childAspectRatio: itemWidth / 58,
+          padding: EdgeInsets.zero,
           children: [
             for (final value in values)
               _StableChoiceButton(
