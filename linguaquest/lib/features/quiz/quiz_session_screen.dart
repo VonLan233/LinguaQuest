@@ -196,8 +196,10 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
       );
       if (confirmed != true || !activeContext.mounted) return;
       setState(() => _isSubmitting = true);
+      await Future<void>.delayed(Duration.zero);
     }
 
+    if (!activeContext.mounted) return;
     if (activeContext.canPop()) {
       activeContext.pop();
       return;
@@ -313,7 +315,7 @@ class _QuestionInput extends StatelessWidget {
             child: SizedBox(
               width: double.infinity,
               child: OutlinedButton(
-                onPressed: checked ? null : () => onSelected(option),
+                onPressed: checked ? () {} : () => onSelected(option),
                 style: OutlinedButton.styleFrom(
                   backgroundColor: selected == option
                       ? AppTheme.selectedSurface(context)

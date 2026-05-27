@@ -309,6 +309,16 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Check'), findsOneWidget);
+    await tester.tap(find.text('Check'));
+    await tester.pumpAndSettle();
+
+    final selectedOptionButton = tester.widget<OutlinedButton>(
+      find.ancestor(
+        of: find.text('讲座；授课'),
+        matching: find.byType(OutlinedButton),
+      ),
+    );
+    expect(selectedOptionButton.onPressed, isNotNull);
 
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
