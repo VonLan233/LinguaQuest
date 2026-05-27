@@ -175,8 +175,6 @@ class _ChoiceGrid<T> extends StatelessWidget {
       builder: (context, constraints) {
         final columns = constraints.maxWidth >= 460 ? 3 : 2;
         const spacing = 10.0;
-        final itemWidth =
-            (constraints.maxWidth - spacing * (columns - 1)) / columns;
 
         return GridView.count(
           shrinkWrap: true,
@@ -184,7 +182,7 @@ class _ChoiceGrid<T> extends StatelessWidget {
           crossAxisCount: columns,
           mainAxisSpacing: spacing,
           crossAxisSpacing: spacing,
-          childAspectRatio: itemWidth / 58,
+          mainAxisExtent: 58,
           padding: EdgeInsets.zero,
           children: [
             for (final value in values)

@@ -185,7 +185,7 @@ class PillLabel extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (icon != null) ...[
-            Icon(icon, size: 15, color: color),
+            Icon(icon, size: 15, color: textColor),
             const SizedBox(width: 5),
           ],
           Text(

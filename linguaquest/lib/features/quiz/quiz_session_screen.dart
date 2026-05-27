@@ -50,11 +50,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          leading: IconButton(
-            tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-            icon: const BackButtonIcon(),
-            onPressed: () => _handleBack(context),
-          ),
+          leading: BackButton(onPressed: () => _handleBack(context)),
           title: Text(lesson.title),
         ),
         body: SafeArea(
