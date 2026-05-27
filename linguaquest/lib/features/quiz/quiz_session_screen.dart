@@ -149,6 +149,9 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
                     backgroundColor: _checked && !_lastCorrect
                         ? Theme.of(context).colorScheme.error
                         : null,
+                    foregroundColor: _checked && !_lastCorrect
+                        ? Theme.of(context).colorScheme.onError
+                        : null,
                   ),
                   icon: Icon(
                     _checked

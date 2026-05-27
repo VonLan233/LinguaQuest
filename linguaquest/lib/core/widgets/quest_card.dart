@@ -169,10 +169,11 @@ class PillLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final textColor =
-        theme.brightness == Brightness.light && color.computeLuminance() > 0.5
-        ? theme.colorScheme.onSurface
-        : color;
+    final isDark = theme.brightness == Brightness.dark;
+    final luminance = color.computeLuminance();
+    final textColor = isDark
+        ? (luminance < 0.3 ? theme.colorScheme.onSurface : color)
+        : (luminance > 0.5 ? theme.colorScheme.onSurface : color);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
       decoration: BoxDecoration(
