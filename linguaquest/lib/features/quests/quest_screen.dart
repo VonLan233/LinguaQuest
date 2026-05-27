@@ -11,7 +11,7 @@ class QuestScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 110),
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
       children: [
         const GradientHeroCard(
           title: 'Quest hub',
@@ -97,7 +97,7 @@ class _QuestCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return QuestCard(
-      onTap: route == null ? null : () => context.go(route!),
+      onTap: route == null ? null : () => context.push(route!),
       padding: const EdgeInsets.all(16),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

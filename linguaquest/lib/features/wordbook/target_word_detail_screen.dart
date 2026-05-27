@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/quest_card.dart';
 import '../../data/models/lesson.dart';
 
@@ -19,13 +20,16 @@ class TargetWordDetailScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text(word.word)),
+      appBar: AppBar(
+        leading: const FallbackBackButton(fallbackLocation: '/wordbook'),
+        title: Text(word.word),
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
             QuestCard(
-              color: const Color(0xFFFFFBF2),
+              color: AppTheme.warmSurface(context),
               child: Column(
                 children: [
                   ImageCueBadge(cue: word.imageCue, size: 120),

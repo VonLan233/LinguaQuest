@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 
+import '../../core/widgets/fallback_back_button.dart';
+
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('About')),
+      appBar: AppBar(
+        leading: const FallbackBackButton(fallbackLocation: '/profile'),
+        title: const Text('About'),
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),

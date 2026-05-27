@@ -6,9 +6,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:linguaquest/app.dart';
 import 'package:linguaquest/core/state/app_controller.dart';
 import 'package:linguaquest/core/theme/app_theme.dart';
+import 'package:linguaquest/core/widgets/quest_card.dart';
 import 'package:linguaquest/data/models/user_profile.dart';
 import 'package:linguaquest/data/repositories/auth_repository.dart';
 import 'package:linguaquest/data/seed/seed_lessons.dart';
+import 'package:linguaquest/features/auth/goal_setup_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -95,6 +97,100 @@ void main() {
     expect(headlineColor, isNot(Colors.black));
   });
 
+  testWidgets('goal setup choices keep a stable size when selected', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          home: const GoalSetupScreen(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final dailyEnglish = find.byKey(const ValueKey('choice-Daily English'));
+    final businessEnglish = find.byKey(
+      const ValueKey('choice-Business English'),
+    );
+
+    final dailyEnglishSize = tester.getSize(dailyEnglish);
+    final businessEnglishSize = tester.getSize(businessEnglish);
+
+    await tester.tap(businessEnglish);
+    await tester.pumpAndSettle();
+
+    expect(tester.getSize(dailyEnglish), dailyEnglishSize);
+    expect(tester.getSize(businessEnglish), businessEnglishSize);
+
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -520));
+    await tester.pumpAndSettle();
+
+    final visibleElementary = find.byKey(const ValueKey('choice-Elementary'));
+    final visibleAdvanced = find.byKey(const ValueKey('choice-Advanced'));
+    final elementarySize = tester.getSize(visibleElementary);
+    final advancedSize = tester.getSize(visibleAdvanced);
+
+    await tester.tap(visibleAdvanced);
+    await tester.pumpAndSettle();
+
+    expect(tester.getSize(visibleElementary), elementarySize);
+    expect(tester.getSize(visibleAdvanced), advancedSize);
+  });
+
+  testWidgets('dark semantic surfaces keep readable contrast', (tester) async {
+    late Color warmSurface;
+    late Color accentSurface;
+    late Color selectedSurface;
+    late Color onSurface;
+    late Color onSelectedSurface;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.dark(),
+        home: Builder(
+          builder: (context) {
+            final scheme = Theme.of(context).colorScheme;
+            warmSurface = AppTheme.warmSurface(context);
+            accentSurface = AppTheme.accentSurface(context);
+            selectedSurface = AppTheme.selectedSurface(context);
+            onSurface = scheme.onSurface;
+            onSelectedSurface = scheme.onPrimaryContainer;
+
+            return Scaffold(
+              body: Column(
+                children: [
+                  QuestCard(
+                    color: warmSurface,
+                    child: const Text('Warm surface text'),
+                  ),
+                  QuestCard(
+                    color: accentSurface,
+                    child: const Text('Accent surface text'),
+                  ),
+                  LinearProgressIndicator(
+                    value: 0.5,
+                    backgroundColor: AppTheme.progressTrack(context),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+
+    expect(_contrastRatio(onSurface, warmSurface), greaterThanOrEqualTo(4.5));
+    expect(_contrastRatio(onSurface, accentSurface), greaterThanOrEqualTo(4.5));
+    expect(
+      _contrastRatio(onSelectedSurface, selectedSurface),
+      greaterThanOrEqualTo(4.5),
+    );
+  });
+
   test('seed learning path contains blueprint-sized lesson range', () {
     expect(seedLessons(), hasLength(greaterThanOrEqualTo(6)));
     expect(seedLessons(), hasLength(lessThanOrEqualTo(10)));
@@ -159,6 +255,90 @@ void main() {
     expect(find.text('commute'), findsOneWidget);
     expect(find.text('Lesson'), findsWidgets);
   });
+
+  testWidgets('lesson and quiz screens expose a working back path', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'back-user',
+      name: 'Noah',
+      email: 'noah@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+
+    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.tap(find.text('Continue lesson'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Start quiz'), findsWidgets);
+    expect(find.byType(BackButtonIcon), findsOneWidget);
+
+    await tester.tap(find.byType(BackButtonIcon));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Today’s learning pack'), findsOneWidget);
+
+    await tester.tap(find.text('Continue lesson'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Start quiz').first);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Check'), findsOneWidget);
+    expect(find.byType(BackButtonIcon), findsOneWidget);
+
+    await tester.tap(find.text('讲座；授课'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(BackButtonIcon));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Leave quiz?'), findsOneWidget);
+
+    await tester.tap(find.text('Stay'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Check'), findsOneWidget);
+    await tester.tap(find.text('Check'));
+    await tester.pumpAndSettle();
+
+    final selectedOptionButton = tester.widget<OutlinedButton>(
+      find.ancestor(
+        of: find.text('讲座；授课'),
+        matching: find.byType(OutlinedButton),
+      ),
+    );
+    expect(selectedOptionButton.onPressed, isNotNull);
+
+    await tester.tap(find.byType(BackButtonIcon));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Leave'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Start quiz'), findsWidgets);
+  });
+}
+
+double _contrastRatio(Color foreground, Color background) {
+  final foregroundLuminance = foreground.computeLuminance();
+  final backgroundLuminance = background.computeLuminance();
+  final lighter = foregroundLuminance > backgroundLuminance
+      ? foregroundLuminance
+      : backgroundLuminance;
+  final darker = foregroundLuminance > backgroundLuminance
+      ? backgroundLuminance
+      : foregroundLuminance;
+  return (lighter + 0.05) / (darker + 0.05);
 }
 
 class _FailingAuth implements AuthRepository {

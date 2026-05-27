@@ -62,7 +62,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
             ),
             const SizedBox(height: 20),
             QuestCard(
-              child: _ChoiceSection(
+              child: _ChoiceSection<String>(
                 title: 'Target',
                 values: targets,
                 selected: _target,
@@ -71,7 +71,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
             ),
             const SizedBox(height: 20),
             QuestCard(
-              child: _ChoiceSection(
+              child: _ChoiceSection<String>(
                 title: 'Level',
                 values: levels,
                 selected: _level,
@@ -88,14 +88,11 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 8),
-                  SegmentedButton<int>(
-                    segments: [
-                      for (final goal in goals)
-                        ButtonSegment(value: goal, label: Text('$goal')),
-                    ],
-                    selected: {_dailyGoal},
-                    onSelectionChanged: (values) =>
-                        setState(() => _dailyGoal = values.first),
+                  _ChoiceGrid<int>(
+                    values: goals,
+                    selected: _dailyGoal,
+                    labelFor: (goal) => '$goal min',
+                    onSelected: (goal) => setState(() => _dailyGoal = goal),
                   ),
                 ],
               ),
@@ -126,18 +123,20 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
   }
 }
 
-class _ChoiceSection extends StatelessWidget {
+class _ChoiceSection<T> extends StatelessWidget {
   const _ChoiceSection({
     required this.title,
     required this.values,
     required this.selected,
     required this.onSelected,
+    this.labelFor,
   });
 
   final String title;
-  final List<String> values;
-  final String selected;
-  final ValueChanged<String> onSelected;
+  final List<T> values;
+  final T selected;
+  final ValueChanged<T> onSelected;
+  final String Function(T value)? labelFor;
 
   @override
   Widget build(BuildContext context) {
@@ -146,20 +145,118 @@ class _ChoiceSection extends StatelessWidget {
       children: [
         Text(title, style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            for (final value in values)
-              ChoiceChip(
-                label: Text(value),
-                selected: value == selected,
-                onSelected: (_) => onSelected(value),
-                selectedColor: AppTheme.mint,
-              ),
-          ],
+        _ChoiceGrid<T>(
+          values: values,
+          selected: selected,
+          labelFor: labelFor ?? (value) => value.toString(),
+          onSelected: onSelected,
         ),
       ],
+    );
+  }
+}
+
+class _ChoiceGrid<T> extends StatelessWidget {
+  const _ChoiceGrid({
+    required this.values,
+    required this.selected,
+    required this.labelFor,
+    required this.onSelected,
+  });
+
+  final List<T> values;
+  final T selected;
+  final String Function(T value) labelFor;
+  final ValueChanged<T> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final columns = constraints.maxWidth >= 460 ? 3 : 2;
+        const spacing = 10.0;
+
+        return GridView.count(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisCount: columns,
+          mainAxisSpacing: spacing,
+          crossAxisSpacing: spacing,
+          mainAxisExtent: 58,
+          padding: EdgeInsets.zero,
+          children: [
+            for (final value in values)
+              _StableChoiceButton(
+                key: ValueKey('choice-${labelFor(value)}'),
+                label: labelFor(value),
+                selected: value == selected,
+                onTap: () => onSelected(value),
+              ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _StableChoiceButton extends StatelessWidget {
+  const _StableChoiceButton({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+    super.key,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = AppTheme.isDark(context);
+    final background = selected
+        ? AppTheme.selectedSurface(context)
+        : theme.colorScheme.surfaceContainerHigh;
+    final borderColor = selected
+        ? theme.colorScheme.primary
+        : theme.colorScheme.outlineVariant;
+    final textColor = selected
+        ? (isDark ? theme.colorScheme.onPrimaryContainer : AppTheme.deepTeal)
+        : theme.colorScheme.onSurface;
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 140),
+      curve: Curves.easeOut,
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: borderColor, width: selected ? 2 : 1),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(18),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(18),
+          onTap: onTap,
+          child: Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+              label,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.labelLarge?.copyWith(
+                color: textColor,
+                fontWeight: FontWeight.w900,
+                height: 1.1,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

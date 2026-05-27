@@ -24,7 +24,7 @@ class HomeScreen extends ConsumerWidget {
     final currentLesson = state.lessons.isEmpty ? null : state.lessons.first;
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 110),
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
       children: [
         Row(
           children: [
@@ -69,7 +69,7 @@ class HomeScreen extends ConsumerWidget {
             ),
             onPressed: currentLesson == null
                 ? null
-                : () => context.go('/lesson/${currentLesson.id}'),
+                : () => context.push('/lesson/${currentLesson.id}'),
             icon: const Icon(Icons.play_arrow_rounded),
             label: Text(
               currentLesson == null ? 'No lesson available' : 'Continue lesson',
@@ -122,7 +122,7 @@ class HomeScreen extends ConsumerWidget {
                 child: LinearProgressIndicator(
                   value: dailyProgress,
                   minHeight: 12,
-                  backgroundColor: AppTheme.mint,
+                  backgroundColor: AppTheme.progressTrack(context),
                 ),
               ),
               const SizedBox(height: 10),
@@ -142,7 +142,7 @@ class HomeScreen extends ConsumerWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: OutlinedButton.icon(
-                      onPressed: () => context.go('/wordbook'),
+                      onPressed: () => context.push('/wordbook'),
                       icon: const Icon(Icons.style_outlined),
                       label: const Text('Wordbook'),
                     ),
@@ -155,8 +155,8 @@ class HomeScreen extends ConsumerWidget {
         const SizedBox(height: 22),
         QuestCard(
           padding: const EdgeInsets.all(16),
-          onTap: () => context.go('/wordbook'),
-          color: const Color(0xFFFFF7E8),
+          onTap: () => context.push('/wordbook'),
+          color: AppTheme.accentSurface(context),
           child: Row(
             children: [
               const ImageCueBadge(cue: '🌟', size: 58),
@@ -202,7 +202,7 @@ class HomeScreen extends ConsumerWidget {
                 (word) => QuestCard(
                   margin: const EdgeInsets.only(bottom: 10),
                   padding: const EdgeInsets.all(14),
-                  onTap: () => context.go('/custom-words/${word.id}'),
+                  onTap: () => context.push('/custom-words/${word.id}'),
                   child: Row(
                     children: [
                       ImageCueBadge(
