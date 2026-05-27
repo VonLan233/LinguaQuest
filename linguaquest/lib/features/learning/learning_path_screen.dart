@@ -70,9 +70,7 @@ class _PathNode extends StatelessWidget {
       color = AppTheme.teal;
     }
     final theme = Theme.of(context);
-    final lockedCardColor = AppTheme.isDark(context)
-        ? theme.colorScheme.surfaceContainerLow
-        : const Color(0xFFF0F3F2);
+    final lockedCardColor = theme.colorScheme.surfaceContainerLow;
     final cardColor = locked ? lockedCardColor : theme.colorScheme.surface;
 
     return QuestCard(

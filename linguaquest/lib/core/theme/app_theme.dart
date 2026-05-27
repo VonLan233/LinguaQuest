@@ -83,6 +83,15 @@ class AppTheme {
     final baseTextTheme = scheme.brightness == Brightness.dark
         ? Typography.material2021().white
         : Typography.material2021().black;
+    final chipLabelStyle = WidgetStateTextStyle.resolveWith((states) {
+      if (states.contains(WidgetState.disabled)) {
+        return TextStyle(color: scheme.onSurface.withValues(alpha: 0.38));
+      }
+      if (isDark && states.contains(WidgetState.selected)) {
+        return TextStyle(color: scheme.onPrimaryContainer);
+      }
+      return TextStyle(color: scheme.onSurface);
+    });
 
     return ThemeData(
       useMaterial3: true,
@@ -148,8 +157,8 @@ class AppTheme {
         backgroundColor: isDark ? scheme.surfaceContainerHigh : null,
         selectedColor: isDark ? scheme.primaryContainer : mint,
         disabledColor: isDark ? scheme.surfaceContainerLow : null,
-        labelStyle: TextStyle(color: scheme.onSurface),
-        secondaryLabelStyle: TextStyle(color: scheme.onSurface),
+        labelStyle: chipLabelStyle,
+        secondaryLabelStyle: chipLabelStyle,
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
         side: BorderSide(color: scheme.outlineVariant),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
