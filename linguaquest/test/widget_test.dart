@@ -172,6 +172,39 @@ void main() {
     expect(find.text('Learning Path'), findsOneWidget);
   });
 
+  testWidgets('main shell fling direction matches drag direction', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'fling-user',
+      name: 'Finn',
+      email: 'finn@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+
+    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.fling(
+      find.text('Today’s learning pack'),
+      const Offset(-80, 0),
+      1000,
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Learning Path'), findsOneWidget);
+  });
+
   testWidgets('dark theme keeps headline text readable', (tester) async {
     final dark = AppTheme.dark();
     final headlineColor = dark.textTheme.headlineMedium?.color;

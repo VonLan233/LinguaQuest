@@ -170,6 +170,7 @@ class ReminderSettingsScreen extends ConsumerWidget {
       initialTime: TimeOfDay(hour: settings.hour, minute: settings.minute),
     );
     if (picked == null) return;
+    if (!context.mounted) return;
     await ref
         .read(appControllerProvider.notifier)
         .updateReminderSettings(

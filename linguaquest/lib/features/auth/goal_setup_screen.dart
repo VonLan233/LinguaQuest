@@ -184,6 +184,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
       lastDate: lastDate,
     );
     if (picked == null) return;
+    if (!mounted) return;
     setState(() => _deadline = picked);
   }
 

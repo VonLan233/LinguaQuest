@@ -106,7 +106,7 @@ class _AppShellState extends State<AppShell> {
         velocity.abs() >= _minimumFlingVelocity;
     if (!isDeliberateDrag && !isMeaningfulFling) return;
 
-    final direction = isDeliberateDrag ? _dragDeltaX : -velocity;
+    final direction = isDeliberateDrag ? _dragDeltaX : velocity;
     final nextIndex = direction < 0
         ? widget.selectedIndex + 1
         : widget.selectedIndex - 1;
