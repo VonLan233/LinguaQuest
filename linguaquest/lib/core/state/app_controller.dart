@@ -196,10 +196,13 @@ class AppController extends Notifier<AppState> {
   Future<void> logout() async {
     final themeMode = state.themeMode;
     final reminderSettings = state.reminderSettings;
+    final lessons = state.lessons;
+    final completedLessonIds = state.completedLessonIds;
     await _authRepository.logout();
     state = AppState.initial().copyWith(
       isBootstrapped: true,
-      lessons: _applyLessonProgression(state.lessons, state.completedLessonIds),
+      lessons: _applyLessonProgression(lessons, completedLessonIds),
+      completedLessonIds: completedLessonIds,
       themeMode: themeMode,
       reminderSettings: reminderSettings,
     );
@@ -549,17 +552,25 @@ class AppController extends Notifier<AppState> {
   DailyReminderSettings _loadReminderSettings(SharedPreferences prefs) {
     final raw = prefs.getString(_reminderKey);
     if (raw == null) return DailyReminderSettings.defaults;
-    final decoded = jsonDecode(raw);
-    if (decoded is! Map<String, dynamic>) return DailyReminderSettings.defaults;
-    return DailyReminderSettings.fromJson(decoded);
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! Map) return DailyReminderSettings.defaults;
+      return DailyReminderSettings.fromJson(Map<String, dynamic>.from(decoded));
+    } catch (_) {
+      return DailyReminderSettings.defaults;
+    }
   }
 
   LearningPlan? _loadLearningPlan(SharedPreferences prefs) {
     final raw = prefs.getString(_learningPlanKey);
     if (raw == null) return null;
-    final decoded = jsonDecode(raw);
-    if (decoded is! Map<String, dynamic>) return null;
-    return LearningPlan.fromJson(decoded);
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! Map) return null;
+      return LearningPlan.fromJson(Map<String, dynamic>.from(decoded));
+    } catch (_) {
+      return null;
+    }
   }
 
   Set<String> _stringSet(SharedPreferences prefs, String key) {

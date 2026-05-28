@@ -295,7 +295,6 @@ class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
         .map((mistake) => mistake.word.id)
         .toSet();
     _selectedIds = _selectedIds.intersection(currentIds);
-    if (_selectedIds.isEmpty) _selectedIds = currentIds;
   }
 
   @override

@@ -35,9 +35,18 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final lesson = _lesson;
+    final lessons = ref.watch(
+      appControllerProvider.select((state) => state.lessons),
+    );
+    final lesson = _findLesson(lessons);
     if (lesson == null) {
       return const Scaffold(body: Center(child: Text('Lesson not found')));
+    }
+    if (lesson.questions.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(title: Text(lesson.title)),
+        body: const Center(child: Text('This lesson has no quiz yet.')),
+      );
     }
     final question = lesson.questions[_index];
     final progress = (_index + 1) / lesson.questions.length;
@@ -207,8 +216,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
     activeContext.go('/learn');
   }
 
-  Lesson? get _lesson {
-    final lessons = ref.read(appControllerProvider).lessons;
+  Lesson? _findLesson(List<Lesson> lessons) {
     for (final lesson in lessons) {
       if (lesson.id == widget.lessonId) return lesson;
     }

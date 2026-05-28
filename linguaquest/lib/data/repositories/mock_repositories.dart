@@ -15,6 +15,7 @@ import 'review_repository.dart';
 
 class MockAuthRepository implements AuthRepository {
   static const _profileKey = 'linguaquest.profile';
+  static const _registeredEmailsKey = 'linguaquest.mock.registered_emails';
   UserProfile? _profile;
 
   @override
@@ -23,7 +24,14 @@ class MockAuthRepository implements AuthRepository {
     final prefs = await SharedPreferences.getInstance();
     final raw = prefs.getString(_profileKey);
     if (raw == null) return null;
-    _profile = UserProfile.fromJson(jsonDecode(raw) as Map<String, dynamic>);
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! Map) return null;
+      _profile = UserProfile.fromJson(Map<String, dynamic>.from(decoded));
+    } catch (_) {
+      await prefs.remove(_profileKey);
+      return null;
+    }
     return _profile;
   }
 
@@ -34,8 +42,13 @@ class MockAuthRepository implements AuthRepository {
     required String password,
   }) async {
     final normalizedEmail = email.trim().toLowerCase();
-    final existing = await loadSession();
-    if (existing != null && existing.email == normalizedEmail) {
+    final prefs = await SharedPreferences.getInstance();
+    final registeredEmails =
+        prefs.getStringList(_registeredEmailsKey) ?? const <String>[];
+    final normalizedRegisteredEmails = registeredEmails
+        .map((email) => email.trim().toLowerCase())
+        .toSet();
+    if (normalizedRegisteredEmails.contains(normalizedEmail)) {
       throw StateError('email already registered');
     }
     final now = DateTime.now();
@@ -51,6 +64,10 @@ class MockAuthRepository implements AuthRepository {
       createdAt: now,
       updatedAt: now,
     );
+    await prefs.setStringList(_registeredEmailsKey, [
+      ...normalizedRegisteredEmails,
+      normalizedEmail,
+    ]);
     return updateProfile(profile);
   }
 

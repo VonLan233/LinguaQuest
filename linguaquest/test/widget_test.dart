@@ -8,9 +8,12 @@ import 'package:linguaquest/core/state/app_controller.dart';
 import 'package:linguaquest/core/state/app_state.dart';
 import 'package:linguaquest/core/theme/app_theme.dart';
 import 'package:linguaquest/core/widgets/quest_card.dart';
+import 'package:linguaquest/data/models/lesson.dart';
 import 'package:linguaquest/data/models/lesson_result.dart';
+import 'package:linguaquest/data/models/study_session.dart';
 import 'package:linguaquest/data/models/user_profile.dart';
 import 'package:linguaquest/data/repositories/auth_repository.dart';
+import 'package:linguaquest/data/repositories/learning_repository.dart';
 import 'package:linguaquest/data/seed/seed_lessons.dart';
 import 'package:linguaquest/features/auth/goal_setup_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -425,6 +428,145 @@ void main() {
       container.read(appControllerProvider).errorMessage,
       'This email is already registered. Try logging in instead.',
     );
+
+    await controller.logout();
+    expect(
+      await controller.register('Ava', 'ava@lingua.quest', 'password123'),
+      false,
+    );
+    expect(
+      container.read(appControllerProvider).errorMessage,
+      'This email is already registered. Try logging in instead.',
+    );
+  });
+
+  test('bootstrap tolerates corrupted persisted settings JSON', () async {
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': 'not-json',
+      'linguaquest.reminderSettings': '{bad json',
+      'linguaquest.learningPlan': 'not-json',
+    });
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    final state = container.read(appControllerProvider);
+
+    expect(state.isBootstrapped, true);
+    expect(state.errorMessage, isNull);
+    expect(state.user, isNull);
+    expect(state.reminderSettings, DailyReminderSettings.defaults);
+    expect(state.learningPlan, isNull);
+  });
+
+  test('logout keeps lesson status and completed ids in sync', () async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'logout-user',
+      name: 'Lou',
+      email: 'lou@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    final completedLessonId = seedLessons().first.id;
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+      'linguaquest.completedLessons': [completedLessonId],
+    });
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    expect(container.read(appControllerProvider).completedLessonIds, {
+      completedLessonId,
+    });
+
+    await container.read(appControllerProvider.notifier).logout();
+    final state = container.read(appControllerProvider);
+
+    expect(state.user, isNull);
+    expect(state.completedLessonIds, {completedLessonId});
+    expect(state.lessons.first.status, 'completed');
+    expect(state.learningPathProgress, greaterThan(0));
+  });
+
+  testWidgets('home and wordbook tolerate empty lesson words and tags', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'empty-data-user',
+      name: 'Eli',
+      email: 'eli@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    final emptyLesson = seedLessons().first.copyWith(
+      id: 'empty-lesson',
+      title: 'Empty Lesson',
+      status: 'current',
+      words: const [],
+      questions: const [],
+    );
+    final taglessWord = const Word(
+      id: 'tagless-word',
+      word: 'context',
+      phonetic: '/ˈkɒntekst/',
+      meaning: '语境',
+      definition: 'The situation in which a word is used.',
+      partOfSpeech: 'noun',
+      exampleSentence: 'Context helps learners understand meaning.',
+      exampleTranslation: '语境帮助学习者理解含义。',
+      imageCue: '🧭',
+      difficulty: 'Easy',
+      tags: [],
+    );
+    final taglessLesson = seedLessons()[1].copyWith(
+      id: 'tagless-lesson',
+      title: 'Tagless Lesson',
+      status: 'locked',
+      words: [taglessWord],
+      questions: const [],
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          learningRepositoryProvider.overrideWithValue(
+            _StaticLearningRepository([emptyLesson, taglessLesson]),
+          ),
+        ],
+        child: const LinguaQuestApp(),
+      ),
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    expect(find.text('Ready for Empty Lesson?'), findsOneWidget);
+
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -500));
+    await tester.pumpAndSettle();
+    expect(find.text('Open word cards'), findsOneWidget);
+
+    await tester.tap(find.text('Wordbook').first);
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('Visual Wordbook'), findsOneWidget);
+    expect(find.text('context'), findsOneWidget);
+    expect(find.text('Easy'), findsOneWidget);
   });
 
   test('deadline planning saves daily words into the profile', () async {
@@ -568,6 +710,73 @@ void main() {
       );
     },
   );
+
+  testWidgets('mistake card importer preserves an empty manual selection', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'selection-user',
+      name: 'Sel',
+      email: 'sel@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    final lesson = seedLessons().first;
+    final mistakes = lesson.questions.take(2).toList();
+    await container
+        .read(appControllerProvider.notifier)
+        .completeLesson(
+          LessonResult(
+            lessonId: lesson.id,
+            lessonTitle: lesson.title,
+            totalQuestions: lesson.questions.length,
+            correctAnswers: 1,
+            xpEarned: 10,
+            mistakes: mistakes,
+            completedAt: DateTime.now(),
+          ),
+        );
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const LinguaQuestApp(),
+      ),
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.tap(find.text('Review').last);
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('Add Mistake Cards'), 300);
+    await tester.pumpAndSettle();
+    expect(find.text('Add Selected (2)'), findsOneWidget);
+
+    await tester.tap(find.byType(CheckboxListTile).at(0));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(CheckboxListTile).at(1));
+    await tester.pumpAndSettle();
+    expect(find.text('Add Selected (0)'), findsOneWidget);
+
+    await container
+        .read(appControllerProvider.notifier)
+        .updateThemeMode(ThemeMode.dark);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Add Selected (0)'), findsOneWidget);
+  });
 }
 
 double _contrastRatio(Color foreground, Color background) {
@@ -605,4 +814,16 @@ class _FailingAuth implements AuthRepository {
 
   @override
   Future<void> logout() async {}
+}
+
+class _StaticLearningRepository implements LearningRepository {
+  const _StaticLearningRepository(this.lessons);
+
+  final List<Lesson> lessons;
+
+  @override
+  Future<List<Lesson>> listLessons() async => lessons;
+
+  @override
+  Future<void> recordStudySession(StudySession session) async {}
 }

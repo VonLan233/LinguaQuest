@@ -28,7 +28,9 @@ class HomeScreen extends ConsumerWidget {
     final pathComplete =
         state.lessons.isNotEmpty &&
         state.lessons.every((lesson) => lesson.status == 'completed');
-    final wordOfDay = currentLesson?.words.first;
+    final wordOfDay = (currentLesson?.words.isNotEmpty ?? false)
+        ? currentLesson!.words.first
+        : null;
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),

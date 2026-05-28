@@ -101,8 +101,10 @@ class WordbookScreen extends ConsumerWidget {
                               ? Theme.of(context).colorScheme.error
                               : AppTheme.coral,
                         ),
-                        const SizedBox(height: 6),
-                        PillLabel(label: word.tags.first),
+                        if (word.tags.isNotEmpty) ...[
+                          const SizedBox(height: 6),
+                          PillLabel(label: word.tags.first),
+                        ],
                       ],
                     ),
                   ],

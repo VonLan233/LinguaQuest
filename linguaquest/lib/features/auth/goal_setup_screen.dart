@@ -6,6 +6,7 @@ import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/date_formatting.dart';
 import '../../core/widgets/quest_card.dart';
+import '../../data/models/lesson.dart';
 
 class GoalSetupScreen extends ConsumerStatefulWidget {
   const GoalSetupScreen({super.key});
@@ -37,7 +38,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
     final state = ref.watch(appControllerProvider);
     final plannedDailyWords = _deadline == null
         ? null
-        : _dailyWordsForDeadline(state.completedLessonIds);
+        : _dailyWordsForDeadline(state.lessons, state.completedLessonIds);
     return Scaffold(
       appBar: AppBar(title: const Text('Goal Setup')),
       body: SafeArea(
@@ -181,8 +182,10 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
     setState(() => _deadline = picked);
   }
 
-  int _dailyWordsForDeadline(Set<String> completedLessonIds) {
-    final lessons = ref.read(appControllerProvider).lessons;
+  int _dailyWordsForDeadline(
+    List<Lesson> lessons,
+    Set<String> completedLessonIds,
+  ) {
     final remainingWords = lessons
         .where((lesson) => !completedLessonIds.contains(lesson.id))
         .fold(0, (total, lesson) => total + lesson.words.length);
