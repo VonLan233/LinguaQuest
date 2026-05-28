@@ -16,12 +16,21 @@ class HomeScreen extends ConsumerWidget {
     final state = ref.watch(appControllerProvider);
     final user = state.user;
     final dueCount = state.dueWords.length;
-    final dailyProgress = user == null
-        ? 0.35
-        : ((user.dailyGoal - dueCount).clamp(0, user.dailyGoal) /
-                  user.dailyGoal)
-              .clamp(0.0, 1.0);
-    final currentLesson = state.lessons.isEmpty ? null : state.lessons.first;
+    final dailyGoal = state.learningPlan?.dailyWords ?? user?.dailyGoal ?? 10;
+    final todayLessonWords = state.lessons
+        .where((lesson) => state.todayCompletedLessonIds.contains(lesson.id))
+        .fold(0, (total, lesson) => total + lesson.words.length);
+    final todayWork = todayLessonWords + state.todayReviewWordIds.length;
+    final dailyProgress = dailyGoal <= 0
+        ? 0.0
+        : (todayWork / dailyGoal).clamp(0.0, 1.0);
+    final currentLesson = state.currentLesson;
+    final pathComplete =
+        state.lessons.isNotEmpty &&
+        state.lessons.every((lesson) => lesson.status == 'completed');
+    final wordOfDay = (currentLesson?.words.isNotEmpty ?? false)
+        ? currentLesson!.words.first
+        : null;
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
@@ -57,9 +66,12 @@ class HomeScreen extends ConsumerWidget {
         GradientHeroCard(
           title: currentLesson == null
               ? 'Build your first learning path'
+              : pathComplete
+              ? 'Learning path complete'
               : 'Ready for ${currentLesson.title}?',
-          subtitle:
-              'Complete one bite-sized lesson, then clear review cards before they turn weak.',
+          subtitle: state.learningPlan == null
+              ? 'Complete one bite-sized lesson, then clear review cards before they turn weak.'
+              : '${state.learningPlan!.dailyWords} words/day until your ${state.learningPlan!.target} plan ends.',
           icon: Icons.rocket_launch_outlined,
           badge: 'Today’s learning pack',
           action: FilledButton.icon(
@@ -67,12 +79,14 @@ class HomeScreen extends ConsumerWidget {
               backgroundColor: Colors.white,
               foregroundColor: AppTheme.deepTeal,
             ),
-            onPressed: currentLesson == null
+            onPressed: currentLesson == null || pathComplete
                 ? null
                 : () => context.push('/lesson/${currentLesson.id}'),
             icon: const Icon(Icons.play_arrow_rounded),
             label: Text(
-              currentLesson == null ? 'No lesson available' : 'Continue lesson',
+              currentLesson == null || pathComplete
+                  ? 'No lesson available'
+                  : 'Continue lesson',
             ),
           ),
         ),
@@ -84,7 +98,7 @@ class HomeScreen extends ConsumerWidget {
                 label: 'XP',
                 value: '${user?.xp ?? 0}',
                 icon: Icons.bolt,
-                color: AppTheme.coral,
+                color: AppTheme.mango,
               ),
             ),
             const SizedBox(width: 10),
@@ -102,7 +116,7 @@ class HomeScreen extends ConsumerWidget {
                 label: 'Due',
                 value: '${state.dueWords.length}',
                 icon: Icons.replay,
-                color: AppTheme.teal,
+                color: AppTheme.cyan,
               ),
             ),
           ],
@@ -127,7 +141,7 @@ class HomeScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                '${(dailyProgress * 100).round()}% daily focus · $dueCount words due',
+                '$todayWork/$dailyGoal words today · $dueCount review cards due',
               ),
               const SizedBox(height: 16),
               Row(
@@ -159,7 +173,7 @@ class HomeScreen extends ConsumerWidget {
           color: AppTheme.accentSurface(context),
           child: Row(
             children: [
-              const ImageCueBadge(cue: '🌟', size: 58),
+              ImageCueBadge(cue: wordOfDay?.imageCue ?? '🌟', size: 58),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
@@ -170,7 +184,11 @@ class HomeScreen extends ConsumerWidget {
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                     const SizedBox(height: 3),
-                    const Text('priority · 优先事项 · tap to open word cards'),
+                    Text(
+                      wordOfDay == null
+                          ? 'Open word cards'
+                          : '${wordOfDay.word} · ${wordOfDay.meaning}',
+                    ),
                   ],
                 ),
               ),

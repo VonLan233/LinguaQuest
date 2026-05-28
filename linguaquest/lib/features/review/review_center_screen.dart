@@ -10,6 +10,7 @@ import '../../core/widgets/metric_tile.dart';
 import '../../core/widgets/quest_card.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/custom_word.dart';
+import '../../data/models/lesson.dart';
 
 class ReviewCenterScreen extends ConsumerWidget {
   const ReviewCenterScreen({super.key});
@@ -110,6 +111,8 @@ class ReviewCenterScreen extends ConsumerWidget {
         if (lessonMistakes.isEmpty && weak.isEmpty)
           const Text('No weak words or lesson mistakes yet.')
         else ...[
+          if (lessonMistakes.isNotEmpty)
+            _MistakeWordImporter(mistakes: lessonMistakes),
           for (final mistake in lessonMistakes.take(5))
             QuestCard(
               margin: const EdgeInsets.only(bottom: 10),
@@ -188,6 +191,10 @@ class _ReviewTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isLoading = ref.watch(
+      appControllerProvider.select((state) => state.isLoading),
+    );
+    final canReview = word.isDue(DateTime.now()) && !isLoading;
     return QuestCard(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
@@ -217,9 +224,9 @@ class _ReviewTile extends ConsumerWidget {
             children: [
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: () => ref
-                      .read(appControllerProvider.notifier)
-                      .reviewWord(word.id, false),
+                  onPressed: canReview
+                      ? () => _review(context, ref, isCorrect: false)
+                      : null,
                   icon: const Icon(Icons.close),
                   label: const Text('Missed'),
                 ),
@@ -227,9 +234,9 @@ class _ReviewTile extends ConsumerWidget {
               const SizedBox(width: 10),
               Expanded(
                 child: FilledButton.icon(
-                  onPressed: () => ref
-                      .read(appControllerProvider.notifier)
-                      .reviewWord(word.id, true),
+                  onPressed: canReview
+                      ? () => _review(context, ref, isCorrect: true)
+                      : null,
                   icon: const Icon(Icons.check),
                   label: const Text('Remembered'),
                 ),
@@ -239,5 +246,156 @@ class _ReviewTile extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _review(
+    BuildContext context,
+    WidgetRef ref, {
+    required bool isCorrect,
+  }) async {
+    final succeeded = await ref
+        .read(appControllerProvider.notifier)
+        .reviewWord(word.id, isCorrect);
+    if (!context.mounted) return;
+    final message = succeeded
+        ? isCorrect
+              ? 'Marked as remembered'
+              : 'Scheduled for practice'
+        : ref.read(appControllerProvider).errorMessage ??
+              'Could not update this card';
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+}
+
+class _MistakeWordImporter extends ConsumerStatefulWidget {
+  const _MistakeWordImporter({required this.mistakes});
+
+  final List<QuizQuestion> mistakes;
+
+  @override
+  ConsumerState<_MistakeWordImporter> createState() =>
+      _MistakeWordImporterState();
+}
+
+class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
+  static const _visibleMistakeLimit = 6;
+
+  late Set<String> _selectedIds;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIds = _visibleMistakeIds();
+  }
+
+  @override
+  void didUpdateWidget(covariant _MistakeWordImporter oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final currentIds = widget.mistakes
+        .take(_visibleMistakeLimit)
+        .map((mistake) => mistake.word.id)
+        .toSet();
+    _selectedIds = _selectedIds.intersection(currentIds);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(appControllerProvider);
+    final visibleMistakes = widget.mistakes.take(_visibleMistakeLimit).toList();
+    final existingWords = state.customWords
+        .map((word) => word.word.trim().toLowerCase())
+        .toSet();
+    final selectableCount = visibleMistakes
+        .where(
+          (mistake) =>
+              !existingWords.contains(mistake.word.word.trim().toLowerCase()),
+        )
+        .length;
+    final selectedAddableCount = visibleMistakes
+        .where(
+          (mistake) =>
+              _selectedIds.contains(mistake.word.id) &&
+              !existingWords.contains(mistake.word.word.trim().toLowerCase()),
+        )
+        .length;
+
+    return QuestCard(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(14),
+      color: AppTheme.warmSurface(context),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Add Mistake Cards',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            selectableCount == 0
+                ? 'All recent mistakes are already in your custom word cards.'
+                : 'Select wrong words to add directly to your review cards.',
+          ),
+          const SizedBox(height: 10),
+          for (final mistake in visibleMistakes) ...[
+            Builder(
+              builder: (context) {
+                final exists = existingWords.contains(
+                  mistake.word.word.trim().toLowerCase(),
+                );
+                return CheckboxListTile(
+                  contentPadding: EdgeInsets.zero,
+                  value: !exists && _selectedIds.contains(mistake.word.id),
+                  enabled: !exists,
+                  onChanged: (checked) {
+                    setState(() {
+                      if (checked ?? false) {
+                        _selectedIds.add(mistake.word.id);
+                      } else {
+                        _selectedIds.remove(mistake.word.id);
+                      }
+                    });
+                  },
+                  title: Text(mistake.word.word),
+                  subtitle: Text(
+                    exists ? 'Already added' : mistake.word.meaning,
+                  ),
+                );
+              },
+            ),
+          ],
+          const SizedBox(height: 8),
+          FilledButton.icon(
+            onPressed: selectedAddableCount == 0 || state.isLoading
+                ? null
+                : _addSelected,
+            icon: const Icon(Icons.add_card_outlined),
+            label: Text('Add Selected ($selectedAddableCount)'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _addSelected() async {
+    final added = await ref
+        .read(appControllerProvider.notifier)
+        .addMistakesToCustomWords(
+          _selectedIds.intersection(_visibleMistakeIds()),
+        );
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('$added mistake cards added')));
+    if (added > 0) setState(() => _selectedIds.clear());
+  }
+
+  Set<String> _visibleMistakeIds() {
+    return widget.mistakes
+        .take(_visibleMistakeLimit)
+        .map((mistake) => mistake.word.id)
+        .toSet();
   }
 }

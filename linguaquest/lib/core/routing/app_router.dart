@@ -49,34 +49,37 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/goal-setup',
         builder: (context, state) => const GoalSetupScreen(),
       ),
-      GoRoute(
-        path: '/home',
-        builder: (context, state) =>
-            const AppShell(selectedIndex: 0, child: HomeScreen()),
-      ),
-      GoRoute(
-        path: '/learn',
-        builder: (context, state) =>
-            const AppShell(selectedIndex: 1, child: LearningPathScreen()),
-      ),
-      GoRoute(
-        path: '/review',
-        builder: (context, state) =>
-            const AppShell(selectedIndex: 2, child: ReviewCenterScreen()),
+      ShellRoute(
+        builder: (context, state, child) {
+          final selectedIndex = _tabIndexForPath(state.uri.path);
+          return AppShell(selectedIndex: selectedIndex, child: child);
+        },
+        routes: [
+          GoRoute(
+            path: '/home',
+            builder: (context, state) => const HomeScreen(),
+          ),
+          GoRoute(
+            path: '/learn',
+            builder: (context, state) => const LearningPathScreen(),
+          ),
+          GoRoute(
+            path: '/review',
+            builder: (context, state) => const ReviewCenterScreen(),
+          ),
+          GoRoute(
+            path: '/quest',
+            builder: (context, state) => const QuestScreen(),
+          ),
+          GoRoute(
+            path: '/profile',
+            builder: (context, state) => const ProfileScreen(),
+          ),
+        ],
       ),
       GoRoute(
         path: '/mistake-book',
         builder: (context, state) => const MistakeBookScreen(),
-      ),
-      GoRoute(
-        path: '/quest',
-        builder: (context, state) =>
-            const AppShell(selectedIndex: 3, child: QuestScreen()),
-      ),
-      GoRoute(
-        path: '/profile',
-        builder: (context, state) =>
-            const AppShell(selectedIndex: 4, child: ProfileScreen()),
       ),
       GoRoute(
         path: '/leaderboard',
@@ -101,6 +104,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/settings',
         builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: '/settings/theme',
+        builder: (context, state) => const ThemeSettingsScreen(),
+      ),
+      GoRoute(
+        path: '/settings/reminder',
+        builder: (context, state) => const ReminderSettingsScreen(),
       ),
       GoRoute(
         path: '/help',
@@ -152,3 +163,11 @@ final routerProvider = Provider<GoRouter>((ref) {
     ],
   );
 });
+
+int _tabIndexForPath(String path) {
+  if (path.startsWith('/learn')) return 1;
+  if (path.startsWith('/review')) return 2;
+  if (path.startsWith('/quest')) return 3;
+  if (path.startsWith('/profile')) return 4;
+  return 0;
+}

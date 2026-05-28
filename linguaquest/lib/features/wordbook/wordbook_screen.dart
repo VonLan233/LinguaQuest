@@ -26,9 +26,9 @@ class WordbookScreen extends ConsumerWidget {
           padding: const EdgeInsets.all(20),
           children: [
             GradientHeroCard(
-              title: 'Visual wordbook',
+              title: 'Visual Wordbook',
               subtitle:
-                  'Image-first cards connect words with scenes, meanings, and example sentences.',
+                  'Image-first cards connect pronunciation, meaning, examples, tags, and review signals.',
               icon: Icons.style_outlined,
               badge: '${words.length} target words',
               action: FilledButton.icon(
@@ -43,9 +43,9 @@ class WordbookScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 22),
             SectionHeader(
-              title: 'Target words',
+              title: 'Target Words',
               subtitle:
-                  '${words.length} words from your current learning path.',
+                  '${words.length} words · ${(state.learningPathProgress * 100).round()}% path progress',
             ),
             const SizedBox(height: 16),
             for (final word in words)
@@ -67,6 +67,16 @@ class WordbookScreen extends ConsumerWidget {
                           ),
                           const SizedBox(height: 3),
                           Text(word.meaning),
+                          const SizedBox(height: 3),
+                          Text(
+                            '${word.phonetic} · ${word.partOfSpeech}',
+                            style: TextStyle(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                           const SizedBox(height: 5),
                           Text(
                             word.exampleSentence,
@@ -82,7 +92,21 @@ class WordbookScreen extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    PillLabel(label: word.difficulty, color: AppTheme.coral),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        PillLabel(
+                          label: word.difficulty,
+                          color: word.difficulty == 'Hard'
+                              ? Theme.of(context).colorScheme.error
+                              : AppTheme.coral,
+                        ),
+                        if (word.tags.isNotEmpty) ...[
+                          const SizedBox(height: 6),
+                          PillLabel(label: word.tags.first),
+                        ],
+                      ],
+                    ),
                   ],
                 ),
               ),

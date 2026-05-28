@@ -12,17 +12,38 @@ class SplashScreen extends ConsumerStatefulWidget {
   ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends ConsumerState<SplashScreen> {
+class _SplashScreenState extends ConsumerState<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _fade;
+  late final Animation<double> _scale;
+
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    )..forward();
+    _fade = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
+    _scale = Tween<double>(
+      begin: 0.86,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
     Future.microtask(_start);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   Future<void> _start() async {
     await ref.read(appControllerProvider.notifier).bootstrap();
     if (!mounted) return;
     final state = ref.read(appControllerProvider);
+    if (!state.isBootstrapped && state.errorMessage != null) return;
     await Future<void>.delayed(const Duration(milliseconds: 500));
     if (!mounted) return;
     context.go(state.isAuthenticated ? '/home' : '/onboarding');
@@ -30,32 +51,71 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(appControllerProvider);
+    final failed =
+        !state.isLoading && !state.isBootstrapped && state.errorMessage != null;
+
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const _LogoMark(),
+            ScaleTransition(scale: _scale, child: const _LogoMark()),
             const SizedBox(height: 20),
-            Text(
-              'LinguaQuest',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Image cards. Guided paths. Smart review.',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+            FadeTransition(
+              opacity: _fade,
+              child: Column(
+                children: [
+                  Text(
+                    'LinguaQuest',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Image cards. Guided paths. Smart review.',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 22),
-            const SizedBox(
-              width: 180,
-              child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(999)),
-                child: LinearProgressIndicator(minHeight: 8),
+            if (failed)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 28),
+                child: Column(
+                  children: [
+                    Text(
+                      state.errorMessage!,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    FilledButton.icon(
+                      onPressed: _start,
+                      icon: const Icon(Icons.refresh_rounded),
+                      label: const Text('Retry'),
+                    ),
+                  ],
+                ),
+              )
+            else
+              SizedBox(
+                width: 180,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(999)),
+                  child: TweenAnimationBuilder<double>(
+                    tween: Tween<double>(begin: 0, end: 1),
+                    duration: const Duration(milliseconds: 1000),
+                    curve: Curves.easeOutCubic,
+                    builder: (context, value, _) =>
+                        LinearProgressIndicator(value: value, minHeight: 8),
+                  ),
+                ),
               ),
-            ),
           ],
         ),
       ),

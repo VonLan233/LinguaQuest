@@ -54,25 +54,39 @@ class ProfileScreen extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: 22),
-        const SectionHeader(title: 'Settings and support'),
+        if (state.learningPlan != null) ...[
+          QuestCard(
+            padding: const EdgeInsets.all(14),
+            child: ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: const Icon(Icons.event_available_outlined),
+              title: const Text('Learning Plan'),
+              subtitle: Text(
+                '${state.learningPlan!.dailyWords} words/day · ${state.learningPlan!.remainingWords} words planned',
+              ),
+            ),
+          ),
+          const SizedBox(height: 22),
+        ],
+        const SectionHeader(title: 'Settings and Support'),
         const SizedBox(height: 10),
         _ProfileAction(
           icon: Icons.flag_outlined,
-          title: 'Learning target',
+          title: 'Learning Target',
           subtitle: user?.targetExam ?? 'Daily English',
           route: '/goal-setup',
         ),
         const _ProfileAction(
           icon: Icons.notifications_outlined,
-          title: 'Daily reminder',
-          subtitle: '20:00, local notification placeholder',
-          route: '/settings',
+          title: 'Daily Reminder',
+          subtitle: 'Choose reminder time and status',
+          route: '/settings/reminder',
         ),
         const _ProfileAction(
           icon: Icons.dark_mode_outlined,
-          title: 'Dark mode',
-          subtitle: 'Available through system theme',
-          route: '/settings',
+          title: 'Dark Mode',
+          subtitle: 'System, light, or dark theme',
+          route: '/settings/theme',
         ),
         const _ProfileAction(
           icon: Icons.help_outline,

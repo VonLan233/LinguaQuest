@@ -14,8 +14,8 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController(text: 'learner@lingua.quest');
-  final _passwordController = TextEditingController(text: 'password123');
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   void dispose() {
@@ -31,27 +31,33 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       appBar: AppBar(title: const Text('Log in')),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const GradientHeroCard(
-                  title: 'Welcome back',
-                  subtitle:
-                      'Jump back into your path, protect your streak, and clear due cards.',
-                  icon: Icons.login_rounded,
-                  badge: 'Resume learning',
+                Text(
+                  'Welcome Back',
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 6),
+                Text(
+                  'Continue your learning path and clear today’s review cards.',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 16),
                 QuestCard(
+                  padding: const EdgeInsets.all(16),
                   child: Column(
                     children: [
                       TextFormField(
                         controller: _emailController,
                         decoration: const InputDecoration(
                           labelText: 'Email',
+                          hintText: 'Enter your email',
                           prefixIcon: Icon(Icons.mail_outline),
                         ),
                         keyboardType: TextInputType.emailAddress,
@@ -62,6 +68,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         controller: _passwordController,
                         decoration: const InputDecoration(
                           labelText: 'Password',
+                          hintText: 'Enter your password',
                           prefixIcon: Icon(Icons.lock_outline),
                         ),
                         obscureText: true,

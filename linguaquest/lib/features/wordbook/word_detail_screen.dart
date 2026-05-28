@@ -20,6 +20,8 @@ class WordDetailScreen extends ConsumerWidget {
     if (word == null) {
       return const Scaffold(body: Center(child: Text('Word not found')));
     }
+    final state = ref.watch(appControllerProvider);
+    final canReview = word.isDue(DateTime.now()) && !state.isLoading;
 
     return Scaffold(
       appBar: AppBar(
@@ -92,17 +94,53 @@ class WordDetailScreen extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 20),
+            QuestCard(
+              padding: const EdgeInsets.all(14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Review Stats',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _StatLine(
+                          label: 'Remembered',
+                          value: '${word.correctCount}',
+                        ),
+                      ),
+                      Expanded(
+                        child: _StatLine(
+                          label: 'Missed',
+                          value: '${word.wrongCount}',
+                        ),
+                      ),
+                      Expanded(
+                        child: _StatLine(
+                          label: 'Mastery',
+                          value: '${word.masteryLevel}/5',
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
             FilledButton.icon(
-              onPressed: () => ref
-                  .read(appControllerProvider.notifier)
-                  .reviewWord(word.id, true),
+              onPressed: canReview
+                  ? () => _review(context, ref, word.id, isCorrect: true)
+                  : null,
               icon: const Icon(Icons.check_circle_outline),
               label: const Text('Mark remembered'),
             ),
             OutlinedButton.icon(
-              onPressed: () => ref
-                  .read(appControllerProvider.notifier)
-                  .reviewWord(word.id, false),
+              onPressed: canReview
+                  ? () => _review(context, ref, word.id, isCorrect: false)
+                  : null,
               icon: const Icon(Icons.replay),
               label: const Text('Practice again soon'),
             ),
@@ -117,5 +155,45 @@ class WordDetailScreen extends ConsumerWidget {
       if (word.id == wordId) return word;
     }
     return null;
+  }
+
+  Future<void> _review(
+    BuildContext context,
+    WidgetRef ref,
+    String id, {
+    required bool isCorrect,
+  }) async {
+    final succeeded = await ref
+        .read(appControllerProvider.notifier)
+        .reviewWord(id, isCorrect);
+    if (!context.mounted) return;
+    final message = succeeded
+        ? isCorrect
+              ? 'Marked as remembered'
+              : 'Scheduled for practice'
+        : ref.read(appControllerProvider).errorMessage ??
+              'Could not update this card';
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+}
+
+class _StatLine extends StatelessWidget {
+  const _StatLine({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(value, style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 2),
+        Text(label, style: Theme.of(context).textTheme.bodySmall),
+      ],
+    );
   }
 }
