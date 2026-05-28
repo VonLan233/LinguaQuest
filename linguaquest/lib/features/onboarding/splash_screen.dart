@@ -108,7 +108,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                 child: ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(999)),
                   child: TweenAnimationBuilder<double>(
-                    tween: Tween(begin: 0, end: 1),
+                    tween: Tween<double>(begin: 0, end: 1),
                     duration: const Duration(milliseconds: 1000),
                     curve: Curves.easeOutCubic,
                     builder: (context, value, _) =>
