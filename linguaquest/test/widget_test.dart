@@ -187,6 +187,42 @@ void main() {
     expect(tester.getSize(visibleAdvanced), advancedSize);
   });
 
+  test('deadline picker initial date stays inside selectable bounds', () {
+    final now = DateTime(2026, 5, 25, 15, 45);
+    final today = DateTime(2026, 5, 25);
+    final fallback = DateTime(2026, 6, 24);
+    final lastDate = DateTime(2027, 5, 25);
+
+    expect(
+      clampDeadlinePickerInitialDate(now: now, selected: DateTime(2026, 5, 1)),
+      fallback,
+    );
+    expect(
+      clampDeadlinePickerInitialDate(
+        now: now,
+        selected: DateTime(2026, 5, 25, 23, 59),
+      ),
+      today,
+    );
+    expect(
+      clampDeadlinePickerInitialDate(now: now, selected: DateTime(2030, 1, 1)),
+      lastDate,
+    );
+    expect(clampDeadlinePickerInitialDate(now: now), fallback);
+  });
+
+  test('learning plan day count uses calendar days', () {
+    final plan = LearningPlan(
+      target: 'Daily English',
+      deadline: DateTime(2026, 5, 27, 23, 59),
+      dailyWords: 10,
+      remainingWords: 30,
+      createdAt: DateTime(2026, 5, 25, 12),
+    );
+
+    expect(plan.daysLeft(DateTime(2026, 5, 25, 23, 30)), 3);
+  });
+
   testWidgets('dark semantic surfaces keep readable contrast', (tester) async {
     late Color warmSurface;
     late Color accentSurface;
@@ -777,6 +813,83 @@ void main() {
 
     expect(find.text('Add Selected (0)'), findsOneWidget);
   });
+
+  testWidgets(
+    'mistake card importer only selects visible mistakes by default',
+    (tester) async {
+      final now = DateTime(2026, 5, 25);
+      final profile = UserProfile(
+        uid: 'visible-selection-user',
+        name: 'Vis',
+        email: 'vis@lingua.quest',
+        targetExam: 'Daily English',
+        level: 'Elementary',
+        dailyGoal: 10,
+        xp: 0,
+        streak: 0,
+        createdAt: now,
+        updatedAt: now,
+      );
+      SharedPreferences.setMockInitialValues({
+        'linguaquest.profile': jsonEncode(profile.toJson()),
+      });
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      await container.read(appControllerProvider.notifier).bootstrap();
+      final lesson = seedLessons().first;
+      final mistakes = List.generate(8, _mistakeQuestion);
+      await container
+          .read(appControllerProvider.notifier)
+          .completeLesson(
+            LessonResult(
+              lessonId: lesson.id,
+              lessonTitle: lesson.title,
+              totalQuestions: mistakes.length,
+              correctAnswers: 0,
+              xpEarned: 10,
+              mistakes: mistakes,
+              completedAt: DateTime.now(),
+            ),
+          );
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: const LinguaQuestApp(),
+        ),
+      );
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      await tester.tap(find.text('Review').last);
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(find.text('Add Mistake Cards'), 300);
+      await tester.pumpAndSettle();
+
+      expect(find.text('review-word-0'), findsOneWidget);
+      expect(find.text('review-word-5'), findsOneWidget);
+      expect(find.text('review-word-6'), findsNothing);
+      expect(find.text('Add Selected (6)'), findsOneWidget);
+
+      await tester.scrollUntilVisible(
+        find.widgetWithText(FilledButton, 'Add Selected (6)'),
+        300,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(FilledButton, 'Add Selected (6)'));
+      await tester.pumpAndSettle();
+
+      final customWords = container.read(appControllerProvider).customWords;
+      expect(
+        customWords
+            .where((word) => word.word.startsWith('review-word-'))
+            .length,
+        6,
+      );
+      expect(customWords.any((word) => word.word == 'review-word-6'), false);
+      expect(customWords.any((word) => word.word == 'review-word-7'), false);
+    },
+  );
 }
 
 double _contrastRatio(Color foreground, Color background) {
@@ -826,4 +939,29 @@ class _StaticLearningRepository implements LearningRepository {
 
   @override
   Future<void> recordStudySession(StudySession session) async {}
+}
+
+QuizQuestion _mistakeQuestion(int index) {
+  final word = Word(
+    id: 'review-word-$index',
+    word: 'review-word-$index',
+    phonetic: '/word/',
+    meaning: 'meaning $index',
+    definition: 'Definition $index',
+    partOfSpeech: 'noun',
+    exampleSentence: 'This is review word $index.',
+    exampleTranslation: '这是复习单词 $index。',
+    imageCue: '📘',
+    difficulty: 'Medium',
+    tags: const ['review'],
+  );
+  return QuizQuestion(
+    id: 'review-question-$index',
+    type: QuizQuestionType.meaningChoice,
+    prompt: 'Choose the meaning',
+    answer: word.meaning,
+    options: [word.meaning, 'wrong'],
+    explanation: 'Explanation $index',
+    word: word,
+  );
 }

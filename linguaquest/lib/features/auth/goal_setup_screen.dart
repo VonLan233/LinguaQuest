@@ -172,11 +172,16 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
 
   Future<void> _pickDeadline() async {
     final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final lastDate = today.add(const Duration(days: 365));
     final picked = await showDatePicker(
       context: context,
-      initialDate: _deadline ?? now.add(const Duration(days: 30)),
-      firstDate: DateTime(now.year, now.month, now.day),
-      lastDate: now.add(const Duration(days: 365)),
+      initialDate: clampDeadlinePickerInitialDate(
+        selected: _deadline,
+        now: now,
+      ),
+      firstDate: today,
+      lastDate: lastDate,
     );
     if (picked == null) return;
     setState(() => _deadline = picked);
@@ -191,12 +196,26 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
         .fold(0, (total, lesson) => total + lesson.words.length);
     final now = DateTime.now();
     final deadline = _deadline ?? now;
-    final today = DateTime(now.year, now.month, now.day);
-    final targetDay = DateTime(deadline.year, deadline.month, deadline.day);
+    final today = DateTime.utc(now.year, now.month, now.day);
+    final targetDay = DateTime.utc(deadline.year, deadline.month, deadline.day);
     final days = targetDay.difference(today).inDays.clamp(0, 9999).toInt() + 1;
     if (remainingWords == 0) return 1;
     return ((remainingWords + days - 1) ~/ days).clamp(1, 999).toInt();
   }
+}
+
+DateTime clampDeadlinePickerInitialDate({
+  required DateTime now,
+  DateTime? selected,
+}) {
+  final today = DateTime(now.year, now.month, now.day);
+  final lastDate = today.add(const Duration(days: 365));
+  if (selected == null) return today.add(const Duration(days: 30));
+
+  final selectedDay = DateTime(selected.year, selected.month, selected.day);
+  if (selectedDay.isBefore(today)) return today.add(const Duration(days: 30));
+  if (selectedDay.isAfter(lastDate)) return lastDate;
+  return selectedDay;
 }
 
 class _ChoiceSection<T> extends StatelessWidget {

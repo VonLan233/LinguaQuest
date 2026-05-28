@@ -280,18 +280,21 @@ class _MistakeWordImporter extends ConsumerStatefulWidget {
 }
 
 class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
+  static const _visibleMistakeLimit = 6;
+
   late Set<String> _selectedIds;
 
   @override
   void initState() {
     super.initState();
-    _selectedIds = widget.mistakes.map((mistake) => mistake.word.id).toSet();
+    _selectedIds = _visibleMistakeIds();
   }
 
   @override
   void didUpdateWidget(covariant _MistakeWordImporter oldWidget) {
     super.didUpdateWidget(oldWidget);
     final currentIds = widget.mistakes
+        .take(_visibleMistakeLimit)
         .map((mistake) => mistake.word.id)
         .toSet();
     _selectedIds = _selectedIds.intersection(currentIds);
@@ -300,16 +303,17 @@ class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(appControllerProvider);
+    final visibleMistakes = widget.mistakes.take(_visibleMistakeLimit).toList();
     final existingWords = state.customWords
         .map((word) => word.word.trim().toLowerCase())
         .toSet();
-    final selectableCount = widget.mistakes
+    final selectableCount = visibleMistakes
         .where(
           (mistake) =>
               !existingWords.contains(mistake.word.word.trim().toLowerCase()),
         )
         .length;
-    final selectedAddableCount = widget.mistakes
+    final selectedAddableCount = visibleMistakes
         .where(
           (mistake) =>
               _selectedIds.contains(mistake.word.id) &&
@@ -335,7 +339,7 @@ class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
                 : 'Select wrong words to add directly to your review cards.',
           ),
           const SizedBox(height: 10),
-          for (final mistake in widget.mistakes.take(6)) ...[
+          for (final mistake in visibleMistakes) ...[
             Builder(
               builder: (context) {
                 final exists = existingWords.contains(
@@ -378,11 +382,20 @@ class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
   Future<void> _addSelected() async {
     final added = await ref
         .read(appControllerProvider.notifier)
-        .addMistakesToCustomWords(_selectedIds);
+        .addMistakesToCustomWords(
+          _selectedIds.intersection(_visibleMistakeIds()),
+        );
     if (!mounted) return;
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text('$added mistake cards added')));
     if (added > 0) setState(() => _selectedIds.clear());
+  }
+
+  Set<String> _visibleMistakeIds() {
+    return widget.mistakes
+        .take(_visibleMistakeLimit)
+        .map((mistake) => mistake.word.id)
+        .toSet();
   }
 }
