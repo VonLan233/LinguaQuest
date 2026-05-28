@@ -5,8 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:linguaquest/app.dart';
 import 'package:linguaquest/core/state/app_controller.dart';
+import 'package:linguaquest/core/state/app_state.dart';
 import 'package:linguaquest/core/theme/app_theme.dart';
 import 'package:linguaquest/core/widgets/quest_card.dart';
+import 'package:linguaquest/data/models/lesson_result.dart';
 import 'package:linguaquest/data/models/user_profile.dart';
 import 'package:linguaquest/data/repositories/auth_repository.dart';
 import 'package:linguaquest/data/seed/seed_lessons.dart';
@@ -81,12 +83,53 @@ void main() {
     await tester.tap(find.widgetWithText(OutlinedButton, 'Log in'));
     await tester.pumpAndSettle();
 
+    expect(find.text('learner@lingua.quest'), findsNothing);
+    await tester.enterText(
+      find.byType(TextFormField).at(0),
+      'learner@lingua.quest',
+    );
+    await tester.enterText(find.byType(TextFormField).at(1), 'password123');
+    await tester.pumpAndSettle();
+
     await tester.tap(find.widgetWithText(FilledButton, 'Log in'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Welcome back'), findsOneWidget);
+    expect(find.text('Welcome Back'), findsOneWidget);
     expect(find.textContaining('login failed'), findsOneWidget);
     expect(find.text('Today’s learning pack'), findsNothing);
+  });
+
+  testWidgets('main shell supports direct horizontal tab swiping', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'swipe-user',
+      name: 'Ari',
+      email: 'ari@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+
+    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.fling(
+      find.text('Today’s learning pack'),
+      const Offset(-500, 0),
+      1000,
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Learning Path'), findsOneWidget);
   });
 
   testWidgets('dark theme keeps headline text readable', (tester) async {
@@ -245,14 +288,22 @@ void main() {
     await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(find.text('Go to review center'), 300);
+    await tester.scrollUntilVisible(find.text('Back to learning path'), 300);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Go to review center'));
+    await tester.tap(find.text('Back to learning path'));
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(find.text('Travel Basics'), 300);
+    await tester.pumpAndSettle();
+    expect(find.text('Travel Basics'), findsOneWidget);
+    expect(find.text('Current'), findsWidgets);
+
+    await tester.tap(find.text('Review').last);
     await tester.pumpAndSettle();
 
     await tester.scrollUntilVisible(find.text('commute'), 300);
     await tester.pumpAndSettle();
-    expect(find.text('commute'), findsOneWidget);
+    expect(find.text('commute'), findsWidgets);
     expect(find.text('Lesson'), findsWidgets);
   });
 
@@ -327,6 +378,196 @@ void main() {
 
     expect(find.text('Start quiz'), findsWidgets);
   });
+
+  test('theme and reminder settings persist locally', () async {
+    SharedPreferences.setMockInitialValues({});
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    await container
+        .read(appControllerProvider.notifier)
+        .updateThemeMode(ThemeMode.dark);
+    await container
+        .read(appControllerProvider.notifier)
+        .updateReminderSettings(
+          const DailyReminderSettings(enabled: false, hour: 7, minute: 30),
+        );
+
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getString('linguaquest.themeMode'), 'dark');
+    expect(
+      prefs.getString('linguaquest.reminderSettings'),
+      contains('"hour":7'),
+    );
+    expect(container.read(appControllerProvider).themeMode, ThemeMode.dark);
+    expect(
+      container.read(appControllerProvider).reminderSettings.enabled,
+      false,
+    );
+  });
+
+  test('mock register rejects duplicate email', () async {
+    SharedPreferences.setMockInitialValues({});
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    final controller = container.read(appControllerProvider.notifier);
+    expect(
+      await controller.register('Ava', 'ava@lingua.quest', 'password123'),
+      true,
+    );
+    expect(
+      await controller.register('Ava', 'ava@lingua.quest', 'password123'),
+      false,
+    );
+    expect(
+      container.read(appControllerProvider).errorMessage,
+      'This email is already registered. Try logging in instead.',
+    );
+  });
+
+  test('deadline planning saves daily words into the profile', () async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'plan-user',
+      name: 'Pia',
+      email: 'pia@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      createdAt: now,
+      updatedAt: now,
+      xp: 0,
+      streak: 0,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    final deadline = DateTime.now().add(const Duration(days: 9));
+    final succeeded = await container
+        .read(appControllerProvider.notifier)
+        .completeGoalSetup(
+          targetExam: 'IELTS',
+          level: 'Intermediate',
+          dailyGoal: 10,
+          deadline: deadline,
+        );
+
+    final state = container.read(appControllerProvider);
+    expect(succeeded, true);
+    expect(state.learningPlan, isNotNull);
+    expect(state.user?.dailyGoal, state.learningPlan?.dailyWords);
+    expect(state.learningPlan?.dailyWords, greaterThan(0));
+  });
+
+  test('remembered words cannot be counted twice on the same day', () async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'review-user',
+      name: 'Rae',
+      email: 'rae@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      createdAt: now,
+      updatedAt: now,
+      xp: 0,
+      streak: 0,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    final dueWord = container.read(appControllerProvider).dueWords.first;
+
+    expect(
+      await container
+          .read(appControllerProvider.notifier)
+          .reviewWord(dueWord.id, true),
+      true,
+    );
+    final reviewedWord = container
+        .read(appControllerProvider)
+        .customWords
+        .firstWhere((word) => word.id == dueWord.id);
+    expect(reviewedWord.correctCount, dueWord.correctCount + 1);
+
+    expect(
+      await container
+          .read(appControllerProvider.notifier)
+          .reviewWord(dueWord.id, true),
+      false,
+    );
+    final afterDuplicate = container
+        .read(appControllerProvider)
+        .customWords
+        .firstWhere((word) => word.id == dueWord.id);
+    expect(afterDuplicate.correctCount, reviewedWord.correctCount);
+  });
+
+  test(
+    'mistake words can be converted into custom cards in one action',
+    () async {
+      final now = DateTime(2026, 5, 25);
+      final profile = UserProfile(
+        uid: 'cards-user',
+        name: 'Kai',
+        email: 'kai@lingua.quest',
+        targetExam: 'Daily English',
+        level: 'Elementary',
+        dailyGoal: 10,
+        createdAt: now,
+        updatedAt: now,
+        xp: 0,
+        streak: 0,
+      );
+      SharedPreferences.setMockInitialValues({
+        'linguaquest.profile': jsonEncode(profile.toJson()),
+      });
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      await container.read(appControllerProvider.notifier).bootstrap();
+      final lesson = seedLessons().first;
+      final mistake = lesson.questions[1];
+      final result = LessonResult(
+        lessonId: lesson.id,
+        lessonTitle: lesson.title,
+        totalQuestions: lesson.questions.length,
+        correctAnswers: 2,
+        xpEarned: 10,
+        mistakes: [mistake],
+        completedAt: DateTime.now(),
+      );
+
+      expect(
+        await container
+            .read(appControllerProvider.notifier)
+            .completeLesson(result),
+        true,
+      );
+      final added = await container
+          .read(appControllerProvider.notifier)
+          .addMistakesToCustomWords({mistake.word.id});
+
+      expect(added, 1);
+      expect(
+        container
+            .read(appControllerProvider)
+            .customWords
+            .any((word) => word.word == mistake.word.word),
+        true,
+      );
+    },
+  );
 }
 
 double _contrastRatio(Color foreground, Color background) {

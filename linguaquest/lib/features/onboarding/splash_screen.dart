@@ -12,11 +12,31 @@ class SplashScreen extends ConsumerStatefulWidget {
   ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends ConsumerState<SplashScreen> {
+class _SplashScreenState extends ConsumerState<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _fade;
+  late final Animation<double> _scale;
+
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    )..forward();
+    _fade = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
+    _scale = Tween<double>(
+      begin: 0.86,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
     Future.microtask(_start);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   Future<void> _start() async {
@@ -35,25 +55,38 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const _LogoMark(),
+            ScaleTransition(scale: _scale, child: const _LogoMark()),
             const SizedBox(height: 20),
-            Text(
-              'LinguaQuest',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Image cards. Guided paths. Smart review.',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+            FadeTransition(
+              opacity: _fade,
+              child: Column(
+                children: [
+                  Text(
+                    'LinguaQuest',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Image cards. Guided paths. Smart review.',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 22),
-            const SizedBox(
+            SizedBox(
               width: 180,
               child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(999)),
-                child: LinearProgressIndicator(minHeight: 8),
+                borderRadius: const BorderRadius.all(Radius.circular(999)),
+                child: TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 0, end: 1),
+                  duration: const Duration(milliseconds: 1000),
+                  curve: Curves.easeOutCubic,
+                  builder: (context, value, _) =>
+                      LinearProgressIndicator(value: value, minHeight: 8),
+                ),
               ),
             ),
           ],

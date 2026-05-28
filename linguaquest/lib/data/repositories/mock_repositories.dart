@@ -33,11 +33,16 @@ class MockAuthRepository implements AuthRepository {
     required String email,
     required String password,
   }) async {
+    final normalizedEmail = email.trim().toLowerCase();
+    final existing = await loadSession();
+    if (existing != null && existing.email == normalizedEmail) {
+      throw StateError('email already registered');
+    }
     final now = DateTime.now();
     final profile = UserProfile(
       uid: 'user-${now.microsecondsSinceEpoch}',
       name: name.trim(),
-      email: email.trim().toLowerCase(),
+      email: normalizedEmail,
       targetExam: 'Daily English',
       level: 'Elementary',
       dailyGoal: 10,

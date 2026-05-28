@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/utils/date_formatting.dart';
 import '../../core/widgets/quest_card.dart';
 
 class GoalSetupScreen extends ConsumerStatefulWidget {
@@ -17,6 +18,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
   String _target = 'Daily English';
   String _level = 'Elementary';
   int _dailyGoal = 10;
+  DateTime? _deadline;
 
   static const targets = [
     'CET-4',
@@ -32,8 +34,12 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(appControllerProvider);
+    final plannedDailyWords = _deadline == null
+        ? null
+        : _dailyWordsForDeadline(state.completedLessonIds);
     return Scaffold(
-      appBar: AppBar(title: const Text('Goal setup')),
+      appBar: AppBar(title: const Text('Goal Setup')),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
@@ -53,7 +59,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
                   ),
                   const SizedBox(width: 8),
                   PillLabel(
-                    label: '$_dailyGoal/day',
+                    label: '${plannedDailyWords ?? _dailyGoal}/day',
                     icon: Icons.today_outlined,
                     color: Colors.white,
                   ),
@@ -84,15 +90,55 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Daily goal',
+                    'Daily Goal',
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 8),
                   _ChoiceGrid<int>(
                     values: goals,
                     selected: _dailyGoal,
-                    labelFor: (goal) => '$goal min',
+                    labelFor: (goal) => '$goal words',
                     onSelected: (goal) => setState(() => _dailyGoal = goal),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            QuestCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Plan by Deadline',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    _deadline == null
+                        ? 'Choose a target date to calculate words per day.'
+                        : '${formatShortDate(_deadline!)} · ${plannedDailyWords ?? _dailyGoal} words/day',
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: _pickDeadline,
+                          icon: const Icon(Icons.event_outlined),
+                          label: Text(
+                            _deadline == null ? 'Choose Date' : 'Change Date',
+                          ),
+                        ),
+                      ),
+                      if (_deadline != null) ...[
+                        const SizedBox(width: 10),
+                        IconButton.filledTonal(
+                          tooltip: 'Clear date plan',
+                          onPressed: () => setState(() => _deadline = null),
+                          icon: const Icon(Icons.close_rounded),
+                        ),
+                      ],
+                    ],
                   ),
                 ],
               ),
@@ -116,10 +162,37 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
           targetExam: _target,
           level: _level,
           dailyGoal: _dailyGoal,
+          deadline: _deadline,
         );
     if (!mounted) return;
     if (!succeeded) return;
     context.go('/home');
+  }
+
+  Future<void> _pickDeadline() async {
+    final now = DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _deadline ?? now.add(const Duration(days: 30)),
+      firstDate: DateTime(now.year, now.month, now.day),
+      lastDate: now.add(const Duration(days: 365)),
+    );
+    if (picked == null) return;
+    setState(() => _deadline = picked);
+  }
+
+  int _dailyWordsForDeadline(Set<String> completedLessonIds) {
+    final lessons = ref.read(appControllerProvider).lessons;
+    final remainingWords = lessons
+        .where((lesson) => !completedLessonIds.contains(lesson.id))
+        .fold(0, (total, lesson) => total + lesson.words.length);
+    final now = DateTime.now();
+    final deadline = _deadline ?? now;
+    final today = DateTime(now.year, now.month, now.day);
+    final targetDay = DateTime(deadline.year, deadline.month, deadline.day);
+    final days = targetDay.difference(today).inDays.clamp(0, 9999).toInt() + 1;
+    if (remainingWords == 0) return 1;
+    return ((remainingWords + days - 1) ~/ days).clamp(1, 999).toInt();
   }
 }
 

@@ -18,7 +18,7 @@ class LearningPathScreen extends ConsumerWidget {
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
       children: [
         SectionHeader(
-          title: 'Learning path',
+          title: 'Learning Path',
           subtitle:
               'Follow the path. No planning, just one small win at a time.',
           trailing: IconButton(
@@ -61,11 +61,14 @@ class _PathNode extends StatelessWidget {
   Widget build(BuildContext context) {
     final locked = lesson.status == 'locked';
     final current = lesson.status == 'current';
+    final completed = lesson.status == 'completed';
     final Color color;
     if (locked) {
       color = Colors.blueGrey;
     } else if (current) {
       color = AppTheme.coral;
+    } else if (completed) {
+      color = Colors.green;
     } else {
       color = AppTheme.teal;
     }
@@ -128,7 +131,7 @@ class _PathNode extends StatelessWidget {
                       ),
                     ),
                     PillLabel(
-                      label: lesson.status,
+                      label: _statusLabel(lesson.status),
                       icon: locked ? Icons.lock_outline : Icons.bolt,
                       color: color,
                     ),
@@ -205,6 +208,19 @@ class _PathNode extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+String _statusLabel(String status) {
+  switch (status) {
+    case 'completed':
+      return 'Completed';
+    case 'current':
+      return 'Current';
+    case 'locked':
+      return 'Locked';
+    default:
+      return status;
   }
 }
 

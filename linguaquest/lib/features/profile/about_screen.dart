@@ -30,6 +30,27 @@ class AboutScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             const ListTile(
+              leading: Icon(Icons.flag_outlined),
+              title: Text('Project Goal'),
+              subtitle: Text(
+                'Help learners build a daily English habit through short lessons, mistake recovery, and visible progress.',
+              ),
+            ),
+            const ListTile(
+              leading: Icon(Icons.groups_outlined),
+              title: Text('Development Team'),
+              subtitle: Text(
+                'ASM2 Mobile team. Built as a product-oriented Flutter learning app prototype.',
+              ),
+            ),
+            const ListTile(
+              leading: Icon(Icons.extension_outlined),
+              title: Text('Core Experience'),
+              subtitle: Text(
+                'Goal planning, visual vocabulary, quiz practice, review scheduling, and personal word cards.',
+              ),
+            ),
+            const ListTile(
               leading: Icon(Icons.privacy_tip_outlined),
               title: Text('Privacy'),
               subtitle: Text(
