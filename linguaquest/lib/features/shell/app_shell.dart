@@ -14,7 +14,13 @@ class AppShell extends StatefulWidget {
 }
 
 class _AppShellState extends State<AppShell> {
+  static const _minimumSwipeDistance = 72.0;
+  static const _minimumFlingDistance = 36.0;
+  static const _minimumFlingVelocity = 650.0;
+  static const _pageSwipeFraction = 0.20;
+
   Offset _pageOffset = Offset.zero;
+  double _dragDeltaX = 0;
 
   @override
   void didUpdateWidget(covariant AppShell oldWidget) {
@@ -37,6 +43,10 @@ class _AppShellState extends State<AppShell> {
         bottom: false,
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
+          onHorizontalDragStart: (_) => _dragDeltaX = 0,
+          onHorizontalDragUpdate: (details) {
+            _dragDeltaX += details.primaryDelta ?? 0;
+          },
           onHorizontalDragEnd: _handleHorizontalDrag,
           child: ClipRect(
             child: AnimatedSlide(
@@ -84,8 +94,20 @@ class _AppShellState extends State<AppShell> {
 
   void _handleHorizontalDrag(DragEndDetails details) {
     final velocity = details.primaryVelocity ?? 0;
-    if (velocity.abs() < 250) return;
-    final nextIndex = velocity < 0
+    final width = MediaQuery.sizeOf(context).width;
+    final distanceThreshold = (width * _pageSwipeFraction).clamp(
+      _minimumSwipeDistance,
+      180.0,
+    );
+    final distance = _dragDeltaX.abs();
+    final isDeliberateDrag = distance >= distanceThreshold;
+    final isMeaningfulFling =
+        distance >= _minimumFlingDistance &&
+        velocity.abs() >= _minimumFlingVelocity;
+    if (!isDeliberateDrag && !isMeaningfulFling) return;
+
+    final direction = isDeliberateDrag ? _dragDeltaX : -velocity;
+    final nextIndex = direction < 0
         ? widget.selectedIndex + 1
         : widget.selectedIndex - 1;
     if (nextIndex < 0 || nextIndex >= AppShell.routes.length) return;

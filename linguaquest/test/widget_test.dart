@@ -8,11 +8,13 @@ import 'package:linguaquest/core/state/app_controller.dart';
 import 'package:linguaquest/core/state/app_state.dart';
 import 'package:linguaquest/core/theme/app_theme.dart';
 import 'package:linguaquest/core/widgets/quest_card.dart';
+import 'package:linguaquest/data/models/custom_word.dart';
 import 'package:linguaquest/data/models/lesson.dart';
 import 'package:linguaquest/data/models/lesson_result.dart';
 import 'package:linguaquest/data/models/study_session.dart';
 import 'package:linguaquest/data/models/user_profile.dart';
 import 'package:linguaquest/data/repositories/auth_repository.dart';
+import 'package:linguaquest/data/repositories/custom_word_repository.dart';
 import 'package:linguaquest/data/repositories/learning_repository.dart';
 import 'package:linguaquest/data/seed/seed_lessons.dart';
 import 'package:linguaquest/features/auth/goal_setup_screen.dart';
@@ -102,7 +104,34 @@ void main() {
     expect(find.text('Today’s learning pack'), findsNothing);
   });
 
-  testWidgets('main shell supports direct horizontal tab swiping', (
+  testWidgets('bootstrap failure can retry without restarting the app', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+    final learningRepository = _FlakyLearningRepository();
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          learningRepositoryProvider.overrideWithValue(learningRepository),
+        ],
+        child: const LinguaQuestApp(),
+      ),
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    expect(learningRepository.listAttempts, 1);
+    expect(find.textContaining('Could not start LinguaQuest'), findsOneWidget);
+    expect(find.text('Retry'), findsOneWidget);
+
+    await tester.tap(find.text('Retry'));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    expect(learningRepository.listAttempts, 2);
+    expect(find.byIcon(Icons.route_outlined), findsWidgets);
+  });
+
+  testWidgets('main shell supports deliberate horizontal tab swiping', (
     tester,
   ) async {
     final now = DateTime(2026, 5, 25);
@@ -127,8 +156,16 @@ void main() {
 
     await tester.fling(
       find.text('Today’s learning pack'),
-      const Offset(-500, 0),
+      const Offset(-24, 0),
       1000,
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Today’s learning pack'), findsOneWidget);
+
+    await tester.drag(
+      find.text('Today’s learning pack'),
+      const Offset(-260, 0),
     );
     await tester.pumpAndSettle();
 
@@ -747,6 +784,56 @@ void main() {
     },
   );
 
+  test('mistake card import creates cards concurrently', () async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'parallel-cards-user',
+      name: 'Par',
+      email: 'par@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      createdAt: now,
+      updatedAt: now,
+      xp: 0,
+      streak: 0,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final customWordRepository = _ConcurrentCustomWordRepository();
+    final container = ProviderContainer(
+      overrides: [
+        customWordRepositoryProvider.overrideWithValue(customWordRepository),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    final lesson = seedLessons().first;
+    final mistakes = List.generate(4, _mistakeQuestion);
+    await container
+        .read(appControllerProvider.notifier)
+        .completeLesson(
+          LessonResult(
+            lessonId: lesson.id,
+            lessonTitle: lesson.title,
+            totalQuestions: mistakes.length,
+            correctAnswers: 0,
+            xpEarned: 10,
+            mistakes: mistakes,
+            completedAt: DateTime.now(),
+          ),
+        );
+
+    final added = await container
+        .read(appControllerProvider.notifier)
+        .addMistakesToCustomWords(mistakes.map((item) => item.word.id).toSet());
+
+    expect(added, 4);
+    expect(customWordRepository.maxConcurrentCreates, greaterThan(1));
+  });
+
   testWidgets('mistake card importer preserves an empty manual selection', (
     tester,
   ) async {
@@ -939,6 +1026,59 @@ class _StaticLearningRepository implements LearningRepository {
 
   @override
   Future<void> recordStudySession(StudySession session) async {}
+}
+
+class _FlakyLearningRepository implements LearningRepository {
+  int listAttempts = 0;
+
+  @override
+  Future<List<Lesson>> listLessons() async {
+    listAttempts++;
+    if (listAttempts == 1) {
+      throw Exception('temporary catalog failure');
+    }
+    return seedLessons();
+  }
+
+  @override
+  Future<void> recordStudySession(StudySession session) async {}
+}
+
+class _ConcurrentCustomWordRepository implements CustomWordRepository {
+  final List<CustomWord> words = [];
+  int _activeCreates = 0;
+  int maxConcurrentCreates = 0;
+
+  @override
+  Future<List<CustomWord>> list(String uid) async => words;
+
+  @override
+  Future<CustomWord> create(CustomWord word) async {
+    _activeCreates++;
+    if (_activeCreates > maxConcurrentCreates) {
+      maxConcurrentCreates = _activeCreates;
+    }
+    await Future<void>.delayed(const Duration(milliseconds: 10));
+    words.add(word);
+    _activeCreates--;
+    return word;
+  }
+
+  @override
+  Future<void> delete(String uid, String id) async {
+    words.removeWhere((word) => word.uid == uid && word.id == id);
+  }
+
+  @override
+  Future<CustomWord> update(CustomWord word) async {
+    final index = words.indexWhere((item) => item.id == word.id);
+    if (index == -1) {
+      words.add(word);
+    } else {
+      words[index] = word;
+    }
+    return word;
+  }
 }
 
 QuizQuestion _mistakeQuestion(int index) {

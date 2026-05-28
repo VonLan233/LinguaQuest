@@ -114,7 +114,7 @@ class AppController extends Notifier<AppState> {
       );
     } catch (error) {
       state = state.copyWith(
-        isBootstrapped: true,
+        isBootstrapped: false,
         isLoading: false,
         errorMessage: 'Could not start LinguaQuest: ${_friendlyError(error)}',
       );
@@ -354,28 +354,32 @@ class AppController extends Notifier<AppState> {
       final existingWords = state.customWords
           .map((word) => word.word.trim().toLowerCase())
           .toSet();
-      final created = <CustomWord>[];
-      for (final mistake in mistakes) {
+      final createFutures = <Future<CustomWord>>[];
+      final createdAt = DateTime.now().microsecondsSinceEpoch;
+      for (var index = 0; index < mistakes.length; index++) {
+        final mistake = mistakes[index];
         final word = mistake.word;
         final normalized = word.word.trim().toLowerCase();
         if (!wordIds.contains(word.id) || existingWords.contains(normalized)) {
           continue;
         }
-        final customWord = await _customWordRepository.create(
-          CustomWord.create(
-            id: 'mistake-${word.id}-${DateTime.now().microsecondsSinceEpoch}',
-            uid: user.uid,
-            word: word.word,
-            meaning: word.meaning,
-            exampleSentence: word.exampleSentence,
-            note: '${word.definition}\n${mistake.explanation}',
-            tag: word.tags.isEmpty ? 'mistake' : word.tags.first,
-            difficulty: word.difficulty,
+        existingWords.add(normalized);
+        createFutures.add(
+          _customWordRepository.create(
+            CustomWord.create(
+              id: 'mistake-${word.id}-${createdAt + index}',
+              uid: user.uid,
+              word: word.word,
+              meaning: word.meaning,
+              exampleSentence: word.exampleSentence,
+              note: '${word.definition}\n${mistake.explanation}',
+              tag: word.tags.isEmpty ? 'mistake' : word.tags.first,
+              difficulty: word.difficulty,
+            ),
           ),
         );
-        created.add(customWord);
-        existingWords.add(normalized);
       }
+      final created = await Future.wait(createFutures);
       state = state.copyWith(
         isLoading: false,
         customWords: [...created, ...state.customWords],

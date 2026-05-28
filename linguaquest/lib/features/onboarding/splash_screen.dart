@@ -43,6 +43,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     await ref.read(appControllerProvider.notifier).bootstrap();
     if (!mounted) return;
     final state = ref.read(appControllerProvider);
+    if (!state.isBootstrapped && state.errorMessage != null) return;
     await Future<void>.delayed(const Duration(milliseconds: 500));
     if (!mounted) return;
     context.go(state.isAuthenticated ? '/home' : '/onboarding');
@@ -50,6 +51,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(appControllerProvider);
+    final failed =
+        !state.isLoading && !state.isBootstrapped && state.errorMessage != null;
+
     return Scaffold(
       body: Center(
         child: Column(
@@ -76,19 +81,41 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               ),
             ),
             const SizedBox(height: 22),
-            SizedBox(
-              width: 180,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(999)),
-                child: TweenAnimationBuilder<double>(
-                  tween: Tween(begin: 0, end: 1),
-                  duration: const Duration(milliseconds: 1000),
-                  curve: Curves.easeOutCubic,
-                  builder: (context, value, _) =>
-                      LinearProgressIndicator(value: value, minHeight: 8),
+            if (failed)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 28),
+                child: Column(
+                  children: [
+                    Text(
+                      state.errorMessage!,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    FilledButton.icon(
+                      onPressed: _start,
+                      icon: const Icon(Icons.refresh_rounded),
+                      label: const Text('Retry'),
+                    ),
+                  ],
+                ),
+              )
+            else
+              SizedBox(
+                width: 180,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(999)),
+                  child: TweenAnimationBuilder<double>(
+                    tween: Tween(begin: 0, end: 1),
+                    duration: const Duration(milliseconds: 1000),
+                    curve: Curves.easeOutCubic,
+                    builder: (context, value, _) =>
+                        LinearProgressIndicator(value: value, minHeight: 8),
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),
