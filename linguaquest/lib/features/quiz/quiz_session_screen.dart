@@ -20,6 +20,7 @@ class QuizSessionScreen extends ConsumerStatefulWidget {
 class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
   final _textController = TextEditingController();
   final List<QuizQuestion> _mistakes = [];
+  final Set<String> _mistakeQuestionIds = {};
   int _index = 0;
   int _correct = 0;
   String? _selected;
@@ -163,7 +164,13 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
                         ? Icons.arrow_forward_rounded
                         : Icons.check_rounded,
                   ),
-                  label: Text(_checked ? 'Continue' : 'Check'),
+                  label: Text(
+                    _checked
+                        ? _lastCorrect
+                              ? 'Continue'
+                              : 'Try again'
+                        : 'Check',
+                  ),
                 ),
               ],
             ),
@@ -242,9 +249,18 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
         _lastCorrect = isCorrect;
         if (isCorrect) {
           _correct++;
-        } else {
+        } else if (_mistakeQuestionIds.add(question.id)) {
           _mistakes.add(question);
         }
+      });
+      return;
+    }
+
+    if (!_lastCorrect) {
+      setState(() {
+        _checked = false;
+        _selected = null;
+        _textController.clear();
       });
       return;
     }
@@ -328,28 +344,77 @@ class _QuestionInput extends StatelessWidget {
                   splashFactory: checked ? NoSplash.splashFactory : null,
                   overlayColor: checked ? Colors.transparent : null,
                   enabledMouseCursor: checked ? SystemMouseCursors.basic : null,
-                  backgroundColor: selected == option
-                      ? AppTheme.selectedSurface(context)
-                      : Theme.of(context).colorScheme.surface,
-                  foregroundColor: Theme.of(context).colorScheme.onSurface,
+                  backgroundColor: _optionBackground(context, option),
+                  foregroundColor: _optionForeground(context, option),
                   side: BorderSide(
-                    color: selected == option
-                        ? AppTheme.teal
-                        : Theme.of(context).colorScheme.outlineVariant,
-                    width: selected == option ? 2 : 1,
+                    color: _optionBorder(context, option),
+                    width: selected == option || _isCorrectOption(option)
+                        ? 2
+                        : 1,
                   ),
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.all(18),
                 ),
-                child: Text(
-                  option,
-                  style: const TextStyle(fontWeight: FontWeight.w900),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        option,
+                        style: const TextStyle(fontWeight: FontWeight.w900),
+                      ),
+                    ),
+                    if (checked && selected == option)
+                      Icon(
+                        _isCorrectOption(option)
+                            ? Icons.check_circle_outline
+                            : Icons.cancel_outlined,
+                      ),
+                    if (checked &&
+                        selected != option &&
+                        _isCorrectOption(option))
+                      const Icon(Icons.check_circle_outline),
+                  ],
                 ),
               ),
             ),
           ),
       ],
     );
+  }
+
+  bool _isCorrectOption(String option) {
+    return option.toLowerCase() == question.answer.toLowerCase();
+  }
+
+  Color _optionBackground(BuildContext context, String option) {
+    if (!checked) {
+      return selected == option
+          ? AppTheme.selectedSurface(context)
+          : Theme.of(context).colorScheme.surface;
+    }
+    if (_isCorrectOption(option)) return Colors.green.withValues(alpha: 0.12);
+    if (selected == option) {
+      return Theme.of(context).colorScheme.error.withValues(alpha: 0.12);
+    }
+    return Theme.of(context).colorScheme.surface;
+  }
+
+  Color _optionForeground(BuildContext context, String option) {
+    if (!checked) return Theme.of(context).colorScheme.onSurface;
+    if (_isCorrectOption(option)) return Colors.green.shade700;
+    if (selected == option) return Theme.of(context).colorScheme.error;
+    return Theme.of(context).colorScheme.onSurface;
+  }
+
+  Color _optionBorder(BuildContext context, String option) {
+    if (!checked) {
+      return selected == option
+          ? AppTheme.teal
+          : Theme.of(context).colorScheme.outlineVariant;
+    }
+    if (_isCorrectOption(option)) return Colors.green;
+    if (selected == option) return Theme.of(context).colorScheme.error;
+    return Theme.of(context).colorScheme.outlineVariant;
   }
 }
 
