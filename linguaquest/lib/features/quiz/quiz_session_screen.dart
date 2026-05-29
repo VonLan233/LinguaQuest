@@ -248,7 +248,9 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
         _checked = true;
         _lastCorrect = isCorrect;
         if (isCorrect) {
-          _correct++;
+          if (!_mistakeQuestionIds.contains(question.id)) {
+            _correct++;
+          }
         } else if (_mistakeQuestionIds.add(question.id)) {
           _mistakes.add(question);
         }

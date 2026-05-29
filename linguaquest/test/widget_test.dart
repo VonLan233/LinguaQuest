@@ -402,6 +402,11 @@ void main() {
     await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();
 
+    expect(
+      find.text('2/3 correct · 13 XP earned · mistakes moved into review.'),
+      findsOneWidget,
+    );
+
     await tester.scrollUntilVisible(
       find.text('Go to review center'),
       300,
