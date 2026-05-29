@@ -7,7 +7,13 @@ class AppShell extends StatefulWidget {
   final int selectedIndex;
   final Widget child;
 
-  static const routes = ['/home', '/learn', '/review', '/quest', '/profile'];
+  static const routes = [
+    '/home',
+    '/training',
+    '/ai-learning',
+    '/discover',
+    '/profile',
+  ];
 
   @override
   State<AppShell> createState() => _AppShellState();
@@ -65,27 +71,27 @@ class _AppShellState extends State<AppShell> {
           NavigationDestination(
             icon: Icon(Icons.home_outlined),
             selectedIcon: Icon(Icons.home_rounded),
-            label: 'Home',
+            label: '首页',
           ),
           NavigationDestination(
-            icon: Icon(Icons.route_outlined),
-            selectedIcon: Icon(Icons.route_rounded),
-            label: 'Learn',
+            icon: Icon(Icons.sports_esports_outlined),
+            selectedIcon: Icon(Icons.sports_esports_rounded),
+            label: '训练场',
           ),
           NavigationDestination(
-            icon: Icon(Icons.replay_outlined),
-            selectedIcon: Icon(Icons.replay_rounded),
-            label: 'Review',
+            icon: Icon(Icons.psychology_alt_outlined),
+            selectedIcon: Icon(Icons.psychology_alt_rounded),
+            label: 'AI学习',
           ),
           NavigationDestination(
-            icon: Icon(Icons.emoji_events_outlined),
-            selectedIcon: Icon(Icons.emoji_events_rounded),
-            label: 'Quest',
+            icon: Icon(Icons.explore_outlined),
+            selectedIcon: Icon(Icons.explore_rounded),
+            label: '发现',
           ),
           NavigationDestination(
             icon: Icon(Icons.person_outline),
             selectedIcon: Icon(Icons.person_rounded),
-            label: 'Profile',
+            label: '我的',
           ),
         ],
       ),
