@@ -48,7 +48,7 @@ class ProfileScreen extends ConsumerWidget {
           physics: const NeverScrollableScrollPhysics(),
           mainAxisSpacing: 10,
           crossAxisSpacing: 10,
-          childAspectRatio: 1.55,
+          childAspectRatio: 1.28,
           children: [
             MetricTile(
               label: '连续打卡',
