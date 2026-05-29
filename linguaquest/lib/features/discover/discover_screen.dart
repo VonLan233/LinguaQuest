@@ -16,6 +16,11 @@ class DiscoverScreen extends ConsumerWidget {
     final user = state.user;
     final newLearningDone = state.todayCompletedLessonIds.isNotEmpty;
     final reviewDone = state.todayReviewWordIds.isNotEmpty;
+    final reviewedMistakeToday = state.customWords.any(
+      (word) =>
+          state.todayReviewWordIds.contains(word.id) && word.wrongCount > 0,
+    );
+    final weakCleanupDone = reviewedMistakeToday && state.weakWords.isEmpty;
     final checkedInToday = DateUtils.isSameDay(
       user?.lastStudyDate,
       DateTime.now(),
@@ -81,7 +86,7 @@ class DiscoverScreen extends ConsumerWidget {
           title: '错词清理',
           condition: '今日错词再次答对',
           points: 10,
-          isDone: state.weakWords.isEmpty && state.customWords.isNotEmpty,
+          isDone: weakCleanupDone,
           onTap: () => context.push('/review'),
         ),
         const SizedBox(height: 22),

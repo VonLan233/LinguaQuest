@@ -262,7 +262,6 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
       setState(() {
         _checked = false;
         _selected = null;
-        _textController.clear();
       });
       return;
     }
@@ -394,7 +393,9 @@ class _QuestionInput extends StatelessWidget {
           ? AppTheme.selectedSurface(context)
           : Theme.of(context).colorScheme.surface;
     }
-    if (_isCorrectOption(option)) return Colors.green.withValues(alpha: 0.12);
+    if (_isCorrectOption(option)) {
+      return _successColor(context).withValues(alpha: 0.12);
+    }
     if (selected == option) {
       return Theme.of(context).colorScheme.error.withValues(alpha: 0.12);
     }
@@ -403,7 +404,7 @@ class _QuestionInput extends StatelessWidget {
 
   Color _optionForeground(BuildContext context, String option) {
     if (!checked) return Theme.of(context).colorScheme.onSurface;
-    if (_isCorrectOption(option)) return Colors.green.shade700;
+    if (_isCorrectOption(option)) return _successColor(context);
     if (selected == option) return Theme.of(context).colorScheme.error;
     return Theme.of(context).colorScheme.onSurface;
   }
@@ -414,9 +415,15 @@ class _QuestionInput extends StatelessWidget {
           ? AppTheme.teal
           : Theme.of(context).colorScheme.outlineVariant;
     }
-    if (_isCorrectOption(option)) return Colors.green;
+    if (_isCorrectOption(option)) return _successColor(context);
     if (selected == option) return Theme.of(context).colorScheme.error;
     return Theme.of(context).colorScheme.outlineVariant;
+  }
+
+  Color _successColor(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.dark
+        ? Colors.green.shade300
+        : Colors.green.shade700;
   }
 }
 
@@ -429,7 +436,9 @@ class _FeedbackPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = isCorrect
-        ? Colors.green
+        ? Theme.of(context).brightness == Brightness.dark
+              ? Colors.green.shade300
+              : Colors.green.shade700
         : Theme.of(context).colorScheme.error;
     return QuestCard(
       color: color.withValues(alpha: 0.10),

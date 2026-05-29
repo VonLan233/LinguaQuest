@@ -184,11 +184,7 @@ class CustomWord {
         .clamp(1.3, 3.0)
         .toDouble();
     return copyWith(
-      status: isCorrect
-          ? nextLevel >= 5
-                ? 'Mastered'
-                : 'Review'
-          : 'Relearning',
+      status: isCorrect ? _statusForMastery(nextLevel) : 'Relearning',
       easeFactor: nextEase,
       intervalDays: interval,
       repetitionCount: isCorrect ? repetitionCount + 1 : 0,
@@ -284,6 +280,10 @@ class CustomWord {
 
   static String _statusFromMastery(Map<String, dynamic> json) {
     final mastery = json['masteryLevel'] as int? ?? 0;
+    return _statusForMastery(mastery);
+  }
+
+  static String _statusForMastery(int mastery) {
     if (mastery >= 5) return 'Mastered';
     if (mastery >= 2) return 'Review';
     return 'Learning';
