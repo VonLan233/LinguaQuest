@@ -16,6 +16,10 @@ class DiscoverScreen extends ConsumerWidget {
     final user = state.user;
     final newLearningDone = state.todayCompletedLessonIds.isNotEmpty;
     final reviewDone = state.todayReviewWordIds.isNotEmpty;
+    final checkedInToday = DateUtils.isSameDay(
+      user?.lastStudyDate,
+      DateTime.now(),
+    );
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
       children: [
@@ -45,7 +49,7 @@ class DiscoverScreen extends ConsumerWidget {
           title: '每日签到',
           condition: '当天打开并完成一次学习动作',
           points: 5,
-          isDone: (user?.lastStudyDate != null),
+          isDone: checkedInToday,
           onTap: () => context.go('/home'),
         ),
         _RewardTaskCard(

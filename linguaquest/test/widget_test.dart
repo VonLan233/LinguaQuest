@@ -74,6 +74,36 @@ void main() {
     expect(find.text('今日词条'), findsOneWidget);
   });
 
+  testWidgets('discover check-in only counts same-day study', (tester) async {
+    final yesterday = DateTime.now().subtract(const Duration(days: 1));
+    final profile = UserProfile(
+      uid: 'discover-user',
+      name: 'Dina',
+      email: 'dina@lingua.quest',
+      targetExam: 'IELTS',
+      level: 'Intermediate',
+      dailyGoal: 12,
+      xp: 120,
+      streak: 4,
+      lastStudyDate: yesterday,
+      createdAt: yesterday,
+      updatedAt: yesterday,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+
+    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.tap(find.text('发现'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('每日签到'), findsOneWidget);
+    expect(find.text('+5'), findsOneWidget);
+    expect(find.text('已获取'), findsNothing);
+  });
+
   testWidgets('failed login stays on login screen and shows error', (
     tester,
   ) async {
