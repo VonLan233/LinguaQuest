@@ -59,15 +59,19 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    expect(find.text('Today’s learning pack'), findsOneWidget);
-    expect(find.text('Ready for Campus Starter?'), findsOneWidget);
-    expect(find.text('Home'), findsWidgets);
-    expect(find.text('Learn'), findsWidgets);
+    expect(find.text('已连续打卡 6 天'), findsOneWidget);
+    expect(find.text('IELTS · Intermediate'), findsOneWidget);
+    expect(find.text('首页'), findsWidgets);
+    expect(find.text('训练场'), findsWidgets);
 
-    await tester.drag(find.byType(Scrollable).first, const Offset(0, -500));
+    await tester.scrollUntilVisible(
+      find.text('今日词条'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.pumpAndSettle();
 
-    expect(find.text('Word of the day'), findsOneWidget);
+    expect(find.text('今日词条'), findsOneWidget);
   });
 
   testWidgets('failed login stays on login screen and shows error', (
@@ -101,7 +105,7 @@ void main() {
 
     expect(find.text('Welcome Back'), findsOneWidget);
     expect(find.textContaining('login failed'), findsOneWidget);
-    expect(find.text('Today’s learning pack'), findsNothing);
+    expect(find.textContaining('已连续打卡'), findsNothing);
   });
 
   testWidgets('bootstrap failure can retry without restarting the app', (
@@ -154,22 +158,15 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    await tester.fling(
-      find.text('Today’s learning pack'),
-      const Offset(-24, 0),
-      1000,
-    );
+    await tester.fling(find.text('今日任务控制台'), const Offset(-24, 0), 1000);
     await tester.pumpAndSettle();
 
-    expect(find.text('Today’s learning pack'), findsOneWidget);
+    expect(find.text('今日任务控制台'), findsOneWidget);
 
-    await tester.drag(
-      find.text('Today’s learning pack'),
-      const Offset(-260, 0),
-    );
+    await tester.drag(find.text('今日任务控制台'), const Offset(-260, 0));
     await tester.pumpAndSettle();
 
-    expect(find.text('Learning Path'), findsOneWidget);
+    expect(find.text('专项训练'), findsOneWidget);
   });
 
   testWidgets('main shell fling direction matches drag direction', (
@@ -195,14 +192,10 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    await tester.fling(
-      find.text('Today’s learning pack'),
-      const Offset(-80, 0),
-      1000,
-    );
+    await tester.fling(find.text('今日任务控制台'), const Offset(-80, 0), 1000);
     await tester.pumpAndSettle();
 
-    expect(find.text('Learning Path'), findsOneWidget);
+    expect(find.text('专项训练'), findsOneWidget);
   });
 
   testWidgets('dark theme keeps headline text readable', (tester) async {
@@ -371,12 +364,24 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    await tester.tap(find.text('Continue lesson'));
+    await tester.scrollUntilVisible(
+      find.text('新学 10'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('新学 10'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Start quiz').first);
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('讲座；授课'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Check'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Try again'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('通勤'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Check'));
     await tester.pumpAndSettle();
@@ -397,20 +402,20 @@ void main() {
     await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(find.text('Back to learning path'), 300);
+    await tester.scrollUntilVisible(
+      find.text('Go to review center'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Back to learning path'));
-    await tester.pumpAndSettle();
-
-    await tester.scrollUntilVisible(find.text('Travel Basics'), 300);
-    await tester.pumpAndSettle();
-    expect(find.text('Travel Basics'), findsOneWidget);
-    expect(find.text('Current'), findsWidgets);
-
-    await tester.tap(find.text('Review').last);
+    await tester.tap(find.text('Go to review center'));
     await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(find.text('commute'), 300);
+    await tester.scrollUntilVisible(
+      find.text('commute'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.pumpAndSettle();
     expect(find.text('commute'), findsWidgets);
     expect(find.text('Lesson'), findsWidgets);
@@ -439,7 +444,13 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    await tester.tap(find.text('Continue lesson'));
+    await tester.scrollUntilVisible(
+      find.text('新学 10'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('新学 10'));
     await tester.pumpAndSettle();
 
     expect(find.text('Start quiz'), findsWidgets);
@@ -448,9 +459,15 @@ void main() {
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
 
-    expect(find.text('Today’s learning pack'), findsOneWidget);
+    expect(find.text('今日任务控制台'), findsOneWidget);
 
-    await tester.tap(find.text('Continue lesson'));
+    await tester.scrollUntilVisible(
+      find.text('新学 10'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('新学 10'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Start quiz').first);
     await tester.pumpAndSettle();
@@ -660,13 +677,23 @@ void main() {
     );
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    expect(find.text('Ready for Empty Lesson?'), findsOneWidget);
+    expect(find.text('今日任务控制台'), findsOneWidget);
 
-    await tester.drag(find.byType(Scrollable).first, const Offset(0, -500));
+    await tester.scrollUntilVisible(
+      find.text('打开单词卡片'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.pumpAndSettle();
-    expect(find.text('Open word cards'), findsOneWidget);
+    expect(find.text('打开单词卡片'), findsOneWidget);
 
-    await tester.tap(find.text('Wordbook').first);
+    await tester.scrollUntilVisible(
+      find.text('单词本'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('单词本'));
     await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
@@ -914,9 +941,19 @@ void main() {
     );
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    await tester.tap(find.text('Review').last);
+    await tester.scrollUntilVisible(
+      find.text('复习 2'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(find.text('Add Mistake Cards'), 300);
+    await tester.tap(find.text('复习 2'));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text('Add Mistake Cards'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.pumpAndSettle();
     expect(find.text('Add Selected (2)'), findsOneWidget);
 
@@ -981,9 +1018,19 @@ void main() {
       );
       await tester.pumpAndSettle(const Duration(seconds: 1));
 
-      await tester.tap(find.text('Review').last);
+      await tester.scrollUntilVisible(
+        find.text('复习 2'),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
       await tester.pumpAndSettle();
-      await tester.scrollUntilVisible(find.text('Add Mistake Cards'), 300);
+      await tester.tap(find.text('复习 2'));
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
+        find.text('Add Mistake Cards'),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('review-word-0'), findsOneWidget);

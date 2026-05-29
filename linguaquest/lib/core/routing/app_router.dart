@@ -78,17 +78,20 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: '/profile',
             builder: (context, state) => const ProfileScreen(),
           ),
+          GoRoute(
+            path: '/learn',
+            builder: (context, state) => const LearningPathScreen(),
+          ),
+          GoRoute(
+            path: '/review',
+            builder: (context, state) => const ReviewCenterScreen(),
+          ),
+          GoRoute(
+            path: '/quest',
+            builder: (context, state) => const QuestScreen(),
+          ),
         ],
       ),
-      GoRoute(
-        path: '/learn',
-        builder: (context, state) => const LearningPathScreen(),
-      ),
-      GoRoute(
-        path: '/review',
-        builder: (context, state) => const ReviewCenterScreen(),
-      ),
-      GoRoute(path: '/quest', builder: (context, state) => const QuestScreen()),
       GoRoute(
         path: '/mistake-book',
         builder: (context, state) => const MistakeBookScreen(),
@@ -180,6 +183,7 @@ int _tabIndexForPath(String path) {
   if (path.startsWith('/training')) return 1;
   if (path.startsWith('/ai-learning')) return 2;
   if (path.startsWith('/discover')) return 3;
+  if (path.startsWith('/quest')) return 3;
   if (path.startsWith('/profile')) return 4;
   return 0;
 }
