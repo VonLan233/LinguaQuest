@@ -286,52 +286,75 @@ class _RewardTaskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final canClaim = isDone && !isClaimed;
     final activeColor = canClaim
         ? AppTheme.teal
         : isDone
         ? AppTheme.success
         : AppTheme.mango;
-    return QuestCard(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(14),
-      onTap: canClaim
-          ? onClaim
-          : isDone
-          ? null
-          : onTap,
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: activeColor.withValues(alpha: 0.14),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Icon(icon, color: activeColor),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: canClaim
+              ? onClaim
+              : isDone
+              ? null
+              : onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Row(
               children: [
-                Text(title, style: Theme.of(context).textTheme.titleMedium),
-                Text(condition),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: activeColor.withValues(alpha: 0.14),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Icon(icon, color: activeColor),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title, style: theme.textTheme.titleMedium),
+                      const SizedBox(height: 3),
+                      Text(
+                        condition,
+                        style: TextStyle(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 10),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 132),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: PillLabel(
+                      label: isClaimed
+                          ? '已入账 +$points XP'
+                          : canClaim
+                          ? '领取 +$points XP'
+                          : '去完成 +$points XP',
+                      icon: isDone
+                          ? Icons.check_circle_outline
+                          : Icons.add_circle_outline,
+                      color: activeColor,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
-          PillLabel(
-            label: isClaimed
-                ? '已入账 +$points XP'
-                : canClaim
-                ? '领取 +$points XP'
-                : '去完成 +$points XP',
-            icon: isDone
-                ? Icons.check_circle_outline
-                : Icons.add_circle_outline,
-            color: activeColor,
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -350,9 +373,9 @@ class _ForumPostCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return QuestCard(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(16),
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 18),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -362,9 +385,12 @@ class _ForumPostCard extends StatelessWidget {
             color: AppTheme.coral,
           ),
           const SizedBox(height: 10),
-          Text(title, style: Theme.of(context).textTheme.titleMedium),
+          Text(title, style: theme.textTheme.titleMedium),
           const SizedBox(height: 6),
-          Text(body),
+          Text(
+            body,
+            style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+          ),
           const SizedBox(height: 10),
           const Row(
             children: [

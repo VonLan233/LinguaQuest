@@ -246,17 +246,17 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    final cleanupCard = find.ancestor(
+    final cleanupTask = find.ancestor(
       of: find.text('错词清理'),
-      matching: find.byType(QuestCard),
+      matching: find.byType(InkWell),
     );
-    expect(cleanupCard, findsOneWidget);
+    expect(cleanupTask, findsOneWidget);
     expect(
-      find.descendant(of: cleanupCard, matching: find.text('去完成 +10 XP')),
+      find.descendant(of: cleanupTask, matching: find.text('去完成 +10 XP')),
       findsOneWidget,
     );
     expect(
-      find.descendant(of: cleanupCard, matching: find.textContaining('已入账')),
+      find.descendant(of: cleanupTask, matching: find.textContaining('已入账')),
       findsNothing,
     );
   });
@@ -335,17 +335,17 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    final cleanupCard = find.ancestor(
+    final cleanupTask = find.ancestor(
       of: find.text('错词清理'),
-      matching: find.byType(QuestCard),
+      matching: find.byType(InkWell),
     );
-    expect(cleanupCard, findsOneWidget);
+    expect(cleanupTask, findsOneWidget);
     expect(
-      find.descendant(of: cleanupCard, matching: find.text('去完成 +10 XP')),
+      find.descendant(of: cleanupTask, matching: find.text('去完成 +10 XP')),
       findsOneWidget,
     );
     expect(
-      find.descendant(of: cleanupCard, matching: find.textContaining('已入账')),
+      find.descendant(of: cleanupTask, matching: find.textContaining('已入账')),
       findsNothing,
     );
   });
