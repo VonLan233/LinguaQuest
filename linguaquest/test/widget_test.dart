@@ -23,8 +23,9 @@ import 'package:linguaquest/features/learning/lesson_preview_screen.dart';
 import 'package:linguaquest/features/quiz/lesson_result_screen.dart';
 import 'package:linguaquest/features/quiz/quiz_session_screen.dart';
 import 'package:linguaquest/features/search/search_screen.dart';
-import 'package:linguaquest/features/wordbook/wordbook_screen.dart';
 import 'package:linguaquest/features/wordbook/target_word_detail_screen.dart';
+import 'package:linguaquest/features/wordbook/word_detail_screen.dart';
+import 'package:linguaquest/features/wordbook/wordbook_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -1572,6 +1573,67 @@ void main() {
     final savedWords = container.read(appControllerProvider).customWords;
     expect(savedWords.any((word) => word.word == targetWord.word), true);
     expect(find.widgetWithText(FilledButton, '已加入生词本'), findsOneWidget);
+  });
+
+  testWidgets('custom word detail shows the full knowledge blocks', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'custom-detail-user',
+      name: 'Casey',
+      email: 'casey@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    await container
+        .read(appControllerProvider.notifier)
+        .addCustomWord(
+          word: 'context',
+          meaning: '语境',
+          exampleSentence: 'Context helps memory.',
+          note: 'Use it in writing.',
+          tag: 'study',
+          difficulty: 'Medium',
+        );
+    final word = container.read(appControllerProvider).customWords.first;
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          home: WordDetailScreen(wordId: word.id),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('context'), findsWidgets);
+    await tester.scrollUntilVisible(
+      find.text('词汇全解'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('词汇全解'), findsOneWidget);
+    expect(find.text('词组搭配'), findsOneWidget);
+    expect(find.text('近义 / 反义'), findsOneWidget);
+    expect(find.text('派生词族'), findsOneWidget);
+    expect(find.text('词根拆词'), findsOneWidget);
   });
 
   testWidgets('home and wordbook tolerate empty lesson words and tags', (

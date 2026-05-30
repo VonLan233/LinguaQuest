@@ -2,16 +2,27 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/learning_badges.dart';
+import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 
 class WordKnowledgeSections extends StatelessWidget {
-  const WordKnowledgeSections({required this.word, super.key});
+  WordKnowledgeSections({required Word word, super.key})
+    : wordText = word.word,
+      meaning = word.meaning,
+      exampleSentence = word.exampleSentence;
 
-  final Word word;
+  WordKnowledgeSections.custom({required CustomWord word, super.key})
+    : wordText = word.word,
+      meaning = word.meaning,
+      exampleSentence = word.exampleSentence;
+
+  final String wordText;
+  final String meaning;
+  final String exampleSentence;
 
   @override
   Widget build(BuildContext context) {
-    final knowledge = _knowledgeFor(word);
+    final knowledge = _knowledgeFor(wordText, meaning, exampleSentence);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -106,8 +117,12 @@ class _KnowledgeDivider extends StatelessWidget {
   }
 }
 
-_KnowledgeData _knowledgeFor(Word word) {
-  switch (word.word.toLowerCase()) {
+_KnowledgeData _knowledgeFor(
+  String wordText,
+  String meaning,
+  String exampleSentence,
+) {
+  switch (wordText.toLowerCase()) {
     case 'allocate':
       return const _KnowledgeData(
         collocations: ['allocate time', 'allocate resources', 'allocate funds'],
@@ -253,17 +268,25 @@ _KnowledgeData _knowledgeFor(Word word) {
         rootNote: 'dead + line，可记作“不能再越过的最后一条线”。',
       );
     default:
-      return _fallbackKnowledge(word);
+      return _fallbackKnowledge(wordText, meaning, exampleSentence);
   }
 }
 
-_KnowledgeData _fallbackKnowledge(Word word) {
+_KnowledgeData _fallbackKnowledge(
+  String wordText,
+  String meaning,
+  String exampleSentence,
+) {
+  final cleanExample = exampleSentence.trim();
+  final rootNote = cleanExample.isEmpty
+      ? '结合释义“$meaning”记忆核心用法。'
+      : '结合例句“$cleanExample”记忆核心含义：$meaning。';
   return _KnowledgeData(
-    collocations: ['use ${word.word}', '${word.word} in context'],
+    collocations: ['use $wordText', '$wordText in context'],
     synonyms: ['related word'],
     antonyms: ['opposite meaning'],
-    family: ['${word.word} form', '${word.word} phrase'],
-    rootNote: '结合例句“${word.exampleSentence}”记忆核心含义：${word.meaning}。',
+    family: ['$wordText form', '$wordText phrase'],
+    rootNote: rootNote,
   );
 }
 

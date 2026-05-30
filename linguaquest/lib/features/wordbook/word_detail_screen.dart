@@ -11,6 +11,7 @@ import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/pronunciation_controls.dart';
 import '../../data/models/custom_word.dart';
+import 'word_knowledge_sections.dart';
 
 class WordDetailScreen extends ConsumerWidget {
   const WordDetailScreen({required this.wordId, super.key});
@@ -105,6 +106,8 @@ class WordDetailScreen extends ConsumerWidget {
                 ),
               ],
             ),
+            const SizedBox(height: 20),
+            WordKnowledgeSections.custom(word: word),
             const SizedBox(height: 20),
             AiWordSupportLink(word: word.word),
             const SizedBox(height: 20),
