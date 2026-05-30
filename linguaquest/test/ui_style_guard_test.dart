@@ -61,6 +61,9 @@ void main() {
       final training = File(
         'lib/features/training/training_screen.dart',
       ).readAsStringSync();
+      final discover = File(
+        'lib/features/discover/discover_screen.dart',
+      ).readAsStringSync();
       final newStudy = File(
         'lib/features/study/new_study_screen.dart',
       ).readAsStringSync();
@@ -70,6 +73,8 @@ void main() {
 
       expect(home, contains("context.push('/study/new')"));
       expect(home, contains("context.push('/study/review')"));
+      expect(discover, contains("context.push('/study/new')"));
+      expect(discover, isNot(contains("context.push('/learn')")));
       expect(home, isNot(contains('/timed-test/lesson-campus-1')));
       expect(training, contains("context.push('/timed-test/lesson-campus-1')"));
       expect(training, isNot(contains("context.push('/study/review')")));

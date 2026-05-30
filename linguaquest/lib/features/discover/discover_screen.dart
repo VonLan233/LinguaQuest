@@ -87,7 +87,7 @@ class DiscoverScreen extends ConsumerWidget {
           points: 20,
           isDone: newLearningDone,
           isClaimed: claimed.contains('new-learning'),
-          onTap: () => context.push('/learn'),
+          onTap: () => context.push('/study/new'),
           onClaim: () => _claimReward(
             context,
             ref,
