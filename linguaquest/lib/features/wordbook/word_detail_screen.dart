@@ -7,7 +7,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/utils/date_formatting.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/fallback_back_button.dart';
-import '../../core/widgets/quest_card.dart';
+import '../../core/widgets/learning_badges.dart';
 import '../../data/models/custom_word.dart';
 
 class WordDetailScreen extends ConsumerWidget {

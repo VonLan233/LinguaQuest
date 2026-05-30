@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'quest_card.dart';
+import 'learning_badges.dart';
 
 class EmptyState extends StatelessWidget {
   const EmptyState({

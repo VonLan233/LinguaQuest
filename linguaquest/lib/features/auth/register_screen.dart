@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
-import '../../core/widgets/quest_card.dart';
+import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {

@@ -7,7 +7,7 @@ import 'package:linguaquest/app.dart';
 import 'package:linguaquest/core/state/app_controller.dart';
 import 'package:linguaquest/core/state/app_state.dart';
 import 'package:linguaquest/core/theme/app_theme.dart';
-import 'package:linguaquest/core/widgets/quest_card.dart';
+import 'package:linguaquest/core/widgets/learning_badges.dart';
 import 'package:linguaquest/data/models/custom_word.dart';
 import 'package:linguaquest/data/models/lesson.dart';
 import 'package:linguaquest/data/models/lesson_result.dart';
@@ -584,12 +584,14 @@ void main() {
             return Scaffold(
               body: Column(
                 children: [
-                  QuestCard(
+                  Container(
                     color: warmSurface,
+                    padding: const EdgeInsets.all(12),
                     child: const Text('Warm surface text'),
                   ),
-                  QuestCard(
+                  Container(
                     color: accentSurface,
+                    padding: const EdgeInsets.all(12),
                     child: const Text('Accent surface text'),
                   ),
                   LinearProgressIndicator(

@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/fallback_back_button.dart';
-import '../../core/widgets/quest_card.dart';
+import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 
 class LeaderboardScreen extends ConsumerWidget {

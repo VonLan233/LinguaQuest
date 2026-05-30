@@ -2,66 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
 
-class QuestCard extends StatelessWidget {
-  const QuestCard({
-    required this.child,
-    this.padding = const EdgeInsets.all(18),
-    this.margin,
-    this.color,
-    this.borderColor,
-    this.onTap,
-    super.key,
-  });
-
-  final Widget child;
-  final EdgeInsetsGeometry padding;
-  final EdgeInsetsGeometry? margin;
-  final Color? color;
-  final Color? borderColor;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final radius = BorderRadius.circular(8);
-    final decoration = BoxDecoration(
-      color: color ?? theme.colorScheme.surface,
-      borderRadius: radius,
-      border: Border.all(
-        color:
-            borderColor ??
-            theme.colorScheme.outlineVariant.withValues(alpha: 0.72),
-      ),
-    );
-
-    if (onTap == null) {
-      return Container(
-        margin: margin,
-        padding: padding,
-        decoration: decoration,
-        child: child,
-      );
-    }
-
-    return Padding(
-      padding: margin ?? EdgeInsets.zero,
-      child: Material(
-        color: Colors.transparent,
-        shape: RoundedRectangleBorder(borderRadius: radius),
-        clipBehavior: Clip.antiAlias,
-        child: Ink(
-          decoration: decoration,
-          child: InkWell(
-            borderRadius: radius,
-            onTap: onTap,
-            child: Padding(padding: padding, child: child),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class PillLabel extends StatelessWidget {
   const PillLabel({
     required this.label,

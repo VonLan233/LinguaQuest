@@ -27,6 +27,14 @@ void main() {
       }
     });
 
+    test('legacy quest card abstraction stays removed', () {
+      final source = _readDartSources(Directory('lib'));
+
+      expect(File('lib/core/widgets/quest_card.dart').existsSync(), isFalse);
+      expect(source, isNot(contains('QuestCard')));
+      expect(source, isNot(contains('quest_card.dart')));
+    });
+
     test('brand presence stays icon-led and avoids generic language marks', () {
       final featureSource = _readDartSources(Directory('lib/features'));
       final transparentIconUses = RegExp(
