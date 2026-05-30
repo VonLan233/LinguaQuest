@@ -37,7 +37,10 @@ class TrainingScreen extends ConsumerWidget {
               icon: Icons.bolt,
               color: AppTheme.mango,
             ),
-            const PillLabel(label: '今日可得 60', icon: Icons.add_circle_outline),
+            const PillLabel(
+              label: '今日可得 60 XP',
+              icon: Icons.add_circle_outline,
+            ),
           ],
         ),
         const SizedBox(height: 18),
