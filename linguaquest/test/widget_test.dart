@@ -117,6 +117,52 @@ void main() {
     expect(find.text('检查'), findsNothing);
   });
 
+  testWidgets('home review entry opens standalone review flow', (tester) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'review-user',
+      name: 'Riley',
+      email: 'riley@lingua.quest',
+      targetExam: 'IELTS',
+      level: 'Intermediate',
+      dailyGoal: 12,
+      xp: 240,
+      streak: 6,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+
+    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.scrollUntilVisible(
+      find.text('复习 2'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, '复习 2'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('今日复习'), findsOneWidget);
+    expect(find.text('显示释义'), findsOneWidget);
+    expect(find.text('加入错词卡'), findsNothing);
+
+    await tester.tap(find.widgetWithText(FilledButton, '显示释义'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('记住了'), findsOneWidget);
+    expect(find.text('没记住'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(FilledButton, '记住了'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('2/2'), findsOneWidget);
+  });
+
   testWidgets('discover check-in only counts same-day study', (tester) async {
     final yesterday = DateTime.now().subtract(const Duration(days: 1));
     final profile = UserProfile(
@@ -1316,6 +1362,8 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('复习 2'));
     await tester.pumpAndSettle();
+    await tester.tap(find.text('管理复习队列'));
+    await tester.pumpAndSettle();
     await tester.scrollUntilVisible(
       find.text('加入错词卡'),
       300,
@@ -1392,6 +1440,8 @@ void main() {
       );
       await tester.pumpAndSettle();
       await tester.tap(find.text('复习 2'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('管理复习队列'));
       await tester.pumpAndSettle();
       await tester.scrollUntilVisible(
         find.text('加入错词卡'),

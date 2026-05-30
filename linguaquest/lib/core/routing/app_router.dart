@@ -29,6 +29,7 @@ import '../../features/review/review_center_screen.dart';
 import '../../features/search/search_screen.dart';
 import '../../features/shell/app_shell.dart';
 import '../../features/study/new_study_screen.dart';
+import '../../features/study/review_study_screen.dart';
 import '../../features/training/training_screen.dart';
 import '../../features/wordbook/add_edit_custom_word_screen.dart';
 import '../../features/wordbook/custom_word_list_screen.dart';
@@ -97,7 +98,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/study/review',
-        builder: (context, state) => const ReviewCenterScreen(),
+        builder: (context, state) => const ReviewStudyScreen(),
       ),
       GoRoute(
         path: '/review',
