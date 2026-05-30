@@ -445,6 +445,29 @@ void main() {
       }
     });
 
+    test('word screens keep pronunciation controls near word content', () {
+      final pronunciation = File(
+        'lib/core/widgets/pronunciation_controls.dart',
+      ).readAsStringSync();
+      final lessonPreview = File(
+        'lib/features/learning/lesson_preview_screen.dart',
+      ).readAsStringSync();
+      final targetDetail = File(
+        'lib/features/wordbook/target_word_detail_screen.dart',
+      ).readAsStringSync();
+      final customDetail = File(
+        'lib/features/wordbook/word_detail_screen.dart',
+      ).readAsStringSync();
+
+      expect(pronunciation, contains('class PronunciationControls'));
+      expect(pronunciation, contains('英音'));
+      expect(pronunciation, contains('美音'));
+      expect(pronunciation, contains('发音失败，请重试'));
+      for (final source in [lessonPreview, targetDetail, customDetail]) {
+        expect(source, contains('PronunciationControls(word:'));
+      }
+    });
+
     test('AI learning statuses stay user-facing', () {
       final aiLearning = File(
         'lib/features/ai_learning/ai_learning_screen.dart',

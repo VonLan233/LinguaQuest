@@ -6,6 +6,7 @@ import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/pronunciation_controls.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson.dart';
 
@@ -226,7 +227,15 @@ class _WordStudyCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(word.word, style: theme.textTheme.headlineSmall),
+                    Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 10,
+                      runSpacing: 8,
+                      children: [
+                        Text(word.word, style: theme.textTheme.headlineSmall),
+                        PronunciationControls(word: word.word, compact: true),
+                      ],
+                    ),
                     const SizedBox(height: 3),
                     Text(
                       word.phonetic,

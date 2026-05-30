@@ -9,6 +9,7 @@ import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/ai_word_support_link.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/pronunciation_controls.dart';
 import '../../data/models/custom_word.dart';
 
 class WordDetailScreen extends ConsumerWidget {
@@ -49,12 +50,20 @@ class WordDetailScreen extends ConsumerWidget {
                 children: [
                   ImageCueBadge(cue: wordInitialCue(word.word), size: 104),
                   const SizedBox(height: 16),
-                  Text(
-                    word.word,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                      fontWeight: FontWeight.w900,
-                    ),
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 12,
+                    runSpacing: 8,
+                    children: [
+                      Text(
+                        word.word,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.displaySmall
+                            ?.copyWith(fontWeight: FontWeight.w900),
+                      ),
+                      PronunciationControls(word: word.word, compact: true),
+                    ],
                   ),
                   const SizedBox(height: 8),
                   Text(

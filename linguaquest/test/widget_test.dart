@@ -8,6 +8,7 @@ import 'package:linguaquest/core/state/app_controller.dart';
 import 'package:linguaquest/core/state/app_state.dart';
 import 'package:linguaquest/core/theme/app_theme.dart';
 import 'package:linguaquest/core/widgets/learning_badges.dart';
+import 'package:linguaquest/core/widgets/pronunciation_controls.dart';
 import 'package:linguaquest/data/models/custom_word.dart';
 import 'package:linguaquest/data/models/lesson.dart';
 import 'package:linguaquest/data/models/lesson_result.dart';
@@ -186,6 +187,31 @@ void main() {
     expect(wordInitialCue(''), '?');
     expect(wordInitialCue('  '), '?');
     expect(wordInitialCue('apple'), 'A');
+  });
+
+  testWidgets('pronunciation controls expose loading and retry states', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(body: PronunciationControls(word: '')),
+      ),
+    );
+
+    expect(find.text('英音'), findsOneWidget);
+    expect(find.text('美音'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('pronunciation-uk')));
+    await tester.pump();
+
+    expect(find.text('英音加载'), findsOneWidget);
+
+    await tester.pump(const Duration(milliseconds: 430));
+    await tester.pump();
+
+    expect(find.text('英音重试'), findsOneWidget);
+    expect(find.text('英音发音失败，请重试'), findsWidgets);
   });
 
   testWidgets('home new-study entry opens standalone new learning flow', (
