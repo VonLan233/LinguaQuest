@@ -34,10 +34,11 @@ class MistakeBookScreen extends ConsumerWidget {
                   ? '暂时没有课程错题'
                   : '${lessonMistakes.length} 个课程错题',
               subtitle: '测验错题和弱项自定义卡会保留在这里，方便后续复习。',
-              trailing: IconButton.filledTonal(
+              trailing: QuestIconButton(
                 tooltip: '去练一课',
                 onPressed: () => context.go('/learn'),
-                icon: const Icon(Icons.route_outlined),
+                icon: Icons.route_outlined,
+                color: AppTheme.coral,
               ),
             ),
             const SizedBox(height: 14),

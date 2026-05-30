@@ -32,10 +32,11 @@ class DiscoverScreen extends ConsumerWidget {
         SectionHeader(
           title: '发现',
           subtitle: '签到、积分任务、抽奖和学习社区；领取的 XP 会加入个人总积分。',
-          trailing: IconButton.filledTonal(
+          trailing: QuestIconButton(
             tooltip: '任务中心',
             onPressed: () => context.push('/quest'),
-            icon: const Icon(Icons.emoji_events_outlined),
+            icon: Icons.emoji_events_outlined,
+            color: AppTheme.mango,
           ),
         ),
         const SizedBox(height: 14),

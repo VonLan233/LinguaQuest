@@ -63,10 +63,11 @@ class HomeScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(width: 10),
-            IconButton.filledTonal(
+            QuestIconButton(
               tooltip: '消息通知',
               onPressed: () => context.go('/discover'),
-              icon: const Icon(Icons.notifications_outlined),
+              icon: Icons.notifications_outlined,
+              color: AppTheme.coral,
             ),
           ],
         ),

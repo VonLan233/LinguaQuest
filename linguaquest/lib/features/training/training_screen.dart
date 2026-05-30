@@ -20,10 +20,11 @@ class TrainingScreen extends ConsumerWidget {
         SectionHeader(
           title: '训练场',
           subtitle: '限时测试、专项训练和排行榜放在这里；正式新学与复习保持独立。',
-          trailing: IconButton.filledTonal(
+          trailing: QuestIconButton(
             tooltip: '排行榜',
             onPressed: () => context.push('/leaderboard'),
-            icon: const Icon(Icons.leaderboard_outlined),
+            icon: Icons.leaderboard_outlined,
+            color: AppTheme.coral,
           ),
         ),
         const SizedBox(height: 14),

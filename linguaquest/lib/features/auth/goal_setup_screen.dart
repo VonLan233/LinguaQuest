@@ -126,10 +126,11 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
                     ),
                     if (_deadline != null) ...[
                       const SizedBox(width: 10),
-                      IconButton.filledTonal(
+                      QuestIconButton(
                         tooltip: '清除日期规划',
                         onPressed: () => setState(() => _deadline = null),
-                        icon: const Icon(Icons.close_rounded),
+                        icon: Icons.close_rounded,
+                        color: AppTheme.coral,
                       ),
                     ],
                   ],

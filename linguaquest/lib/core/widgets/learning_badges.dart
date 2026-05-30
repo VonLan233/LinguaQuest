@@ -103,6 +103,49 @@ class IconCueBadge extends StatelessWidget {
   }
 }
 
+class QuestIconButton extends StatelessWidget {
+  const QuestIconButton({
+    required this.tooltip,
+    required this.icon,
+    required this.onPressed,
+    this.color = AppTheme.teal,
+    this.size = 44,
+    super.key,
+  });
+
+  final String tooltip;
+  final IconData icon;
+  final VoidCallback? onPressed;
+  final Color color;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return SizedBox.square(
+      dimension: size,
+      child: IconButton(
+        tooltip: tooltip,
+        onPressed: onPressed,
+        icon: Icon(icon, size: size * 0.48),
+        style: IconButton.styleFrom(
+          padding: EdgeInsets.zero,
+          foregroundColor: color,
+          disabledForegroundColor: theme.colorScheme.onSurface.withValues(
+            alpha: 0.38,
+          ),
+          backgroundColor: AppTheme.iconBadgeSurface(context),
+          disabledBackgroundColor: theme.colorScheme.surfaceContainerLow,
+          side: BorderSide(color: theme.colorScheme.outlineVariant),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(size * 0.26),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 String wordInitialCue(String value) {
   final trimmed = value.trim();
   if (trimmed.isEmpty) return '?';

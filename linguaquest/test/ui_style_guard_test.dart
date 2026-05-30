@@ -89,6 +89,17 @@ void main() {
       expect(sources, isNot(contains('AppTheme.iconBadgeSurface(context)')));
     });
 
+    test('small icon actions use branded quest buttons', () {
+      final badges = File(
+        'lib/core/widgets/learning_badges.dart',
+      ).readAsStringSync();
+      final source = _readDartSources(Directory('lib/features'));
+
+      expect(badges, contains('class QuestIconButton'));
+      expect(source, contains('QuestIconButton'));
+      expect(source, isNot(contains('IconButton.filledTonal')));
+    });
+
     test('profile dashboard keeps the top area lightweight', () {
       final profile = File(
         'lib/features/profile/profile_screen.dart',

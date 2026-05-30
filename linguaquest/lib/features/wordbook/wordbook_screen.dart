@@ -30,10 +30,11 @@ class WordbookScreen extends ConsumerWidget {
             SectionHeader(
               title: '图片单词本',
               subtitle: '用图片词卡串联发音、释义、例句、标签和复习信号。',
-              trailing: IconButton.filledTonal(
+              trailing: QuestIconButton(
                 tooltip: '自定义词卡',
                 onPressed: () => context.push('/custom-words'),
-                icon: const Icon(Icons.add_card_outlined),
+                icon: Icons.add_card_outlined,
+                color: AppTheme.cyan,
               ),
             ),
             const SizedBox(height: 14),

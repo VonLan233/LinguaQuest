@@ -16,10 +16,11 @@ class AiLearningScreen extends StatelessWidget {
         SectionHeader(
           title: 'AI 学习',
           subtitle: '解释语法、辨析词义、生成语境；正式学习记录仍由答题结果更新。',
-          trailing: IconButton.filledTonal(
+          trailing: QuestIconButton(
             tooltip: '知识问答',
             onPressed: () => context.push('/ai-tutor'),
-            icon: const Icon(Icons.chat_bubble_outline),
+            icon: Icons.chat_bubble_outline,
+            color: AppTheme.cyan,
           ),
         ),
         const SizedBox(height: 14),
