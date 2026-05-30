@@ -1075,6 +1075,7 @@ void main() {
     Finder continueButton() => find.widgetWithText(FilledButton, '继续');
 
     expect(find.textContaining('答对了'), findsOneWidget);
+    expect(find.textContaining('强化记忆：allocate · 分配'), findsOneWidget);
     expect(continueButton(), findsOneWidget);
     expect(tester.widget<FilledButton>(continueButton()).onPressed, isNull);
 

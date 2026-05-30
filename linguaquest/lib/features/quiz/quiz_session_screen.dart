@@ -135,7 +135,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
                           const SizedBox(height: 14),
                           _FeedbackPanel(
                             isCorrect: _lastCorrect,
-                            explanation: question.explanation,
+                            question: question,
                           ),
                         ],
                       ],
@@ -473,10 +473,10 @@ class _QuestionInput extends StatelessWidget {
 }
 
 class _FeedbackPanel extends StatelessWidget {
-  const _FeedbackPanel({required this.isCorrect, required this.explanation});
+  const _FeedbackPanel({required this.isCorrect, required this.question});
 
   final bool isCorrect;
-  final String explanation;
+  final QuizQuestion question;
 
   @override
   Widget build(BuildContext context) {
@@ -505,9 +505,36 @@ class _FeedbackPanel extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: Text(
-              isCorrect ? '答对了。$explanation' : '还不对。$explanation',
-              style: TextStyle(color: color),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  isCorrect
+                      ? '答对了。${question.explanation}'
+                      : '还不对。${question.explanation}',
+                  style: TextStyle(color: color),
+                ),
+                if (isCorrect) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    '强化记忆：${question.word.word} · ${question.word.meaning}',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  if (question.word.exampleSentence.isNotEmpty) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      question.word.exampleSentence,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        height: 1.35,
+                      ),
+                    ),
+                  ],
+                ],
+              ],
             ),
           ),
         ],
