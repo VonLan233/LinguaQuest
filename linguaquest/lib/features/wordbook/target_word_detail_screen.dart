@@ -110,7 +110,8 @@ class TargetWordDetailScreen extends ConsumerWidget {
                   label: displayDifficulty(word.difficulty),
                   color: AppTheme.coral,
                 ),
-                for (final tag in word.tags) PillLabel(label: tag),
+                for (final tag in word.tags)
+                  PillLabel(label: displayWordTag(tag)),
               ],
             ),
           ],
@@ -131,7 +132,7 @@ class TargetWordDetailScreen extends ConsumerWidget {
           meaning: word.meaning,
           exampleSentence: word.exampleSentence,
           note: '${word.definition}\n${word.exampleTranslation}',
-          tag: word.tags.isEmpty ? '目标词' : word.tags.first,
+          tag: word.tags.isEmpty ? '目标词' : displayWordTag(word.tags.first),
           difficulty: word.difficulty,
         );
     if (!context.mounted) return;

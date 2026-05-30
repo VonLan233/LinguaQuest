@@ -79,3 +79,30 @@ String displayCustomTag(String value) {
       return value.trim().isEmpty ? '自定义' : value.trim();
   }
 }
+
+String displayWordTag(String value) {
+  switch (value.trim().toLowerCase()) {
+    case 'academic':
+      return '学术';
+    case 'business':
+      return '商务';
+    case 'campus':
+      return '校园';
+    case 'daily':
+      return '日常';
+    case 'exam':
+      return '考试';
+    case 'food':
+      return '饮食';
+    case 'health':
+      return '健康';
+    case 'study':
+      return '学习';
+    case 'travel':
+      return '旅行';
+    case 'writing':
+      return '写作';
+    default:
+      return value.trim().isEmpty ? '目标词' : value.trim();
+  }
+}

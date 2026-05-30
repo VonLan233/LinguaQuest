@@ -18,6 +18,7 @@ import '../../data/repositories/learning_repository.dart';
 import '../../data/repositories/mock_repositories.dart';
 import '../../data/repositories/review_repository.dart';
 import '../constants/app_constants.dart';
+import '../utils/ui_labels.dart';
 import 'app_state.dart';
 
 final apiClientProvider = Provider<ApiClient>((ref) => ApiClient());
@@ -406,7 +407,7 @@ class AppController extends Notifier<AppState> {
               meaning: word.meaning,
               exampleSentence: word.exampleSentence,
               note: '${word.definition}\n${mistake.explanation}',
-              tag: word.tags.isEmpty ? '错题' : word.tags.first,
+              tag: word.tags.isEmpty ? '错题' : displayWordTag(word.tags.first),
               difficulty: word.difficulty,
             ),
           ),

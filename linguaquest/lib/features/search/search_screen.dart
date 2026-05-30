@@ -97,7 +97,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         word.definition.toLowerCase().contains(query) ||
         word.exampleSentence.toLowerCase().contains(query) ||
         word.exampleTranslation.toLowerCase().contains(query) ||
-        word.tags.any((tag) => tag.toLowerCase().contains(query));
+        word.tags.any(
+          (tag) =>
+              tag.toLowerCase().contains(query) ||
+              displayWordTag(tag).toLowerCase().contains(query),
+        );
   }
 
   bool _matchesCustomWord(CustomWord word, String query) {

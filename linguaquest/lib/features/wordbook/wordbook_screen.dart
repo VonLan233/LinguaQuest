@@ -131,7 +131,7 @@ class _TargetWordRow extends StatelessWidget {
                     ),
                     if (word.tags.isNotEmpty) ...[
                       const SizedBox(height: 6),
-                      PillLabel(label: word.tags.first),
+                      PillLabel(label: displayWordTag(word.tags.first)),
                     ],
                   ],
                 ),

@@ -299,6 +299,31 @@ void main() {
       expect(reviewStudy, contains('displayCustomTag(word.tag)'));
     });
 
+    test('target word tags are localized at display boundaries', () {
+      final labels = File('lib/core/utils/ui_labels.dart').readAsStringSync();
+      final wordbook = File(
+        'lib/features/wordbook/wordbook_screen.dart',
+      ).readAsStringSync();
+      final targetDetail = File(
+        'lib/features/wordbook/target_word_detail_screen.dart',
+      ).readAsStringSync();
+      final search = File(
+        'lib/features/search/search_screen.dart',
+      ).readAsStringSync();
+      final appController = File(
+        'lib/core/state/app_controller.dart',
+      ).readAsStringSync();
+
+      expect(labels, contains('displayWordTag'));
+      expect(labels, contains("case 'academic'"));
+      expect(labels, contains("case 'exam'"));
+      expect(wordbook, contains('displayWordTag(word.tags.first)'));
+      expect(targetDetail, contains('displayWordTag(tag)'));
+      expect(targetDetail, contains('displayWordTag(word.tags.first)'));
+      expect(search, contains('displayWordTag(tag)'));
+      expect(appController, contains('displayWordTag(word.tags.first)'));
+    });
+
     test('AI learning statuses stay user-facing', () {
       final aiLearning = File(
         'lib/features/ai_learning/ai_learning_screen.dart',
