@@ -6,7 +6,6 @@ import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/quest_card.dart';
-import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson.dart';
 
 class NewStudyScreen extends ConsumerWidget {
@@ -19,6 +18,7 @@ class NewStudyScreen extends ConsumerWidget {
     final dailyGoal =
         state.learningPlan?.dailyWords ?? state.user?.dailyGoal ?? 10;
     final words = lesson?.words.take(dailyGoal).toList() ?? const <Word>[];
+    final canStart = lesson != null && words.isNotEmpty;
 
     return Scaffold(
       appBar: AppBar(
@@ -32,9 +32,21 @@ class NewStudyScreen extends ConsumerWidget {
           ),
         ],
       ),
+      bottomNavigationBar: canStart
+          ? SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+                child: FilledButton.icon(
+                  onPressed: () => context.push('/lesson/${lesson.id}'),
+                  icon: const Icon(Icons.play_arrow_rounded),
+                  label: const Text('进入词卡学习'),
+                ),
+              ),
+            )
+          : null,
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 28),
+          padding: EdgeInsets.fromLTRB(20, 10, 20, canStart ? 100 : 28),
           children: [
             _StudyHeader(
               count: words.length,
@@ -42,9 +54,18 @@ class NewStudyScreen extends ConsumerWidget {
               dailyGoal: dailyGoal,
             ),
             const SizedBox(height: 20),
-            const SectionHeader(
-              title: '今日新词包',
-              subtitle: '先自评，再看词卡，最后进入语境题。正式复习会单独排队。',
+            Text(
+              '今日新词包',
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              '先自评，再看词卡，最后进入语境题。正式复习会单独排队。',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
             const SizedBox(height: 12),
             _FlowSteps(),
@@ -70,12 +91,6 @@ class NewStudyScreen extends ConsumerWidget {
                 ),
               )
             else ...[
-              FilledButton.icon(
-                onPressed: () => context.push('/lesson/${lesson.id}'),
-                icon: const Icon(Icons.play_arrow_rounded),
-                label: const Text('进入词卡学习'),
-              ),
-              const SizedBox(height: 16),
               for (final word in words) _WordPreviewTile(word: word),
             ],
           ],
@@ -148,39 +163,58 @@ class _FlowSteps extends StatelessWidget {
       ('2', '词卡', '补全释义和例句'),
       ('3', '语境题', '主动回忆'),
     ];
-    return Row(
-      children: [
-        for (var i = 0; i < steps.length; i++) ...[
-          Expanded(
-            child: QuestCard(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-              color: i == 1 ? AppTheme.accentSurface(context) : null,
+    final colorScheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (var i = 0; i < steps.length; i++) ...[
+            Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CircleAvatar(
-                    radius: 15,
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                    radius: 17,
+                    backgroundColor: i == 1
+                        ? colorScheme.secondaryContainer
+                        : colorScheme.primary,
+                    foregroundColor: i == 1
+                        ? colorScheme.onSecondaryContainer
+                        : colorScheme.onPrimary,
                     child: Text(steps[i].$1),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     steps[i].$2,
-                    style: Theme.of(context).textTheme.titleMedium,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w900,
+                    ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     steps[i].$3,
-                    style: Theme.of(context).textTheme.bodySmall,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ),
             ),
-          ),
-          if (i != steps.length - 1) const SizedBox(width: 8),
+            if (i != steps.length - 1)
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 17),
+                  child: Divider(
+                    color: colorScheme.outlineVariant,
+                    thickness: 2,
+                  ),
+                ),
+              ),
+          ],
         ],
-      ],
+      ),
     );
   }
 }
