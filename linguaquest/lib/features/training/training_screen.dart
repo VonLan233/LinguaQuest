@@ -54,52 +54,60 @@ class TrainingScreen extends ConsumerWidget {
           subtitle: '校园词包和抢词挑战归入训练场，不再占用新学入口。',
         ),
         const SizedBox(height: 12),
-        _TrainingGameCard(
-          icon: Icons.school_outlined,
-          title: '校园速测',
-          body: '从校园生活词包抽题，适合课后快速检测，不影响正式复习节奏。',
-          source: '校园生活 · 限时测试',
-          actionLabel: '开始测试',
-          onTap: () => context.push('/timed-test/lesson-campus-1'),
-        ),
-        _TrainingGameCard(
-          icon: Icons.timer_outlined,
-          title: '抢词',
-          body: '60 秒内尽可能答对英文选义题，按正确数、连击和准确率给积分。',
-          source: '已学词 + 到期词',
-          actionLabel: '即将开放',
+        _TrainingGameList(
+          games: [
+            _TrainingGameData(
+              icon: Icons.school_outlined,
+              title: '校园速测',
+              body: '从校园生活词包抽题，适合课后快速检测，不影响正式复习节奏。',
+              source: '校园生活 · 限时测试',
+              actionLabel: '开始测试',
+              onTap: () => context.push('/timed-test/lesson-campus-1'),
+            ),
+            const _TrainingGameData(
+              icon: Icons.timer_outlined,
+              title: '抢词',
+              body: '60 秒内尽可能答对英文选义题，按正确数、连击和准确率给积分。',
+              source: '已学词 + 到期词',
+              actionLabel: '即将开放',
+            ),
+          ],
         ),
         const SizedBox(height: 12),
         const SectionHeader(title: '专项训练', subtitle: '围绕拼写、听音、搭配和短文挖词补弱项。'),
         const SizedBox(height: 12),
-        _TrainingGameCard(
-          icon: Icons.stairs_outlined,
-          title: '一站到底',
-          body: '从简单到困难连续答题，错词会进入弱项词和错词本。',
-          source: '当前词书 + 弱项词',
-          actionLabel: '即将开放',
-        ),
-        _TrainingGameCard(
-          icon: Icons.edit_note_outlined,
-          title: '单词拼写',
-          body: '看中文、听发音或看例句空格后输入英文，强化可产出能力。',
-          source: '拼写弱项词',
-          actionLabel: '进入生词本',
-          onTap: () => context.push('/custom-words'),
-        ),
-        const _TrainingGameCard(
-          icon: Icons.article_outlined,
-          title: '文章挖词',
-          body: '用今日词汇生成短文并挖空，连接背词和阅读理解。',
-          source: '今日学习词 + AI 短文',
-          actionLabel: '即将开放',
-        ),
-        const _TrainingGameCard(
-          icon: Icons.hearing_outlined,
-          title: '听音速答',
-          body: '播放发音后选择单词或释义，反应时间影响得分。',
-          source: '听力弱项词',
-          actionLabel: '即将开放',
+        _TrainingGameList(
+          games: [
+            const _TrainingGameData(
+              icon: Icons.stairs_outlined,
+              title: '一站到底',
+              body: '从简单到困难连续答题，错词会进入弱项词和错词本。',
+              source: '当前词书 + 弱项词',
+              actionLabel: '即将开放',
+            ),
+            _TrainingGameData(
+              icon: Icons.edit_note_outlined,
+              title: '单词拼写',
+              body: '看中文、听发音或看例句空格后输入英文，强化可产出能力。',
+              source: '拼写弱项词',
+              actionLabel: '进入生词本',
+              onTap: () => context.push('/custom-words'),
+            ),
+            const _TrainingGameData(
+              icon: Icons.article_outlined,
+              title: '文章挖词',
+              body: '用今日词汇生成短文并挖空，连接背词和阅读理解。',
+              source: '今日学习词 + AI 短文',
+              actionLabel: '即将开放',
+            ),
+            const _TrainingGameData(
+              icon: Icons.hearing_outlined,
+              title: '听音速答',
+              body: '播放发音后选择单词或释义，反应时间影响得分。',
+              source: '听力弱项词',
+              actionLabel: '即将开放',
+            ),
+          ],
         ),
       ],
     );
@@ -216,22 +224,34 @@ class _TrainingSignalDivider extends StatelessWidget {
   }
 }
 
-class _TrainingGameCard extends StatelessWidget {
-  const _TrainingGameCard({
-    required this.icon,
-    required this.title,
-    required this.body,
-    required this.source,
-    required this.actionLabel,
-    this.onTap,
-  });
+class _TrainingGameList extends StatelessWidget {
+  const _TrainingGameList({required this.games});
 
-  final IconData icon;
-  final String title;
-  final String body;
-  final String source;
-  final String actionLabel;
-  final VoidCallback? onTap;
+  final List<_TrainingGameData> games;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        for (var index = 0; index < games.length; index++) ...[
+          _TrainingGameRow(game: games[index]),
+          if (index != games.length - 1)
+            Divider(
+              height: 10,
+              color: Theme.of(
+                context,
+              ).colorScheme.outlineVariant.withValues(alpha: 0.7),
+            ),
+        ],
+      ],
+    );
+  }
+}
+
+class _TrainingGameRow extends StatelessWidget {
+  const _TrainingGameRow({required this.game});
+
+  final _TrainingGameData game;
 
   @override
   Widget build(BuildContext context) {
@@ -248,17 +268,17 @@ class _TrainingGameCard extends StatelessWidget {
               color: AppTheme.iconBadgeSurface(context),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(icon, color: AppTheme.coral),
+            child: Icon(game.icon, color: AppTheme.coral),
           ),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: theme.textTheme.titleMedium),
+                Text(game.title, style: theme.textTheme.titleMedium),
                 const SizedBox(height: 4),
                 Text(
-                  body,
+                  game.body,
                   style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                 ),
                 const SizedBox(height: 10),
@@ -266,13 +286,15 @@ class _TrainingGameCard extends StatelessWidget {
                   spacing: 8,
                   runSpacing: 8,
                   children: [
-                    PillLabel(label: source, icon: Icons.source_outlined),
+                    PillLabel(label: game.source, icon: Icons.source_outlined),
                     PillLabel(
-                      label: actionLabel,
-                      icon: onTap == null
+                      label: game.actionLabel,
+                      icon: game.onTap == null
                           ? Icons.lock_clock_outlined
                           : Icons.play_arrow_rounded,
-                      color: onTap == null ? Colors.blueGrey : AppTheme.teal,
+                      color: game.onTap == null
+                          ? Colors.blueGrey
+                          : AppTheme.teal,
                     ),
                   ],
                 ),
@@ -283,14 +305,32 @@ class _TrainingGameCard extends StatelessWidget {
       ),
     );
 
-    if (onTap == null) return content;
+    if (game.onTap == null) return content;
     return Material(
       color: Colors.transparent,
       child: InkWell(
         borderRadius: BorderRadius.circular(8),
-        onTap: onTap,
+        onTap: game.onTap,
         child: content,
       ),
     );
   }
+}
+
+class _TrainingGameData {
+  const _TrainingGameData({
+    required this.icon,
+    required this.title,
+    required this.body,
+    required this.source,
+    required this.actionLabel,
+    this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final String body;
+  final String source;
+  final String actionLabel;
+  final VoidCallback? onTap;
 }

@@ -81,7 +81,10 @@ void main() {
       ).readAsStringSync();
 
       expect(training, contains('_TrainingReadinessLine'));
+      expect(training, contains('_TrainingGameList'));
+      expect(training, contains('_TrainingGameRow'));
       expect(training, isNot(contains('MetricTile')));
+      expect(training, isNot(contains('_TrainingGameCard')));
       expect(training, contains('校园生活 · 限时测试'));
     });
 
