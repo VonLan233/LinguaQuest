@@ -111,51 +111,18 @@ class HomeScreen extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: 18),
-        QuestCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SectionHeader(title: '今日任务控制台'),
-              const SizedBox(height: 16),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(999),
-                child: LinearProgressIndicator(
-                  value: dailyProgress,
-                  minHeight: 12,
-                  backgroundColor: AppTheme.progressTrack(context),
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    AppTheme.teal,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                '今日 $todayWork/${dailyGoal + reviewTarget} 词 · 当前词书 ${currentLesson?.section ?? displayTarget(state.learningPlan?.target ?? '雅思核心词汇')}',
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: FilledButton.icon(
-                      onPressed: currentLesson == null || pathComplete
-                          ? null
-                          : () => context.push('/study/new'),
-                      icon: const Icon(Icons.add_task_rounded),
-                      label: Text('新学 $dailyGoal'),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: FilledButton.tonalIcon(
-                      onPressed: () => context.push('/study/review'),
-                      icon: const Icon(Icons.replay_rounded),
-                      label: Text('复习 $dueCount'),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+        _DailyTaskPanel(
+          todayWork: todayWork,
+          totalWork: dailyGoal + reviewTarget,
+          currentSection:
+              currentLesson?.section ??
+              displayTarget(state.learningPlan?.target ?? '雅思核心词汇'),
+          progress: dailyProgress,
+          dailyGoal: dailyGoal,
+          dueCount: dueCount,
+          canStartNew: currentLesson != null && !pathComplete,
+          onNewStudy: () => context.push('/study/new'),
+          onReview: () => context.push('/study/review'),
         ),
         const SizedBox(height: 18),
         QuestCard(
@@ -294,6 +261,84 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ),
       ],
+    );
+  }
+}
+
+class _DailyTaskPanel extends StatelessWidget {
+  const _DailyTaskPanel({
+    required this.todayWork,
+    required this.totalWork,
+    required this.currentSection,
+    required this.progress,
+    required this.dailyGoal,
+    required this.dueCount,
+    required this.canStartNew,
+    required this.onNewStudy,
+    required this.onReview,
+  });
+
+  final int todayWork;
+  final int totalWork;
+  final String currentSection;
+  final double progress;
+  final int dailyGoal;
+  final int dueCount;
+  final bool canStartNew;
+  final VoidCallback onNewStudy;
+  final VoidCallback onReview;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '今日任务控制台',
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          const SizedBox(height: 12),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(999),
+            child: LinearProgressIndicator(
+              value: progress,
+              minHeight: 12,
+              backgroundColor: AppTheme.progressTrack(context),
+              valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.teal),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            '今日 $todayWork/$totalWork 词 · 当前词书 $currentSection',
+            style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+          ),
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              Expanded(
+                child: FilledButton.icon(
+                  onPressed: canStartNew ? onNewStudy : null,
+                  icon: const Icon(Icons.add_task_rounded),
+                  label: Text('新学 $dailyGoal'),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: FilledButton.tonalIcon(
+                  onPressed: onReview,
+                  icon: const Icon(Icons.replay_rounded),
+                  label: Text('复习 $dueCount'),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
