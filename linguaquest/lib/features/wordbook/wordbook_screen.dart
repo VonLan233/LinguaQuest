@@ -8,6 +8,7 @@ import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/quest_card.dart';
 import '../../core/widgets/section_header.dart';
+import '../../data/models/lesson.dart';
 
 class WordbookScreen extends ConsumerWidget {
   const WordbookScreen({super.key});
@@ -58,69 +59,85 @@ class WordbookScreen extends ConsumerWidget {
                   '${words.length} 词 · 学习路径完成 ${(state.learningPathProgress * 100).round()}%',
             ),
             const SizedBox(height: 16),
-            for (final word in words)
-              QuestCard(
-                margin: const EdgeInsets.only(bottom: 12),
-                padding: const EdgeInsets.all(15),
-                onTap: () => context.push('/wordbook/${word.id}'),
-                child: Row(
-                  children: [
-                    ImageCueBadge(cue: word.imageCue, size: 62),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            word.word,
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                          const SizedBox(height: 3),
-                          Text(word.meaning),
-                          const SizedBox(height: 3),
-                          Text(
-                            '${word.phonetic} · ${word.partOfSpeech}',
-                            style: TextStyle(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.onSurfaceVariant,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            word.exampleSentence,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        PillLabel(
-                          label: displayDifficulty(word.difficulty),
-                          color: word.difficulty == 'Hard'
-                              ? Theme.of(context).colorScheme.error
-                              : AppTheme.coral,
+            for (final word in words) _TargetWordRow(word: word),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TargetWordRow extends StatelessWidget {
+  const _TargetWordRow({required this.word});
+
+  final Word word;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () => context.push('/wordbook/${word.id}'),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ImageCueBadge(cue: word.imageCue, size: 62),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(word.word, style: theme.textTheme.titleMedium),
+                      const SizedBox(height: 3),
+                      Text(word.meaning),
+                      const SizedBox(height: 3),
+                      Text(
+                        '${word.phonetic} · ${word.partOfSpeech}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: theme.colorScheme.onSurfaceVariant,
+                          fontWeight: FontWeight.w700,
                         ),
-                        if (word.tags.isNotEmpty) ...[
-                          const SizedBox(height: 6),
-                          PillLabel(label: word.tags.first),
-                        ],
-                      ],
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        word.exampleSentence,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    PillLabel(
+                      label: displayDifficulty(word.difficulty),
+                      color: word.difficulty == 'Hard'
+                          ? theme.colorScheme.error
+                          : AppTheme.coral,
                     ),
+                    if (word.tags.isNotEmpty) ...[
+                      const SizedBox(height: 6),
+                      PillLabel(label: word.tags.first),
+                    ],
                   ],
                 ),
-              ),
-          ],
+              ],
+            ),
+          ),
         ),
       ),
     );
