@@ -1,5 +1,14 @@
 import '../../core/utils/spaced_repetition.dart';
 
+enum ReviewDimension {
+  meaningRecognition,
+  meaningRecall,
+  spelling,
+  listening,
+  context,
+  confidence,
+}
+
 class CustomWord {
   const CustomWord({
     required this.id,
@@ -174,7 +183,11 @@ class CustomWord {
 
   bool isDue(DateTime now) => !nextReviewAt.isAfter(now);
 
-  CustomWord reviewed({required bool isCorrect, DateTime? now}) {
+  CustomWord reviewed({
+    required bool isCorrect,
+    DateTime? now,
+    ReviewDimension dimension = ReviewDimension.confidence,
+  }) {
     final timestamp = now ?? DateTime.now();
     final nextLevel = isCorrect
         ? (masteryLevel + 1).clamp(0, 5)
@@ -192,12 +205,42 @@ class CustomWord {
       masteryLevel: nextLevel,
       correctCount: correctCount + (isCorrect ? 1 : 0),
       wrongCount: wrongCount + (isCorrect ? 0 : 1),
-      meaningRecognitionScore: _adjustScore(meaningRecognitionScore, isCorrect),
-      meaningRecallScore: _adjustScore(meaningRecallScore, isCorrect),
-      spellingScore: _adjustScore(spellingScore, isCorrect),
-      listeningScore: _adjustScore(listeningScore, isCorrect),
-      contextScore: _adjustScore(contextScore, isCorrect),
-      confidenceScore: _adjustScore(confidenceScore, isCorrect),
+      meaningRecognitionScore: _scoreForDimension(
+        ReviewDimension.meaningRecognition,
+        dimension,
+        meaningRecognitionScore,
+        isCorrect,
+      ),
+      meaningRecallScore: _scoreForDimension(
+        ReviewDimension.meaningRecall,
+        dimension,
+        meaningRecallScore,
+        isCorrect,
+      ),
+      spellingScore: _scoreForDimension(
+        ReviewDimension.spelling,
+        dimension,
+        spellingScore,
+        isCorrect,
+      ),
+      listeningScore: _scoreForDimension(
+        ReviewDimension.listening,
+        dimension,
+        listeningScore,
+        isCorrect,
+      ),
+      contextScore: _scoreForDimension(
+        ReviewDimension.context,
+        dimension,
+        contextScore,
+        isCorrect,
+      ),
+      confidenceScore: _scoreForDimension(
+        ReviewDimension.confidence,
+        dimension,
+        confidenceScore,
+        isCorrect,
+      ),
       nextReviewAt: nextReviewDateForLevel(nextLevel, timestamp),
       updatedAt: timestamp,
     );
@@ -291,5 +334,15 @@ class CustomWord {
 
   static int _adjustScore(int score, bool isCorrect) {
     return (score + (isCorrect ? 12 : -18)).clamp(0, 100).toInt();
+  }
+
+  static int _scoreForDimension(
+    ReviewDimension scoreDimension,
+    ReviewDimension reviewDimension,
+    int score,
+    bool isCorrect,
+  ) {
+    if (scoreDimension != reviewDimension) return score;
+    return _adjustScore(score, isCorrect);
   }
 }

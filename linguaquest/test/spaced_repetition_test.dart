@@ -32,4 +32,29 @@ void main() {
     expect(wrong.masteryLevel, 0);
     expect(wrong.wrongCount, 1);
   });
+
+  test('custom word review updates only the selected mastery dimension', () {
+    final now = DateTime(2026, 5, 25, 10);
+    final word = CustomWord.create(
+      id: '2',
+      uid: 'u1',
+      word: 'spell',
+      meaning: '拼写',
+      exampleSentence: 'Spell the word carefully.',
+      now: now,
+    );
+
+    final reviewed = word.reviewed(
+      isCorrect: true,
+      now: now,
+      dimension: ReviewDimension.spelling,
+    );
+
+    expect(reviewed.spellingScore, word.spellingScore + 12);
+    expect(reviewed.meaningRecognitionScore, word.meaningRecognitionScore);
+    expect(reviewed.meaningRecallScore, word.meaningRecallScore);
+    expect(reviewed.listeningScore, word.listeningScore);
+    expect(reviewed.contextScore, word.contextScore);
+    expect(reviewed.confidenceScore, word.confidenceScore);
+  });
 }
