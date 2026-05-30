@@ -8,24 +8,15 @@ class HelpSupportScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const faqs = [
-      (
-        'How are reviews scheduled?',
-        'A word moves between mastery 0-5. Higher mastery means a longer nextReviewAt interval.',
-      ),
-      (
-        'Can I add my own words?',
-        'Yes. Open Wordbook, then Custom Words, and use Add to create a card.',
-      ),
-      (
-        'Is AI tutor live?',
-        'Not yet. The current screen is a mock interaction for future API integration.',
-      ),
+      ('复习时间如何安排？', '每个词会在 0-5 的掌握度之间变化，掌握度越高，下次复习间隔越长。'),
+      ('可以添加自己的单词吗？', '可以。进入单词本或生词本，点击添加即可创建个人词卡。'),
+      ('AI 助教已经接入正式模型了吗？', '还没有。当前界面用于验证交互，后续再接入正式 API。'),
     ];
 
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/profile'),
-        title: const Text('Help / Support'),
+        title: const Text('帮助与反馈'),
       ),
       body: SafeArea(
         child: ListView(
@@ -42,7 +33,7 @@ class HelpSupportScreen extends StatelessWidget {
             const SizedBox(height: 12),
             const ListTile(
               leading: Icon(Icons.mail_outline),
-              title: Text('Contact support'),
+              title: Text('联系支持'),
               subtitle: Text('support@lingua.quest'),
             ),
           ],

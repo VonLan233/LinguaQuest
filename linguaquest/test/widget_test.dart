@@ -33,7 +33,7 @@ void main() {
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -500));
     await tester.pumpAndSettle();
 
-    expect(find.text('Create account'), findsOneWidget);
+    expect(find.text('注册账号'), findsOneWidget);
   });
 
   testWidgets('renders redesigned home dashboard for an existing learner', (
@@ -363,7 +363,7 @@ void main() {
 
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -500));
     await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(OutlinedButton, 'Log in'));
+    await tester.tap(find.widgetWithText(OutlinedButton, '登录'));
     await tester.pumpAndSettle();
 
     expect(find.text('learner@lingua.quest'), findsNothing);
@@ -374,10 +374,10 @@ void main() {
     await tester.enterText(find.byType(TextFormField).at(1), 'password123');
     await tester.pumpAndSettle();
 
-    await tester.tap(find.widgetWithText(FilledButton, 'Log in'));
+    await tester.tap(find.widgetWithText(FilledButton, '登录'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Welcome Back'), findsOneWidget);
+    expect(find.text('欢迎回来'), findsOneWidget);
     expect(find.textContaining('login failed'), findsOneWidget);
     expect(find.textContaining('已连续打卡'), findsNothing);
   });
@@ -399,10 +399,10 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     expect(learningRepository.listAttempts, 1);
-    expect(find.textContaining('Could not start LinguaQuest'), findsOneWidget);
-    expect(find.text('Retry'), findsOneWidget);
+    expect(find.textContaining('LinguaQuest 启动失败'), findsOneWidget);
+    expect(find.text('重试'), findsOneWidget);
 
-    await tester.tap(find.text('Retry'));
+    await tester.tap(find.text('重试'));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     expect(learningRepository.listAttempts, 2);
@@ -832,7 +832,7 @@ void main() {
     );
     expect(
       container.read(appControllerProvider).errorMessage,
-      'This email is already registered. Try logging in instead.',
+      '该邮箱已经注册，请直接登录。',
     );
 
     await controller.logout();
@@ -842,7 +842,7 @@ void main() {
     );
     expect(
       container.read(appControllerProvider).errorMessage,
-      'This email is already registered. Try logging in instead.',
+      '该邮箱已经注册，请直接登录。',
     );
   });
 

@@ -284,9 +284,7 @@ class HomeScreen extends ConsumerWidget {
                               word.word,
                               style: Theme.of(context).textTheme.titleMedium,
                             ),
-                            Text(
-                              '${word.meaning} · mastery ${word.masteryLevel}/5',
-                            ),
+                            Text('${word.meaning} · 掌握 ${word.masteryLevel}/5'),
                           ],
                         ),
                       ),

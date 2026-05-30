@@ -21,17 +21,13 @@ class LeaderboardScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/quest'),
-        title: const Text('Leaderboard'),
+        title: const Text('排行榜'),
       ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            const SectionHeader(
-              title: 'Weekly XP',
-              subtitle:
-                  'A lightweight ranking shell for friends and future class groups.',
-            ),
+            const SectionHeader(title: '本周 XP', subtitle: '好友和未来班级小组的轻量排名原型。'),
             const SizedBox(height: 16),
             for (var index = 0; index < entries.length; index++)
               _LeaderboardTile(entry: entries[index], rank: index + 1),
@@ -62,7 +58,7 @@ class _LeaderboardTile extends StatelessWidget {
       child: ListTile(
         leading: CircleAvatar(child: Text('$rank')),
         title: Text(entry.name),
-        subtitle: const Text('Valid study XP only'),
+        subtitle: const Text('仅统计有效学习 XP'),
         trailing: Chip(label: Text('${entry.xp} XP')),
       ),
     );

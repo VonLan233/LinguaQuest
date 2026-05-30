@@ -25,40 +25,37 @@ class _ClassModeScreenState extends State<ClassModeScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/quest'),
-        title: const Text('Teacher / Class mode'),
+        title: const Text('班级模式'),
       ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
             const SectionHeader(
-              title: 'Class learning',
-              subtitle:
-                  'Join-code and teacher analytics shell for the next server-backed phase.',
+              title: '班级学习',
+              subtitle: '先保留班级码和教师看板入口，后续接入服务器后启用同步。',
             ),
             const SizedBox(height: 16),
             TextField(
               controller: _codeController,
               decoration: const InputDecoration(
-                labelText: 'Class code',
+                labelText: '班级码',
                 prefixIcon: Icon(Icons.key_outlined),
               ),
             ),
             const SizedBox(height: 12),
             FilledButton.icon(
               onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Joined class ${_codeController.text} (mock)'),
-                ),
+                SnackBar(content: Text('已加入班级 ${_codeController.text}（模拟）')),
               ),
               icon: const Icon(Icons.group_add_outlined),
-              label: const Text('Join class'),
+              label: const Text('加入班级'),
             ),
             const SizedBox(height: 16),
             OutlinedButton.icon(
               onPressed: () => context.push('/class-progress'),
               icon: const Icon(Icons.query_stats_outlined),
-              label: const Text('View class progress'),
+              label: const Text('查看班级进度'),
             ),
           ],
         ),

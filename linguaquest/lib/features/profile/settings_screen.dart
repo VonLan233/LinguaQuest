@@ -16,7 +16,7 @@ class SettingsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/profile'),
-        title: const Text('Settings'),
+        title: const Text('设置'),
       ),
       body: SafeArea(
         child: ListView(
@@ -24,15 +24,15 @@ class SettingsScreen extends ConsumerWidget {
           children: [
             _SettingsAction(
               icon: Icons.notifications_outlined,
-              title: 'Daily Reminder',
+              title: '每日提醒',
               subtitle: state.reminderSettings.enabled
-                  ? 'Every day at ${state.reminderSettings.formattedTime}'
-                  : 'Reminder is off',
+                  ? '每天 ${state.reminderSettings.formattedTime}'
+                  : '提醒已关闭',
               route: '/settings/reminder',
             ),
             _SettingsAction(
               icon: Icons.dark_mode_outlined,
-              title: 'Theme',
+              title: '主题',
               subtitle: _themeModeLabel(state.themeMode),
               route: '/settings/theme',
             ),
@@ -41,8 +41,8 @@ class SettingsScreen extends ConsumerWidget {
               child: ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Icon(Icons.volume_up_outlined),
-                title: Text('Quiz Sound Feedback'),
-                subtitle: Text('Prepared for future pronunciation support'),
+                title: Text('答题音效反馈'),
+                subtitle: Text('为后续发音和听力支持预留'),
               ),
             ),
           ],
@@ -63,7 +63,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/settings'),
-        title: const Text('Theme'),
+        title: const Text('主题'),
       ),
       body: SafeArea(
         child: ListView(
@@ -73,22 +73,22 @@ class ThemeSettingsScreen extends ConsumerWidget {
               value: ThemeMode.system,
               groupValue: themeMode,
               icon: Icons.phone_android_outlined,
-              title: 'System',
-              subtitle: 'Follow the device light or dark preference',
+              title: '跟随系统',
+              subtitle: '根据设备浅色或深色偏好自动切换',
             ),
             _ThemeOption(
               value: ThemeMode.light,
               groupValue: themeMode,
               icon: Icons.light_mode_outlined,
-              title: 'Light',
-              subtitle: 'Keep LinguaQuest bright',
+              title: '浅色',
+              subtitle: '保持明亮清爽的学习界面',
             ),
             _ThemeOption(
               value: ThemeMode.dark,
               groupValue: themeMode,
               icon: Icons.dark_mode_outlined,
-              title: 'Dark',
-              subtitle: 'Use the dark learning interface',
+              title: '深色',
+              subtitle: '使用深色学习界面',
             ),
           ],
         ),
@@ -108,7 +108,7 @@ class ReminderSettingsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/settings'),
-        title: const Text('Daily Reminder'),
+        title: const Text('每日提醒'),
       ),
       body: SafeArea(
         child: ListView(
@@ -127,11 +127,11 @@ class ReminderSettingsScreen extends ConsumerWidget {
                             settings.copyWith(enabled: value),
                           );
                     },
-                    title: const Text('Daily Reminder'),
+                    title: const Text('每日提醒'),
                     subtitle: Text(
                       settings.enabled
-                          ? 'Reminder time: ${settings.formattedTime}'
-                          : 'No reminder will be shown in the app',
+                          ? '提醒时间：${settings.formattedTime}'
+                          : '应用内不会显示提醒',
                     ),
                   ),
                   const Divider(height: 24),
@@ -139,7 +139,7 @@ class ReminderSettingsScreen extends ConsumerWidget {
                     contentPadding: EdgeInsets.zero,
                     enabled: settings.enabled,
                     leading: const Icon(Icons.schedule_outlined),
-                    title: const Text('Reminder Time'),
+                    title: const Text('提醒时间'),
                     subtitle: Text(settings.formattedTime),
                     trailing: const Icon(Icons.chevron_right_rounded),
                     onTap: settings.enabled
@@ -151,7 +151,7 @@ class ReminderSettingsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              'This setting is saved in the app. System notifications are not enabled in this build.',
+              '该设置会保存在应用内；当前版本暂未启用系统级通知。',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
@@ -265,10 +265,10 @@ class _ThemeOption extends ConsumerWidget {
 String _themeModeLabel(ThemeMode mode) {
   switch (mode) {
     case ThemeMode.light:
-      return 'Light mode';
+      return '浅色';
     case ThemeMode.dark:
-      return 'Dark mode';
+      return '深色';
     case ThemeMode.system:
-      return 'Follows system setting';
+      return '跟随系统';
   }
 }

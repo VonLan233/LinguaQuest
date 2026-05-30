@@ -27,9 +27,9 @@ class AiLearningScreen extends StatelessWidget {
           spacing: 8,
           runSpacing: 8,
           children: [
-            PillLabel(label: 'Mock first', icon: Icons.science_outlined),
+            PillLabel(label: '先用模拟流程', icon: Icons.science_outlined),
             PillLabel(
-              label: 'No client API key',
+              label: '无需客户端密钥',
               icon: Icons.lock_outline,
               color: AppTheme.cyan,
             ),
@@ -51,7 +51,7 @@ class AiLearningScreen extends StatelessWidget {
           icon: Icons.account_tree_outlined,
           title: 'AI 长难句分析',
           body: '提取主干、划分从句、解释修饰成分和关键词，并给出自然中文翻译。',
-          status: 'Mock',
+          status: '模拟',
           onTap: () => context.push('/ai-tutor'),
         ),
         _AiToolCard(
@@ -64,7 +64,7 @@ class AiLearningScreen extends StatelessWidget {
           icon: Icons.question_answer_outlined,
           title: 'AI 知识问答',
           body: '结合当前单词、例句和学习目标回答词义、语法和表达自然度问题。',
-          status: 'Ready',
+          status: '可用',
           onTap: () => context.push('/ai-tutor'),
         ),
         const _AiToolCard(

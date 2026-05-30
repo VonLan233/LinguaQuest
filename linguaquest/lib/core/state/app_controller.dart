@@ -121,7 +121,7 @@ class AppController extends Notifier<AppState> {
       state = state.copyWith(
         isBootstrapped: false,
         isLoading: false,
-        errorMessage: 'Could not start LinguaQuest: ${_friendlyError(error)}',
+        errorMessage: 'LinguaQuest 启动失败：${_friendlyError(error)}',
       );
     }
   }
@@ -322,9 +322,7 @@ class AppController extends Notifier<AppState> {
     if (word == null) return false;
     final now = DateTime.now();
     if (isCorrect && !word.isDue(now)) {
-      state = state.copyWith(
-        errorMessage: 'This word is already marked for today.',
-      );
+      state = state.copyWith(errorMessage: '这张词卡今天已经完成复习。');
       return false;
     }
     return _run(() async {
@@ -449,15 +447,15 @@ class AppController extends Notifier<AppState> {
       final data = error.response?.data;
       final message = data is Map ? data['error']?.toString() : null;
       if (message == 'email already registered') {
-        return 'This email is already registered. Try logging in instead.';
+        return '该邮箱已经注册，请直接登录。';
       }
       if (message != null && message.isNotEmpty) return message;
-      return 'Network request failed. Please try again.';
+      return '网络请求失败，请稍后重试。';
     }
     if (error is StateError) {
       final message = error.message;
       if (message == 'email already registered') {
-        return 'This email is already registered. Try logging in instead.';
+        return '该邮箱已经注册，请直接登录。';
       }
       return message;
     }

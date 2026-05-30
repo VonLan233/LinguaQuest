@@ -28,23 +28,22 @@ class ProgressAnalyticsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/quest'),
-        title: const Text('Progress analytics'),
+        title: const Text('学习分析'),
       ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
             const SectionHeader(
-              title: 'Learning data',
-              subtitle:
-                  'A first-pass analytics view from custom words and review history.',
+              title: '学习数据',
+              subtitle: '根据生词卡和复习记录生成的首版分析视图。',
             ),
             const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
                   child: MetricTile(
-                    label: 'Custom words',
+                    label: '生词卡',
                     value: '${state.customWords.length}',
                     icon: Icons.style_outlined,
                   ),
@@ -52,7 +51,7 @@ class ProgressAnalyticsScreen extends ConsumerWidget {
                 const SizedBox(width: 10),
                 Expanded(
                   child: MetricTile(
-                    label: 'Mastered',
+                    label: '已掌握',
                     value: '$mastered',
                     icon: Icons.verified_outlined,
                   ),
@@ -60,7 +59,7 @@ class ProgressAnalyticsScreen extends ConsumerWidget {
                 const SizedBox(width: 10),
                 Expanded(
                   child: MetricTile(
-                    label: 'Accuracy',
+                    label: '正确率',
                     value: '$accuracy%',
                     icon: Icons.insights_outlined,
                   ),
@@ -69,7 +68,7 @@ class ProgressAnalyticsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 20),
             Text(
-              'Review load',
+              '复习负荷',
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
@@ -85,7 +84,7 @@ class ProgressAnalyticsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              '${state.dueWords.length} due words out of ${state.customWords.length} custom cards',
+              '${state.customWords.length} 张生词卡中有 ${state.dueWords.length} 张到期',
             ),
           ],
         ),

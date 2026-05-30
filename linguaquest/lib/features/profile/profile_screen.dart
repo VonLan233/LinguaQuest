@@ -153,7 +153,7 @@ class ProfileScreen extends ConsumerWidget {
                 child: Text(
                   weakestWord == null
                       ? '弱项分析：暂无常错词，继续完成学习和复习后会生成。'
-                      : '最常错词：${weakestWord.word} · ${weakestWord.wrongCount} 次错误 · ${weakestWord.status}',
+                      : '最常错词：${weakestWord.word} · ${weakestWord.wrongCount} 次错误 · ${displayWordStatus(weakestWord.status)}',
                 ),
               ),
             ],

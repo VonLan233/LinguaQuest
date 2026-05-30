@@ -53,3 +53,18 @@ String displayDifficultyFilter(String value) {
       return displayDifficulty(value);
   }
 }
+
+String displayWordStatus(String value) {
+  switch (value) {
+    case 'Learning':
+      return '学习中';
+    case 'Review':
+      return '复习中';
+    case 'Relearning':
+      return '需巩固';
+    case 'Mastered':
+      return '已掌握';
+    default:
+      return value;
+  }
+}

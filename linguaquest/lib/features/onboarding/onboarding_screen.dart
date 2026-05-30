@@ -15,21 +15,20 @@ class OnboardingScreen extends StatelessWidget {
       const _OnboardingCard(
         cue: '🖼',
         icon: Icons.image_search_outlined,
-        title: 'Image word cards',
-        body: 'Words carry meaning, examples, mastery, and visual cues.',
+        title: '图像词卡',
+        body: '单词、释义、例句、掌握度和视觉线索都放在一张卡里。',
       ),
       const _OnboardingCard(
         cue: '🛤',
         icon: Icons.route_outlined,
-        title: 'A clear path',
-        body:
-            'Short lessons decide what to learn next, so daily study stays simple.',
+        title: '清晰路径',
+        body: '短课节负责安排下一步学习，让每天打开应用后知道先做什么。',
       ),
       const _OnboardingCard(
         cue: '🔁',
         icon: Icons.replay_outlined,
-        title: 'Review at the right time',
-        body: 'Weak words return sooner; mastered words wait longer.',
+        title: '准时复习',
+        body: '弱项词更快回到队列，已掌握的词会拉长复习间隔。',
       ),
     ];
 
@@ -58,8 +57,7 @@ class OnboardingScreen extends StatelessWidget {
                 const Expanded(
                   child: SectionHeader(
                     title: 'LinguaQuest',
-                    subtitle:
-                        'Bite-sized lessons, visual memory cards, and smart review.',
+                    subtitle: '短课节、视觉记忆卡和智能复习，帮你稳定积累英语词汇。',
                   ),
                 ),
               ],
@@ -72,30 +70,27 @@ class OnboardingScreen extends StatelessWidget {
                 PillLabel(label: '词境星球', icon: Icons.language_outlined),
                 PillLabel(label: 'XP', icon: Icons.bolt, color: AppTheme.mango),
                 PillLabel(
-                  label: 'Streak',
+                  label: '连续打卡',
                   icon: Icons.local_fire_department,
                   color: AppTheme.coral,
                 ),
               ],
             ),
             const SizedBox(height: 22),
-            Text(
-              'Pick up where modern language apps work best',
-              style: theme.textTheme.titleLarge,
-            ),
+            Text('像游戏闯关一样完成每日学习', style: theme.textTheme.titleLarge),
             const SizedBox(height: 12),
             for (final card in cards) ...[card, const SizedBox(height: 12)],
             const SizedBox(height: 18),
             FilledButton.icon(
               onPressed: () => context.go('/register'),
               icon: const Icon(Icons.person_add_alt_1),
-              label: const Text('Create account'),
+              label: const Text('注册账号'),
             ),
             const SizedBox(height: 10),
             OutlinedButton.icon(
               onPressed: () => context.go('/login'),
               icon: const Icon(Icons.login),
-              label: const Text('Log in'),
+              label: const Text('登录'),
             ),
           ],
         ),

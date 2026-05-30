@@ -86,7 +86,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Image cards. Guided paths. Smart review.',
+                      '图像词卡、清晰路径、智能复习。',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                         fontWeight: FontWeight.w700,
@@ -112,7 +112,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                       FilledButton.icon(
                         onPressed: _start,
                         icon: const Icon(Icons.refresh_rounded),
-                        label: const Text('Retry'),
+                        label: const Text('重试'),
                       ),
                     ],
                   ),
