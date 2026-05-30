@@ -342,24 +342,70 @@ class _DailyFocusHeader extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 12),
-        Text(
-          '今天完成 $todayWork/$totalWork 词',
-          style: theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.w900,
-            height: 1.08,
-          ),
-        ),
-        const SizedBox(height: 10),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(999),
-          child: LinearProgressIndicator(
-            value: progress,
-            minHeight: 10,
-            backgroundColor: AppTheme.progressTrack(context),
-            valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.teal),
-          ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Text(
+                '今天完成 $todayWork/$totalWork 词',
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w900,
+                  height: 1.08,
+                ),
+              ),
+            ),
+            const SizedBox(width: 14),
+            _DailyProgressRing(progress: progress),
+          ],
         ),
       ],
+    );
+  }
+}
+
+class _DailyProgressRing extends StatelessWidget {
+  const _DailyProgressRing({required this.progress});
+
+  final double progress;
+
+  @override
+  Widget build(BuildContext context) {
+    final percent = (progress.clamp(0.0, 1.0) * 100).round();
+    return SizedBox.square(
+      dimension: 82,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          SizedBox.square(
+            dimension: 82,
+            child: CircularProgressIndicator(
+              value: progress.clamp(0.0, 1.0),
+              strokeWidth: 8,
+              strokeCap: StrokeCap.round,
+              backgroundColor: AppTheme.progressTrack(context),
+              valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.teal),
+            ),
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '$percent%',
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900),
+              ),
+              Text(
+                '今日',
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

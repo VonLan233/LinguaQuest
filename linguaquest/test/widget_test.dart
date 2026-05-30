@@ -106,9 +106,11 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     expect(find.text('今天完成 4/14 词'), findsOneWidget);
+    expect(find.text('29%'), findsOneWidget);
+    expect(find.text('今日'), findsOneWidget);
 
-    final progress = tester.widget<LinearProgressIndicator>(
-      find.byType(LinearProgressIndicator).first,
+    final progress = tester.widget<CircularProgressIndicator>(
+      find.byType(CircularProgressIndicator).first,
     );
     expect(progress.value, closeTo(4 / 14, 0.001));
   });
