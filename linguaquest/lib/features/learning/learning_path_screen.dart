@@ -100,18 +100,6 @@ class _PathNode extends StatelessWidget {
                   color: color,
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.white, width: 4),
-                  boxShadow: [
-                    BoxShadow(
-                      color: color.withValues(alpha: current ? 0.36 : 0.20),
-                      blurRadius: current ? 24 : 12,
-                      offset: Offset(0, current ? 11 : 6),
-                    ),
-                    const BoxShadow(
-                      color: Color(0x18000000),
-                      blurRadius: 0,
-                      offset: Offset(0, 4),
-                    ),
-                  ],
                 ),
                 child: Icon(
                   locked
