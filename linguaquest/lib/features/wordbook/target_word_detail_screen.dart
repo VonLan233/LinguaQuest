@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/quest_card.dart';
 import '../../data/models/lesson.dart';
@@ -16,7 +17,7 @@ class TargetWordDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final word = _find(ref);
     if (word == null) {
-      return const Scaffold(body: Center(child: Text('Word not found')));
+      return const Scaffold(body: Center(child: Text('没有找到这个词')));
     }
 
     return Scaffold(
@@ -85,7 +86,10 @@ class TargetWordDetailScreen extends ConsumerWidget {
               runSpacing: 8,
               children: [
                 PillLabel(label: word.partOfSpeech),
-                PillLabel(label: word.difficulty, color: AppTheme.coral),
+                PillLabel(
+                  label: displayDifficulty(word.difficulty),
+                  color: AppTheme.coral,
+                ),
                 for (final tag in word.tags) PillLabel(label: tag),
               ],
             ),

@@ -24,15 +24,20 @@ class MetricTile extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(22),
         border: Border.all(
           color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
         ),
         boxShadow: const [
           BoxShadow(
             color: AppTheme.cardShadow,
-            blurRadius: 20,
-            offset: Offset(0, 10),
+            blurRadius: 14,
+            offset: Offset(0, 7),
+          ),
+          BoxShadow(
+            color: Color(0x12000000),
+            blurRadius: 0,
+            offset: Offset(0, 3),
           ),
         ],
       ),
@@ -43,7 +48,8 @@ class MetricTile extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: resolvedColor.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(color: resolvedColor.withValues(alpha: 0.18)),
             ),
             child: Icon(icon, color: resolvedColor, size: 20),
           ),

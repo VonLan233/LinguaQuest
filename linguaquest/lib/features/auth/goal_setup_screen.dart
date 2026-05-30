@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/date_formatting.dart';
+import '../../core/utils/ui_labels.dart';
+import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/quest_card.dart';
 import '../../data/models/lesson.dart';
 
@@ -40,27 +42,29 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
         ? null
         : _dailyWordsForDeadline(state.lessons, state.completedLessonIds);
     return Scaffold(
-      appBar: AppBar(title: const Text('Goal Setup')),
+      appBar: AppBar(
+        leading: const FallbackBackButton(fallbackLocation: '/home'),
+        title: const Text('目标设置'),
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
           children: [
             GradientHeroCard(
-              title: 'Choose your learning plan',
-              subtitle:
-                  'We turn your target into daily lessons, reviews, and quests.',
+              title: '选择学习计划',
+              subtitle: '系统会把目标拆成每日新学、到期复习和积分任务。',
               icon: Icons.track_changes_rounded,
-              badge: 'Step 2 of 2',
+              badge: '第 2 步 / 共 2 步',
               action: Row(
                 children: [
                   PillLabel(
-                    label: _target,
+                    label: displayTarget(_target),
                     icon: Icons.flag_outlined,
                     color: Colors.white,
                   ),
                   const SizedBox(width: 8),
                   PillLabel(
-                    label: '${plannedDailyWords ?? _dailyGoal}/day',
+                    label: '${plannedDailyWords ?? _dailyGoal}/天',
                     icon: Icons.today_outlined,
                     color: Colors.white,
                   ),
@@ -70,18 +74,20 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
             const SizedBox(height: 20),
             QuestCard(
               child: _ChoiceSection<String>(
-                title: 'Target',
+                title: '目标',
                 values: targets,
                 selected: _target,
+                labelFor: displayTarget,
                 onSelected: (value) => setState(() => _target = value),
               ),
             ),
             const SizedBox(height: 20),
             QuestCard(
               child: _ChoiceSection<String>(
-                title: 'Level',
+                title: '水平',
                 values: levels,
                 selected: _level,
+                labelFor: displayLevel,
                 onSelected: (value) => setState(() => _level = value),
               ),
             ),
@@ -90,15 +96,12 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Daily Goal',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
+                  Text('每日目标', style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: 8),
                   _ChoiceGrid<int>(
                     values: goals,
                     selected: _dailyGoal,
-                    labelFor: (goal) => '$goal words',
+                    labelFor: (goal) => '$goal 词',
                     onSelected: (goal) => setState(() => _dailyGoal = goal),
                   ),
                 ],
@@ -110,14 +113,14 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Plan by Deadline',
+                    '按截止日期规划',
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 8),
                   Text(
                     _deadline == null
-                        ? 'Choose a target date to calculate words per day.'
-                        : '${formatShortDate(_deadline!)} · ${plannedDailyWords ?? _dailyGoal} words/day',
+                        ? '选择目标日期后，系统会自动计算每天需要学习的词数。'
+                        : '${formatShortDate(_deadline!)} · 每天 ${plannedDailyWords ?? _dailyGoal} 词',
                   ),
                   const SizedBox(height: 12),
                   Row(
@@ -126,15 +129,13 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
                         child: OutlinedButton.icon(
                           onPressed: _pickDeadline,
                           icon: const Icon(Icons.event_outlined),
-                          label: Text(
-                            _deadline == null ? 'Choose Date' : 'Change Date',
-                          ),
+                          label: Text(_deadline == null ? '选择日期' : '更改日期'),
                         ),
                       ),
                       if (_deadline != null) ...[
                         const SizedBox(width: 10),
                         IconButton.filledTonal(
-                          tooltip: 'Clear date plan',
+                          tooltip: '清除日期规划',
                           onPressed: () => setState(() => _deadline = null),
                           icon: const Icon(Icons.close_rounded),
                         ),
@@ -148,7 +149,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
             FilledButton.icon(
               onPressed: _save,
               icon: const Icon(Icons.check_circle_outline),
-              label: const Text('Enter LinguaQuest'),
+              label: const Text('进入 LinguaQuest'),
             ),
           ],
         ),
@@ -283,7 +284,7 @@ class _ChoiceGrid<T> extends StatelessWidget {
           children: [
             for (final value in values)
               _StableChoiceButton(
-                key: ValueKey('choice-${labelFor(value)}'),
+                key: ValueKey('choice-$value'),
                 label: labelFor(value),
                 selected: value == selected,
                 onTap: () => onSelected(value),

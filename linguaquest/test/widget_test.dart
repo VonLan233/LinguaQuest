@@ -60,7 +60,7 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     expect(find.text('已连续打卡 6 天'), findsOneWidget);
-    expect(find.text('IELTS · Intermediate'), findsOneWidget);
+    expect(find.text('IELTS · 中级'), findsOneWidget);
     expect(find.text('首页'), findsWidgets);
     expect(find.text('训练场'), findsWidgets);
 
@@ -104,8 +104,8 @@ void main() {
     await tester.tap(find.text('开始新学 12'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Start quiz'), findsWidgets);
-    expect(find.text('Check'), findsNothing);
+    expect(find.text('开始测验'), findsWidgets);
+    expect(find.text('检查'), findsNothing);
   });
 
   testWidgets('discover check-in only counts same-day study', (tester) async {
@@ -134,8 +134,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('每日签到'), findsOneWidget);
-    expect(find.text('+5'), findsOneWidget);
-    expect(find.text('已获取'), findsNothing);
+    expect(find.text('去完成 +5'), findsOneWidget);
+    expect(find.text('已领取'), findsNothing);
   });
 
   testWidgets('discover weak cleanup does not auto-complete without mistakes', (
@@ -195,11 +195,11 @@ void main() {
     );
     expect(cleanupCard, findsOneWidget);
     expect(
-      find.descendant(of: cleanupCard, matching: find.text('+10')),
+      find.descendant(of: cleanupCard, matching: find.text('去完成 +10')),
       findsOneWidget,
     );
     expect(
-      find.descendant(of: cleanupCard, matching: find.text('已获取')),
+      find.descendant(of: cleanupCard, matching: find.text('已领取')),
       findsNothing,
     );
   });
@@ -284,11 +284,11 @@ void main() {
     );
     expect(cleanupCard, findsOneWidget);
     expect(
-      find.descendant(of: cleanupCard, matching: find.text('+10')),
+      find.descendant(of: cleanupCard, matching: find.text('去完成 +10')),
       findsOneWidget,
     );
     expect(
-      find.descendant(of: cleanupCard, matching: find.text('已获取')),
+      find.descendant(of: cleanupCard, matching: find.text('已领取')),
       findsNothing,
     );
   });
@@ -591,58 +591,51 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('新学 10'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Start quiz').first);
+    await tester.tap(find.text('开始测验').first);
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('讲座；授课'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Check'));
+    await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Try again'));
+    await tester.tap(find.text('再试一次'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('通勤'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Check'));
+    await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Continue'));
+    await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('lecture'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Check'));
+    await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Continue'));
+    await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextField), 'deadline');
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Check'));
+    await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Continue'));
+    await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
-    expect(
-      find.text('2/3 correct · 13 XP earned · mistakes moved into review.'),
-      findsOneWidget,
-    );
+    expect(find.text('答对 2/3 题 · 获得 13 XP · 错题已进入复习。'), findsOneWidget);
 
     await tester.scrollUntilVisible(
-      find.text('Go to review center'),
+      find.text('去复习中心'),
       300,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Go to review center'));
+    await tester.tap(find.text('去复习中心'));
     await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(
-      find.text('commute'),
-      300,
-      scrollable: find.byType(Scrollable).first,
-    );
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -900));
     await tester.pumpAndSettle();
     expect(find.text('commute'), findsWidgets);
-    expect(find.text('Lesson'), findsWidgets);
+    expect(find.text('课程'), findsWidgets);
   });
 
   testWidgets('lesson and quiz screens expose a working back path', (
@@ -677,7 +670,7 @@ void main() {
     await tester.tap(find.text('新学 10'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Start quiz'), findsWidgets);
+    expect(find.text('开始测验'), findsWidgets);
     expect(find.byType(BackButtonIcon), findsOneWidget);
 
     await tester.tap(find.byType(BackButtonIcon));
@@ -693,10 +686,10 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('新学 10'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Start quiz').first);
+    await tester.tap(find.text('开始测验').first);
     await tester.pumpAndSettle();
 
-    expect(find.text('Check'), findsOneWidget);
+    expect(find.text('检查'), findsOneWidget);
     expect(find.byType(BackButtonIcon), findsOneWidget);
 
     await tester.tap(find.text('讲座；授课'));
@@ -704,13 +697,13 @@ void main() {
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
 
-    expect(find.text('Leave quiz?'), findsOneWidget);
+    expect(find.text('离开测验？'), findsOneWidget);
 
-    await tester.tap(find.text('Stay'));
+    await tester.tap(find.text('继续答题'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Check'), findsOneWidget);
-    await tester.tap(find.text('Check'));
+    expect(find.text('检查'), findsOneWidget);
+    await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
 
     final selectedOptionButton = tester.widget<OutlinedButton>(
@@ -723,10 +716,10 @@ void main() {
 
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Leave'));
+    await tester.tap(find.text('离开'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Start quiz'), findsWidgets);
+    expect(find.text('开始测验'), findsWidgets);
   });
 
   test('theme and reminder settings persist locally', () async {
@@ -921,9 +914,9 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
-    expect(find.text('Visual Wordbook'), findsOneWidget);
+    expect(find.text('图片单词本'), findsOneWidget);
     expect(find.text('context'), findsOneWidget);
-    expect(find.text('Easy'), findsOneWidget);
+    expect(find.text('简单'), findsOneWidget);
   });
 
   test('deadline planning saves daily words into the profile', () async {
@@ -1012,6 +1005,54 @@ void main() {
     expect(afterDuplicate.correctCount, reviewedWord.correctCount);
   });
 
+  test('claiming a discover reward updates XP once per day', () async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'reward-user',
+      name: 'Rey',
+      email: 'rey@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      createdAt: now,
+      updatedAt: now,
+      xp: 30,
+      streak: 1,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    final controller = container.read(appControllerProvider.notifier);
+
+    expect(
+      await controller.claimReward(
+        id: 'daily-checkin',
+        points: 5,
+        isAvailable: true,
+      ),
+      true,
+    );
+    expect(container.read(appControllerProvider).user?.xp, 35);
+    expect(
+      container.read(appControllerProvider).todayClaimedRewardIds,
+      contains('daily-checkin'),
+    );
+
+    expect(
+      await controller.claimReward(
+        id: 'daily-checkin',
+        points: 5,
+        isAvailable: true,
+      ),
+      false,
+    );
+    expect(container.read(appControllerProvider).user?.xp, 35);
+  });
+
   test('custom word review status follows mastery thresholds', () {
     final now = DateTime(2026, 5, 25);
     final word = CustomWord.create(
@@ -1066,28 +1107,28 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('新学 10'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Start quiz').first);
+    await tester.tap(find.text('开始测验').first);
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('通勤'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Check'));
+    await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Continue'));
+    await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('lecture'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Check'));
+    await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Continue'));
+    await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextField), 'deadlin');
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Check'));
+    await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Try again'));
+    await tester.tap(find.text('再试一次'));
     await tester.pumpAndSettle();
 
     expect(find.text('deadlin'), findsOneWidget);
@@ -1255,25 +1296,25 @@ void main() {
     await tester.tap(find.text('复习 2'));
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(
-      find.text('Add Mistake Cards'),
+      find.text('加入错词卡'),
       300,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    expect(find.text('Add Selected (2)'), findsOneWidget);
+    expect(find.text('加入已选 (2)'), findsOneWidget);
 
     await tester.tap(find.byType(CheckboxListTile).at(0));
     await tester.pumpAndSettle();
     await tester.tap(find.byType(CheckboxListTile).at(1));
     await tester.pumpAndSettle();
-    expect(find.text('Add Selected (0)'), findsOneWidget);
+    expect(find.text('加入已选 (0)'), findsOneWidget);
 
     await container
         .read(appControllerProvider.notifier)
         .updateThemeMode(ThemeMode.dark);
     await tester.pumpAndSettle();
 
-    expect(find.text('Add Selected (0)'), findsOneWidget);
+    expect(find.text('加入已选 (0)'), findsOneWidget);
   });
 
   testWidgets(
@@ -1332,7 +1373,7 @@ void main() {
       await tester.tap(find.text('复习 2'));
       await tester.pumpAndSettle();
       await tester.scrollUntilVisible(
-        find.text('Add Mistake Cards'),
+        find.text('加入错词卡'),
         300,
         scrollable: find.byType(Scrollable).first,
       );
@@ -1341,14 +1382,14 @@ void main() {
       expect(find.text('review-word-0'), findsOneWidget);
       expect(find.text('review-word-5'), findsOneWidget);
       expect(find.text('review-word-6'), findsNothing);
-      expect(find.text('Add Selected (6)'), findsOneWidget);
+      expect(find.text('加入已选 (6)'), findsOneWidget);
 
       await tester.scrollUntilVisible(
-        find.widgetWithText(FilledButton, 'Add Selected (6)'),
+        find.widgetWithText(FilledButton, '加入已选 (6)'),
         300,
       );
       await tester.pumpAndSettle();
-      await tester.tap(find.widgetWithText(FilledButton, 'Add Selected (6)'));
+      await tester.tap(find.widgetWithText(FilledButton, '加入已选 (6)'));
       await tester.pumpAndSettle();
 
       final customWords = container.read(appControllerProvider).customWords;

@@ -62,6 +62,7 @@ class AppController extends Notifier<AppState> {
   static const _todayDateKey = 'linguaquest.today.date';
   static const _todayLessonIdsKey = 'linguaquest.today.lessons';
   static const _todayReviewIdsKey = 'linguaquest.today.reviews';
+  static const _todayRewardIdsKey = 'linguaquest.today.rewards';
 
   late final AuthRepository _authRepository;
   late final CustomWordRepository _customWordRepository;
@@ -91,6 +92,9 @@ class AppController extends Notifier<AppState> {
       final todayReviewWordIds = hasTodayState
           ? _stringSet(prefs, _todayReviewIdsKey)
           : <String>{};
+      final todayClaimedRewardIds = hasTodayState
+          ? _stringSet(prefs, _todayRewardIdsKey)
+          : <String>{};
       final lessons = _applyLessonProgression(
         await _learningRepository.listLessons(),
         completedLessonIds,
@@ -111,6 +115,7 @@ class AppController extends Notifier<AppState> {
         completedLessonIds: completedLessonIds,
         todayCompletedLessonIds: todayCompletedLessonIds,
         todayReviewWordIds: todayReviewWordIds,
+        todayClaimedRewardIds: todayClaimedRewardIds,
       );
     } catch (error) {
       state = state.copyWith(
@@ -353,6 +358,28 @@ class AppController extends Notifier<AppState> {
     });
   }
 
+  Future<bool> claimReward({
+    required String id,
+    required int points,
+    required bool isAvailable,
+  }) async {
+    final user = state.user;
+    if (user == null || points <= 0 || !isAvailable) return false;
+    if (state.todayClaimedRewardIds.contains(id)) return false;
+    return _run(() async {
+      final now = DateTime.now();
+      final claimedRewardIds = {...state.todayClaimedRewardIds, id};
+      final updatedUser = await _authRepository.updateProfile(
+        user.copyWith(xp: user.xp + points, updatedAt: now),
+      );
+      await _saveTodayClaimedRewards(claimedRewardIds);
+      state = state.copyWith(
+        user: updatedUser,
+        todayClaimedRewardIds: claimedRewardIds,
+      );
+    });
+  }
+
   Future<int> addMistakesToCustomWords(Set<String> wordIds) async {
     final user = state.user;
     final mistakes = state.lastResult?.mistakes ?? const [];
@@ -537,6 +564,17 @@ class AppController extends Notifier<AppState> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_todayDateKey, _dateKey(DateTime.now()));
     await prefs.setStringList(_todayReviewIdsKey, todayReviewWordIds.toList());
+  }
+
+  Future<void> _saveTodayClaimedRewards(
+    Set<String> todayClaimedRewardIds,
+  ) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_todayDateKey, _dateKey(DateTime.now()));
+    await prefs.setStringList(
+      _todayRewardIdsKey,
+      todayClaimedRewardIds.toList(),
+    );
   }
 
   ThemeMode _themeModeFromName(String? value) {

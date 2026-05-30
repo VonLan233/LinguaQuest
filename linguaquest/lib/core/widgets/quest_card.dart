@@ -25,7 +25,7 @@ class QuestCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final radius = BorderRadius.circular(28);
+    final radius = BorderRadius.circular(24);
     final decoration = BoxDecoration(
       color: color ?? theme.colorScheme.surface,
       gradient: gradient,
@@ -38,8 +38,13 @@ class QuestCard extends StatelessWidget {
       boxShadow: const [
         BoxShadow(
           color: AppTheme.cardShadow,
-          blurRadius: 24,
-          offset: Offset(0, 14),
+          blurRadius: 18,
+          offset: Offset(0, 8),
+        ),
+        BoxShadow(
+          color: Color(0x12000000),
+          blurRadius: 0,
+          offset: Offset(0, 3),
         ),
       ],
     );
@@ -94,11 +99,24 @@ class GradientHeroCard extends StatelessWidget {
       gradient: const LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
-        colors: [AppTheme.deepTeal, AppTheme.teal, AppTheme.cyan],
+        colors: [AppTheme.cyan, AppTheme.deepTeal, AppTheme.teal],
+        stops: [0, 0.58, 1],
       ),
       borderColor: Colors.white.withValues(alpha: 0.18),
       child: Stack(
         children: [
+          Positioned(
+            right: -58,
+            bottom: -78,
+            child: Container(
+              width: 186,
+              height: 186,
+              decoration: BoxDecoration(
+                color: AppTheme.mango.withValues(alpha: 0.22),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
           Positioned(
             right: -28,
             top: -26,
@@ -120,6 +138,9 @@ class GradientHeroCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.18),
                     borderRadius: BorderRadius.circular(999),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.22),
+                    ),
                   ),
                   child: Text(
                     badge!,
@@ -135,6 +156,7 @@ class GradientHeroCard extends StatelessWidget {
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.w900,
+                  height: 1.05,
                 ),
               ),
               const SizedBox(height: 8),
@@ -214,15 +236,15 @@ class ImageCueBadge extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFFFFF4D8), Color(0xFFE2FBF4)],
+          colors: [Color(0xFFFFF3A8), Color(0xFFE9FFD9), Color(0xFFDDF3FF)],
         ),
-        borderRadius: BorderRadius.circular(size * 0.34),
+        borderRadius: BorderRadius.circular(size * 0.32),
         border: Border.all(color: theme.colorScheme.surface, width: 3),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x16006E72),
-            blurRadius: 18,
-            offset: Offset(0, 9),
+            color: AppTheme.cardShadow,
+            blurRadius: 16,
+            offset: Offset(0, 7),
           ),
         ],
       ),

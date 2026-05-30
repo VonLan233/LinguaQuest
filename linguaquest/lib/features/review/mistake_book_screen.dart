@@ -20,7 +20,7 @@ class MistakeBookScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/review'),
-        title: const Text('Mistake book'),
+        title: const Text('错词本'),
       ),
       body: SafeArea(
         child: ListView(
@@ -28,12 +28,11 @@ class MistakeBookScreen extends ConsumerWidget {
           children: [
             GradientHeroCard(
               title: lessonMistakes.isEmpty
-                  ? 'No lesson mistakes yet'
-                  : '${lessonMistakes.length} lesson mistakes',
-              subtitle:
-                  'Wrong quiz answers and weak custom cards stay visible for follow-up review.',
+                  ? '暂时没有课程错题'
+                  : '${lessonMistakes.length} 个课程错题',
+              subtitle: '测验错题和弱项自定义卡会保留在这里，方便后续复习。',
               icon: Icons.auto_fix_high_outlined,
-              badge: 'Mistake recovery',
+              badge: '错题修复',
               action: FilledButton.icon(
                 style: FilledButton.styleFrom(
                   backgroundColor: Colors.white,
@@ -41,30 +40,26 @@ class MistakeBookScreen extends ConsumerWidget {
                 ),
                 onPressed: () => context.go('/learn'),
                 icon: const Icon(Icons.route_outlined),
-                label: const Text('Practice lesson'),
+                label: const Text('去练一课'),
               ),
             ),
             const SizedBox(height: 20),
             if (lessonMistakes.isEmpty && weakWords.isEmpty)
               EmptyState(
                 icon: Icons.check_circle_outline,
-                title: 'Mistake book is clear',
-                message:
-                    'Miss a quiz question or mark custom words as missed to build this list.',
+                title: '错词本已清空',
+                message: '测验答错，或把自定义词标记为没记住后，这里会出现复习项。',
                 action: OutlinedButton.icon(
                   onPressed: () => context.go('/learn'),
                   icon: const Icon(Icons.play_arrow_rounded),
-                  label: const Text('Start a lesson'),
+                  label: const Text('开始一课'),
                 ),
               )
             else ...[
-              Text(
-                'Lesson mistakes',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+              Text('课程错题', style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 10),
               if (lessonMistakes.isEmpty)
-                const Text('No wrong quiz answers from the latest lesson.')
+                const Text('最近一课没有答错的题。')
               else
                 for (final mistake in lessonMistakes)
                   QuestCard(
@@ -90,13 +85,10 @@ class MistakeBookScreen extends ConsumerWidget {
                     ),
                   ),
               const SizedBox(height: 18),
-              Text(
-                'Weak custom words',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+              Text('弱项自定义词', style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 10),
               if (weakWords.isEmpty)
-                const Text('No weak custom words yet.')
+                const Text('还没有弱项自定义词。')
               else
                 for (final word in weakWords)
                   QuestCard(
@@ -115,9 +107,7 @@ class MistakeBookScreen extends ConsumerWidget {
                                 word.word,
                                 style: Theme.of(context).textTheme.titleMedium,
                               ),
-                              Text(
-                                '${word.wrongCount} wrong · ${word.meaning}',
-                              ),
+                              Text('错 ${word.wrongCount} 次 · ${word.meaning}'),
                             ],
                           ),
                         ),

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/quest_card.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
@@ -41,12 +42,12 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
     );
     final lesson = _findLesson(lessons);
     if (lesson == null) {
-      return const Scaffold(body: Center(child: Text('Lesson not found')));
+      return const Scaffold(body: Center(child: Text('没有找到这节课')));
     }
     if (lesson.questions.isEmpty) {
       return Scaffold(
         appBar: AppBar(title: Text(lesson.title)),
-        body: const Center(child: Text('This lesson has no quiz yet.')),
+        body: const Center(child: Text('这节课还没有测验。')),
       );
     }
     final question = lesson.questions[_index];
@@ -78,6 +79,9 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
                           value: progress,
                           minHeight: 12,
                           backgroundColor: AppTheme.progressTrack(context),
+                          valueColor: const AlwaysStoppedAnimation<Color>(
+                            AppTheme.teal,
+                          ),
                         ),
                       ),
                     ),
@@ -95,7 +99,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         QuestCard(
-                          color: AppTheme.warmSurface(context),
+                          color: AppTheme.accentSurface(context),
                           child: Column(
                             children: [
                               ImageCueBadge(
@@ -118,7 +122,9 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
                                 children: [
                                   PillLabel(label: question.word.partOfSpeech),
                                   PillLabel(
-                                    label: question.word.difficulty,
+                                    label: displayDifficulty(
+                                      question.word.difficulty,
+                                    ),
                                     color: AppTheme.coral,
                                   ),
                                 ],
@@ -137,7 +143,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
                           onInputChanged: () => setState(() {}),
                         ),
                         if (_checked) ...[
-                          const SizedBox(height: 18),
+                          const SizedBox(height: 14),
                           _FeedbackPanel(
                             isCorrect: _lastCorrect,
                             explanation: question.explanation,
@@ -164,11 +170,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
                         ? Icons.arrow_forward_rounded
                         : Icons.check_rounded,
                   ),
-                  label: Text(
-                    _checked
-                        ? (_lastCorrect ? 'Continue' : 'Try again')
-                        : 'Check',
-                  ),
+                  label: Text(_checked ? (_lastCorrect ? '继续' : '再试一次') : '检查'),
                 ),
               ],
             ),
@@ -193,17 +195,17 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
       final confirmed = await showDialog<bool>(
         context: activeContext,
         builder: (context) => AlertDialog(
-          title: const Text('Leave quiz?'),
-          content: const Text('Your current quiz progress will be discarded.'),
+          title: const Text('离开测验？'),
+          content: const Text('当前测验进度将被放弃。'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Stay'),
+              child: const Text('继续答题'),
             ),
             FilledButton.icon(
               onPressed: () => Navigator.pop(context, true),
               icon: const Icon(Icons.exit_to_app_rounded),
-              label: const Text('Leave'),
+              label: const Text('离开'),
             ),
           ],
         ),
@@ -323,7 +325,7 @@ class _QuestionInput extends StatelessWidget {
         controller: controller,
         enabled: !checked,
         decoration: const InputDecoration(
-          labelText: 'Type the word',
+          labelText: '输入单词',
           prefixIcon: Icon(Icons.edit_outlined),
         ),
         onChanged: (_) => onInputChanged(),
@@ -337,6 +339,7 @@ class _QuestionInput extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 10),
             child: SizedBox(
               width: double.infinity,
+              height: 66,
               child: OutlinedButton(
                 onPressed: checked ? () {} : () => onSelected(option),
                 style: OutlinedButton.styleFrom(
@@ -410,7 +413,7 @@ class _QuestionInput extends StatelessWidget {
   Color _optionBorder(BuildContext context, String option) {
     if (!checked) {
       return selected == option
-          ? AppTheme.teal
+          ? Theme.of(context).colorScheme.primary
           : Theme.of(context).colorScheme.outlineVariant;
     }
     if (_isCorrectOption(option)) return _successColor(context);
@@ -420,8 +423,8 @@ class _QuestionInput extends StatelessWidget {
 
   Color _successColor(BuildContext context) {
     return Theme.of(context).brightness == Brightness.dark
-        ? Colors.green.shade300
-        : Colors.green.shade700;
+        ? Theme.of(context).colorScheme.primary
+        : AppTheme.success;
   }
 }
 
@@ -435,8 +438,8 @@ class _FeedbackPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = isCorrect
         ? (Theme.of(context).brightness == Brightness.dark
-              ? Colors.green.shade300
-              : Colors.green.shade700)
+              ? Theme.of(context).colorScheme.primary
+              : AppTheme.success)
         : Theme.of(context).colorScheme.error;
     return QuestCard(
       color: color.withValues(alpha: 0.10),
@@ -451,7 +454,7 @@ class _FeedbackPanel extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              isCorrect ? 'Correct. $explanation' : 'Not yet. $explanation',
+              isCorrect ? '答对了。$explanation' : '还不对。$explanation',
               style: TextStyle(color: color),
             ),
           ),

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/quest_card.dart';
@@ -28,12 +29,12 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/wordbook'),
-        title: const Text('Custom words'),
+        title: const Text('自定义词卡'),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/custom-words/new'),
         icon: const Icon(Icons.add),
-        label: const Text('Add'),
+        label: const Text('添加'),
       ),
       body: SafeArea(
         child: Column(
@@ -41,18 +42,17 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 4),
               child: GradientHeroCard(
-                title: 'My word cards',
-                subtitle:
-                    'Create, search, filter, edit, and review your personal vocabulary deck.',
+                title: '我的词卡',
+                subtitle: '创建、搜索、筛选、编辑并复习你的个人词库。',
                 icon: Icons.add_card_outlined,
-                badge: '${state.customWords.length} custom cards',
+                badge: '${state.customWords.length} 张自定义卡',
               ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
               child: TextField(
                 decoration: const InputDecoration(
-                  labelText: 'Search words, meanings, or tags',
+                  labelText: '搜索单词、释义或标签',
                   prefixIcon: Icon(Icons.search),
                 ),
                 onChanged: (value) => setState(() => _query = value),
@@ -74,7 +74,7 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
                     Padding(
                       padding: const EdgeInsets.only(right: 8),
                       child: ChoiceChip(
-                        label: Text(filter),
+                        label: Text(displayDifficultyFilter(filter)),
                         selected: _filter == filter,
                         onSelected: (_) => setState(() => _filter = filter),
                       ),
@@ -86,12 +86,12 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
               child: words.isEmpty
                   ? EmptyState(
                       icon: Icons.style_outlined,
-                      title: 'No matching words',
-                      message: 'Add a custom card or adjust search filters.',
+                      title: '没有匹配的词卡',
+                      message: '可以添加一张自定义词卡，或调整搜索条件。',
                       action: FilledButton.icon(
                         onPressed: () => context.push('/custom-words/new'),
                         icon: const Icon(Icons.add),
-                        label: const Text('Add word'),
+                        label: const Text('添加单词'),
                       ),
                     )
                   : ListView.separated(
@@ -130,19 +130,17 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Delete "${word.word}"?'),
-        content: const Text(
-          'This removes the custom card and its review schedule.',
-        ),
+        title: Text('删除“${word.word}”？'),
+        content: const Text('这会同时删除自定义词卡和它的复习计划。'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: const Text('取消'),
           ),
           FilledButton.icon(
             onPressed: () => Navigator.pop(context, true),
             icon: const Icon(Icons.delete_outline),
-            label: const Text('Delete'),
+            label: const Text('删除'),
           ),
         ],
       ),
@@ -154,14 +152,14 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
     if (!mounted) return;
     if (!succeeded) {
       final message = ref.read(appControllerProvider).errorMessage;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message ?? 'Could not delete ${word.word}')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message ?? '暂时无法删除 ${word.word}')));
       return;
     }
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text('Deleted ${word.word}')));
+    ).showSnackBar(SnackBar(content: Text('已删除 ${word.word}')));
   }
 }
 
@@ -193,7 +191,10 @@ class _CustomWordTile extends StatelessWidget {
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                     ),
-                    PillLabel(label: word.difficulty, color: AppTheme.coral),
+                    PillLabel(
+                      label: displayDifficulty(word.difficulty),
+                      color: AppTheme.coral,
+                    ),
                   ],
                 ),
                 const SizedBox(height: 3),
@@ -211,7 +212,7 @@ class _CustomWordTile extends StatelessWidget {
             ),
           ),
           IconButton(
-            tooltip: 'Delete',
+            tooltip: '删除',
             icon: const Icon(Icons.delete_outline),
             onPressed: onDelete,
           ),

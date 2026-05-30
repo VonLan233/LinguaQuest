@@ -108,6 +108,7 @@ class AppState {
     required this.completedLessonIds,
     required this.todayCompletedLessonIds,
     required this.todayReviewWordIds,
+    required this.todayClaimedRewardIds,
     this.user,
     this.lastResult,
     this.learningPlan,
@@ -125,6 +126,7 @@ class AppState {
   final Set<String> completedLessonIds;
   final Set<String> todayCompletedLessonIds;
   final Set<String> todayReviewWordIds;
+  final Set<String> todayClaimedRewardIds;
   final LessonResult? lastResult;
   final String? errorMessage;
 
@@ -179,6 +181,7 @@ class AppState {
     Set<String>? completedLessonIds,
     Set<String>? todayCompletedLessonIds,
     Set<String>? todayReviewWordIds,
+    Set<String>? todayClaimedRewardIds,
     LessonResult? lastResult,
     String? errorMessage,
     bool clearError = false,
@@ -198,6 +201,8 @@ class AppState {
       todayCompletedLessonIds:
           todayCompletedLessonIds ?? this.todayCompletedLessonIds,
       todayReviewWordIds: todayReviewWordIds ?? this.todayReviewWordIds,
+      todayClaimedRewardIds:
+          todayClaimedRewardIds ?? this.todayClaimedRewardIds,
       lastResult: lastResult ?? this.lastResult,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
     );
@@ -214,6 +219,7 @@ class AppState {
       completedLessonIds: {},
       todayCompletedLessonIds: {},
       todayReviewWordIds: {},
+      todayClaimedRewardIds: {},
     );
   }
 }

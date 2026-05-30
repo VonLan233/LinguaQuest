@@ -14,6 +14,7 @@ class DiscoverScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appControllerProvider);
     final user = state.user;
+    final claimed = state.todayClaimedRewardIds;
     final newLearningDone = state.todayCompletedLessonIds.isNotEmpty;
     final reviewDone = state.todayReviewWordIds.isNotEmpty;
     final reviewedMistakeToday = state.customWords.any(
@@ -30,9 +31,9 @@ class DiscoverScreen extends ConsumerWidget {
       children: [
         GradientHeroCard(
           title: '发现',
-          subtitle: '签到、积分任务、抽奖和学习社区都放在这里，避免干扰首页的学习入口。',
+          subtitle: '签到、积分任务、抽奖和学习社区都放在这里；领取的 XP 会加入个人总积分。',
           icon: Icons.explore_rounded,
-          badge: '${user?.xp ?? 0} 积分 · ${user?.streak ?? 0} 天连续打卡',
+          badge: '${user?.xp ?? 0} XP · ${user?.streak ?? 0} 天连续打卡',
           action: FilledButton.icon(
             style: FilledButton.styleFrom(
               backgroundColor: Colors.white,
@@ -46,7 +47,7 @@ class DiscoverScreen extends ConsumerWidget {
         const SizedBox(height: 22),
         const SectionHeader(
           title: '积分任务',
-          subtitle: '满足条件后领取积分；未完成时跳转到对应学习入口。',
+          subtitle: '完成条件后点“领取”，XP 会立即加入个人主页和排行榜统计。',
         ),
         const SizedBox(height: 12),
         _RewardTaskCard(
@@ -55,7 +56,16 @@ class DiscoverScreen extends ConsumerWidget {
           condition: '当天打开并完成一次学习动作',
           points: 5,
           isDone: checkedInToday,
+          isClaimed: claimed.contains('daily-checkin'),
           onTap: () => context.go('/home'),
+          onClaim: () => _claimReward(
+            context,
+            ref,
+            id: 'daily-checkin',
+            title: '每日签到',
+            points: 5,
+            isAvailable: checkedInToday,
+          ),
         ),
         _RewardTaskCard(
           icon: Icons.school_outlined,
@@ -63,7 +73,16 @@ class DiscoverScreen extends ConsumerWidget {
           condition: '完成今日新学任务',
           points: 20,
           isDone: newLearningDone,
+          isClaimed: claimed.contains('new-learning'),
           onTap: () => context.push('/learn'),
+          onClaim: () => _claimReward(
+            context,
+            ref,
+            id: 'new-learning',
+            title: '完成新学',
+            points: 20,
+            isAvailable: newLearningDone,
+          ),
         ),
         _RewardTaskCard(
           icon: Icons.replay_outlined,
@@ -71,7 +90,16 @@ class DiscoverScreen extends ConsumerWidget {
           condition: '完成今日到期复习',
           points: 15,
           isDone: reviewDone,
+          isClaimed: claimed.contains('review-done'),
           onTap: () => context.push('/review'),
+          onClaim: () => _claimReward(
+            context,
+            ref,
+            id: 'review-done',
+            title: '完成复习',
+            points: 15,
+            isAvailable: reviewDone,
+          ),
         ),
         _RewardTaskCard(
           icon: Icons.sports_esports_outlined,
@@ -79,7 +107,9 @@ class DiscoverScreen extends ConsumerWidget {
           condition: '完成任意训练场游戏',
           points: 20,
           isDone: false,
+          isClaimed: claimed.contains('training-challenge'),
           onTap: () => context.go('/training'),
+          onClaim: () {},
         ),
         _RewardTaskCard(
           icon: Icons.cleaning_services_outlined,
@@ -87,7 +117,16 @@ class DiscoverScreen extends ConsumerWidget {
           condition: '今日错词再次答对',
           points: 10,
           isDone: weakCleanupDone,
+          isClaimed: claimed.contains('weak-cleanup'),
           onTap: () => context.push('/review'),
+          onClaim: () => _claimReward(
+            context,
+            ref,
+            id: 'weak-cleanup',
+            title: '错词清理',
+            points: 10,
+            isAvailable: weakCleanupDone,
+          ),
         ),
         const SizedBox(height: 22),
         const SectionHeader(title: '积分抽奖', subtitle: '奖品只做虚拟装饰，不影响学习公平性。'),
@@ -131,6 +170,26 @@ class DiscoverScreen extends ConsumerWidget {
       ],
     );
   }
+
+  Future<void> _claimReward(
+    BuildContext context,
+    WidgetRef ref, {
+    required String id,
+    required String title,
+    required int points,
+    required bool isAvailable,
+  }) async {
+    final succeeded = await ref
+        .read(appControllerProvider.notifier)
+        .claimReward(id: id, points: points, isAvailable: isAvailable);
+    if (!context.mounted) return;
+    final message = succeeded
+        ? '$title 已领取 +$points XP，已加入个人总积分和排行榜积分'
+        : ref.read(appControllerProvider).errorMessage ?? '暂时无法领取这个任务';
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
 }
 
 class _RewardTaskCard extends StatelessWidget {
@@ -140,7 +199,9 @@ class _RewardTaskCard extends StatelessWidget {
     required this.condition,
     required this.points,
     required this.isDone,
+    required this.isClaimed,
     required this.onTap,
+    required this.onClaim,
   });
 
   final IconData icon;
@@ -148,25 +209,35 @@ class _RewardTaskCard extends StatelessWidget {
   final String condition;
   final int points;
   final bool isDone;
+  final bool isClaimed;
   final VoidCallback onTap;
+  final VoidCallback onClaim;
 
   @override
   Widget build(BuildContext context) {
+    final canClaim = isDone && !isClaimed;
+    final activeColor = canClaim
+        ? AppTheme.teal
+        : isDone
+        ? AppTheme.success
+        : AppTheme.mango;
     return QuestCard(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
-      onTap: isDone ? null : onTap,
+      onTap: canClaim
+          ? onClaim
+          : isDone
+          ? null
+          : onTap,
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: (isDone ? Colors.green : AppTheme.mango).withValues(
-                alpha: 0.14,
-              ),
+              color: activeColor.withValues(alpha: 0.14),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Icon(icon, color: isDone ? Colors.green : AppTheme.mango),
+            child: Icon(icon, color: activeColor),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -179,11 +250,15 @@ class _RewardTaskCard extends StatelessWidget {
             ),
           ),
           PillLabel(
-            label: isDone ? '已获取' : '+$points',
+            label: isClaimed
+                ? '已领取'
+                : canClaim
+                ? '领取 +$points'
+                : '去完成 +$points',
             icon: isDone
                 ? Icons.check_circle_outline
                 : Icons.add_circle_outline,
-            color: isDone ? Colors.green : AppTheme.mango,
+            color: activeColor,
           ),
         ],
       ),

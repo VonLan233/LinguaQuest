@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/quest_card.dart';
 import '../../core/widgets/section_header.dart';
@@ -19,18 +20,17 @@ class WordbookScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/home'),
-        title: const Text('Wordbook'),
+        title: const Text('单词本'),
       ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
             GradientHeroCard(
-              title: 'Visual Wordbook',
-              subtitle:
-                  'Image-first cards connect pronunciation, meaning, examples, tags, and review signals.',
+              title: '图片单词本',
+              subtitle: '用图片词卡串联发音、释义、例句、标签和复习信号。',
               icon: Icons.style_outlined,
-              badge: '${words.length} target words',
+              badge: '${words.length} 个目标词',
               action: FilledButton.icon(
                 style: FilledButton.styleFrom(
                   backgroundColor: Colors.white,
@@ -38,14 +38,14 @@ class WordbookScreen extends ConsumerWidget {
                 ),
                 onPressed: () => context.push('/custom-words'),
                 icon: const Icon(Icons.add_card_outlined),
-                label: const Text('My custom cards'),
+                label: const Text('我的自定义词卡'),
               ),
             ),
             const SizedBox(height: 22),
             SectionHeader(
-              title: 'Target Words',
+              title: '目标词',
               subtitle:
-                  '${words.length} words · ${(state.learningPathProgress * 100).round()}% path progress',
+                  '${words.length} 词 · 学习路径完成 ${(state.learningPathProgress * 100).round()}%',
             ),
             const SizedBox(height: 16),
             for (final word in words)
@@ -96,7 +96,7 @@ class WordbookScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         PillLabel(
-                          label: word.difficulty,
+                          label: displayDifficulty(word.difficulty),
                           color: word.difficulty == 'Hard'
                               ? Theme.of(context).colorScheme.error
                               : AppTheme.coral,

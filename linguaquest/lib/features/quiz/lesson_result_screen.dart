@@ -17,23 +17,23 @@ class LessonResultScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final resolved = result ?? ref.watch(appControllerProvider).lastResult;
     if (resolved == null) {
-      return const Scaffold(body: Center(child: Text('No lesson result yet')));
+      return const Scaffold(body: Center(child: Text('还没有课程结果')));
     }
 
     final accuracy = (resolved.accuracy * 100).round();
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/learn'),
-        title: const Text('Lesson result'),
+        title: const Text('课程结果'),
       ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
           children: [
             GradientHeroCard(
-              title: accuracy >= 80 ? 'Brilliant run!' : 'Lesson complete',
+              title: accuracy >= 80 ? '表现很棒！' : '课程完成',
               subtitle:
-                  '${resolved.correctAnswers}/${resolved.totalQuestions} correct · ${resolved.xpEarned} XP earned · mistakes moved into review.',
+                  '答对 ${resolved.correctAnswers}/${resolved.totalQuestions} 题 · 获得 ${resolved.xpEarned} XP · 错题已进入复习。',
               icon: Icons.workspace_premium_outlined,
               badge: resolved.lessonTitle,
             ),
@@ -48,7 +48,7 @@ class LessonResultScreen extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 6),
-                  const Text('Accuracy'),
+                  const Text('正确率'),
                   const SizedBox(height: 12),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(999),
@@ -69,7 +69,7 @@ class LessonResultScreen extends ConsumerWidget {
                       ),
                       const SizedBox(width: 8),
                       PillLabel(
-                        label: '${resolved.mistakes.length} mistakes',
+                        label: '${resolved.mistakes.length} 个错题',
                         icon: Icons.replay_rounded,
                         color: AppTheme.coral,
                       ),
@@ -80,7 +80,7 @@ class LessonResultScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 20),
             Text(
-              'Mistakes',
+              '错题',
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
@@ -95,10 +95,7 @@ class LessonResultScreen extends ConsumerWidget {
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Perfect run'),
-                          Text('No mistakes were added to review.'),
-                        ],
+                        children: [Text('全对通关'), Text('没有错题需要加入复习。')],
                       ),
                     ),
                   ],
@@ -132,12 +129,12 @@ class LessonResultScreen extends ConsumerWidget {
             FilledButton.icon(
               onPressed: () => context.go('/review'),
               icon: const Icon(Icons.replay),
-              label: const Text('Go to review center'),
+              label: const Text('去复习中心'),
             ),
             OutlinedButton.icon(
               onPressed: () => context.go('/learn'),
               icon: const Icon(Icons.route_outlined),
-              label: const Text('Back to learning path'),
+              label: const Text('返回学习路径'),
             ),
           ],
         ),

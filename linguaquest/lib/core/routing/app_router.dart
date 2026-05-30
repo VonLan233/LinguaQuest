@@ -26,6 +26,7 @@ import '../../features/quiz/lesson_result_screen.dart';
 import '../../features/quiz/quiz_session_screen.dart';
 import '../../features/review/mistake_book_screen.dart';
 import '../../features/review/review_center_screen.dart';
+import '../../features/search/search_screen.dart';
 import '../../features/shell/app_shell.dart';
 import '../../features/training/training_screen.dart';
 import '../../features/wordbook/add_edit_custom_word_screen.dart';
@@ -37,6 +38,7 @@ import '../../features/wordbook/wordbook_screen.dart';
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/',
+    overridePlatformDefaultLocation: true,
     routes: [
       GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
       GoRoute(
@@ -133,6 +135,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const HelpSupportScreen(),
       ),
       GoRoute(path: '/about', builder: (context, state) => const AboutScreen()),
+      GoRoute(
+        path: '/search',
+        builder: (context, state) => const SearchScreen(),
+      ),
       GoRoute(
         path: '/wordbook',
         builder: (context, state) => const WordbookScreen(),

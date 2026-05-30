@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/metric_tile.dart';
 import '../../core/widgets/quest_card.dart';
 import '../../core/widgets/section_header.dart';
@@ -40,16 +41,15 @@ class HomeScreen extends ConsumerWidget {
       children: [
         Row(
           children: [
-            IconButton.filledTonal(
+            _BrandAvatarButton(
               tooltip: '个人空间',
-              onPressed: () => context.go('/profile'),
-              icon: const Icon(Icons.person_outline),
+              onTap: () => context.go('/profile'),
             ),
             const SizedBox(width: 10),
             Expanded(
               child: InkWell(
                 borderRadius: BorderRadius.circular(999),
-                onTap: () => context.push('/wordbook'),
+                onTap: () => context.push('/search'),
                 child: InputDecorator(
                   decoration: const InputDecoration(
                     isDense: true,
@@ -73,14 +73,14 @@ class HomeScreen extends ConsumerWidget {
         GradientHeroCard(
           title: '已连续打卡 ${user?.streak ?? 0} 天',
           subtitle:
-              '今日 $todayWork/${dailyGoal + reviewTarget} 词 · 新学 $dailyGoal · 复习 $reviewTarget。先回忆，再看解释。',
+              '今日 $todayWork/${dailyGoal + reviewTarget} 词 · 新学 $dailyGoal · 复习 $reviewTarget。沿着学习路径拿下下一小关。',
           icon: Icons.local_fire_department_outlined,
           badge:
-              '${user?.targetExam ?? 'Daily English'} · ${user?.level ?? 'Elementary'}',
+              '${displayTarget(user?.targetExam)} · ${displayLevel(user?.level)}',
           action: FilledButton.icon(
             style: FilledButton.styleFrom(
               backgroundColor: Colors.white,
-              foregroundColor: AppTheme.deepTeal,
+              foregroundColor: AppTheme.ink,
             ),
             onPressed: currentLesson == null || pathComplete
                 ? null
@@ -101,7 +101,7 @@ class HomeScreen extends ConsumerWidget {
                 label: '已学',
                 value: '${state.completedLearningWords}',
                 icon: Icons.school_outlined,
-                color: AppTheme.mango,
+                color: AppTheme.cyan,
               ),
             ),
             const SizedBox(width: 10),
@@ -111,7 +111,7 @@ class HomeScreen extends ConsumerWidget {
                 value:
                     '${state.customWords.where((word) => word.masteryLevel >= 4).length}',
                 icon: Icons.verified_outlined,
-                color: AppTheme.coral,
+                color: AppTheme.success,
               ),
             ),
             const SizedBox(width: 10),
@@ -120,7 +120,7 @@ class HomeScreen extends ConsumerWidget {
                 label: '复习',
                 value: '${state.dueWords.length}',
                 icon: Icons.replay,
-                color: AppTheme.cyan,
+                color: AppTheme.mango,
               ),
             ),
           ],
@@ -138,11 +138,14 @@ class HomeScreen extends ConsumerWidget {
                   value: dailyProgress,
                   minHeight: 12,
                   backgroundColor: AppTheme.progressTrack(context),
+                  valueColor: const AlwaysStoppedAnimation<Color>(
+                    AppTheme.teal,
+                  ),
                 ),
               ),
               const SizedBox(height: 10),
               Text(
-                '今日 $todayWork/${dailyGoal + reviewTarget} 词 · 当前词书 ${currentLesson?.section ?? state.learningPlan?.target ?? '雅思核心词汇'}',
+                '今日 $todayWork/${dailyGoal + reviewTarget} 词 · 当前词书 ${currentLesson?.section ?? displayTarget(state.learningPlan?.target ?? '雅思核心词汇')}',
               ),
               const SizedBox(height: 16),
               Row(
@@ -187,7 +190,7 @@ class HomeScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${state.learningPlan?.target ?? user?.targetExam ?? '雅思核心词汇'} · 每日新学 $dailyGoal · 复习上限 ${reviewTarget == 0 ? '按到期词' : reviewTarget}',
+                      '${displayTarget(state.learningPlan?.target ?? user?.targetExam ?? '雅思核心词汇')} · 每日新学 $dailyGoal · 复习上限 ${reviewTarget == 0 ? '按到期词' : reviewTarget}',
                     ),
                   ],
                 ),
@@ -208,7 +211,7 @@ class HomeScreen extends ConsumerWidget {
             _QuickAction(
               icon: Icons.language_outlined,
               title: '学习模式',
-              subtitle: user?.targetExam ?? 'Daily English',
+              subtitle: displayTarget(user?.targetExam),
               onTap: () => context.push('/goal-setup'),
             ),
             _QuickAction(
@@ -308,6 +311,45 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ),
       ],
+    );
+  }
+}
+
+class _BrandAvatarButton extends StatelessWidget {
+  const _BrandAvatarButton({required this.tooltip, required this.onTap});
+
+  final String tooltip;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(18),
+        onTap: onTap,
+        child: Container(
+          width: 48,
+          height: 48,
+          padding: const EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: const Color(0xFFDDF3FF)),
+            boxShadow: const [
+              BoxShadow(
+                color: AppTheme.cardShadow,
+                blurRadius: 12,
+                offset: Offset(0, 5),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(13),
+            child: Image.asset('lib/assets/image/icon_transparent.png'),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/metric_tile.dart';
 import '../../core/widgets/quest_card.dart';
 import '../../core/widgets/section_header.dart';
@@ -35,11 +36,26 @@ class ProfileScreen extends ConsumerWidget {
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
       children: [
         GradientHeroCard(
-          title: user?.name ?? 'Learner',
+          title: user?.name ?? '学习者',
           subtitle:
-              '${user?.email ?? 'No email'}\n${user?.targetExam ?? 'Daily English'} · ${user?.level ?? 'Elementary'}',
+              '${user?.email ?? '未设置邮箱'}\n${displayTarget(user?.targetExam)} · ${displayLevel(user?.level)}',
           icon: Icons.person_rounded,
-          badge: 'Profile and progress',
+          badge: '个人数据面板',
+          action: Row(
+            children: [
+              PillLabel(
+                label: '${user?.xp ?? 0} XP',
+                icon: Icons.bolt,
+                color: AppTheme.mango,
+              ),
+              const SizedBox(width: 8),
+              PillLabel(
+                label: '${user?.streak ?? 0} 天连续',
+                icon: Icons.local_fire_department,
+                color: Colors.white.withValues(alpha: 0.92),
+              ),
+            ],
+          ),
         ),
         const SizedBox(height: 18),
         GridView.count(
@@ -65,7 +81,7 @@ class ProfileScreen extends ConsumerWidget {
               label: '已掌握',
               value: '$masteredWords',
               icon: Icons.verified_outlined,
-              color: Colors.green,
+              color: AppTheme.success,
             ),
             MetricTile(
               label: '生词本',
@@ -110,6 +126,9 @@ class ProfileScreen extends ConsumerWidget {
                   value: state.learningPathProgress,
                   minHeight: 12,
                   backgroundColor: AppTheme.progressTrack(context),
+                  valueColor: const AlwaysStoppedAnimation<Color>(
+                    AppTheme.teal,
+                  ),
                 ),
               ),
               const SizedBox(height: 10),
@@ -160,7 +179,7 @@ class ProfileScreen extends ConsumerWidget {
         _ProfileAction(
           icon: Icons.flag_outlined,
           title: '学习目标',
-          subtitle: user?.targetExam ?? 'Daily English',
+          subtitle: displayTarget(user?.targetExam),
           route: '/goal-setup',
         ),
         const _ProfileAction(

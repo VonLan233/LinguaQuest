@@ -48,7 +48,7 @@ class _AddEditCustomWordScreenState
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/custom-words'),
-        title: Text(isEditing ? 'Edit word' : 'Add word'),
+        title: Text(isEditing ? '编辑单词' : '添加单词'),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -61,7 +61,7 @@ class _AddEditCustomWordScreenState
                 TextFormField(
                   controller: _wordController,
                   decoration: const InputDecoration(
-                    labelText: 'Word',
+                    labelText: '单词',
                     prefixIcon: Icon(Icons.abc),
                   ),
                   validator: _required,
@@ -70,7 +70,7 @@ class _AddEditCustomWordScreenState
                 TextFormField(
                   controller: _meaningController,
                   decoration: const InputDecoration(
-                    labelText: 'Meaning',
+                    labelText: '释义',
                     prefixIcon: Icon(Icons.translate),
                   ),
                   validator: _required,
@@ -79,7 +79,7 @@ class _AddEditCustomWordScreenState
                 TextFormField(
                   controller: _exampleController,
                   decoration: const InputDecoration(
-                    labelText: 'Example sentence',
+                    labelText: '例句',
                     prefixIcon: Icon(Icons.notes_outlined),
                   ),
                   minLines: 2,
@@ -90,7 +90,7 @@ class _AddEditCustomWordScreenState
                 TextFormField(
                   controller: _noteController,
                   decoration: const InputDecoration(
-                    labelText: 'Note',
+                    labelText: '笔记',
                     prefixIcon: Icon(Icons.edit_note),
                   ),
                   minLines: 2,
@@ -100,16 +100,16 @@ class _AddEditCustomWordScreenState
                 TextFormField(
                   controller: _tagController,
                   decoration: const InputDecoration(
-                    labelText: 'Tag',
+                    labelText: '标签',
                     prefixIcon: Icon(Icons.sell_outlined),
                   ),
                 ),
                 const SizedBox(height: 16),
                 SegmentedButton<String>(
                   segments: const [
-                    ButtonSegment(value: 'Easy', label: Text('Easy')),
-                    ButtonSegment(value: 'Medium', label: Text('Medium')),
-                    ButtonSegment(value: 'Hard', label: Text('Hard')),
+                    ButtonSegment(value: 'Easy', label: Text('简单')),
+                    ButtonSegment(value: 'Medium', label: Text('中等')),
+                    ButtonSegment(value: 'Hard', label: Text('困难')),
                   ],
                   selected: {_difficulty},
                   onSelectionChanged: (values) =>
@@ -119,7 +119,7 @@ class _AddEditCustomWordScreenState
                 FilledButton.icon(
                   onPressed: () => _save(existing),
                   icon: const Icon(Icons.save_outlined),
-                  label: Text(isEditing ? 'Save changes' : 'Create word'),
+                  label: Text(isEditing ? '保存修改' : '创建单词'),
                 ),
               ],
             ),
@@ -178,19 +178,19 @@ class _AddEditCustomWordScreenState
     if (!mounted) return;
     if (!succeeded) {
       final message = ref.read(appControllerProvider).errorMessage;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message ?? 'Could not save this word')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message ?? '暂时无法保存这个单词')));
       return;
     }
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Word saved')));
+    ).showSnackBar(const SnackBar(content: Text('单词已保存')));
     context.go('/custom-words');
   }
 }
 
 String? _required(String? value) {
-  if (value == null || value.trim().isEmpty) return 'Required';
+  if (value == null || value.trim().isEmpty) return '必填';
   return null;
 }

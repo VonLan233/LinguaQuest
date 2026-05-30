@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/quest_card.dart';
 import '../../data/models/lesson.dart';
@@ -17,7 +18,7 @@ class LessonPreviewScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final lesson = _findLesson(ref);
     if (lesson == null) {
-      return const Scaffold(body: Center(child: Text('Lesson not found')));
+      return const Scaffold(body: Center(child: Text('没有找到这节课')));
     }
 
     return Scaffold(
@@ -33,7 +34,7 @@ class LessonPreviewScreen extends ConsumerWidget {
               title: lesson.title,
               subtitle: lesson.description,
               icon: Icons.auto_stories_outlined,
-              badge: '${lesson.section} · ${lesson.estimatedMinutes} min',
+              badge: '${lesson.section} · ${lesson.estimatedMinutes} 分钟',
               action: FilledButton.icon(
                 style: FilledButton.styleFrom(
                   backgroundColor: Colors.white,
@@ -41,7 +42,7 @@ class LessonPreviewScreen extends ConsumerWidget {
                 ),
                 onPressed: () => context.push('/lesson/$lessonId/quiz'),
                 icon: const Icon(Icons.play_arrow_rounded),
-                label: const Text('Start quiz'),
+                label: const Text('开始测验'),
               ),
             ),
             const SizedBox(height: 18),
@@ -55,12 +56,12 @@ class LessonPreviewScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Reward pack',
+                          '奖励包',
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '${lesson.xpReward} XP · ${lesson.questions.length} questions · instant explanations',
+                          '${lesson.xpReward} XP · ${lesson.questions.length} 题 · 答完立即讲解',
                         ),
                       ],
                     ),
@@ -70,7 +71,7 @@ class LessonPreviewScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 22),
             Text(
-              'Image cards in this lesson',
+              '本课图片词卡',
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
@@ -99,7 +100,7 @@ class LessonPreviewScreen extends ConsumerWidget {
                                 ),
                               ),
                               PillLabel(
-                                label: word.difficulty,
+                                label: displayDifficulty(word.difficulty),
                                 color: AppTheme.coral,
                               ),
                             ],
@@ -118,7 +119,7 @@ class LessonPreviewScreen extends ConsumerWidget {
             FilledButton.icon(
               onPressed: () => context.push('/lesson/$lessonId/quiz'),
               icon: const Icon(Icons.play_arrow),
-              label: const Text('Start quiz'),
+              label: const Text('开始测验'),
             ),
           ],
         ),

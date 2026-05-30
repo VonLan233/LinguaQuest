@@ -3,28 +3,49 @@ import 'package:flutter/material.dart';
 class AppTheme {
   const AppTheme._();
 
-  static const Color teal = Color(0xFF00A99D);
-  static const Color deepTeal = Color(0xFF006E72);
-  static const Color cyan = Color(0xFF34C7D8);
-  static const Color coral = Color(0xFFFF7A59);
-  static const Color mango = Color(0xFFFFB84D);
-  static const Color mint = Color(0xFFE5FFF8);
-  static const Color ink = Color(0xFF10202A);
-  static const Color paper = Color(0xFFF4F8F6);
-  static const Color cardShadow = Color(0x1A006E72);
-  static const Color darkPaper = Color(0xFF0D1518);
-  static const Color darkSurface = Color(0xFF142125);
-  static const Color darkSurfaceHigh = Color(0xFF1D2B30);
-  static const Color darkSurfaceHighest = Color(0xFF26363B);
+  static const Color teal = Color(0xFF58CC02);
+  static const Color deepTeal = Color(0xFF1F5F8B);
+  static const Color cyan = Color(0xFF1CB0F6);
+  static const Color coral = Color(0xFFFF6B4A);
+  static const Color mango = Color(0xFFFFC800);
+  static const Color mint = Color(0xFFD7FFB8);
+  static const Color ink = Color(0xFF17324D);
+  static const Color paper = Color(0xFFF6FBF0);
+  static const Color cardShadow = Color(0x1F1F5F8B);
+  static const Color success = Color(0xFF58CC02);
+  static const Color darkPaper = Color(0xFF0B1724);
+  static const Color darkSurface = Color(0xFF102033);
+  static const Color darkSurfaceHigh = Color(0xFF182A40);
+  static const Color darkSurfaceHighest = Color(0xFF22374F);
 
   static ThemeData light() {
-    final scheme = ColorScheme.fromSeed(
-      seedColor: teal,
-      brightness: Brightness.light,
-      primary: teal,
-      secondary: coral,
-      surface: Colors.white,
-    );
+    final scheme =
+        ColorScheme.fromSeed(
+          seedColor: teal,
+          brightness: Brightness.light,
+          primary: teal,
+          secondary: cyan,
+          tertiary: mango,
+          surface: Colors.white,
+        ).copyWith(
+          onPrimary: Colors.white,
+          primaryContainer: mint,
+          onPrimaryContainer: const Color(0xFF214100),
+          secondaryContainer: const Color(0xFFDDF3FF),
+          onSecondaryContainer: const Color(0xFF063653),
+          tertiaryContainer: const Color(0xFFFFF1A6),
+          onTertiaryContainer: const Color(0xFF463B00),
+          surfaceContainerLowest: Colors.white,
+          surfaceContainerLow: const Color(0xFFF9FDF4),
+          surfaceContainer: const Color(0xFFF2FAEB),
+          surfaceContainerHigh: const Color(0xFFEAF6E2),
+          surfaceContainerHighest: const Color(0xFFDCEFD3),
+          onSurface: ink,
+          onSurfaceVariant: const Color(0xFF536471),
+          outline: const Color(0xFFA9C49F),
+          outlineVariant: const Color(0xFFD6E8D0),
+          error: const Color(0xFFE04F3A),
+        );
 
     return _base(scheme).copyWith(scaffoldBackgroundColor: paper);
   }
@@ -34,23 +55,28 @@ class AppTheme {
         ColorScheme.fromSeed(
           seedColor: cyan,
           brightness: Brightness.dark,
-          primary: cyan,
-          secondary: coral,
-        ).copyWith(
+          primary: const Color(0xFF89E219),
+          secondary: const Color(0xFF6ED6FF),
+          tertiary: const Color(0xFFFFD85C),
           surface: darkSurface,
+          error: const Color(0xFFFFB4A8),
+        ).copyWith(
+          onPrimary: const Color(0xFF173000),
           surfaceContainerLowest: const Color(0xFF101A1D),
           surfaceContainerLow: const Color(0xFF172429),
           surfaceContainer: darkSurfaceHigh,
-          surfaceContainerHigh: const Color(0xFF223238),
+          surfaceContainerHigh: const Color(0xFF22364F),
           surfaceContainerHighest: darkSurfaceHighest,
           onSurface: const Color(0xFFEAF4F2),
-          onSurfaceVariant: const Color(0xFFC4D2D0),
-          outline: const Color(0xFF76908E),
-          outlineVariant: const Color(0xFF334A4D),
-          primaryContainer: const Color(0xFF005B63),
-          onPrimaryContainer: const Color(0xFFD9FEFF),
-          secondaryContainer: const Color(0xFF6A2818),
-          onSecondaryContainer: const Color(0xFFFFDAD1),
+          onSurfaceVariant: const Color(0xFFC1D5E8),
+          outline: const Color(0xFF84A0B9),
+          outlineVariant: const Color(0xFF314963),
+          primaryContainer: const Color(0xFF255400),
+          onPrimaryContainer: const Color(0xFFE7FFD1),
+          secondaryContainer: const Color(0xFF053B59),
+          onSecondaryContainer: const Color(0xFFDDF3FF),
+          tertiaryContainer: const Color(0xFF554800),
+          onTertiaryContainer: const Color(0xFFFFF1A6),
         );
 
     return _base(scheme).copyWith(scaffoldBackgroundColor: darkPaper);
@@ -59,24 +85,22 @@ class AppTheme {
   static bool isDark(BuildContext context) =>
       Theme.of(context).colorScheme.brightness == Brightness.dark;
 
-  static Color warmSurface(BuildContext context) => isDark(context)
-      ? Theme.of(context).colorScheme.surfaceContainerHigh
-      : const Color(0xFFFFFBF2);
+  static Color warmSurface(BuildContext context) =>
+      isDark(context) ? const Color(0xFF1F3046) : const Color(0xFFFFF8D8);
 
-  static Color accentSurface(BuildContext context) => isDark(context)
-      ? Theme.of(context).colorScheme.surfaceContainerHigh
-      : const Color(0xFFFFF7E8);
+  static Color accentSurface(BuildContext context) =>
+      isDark(context) ? const Color(0xFF173A55) : const Color(0xFFE8F7FF);
 
   static Color selectedSurface(BuildContext context) =>
       isDark(context) ? Theme.of(context).colorScheme.primaryContainer : mint;
 
   static Color progressTrack(BuildContext context) => isDark(context)
       ? Theme.of(context).colorScheme.surfaceContainerHighest
-      : mint;
+      : const Color(0xFFDDF3FF);
 
   static Color iconBadgeSurface(BuildContext context) => isDark(context)
       ? Theme.of(context).colorScheme.surfaceContainerHighest
-      : mint;
+      : const Color(0xFFE9FFD9);
 
   static ThemeData _base(ColorScheme scheme) {
     final isDark = scheme.brightness == Brightness.dark;
@@ -125,10 +149,12 @@ class AppTheme {
         iconTheme: IconThemeData(color: isDark ? scheme.onSurface : ink),
       ),
       navigationBarTheme: NavigationBarThemeData(
-        height: 72,
+        height: 76,
         elevation: 0,
         backgroundColor: isDark ? scheme.surfaceContainer : Colors.white,
-        indicatorColor: isDark ? scheme.primaryContainer : mint,
+        indicatorColor: isDark
+            ? scheme.primaryContainer
+            : const Color(0xFFE9FFD9),
         labelTextStyle: WidgetStateProperty.resolveWith(
           (states) => TextStyle(
             color: states.contains(WidgetState.selected)
@@ -151,7 +177,7 @@ class AppTheme {
       cardTheme: CardThemeData(
         elevation: 0,
         margin: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       ),
       chipTheme: ChipThemeData(
         backgroundColor: isDark ? scheme.surfaceContainerHigh : null,
@@ -165,19 +191,22 @@ class AppTheme {
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
-          minimumSize: const Size(48, 54),
+          minimumSize: const Size(48, 56),
+          backgroundColor: scheme.primary,
+          foregroundColor: scheme.onPrimary,
           textStyle: const TextStyle(fontWeight: FontWeight.w900),
+          elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(16),
           ),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          minimumSize: const Size(48, 54),
+          minimumSize: const Size(48, 56),
           textStyle: const TextStyle(fontWeight: FontWeight.w900),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(16),
           ),
         ),
       ),

@@ -30,7 +30,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       begin: 0.86,
       end: 1,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
-    Future.microtask(_start);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _start();
+      }
+    });
   }
 
   @override
@@ -44,7 +48,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     if (!mounted) return;
     final state = ref.read(appControllerProvider);
     if (!state.isBootstrapped && state.errorMessage != null) return;
-    await Future<void>.delayed(const Duration(milliseconds: 500));
+    await Future<void>.delayed(const Duration(milliseconds: 1400));
     if (!mounted) return;
     context.go(state.isAuthenticated ? '/home' : '/onboarding');
   }
@@ -56,67 +60,82 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         !state.isLoading && !state.isBootstrapped && state.errorMessage != null;
 
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ScaleTransition(scale: _scale, child: const _LogoMark()),
-            const SizedBox(height: 20),
-            FadeTransition(
-              opacity: _fade,
-              child: Column(
-                children: [
-                  Text(
-                    'LinguaQuest',
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Image cards. Guided paths. Smart review.',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 22),
-            if (failed)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 28),
+      backgroundColor: AppTheme.paper,
+      body: DecoratedBox(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFFE8F7FF), AppTheme.paper],
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ScaleTransition(scale: _scale, child: const _LogoMark()),
+              const SizedBox(height: 22),
+              FadeTransition(
+                opacity: _fade,
                 child: Column(
                   children: [
                     Text(
-                      state.errorMessage!,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.error,
-                      ),
+                      'LinguaQuest',
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(color: AppTheme.ink, height: 1.05),
                     ),
-                    const SizedBox(height: 14),
-                    FilledButton.icon(
-                      onPressed: _start,
-                      icon: const Icon(Icons.refresh_rounded),
-                      label: const Text('Retry'),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Image cards. Guided paths. Smart review.',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ],
                 ),
-              )
-            else
-              SizedBox(
-                width: 180,
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(999)),
-                  child: TweenAnimationBuilder<double>(
-                    tween: Tween<double>(begin: 0, end: 1),
-                    duration: const Duration(milliseconds: 1000),
-                    curve: Curves.easeOutCubic,
-                    builder: (context, value, _) =>
-                        LinearProgressIndicator(value: value, minHeight: 8),
+              ),
+              const SizedBox(height: 24),
+              if (failed)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 28),
+                  child: Column(
+                    children: [
+                      Text(
+                        state.errorMessage!,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+                      FilledButton.icon(
+                        onPressed: _start,
+                        icon: const Icon(Icons.refresh_rounded),
+                        label: const Text('Retry'),
+                      ),
+                    ],
+                  ),
+                )
+              else
+                SizedBox(
+                  width: 180,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(999)),
+                    child: TweenAnimationBuilder<double>(
+                      tween: Tween<double>(begin: 0, end: 1),
+                      duration: const Duration(milliseconds: 1000),
+                      curve: Curves.easeOutCubic,
+                      builder: (context, value, _) => LinearProgressIndicator(
+                        value: value,
+                        minHeight: 10,
+                        backgroundColor: AppTheme.progressTrack(context),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -129,29 +148,27 @@ class _LogoMark extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 84,
-      height: 84,
+      width: 118,
+      height: 118,
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [AppTheme.deepTeal, AppTheme.teal, AppTheme.cyan],
-        ),
-        borderRadius: BorderRadius.circular(28),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: const Color(0xFFDDF3FF), width: 3),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.coral.withValues(alpha: 0.24),
+            color: AppTheme.deepTeal.withValues(alpha: 0.22),
             blurRadius: 24,
-            offset: const Offset(0, 14),
+            offset: const Offset(0, 12),
           ),
         ],
       ),
-      child: const Stack(
-        alignment: Alignment.center,
-        children: [
-          Icon(Icons.language, color: Colors.white, size: 42),
-          Positioned(right: 12, bottom: 10, child: Text('✨')),
-        ],
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(22),
+        child: Image.asset(
+          'lib/assets/image/icon_transparent.png',
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }

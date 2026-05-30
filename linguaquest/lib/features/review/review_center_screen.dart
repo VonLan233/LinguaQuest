@@ -23,19 +23,16 @@ class ReviewCenterScreen extends ConsumerWidget {
     final lessonMistakes = state.lastResult?.mistakes ?? const [];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Review center')),
+      appBar: AppBar(title: const Text('复习中心')),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
           children: [
             GradientHeroCard(
-              title: due.isEmpty
-                  ? 'Review queue clear'
-                  : '${due.length} cards due',
-              subtitle:
-                  'Spaced repetition brings weak cards back before you forget them.',
+              title: due.isEmpty ? '今日复习已清空' : '${due.length} 张卡片待复习',
+              subtitle: '间隔复习会在遗忘前把弱项卡片带回来。',
               icon: Icons.replay_rounded,
-              badge: 'Mistake book · Weak words · Due today',
+              badge: '错词本 · 弱项词 · 今日到期',
               action: FilledButton.icon(
                 style: FilledButton.styleFrom(
                   backgroundColor: Colors.white,
@@ -45,21 +42,20 @@ class ReviewCenterScreen extends ConsumerWidget {
                     ? () => context.push('/custom-words/new')
                     : null,
                 icon: const Icon(Icons.add),
-                label: Text(due.isEmpty ? 'Add cards' : 'Queue ready below'),
+                label: Text(due.isEmpty ? '添加卡片' : '队列在下方'),
               ),
             ),
             const SizedBox(height: 20),
             const SectionHeader(
-              title: 'Review center',
-              subtitle:
-                  'Due words, mistake book, and weak cards stay in one queue.',
+              title: '复习中心',
+              subtitle: '到期词、错词本和弱项卡片统一放在一个队列里。',
             ),
             const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
                   child: MetricTile(
-                    label: 'Due today',
+                    label: '今日到期',
                     value: '${due.length}',
                     icon: Icons.today_outlined,
                   ),
@@ -67,7 +63,7 @@ class ReviewCenterScreen extends ConsumerWidget {
                 const SizedBox(width: 10),
                 Expanded(
                   child: MetricTile(
-                    label: 'Mistakes',
+                    label: '错词',
                     value: '${weak.length}',
                     icon: Icons.warning_amber_outlined,
                     color: Colors.orange,
@@ -76,7 +72,7 @@ class ReviewCenterScreen extends ConsumerWidget {
                 const SizedBox(width: 10),
                 Expanded(
                   child: MetricTile(
-                    label: 'Words',
+                    label: '词卡',
                     value: '${state.customWords.length}',
                     icon: Icons.style_outlined,
                   ),
@@ -85,7 +81,7 @@ class ReviewCenterScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 22),
             Text(
-              'Due today',
+              '今日到期',
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
@@ -94,27 +90,26 @@ class ReviewCenterScreen extends ConsumerWidget {
             if (due.isEmpty)
               EmptyState(
                 icon: Icons.check_circle_outline,
-                title: 'Review queue is clear',
-                message:
-                    'Add custom words or mark mistakes to create spaced review cards.',
+                title: '复习队列已清空',
+                message: '添加自定义词卡，或把错题加入错词本后，这里会生成复习队列。',
                 action: OutlinedButton.icon(
                   onPressed: () => context.push('/custom-words/new'),
                   icon: const Icon(Icons.add),
-                  label: const Text('Add custom word'),
+                  label: const Text('添加自定义词'),
                 ),
               )
             else
               for (final word in due) _ReviewTile(word: word),
             const SizedBox(height: 22),
             Text(
-              'Mistake book',
+              '错词本',
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 10),
             if (lessonMistakes.isEmpty && weak.isEmpty)
-              const Text('No weak words or lesson mistakes yet.')
+              const Text('还没有弱项词或课程错题。')
             else ...[
               if (lessonMistakes.isNotEmpty)
                 _MistakeWordImporter(mistakes: lessonMistakes),
@@ -139,7 +134,7 @@ class ReviewCenterScreen extends ConsumerWidget {
                         ),
                       ),
                       PillLabel(
-                        label: 'Lesson',
+                        label: '课程',
                         icon: Icons.school_outlined,
                         color: AppTheme.coral,
                       ),
@@ -152,7 +147,7 @@ class ReviewCenterScreen extends ConsumerWidget {
                   child: OutlinedButton.icon(
                     onPressed: () => context.push('/mistake-book'),
                     icon: const Icon(Icons.menu_book_outlined),
-                    label: const Text('Open mistake book'),
+                    label: const Text('打开错词本'),
                   ),
                 ),
               for (final word in weak.take(5))
@@ -172,7 +167,7 @@ class ReviewCenterScreen extends ConsumerWidget {
                               word.word,
                               style: Theme.of(context).textTheme.titleMedium,
                             ),
-                            Text('${word.wrongCount} wrong · ${word.meaning}'),
+                            Text('错 ${word.wrongCount} 次 · ${word.meaning}'),
                           ],
                         ),
                       ),
@@ -225,21 +220,27 @@ class _ReviewTile extends ConsumerWidget {
             children: [
               Expanded(
                 child: OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(48),
+                  ),
                   onPressed: canReview
                       ? () => _review(context, ref, isCorrect: false)
                       : null,
                   icon: const Icon(Icons.close),
-                  label: const Text('Missed'),
+                  label: const FittedBox(child: Text('没记住')),
                 ),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child: FilledButton.icon(
+                  style: FilledButton.styleFrom(
+                    minimumSize: const Size.fromHeight(48),
+                  ),
                   onPressed: canReview
                       ? () => _review(context, ref, isCorrect: true)
                       : null,
                   icon: const Icon(Icons.check),
-                  label: const Text('Remembered'),
+                  label: const FittedBox(child: Text('记住了')),
                 ),
               ),
             ],
@@ -260,10 +261,9 @@ class _ReviewTile extends ConsumerWidget {
     if (!context.mounted) return;
     final message = succeeded
         ? isCorrect
-              ? 'Marked as remembered'
-              : 'Scheduled for practice'
-        : ref.read(appControllerProvider).errorMessage ??
-              'Could not update this card';
+              ? '已标记为记住，下次复习会延后'
+              : '已加入更近的复习计划'
+        : ref.read(appControllerProvider).errorMessage ?? '暂时无法更新这张卡片';
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
@@ -329,16 +329,9 @@ class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Add Mistake Cards',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+          Text('加入错词卡', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 4),
-          Text(
-            selectableCount == 0
-                ? 'All recent mistakes are already in your custom word cards.'
-                : 'Select wrong words to add directly to your review cards.',
-          ),
+          Text(selectableCount == 0 ? '最近错题已经全部在自定义词卡里。' : '选择错词后，可以直接加入复习卡片。'),
           const SizedBox(height: 10),
           for (final mistake in visibleMistakes) ...[
             Builder(
@@ -360,9 +353,7 @@ class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
                     });
                   },
                   title: Text(mistake.word.word),
-                  subtitle: Text(
-                    exists ? 'Already added' : mistake.word.meaning,
-                  ),
+                  subtitle: Text(exists ? '已加入' : mistake.word.meaning),
                 );
               },
             ),
@@ -373,7 +364,7 @@ class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
                 ? null
                 : _addSelected,
             icon: const Icon(Icons.add_card_outlined),
-            label: Text('Add Selected ($selectedAddableCount)'),
+            label: Text('加入已选 ($selectedAddableCount)'),
           ),
         ],
       ),
@@ -389,7 +380,7 @@ class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
     if (!mounted) return;
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text('$added mistake cards added')));
+    ).showSnackBar(SnackBar(content: Text('已加入 $added 张错词卡')));
     if (added > 0) setState(() => _selectedIds.clear());
   }
 
