@@ -9,6 +9,12 @@ import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson.dart';
 
+const _pathRailWidth = 74.0;
+const _pathNodeHorizontalPadding = 8.0;
+const _pathConnectorWidth = 6.0;
+const _pathConnectorLeft =
+    _pathNodeHorizontalPadding + (_pathRailWidth - _pathConnectorWidth) / 2;
+
 class LearningPathScreen extends ConsumerWidget {
   const LearningPathScreen({super.key});
 
@@ -92,15 +98,19 @@ class _PathNode extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                children: [
-                  Container(
-                    width: current ? 74 : 62,
-                    height: current ? 74 : 62,
+              SizedBox(
+                width: _pathRailWidth,
+                child: Center(
+                  child: Container(
+                    width: current ? _pathRailWidth : 62,
+                    height: current ? _pathRailWidth : 62,
                     decoration: BoxDecoration(
                       color: color,
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 4),
+                      border: Border.all(
+                        color: theme.colorScheme.surface,
+                        width: 4,
+                      ),
                     ),
                     child: Icon(
                       locked
@@ -114,7 +124,7 @@ class _PathNode extends StatelessWidget {
                       size: current ? 38 : 30,
                     ),
                   ),
-                ],
+                ),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -236,14 +246,18 @@ class _PathConnector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        width: 6,
-        height: 28,
-        margin: const EdgeInsets.symmetric(vertical: 4),
-        decoration: BoxDecoration(
-          color: AppTheme.teal.withValues(alpha: 0.22),
-          borderRadius: BorderRadius.circular(99),
+    return Padding(
+      padding: const EdgeInsets.only(left: _pathConnectorLeft),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Container(
+          width: _pathConnectorWidth,
+          height: 28,
+          margin: const EdgeInsets.symmetric(vertical: 4),
+          decoration: BoxDecoration(
+            color: AppTheme.teal.withValues(alpha: 0.22),
+            borderRadius: BorderRadius.circular(99),
+          ),
         ),
       ),
     );

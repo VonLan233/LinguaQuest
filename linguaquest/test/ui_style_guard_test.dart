@@ -258,6 +258,19 @@ void main() {
       expect(learningPath, contains('color: Colors.transparent'));
     });
 
+    test('learning path rail stays aligned with lesson nodes', () {
+      final learningPath = File(
+        'lib/features/learning/learning_path_screen.dart',
+      ).readAsStringSync();
+
+      expect(learningPath, contains('const _pathRailWidth = 74.0'));
+      expect(learningPath, contains('width: _pathRailWidth'));
+      expect(learningPath, contains('Alignment.centerLeft'));
+      expect(learningPath, contains('left: _pathConnectorLeft'));
+      expect(learningPath, contains('theme.colorScheme.surface'));
+      expect(learningPath, isNot(contains('color: Colors.white')));
+    });
+
     test('home keeps plan editing to one compact entry', () {
       final home = File(
         'lib/features/home/home_screen.dart',
