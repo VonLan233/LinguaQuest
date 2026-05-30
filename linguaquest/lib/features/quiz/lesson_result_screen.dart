@@ -43,46 +43,7 @@ class LessonResultScreen extends ConsumerWidget {
               color: AppTheme.cyan,
             ),
             const SizedBox(height: 12),
-            QuestCard(
-              child: Column(
-                children: [
-                  Text(
-                    '$accuracy%',
-                    style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  const Text('正确率'),
-                  const SizedBox(height: 12),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(999),
-                    child: LinearProgressIndicator(
-                      value: resolved.accuracy,
-                      minHeight: 12,
-                      backgroundColor: AppTheme.progressTrack(context),
-                    ),
-                  ),
-                  const SizedBox(height: 14),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      PillLabel(
-                        label: '+${resolved.xpEarned} XP',
-                        icon: Icons.bolt,
-                        color: AppTheme.mango,
-                      ),
-                      const SizedBox(width: 8),
-                      PillLabel(
-                        label: '${resolved.mistakes.length} 个错题',
-                        icon: Icons.replay_rounded,
-                        color: AppTheme.coral,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+            _ResultScoreSummary(result: resolved, accuracy: accuracy),
             const SizedBox(height: 20),
             Text(
               '错题',
@@ -143,6 +104,74 @@ class LessonResultScreen extends ConsumerWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _ResultScoreSummary extends StatelessWidget {
+  const _ResultScoreSummary({required this.result, required this.accuracy});
+
+  final LessonResult result;
+  final int accuracy;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                '$accuracy%',
+                style: theme.textTheme.displayMedium?.copyWith(
+                  fontWeight: FontWeight.w900,
+                  height: 0.95,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Text(
+                  '正确率',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(999),
+            child: LinearProgressIndicator(
+              value: result.accuracy,
+              minHeight: 12,
+              backgroundColor: AppTheme.progressTrack(context),
+            ),
+          ),
+          const SizedBox(height: 14),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              PillLabel(
+                label: '+${result.xpEarned} XP',
+                icon: Icons.bolt,
+                color: AppTheme.mango,
+              ),
+              PillLabel(
+                label: '${result.mistakes.length} 个错题',
+                icon: Icons.replay_rounded,
+                color: AppTheme.coral,
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
