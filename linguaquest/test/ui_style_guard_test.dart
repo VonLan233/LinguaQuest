@@ -306,12 +306,17 @@ void main() {
       final quest = File(
         'lib/features/quests/quest_screen.dart',
       ).readAsStringSync();
+      final lessonResult = File(
+        'lib/features/quiz/lesson_result_screen.dart',
+      ).readAsStringSync();
 
       expect(training, contains("label: '本周 \${user?.xp ?? 0} XP'"));
       expect(training, contains('今日可得 60 XP'));
       expect(training, isNot(contains('本周 \${user?.xp ?? 0} 积分')));
       expect(quest, contains("label: '任务 XP'"));
       expect(quest, isNot(contains("label: '今日可领 20 XP'")));
+      expect(lessonResult, contains('已入账 +'));
+      expect(lessonResult, contains('总积分 \$currentXp XP'));
     });
 
     test('supporting page copy avoids prototype disclaimers', () {

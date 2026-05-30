@@ -1052,7 +1052,9 @@ void main() {
     await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
-    expect(find.text('答对 3/4 题 · 获得 23 XP · 错题已进入复习。'), findsOneWidget);
+    expect(find.text('答对 3/4 题 · 已入账 +23 XP · 错题已进入复习。'), findsOneWidget);
+    expect(find.text('已入账 +23 XP'), findsOneWidget);
+    expect(find.text('总积分 23 XP'), findsOneWidget);
 
     await tester.scrollUntilVisible(
       find.text('去复习中心'),

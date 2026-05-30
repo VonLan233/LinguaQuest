@@ -34,12 +34,14 @@ class LessonResultScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final resolved = result ?? ref.watch(appControllerProvider).lastResult;
+    final state = ref.watch(appControllerProvider);
+    final resolved = result ?? state.lastResult;
     if (resolved == null) {
       return const Scaffold(body: Center(child: Text('还没有课程结果')));
     }
 
     final accuracy = (resolved.accuracy * 100).round();
+    final currentXp = state.user?.xp;
     final isTimed = source == LessonResultSource.timed;
     return Scaffold(
       appBar: AppBar(
@@ -57,8 +59,8 @@ class LessonResultScreen extends ConsumerWidget {
                   ? (accuracy >= 80 ? '挑战成功！' : '挑战完成')
                   : (accuracy >= 80 ? '表现很棒！' : '课程完成'),
               subtitle: isTimed
-                  ? '答对 ${resolved.correctAnswers}/${resolved.totalQuestions} 题 · 获得 ${resolved.xpEarned} XP · 错题可去复习中心整理。'
-                  : '答对 ${resolved.correctAnswers}/${resolved.totalQuestions} 题 · 获得 ${resolved.xpEarned} XP · 错题已进入复习。',
+                  ? '答对 ${resolved.correctAnswers}/${resolved.totalQuestions} 题 · 已入账 +${resolved.xpEarned} XP · 错题可去复习中心整理。'
+                  : '答对 ${resolved.correctAnswers}/${resolved.totalQuestions} 题 · 已入账 +${resolved.xpEarned} XP · 错题已进入复习。',
             ),
             const SizedBox(height: 12),
             PillLabel(
@@ -69,7 +71,11 @@ class LessonResultScreen extends ConsumerWidget {
               color: isTimed ? AppTheme.coral : AppTheme.cyan,
             ),
             const SizedBox(height: 12),
-            _ResultScoreSummary(result: resolved, accuracy: accuracy),
+            _ResultScoreSummary(
+              result: resolved,
+              accuracy: accuracy,
+              currentXp: currentXp,
+            ),
             const SizedBox(height: 20),
             Text(
               '错题',
@@ -170,10 +176,15 @@ class _MistakeResultRow extends StatelessWidget {
 }
 
 class _ResultScoreSummary extends StatelessWidget {
-  const _ResultScoreSummary({required this.result, required this.accuracy});
+  const _ResultScoreSummary({
+    required this.result,
+    required this.accuracy,
+    required this.currentXp,
+  });
 
   final LessonResult result;
   final int accuracy;
+  final int? currentXp;
 
   @override
   Widget build(BuildContext context) {
@@ -220,10 +231,16 @@ class _ResultScoreSummary extends StatelessWidget {
             runSpacing: 8,
             children: [
               PillLabel(
-                label: '+${result.xpEarned} XP',
+                label: '已入账 +${result.xpEarned} XP',
                 icon: Icons.bolt,
                 color: AppTheme.mango,
               ),
+              if (currentXp != null)
+                PillLabel(
+                  label: '总积分 $currentXp XP',
+                  icon: Icons.account_balance_wallet_outlined,
+                  color: AppTheme.cyan,
+                ),
               PillLabel(
                 label: '${result.mistakes.length} 个错题',
                 icon: Icons.replay_rounded,
