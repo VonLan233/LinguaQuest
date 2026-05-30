@@ -82,7 +82,7 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
                   const SizedBox(height: 18),
                   _ReviewWordCard(word: currentWord, isRevealed: _revealed),
                   const SizedBox(height: 14),
-                  _MemoryHintCard(word: currentWord, isRevealed: _revealed),
+                  _MemoryHintLine(word: currentWord, isRevealed: _revealed),
                 ],
               ),
       ),
@@ -267,8 +267,8 @@ class _ReviewWordCard extends StatelessWidget {
   }
 }
 
-class _MemoryHintCard extends StatelessWidget {
-  const _MemoryHintCard({required this.word, required this.isRevealed});
+class _MemoryHintLine extends StatelessWidget {
+  const _MemoryHintLine({required this.word, required this.isRevealed});
 
   final CustomWord word;
   final bool isRevealed;

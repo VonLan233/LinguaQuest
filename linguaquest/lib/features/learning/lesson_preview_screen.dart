@@ -141,7 +141,7 @@ class _LessonPreviewScreenState extends ConsumerState<LessonPreviewScreen> {
                   },
                 ),
                 const SizedBox(height: 14),
-                _ContextCard(word: word),
+                _ContextSection(word: word),
                 const SizedBox(height: 24),
                 SectionHeader(
                   title: '本课词卡',
@@ -335,8 +335,8 @@ class _ConfidenceOption extends StatelessWidget {
   }
 }
 
-class _ContextCard extends StatelessWidget {
-  const _ContextCard({required this.word});
+class _ContextSection extends StatelessWidget {
+  const _ContextSection({required this.word});
 
   final Word word;
 

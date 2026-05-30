@@ -137,6 +137,22 @@ void main() {
       expect(onboarding, isNot(contains('放在一张卡里')));
     });
 
+    test('study support blocks avoid non-core card semantics', () {
+      final lessonPreview = File(
+        'lib/features/learning/lesson_preview_screen.dart',
+      ).readAsStringSync();
+      final reviewStudy = File(
+        'lib/features/study/review_study_screen.dart',
+      ).readAsStringSync();
+
+      expect(lessonPreview, contains('_WordStudyCard'));
+      expect(lessonPreview, contains('_ContextSection'));
+      expect(lessonPreview, isNot(contains('_ContextCard')));
+      expect(reviewStudy, contains('_ReviewWordCard'));
+      expect(reviewStudy, contains('_MemoryHintLine'));
+      expect(reviewStudy, isNot(contains('_MemoryHintCard')));
+    });
+
     test('new study and review stay separate from campus timed tests', () {
       final home = File(
         'lib/features/home/home_screen.dart',
