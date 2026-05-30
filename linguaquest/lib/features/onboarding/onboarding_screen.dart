@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/brand_mark.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 
@@ -39,20 +40,7 @@ class OnboardingScreen extends StatelessWidget {
           children: [
             Row(
               children: [
-                Container(
-                  width: 62,
-                  height: 62,
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: AppTheme.accentSurface(context),
-                    borderRadius: BorderRadius.circular(18),
-                    border: Border.all(color: theme.colorScheme.outlineVariant),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(13),
-                    child: Image.asset('lib/assets/image/icon_transparent.png'),
-                  ),
-                ),
+                const BrandMark(size: 62),
                 const SizedBox(width: 14),
                 const Expanded(
                   child: SectionHeader(

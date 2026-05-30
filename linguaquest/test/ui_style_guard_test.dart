@@ -37,12 +37,17 @@ void main() {
 
     test('brand presence stays icon-led and avoids generic language marks', () {
       final featureSource = _readDartSources(Directory('lib/features'));
-      final transparentIconUses = RegExp(
-        r'icon_transparent\.png',
+      final brandMark = File(
+        'lib/core/widgets/brand_mark.dart',
+      ).readAsStringSync();
+      final brandMarkUses = RegExp(
+        r'\bBrandMark\s*\(',
       ).allMatches(featureSource).length;
 
-      expect(transparentIconUses, greaterThanOrEqualTo(2));
-      expect(transparentIconUses, lessThanOrEqualTo(3));
+      expect(brandMark, contains('icon_transparent.png'));
+      expect(featureSource, isNot(contains('icon_transparent.png')));
+      expect(brandMarkUses, greaterThanOrEqualTo(3));
+      expect(brandMarkUses, lessThanOrEqualTo(4));
       expect(featureSource, isNot(contains('Icons.language_outlined')));
       expect(featureSource, isNot(contains('猫')));
       expect(featureSource.toLowerCase(), isNot(contains('whisker')));

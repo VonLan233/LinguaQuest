@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/ui_labels.dart';
+import '../../core/widgets/brand_mark.dart';
 import '../../core/widgets/metric_tile.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
@@ -42,7 +43,8 @@ class HomeScreen extends ConsumerWidget {
       children: [
         Row(
           children: [
-            _BrandAvatarButton(
+            BrandMark(
+              size: 48,
               tooltip: '个人空间',
               onTap: () => context.go('/profile'),
             ),
@@ -386,38 +388,6 @@ class _DailyFocusHeader extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _BrandAvatarButton extends StatelessWidget {
-  const _BrandAvatarButton({required this.tooltip, required this.onTap});
-
-  final String tooltip;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Tooltip(
-      message: tooltip,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(18),
-        onTap: onTap,
-        child: Container(
-          width: 48,
-          height: 48,
-          padding: const EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: const Color(0xFFDDF3FF)),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(13),
-            child: Image.asset('lib/assets/image/icon_transparent.png'),
-          ),
-        ),
-      ),
     );
   }
 }
