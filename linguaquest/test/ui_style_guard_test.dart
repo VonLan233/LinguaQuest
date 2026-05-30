@@ -75,6 +75,16 @@ void main() {
       expect(home, isNot(contains('GridView.count')));
     });
 
+    test('training arena keeps top status lightweight', () {
+      final training = File(
+        'lib/features/training/training_screen.dart',
+      ).readAsStringSync();
+
+      expect(training, contains('_TrainingReadinessLine'));
+      expect(training, isNot(contains('MetricTile')));
+      expect(training, contains('校园生活 · 限时测试'));
+    });
+
     test('new study and review stay separate from campus timed tests', () {
       final home = File(
         'lib/features/home/home_screen.dart',

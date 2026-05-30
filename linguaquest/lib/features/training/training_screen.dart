@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
-import '../../core/widgets/metric_tile.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 
@@ -44,34 +43,10 @@ class TrainingScreen extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: 18),
-        Row(
-          children: [
-            Expanded(
-              child: MetricTile(
-                label: '到期词',
-                value: '${state.dueWords.length}',
-                icon: Icons.today_outlined,
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: MetricTile(
-                label: '弱项词',
-                value: '${state.weakWords.length}',
-                icon: Icons.warning_amber_outlined,
-                color: AppTheme.coral,
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: MetricTile(
-                label: '连击目标',
-                value: '10',
-                icon: Icons.bolt,
-                color: AppTheme.mango,
-              ),
-            ),
-          ],
+        _TrainingReadinessLine(
+          dueWords: state.dueWords.length,
+          weakWords: state.weakWords.length,
+          comboTarget: 10,
         ),
         const SizedBox(height: 22),
         const SectionHeader(
@@ -127,6 +102,116 @@ class TrainingScreen extends ConsumerWidget {
           actionLabel: '即将开放',
         ),
       ],
+    );
+  }
+}
+
+class _TrainingReadinessLine extends StatelessWidget {
+  const _TrainingReadinessLine({
+    required this.dueWords,
+    required this.weakWords,
+    required this.comboTarget,
+  });
+
+  final int dueWords;
+  final int weakWords;
+  final int comboTarget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: _TrainingSignal(
+            label: '到期词',
+            value: '$dueWords',
+            icon: Icons.today_outlined,
+            color: AppTheme.teal,
+          ),
+        ),
+        const _TrainingSignalDivider(),
+        Expanded(
+          child: _TrainingSignal(
+            label: '弱项词',
+            value: '$weakWords',
+            icon: Icons.warning_amber_outlined,
+            color: AppTheme.coral,
+          ),
+        ),
+        const _TrainingSignalDivider(),
+        Expanded(
+          child: _TrainingSignal(
+            label: '连击目标',
+            value: '$comboTarget',
+            icon: Icons.bolt,
+            color: AppTheme.mango,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _TrainingSignal extends StatelessWidget {
+  const _TrainingSignal({
+    required this.label,
+    required this.value,
+    required this.icon,
+    required this.color,
+  });
+
+  final String label;
+  final String value;
+  final IconData icon;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(icon, color: color, size: 20),
+        const SizedBox(width: 6),
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                value,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.titleMedium,
+              ),
+              Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _TrainingSignalDivider extends StatelessWidget {
+  const _TrainingSignalDivider();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 34,
+      child: VerticalDivider(
+        width: 16,
+        thickness: 1,
+        color: Theme.of(context).colorScheme.outlineVariant,
+      ),
     );
   }
 }
