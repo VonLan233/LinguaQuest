@@ -103,33 +103,7 @@ class ReviewCenterScreen extends ConsumerWidget {
               if (lessonMistakes.isNotEmpty)
                 _MistakeWordImporter(mistakes: lessonMistakes),
               for (final mistake in lessonMistakes.take(5))
-                QuestCard(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  padding: const EdgeInsets.all(14),
-                  child: Row(
-                    children: [
-                      ImageCueBadge(cue: mistake.word.imageCue, size: 52),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              mistake.word.word,
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                            Text(mistake.explanation),
-                          ],
-                        ),
-                      ),
-                      PillLabel(
-                        label: '课程',
-                        icon: Icons.school_outlined,
-                        color: AppTheme.coral,
-                      ),
-                    ],
-                  ),
-                ),
+                _LessonMistakeRow(mistake: mistake),
               if (lessonMistakes.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10),
@@ -139,31 +113,7 @@ class ReviewCenterScreen extends ConsumerWidget {
                     label: const Text('打开错词本'),
                   ),
                 ),
-              for (final word in weak.take(5))
-                QuestCard(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  padding: const EdgeInsets.all(14),
-                  onTap: () => context.push('/custom-words/${word.id}'),
-                  child: Row(
-                    children: [
-                      ImageCueBadge(cue: wordInitialCue(word.word), size: 52),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              word.word,
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                            Text('错 ${word.wrongCount} 次 · ${word.meaning}'),
-                          ],
-                        ),
-                      ),
-                      const Icon(Icons.chevron_right_rounded),
-                    ],
-                  ),
-                ),
+              for (final word in weak.take(5)) _WeakWordRow(word: word),
             ],
           ],
         ),
@@ -183,9 +133,9 @@ class _ReviewTile extends ConsumerWidget {
       appControllerProvider.select((state) => state.isLoading),
     );
     final canReview = word.isDue(DateTime.now()) && !isLoading;
-    return QuestCard(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(14),
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -194,12 +144,20 @@ class _ReviewTile extends ConsumerWidget {
               ImageCueBadge(cue: wordInitialCue(word.word), size: 54),
               const SizedBox(width: 12),
               Expanded(
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(word.word),
-                  subtitle: Text(
-                    '${word.meaning} · ${formatRelativeDue(word.nextReviewAt, DateTime.now())}',
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(word.word, style: theme.textTheme.titleMedium),
+                    const SizedBox(height: 3),
+                    Text(
+                      '${word.meaning} · ${formatRelativeDue(word.nextReviewAt, DateTime.now())}',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Chip(label: Text('${word.masteryLevel}/5')),
@@ -234,6 +192,8 @@ class _ReviewTile extends ConsumerWidget {
               ),
             ],
           ),
+          const SizedBox(height: 14),
+          Divider(height: 1, color: theme.colorScheme.outlineVariant),
         ],
       ),
     );
@@ -256,6 +216,95 @@ class _ReviewTile extends ConsumerWidget {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
+  }
+}
+
+class _LessonMistakeRow extends StatelessWidget {
+  const _LessonMistakeRow({required this.mistake});
+
+  final QuizQuestion mistake;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Row(
+        children: [
+          ImageCueBadge(cue: mistake.word.imageCue, size: 52),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(mistake.word.word, style: theme.textTheme.titleMedium),
+                const SizedBox(height: 3),
+                Text(
+                  mistake.explanation,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 10),
+          PillLabel(
+            label: '课程',
+            icon: Icons.school_outlined,
+            color: AppTheme.coral,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _WeakWordRow extends StatelessWidget {
+  const _WeakWordRow({required this.word});
+
+  final CustomWord word;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: () => context.push('/custom-words/${word.id}'),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Row(
+              children: [
+                ImageCueBadge(cue: wordInitialCue(word.word), size: 52),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(word.word, style: theme.textTheme.titleMedium),
+                      const SizedBox(height: 3),
+                      Text(
+                        '错 ${word.wrongCount} 次 · ${word.meaning}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.chevron_right_rounded),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 
