@@ -115,22 +115,23 @@ class _OnboardingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return QuestCard(
-      padding: const EdgeInsets.all(16),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         children: [
           Stack(
             alignment: Alignment.center,
             children: [
-              ImageCueBadge(cue: cue, size: 68),
+              ImageCueBadge(cue: cue, size: 62),
               Positioned(
                 right: -1,
                 bottom: -1,
                 child: Container(
                   padding: const EdgeInsets.all(5),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surface,
                     shape: BoxShape.circle,
+                    border: Border.all(color: theme.colorScheme.outlineVariant),
                   ),
                   child: Icon(icon, color: theme.colorScheme.primary, size: 18),
                 ),
