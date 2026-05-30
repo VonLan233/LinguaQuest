@@ -88,19 +88,20 @@ class _QuestCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return QuestCard(
-      onTap: route == null ? null : () => context.push(route!),
-      padding: const EdgeInsets.all(16),
+    final theme = Theme.of(context);
+    final content = Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.all(10),
+            width: 40,
+            height: 40,
             decoration: BoxDecoration(
-              color: AppTheme.coral.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(16),
+              color: AppTheme.iconBadgeSurface(context),
+              borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(icon, color: Theme.of(context).colorScheme.secondary),
+            child: Icon(icon, color: theme.colorScheme.secondary),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -109,18 +110,31 @@ class _QuestCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w800,
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(body),
+                Text(
+                  body,
+                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                ),
               ],
             ),
           ),
           const SizedBox(width: 10),
           PillLabel(label: value, color: AppTheme.coral),
         ],
+      ),
+    );
+
+    if (route == null) return content;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: () => context.push(route!),
+        child: content,
       ),
     );
   }
