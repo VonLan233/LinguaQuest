@@ -80,92 +80,94 @@ class _PathNode extends StatelessWidget {
     } else {
       color = AppTheme.cyan;
     }
-    final lockedCardColor = theme.colorScheme.surfaceContainerLow;
-    final cardColor = locked ? lockedCardColor : theme.colorScheme.surface;
-
-    return QuestCard(
-      onTap: locked ? null : () => _showPreview(context),
-      padding: const EdgeInsets.all(16),
-      color: cardColor,
-      borderColor: current ? AppTheme.mango.withValues(alpha: 0.68) : null,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
+    return Material(
+      color: current ? AppTheme.accentSurface(context) : Colors.transparent,
+      borderRadius: BorderRadius.circular(14),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: locked ? null : () => _showPreview(context),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: current ? 74 : 62,
-                height: current ? 74 : 62,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 4),
-                ),
-                child: Icon(
-                  locked
-                      ? Icons.lock_rounded
-                      : current
-                      ? Icons.play_arrow_rounded
-                      : completed
-                      ? Icons.check_rounded
-                      : Icons.star_rounded,
-                  color: current ? AppTheme.ink : Colors.white,
-                  size: current ? 38 : 30,
+              Column(
+                children: [
+                  Container(
+                    width: current ? 74 : 62,
+                    height: current ? 74 : 62,
+                    decoration: BoxDecoration(
+                      color: color,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 4),
+                    ),
+                    child: Icon(
+                      locked
+                          ? Icons.lock_rounded
+                          : current
+                          ? Icons.play_arrow_rounded
+                          : completed
+                          ? Icons.check_rounded
+                          : Icons.star_rounded,
+                      color: current ? AppTheme.ink : Colors.white,
+                      size: current ? 38 : 30,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            lesson.section,
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              color: color,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ),
+                        PillLabel(
+                          label: _statusLabel(lesson.status),
+                          icon: locked ? Icons.lock_outline : Icons.bolt,
+                          color: color,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(lesson.title, style: theme.textTheme.titleLarge),
+                    const SizedBox(height: 5),
+                    Text(lesson.description),
+                    const SizedBox(height: 14),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        PillLabel(
+                          label: '${lesson.xpReward} XP',
+                          icon: Icons.bolt,
+                          color: AppTheme.mango,
+                        ),
+                        PillLabel(
+                          label: '${lesson.estimatedMinutes} 分钟',
+                          icon: Icons.timer_outlined,
+                        ),
+                        PillLabel(
+                          label: '${lesson.words.length} 词',
+                          icon: Icons.style_outlined,
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        lesson.section,
-                        style: theme.textTheme.labelLarge?.copyWith(
-                          color: color,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
-                    PillLabel(
-                      label: _statusLabel(lesson.status),
-                      icon: locked ? Icons.lock_outline : Icons.bolt,
-                      color: color,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Text(lesson.title, style: theme.textTheme.titleLarge),
-                const SizedBox(height: 5),
-                Text(lesson.description),
-                const SizedBox(height: 14),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [
-                    PillLabel(
-                      label: '${lesson.xpReward} XP',
-                      icon: Icons.bolt,
-                      color: AppTheme.mango,
-                    ),
-                    PillLabel(
-                      label: '${lesson.estimatedMinutes} 分钟',
-                      icon: Icons.timer_outlined,
-                    ),
-                    PillLabel(
-                      label: '${lesson.words.length} 词',
-                      icon: Icons.style_outlined,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
