@@ -201,6 +201,9 @@ void main() {
         'lib/features/ai_learning/ai_learning_screen.dart',
       ).readAsStringSync();
 
+      expect(aiLearning, contains('_AiToolList'));
+      expect(aiLearning, contains('_AiToolLink'));
+      expect(aiLearning, isNot(contains('_AiToolCard')));
       expect(aiLearning, isNot(contains("status: 'P1'")));
       expect(aiLearning, isNot(contains("status: 'P2'")));
       expect(aiLearning, isNot(contains('先用模拟流程')));
