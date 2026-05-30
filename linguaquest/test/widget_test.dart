@@ -696,6 +696,57 @@ void main() {
     expect(find.text('课程'), findsWidgets);
   });
 
+  testWidgets('quiz feedback stays visible before continuing', (tester) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'feedback-user',
+      name: 'Faye',
+      email: 'faye@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+
+    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.scrollUntilVisible(
+      find.text('新学 10'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, '新学 10'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('进入词卡学习'));
+    await tester.pumpAndSettle();
+    await _completeNewWordCards(tester);
+
+    await tester.tap(find.text('通勤'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('检查'));
+    await tester.pump();
+
+    Finder continueButton() => find.widgetWithText(FilledButton, '继续');
+
+    expect(find.textContaining('答对了'), findsOneWidget);
+    expect(continueButton(), findsOneWidget);
+    expect(tester.widget<FilledButton>(continueButton()).onPressed, isNull);
+
+    await tester.pump(const Duration(milliseconds: 499));
+    expect(tester.widget<FilledButton>(continueButton()).onPressed, isNull);
+
+    await tester.pump(const Duration(milliseconds: 2));
+    expect(tester.widget<FilledButton>(continueButton()).onPressed, isNotNull);
+  });
+
   testWidgets('lesson and quiz screens expose a working back path', (
     tester,
   ) async {

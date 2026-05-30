@@ -26,6 +26,8 @@ class QuizSessionScreen extends ConsumerStatefulWidget {
 }
 
 class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
+  static const _feedbackHoldDuration = Duration(milliseconds: 500);
+
   final _textController = TextEditingController();
   final List<QuizQuestion> _mistakes = [];
   final Set<String> _mistakeQuestionIds = {};
@@ -35,6 +37,8 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
   bool _checked = false;
   bool _lastCorrect = false;
   bool _isSubmitting = false;
+  bool _feedbackReady = true;
+  int _feedbackHoldToken = 0;
 
   @override
   void dispose() {
@@ -171,7 +175,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
                   ),
                 ),
                 FilledButton.icon(
-                  onPressed: _canContinue(question) && !_isSubmitting
+                  onPressed: _canUsePrimaryAction(question) && !_isSubmitting
                       ? () => _handlePrimary(lesson, question)
                       : null,
                   style: FilledButton.styleFrom(
@@ -247,8 +251,12 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
     return null;
   }
 
-  bool _canContinue(QuizQuestion question) {
-    if (_checked) return true;
+  bool _canUsePrimaryAction(QuizQuestion question) {
+    if (_checked) return _feedbackReady;
+    return _hasAnswer(question);
+  }
+
+  bool _hasAnswer(QuizQuestion question) {
     if (question.type == QuizQuestionType.spelling) {
       return _textController.text.trim().isNotEmpty;
     }
@@ -264,6 +272,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
       setState(() {
         _checked = true;
         _lastCorrect = isCorrect;
+        _feedbackReady = false;
         if (isCorrect) {
           if (!_mistakeQuestionIds.contains(question.id)) {
             _correct++;
@@ -272,6 +281,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
           _mistakes.add(question);
         }
       });
+      _holdFeedback();
       return;
     }
 
@@ -279,6 +289,8 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
       setState(() {
         _checked = false;
         _selected = null;
+        _feedbackReady = true;
+        _feedbackHoldToken++;
       });
       return;
     }
@@ -313,7 +325,17 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
       _selected = null;
       _checked = false;
       _lastCorrect = false;
+      _feedbackReady = true;
+      _feedbackHoldToken++;
       _textController.clear();
+    });
+  }
+
+  void _holdFeedback() {
+    final token = ++_feedbackHoldToken;
+    Future<void>.delayed(_feedbackHoldDuration, () {
+      if (!mounted || token != _feedbackHoldToken) return;
+      setState(() => _feedbackReady = true);
     });
   }
 }
