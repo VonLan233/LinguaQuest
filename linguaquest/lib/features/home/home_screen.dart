@@ -143,7 +143,7 @@ class HomeScreen extends ConsumerWidget {
           childAspectRatio: 1.4,
           children: [
             _QuickAction(
-              icon: Icons.language_outlined,
+              icon: Icons.flag_outlined,
               title: '学习模式',
               subtitle: displayTarget(user?.targetExam),
               onTap: () => context.push('/goal-setup'),

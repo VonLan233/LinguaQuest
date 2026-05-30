@@ -67,7 +67,7 @@ class OnboardingScreen extends StatelessWidget {
               spacing: 8,
               runSpacing: 8,
               children: [
-                PillLabel(label: '词境星球', icon: Icons.language_outlined),
+                PillLabel(label: '词境星球', icon: Icons.auto_stories_outlined),
                 PillLabel(label: 'XP', icon: Icons.bolt, color: AppTheme.mango),
                 PillLabel(
                   label: '连续打卡',
