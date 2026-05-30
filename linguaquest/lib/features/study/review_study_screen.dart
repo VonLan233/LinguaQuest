@@ -127,8 +127,8 @@ class _ReviewWordCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    return QuestCard(
-      padding: const EdgeInsets.fromLTRB(20, 22, 20, 18),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -220,31 +220,34 @@ class _MemoryHintCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    return QuestCard(
-      color: AppTheme.accentSurface(context),
-      borderColor: colorScheme.secondary.withValues(alpha: 0.24),
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 38,
+          height: 38,
+          decoration: BoxDecoration(
+            color: AppTheme.iconBadgeSurface(context),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(
             isRevealed ? Icons.lightbulb_outline : Icons.visibility_outlined,
             color: colorScheme.secondary,
           ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              isRevealed
-                  ? '下次复习：${formatRelativeDue(word.nextReviewAt, DateTime.now())}'
-                  : '答对不打断；答错才展示知识卡，并安排更近的复习。',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-                height: 1.42,
-              ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Text(
+            isRevealed
+                ? '下次复习：${formatRelativeDue(word.nextReviewAt, DateTime.now())}'
+                : '答对不打断；答错才展示知识卡，并安排更近的复习。',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+              height: 1.42,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
