@@ -311,10 +311,8 @@ class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
         )
         .length;
 
-    return QuestCard(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(14),
-      color: AppTheme.warmSurface(context),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
