@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/quest_card.dart';
+import '../../core/widgets/section_header.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -37,27 +38,45 @@ class OnboardingScreen extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 28),
           children: [
-            GradientHeroCard(
-              title: 'LinguaQuest',
-              subtitle:
-                  'Build an English habit with bite-sized lessons, visual memory cards, and smart review.',
-              icon: Icons.language_rounded,
-              badge: '词境星球 · Learn in context',
-              action: Row(
-                children: [
-                  const PillLabel(
-                    label: 'XP',
-                    icon: Icons.bolt,
-                    color: AppTheme.mango,
+            Row(
+              children: [
+                Container(
+                  width: 62,
+                  height: 62,
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: AppTheme.accentSurface(context),
+                    borderRadius: BorderRadius.circular(18),
+                    border: Border.all(color: theme.colorScheme.outlineVariant),
                   ),
-                  const SizedBox(width: 8),
-                  PillLabel(
-                    label: 'Streak',
-                    icon: Icons.local_fire_department,
-                    color: Colors.white.withValues(alpha: 0.92),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(13),
+                    child: Image.asset('lib/assets/image/icon_transparent.png'),
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(width: 14),
+                const Expanded(
+                  child: SectionHeader(
+                    title: 'LinguaQuest',
+                    subtitle:
+                        'Bite-sized lessons, visual memory cards, and smart review.',
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            const Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                PillLabel(label: '词境星球', icon: Icons.language_outlined),
+                PillLabel(label: 'XP', icon: Icons.bolt, color: AppTheme.mango),
+                PillLabel(
+                  label: 'Streak',
+                  icon: Icons.local_fire_department,
+                  color: AppTheme.coral,
+                ),
+              ],
             ),
             const SizedBox(height: 22),
             Text(

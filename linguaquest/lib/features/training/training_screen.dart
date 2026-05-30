@@ -18,16 +18,27 @@ class TrainingScreen extends ConsumerWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
       children: [
-        GradientHeroCard(
+        SectionHeader(
           title: '训练场',
-          subtitle: '限时测试、专项训练和排行榜放在这里，正式新学与复习不混在训练场里。',
-          icon: Icons.sports_esports_rounded,
-          badge: '本周 ${user?.xp ?? 0} 积分 · 今日可得 60',
-          action: OutlinedButton.icon(
+          subtitle: '限时测试、专项训练和排行榜放在这里；正式新学与复习保持独立。',
+          trailing: IconButton.filledTonal(
+            tooltip: '排行榜',
             onPressed: () => context.push('/leaderboard'),
             icon: const Icon(Icons.leaderboard_outlined),
-            label: const Text('查看排行榜'),
           ),
+        ),
+        const SizedBox(height: 14),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            PillLabel(
+              label: '本周 ${user?.xp ?? 0} 积分',
+              icon: Icons.bolt,
+              color: AppTheme.mango,
+            ),
+            const PillLabel(label: '今日可得 60', icon: Icons.add_circle_outline),
+          ],
         ),
         const SizedBox(height: 18),
         Row(

@@ -29,20 +29,31 @@ class DiscoverScreen extends ConsumerWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
       children: [
-        GradientHeroCard(
+        SectionHeader(
           title: '发现',
-          subtitle: '签到、积分任务、抽奖和学习社区都放在这里；领取的 XP 会加入个人总积分。',
-          icon: Icons.explore_rounded,
-          badge: '${user?.xp ?? 0} XP · ${user?.streak ?? 0} 天连续打卡',
-          action: FilledButton.icon(
-            style: FilledButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: AppTheme.deepTeal,
-            ),
+          subtitle: '签到、积分任务、抽奖和学习社区；领取的 XP 会加入个人总积分。',
+          trailing: IconButton.filledTonal(
+            tooltip: '任务中心',
             onPressed: () => context.push('/quest'),
             icon: const Icon(Icons.emoji_events_outlined),
-            label: const Text('任务中心'),
           ),
+        ),
+        const SizedBox(height: 14),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            PillLabel(
+              label: '${user?.xp ?? 0} XP',
+              icon: Icons.bolt,
+              color: AppTheme.mango,
+            ),
+            PillLabel(
+              label: '${user?.streak ?? 0} 天连续打卡',
+              icon: Icons.local_fire_department_outlined,
+              color: AppTheme.coral,
+            ),
+          ],
         ),
         const SizedBox(height: 22),
         const SectionHeader(

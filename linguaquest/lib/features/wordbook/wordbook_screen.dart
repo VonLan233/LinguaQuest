@@ -26,20 +26,30 @@ class WordbookScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            GradientHeroCard(
+            SectionHeader(
               title: '图片单词本',
               subtitle: '用图片词卡串联发音、释义、例句、标签和复习信号。',
-              icon: Icons.style_outlined,
-              badge: '${words.length} 个目标词',
-              action: FilledButton.icon(
-                style: FilledButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: AppTheme.deepTeal,
-                ),
+              trailing: IconButton.filledTonal(
+                tooltip: '自定义词卡',
                 onPressed: () => context.push('/custom-words'),
                 icon: const Icon(Icons.add_card_outlined),
-                label: const Text('我的自定义词卡'),
               ),
+            ),
+            const SizedBox(height: 14),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                PillLabel(
+                  label: '${words.length} 个目标词',
+                  icon: Icons.style_outlined,
+                  color: AppTheme.cyan,
+                ),
+                PillLabel(
+                  label: '完成 ${(state.learningPathProgress * 100).round()}%',
+                  icon: Icons.route_outlined,
+                ),
+              ],
             ),
             const SizedBox(height: 22),
             SectionHeader(

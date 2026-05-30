@@ -6,6 +6,7 @@ import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/quest_card.dart';
+import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson_result.dart';
 
 class LessonResultScreen extends ConsumerWidget {
@@ -30,12 +31,16 @@ class LessonResultScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
           children: [
-            GradientHeroCard(
+            SectionHeader(
               title: accuracy >= 80 ? '表现很棒！' : '课程完成',
               subtitle:
                   '答对 ${resolved.correctAnswers}/${resolved.totalQuestions} 题 · 获得 ${resolved.xpEarned} XP · 错题已进入复习。',
+            ),
+            const SizedBox(height: 12),
+            PillLabel(
+              label: resolved.lessonTitle,
               icon: Icons.workspace_premium_outlined,
-              badge: resolved.lessonTitle,
+              color: AppTheme.cyan,
             ),
             const SizedBox(height: 12),
             QuestCard(

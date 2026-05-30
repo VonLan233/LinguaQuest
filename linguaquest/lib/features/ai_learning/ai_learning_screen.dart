@@ -13,20 +13,27 @@ class AiLearningScreen extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
       children: [
-        GradientHeroCard(
+        SectionHeader(
           title: 'AI学习',
-          subtitle: 'AI 是增强层：解释语法、辨析词义、生成语境，但学习记录仍由答题结果更新。',
-          icon: Icons.psychology_alt_rounded,
-          badge: 'Mock first · No client API key',
-          action: FilledButton.icon(
-            style: FilledButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: AppTheme.deepTeal,
-            ),
+          subtitle: '解释语法、辨析词义、生成语境；正式学习记录仍由答题结果更新。',
+          trailing: IconButton.filledTonal(
+            tooltip: '知识问答',
             onPressed: () => context.push('/ai-tutor'),
             icon: const Icon(Icons.chat_bubble_outline),
-            label: const Text('打开知识问答'),
           ),
+        ),
+        const SizedBox(height: 14),
+        const Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            PillLabel(label: 'Mock first', icon: Icons.science_outlined),
+            PillLabel(
+              label: 'No client API key',
+              icon: Icons.lock_outline,
+              color: AppTheme.cyan,
+            ),
+          ],
         ),
         const SizedBox(height: 22),
         const SectionHeader(

@@ -8,6 +8,7 @@ import '../../core/utils/date_formatting.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/quest_card.dart';
+import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson.dart';
 
 class GoalSetupScreen extends ConsumerStatefulWidget {
@@ -50,26 +51,27 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
           children: [
-            GradientHeroCard(
-              title: '选择学习计划',
-              subtitle: '系统会把目标拆成每日新学、到期复习和积分任务。',
-              icon: Icons.track_changes_rounded,
-              badge: '第 2 步 / 共 2 步',
-              action: Row(
-                children: [
-                  PillLabel(
-                    label: displayTarget(_target),
-                    icon: Icons.flag_outlined,
-                    color: Colors.white,
-                  ),
-                  const SizedBox(width: 8),
-                  PillLabel(
-                    label: '${plannedDailyWords ?? _dailyGoal}/天',
-                    icon: Icons.today_outlined,
-                    color: Colors.white,
-                  ),
-                ],
-              ),
+            SectionHeader(title: '选择学习计划', subtitle: '系统会把目标拆成每日新学、到期复习和积分任务。'),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                PillLabel(
+                  label: '第 2 步 / 共 2 步',
+                  icon: Icons.track_changes_rounded,
+                  color: AppTheme.cyan,
+                ),
+                PillLabel(
+                  label: displayTarget(_target),
+                  icon: Icons.flag_outlined,
+                ),
+                PillLabel(
+                  label: '${plannedDailyWords ?? _dailyGoal}/天',
+                  icon: Icons.today_outlined,
+                  color: AppTheme.mango,
+                ),
+              ],
             ),
             const SizedBox(height: 20),
             QuestCard(

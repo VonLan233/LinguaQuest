@@ -7,6 +7,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/quest_card.dart';
+import '../../core/widgets/section_header.dart';
 
 class MistakeBookScreen extends ConsumerWidget {
   const MistakeBookScreen({super.key});
@@ -26,22 +27,22 @@ class MistakeBookScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
           children: [
-            GradientHeroCard(
+            SectionHeader(
               title: lessonMistakes.isEmpty
                   ? '暂时没有课程错题'
                   : '${lessonMistakes.length} 个课程错题',
               subtitle: '测验错题和弱项自定义卡会保留在这里，方便后续复习。',
-              icon: Icons.auto_fix_high_outlined,
-              badge: '错题修复',
-              action: FilledButton.icon(
-                style: FilledButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: AppTheme.deepTeal,
-                ),
+              trailing: IconButton.filledTonal(
+                tooltip: '去练一课',
                 onPressed: () => context.go('/learn'),
                 icon: const Icon(Icons.route_outlined),
-                label: const Text('去练一课'),
               ),
+            ),
+            const SizedBox(height: 14),
+            const PillLabel(
+              label: '错题修复',
+              icon: Icons.auto_fix_high_outlined,
+              color: AppTheme.coral,
             ),
             const SizedBox(height: 20),
             if (lessonMistakes.isEmpty && weakWords.isEmpty)

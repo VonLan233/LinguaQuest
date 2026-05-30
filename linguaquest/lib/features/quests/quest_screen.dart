@@ -13,18 +13,16 @@ class QuestScreen extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
       children: [
-        const GradientHeroCard(
-          title: 'Quest hub',
-          subtitle:
-              'Daily missions, badges, leaderboard, class mode, and AI feedback live here.',
-          icon: Icons.emoji_events_outlined,
-          badge: '20 XP available today',
-        ),
-        const SizedBox(height: 20),
         const SectionHeader(
           title: 'Quest hub',
           subtitle:
               'Daily quests and social layers are wired as product-ready shells for phase two.',
+        ),
+        const SizedBox(height: 12),
+        const PillLabel(
+          label: '20 XP available today',
+          icon: Icons.bolt,
+          color: AppTheme.mango,
         ),
         const SizedBox(height: 16),
         const _QuestCard(

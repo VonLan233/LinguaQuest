@@ -8,6 +8,7 @@ import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/quest_card.dart';
+import '../../core/widgets/section_header.dart';
 import '../../data/models/custom_word.dart';
 
 class CustomWordListScreen extends ConsumerStatefulWidget {
@@ -40,12 +41,14 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 10, 20, 4),
-              child: GradientHeroCard(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 8),
+              child: SectionHeader(
                 title: '我的词卡',
                 subtitle: '创建、搜索、筛选、编辑并复习你的个人词库。',
-                icon: Icons.add_card_outlined,
-                badge: '${state.customWords.length} 张自定义卡',
+                trailing: PillLabel(
+                  label: '${state.customWords.length} 张',
+                  icon: Icons.add_card_outlined,
+                ),
               ),
             ),
             Padding(

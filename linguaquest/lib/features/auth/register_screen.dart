@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/widgets/quest_card.dart';
+import '../../core/widgets/section_header.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -39,12 +40,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const GradientHeroCard(
+                const SectionHeader(
                   title: 'Start your path',
                   subtitle:
                       'Create a learner profile, then choose your goal and daily rhythm.',
+                ),
+                const SizedBox(height: 12),
+                const PillLabel(
+                  label: 'Step 1 of 2',
                   icon: Icons.person_add_alt_1,
-                  badge: 'Step 1 of 2',
                 ),
                 const SizedBox(height: 20),
                 QuestCard(
