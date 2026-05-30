@@ -1,4 +1,10 @@
-enum QuizQuestionType { meaningChoice, imageChoice, spelling }
+enum QuizQuestionType {
+  meaningChoice,
+  chineseChoice,
+  contextChoice,
+  imageChoice,
+  spelling,
+}
 
 class Word {
   const Word({

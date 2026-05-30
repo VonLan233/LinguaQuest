@@ -342,16 +342,26 @@ Lesson _lesson({
       ),
       QuizQuestion(
         id: '$id-q2',
-        type: QuizQuestionType.imageChoice,
-        prompt: '哪个单词最符合这个图片提示：${words[1].imageCue}',
+        type: QuizQuestionType.chineseChoice,
+        prompt: '根据中文释义选择英文单词：${words[1].meaning}',
         answer: words[1].word,
         options: [words[1].word, words[0].word, words[2].word],
         explanation:
-            '${words[1].imageCue} 对应“${words[1].word}”，意思是${words[1].meaning}。',
+            '“${words[1].meaning}”对应“${words[1].word}”。${words[1].exampleSentence}',
         word: words[1],
       ),
       QuizQuestion(
         id: '$id-q3',
+        type: QuizQuestionType.contextChoice,
+        prompt: '根据语境选择“${words[2].word}”的中文释义：${words[2].exampleSentence}',
+        answer: words[2].meaning,
+        options: [words[2].meaning, words[0].meaning, words[1].meaning],
+        explanation:
+            '这句话里“${words[2].word}”表示${words[2].meaning}。${words[2].exampleTranslation}',
+        word: words[2],
+      ),
+      QuizQuestion(
+        id: '$id-q4',
         type: QuizQuestionType.spelling,
         prompt: '根据释义拼写单词：${words[2].meaning}',
         answer: words[2].word,

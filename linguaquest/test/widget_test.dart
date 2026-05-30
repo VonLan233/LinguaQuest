@@ -689,8 +689,22 @@ void main() {
   });
 
   test('seed learning path contains blueprint-sized lesson range', () {
-    expect(seedLessons(), hasLength(greaterThanOrEqualTo(6)));
-    expect(seedLessons(), hasLength(lessThanOrEqualTo(10)));
+    final lessons = seedLessons();
+    final firstLessonTypes = {
+      for (final question in lessons.first.questions) question.type,
+    };
+
+    expect(lessons, hasLength(greaterThanOrEqualTo(6)));
+    expect(lessons, hasLength(lessThanOrEqualTo(10)));
+    expect(
+      firstLessonTypes,
+      containsAll({
+        QuizQuestionType.meaningChoice,
+        QuizQuestionType.chineseChoice,
+        QuizQuestionType.contextChoice,
+        QuizQuestionType.spelling,
+      }),
+    );
   });
 
   test('formal new study starts from exam words, not campus timed pack', () {
@@ -788,6 +802,13 @@ void main() {
     await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
+    await tester.tap(find.text('对比'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('检查'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('继续'));
+    await tester.pumpAndSettle();
+
     await tester.enterText(find.byType(TextField), 'contrast');
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));
@@ -795,7 +816,7 @@ void main() {
     await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
-    expect(find.text('答对 2/3 题 · 获得 20 XP · 错题已进入复习。'), findsOneWidget);
+    expect(find.text('答对 3/4 题 · 获得 23 XP · 错题已进入复习。'), findsOneWidget);
 
     await tester.scrollUntilVisible(
       find.text('去复习中心'),
@@ -1412,6 +1433,13 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('evaluate'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('检查'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('继续'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('对比'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
