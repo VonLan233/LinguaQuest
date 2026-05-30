@@ -79,6 +79,9 @@ void main() {
       final targetDetail = File(
         'lib/features/wordbook/target_word_detail_screen.dart',
       ).readAsStringSync();
+      final lessonPreview = File(
+        'lib/features/learning/lesson_preview_screen.dart',
+      ).readAsStringSync();
 
       expect(home, contains("context.push('/study/new')"));
       expect(home, contains("context.push('/study/review')"));
@@ -92,6 +95,11 @@ void main() {
       expect(wordbook, contains('state.formalLessons'));
       expect(search, contains('state.formalLessons'));
       expect(targetDetail, contains('state.formalLessons'));
+      expect(lessonPreview, contains('formalLessons'));
+      expect(
+        lessonPreview,
+        isNot(contains('ref.watch(appControllerProvider).lessons')),
+      );
       expect(training, contains('限时测试'));
       expect(newStudy, contains('不做限时测试'));
       expect(router, contains("path: '/study/new'"));

@@ -18,6 +18,7 @@ import 'package:linguaquest/data/repositories/custom_word_repository.dart';
 import 'package:linguaquest/data/repositories/learning_repository.dart';
 import 'package:linguaquest/data/seed/seed_lessons.dart';
 import 'package:linguaquest/features/auth/goal_setup_screen.dart';
+import 'package:linguaquest/features/learning/lesson_preview_screen.dart';
 import 'package:linguaquest/features/search/search_screen.dart';
 import 'package:linguaquest/features/wordbook/wordbook_screen.dart';
 import 'package:linguaquest/features/wordbook/target_word_detail_screen.dart';
@@ -806,6 +807,45 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('没有找到结果'), findsOneWidget);
+  });
+
+  testWidgets('lesson preview does not open training-only timed packs', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'training-preview-user',
+      name: 'Pax',
+      email: 'pax@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          home: const LessonPreviewScreen(lessonId: 'lesson-campus-1'),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('没有找到这节课'), findsOneWidget);
+    expect(find.text('新学词卡'), findsNothing);
   });
 
   testWidgets('lesson mistake appears in review center after result', (

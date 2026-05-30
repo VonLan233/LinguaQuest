@@ -197,7 +197,7 @@ class _LessonPreviewScreenState extends ConsumerState<LessonPreviewScreen> {
   }
 
   Lesson? _findLesson(WidgetRef ref) {
-    for (final lesson in ref.watch(appControllerProvider).lessons) {
+    for (final lesson in ref.watch(appControllerProvider).formalLessons) {
       if (lesson.id == widget.lessonId) return lesson;
     }
     return null;
