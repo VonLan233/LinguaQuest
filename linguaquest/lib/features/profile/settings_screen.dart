@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/widgets/fallback_back_button.dart';
-import '../../core/widgets/quest_card.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -111,42 +110,34 @@ class ReminderSettingsScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            QuestCard(
-              child: Column(
-                children: [
-                  SwitchListTile(
-                    contentPadding: EdgeInsets.zero,
-                    value: settings.enabled,
-                    onChanged: (value) {
-                      ref
-                          .read(appControllerProvider.notifier)
-                          .updateReminderSettings(
-                            settings.copyWith(enabled: value),
-                          );
-                    },
-                    title: const Text('每日提醒'),
-                    subtitle: Text(
-                      settings.enabled
-                          ? '提醒时间：${settings.formattedTime}'
-                          : '应用内不会显示提醒',
-                    ),
-                  ),
-                  const Divider(height: 24),
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    enabled: settings.enabled,
-                    leading: const Icon(Icons.schedule_outlined),
-                    title: const Text('提醒时间'),
-                    subtitle: Text(settings.formattedTime),
-                    trailing: const Icon(Icons.chevron_right_rounded),
-                    onTap: settings.enabled
-                        ? () => _pickTime(context, ref, settings)
-                        : null,
-                  ),
-                ],
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              value: settings.enabled,
+              onChanged: (value) {
+                ref
+                    .read(appControllerProvider.notifier)
+                    .updateReminderSettings(settings.copyWith(enabled: value));
+              },
+              title: const Text('每日提醒'),
+              subtitle: Text(
+                settings.enabled
+                    ? '提醒时间：${settings.formattedTime}'
+                    : '应用内不会显示提醒',
               ),
             ),
-            const SizedBox(height: 12),
+            const Divider(height: 20),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              enabled: settings.enabled,
+              leading: const Icon(Icons.schedule_outlined),
+              title: const Text('提醒时间'),
+              subtitle: Text(settings.formattedTime),
+              trailing: const Icon(Icons.chevron_right_rounded),
+              onTap: settings.enabled
+                  ? () => _pickTime(context, ref, settings)
+                  : null,
+            ),
+            const SizedBox(height: 16),
             Text(
               '该设置会保存在应用内；当前版本暂未启用系统级通知。',
               style: Theme.of(context).textTheme.bodySmall,
