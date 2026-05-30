@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/state/app_state.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/date_formatting.dart';
 import '../../core/utils/ui_labels.dart';
@@ -41,7 +42,10 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
     final state = ref.watch(appControllerProvider);
     final plannedDailyWords = _deadline == null
         ? null
-        : _dailyWordsForDeadline(state.formalLessons, state.completedLessonIds);
+        : _dailyWordsForDeadline(
+            learningLessonsForTarget(state.lessons, _target),
+            state.completedLessonIds,
+          );
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/home'),

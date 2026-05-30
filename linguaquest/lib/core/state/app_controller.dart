@@ -489,7 +489,7 @@ class AppController extends Notifier<AppState> {
     required DateTime deadline,
   }) {
     final completed = state.completedLessonIds;
-    final remainingWords = state.formalLessons
+    final remainingWords = learningLessonsForTarget(state.lessons, target)
         .where((lesson) => !completed.contains(lesson.id))
         .fold(0, (total, lesson) => total + lesson.words.length);
     final now = DateTime.now();

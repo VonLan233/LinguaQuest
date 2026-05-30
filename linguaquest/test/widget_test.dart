@@ -821,18 +821,49 @@ void main() {
     );
   });
 
-  test('formal new study starts from exam words, not campus timed pack', () {
+  test('formal wordbook follows the selected learning target', () {
     final lessons = seedLessons();
+    final now = DateTime(2026, 5, 25);
 
-    expect(lessons.first.id, 'lesson-exam-1');
-    expect(lessons.first.status, 'current');
-    expect(lessons.first.section, '考试高频');
-
-    final campusLesson = lessons.singleWhere(
-      (lesson) => lesson.id == 'lesson-campus-1',
+    AppState stateFor(String target) => AppState.initial().copyWith(
+      lessons: lessons,
+      user: UserProfile(
+        uid: 'target-user-$target',
+        name: 'Target User',
+        email: '$target@lingua.quest',
+        targetExam: target,
+        level: 'Elementary',
+        dailyGoal: 10,
+        xp: 0,
+        streak: 0,
+        createdAt: now,
+        updatedAt: now,
+      ),
     );
-    expect(campusLesson.status, 'locked');
-    expect(campusLesson.section, '训练场');
+
+    final examState = stateFor('IELTS');
+    expect(examState.currentLesson?.id, 'lesson-exam-1');
+    expect(examState.formalLessons.map((lesson) => lesson.section).toSet(), {
+      '考试高频',
+    });
+
+    final dailyState = stateFor('Daily English');
+    expect(dailyState.currentLesson?.id, 'lesson-food-1');
+    expect(dailyState.formalLessons.map((lesson) => lesson.section).toSet(), {
+      '日常英语',
+    });
+
+    final businessState = stateFor('Business English');
+    expect(businessState.currentLesson?.id, 'lesson-work-1');
+    expect(
+      businessState.formalLessons.map((lesson) => lesson.section).toSet(),
+      {'商务英语'},
+    );
+
+    expect(
+      dailyState.formalLessons.any((lesson) => lesson.id == 'lesson-campus-1'),
+      false,
+    );
   });
 
   test('training packs stay out of formal learning progress', () {
@@ -904,7 +935,8 @@ void main() {
 
     expect(find.text('${state.totalLearningWords} 个目标词'), findsOneWidget);
     expect(find.text('$fullTargetCount 个目标词'), findsNothing);
-    expect(find.text('allocate'), findsWidgets);
+    expect(find.text('appetite'), findsWidgets);
+    expect(find.text('allocate'), findsNothing);
     expect(find.text('commute'), findsNothing);
 
     await tester.pumpWidget(
@@ -1057,7 +1089,7 @@ void main() {
       uid: 'mistake-user',
       name: 'Mia',
       email: 'mia@lingua.quest',
-      targetExam: 'Daily English',
+      targetExam: 'IELTS',
       level: 'Elementary',
       dailyGoal: 10,
       xp: 0,
@@ -1150,7 +1182,7 @@ void main() {
       uid: 'feedback-user',
       name: 'Faye',
       email: 'faye@lingua.quest',
-      targetExam: 'Daily English',
+      targetExam: 'IELTS',
       level: 'Elementary',
       dailyGoal: 10,
       xp: 0,
@@ -1204,7 +1236,7 @@ void main() {
       uid: 'back-user',
       name: 'Noah',
       email: 'noah@lingua.quest',
-      targetExam: 'Daily English',
+      targetExam: 'IELTS',
       level: 'Elementary',
       dailyGoal: 10,
       xp: 0,
@@ -1764,7 +1796,7 @@ void main() {
       uid: 'spelling-user',
       name: 'Sky',
       email: 'sky@lingua.quest',
-      targetExam: 'Daily English',
+      targetExam: 'IELTS',
       level: 'Elementary',
       dailyGoal: 10,
       xp: 0,
