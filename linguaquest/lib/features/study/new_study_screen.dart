@@ -25,11 +25,12 @@ class NewStudyScreen extends ConsumerWidget {
         leading: const FallbackBackButton(fallbackLocation: '/home'),
         title: const Text('新学'),
         actions: [
-          IconButton(
+          QuestIconButton(
             tooltip: '词书路径',
             onPressed: () => context.push('/learn'),
-            icon: const Icon(Icons.route_outlined),
+            icon: Icons.route_outlined,
           ),
+          const SizedBox(width: 12),
         ],
       ),
       bottomNavigationBar: canStart

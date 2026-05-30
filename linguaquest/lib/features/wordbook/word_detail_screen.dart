@@ -29,11 +29,12 @@ class WordDetailScreen extends ConsumerWidget {
         leading: const FallbackBackButton(fallbackLocation: '/custom-words'),
         title: Text(word.word),
         actions: [
-          IconButton(
+          QuestIconButton(
             tooltip: '编辑',
             onPressed: () => context.push('/custom-words/${word.id}/edit'),
-            icon: const Icon(Icons.edit_outlined),
+            icon: Icons.edit_outlined,
           ),
+          const SizedBox(width: 12),
         ],
       ),
       body: SafeArea(

@@ -100,6 +100,7 @@ void main() {
 
       expect(badges, contains('class QuestIconButton'));
       expect(source, contains('QuestIconButton'));
+      expect(RegExp(r'\bIconButton\s*\(').hasMatch(source), isFalse);
       expect(source, isNot(contains('IconButton.filledTonal')));
     });
 

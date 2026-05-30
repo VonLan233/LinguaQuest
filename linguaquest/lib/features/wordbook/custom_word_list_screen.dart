@@ -229,9 +229,10 @@ class _CustomWordTile extends StatelessWidget {
                   ],
                 ),
               ),
-              IconButton(
+              QuestIconButton(
                 tooltip: '删除',
-                icon: const Icon(Icons.delete_outline),
+                icon: Icons.delete_outline,
+                color: AppTheme.coral,
                 onPressed: onDelete,
               ),
             ],

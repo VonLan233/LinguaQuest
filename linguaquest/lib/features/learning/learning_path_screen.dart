@@ -27,11 +27,12 @@ class LearningPathScreen extends ConsumerWidget {
         leading: const FallbackBackButton(fallbackLocation: '/home'),
         title: const Text('学习路径'),
         actions: [
-          IconButton(
+          QuestIconButton(
             tooltip: '回到首页',
             onPressed: () => context.go('/home'),
-            icon: const Icon(Icons.home_outlined),
+            icon: Icons.home_outlined,
           ),
+          const SizedBox(width: 12),
         ],
       ),
       body: SafeArea(
@@ -41,10 +42,10 @@ class LearningPathScreen extends ConsumerWidget {
             SectionHeader(
               title: '词书路径',
               subtitle: '这里只展示词书进度；正式新学和复习回到首页的两个独立入口。',
-              trailing: IconButton(
+              trailing: QuestIconButton(
                 tooltip: '单词本',
                 onPressed: () => context.push('/wordbook'),
-                icon: const Icon(Icons.menu_book_outlined),
+                icon: Icons.menu_book_outlined,
               ),
             ),
             const SizedBox(height: 18),
