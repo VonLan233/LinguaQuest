@@ -72,6 +72,37 @@ class ImageCueBadge extends StatelessWidget {
   }
 }
 
+class IconCueBadge extends StatelessWidget {
+  const IconCueBadge({
+    required this.icon,
+    this.color = AppTheme.teal,
+    this.size = 42,
+    super.key,
+  });
+
+  final IconData icon;
+  final Color color;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: AppTheme.iconBadgeSurface(context),
+        borderRadius: BorderRadius.circular(size * 0.24),
+        border: Border.all(
+          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.72),
+        ),
+      ),
+      alignment: Alignment.center,
+      child: Icon(icon, color: color, size: size * 0.48),
+    );
+  }
+}
+
 String wordInitialCue(String value) {
   final trimmed = value.trim();
   if (trimmed.isEmpty) return '?';

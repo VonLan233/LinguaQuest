@@ -261,15 +261,7 @@ class _TrainingGameRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 42,
-            height: 42,
-            decoration: BoxDecoration(
-              color: AppTheme.iconBadgeSurface(context),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(game.icon, color: AppTheme.coral),
-          ),
+          IconCueBadge(icon: game.icon, color: AppTheme.coral),
           const SizedBox(width: 14),
           Expanded(
             child: Column(

@@ -70,6 +70,24 @@ void main() {
       expect(shell, isNot(contains('NavigationDestination')));
     });
 
+    test('list icon surfaces use the shared cue badge', () {
+      final badges = File(
+        'lib/core/widgets/learning_badges.dart',
+      ).readAsStringSync();
+      final sources = [
+        File('lib/features/ai_learning/ai_learning_screen.dart'),
+        File('lib/features/training/training_screen.dart'),
+        File('lib/features/profile/profile_screen.dart'),
+        File('lib/features/study/review_study_screen.dart'),
+        File('lib/features/quests/quest_screen.dart'),
+        File('lib/features/discover/discover_screen.dart'),
+      ].map((file) => file.readAsStringSync()).join('\n');
+
+      expect(badges, contains('class IconCueBadge'));
+      expect(sources, contains('IconCueBadge'));
+      expect(sources, isNot(contains('AppTheme.iconBadgeSurface(context)')));
+    });
+
     test('profile dashboard keeps the top area lightweight', () {
       final profile = File(
         'lib/features/profile/profile_screen.dart',

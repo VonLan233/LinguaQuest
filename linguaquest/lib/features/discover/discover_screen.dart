@@ -243,15 +243,7 @@ class _XpUseStatusLine extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          width: 42,
-          height: 42,
-          decoration: BoxDecoration(
-            color: AppTheme.mango.withValues(alpha: 0.18),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: const Icon(Icons.bolt_rounded, color: AppTheme.ink),
-        ),
+        const IconCueBadge(icon: Icons.bolt_rounded, color: AppTheme.mango),
         const SizedBox(width: 12),
         Expanded(
           child: Column(

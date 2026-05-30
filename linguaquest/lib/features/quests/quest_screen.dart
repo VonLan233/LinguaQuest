@@ -97,15 +97,7 @@ class _QuestRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: AppTheme.iconBadgeSurface(context),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(icon, color: theme.colorScheme.secondary),
-          ),
+          IconCueBadge(icon: icon, color: theme.colorScheme.secondary),
           const SizedBox(width: 14),
           Expanded(
             child: Column(

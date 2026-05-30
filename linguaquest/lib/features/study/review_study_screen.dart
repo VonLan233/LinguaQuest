@@ -280,17 +280,12 @@ class _MemoryHintLine extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          width: 38,
-          height: 38,
-          decoration: BoxDecoration(
-            color: AppTheme.iconBadgeSurface(context),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(
-            isRevealed ? Icons.lightbulb_outline : Icons.visibility_outlined,
-            color: colorScheme.secondary,
-          ),
+        IconCueBadge(
+          icon: isRevealed
+              ? Icons.lightbulb_outline
+              : Icons.visibility_outlined,
+          color: colorScheme.secondary,
+          size: 38,
         ),
         const SizedBox(width: 10),
         Expanded(

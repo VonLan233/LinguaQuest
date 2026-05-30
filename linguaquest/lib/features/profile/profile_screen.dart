@@ -283,15 +283,7 @@ class _ProfileStatLine extends StatelessWidget {
     final theme = Theme.of(context);
     return Row(
       children: [
-        Container(
-          width: 36,
-          height: 36,
-          decoration: BoxDecoration(
-            color: data.color.withValues(alpha: 0.12),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Icon(data.icon, color: data.color, size: 20),
-        ),
+        IconCueBadge(icon: data.icon, color: data.color, size: 36),
         const SizedBox(width: 10),
         Expanded(
           child: Column(
@@ -383,17 +375,10 @@ class _WeaknessStatusLine extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          width: 38,
-          height: 38,
-          decoration: BoxDecoration(
-            color: AppTheme.iconBadgeSurface(context),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(
-            Icons.analytics_outlined,
-            color: theme.colorScheme.primary,
-          ),
+        IconCueBadge(
+          icon: Icons.analytics_outlined,
+          color: theme.colorScheme.primary,
+          size: 38,
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -473,14 +458,7 @@ class _ProfileAction extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 6),
             child: Row(
               children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: AppTheme.iconBadgeSurface(context),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Icon(icon, color: theme.colorScheme.primary),
-                ),
+                IconCueBadge(icon: icon, color: theme.colorScheme.primary),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
