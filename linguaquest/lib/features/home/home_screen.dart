@@ -115,12 +115,9 @@ class HomeScreen extends ConsumerWidget {
         ),
         const SizedBox(height: 18),
         _DailyTaskPanel(
-          todayWork: todayWork,
-          totalWork: dailyGoal + reviewTarget,
           currentSection:
               currentLesson?.section ??
               displayTarget(state.learningPlan?.target ?? '雅思核心词汇'),
-          progress: dailyProgress,
           dailyGoal: dailyGoal,
           dueCount: dueCount,
           canStartNew: currentLesson != null && !pathComplete,
@@ -254,10 +251,7 @@ class _HomeInfoLink extends StatelessWidget {
 
 class _DailyTaskPanel extends StatelessWidget {
   const _DailyTaskPanel({
-    required this.todayWork,
-    required this.totalWork,
     required this.currentSection,
-    required this.progress,
     required this.dailyGoal,
     required this.dueCount,
     required this.canStartNew,
@@ -265,10 +259,7 @@ class _DailyTaskPanel extends StatelessWidget {
     required this.onReview,
   });
 
-  final int todayWork;
-  final int totalWork;
   final String currentSection;
-  final double progress;
   final int dailyGoal;
   final int dueCount;
   final bool canStartNew;
@@ -289,19 +280,9 @@ class _DailyTaskPanel extends StatelessWidget {
               fontWeight: FontWeight.w900,
             ),
           ),
-          const SizedBox(height: 12),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(999),
-            child: LinearProgressIndicator(
-              value: progress,
-              minHeight: 12,
-              backgroundColor: AppTheme.progressTrack(context),
-              valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.teal),
-            ),
-          ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 6),
           Text(
-            '今日 $todayWork/$totalWork 词 · 当前词书 $currentSection',
+            '当前词书 $currentSection · 新学和复习分开完成',
             style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
           ),
           const SizedBox(height: 14),
