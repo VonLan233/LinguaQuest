@@ -70,13 +70,18 @@ String displayWordStatus(String value) {
 }
 
 String displayCustomTag(String value) {
-  switch (value.trim().toLowerCase()) {
+  final trimmed = value.trim();
+  if (trimmed.isEmpty) return '自定义';
+
+  switch (trimmed.toLowerCase()) {
     case 'custom':
       return '自定义';
     case 'mistake':
       return '错题';
+    case 'character':
+      return '品格';
     default:
-      return value.trim().isEmpty ? '自定义' : value.trim();
+      return displayWordTag(trimmed);
   }
 }
 

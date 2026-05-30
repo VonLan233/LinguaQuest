@@ -291,6 +291,8 @@ void main() {
       expect(labels, contains('displayCustomTag'));
       expect(labels, contains("case 'custom'"));
       expect(labels, contains("case 'mistake'"));
+      expect(labels, contains("case 'character'"));
+      expect(labels, contains('return displayWordTag(trimmed)'));
       expect(addEdit, contains("TextEditingController(text: '自定义')"));
       expect(addEdit, contains('displayCustomTag(word.tag)'));
       expect(customList, contains('displayCustomTag(word.tag)'));
