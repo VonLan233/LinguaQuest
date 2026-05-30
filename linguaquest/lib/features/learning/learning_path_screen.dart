@@ -15,6 +15,7 @@ class LearningPathScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appControllerProvider);
+    final lessons = state.formalLessons;
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/home'),
@@ -41,9 +42,9 @@ class LearningPathScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 18),
-            for (var index = 0; index < state.lessons.length; index++) ...[
-              _PathNode(lesson: state.lessons[index], index: index),
-              if (index != state.lessons.length - 1) const _PathConnector(),
+            for (var index = 0; index < lessons.length; index++) ...[
+              _PathNode(lesson: lessons[index], index: index),
+              if (index != lessons.length - 1) const _PathConnector(),
             ],
             const SizedBox(height: 10),
             OutlinedButton.icon(

@@ -91,6 +91,8 @@ void main() {
       ).readAsStringSync();
 
       expect(learningPath, isNot(contains('AppTheme.accentSurface(context)')));
+      expect(learningPath, contains('state.formalLessons'));
+      expect(learningPath, isNot(contains('state.lessons.length')));
       expect(learningPath, contains('color: Colors.transparent'));
     });
 

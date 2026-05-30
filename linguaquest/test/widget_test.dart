@@ -633,6 +633,32 @@ void main() {
     expect(campusLesson.section, '训练场');
   });
 
+  test('training packs stay out of formal learning progress', () {
+    final lessons = seedLessons();
+    final formalLessonIds = {
+      for (final lesson in lessons)
+        if (!lesson.isTrainingPack) lesson.id,
+    };
+    final state = AppState.initial().copyWith(
+      lessons: lessons,
+      completedLessonIds: formalLessonIds,
+    );
+
+    expect(
+      state.formalLessons.any((lesson) => lesson.id == 'lesson-campus-1'),
+      false,
+    );
+    expect(
+      state.totalLearningWords,
+      lessons
+          .where((lesson) => !lesson.isTrainingPack)
+          .fold(0, (total, lesson) => total + lesson.words.length),
+    );
+    expect(state.completedLearningWords, state.totalLearningWords);
+    expect(state.learningPathProgress, 1);
+    expect(state.currentLesson?.id, isNot('lesson-campus-1'));
+  });
+
   testWidgets('lesson mistake appears in review center after result', (
     tester,
   ) async {

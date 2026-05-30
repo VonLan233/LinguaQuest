@@ -132,22 +132,25 @@ class AppState {
 
   bool get isAuthenticated => user != null;
 
+  List<Lesson> get formalLessons =>
+      lessons.where((lesson) => !lesson.isTrainingPack).toList();
+
   Lesson? get currentLesson {
-    for (final lesson in lessons) {
+    for (final lesson in formalLessons) {
       if (lesson.status == 'current') return lesson;
     }
-    for (final lesson in lessons) {
+    for (final lesson in formalLessons) {
       if (lesson.status != 'completed' && lesson.status != 'locked') {
         return lesson;
       }
     }
-    return lessons.isEmpty ? null : lessons.last;
+    return formalLessons.isEmpty ? null : formalLessons.last;
   }
 
   int get totalLearningWords =>
-      lessons.fold(0, (total, lesson) => total + lesson.words.length);
+      formalLessons.fold(0, (total, lesson) => total + lesson.words.length);
 
-  int get completedLearningWords => lessons
+  int get completedLearningWords => formalLessons
       .where((lesson) => completedLessonIds.contains(lesson.id))
       .fold(0, (total, lesson) => total + lesson.words.length);
 

@@ -513,17 +513,23 @@ class AppController extends Notifier<AppState> {
   ) {
     if (lessons.isEmpty) return lessons;
     final firstIncomplete = lessons.indexWhere(
-      (lesson) => !completedLessonIds.contains(lesson.id),
+      (lesson) =>
+          !lesson.isTrainingPack && !completedLessonIds.contains(lesson.id),
     );
     if (firstIncomplete == -1) {
       return [
-        for (final lesson in lessons) lesson.copyWith(status: 'completed'),
+        for (final lesson in lessons)
+          lesson.copyWith(
+            status: lesson.isTrainingPack ? 'locked' : 'completed',
+          ),
       ];
     }
     return [
       for (var index = 0; index < lessons.length; index++)
         lessons[index].copyWith(
-          status: completedLessonIds.contains(lessons[index].id)
+          status: lessons[index].isTrainingPack
+              ? 'locked'
+              : completedLessonIds.contains(lessons[index].id)
               ? 'completed'
               : index == firstIncomplete
               ? 'current'
