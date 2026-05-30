@@ -1113,6 +1113,16 @@ void main() {
     expect(state.learningPlan, isNotNull);
     expect(state.user?.dailyGoal, state.learningPlan?.dailyWords);
     expect(state.learningPlan?.dailyWords, greaterThan(0));
+    expect(state.learningPlan?.remainingWords, state.totalLearningWords);
+    expect(
+      state.learningPlan?.remainingWords,
+      lessThan(
+        state.lessons.fold<int>(
+          0,
+          (total, lesson) => total + lesson.words.length,
+        ),
+      ),
+    );
   });
 
   test('remembered words cannot be counted twice on the same day', () async {

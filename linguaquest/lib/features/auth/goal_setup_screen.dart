@@ -41,7 +41,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
     final state = ref.watch(appControllerProvider);
     final plannedDailyWords = _deadline == null
         ? null
-        : _dailyWordsForDeadline(state.lessons, state.completedLessonIds);
+        : _dailyWordsForDeadline(state.formalLessons, state.completedLessonIds);
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/home'),
