@@ -119,40 +119,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        QuestCard(
-                          color: AppTheme.accentSurface(context),
-                          child: Column(
-                            children: [
-                              ImageCueBadge(
-                                cue: question.word.imageCue,
-                                size: 112,
-                              ),
-                              const SizedBox(height: 14),
-                              Text(
-                                question.prompt,
-                                textAlign: TextAlign.center,
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.headlineSmall,
-                              ),
-                              const SizedBox(height: 10),
-                              Wrap(
-                                spacing: 8,
-                                runSpacing: 8,
-                                alignment: WrapAlignment.center,
-                                children: [
-                                  PillLabel(label: question.word.partOfSpeech),
-                                  PillLabel(
-                                    label: displayDifficulty(
-                                      question.word.difficulty,
-                                    ),
-                                    color: AppTheme.coral,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
+                        _QuestionPromptPanel(question: question),
                         const SizedBox(height: 18),
                         _QuestionInput(
                           question: question,
@@ -337,6 +304,43 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
       if (!mounted || token != _feedbackHoldToken) return;
       setState(() => _feedbackReady = true);
     });
+  }
+}
+
+class _QuestionPromptPanel extends StatelessWidget {
+  const _QuestionPromptPanel({required this.question});
+
+  final QuizQuestion question;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Column(
+        children: [
+          ImageCueBadge(cue: question.word.imageCue, size: 104),
+          const SizedBox(height: 14),
+          Text(
+            question.prompt,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            alignment: WrapAlignment.center,
+            children: [
+              PillLabel(label: question.word.partOfSpeech),
+              PillLabel(
+                label: displayDifficulty(question.word.difficulty),
+                color: AppTheme.coral,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
 
