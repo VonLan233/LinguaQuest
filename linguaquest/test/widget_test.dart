@@ -1958,9 +1958,9 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('加入已选 (2)'), findsOneWidget);
 
-    await tester.tap(find.byType(CheckboxListTile).at(0));
+    await tester.tap(find.byKey(const ValueKey('mistake-select-w-allocate')));
     await tester.pumpAndSettle();
-    await tester.tap(find.byType(CheckboxListTile).at(1));
+    await tester.tap(find.byKey(const ValueKey('mistake-select-w-evaluate')));
     await tester.pumpAndSettle();
     expect(find.text('加入已选 (0)'), findsOneWidget);
 
@@ -2036,9 +2036,18 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('review-word-0'), findsOneWidget);
-      expect(find.text('review-word-5'), findsOneWidget);
-      expect(find.text('review-word-6'), findsNothing);
+      expect(
+        find.byKey(const ValueKey('mistake-select-review-word-0')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey('mistake-select-review-word-5')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey('mistake-select-review-word-6')),
+        findsNothing,
+      );
       expect(find.text('加入已选 (6)'), findsOneWidget);
 
       await tester.scrollUntilVisible(

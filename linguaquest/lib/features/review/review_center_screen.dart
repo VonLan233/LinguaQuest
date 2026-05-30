@@ -469,21 +469,21 @@ class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
                 final exists = existingWords.contains(
                   mistake.word.word.trim().toLowerCase(),
                 );
-                return CheckboxListTile(
-                  contentPadding: EdgeInsets.zero,
-                  value: !exists && _selectedIds.contains(mistake.word.id),
+                return _MistakeSelectionRow(
+                  key: ValueKey('mistake-select-${mistake.word.id}'),
+                  word: mistake.word.word,
+                  meaning: exists ? '已加入' : mistake.word.meaning,
+                  selected: !exists && _selectedIds.contains(mistake.word.id),
                   enabled: !exists,
                   onChanged: (checked) {
                     setState(() {
-                      if (checked ?? false) {
+                      if (checked) {
                         _selectedIds.add(mistake.word.id);
                       } else {
                         _selectedIds.remove(mistake.word.id);
                       }
                     });
                   },
-                  title: Text(mistake.word.word),
-                  subtitle: Text(exists ? '已加入' : mistake.word.meaning),
                 );
               },
             ),
@@ -519,5 +519,90 @@ class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
         .take(_visibleMistakeLimit)
         .map((mistake) => mistake.word.id)
         .toSet();
+  }
+}
+
+class _MistakeSelectionRow extends StatelessWidget {
+  const _MistakeSelectionRow({
+    required this.word,
+    required this.meaning,
+    required this.selected,
+    required this.enabled,
+    required this.onChanged,
+    super.key,
+  });
+
+  final String word;
+  final String meaning;
+  final bool selected;
+  final bool enabled;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final color = selected ? AppTheme.teal : theme.colorScheme.outline;
+    return Semantics(
+      button: true,
+      checked: selected,
+      enabled: enabled,
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: enabled ? () => onChanged(!selected) : null,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Row(
+              children: [
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 160),
+                  curve: Curves.easeOutCubic,
+                  width: 30,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    color: selected
+                        ? AppTheme.selectedSurface(context)
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: color, width: selected ? 2 : 1),
+                  ),
+                  child: Icon(
+                    selected ? Icons.check_rounded : Icons.add_rounded,
+                    color: selected ? AppTheme.teal : color,
+                    size: 19,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(word, style: theme.textTheme.titleMedium),
+                      const SizedBox(height: 2),
+                      Text(
+                        meaning,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (!enabled)
+                  const PillLabel(
+                    label: '已加入',
+                    icon: Icons.check_circle_outline,
+                    color: AppTheme.cyan,
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

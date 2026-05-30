@@ -12,6 +12,7 @@ void main() {
         (RegExp(r'\bChip\s*\('), 'Chip('),
         (RegExp(r'\bChoiceChip\s*\('), 'ChoiceChip('),
         (RegExp(r'\bSegmentedButton\s*\('), 'SegmentedButton('),
+        (RegExp(r'\bCheckboxListTile\s*\('), 'CheckboxListTile('),
         (RegExp(r'\bBoxShadow\b'), 'BoxShadow'),
         (RegExp(r'\bLinearGradient\b'), 'LinearGradient'),
         (RegExp(r'\bRadialGradient\b'), 'RadialGradient'),
@@ -125,6 +126,16 @@ void main() {
       expect(addEdit, contains("value: 'Easy'"));
       expect(addEdit, isNot(contains('SegmentedButton')));
       expect(addEdit, isNot(contains('ButtonSegment')));
+    });
+
+    test('mistake importer uses branded selection rows', () {
+      final reviewCenter = File(
+        'lib/features/review/review_center_screen.dart',
+      ).readAsStringSync();
+
+      expect(reviewCenter, contains('_MistakeSelectionRow'));
+      expect(reviewCenter, contains('mistake-select-'));
+      expect(reviewCenter, isNot(contains('CheckboxListTile')));
     });
 
     test('profile dashboard keeps the top area lightweight', () {
