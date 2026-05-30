@@ -1,5 +1,9 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../core/theme/app_theme.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({required this.selectedIndex, required this.child, super.key});
@@ -64,36 +68,9 @@ class _AppShellState extends State<AppShell> {
           ),
         ),
       ),
-      bottomNavigationBar: NavigationBar(
+      bottomNavigationBar: _QuestBottomNav(
         selectedIndex: widget.selectedIndex,
-        onDestinationSelected: (index) => _goToIndex(context, index),
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home_rounded),
-            label: '首页',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.sports_esports_outlined),
-            selectedIcon: Icon(Icons.sports_esports_rounded),
-            label: '训练场',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.psychology_alt_outlined),
-            selectedIcon: Icon(Icons.psychology_alt_rounded),
-            label: 'AI 学习',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.explore_outlined),
-            selectedIcon: Icon(Icons.explore_rounded),
-            label: '发现',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person_rounded),
-            label: '我的',
-          ),
-        ],
+        onSelected: (index) => _goToIndex(context, index),
       ),
     );
   }
@@ -124,4 +101,226 @@ class _AppShellState extends State<AppShell> {
     if (index == widget.selectedIndex) return;
     context.go(AppShell.routes[index]);
   }
+}
+
+class _QuestBottomNav extends StatelessWidget {
+  const _QuestBottomNav({
+    required this.selectedIndex,
+    required this.onSelected,
+  });
+
+  final int selectedIndex;
+  final ValueChanged<int> onSelected;
+
+  static const tabs = [
+    _QuestTabData(
+      label: '首页',
+      icon: Icons.home_outlined,
+      selectedIcon: Icons.home_rounded,
+      color: AppTheme.teal,
+    ),
+    _QuestTabData(
+      label: '训练场',
+      icon: Icons.sports_esports_outlined,
+      selectedIcon: Icons.sports_esports_rounded,
+      color: AppTheme.coral,
+    ),
+    _QuestTabData(
+      label: 'AI 学习',
+      icon: Icons.psychology_alt_outlined,
+      selectedIcon: Icons.psychology_alt_rounded,
+      color: AppTheme.cyan,
+    ),
+    _QuestTabData(
+      label: '发现',
+      icon: Icons.explore_outlined,
+      selectedIcon: Icons.explore_rounded,
+      color: AppTheme.mango,
+    ),
+    _QuestTabData(
+      label: '我的',
+      icon: Icons.person_outline,
+      selectedIcon: Icons.person_rounded,
+      color: AppTheme.teal,
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Material(
+      color: colorScheme.surface,
+      child: SafeArea(
+        top: false,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            border: Border(top: BorderSide(color: colorScheme.outlineVariant)),
+          ),
+          child: SizedBox(
+            height: 76,
+            child: Row(
+              children: [
+                for (var index = 0; index < tabs.length; index++)
+                  Expanded(
+                    child: _QuestTabButton(
+                      data: tabs[index],
+                      selected: selectedIndex == index,
+                      onTap: () => onSelected(index),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _QuestTabButton extends StatelessWidget {
+  const _QuestTabButton({
+    required this.data,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final _QuestTabData data;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final tabColor = selected ? data.color : colorScheme.onSurfaceVariant;
+    final labelColor = selected ? colorScheme.onSurface : tabColor;
+    return Semantics(
+      selected: selected,
+      button: true,
+      label: data.label,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 8),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _QuestTabIcon(data: data, selected: selected, color: tabColor),
+                const SizedBox(height: 4),
+                Text(
+                  data.label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: labelColor,
+                    fontWeight: selected ? FontWeight.w900 : FontWeight.w800,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _QuestTabIcon extends StatelessWidget {
+  const _QuestTabIcon({
+    required this.data,
+    required this.selected,
+    required this.color,
+  });
+
+  final _QuestTabData data;
+  final bool selected;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = colorScheme.brightness == Brightness.dark;
+    final selectedSurface = isDark
+        ? colorScheme.primaryContainer
+        : AppTheme.selectedSurface(context);
+    return Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.center,
+      children: [
+        if (selected) ...[
+          Positioned(
+            top: -2,
+            left: 11,
+            child: _QuestTabEar(color: selectedSurface),
+          ),
+          Positioned(
+            top: -2,
+            right: 11,
+            child: _QuestTabEar(color: selectedSurface),
+          ),
+        ],
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          curve: Curves.easeOutCubic,
+          width: 38,
+          height: 34,
+          decoration: BoxDecoration(
+            color: selected ? selectedSurface : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: selected
+                  ? color.withValues(alpha: 0.24)
+                  : Colors.transparent,
+            ),
+          ),
+          child: Icon(
+            selected ? data.selectedIcon : data.icon,
+            color: color,
+            size: 22,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _QuestTabEar extends StatelessWidget {
+  const _QuestTabEar({required this.color});
+
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Transform.rotate(
+      angle: math.pi / 4,
+      child: Container(
+        width: 8,
+        height: 8,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(2),
+          border: Border.all(
+            color: Theme.of(context).colorScheme.outlineVariant,
+            width: 0.8,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _QuestTabData {
+  const _QuestTabData({
+    required this.label,
+    required this.icon,
+    required this.selectedIcon,
+    required this.color,
+  });
+
+  final String label;
+  final IconData icon;
+  final IconData selectedIcon;
+  final Color color;
 }

@@ -57,6 +57,19 @@ void main() {
       expect(featureSource.toLowerCase(), isNot(contains('paw')));
     });
 
+    test('bottom navigation uses compact branded shell tabs', () {
+      final shell = File(
+        'lib/features/shell/app_shell.dart',
+      ).readAsStringSync();
+
+      expect(shell, contains('_QuestBottomNav'));
+      expect(shell, contains('_QuestTabButton'));
+      expect(shell, contains('_QuestTabEar'));
+      expect(shell, contains("label: 'AI 学习'"));
+      expect(shell, isNot(contains('NavigationBar(')));
+      expect(shell, isNot(contains('NavigationDestination')));
+    });
+
     test('profile dashboard keeps the top area lightweight', () {
       final profile = File(
         'lib/features/profile/profile_screen.dart',
