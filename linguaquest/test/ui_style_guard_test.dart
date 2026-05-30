@@ -54,6 +54,17 @@ void main() {
       expect(featureSource.toLowerCase(), isNot(contains('paw')));
     });
 
+    test('profile dashboard keeps the top area lightweight', () {
+      final profile = File(
+        'lib/features/profile/profile_screen.dart',
+      ).readAsStringSync();
+
+      expect(profile, contains('BrandMark'));
+      expect(profile, contains('学习仪表盘'));
+      expect(profile, isNot(contains('MetricTile')));
+      expect(profile, isNot(contains('GridView.count')));
+    });
+
     test('new study and review stay separate from campus timed tests', () {
       final home = File(
         'lib/features/home/home_screen.dart',
