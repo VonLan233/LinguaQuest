@@ -411,13 +411,6 @@ class _BrandAvatarButton extends StatelessWidget {
             color: Colors.white,
             borderRadius: BorderRadius.circular(18),
             border: Border.all(color: const Color(0xFFDDF3FF)),
-            boxShadow: const [
-              BoxShadow(
-                color: AppTheme.cardShadow,
-                blurRadius: 12,
-                offset: Offset(0, 5),
-              ),
-            ],
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(13),

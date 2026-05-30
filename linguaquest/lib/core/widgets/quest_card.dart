@@ -7,7 +7,6 @@ class QuestCard extends StatelessWidget {
     required this.child,
     this.padding = const EdgeInsets.all(18),
     this.margin,
-    this.gradient,
     this.color,
     this.borderColor,
     this.onTap,
@@ -17,7 +16,6 @@ class QuestCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry padding;
   final EdgeInsetsGeometry? margin;
-  final Gradient? gradient;
   final Color? color;
   final Color? borderColor;
   final VoidCallback? onTap;
@@ -28,7 +26,6 @@ class QuestCard extends StatelessWidget {
     final radius = BorderRadius.circular(8);
     final decoration = BoxDecoration(
       color: color ?? theme.colorScheme.surface,
-      gradient: gradient,
       borderRadius: radius,
       border: Border.all(
         color:

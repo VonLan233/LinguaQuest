@@ -61,81 +61,74 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
     return Scaffold(
       backgroundColor: AppTheme.paper,
-      body: DecoratedBox(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFFE8F7FF), AppTheme.paper],
-          ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ScaleTransition(scale: _scale, child: const _LogoMark()),
-              const SizedBox(height: 22),
-              FadeTransition(
-                opacity: _fade,
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ScaleTransition(scale: _scale, child: const _LogoMark()),
+            const SizedBox(height: 22),
+            FadeTransition(
+              opacity: _fade,
+              child: Column(
+                children: [
+                  Text(
+                    'LinguaQuest',
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      color: AppTheme.ink,
+                      height: 1.05,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '图像词卡、清晰路径、智能复习。',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            if (failed)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 28),
                 child: Column(
                   children: [
                     Text(
-                      'LinguaQuest',
-                      style: Theme.of(context).textTheme.headlineMedium
-                          ?.copyWith(color: AppTheme.ink, height: 1.05),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      '图像词卡、清晰路径、智能复习。',
+                      state.errorMessage!,
+                      textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        fontWeight: FontWeight.w700,
+                        color: Theme.of(context).colorScheme.error,
                       ),
+                    ),
+                    const SizedBox(height: 14),
+                    FilledButton.icon(
+                      onPressed: _start,
+                      icon: const Icon(Icons.refresh_rounded),
+                      label: const Text('重试'),
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 24),
-              if (failed)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 28),
-                  child: Column(
-                    children: [
-                      Text(
-                        state.errorMessage!,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.error,
-                        ),
-                      ),
-                      const SizedBox(height: 14),
-                      FilledButton.icon(
-                        onPressed: _start,
-                        icon: const Icon(Icons.refresh_rounded),
-                        label: const Text('重试'),
-                      ),
-                    ],
-                  ),
-                )
-              else
-                SizedBox(
-                  width: 180,
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(999)),
-                    child: TweenAnimationBuilder<double>(
-                      tween: Tween<double>(begin: 0, end: 1),
-                      duration: const Duration(milliseconds: 1000),
-                      curve: Curves.easeOutCubic,
-                      builder: (context, value, _) => LinearProgressIndicator(
-                        value: value,
-                        minHeight: 10,
-                        backgroundColor: AppTheme.progressTrack(context),
-                      ),
+              )
+            else
+              SizedBox(
+                width: 180,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(999)),
+                  child: TweenAnimationBuilder<double>(
+                    tween: Tween<double>(begin: 0, end: 1),
+                    duration: const Duration(milliseconds: 1000),
+                    curve: Curves.easeOutCubic,
+                    builder: (context, value, _) => LinearProgressIndicator(
+                      value: value,
+                      minHeight: 10,
+                      backgroundColor: AppTheme.progressTrack(context),
                     ),
                   ),
                 ),
-            ],
-          ),
+              ),
+          ],
         ),
       ),
     );
@@ -155,13 +148,6 @@ class _LogoMark extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(30),
         border: Border.all(color: const Color(0xFFDDF3FF), width: 3),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.deepTeal.withValues(alpha: 0.22),
-            blurRadius: 24,
-            offset: const Offset(0, 12),
-          ),
-        ],
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(22),
