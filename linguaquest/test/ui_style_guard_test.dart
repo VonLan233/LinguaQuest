@@ -9,6 +9,7 @@ void main() {
       final forbiddenPatterns = [
         (RegExp(r'\bQuestCard\s*\('), 'QuestCard('),
         (RegExp(r'\bCard\s*\('), 'Card('),
+        (RegExp(r'\bChip\s*\('), 'Chip('),
         (RegExp(r'\bBoxShadow\b'), 'BoxShadow'),
         (RegExp(r'\bLinearGradient\b'), 'LinearGradient'),
         (RegExp(r'\bRadialGradient\b'), 'RadialGradient'),

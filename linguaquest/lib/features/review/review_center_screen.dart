@@ -250,7 +250,11 @@ class _ReviewTile extends ConsumerWidget {
                   ],
                 ),
               ),
-              Chip(label: Text('${word.masteryLevel}/5')),
+              PillLabel(
+                label: '掌握 ${word.masteryLevel}/5',
+                icon: Icons.psychology_outlined,
+                color: AppTheme.mango,
+              ),
             ],
           ),
           Row(
