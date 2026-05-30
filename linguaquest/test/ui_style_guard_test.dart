@@ -31,8 +31,11 @@ void main() {
       final source = _readDartSources(Directory('lib'));
 
       expect(File('lib/core/widgets/quest_card.dart').existsSync(), isFalse);
+      expect(File('lib/core/widgets/metric_tile.dart').existsSync(), isFalse);
       expect(source, isNot(contains('QuestCard')));
       expect(source, isNot(contains('quest_card.dart')));
+      expect(source, isNot(contains('MetricTile')));
+      expect(source, isNot(contains('metric_tile.dart')));
     });
 
     test('brand presence stays icon-led and avoids generic language marks', () {
