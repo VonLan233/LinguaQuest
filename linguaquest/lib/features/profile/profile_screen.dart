@@ -113,64 +113,24 @@ class ProfileScreen extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: 22),
-        QuestCard(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('当前词书进度', style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 12),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(999),
-                child: LinearProgressIndicator(
-                  value: state.learningPathProgress,
-                  minHeight: 12,
-                  backgroundColor: AppTheme.progressTrack(context),
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    AppTheme.teal,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                '${state.completedLearningWords}/${state.totalLearningWords} 词 · 今日学习 ${state.todayCompletedLessonIds.length} 课 · 今日复习 ${state.todayReviewWordIds.length} 词',
-              ),
-            ],
-          ),
+        _ProfileProgressSummary(
+          progress: state.learningPathProgress,
+          completedWords: state.completedLearningWords,
+          totalWords: state.totalLearningWords,
+          todayLessons: state.todayCompletedLessonIds.length,
+          todayReviews: state.todayReviewWordIds.length,
         ),
         const SizedBox(height: 22),
-        QuestCard(
-          padding: const EdgeInsets.all(16),
-          color: AppTheme.accentSurface(context),
-          child: Row(
-            children: [
-              Icon(
-                Icons.analytics_outlined,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  weakestWord == null
-                      ? '弱项分析：暂无常错词，继续完成学习和复习后会生成。'
-                      : '最常错词：${weakestWord.word} · ${weakestWord.wrongCount} 次错误 · ${displayWordStatus(weakestWord.status)}',
-                ),
-              ),
-            ],
-          ),
+        _WeaknessStatusLine(
+          text: weakestWord == null
+              ? '弱项分析：暂无常错词，继续完成学习和复习后会生成。'
+              : '最常错词：${weakestWord.word} · ${weakestWord.wrongCount} 次错误 · ${displayWordStatus(weakestWord.status)}',
         ),
         const SizedBox(height: 22),
         if (state.learningPlan != null) ...[
-          QuestCard(
-            padding: const EdgeInsets.all(14),
-            child: ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: const Icon(Icons.event_available_outlined),
-              title: const Text('学习计划'),
-              subtitle: Text(
-                '每日 ${state.learningPlan!.dailyWords} 词 · 计划剩余 ${state.learningPlan!.remainingWords} 词',
-              ),
-            ),
+          _LearningPlanLine(
+            dailyWords: state.learningPlan!.dailyWords,
+            remainingWords: state.learningPlan!.remainingWords,
           ),
           const SizedBox(height: 22),
         ],
@@ -232,6 +192,119 @@ class ProfileScreen extends ConsumerWidget {
           },
           icon: const Icon(Icons.logout),
           label: const Text('退出登录'),
+        ),
+      ],
+    );
+  }
+}
+
+class _ProfileProgressSummary extends StatelessWidget {
+  const _ProfileProgressSummary({
+    required this.progress,
+    required this.completedWords,
+    required this.totalWords,
+    required this.todayLessons,
+    required this.todayReviews,
+  });
+
+  final double progress;
+  final int completedWords;
+  final int totalWords;
+  final int todayLessons;
+  final int todayReviews;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('当前词书进度', style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 12),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(999),
+          child: LinearProgressIndicator(
+            value: progress,
+            minHeight: 12,
+            backgroundColor: AppTheme.progressTrack(context),
+            valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.teal),
+          ),
+        ),
+        const SizedBox(height: 10),
+        Text(
+          '$completedWords/$totalWords 词 · 今日学习 $todayLessons 课 · 今日复习 $todayReviews 词',
+        ),
+      ],
+    );
+  }
+}
+
+class _WeaknessStatusLine extends StatelessWidget {
+  const _WeaknessStatusLine({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 38,
+          height: 38,
+          decoration: BoxDecoration(
+            color: AppTheme.iconBadgeSurface(context),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(
+            Icons.analytics_outlined,
+            color: theme.colorScheme.primary,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            text,
+            style: TextStyle(
+              color: theme.colorScheme.onSurfaceVariant,
+              height: 1.42,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _LearningPlanLine extends StatelessWidget {
+  const _LearningPlanLine({
+    required this.dailyWords,
+    required this.remainingWords,
+  });
+
+  final int dailyWords;
+  final int remainingWords;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(Icons.event_available_outlined, color: theme.colorScheme.primary),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('学习计划', style: theme.textTheme.titleMedium),
+              const SizedBox(height: 2),
+              Text(
+                '每日 $dailyWords 词 · 计划剩余 $remainingWords 词',
+                style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+              ),
+            ],
+          ),
         ),
       ],
     );
