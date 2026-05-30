@@ -306,7 +306,11 @@ class AppController extends Notifier<AppState> {
     });
   }
 
-  Future<bool> reviewWord(String id, bool isCorrect) async {
+  Future<bool> reviewWord(
+    String id,
+    bool isCorrect, {
+    ReviewDimension dimension = ReviewDimension.confidence,
+  }) async {
     final user = state.user;
     if (user == null) return false;
     final word = _customWordById(id);
@@ -319,7 +323,11 @@ class AppController extends Notifier<AppState> {
       return false;
     }
     return _run(() async {
-      final reviewed = word.reviewed(isCorrect: isCorrect, now: now);
+      final reviewed = word.reviewed(
+        isCorrect: isCorrect,
+        now: now,
+        dimension: dimension,
+      );
       await _customWordRepository.update(reviewed);
       await _reviewRepository.recordReviewEvent(
         ReviewEvent(

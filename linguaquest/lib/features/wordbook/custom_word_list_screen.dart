@@ -179,10 +179,7 @@ class _CustomWordTile extends StatelessWidget {
       onTap: () => context.push('/custom-words/${word.id}'),
       child: Row(
         children: [
-          ImageCueBadge(
-            cue: word.word.characters.first.toUpperCase(),
-            size: 58,
-          ),
+          ImageCueBadge(cue: wordInitialCue(word.word), size: 58),
           const SizedBox(width: 13),
           Expanded(
             child: Column(

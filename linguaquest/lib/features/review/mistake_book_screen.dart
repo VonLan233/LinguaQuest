@@ -105,10 +105,7 @@ class MistakeBookScreen extends ConsumerWidget {
                     onTap: () => context.push('/custom-words/${word.id}'),
                     child: Row(
                       children: [
-                        ImageCueBadge(
-                          cue: word.word.characters.first.toUpperCase(),
-                          size: 56,
-                        ),
+                        ImageCueBadge(cue: wordInitialCue(word.word), size: 56),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Column(

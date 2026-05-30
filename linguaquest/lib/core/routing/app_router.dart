@@ -5,6 +5,8 @@ import '../../data/models/lesson_result.dart';
 import '../../features/auth/goal_setup_screen.dart';
 import '../../features/auth/login_screen.dart';
 import '../../features/auth/register_screen.dart';
+import '../../features/ai_learning/ai_learning_screen.dart';
+import '../../features/discover/discover_screen.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/learning/learning_path_screen.dart';
 import '../../features/learning/lesson_preview_screen.dart';
@@ -25,6 +27,7 @@ import '../../features/quiz/quiz_session_screen.dart';
 import '../../features/review/mistake_book_screen.dart';
 import '../../features/review/review_center_screen.dart';
 import '../../features/shell/app_shell.dart';
+import '../../features/training/training_screen.dart';
 import '../../features/wordbook/add_edit_custom_word_screen.dart';
 import '../../features/wordbook/custom_word_list_screen.dart';
 import '../../features/wordbook/target_word_detail_screen.dart';
@@ -60,22 +63,34 @@ final routerProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => const HomeScreen(),
           ),
           GoRoute(
-            path: '/learn',
-            builder: (context, state) => const LearningPathScreen(),
+            path: '/training',
+            builder: (context, state) => const TrainingScreen(),
           ),
           GoRoute(
-            path: '/review',
-            builder: (context, state) => const ReviewCenterScreen(),
+            path: '/ai-learning',
+            builder: (context, state) => const AiLearningScreen(),
           ),
           GoRoute(
-            path: '/quest',
-            builder: (context, state) => const QuestScreen(),
+            path: '/discover',
+            builder: (context, state) => const DiscoverScreen(),
           ),
           GoRoute(
             path: '/profile',
             builder: (context, state) => const ProfileScreen(),
           ),
+          GoRoute(
+            path: '/quest',
+            builder: (context, state) => const QuestScreen(),
+          ),
         ],
+      ),
+      GoRoute(
+        path: '/learn',
+        builder: (context, state) => const LearningPathScreen(),
+      ),
+      GoRoute(
+        path: '/review',
+        builder: (context, state) => const ReviewCenterScreen(),
       ),
       GoRoute(
         path: '/mistake-book',
@@ -165,8 +180,9 @@ final routerProvider = Provider<GoRouter>((ref) {
 });
 
 int _tabIndexForPath(String path) {
-  if (path.startsWith('/learn')) return 1;
-  if (path.startsWith('/review')) return 2;
+  if (path.startsWith('/training')) return 1;
+  if (path.startsWith('/ai-learning')) return 2;
+  if (path.startsWith('/discover')) return 3;
   if (path.startsWith('/quest')) return 3;
   if (path.startsWith('/profile')) return 4;
   return 0;

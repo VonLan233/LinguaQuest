@@ -44,10 +44,7 @@ class WordDetailScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  ImageCueBadge(
-                    cue: word.word.characters.first.toUpperCase(),
-                    size: 112,
-                  ),
+                  ImageCueBadge(cue: wordInitialCue(word.word), size: 112),
                   const SizedBox(height: 16),
                   Text(
                     word.word,
