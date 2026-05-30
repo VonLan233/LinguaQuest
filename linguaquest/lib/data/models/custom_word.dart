@@ -117,21 +117,20 @@ class CustomWord {
       difficulty: json['difficulty'] as String? ?? 'Medium',
       status: json['status'] as String? ?? _statusFromMastery(json),
       easeFactor: _double(json['easeFactor']) ?? 2.5,
-      intervalDays: json['intervalDays'] as int? ?? 0,
-      repetitionCount: json['repetitionCount'] as int? ?? 0,
-      lapseCount: json['lapseCount'] as int? ?? 0,
-      masteryLevel: json['masteryLevel'] as int? ?? 0,
-      correctCount: json['correctCount'] as int? ?? 0,
-      wrongCount: json['wrongCount'] as int? ?? 0,
+      intervalDays: _int(json['intervalDays']) ?? 0,
+      repetitionCount: _int(json['repetitionCount']) ?? 0,
+      lapseCount: _int(json['lapseCount']) ?? 0,
+      masteryLevel: _int(json['masteryLevel']) ?? 0,
+      correctCount: _int(json['correctCount']) ?? 0,
+      wrongCount: _int(json['wrongCount']) ?? 0,
       meaningRecognitionScore:
-          json['meaningRecognitionScore'] as int? ?? _scoreFromMastery(json),
+          _int(json['meaningRecognitionScore']) ?? _scoreFromMastery(json),
       meaningRecallScore:
-          json['meaningRecallScore'] as int? ?? _scoreFromMastery(json),
-      spellingScore: json['spellingScore'] as int? ?? _scoreFromMastery(json),
-      listeningScore: json['listeningScore'] as int? ?? _scoreFromMastery(json),
-      contextScore: json['contextScore'] as int? ?? _scoreFromMastery(json),
-      confidenceScore:
-          json['confidenceScore'] as int? ?? _scoreFromMastery(json),
+          _int(json['meaningRecallScore']) ?? _scoreFromMastery(json),
+      spellingScore: _int(json['spellingScore']) ?? _scoreFromMastery(json),
+      listeningScore: _int(json['listeningScore']) ?? _scoreFromMastery(json),
+      contextScore: _int(json['contextScore']) ?? _scoreFromMastery(json),
+      confidenceScore: _int(json['confidenceScore']) ?? _scoreFromMastery(json),
       nextReviewAt: _date(json['nextReviewAt']) ?? DateTime.now(),
       createdAt: _date(json['createdAt']) ?? DateTime.now(),
       updatedAt: _date(json['updatedAt']) ?? DateTime.now(),
@@ -316,13 +315,20 @@ class CustomWord {
     return double.tryParse(value.toString());
   }
 
+  static int? _int(Object? value) {
+    if (value == null) return null;
+    if (value is int) return value;
+    if (value is double) return value.toInt();
+    return int.tryParse(value.toString());
+  }
+
   static int _scoreFromMastery(Map<String, dynamic> json) {
-    final mastery = json['masteryLevel'] as int? ?? 0;
+    final mastery = _int(json['masteryLevel']) ?? 0;
     return (mastery * 20).clamp(0, 100).toInt();
   }
 
   static String _statusFromMastery(Map<String, dynamic> json) {
-    final mastery = json['masteryLevel'] as int? ?? 0;
+    final mastery = _int(json['masteryLevel']) ?? 0;
     return _statusForMastery(mastery);
   }
 

@@ -57,4 +57,32 @@ void main() {
     expect(reviewed.contextScore, word.contextScore);
     expect(reviewed.confidenceScore, word.confidenceScore);
   });
+
+  test('custom word JSON accepts double-backed integer values', () {
+    final word = CustomWord.fromJson({
+      'id': '3',
+      'uid': 'u1',
+      'word': 'robust',
+      'meaning': '健壮的',
+      'masteryLevel': 2.0,
+      'intervalDays': 3.0,
+      'repetitionCount': 4.0,
+      'lapseCount': 1.0,
+      'correctCount': 5.0,
+      'wrongCount': 2.0,
+      'meaningRecognitionScore': 60.0,
+      'spellingScore': 55.0,
+    });
+
+    expect(word.status, 'Review');
+    expect(word.masteryLevel, 2);
+    expect(word.intervalDays, 3);
+    expect(word.repetitionCount, 4);
+    expect(word.lapseCount, 1);
+    expect(word.correctCount, 5);
+    expect(word.wrongCount, 2);
+    expect(word.meaningRecognitionScore, 60);
+    expect(word.spellingScore, 55);
+    expect(word.meaningRecallScore, 40);
+  });
 }
