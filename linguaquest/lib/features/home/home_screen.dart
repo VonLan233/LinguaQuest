@@ -25,9 +25,10 @@ class HomeScreen extends ConsumerWidget {
         : dueCount.clamp(0, state.learningPlan!.dailyWords * 2).toInt();
     final todayLessonWords = state.todayLearningWords;
     final todayWork = todayLessonWords + state.todayReviewWordIds.length;
-    final dailyProgress = dailyGoal <= 0
+    final totalWork = dailyGoal + reviewTarget;
+    final dailyProgress = totalWork <= 0
         ? 0.0
-        : (todayWork / dailyGoal).clamp(0.0, 1.0);
+        : (todayWork / totalWork).clamp(0.0, 1.0);
     final currentLesson = state.currentLesson;
     final pathComplete =
         state.formalLessons.isNotEmpty &&
@@ -76,7 +77,7 @@ class HomeScreen extends ConsumerWidget {
           target: displayTarget(user?.targetExam),
           level: displayLevel(user?.level),
           todayWork: todayWork,
-          totalWork: dailyGoal + reviewTarget,
+          totalWork: totalWork,
           progress: dailyProgress,
         ),
         const SizedBox(height: 18),

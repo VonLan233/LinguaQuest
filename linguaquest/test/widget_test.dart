@@ -79,6 +79,40 @@ void main() {
     expect(find.text('今日词条'), findsOneWidget);
   });
 
+  testWidgets('home progress uses the combined new and review target', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'progress-user',
+      name: 'Ava',
+      email: 'progress@lingua.quest',
+      targetExam: 'IELTS',
+      level: 'Intermediate',
+      dailyGoal: 12,
+      xp: 240,
+      streak: 6,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+      'linguaquest.today.date': _todayDateKey(DateTime.now()),
+      'linguaquest.today.lessons': ['lesson-exam-1'],
+      'linguaquest.today.reviews': ['seed-1'],
+    });
+
+    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    expect(find.text('今天完成 4/14 词'), findsOneWidget);
+
+    final progress = tester.widget<LinearProgressIndicator>(
+      find.byType(LinearProgressIndicator).first,
+    );
+    expect(progress.value, closeTo(4 / 14, 0.001));
+  });
+
   test('word initial cue falls back for empty custom words', () {
     expect(wordInitialCue(''), '?');
     expect(wordInitialCue('  '), '?');
@@ -2081,4 +2115,10 @@ QuizQuestion _mistakeQuestion(int index) {
     explanation: 'Explanation $index',
     word: word,
   );
+}
+
+String _todayDateKey(DateTime date) {
+  final month = date.month.toString().padLeft(2, '0');
+  final day = date.day.toString().padLeft(2, '0');
+  return '${date.year}-$month-$day';
 }
