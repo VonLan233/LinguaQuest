@@ -74,78 +74,67 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
               ],
             ),
             const SizedBox(height: 20),
-            QuestCard(
-              child: _ChoiceSection<String>(
-                title: '目标',
-                values: targets,
-                selected: _target,
-                labelFor: displayTarget,
-                onSelected: (value) => setState(() => _target = value),
-              ),
+            _ChoiceSection<String>(
+              title: '目标',
+              values: targets,
+              selected: _target,
+              labelFor: displayTarget,
+              onSelected: (value) => setState(() => _target = value),
             ),
-            const SizedBox(height: 20),
-            QuestCard(
-              child: _ChoiceSection<String>(
-                title: '水平',
-                values: levels,
-                selected: _level,
-                labelFor: displayLevel,
-                onSelected: (value) => setState(() => _level = value),
-              ),
+            const SizedBox(height: 24),
+            _ChoiceSection<String>(
+              title: '水平',
+              values: levels,
+              selected: _level,
+              labelFor: displayLevel,
+              onSelected: (value) => setState(() => _level = value),
             ),
-            const SizedBox(height: 20),
-            QuestCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('每日目标', style: Theme.of(context).textTheme.titleMedium),
-                  const SizedBox(height: 8),
-                  _ChoiceGrid<int>(
-                    values: goals,
-                    selected: _dailyGoal,
-                    labelFor: (goal) => '$goal 词',
-                    onSelected: (goal) => setState(() => _dailyGoal = goal),
-                  ),
-                ],
-              ),
+            const SizedBox(height: 24),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('每日目标', style: Theme.of(context).textTheme.titleMedium),
+                const SizedBox(height: 8),
+                _ChoiceGrid<int>(
+                  values: goals,
+                  selected: _dailyGoal,
+                  labelFor: (goal) => '$goal 词',
+                  onSelected: (goal) => setState(() => _dailyGoal = goal),
+                ),
+              ],
             ),
-            const SizedBox(height: 20),
-            QuestCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '按截止日期规划',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    _deadline == null
-                        ? '选择目标日期后，系统会自动计算每天需要学习的词数。'
-                        : '${formatShortDate(_deadline!)} · 每天 ${plannedDailyWords ?? _dailyGoal} 词',
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: _pickDeadline,
-                          icon: const Icon(Icons.event_outlined),
-                          label: Text(_deadline == null ? '选择日期' : '更改日期'),
-                        ),
+            const SizedBox(height: 24),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('按截止日期规划', style: Theme.of(context).textTheme.titleMedium),
+                const SizedBox(height: 8),
+                Text(
+                  _deadline == null
+                      ? '选择目标日期后，系统会自动计算每天需要学习的词数。'
+                      : '${formatShortDate(_deadline!)} · 每天 ${plannedDailyWords ?? _dailyGoal} 词',
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: _pickDeadline,
+                        icon: const Icon(Icons.event_outlined),
+                        label: Text(_deadline == null ? '选择日期' : '更改日期'),
                       ),
-                      if (_deadline != null) ...[
-                        const SizedBox(width: 10),
-                        IconButton.filledTonal(
-                          tooltip: '清除日期规划',
-                          onPressed: () => setState(() => _deadline = null),
-                          icon: const Icon(Icons.close_rounded),
-                        ),
-                      ],
+                    ),
+                    if (_deadline != null) ...[
+                      const SizedBox(width: 10),
+                      IconButton.filledTonal(
+                        tooltip: '清除日期规划',
+                        onPressed: () => setState(() => _deadline = null),
+                        icon: const Icon(Icons.close_rounded),
+                      ),
                     ],
-                  ),
-                ],
-              ),
+                  ],
+                ),
+              ],
             ),
             const SizedBox(height: 28),
             FilledButton.icon(
