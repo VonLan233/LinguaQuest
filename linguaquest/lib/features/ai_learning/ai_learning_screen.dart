@@ -101,18 +101,18 @@ class _AiToolCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return QuestCard(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(16),
-      onTap: onTap,
+    final theme = Theme.of(context);
+    final content = Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.all(12),
+            width: 42,
+            height: 42,
             decoration: BoxDecoration(
-              color: AppTheme.cyan.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(18),
+              color: AppTheme.iconBadgeSurface(context),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, color: AppTheme.deepTeal),
           ),
@@ -121,9 +121,12 @@ class _AiToolCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: Theme.of(context).textTheme.titleMedium),
+                Text(title, style: theme.textTheme.titleMedium),
                 const SizedBox(height: 4),
-                Text(body),
+                Text(
+                  body,
+                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                ),
               ],
             ),
           ),
@@ -133,6 +136,16 @@ class _AiToolCard extends StatelessWidget {
             color: onTap == null ? Colors.blueGrey : AppTheme.teal,
           ),
         ],
+      ),
+    );
+
+    if (onTap == null) return content;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: onTap,
+        child: content,
       ),
     );
   }
