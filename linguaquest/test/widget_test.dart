@@ -148,16 +148,17 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('今日复习'), findsOneWidget);
-    expect(find.text('显示释义'), findsOneWidget);
-    expect(find.text('加入错词卡'), findsNothing);
-
-    await tester.tap(find.widgetWithText(FilledButton, '显示释义'));
-    await tester.pumpAndSettle();
-
     expect(find.text('记住了'), findsOneWidget);
     expect(find.text('没记住'), findsOneWidget);
+    expect(find.text('显示释义'), findsNothing);
+    expect(find.text('加入错词卡'), findsNothing);
 
-    await tester.tap(find.widgetWithText(FilledButton, '记住了'));
+    await tester.tap(find.widgetWithText(OutlinedButton, '没记住'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('加入巩固队列'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(FilledButton, '加入巩固队列'));
     await tester.pumpAndSettle();
 
     expect(find.text('2/2'), findsOneWidget);

@@ -49,8 +49,9 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
           : _ReviewActions(
               isRevealed: _revealed,
               isSubmitting: _isSubmitting,
-              onReveal: () => setState(() => _revealed = true),
-              onForgot: () => _review(currentWord, isCorrect: false),
+              onForgot: () => setState(() => _revealed = true),
+              onContinueAfterReveal: () =>
+                  _review(currentWord, isCorrect: false),
               onRemembered: () => _review(currentWord, isCorrect: true),
             ),
       body: SafeArea(
@@ -197,7 +198,7 @@ class _ReviewWordCard extends StatelessWidget {
           ] else ...[
             const SizedBox(height: 18),
             Text(
-              '先在脑中说出中文释义，再点击底部按钮查看答案。',
+              '看英文先回想中文释义。记得就直接进入下一张，忘了再展开知识卡。',
               style: textTheme.bodyLarge?.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
                 height: 1.45,
@@ -235,7 +236,7 @@ class _MemoryHintCard extends StatelessWidget {
             child: Text(
               isRevealed
                   ? '下次复习：${formatRelativeDue(word.nextReviewAt, DateTime.now())}'
-                  : '翻答案前停 3 秒，能减少“看见才认识”的错觉。',
+                  : '答对不打断；答错才展示知识卡，并安排更近的复习。',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurfaceVariant,
                 height: 1.42,
@@ -270,15 +271,15 @@ class _ReviewActions extends StatelessWidget {
   const _ReviewActions({
     required this.isRevealed,
     required this.isSubmitting,
-    required this.onReveal,
     required this.onForgot,
+    required this.onContinueAfterReveal,
     required this.onRemembered,
   });
 
   final bool isRevealed;
   final bool isSubmitting;
-  final VoidCallback onReveal;
   final VoidCallback onForgot;
+  final VoidCallback onContinueAfterReveal;
   final VoidCallback onRemembered;
 
   @override
@@ -291,12 +292,17 @@ class _ReviewActions extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
           child: isRevealed
-              ? Row(
+              ? FilledButton.icon(
+                  onPressed: isSubmitting ? null : onContinueAfterReveal,
+                  icon: const Icon(Icons.replay_rounded),
+                  label: const Text('加入巩固队列'),
+                )
+              : Row(
                   children: [
                     Expanded(
                       child: OutlinedButton.icon(
                         onPressed: isSubmitting ? null : onForgot,
-                        icon: const Icon(Icons.close_rounded),
+                        icon: const Icon(Icons.visibility_outlined),
                         label: const Text('没记住'),
                       ),
                     ),
@@ -309,11 +315,6 @@ class _ReviewActions extends StatelessWidget {
                       ),
                     ),
                   ],
-                )
-              : FilledButton.icon(
-                  onPressed: isSubmitting ? null : onReveal,
-                  icon: const Icon(Icons.visibility_outlined),
-                  label: const Text('显示释义'),
                 ),
         ),
       ),
