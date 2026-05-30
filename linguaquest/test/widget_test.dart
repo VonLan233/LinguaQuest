@@ -619,6 +619,20 @@ void main() {
     expect(seedLessons(), hasLength(lessThanOrEqualTo(10)));
   });
 
+  test('formal new study starts from exam words, not campus timed pack', () {
+    final lessons = seedLessons();
+
+    expect(lessons.first.id, 'lesson-exam-1');
+    expect(lessons.first.status, 'current');
+    expect(lessons.first.section, '考试高频');
+
+    final campusLesson = lessons.singleWhere(
+      (lesson) => lesson.id == 'lesson-campus-1',
+    );
+    expect(campusLesson.status, 'locked');
+    expect(campusLesson.section, '训练场');
+  });
+
   testWidgets('lesson mistake appears in review center after result', (
     tester,
   ) async {
@@ -654,34 +668,34 @@ void main() {
     await tester.pumpAndSettle();
     await _completeNewWordCards(tester);
 
-    await tester.tap(find.text('讲座；授课'));
+    await tester.tap(find.text('评估'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('再试一次'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('通勤'));
+    await tester.tap(find.text('分配'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('lecture'));
+    await tester.tap(find.text('evaluate'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
-    await tester.enterText(find.byType(TextField), 'deadline');
+    await tester.enterText(find.byType(TextField), 'contrast');
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
-    expect(find.text('答对 2/3 题 · 获得 13 XP · 错题已进入复习。'), findsOneWidget);
+    expect(find.text('答对 2/3 题 · 获得 20 XP · 错题已进入复习。'), findsOneWidget);
 
     await tester.scrollUntilVisible(
       find.text('去复习中心'),
@@ -694,7 +708,7 @@ void main() {
 
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -900));
     await tester.pumpAndSettle();
-    expect(find.text('commute'), findsWidgets);
+    expect(find.text('allocate'), findsWidgets);
     expect(find.text('课程'), findsWidgets);
   });
 
@@ -731,7 +745,7 @@ void main() {
     await tester.pumpAndSettle();
     await _completeNewWordCards(tester);
 
-    await tester.tap(find.text('通勤'));
+    await tester.tap(find.text('分配'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));
     await tester.pump();
@@ -813,7 +827,7 @@ void main() {
     expect(find.text('检查'), findsOneWidget);
     expect(find.byType(BackButtonIcon), findsOneWidget);
 
-    await tester.tap(find.text('讲座；授课'));
+    await tester.tap(find.text('评估'));
     await tester.pumpAndSettle();
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
@@ -828,10 +842,7 @@ void main() {
     await tester.pumpAndSettle();
 
     final selectedOptionButton = tester.widget<OutlinedButton>(
-      find.ancestor(
-        of: find.text('讲座；授课'),
-        matching: find.byType(OutlinedButton),
-      ),
+      find.ancestor(of: find.text('评估'), matching: find.byType(OutlinedButton)),
     );
     expect(selectedOptionButton.onPressed, isNotNull);
 
@@ -1232,28 +1243,28 @@ void main() {
     await tester.pumpAndSettle();
     await _completeNewWordCards(tester);
 
-    await tester.tap(find.text('通勤'));
+    await tester.tap(find.text('分配'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('lecture'));
+    await tester.tap(find.text('evaluate'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
-    await tester.enterText(find.byType(TextField), 'deadlin');
+    await tester.enterText(find.byType(TextField), 'contras');
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('再试一次'));
     await tester.pumpAndSettle();
 
-    expect(find.text('deadlin'), findsOneWidget);
+    expect(find.text('contras'), findsOneWidget);
   });
 
   test(

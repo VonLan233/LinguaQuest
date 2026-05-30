@@ -255,20 +255,20 @@ List<Lesson> seedLessons() {
 
   return [
     _lesson(
-      id: 'lesson-campus-1',
-      title: '校园入门',
-      section: '校园生活',
-      description: '覆盖讲座、作业和校园日常移动的核心词。',
+      id: 'lesson-exam-1',
+      title: '考试信号词',
+      section: '考试高频',
+      description: '阅读、写作和题干里常见的学术动词。',
       status: 'current',
-      xpReward: 20,
-      words: campusWords,
+      xpReward: 30,
+      words: examWords,
     ),
     _lesson(
       id: 'lesson-travel-1',
       title: '旅行基础',
       section: '旅行英语',
       description: '机场、行程和短对话中最常用的旅行词。',
-      status: 'unlocked',
+      status: 'locked',
       xpReward: 25,
       words: travelWords,
     ),
@@ -280,15 +280,6 @@ List<Lesson> seedLessons() {
       status: 'locked',
       xpReward: 30,
       words: workWords,
-    ),
-    _lesson(
-      id: 'lesson-exam-1',
-      title: '考试信号词',
-      section: '考试高频',
-      description: '阅读、写作和题干里常见的学术动词。',
-      status: 'locked',
-      xpReward: 30,
-      words: examWords,
     ),
     _lesson(
       id: 'lesson-food-1',
@@ -307,6 +298,15 @@ List<Lesson> seedLessons() {
       status: 'locked',
       xpReward: 20,
       words: healthWords,
+    ),
+    _lesson(
+      id: 'lesson-campus-1',
+      title: '校园速测词包',
+      section: '训练场',
+      description: '校园生活词汇保留给限时测试，不作为默认新学入口。',
+      status: 'locked',
+      xpReward: 20,
+      words: campusWords,
     ),
   ];
 }

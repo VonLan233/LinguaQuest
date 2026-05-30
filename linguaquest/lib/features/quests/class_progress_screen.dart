@@ -11,7 +11,7 @@ class ClassProgressScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const rows = [
-      ('校园入门', '92%', 'deadline'),
+      ('考试信号词', '92%', 'allocate'),
       ('旅行基础', '64%', 'itinerary'),
       ('职场表达', '38%', 'negotiate'),
     ];
