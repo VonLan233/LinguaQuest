@@ -29,11 +29,11 @@ class TargetWordDetailScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            QuestCard(
-              color: AppTheme.warmSurface(context),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
               child: Column(
                 children: [
-                  ImageCueBadge(cue: word.imageCue, size: 120),
+                  ImageCueBadge(cue: word.imageCue, size: 108),
                   const SizedBox(height: 16),
                   Text(
                     word.word,

@@ -40,12 +40,12 @@ class WordDetailScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            QuestCard(
-              color: AppTheme.warmSurface(context),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  ImageCueBadge(cue: wordInitialCue(word.word), size: 112),
+                  ImageCueBadge(cue: wordInitialCue(word.word), size: 104),
                   const SizedBox(height: 16),
                   Text(
                     word.word,
