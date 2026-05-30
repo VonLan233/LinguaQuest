@@ -210,8 +210,11 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
       activeContext.pop();
       return;
     }
-    activeContext.go('/learn');
+    activeContext.go(_fallbackExitRoute);
   }
+
+  String get _fallbackExitRoute =>
+      widget.mode == QuizSessionMode.timed ? '/training' : '/learn';
 
   Lesson? _findLesson(List<Lesson> lessons) {
     for (final lesson in lessons) {

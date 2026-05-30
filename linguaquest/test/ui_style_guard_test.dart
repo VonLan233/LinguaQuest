@@ -205,6 +205,8 @@ void main() {
       );
       expect(quizSession, contains('isTimed ? state.lessons'));
       expect(quizSession, contains(': state.formalLessons'));
+      expect(quizSession, contains('_fallbackExitRoute'));
+      expect(quizSession, contains("? '/training' : '/learn'"));
       expect(training, contains('限时测试'));
       expect(training, contains('今日可得 60 XP'));
       expect(training, isNot(contains("label: '今日可得 60'")));
