@@ -8,6 +8,8 @@ import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/quest_card.dart';
 import '../../core/widgets/section_header.dart';
+import '../../data/models/custom_word.dart';
+import '../../data/models/lesson.dart';
 
 class MistakeBookScreen extends ConsumerWidget {
   const MistakeBookScreen({super.key});
@@ -63,61 +65,100 @@ class MistakeBookScreen extends ConsumerWidget {
                 const Text('最近一课没有答错的题。')
               else
                 for (final mistake in lessonMistakes)
-                  QuestCard(
-                    margin: const EdgeInsets.only(bottom: 10),
-                    padding: const EdgeInsets.all(14),
-                    child: Row(
-                      children: [
-                        ImageCueBadge(cue: mistake.word.imageCue, size: 56),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                mistake.word.word,
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
-                              Text(mistake.explanation),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  _MistakeWordRow(mistake: mistake),
               const SizedBox(height: 18),
               Text('弱项自定义词', style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 10),
               if (weakWords.isEmpty)
                 const Text('还没有弱项自定义词。')
               else
-                for (final word in weakWords)
-                  QuestCard(
-                    margin: const EdgeInsets.only(bottom: 10),
-                    padding: const EdgeInsets.all(14),
-                    onTap: () => context.push('/custom-words/${word.id}'),
-                    child: Row(
-                      children: [
-                        ImageCueBadge(cue: wordInitialCue(word.word), size: 56),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                word.word,
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
-                              Text('错 ${word.wrongCount} 次 · ${word.meaning}'),
-                            ],
-                          ),
-                        ),
-                        const Icon(Icons.chevron_right_rounded),
-                      ],
-                    ),
-                  ),
+                for (final word in weakWords) _WeakCustomWordRow(word: word),
             ],
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _MistakeWordRow extends StatelessWidget {
+  const _MistakeWordRow({required this.mistake});
+
+  final QuizQuestion mistake;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Row(
+        children: [
+          ImageCueBadge(cue: mistake.word.imageCue, size: 56),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(mistake.word.word, style: theme.textTheme.titleMedium),
+                const SizedBox(height: 3),
+                Text(
+                  mistake.explanation,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _WeakCustomWordRow extends StatelessWidget {
+  const _WeakCustomWordRow({required this.word});
+
+  final CustomWord word;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () => context.push('/custom-words/${word.id}'),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Row(
+              children: [
+                ImageCueBadge(cue: wordInitialCue(word.word), size: 56),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(word.word, style: theme.textTheme.titleMedium),
+                      const SizedBox(height: 3),
+                      Text(
+                        '错 ${word.wrongCount} 次 · ${word.meaning}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.chevron_right_rounded),
+              ],
+            ),
+          ),
         ),
       ),
     );
