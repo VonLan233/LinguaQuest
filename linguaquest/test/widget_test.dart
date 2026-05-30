@@ -147,6 +147,41 @@ void main() {
     expect(find.text('单词库'), findsNothing);
   });
 
+  testWidgets('home word of day opens its target word detail', (tester) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'word-of-day-user',
+      name: 'Wendy',
+      email: 'wendy@lingua.quest',
+      targetExam: 'IELTS',
+      level: 'Intermediate',
+      dailyGoal: 12,
+      xp: 240,
+      streak: 6,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+
+    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.scrollUntilVisible(
+      find.text('今日词条'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('今日词条'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('allocate'), findsWidgets);
+    expect(find.text('加入生词本'), findsOneWidget);
+    expect(find.text('AI 学习'), findsOneWidget);
+  });
+
   test('word initial cue falls back for empty custom words', () {
     expect(wordInitialCue(''), '?');
     expect(wordInitialCue('  '), '?');

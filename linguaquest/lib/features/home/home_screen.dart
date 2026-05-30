@@ -135,7 +135,9 @@ class HomeScreen extends ConsumerWidget {
           body: wordOfDay == null
               ? '打开单词卡片'
               : '${wordOfDay.word} · ${wordOfDay.meaning}',
-          onTap: () => context.push('/wordbook'),
+          onTap: () => wordOfDay == null
+              ? context.push('/wordbook')
+              : context.push('/wordbook/${wordOfDay.id}'),
         ),
         const SizedBox(height: 22),
         SectionHeader(
