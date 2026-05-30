@@ -71,7 +71,8 @@ class NewStudyScreen extends ConsumerWidget {
             _FlowSteps(),
             const SizedBox(height: 20),
             if (lesson == null || words.isEmpty)
-              QuestCard(
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -226,32 +227,46 @@ class _WordPreviewTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return QuestCard(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(14),
-      child: Row(
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Column(
         children: [
-          ImageCueBadge(cue: word.imageCue, size: 54),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(word.word, style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(height: 3),
-                Text(
-                  word.meaning,
+          Row(
+            children: [
+              ImageCueBadge(cue: word.imageCue, size: 54),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(word.word, style: theme.textTheme.titleMedium),
+                    const SizedBox(height: 3),
+                    Text(
+                      word.meaning,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 10),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 82),
+                child: Text(
+                  word.phonetic,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.end,
+                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          Text(
-            word.phonetic,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
+          const SizedBox(height: 12),
+          Divider(
+            height: 1,
+            color: Theme.of(context).colorScheme.outlineVariant,
           ),
         ],
       ),
