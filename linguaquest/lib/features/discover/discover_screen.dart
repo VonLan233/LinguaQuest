@@ -146,7 +146,7 @@ class DiscoverScreen extends ConsumerWidget {
         const SizedBox(height: 12),
         const _LotteryInfoLine(),
         const SizedBox(height: 22),
-        const SectionHeader(title: '社区帖子', subtitle: '首版为列表/详情/评论壳，后续接入审核和举报。'),
+        const SectionHeader(title: '社区帖子', subtitle: '学习打卡和错题讨论集中展示。'),
         const SizedBox(height: 12),
         const _ForumPostCard(
           title: '今日打卡：用 12 分钟复习了 18 个词',

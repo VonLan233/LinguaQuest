@@ -29,7 +29,7 @@ class LeaderboardScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            const SectionHeader(title: '本周 XP', subtitle: '好友和未来班级小组的轻量排名原型。'),
+            const SectionHeader(title: '本周 XP', subtitle: '好友和班级小组的轻量排名。'),
             const SizedBox(height: 16),
             for (var index = 0; index < entries.length; index++)
               _LeaderboardTile(entry: entries[index], rank: index + 1),

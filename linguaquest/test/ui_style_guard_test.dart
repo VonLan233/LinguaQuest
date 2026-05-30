@@ -168,6 +168,7 @@ void main() {
         File('lib/features/quests/quest_screen.dart').readAsStringSync(),
         File('lib/features/quests/ai_tutor_screen.dart').readAsStringSync(),
         File('lib/features/quests/class_mode_screen.dart').readAsStringSync(),
+        File('lib/features/quests/leaderboard_screen.dart').readAsStringSync(),
         File(
           'lib/features/quests/class_progress_screen.dart',
         ).readAsStringSync(),
@@ -179,6 +180,30 @@ void main() {
       }
       expect(sources, contains('即时反馈'));
       expect(sources, contains('可试用'));
+    });
+
+    test('supporting page copy avoids prototype disclaimers', () {
+      final sources = [
+        File(
+          'lib/features/profile/help_support_screen.dart',
+        ).readAsStringSync(),
+        File('lib/features/profile/about_screen.dart').readAsStringSync(),
+        File('lib/features/profile/settings_screen.dart').readAsStringSync(),
+        File('lib/features/discover/discover_screen.dart').readAsStringSync(),
+      ].join('\n');
+      const prototypePhrases = [
+        '当前界面用于验证交互',
+        '后续再接入正式 API',
+        '学习应用原型',
+        '后续接入审核',
+        '为后续发音',
+      ];
+
+      for (final phrase in prototypePhrases) {
+        expect(sources, isNot(contains(phrase)));
+      }
+      expect(sources, contains('学习打卡和错题讨论集中展示'));
+      expect(sources, contains('用于提醒答题结果和练习节奏'));
     });
   });
 }

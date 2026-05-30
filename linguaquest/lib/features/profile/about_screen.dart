@@ -37,7 +37,7 @@ class AboutScreen extends StatelessWidget {
             const ListTile(
               leading: Icon(Icons.groups_outlined),
               title: Text('开发团队'),
-              subtitle: Text('ASM2 Mobile 团队。该项目是面向产品体验的 Flutter 学习应用原型。'),
+              subtitle: Text('ASM2 Mobile 团队。专注移动优先的英语学习体验。'),
             ),
             const ListTile(
               leading: Icon(Icons.extension_outlined),

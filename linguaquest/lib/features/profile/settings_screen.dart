@@ -39,7 +39,7 @@ class SettingsScreen extends ConsumerWidget {
             const _SettingsInfoLine(
               icon: Icons.volume_up_outlined,
               title: '答题音效反馈',
-              subtitle: '为后续发音和听力支持预留',
+              subtitle: '用于提醒答题结果和练习节奏',
             ),
           ],
         ),
