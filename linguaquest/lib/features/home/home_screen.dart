@@ -286,10 +286,7 @@ class HomeScreen extends ConsumerWidget {
                   onTap: () => context.push('/custom-words/${word.id}'),
                   child: Row(
                     children: [
-                      ImageCueBadge(
-                        cue: word.word.characters.first.toUpperCase(),
-                        size: 50,
-                      ),
+                      ImageCueBadge(cue: wordInitialCue(word.word), size: 50),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(

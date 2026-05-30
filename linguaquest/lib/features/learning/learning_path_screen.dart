@@ -184,7 +184,10 @@ class _PathNode extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ImageCueBadge(cue: lesson.words.first.imageCue, size: 78),
+            ImageCueBadge(
+              cue: lesson.words.isEmpty ? '?' : lesson.words.first.imageCue,
+              size: 78,
+            ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
