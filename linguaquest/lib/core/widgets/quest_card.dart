@@ -25,7 +25,7 @@ class QuestCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final radius = BorderRadius.circular(16);
+    final radius = BorderRadius.circular(8);
     final decoration = BoxDecoration(
       color: color ?? theme.colorScheme.surface,
       gradient: gradient,
@@ -35,13 +35,6 @@ class QuestCard extends StatelessWidget {
             borderColor ??
             theme.colorScheme.outlineVariant.withValues(alpha: 0.72),
       ),
-      boxShadow: const [
-        BoxShadow(
-          color: AppTheme.cardShadow,
-          blurRadius: 8,
-          offset: Offset(0, 3),
-        ),
-      ],
     );
 
     if (onTap == null) {
@@ -129,20 +122,12 @@ class ImageCueBadge extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFFFFF3A8), Color(0xFFE9FFD9), Color(0xFFDDF3FF)],
+        color: AppTheme.iconBadgeSurface(context),
+        borderRadius: BorderRadius.circular(size * 0.24),
+        border: Border.all(
+          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.72),
+          width: 2,
         ),
-        borderRadius: BorderRadius.circular(size * 0.32),
-        border: Border.all(color: theme.colorScheme.surface, width: 3),
-        boxShadow: const [
-          BoxShadow(
-            color: AppTheme.cardShadow,
-            blurRadius: 16,
-            offset: Offset(0, 7),
-          ),
-        ],
       ),
       alignment: Alignment.center,
       child: Text(cue, style: TextStyle(fontSize: size * 0.48)),

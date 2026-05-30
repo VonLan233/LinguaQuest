@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../theme/app_theme.dart';
-
 class MetricTile extends StatelessWidget {
   const MetricTile({
     required this.label,
@@ -24,22 +22,10 @@ class MetricTile extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
         ),
-        boxShadow: const [
-          BoxShadow(
-            color: AppTheme.cardShadow,
-            blurRadius: 14,
-            offset: Offset(0, 7),
-          ),
-          BoxShadow(
-            color: Color(0x12000000),
-            blurRadius: 0,
-            offset: Offset(0, 3),
-          ),
-        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

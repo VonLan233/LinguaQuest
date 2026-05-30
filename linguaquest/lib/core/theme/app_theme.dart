@@ -11,7 +11,7 @@ class AppTheme {
   static const Color mint = Color(0xFFD7FFB8);
   static const Color ink = Color(0xFF17324D);
   static const Color paper = Color(0xFFF8FBF5);
-  static const Color cardShadow = Color(0x0F17324D);
+  static const Color cardShadow = Color(0x0A17324D);
   static const Color success = Color(0xFF58CC02);
   static const Color darkPaper = Color(0xFF0B1724);
   static const Color darkSurface = Color(0xFF102033);
@@ -177,7 +177,7 @@ class AppTheme {
       cardTheme: CardThemeData(
         elevation: 0,
         margin: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       chipTheme: ChipThemeData(
         backgroundColor: isDark ? scheme.surfaceContainerHigh : null,
