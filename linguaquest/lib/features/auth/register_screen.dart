@@ -50,45 +50,37 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   icon: Icons.person_add_alt_1,
                 ),
                 const SizedBox(height: 20),
-                QuestCard(
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        controller: _nameController,
-                        decoration: const InputDecoration(
-                          labelText: '昵称',
-                          hintText: '输入昵称',
-                          prefixIcon: Icon(Icons.badge_outlined),
-                        ),
-                        validator: (value) =>
-                            value == null || value.trim().isEmpty
-                            ? '请输入昵称'
-                            : null,
-                      ),
-                      const SizedBox(height: 12),
-                      TextFormField(
-                        controller: _emailController,
-                        decoration: const InputDecoration(
-                          labelText: '邮箱',
-                          hintText: 'name@example.com',
-                          prefixIcon: Icon(Icons.mail_outline),
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                        validator: _emailValidator,
-                      ),
-                      const SizedBox(height: 12),
-                      TextFormField(
-                        controller: _passwordController,
-                        decoration: const InputDecoration(
-                          labelText: '密码',
-                          hintText: '设置密码',
-                          prefixIcon: Icon(Icons.lock_outline),
-                        ),
-                        obscureText: true,
-                        validator: _passwordValidator,
-                      ),
-                    ],
+                TextFormField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(
+                    labelText: '昵称',
+                    hintText: '输入昵称',
+                    prefixIcon: Icon(Icons.badge_outlined),
                   ),
+                  validator: (value) =>
+                      value == null || value.trim().isEmpty ? '请输入昵称' : null,
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                    labelText: '邮箱',
+                    hintText: 'name@example.com',
+                    prefixIcon: Icon(Icons.mail_outline),
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                  validator: _emailValidator,
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _passwordController,
+                  decoration: const InputDecoration(
+                    labelText: '密码',
+                    hintText: '设置密码',
+                    prefixIcon: Icon(Icons.lock_outline),
+                  ),
+                  obscureText: true,
+                  validator: _passwordValidator,
                 ),
                 if (state.errorMessage != null) ...[
                   const SizedBox(height: 12),
