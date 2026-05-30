@@ -55,6 +55,33 @@ class DiscoverScreen extends ConsumerWidget {
             ),
           ],
         ),
+        const SizedBox(height: 14),
+        QuestCard(
+          padding: const EdgeInsets.all(16),
+          color: AppTheme.warmSurface(context),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const ImageCueBadge(cue: '⚡', size: 54),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'XP 用途',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '领取后立即同步到个人主页和排行榜；积分抽奖会消耗当前 XP。当前余额 ${user?.xp ?? 0} XP。',
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
         const SizedBox(height: 22),
         const SectionHeader(
           title: '积分任务',
@@ -194,12 +221,21 @@ class DiscoverScreen extends ConsumerWidget {
         .read(appControllerProvider.notifier)
         .claimReward(id: id, points: points, isAvailable: isAvailable);
     if (!context.mounted) return;
+    final currentXp = ref.read(appControllerProvider).user?.xp ?? 0;
     final message = succeeded
-        ? '$title 已领取 +$points XP，已加入个人总积分和排行榜积分'
+        ? '$title 已入账 +$points XP，当前总积分 $currentXp XP'
         : ref.read(appControllerProvider).errorMessage ?? '暂时无法领取这个任务';
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        action: succeeded
+            ? SnackBarAction(
+                label: '查看主页',
+                onPressed: () => context.go('/profile'),
+              )
+            : null,
+      ),
+    );
   }
 }
 
@@ -262,10 +298,10 @@ class _RewardTaskCard extends StatelessWidget {
           ),
           PillLabel(
             label: isClaimed
-                ? '已领取'
+                ? '已入账 +$points XP'
                 : canClaim
-                ? '领取 +$points'
-                : '去完成 +$points',
+                ? '领取 +$points XP'
+                : '去完成 +$points XP',
             icon: isDone
                 ? Icons.check_circle_outline
                 : Icons.add_circle_outline,

@@ -189,8 +189,9 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('每日签到'), findsOneWidget);
-    expect(find.text('去完成 +5'), findsOneWidget);
-    expect(find.text('已领取'), findsNothing);
+    expect(find.text('XP 用途'), findsOneWidget);
+    expect(find.text('去完成 +5 XP'), findsOneWidget);
+    expect(find.textContaining('已入账'), findsNothing);
   });
 
   testWidgets('discover weak cleanup does not auto-complete without mistakes', (
@@ -250,11 +251,11 @@ void main() {
     );
     expect(cleanupCard, findsOneWidget);
     expect(
-      find.descendant(of: cleanupCard, matching: find.text('去完成 +10')),
+      find.descendant(of: cleanupCard, matching: find.text('去完成 +10 XP')),
       findsOneWidget,
     );
     expect(
-      find.descendant(of: cleanupCard, matching: find.text('已领取')),
+      find.descendant(of: cleanupCard, matching: find.textContaining('已入账')),
       findsNothing,
     );
   });
@@ -339,11 +340,11 @@ void main() {
     );
     expect(cleanupCard, findsOneWidget);
     expect(
-      find.descendant(of: cleanupCard, matching: find.text('去完成 +10')),
+      find.descendant(of: cleanupCard, matching: find.text('去完成 +10 XP')),
       findsOneWidget,
     );
     expect(
-      find.descendant(of: cleanupCard, matching: find.text('已领取')),
+      find.descendant(of: cleanupCard, matching: find.textContaining('已入账')),
       findsNothing,
     );
   });
