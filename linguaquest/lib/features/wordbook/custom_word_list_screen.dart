@@ -175,51 +175,64 @@ class _CustomWordTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mastery = word.masteryLevel / 5;
-    return QuestCard(
-      padding: const EdgeInsets.all(14),
-      onTap: () => context.push('/custom-words/${word.id}'),
-      child: Row(
-        children: [
-          ImageCueBadge(cue: wordInitialCue(word.word), size: 58),
-          const SizedBox(width: 13),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+    final theme = Theme.of(context);
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(12),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () => context.push('/custom-words/${word.id}'),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          child: Row(
+            children: [
+              ImageCueBadge(cue: wordInitialCue(word.word), size: 58),
+              const SizedBox(width: 13),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Text(
-                        word.word,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            word.word,
+                            style: theme.textTheme.titleMedium,
+                          ),
+                        ),
+                        PillLabel(
+                          label: displayDifficulty(word.difficulty),
+                          color: AppTheme.coral,
+                        ),
+                      ],
                     ),
-                    PillLabel(
-                      label: displayDifficulty(word.difficulty),
-                      color: AppTheme.coral,
+                    const SizedBox(height: 3),
+                    Text(
+                      '${word.meaning} · ${word.tag}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: theme.colorScheme.onSurface),
+                    ),
+                    const SizedBox(height: 9),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(999),
+                      child: LinearProgressIndicator(
+                        value: mastery,
+                        minHeight: 8,
+                        backgroundColor: AppTheme.progressTrack(context),
+                      ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 3),
-                Text('${word.meaning} · ${word.tag}'),
-                const SizedBox(height: 9),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(999),
-                  child: LinearProgressIndicator(
-                    value: mastery,
-                    minHeight: 8,
-                    backgroundColor: AppTheme.progressTrack(context),
-                  ),
-                ),
-              ],
-            ),
+              ),
+              IconButton(
+                tooltip: '删除',
+                icon: const Icon(Icons.delete_outline),
+                onPressed: onDelete,
+              ),
+            ],
           ),
-          IconButton(
-            tooltip: '删除',
-            icon: const Icon(Icons.delete_outline),
-            onPressed: onDelete,
-          ),
-        ],
+        ),
       ),
     );
   }
