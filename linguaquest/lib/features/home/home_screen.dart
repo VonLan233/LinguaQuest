@@ -6,7 +6,6 @@ import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/brand_mark.dart';
-import '../../core/widgets/metric_tile.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/custom_word.dart';
@@ -81,36 +80,12 @@ class HomeScreen extends ConsumerWidget {
           progress: dailyProgress,
         ),
         const SizedBox(height: 18),
-        Row(
-          children: [
-            Expanded(
-              child: MetricTile(
-                label: '已学',
-                value: '${state.completedLearningWords}',
-                icon: Icons.school_outlined,
-                color: AppTheme.cyan,
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: MetricTile(
-                label: '掌握',
-                value:
-                    '${state.customWords.where((word) => word.masteryLevel >= 4).length}',
-                icon: Icons.verified_outlined,
-                color: AppTheme.success,
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: MetricTile(
-                label: '复习',
-                value: '${state.dueWords.length}',
-                icon: Icons.replay,
-                color: AppTheme.mango,
-              ),
-            ),
-          ],
+        _HomeLearningSignals(
+          completedWords: state.completedLearningWords,
+          masteredWords: state.customWords
+              .where((word) => word.masteryLevel >= 4)
+              .length,
+          dueWords: state.dueWords.length,
         ),
         const SizedBox(height: 18),
         _DailyTaskPanel(
@@ -124,33 +99,27 @@ class HomeScreen extends ConsumerWidget {
           onReview: () => context.push('/study/review'),
         ),
         const SizedBox(height: 18),
-        GridView.count(
-          crossAxisCount: 2,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 10,
-          childAspectRatio: 1.4,
-          children: [
-            _QuickAction(
+        _HomeShortcutList(
+          actions: [
+            _HomeShortcutData(
               icon: Icons.flag_outlined,
               title: '学习模式',
               subtitle: displayTarget(user?.targetExam),
               onTap: () => context.push('/goal-setup'),
             ),
-            _QuickAction(
+            _HomeShortcutData(
               icon: Icons.menu_book_outlined,
               title: '单词本',
               subtitle: '${state.totalLearningWords} 词',
               onTap: () => context.push('/wordbook'),
             ),
-            _QuickAction(
+            _HomeShortcutData(
               icon: Icons.article_outlined,
               title: '每日短文',
               subtitle: '情景填空',
               onTap: () => context.go('/ai-learning'),
             ),
-            _QuickAction(
+            _HomeShortcutData(
               icon: Icons.route_outlined,
               title: '学习路径',
               subtitle: '正式词书',
@@ -185,6 +154,116 @@ class HomeScreen extends ConsumerWidget {
         else
           ...state.weakWords.take(3).map((word) => _WeakWordLink(word: word)),
       ],
+    );
+  }
+}
+
+class _HomeLearningSignals extends StatelessWidget {
+  const _HomeLearningSignals({
+    required this.completedWords,
+    required this.masteredWords,
+    required this.dueWords,
+  });
+
+  final int completedWords;
+  final int masteredWords;
+  final int dueWords;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: _HomeSignal(
+            label: '已学',
+            value: '$completedWords',
+            icon: Icons.school_outlined,
+            color: AppTheme.cyan,
+          ),
+        ),
+        const _HomeSignalDivider(),
+        Expanded(
+          child: _HomeSignal(
+            label: '掌握',
+            value: '$masteredWords',
+            icon: Icons.verified_outlined,
+            color: AppTheme.success,
+          ),
+        ),
+        const _HomeSignalDivider(),
+        Expanded(
+          child: _HomeSignal(
+            label: '复习',
+            value: '$dueWords',
+            icon: Icons.replay,
+            color: AppTheme.mango,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _HomeSignal extends StatelessWidget {
+  const _HomeSignal({
+    required this.label,
+    required this.value,
+    required this.icon,
+    required this.color,
+  });
+
+  final String label;
+  final String value;
+  final IconData icon;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(icon, color: color, size: 20),
+        const SizedBox(width: 6),
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                value,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.titleMedium,
+              ),
+              Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _HomeSignalDivider extends StatelessWidget {
+  const _HomeSignalDivider();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 34,
+      child: VerticalDivider(
+        width: 16,
+        thickness: 1,
+        color: Theme.of(context).colorScheme.outlineVariant,
+      ),
     );
   }
 }
@@ -410,8 +489,78 @@ class _DailyProgressRing extends StatelessWidget {
   }
 }
 
-class _QuickAction extends StatelessWidget {
-  const _QuickAction({
+class _HomeShortcutList extends StatelessWidget {
+  const _HomeShortcutList({required this.actions});
+
+  final List<_HomeShortcutData> actions;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        for (var index = 0; index < actions.length; index++) ...[
+          _HomeShortcutLink(data: actions[index]),
+          if (index != actions.length - 1)
+            Divider(
+              height: 10,
+              color: Theme.of(
+                context,
+              ).colorScheme.outlineVariant.withValues(alpha: 0.7),
+            ),
+        ],
+      ],
+    );
+  }
+}
+
+class _HomeShortcutLink extends StatelessWidget {
+  const _HomeShortcutLink({required this.data});
+
+  final _HomeShortcutData data;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(12),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: data.onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 7),
+          child: Row(
+            children: [
+              Icon(data.icon, color: theme.colorScheme.primary),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(data.title, style: theme.textTheme.titleMedium),
+                    const SizedBox(height: 2),
+                    Text(
+                      data.subtitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right_rounded),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _HomeShortcutData {
+  const _HomeShortcutData({
     required this.icon,
     required this.title,
     required this.subtitle,
@@ -422,37 +571,6 @@ class _QuickAction extends StatelessWidget {
   final String title;
   final String subtitle;
   final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Material(
-      color: Colors.transparent,
-      borderRadius: BorderRadius.circular(14),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, color: theme.colorScheme.primary),
-              const SizedBox(height: 8),
-              Text(title, style: theme.textTheme.titleMedium),
-              Text(
-                subtitle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }
 
 class _WeakWordLink extends StatelessWidget {

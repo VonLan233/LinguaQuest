@@ -65,6 +65,16 @@ void main() {
       expect(profile, isNot(contains('GridView.count')));
     });
 
+    test('home dashboard keeps first viewport lightweight', () {
+      final home = File(
+        'lib/features/home/home_screen.dart',
+      ).readAsStringSync();
+
+      expect(home, contains('_HomeLearningSignals'));
+      expect(home, isNot(contains('MetricTile')));
+      expect(home, isNot(contains('GridView.count')));
+    });
+
     test('new study and review stay separate from campus timed tests', () {
       final home = File(
         'lib/features/home/home_screen.dart',
