@@ -22,7 +22,7 @@ class DiscoverScreen extends ConsumerWidget {
     );
     final weakCleanupDone = reviewedMistakeToday && state.weakWords.isEmpty;
     final checkedInToday = DateUtils.isSameDay(
-      user?.lastStudyDate,
+      user?.lastStudyDate?.toLocal(),
       DateTime.now(),
     );
     return ListView(

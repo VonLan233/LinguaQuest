@@ -217,7 +217,10 @@ void main() {
       ]);
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
-      'linguaquest.today.date': DateTime.now().toIso8601String(),
+      'linguaquest.today.date': DateTime.now()
+          .toIso8601String()
+          .split('T')
+          .first,
       'linguaquest.today.reviews': ['cleared-word'],
     });
 
