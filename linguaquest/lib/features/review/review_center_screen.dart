@@ -6,7 +6,6 @@ import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/date_formatting.dart';
 import '../../core/widgets/empty_state.dart';
-import '../../core/widgets/metric_tile.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/custom_word.dart';
@@ -40,33 +39,10 @@ class ReviewCenterScreen extends ConsumerWidget {
                   : null,
             ),
             const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: MetricTile(
-                    label: '今日到期',
-                    value: '${due.length}',
-                    icon: Icons.today_outlined,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: MetricTile(
-                    label: '错词',
-                    value: '${weak.length}',
-                    icon: Icons.warning_amber_outlined,
-                    color: Colors.orange,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: MetricTile(
-                    label: '词卡',
-                    value: '${state.customWords.length}',
-                    icon: Icons.style_outlined,
-                  ),
-                ),
-              ],
+            _ReviewQueueSignals(
+              dueCount: due.length,
+              weakCount: weak.length,
+              cardCount: state.customWords.length,
             ),
             const SizedBox(height: 22),
             Text(
@@ -117,6 +93,116 @@ class ReviewCenterScreen extends ConsumerWidget {
             ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _ReviewQueueSignals extends StatelessWidget {
+  const _ReviewQueueSignals({
+    required this.dueCount,
+    required this.weakCount,
+    required this.cardCount,
+  });
+
+  final int dueCount;
+  final int weakCount;
+  final int cardCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: _ReviewSignal(
+            label: '今日到期',
+            value: '$dueCount',
+            icon: Icons.today_outlined,
+            color: AppTheme.teal,
+          ),
+        ),
+        const _ReviewSignalDivider(),
+        Expanded(
+          child: _ReviewSignal(
+            label: '错词',
+            value: '$weakCount',
+            icon: Icons.warning_amber_outlined,
+            color: AppTheme.coral,
+          ),
+        ),
+        const _ReviewSignalDivider(),
+        Expanded(
+          child: _ReviewSignal(
+            label: '词卡',
+            value: '$cardCount',
+            icon: Icons.style_outlined,
+            color: AppTheme.cyan,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ReviewSignal extends StatelessWidget {
+  const _ReviewSignal({
+    required this.label,
+    required this.value,
+    required this.icon,
+    required this.color,
+  });
+
+  final String label;
+  final String value;
+  final IconData icon;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(icon, color: color, size: 20),
+        const SizedBox(width: 6),
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                value,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.titleMedium,
+              ),
+              Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ReviewSignalDivider extends StatelessWidget {
+  const _ReviewSignalDivider();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 34,
+      child: VerticalDivider(
+        width: 16,
+        thickness: 1,
+        color: Theme.of(context).colorScheme.outlineVariant,
       ),
     );
   }

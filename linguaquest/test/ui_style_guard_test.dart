@@ -85,6 +85,17 @@ void main() {
       expect(training, contains('校园生活 · 限时测试'));
     });
 
+    test('review center keeps queue status lightweight', () {
+      final review = File(
+        'lib/features/review/review_center_screen.dart',
+      ).readAsStringSync();
+
+      expect(review, contains('_ReviewQueueSignals'));
+      expect(review, isNot(contains('MetricTile')));
+      expect(review, contains('没记住'));
+      expect(review, contains('记住了'));
+    });
+
     test('new study and review stay separate from campus timed tests', () {
       final home = File(
         'lib/features/home/home_screen.dart',
