@@ -5,6 +5,7 @@ import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/ui_labels.dart';
+import '../../core/widgets/ai_word_support_link.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../data/models/lesson.dart';
@@ -114,6 +115,8 @@ class TargetWordDetailScreen extends ConsumerWidget {
                   PillLabel(label: displayWordTag(tag)),
               ],
             ),
+            const SizedBox(height: 22),
+            AiWordSupportLink(word: word.word),
           ],
         ),
       ),
