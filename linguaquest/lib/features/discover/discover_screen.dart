@@ -144,29 +144,7 @@ class DiscoverScreen extends ConsumerWidget {
         const SizedBox(height: 22),
         const SectionHeader(title: '积分抽奖', subtitle: '奖品只做虚拟装饰，不影响学习公平性。'),
         const SizedBox(height: 12),
-        QuestCard(
-          padding: const EdgeInsets.all(16),
-          color: AppTheme.accentSurface(context),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  const ImageCueBadge(cue: '🎁', size: 58),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      '头像框、主页背景、学习徽章、训练场称号、卡片皮肤',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              const Text('消耗 30 积分抽一次；稀有概率透明展示，未中奖也给碎片。'),
-            ],
-          ),
-        ),
+        const _LotteryInfoLine(),
         const SizedBox(height: 22),
         const SectionHeader(title: '社区帖子', subtitle: '首版为列表/详情/评论壳，后续接入审核和举报。'),
         const SizedBox(height: 12),
@@ -210,6 +188,38 @@ class DiscoverScreen extends ConsumerWidget {
               )
             : null,
       ),
+    );
+  }
+}
+
+class _LotteryInfoLine extends StatelessWidget {
+  const _LotteryInfoLine();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const ImageCueBadge(cue: '🎁', size: 52),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '头像框、主页背景、学习徽章、训练场称号、卡片皮肤',
+                style: theme.textTheme.titleMedium,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                '消耗 30 积分抽一次；稀有概率透明展示，未中奖也给碎片。',
+                style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
