@@ -116,6 +116,37 @@ void main() {
     expect(progress.value, closeTo(4 / 14, 0.001));
   });
 
+  testWidgets('home search bar opens search instead of wordbook', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'search-entry-user',
+      name: 'Sera',
+      email: 'sera@lingua.quest',
+      targetExam: 'IELTS',
+      level: 'Intermediate',
+      dailyGoal: 12,
+      xp: 240,
+      streak: 6,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+
+    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.tap(find.text('搜索单词、短语或例句'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('搜索'), findsOneWidget);
+    expect(find.text('输入关键词开始搜索'), findsOneWidget);
+    expect(find.text('单词库'), findsNothing);
+  });
+
   test('word initial cue falls back for empty custom words', () {
     expect(wordInitialCue(''), '?');
     expect(wordInitialCue('  '), '?');
