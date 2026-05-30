@@ -18,6 +18,7 @@ import 'package:linguaquest/data/repositories/custom_word_repository.dart';
 import 'package:linguaquest/data/repositories/learning_repository.dart';
 import 'package:linguaquest/data/seed/seed_lessons.dart';
 import 'package:linguaquest/features/auth/goal_setup_screen.dart';
+import 'package:linguaquest/features/wordbook/target_word_detail_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -1064,6 +1065,57 @@ void main() {
     expect(state.completedLessonIds, {completedLessonId});
     expect(state.lessons.first.status, 'completed');
     expect(state.learningPathProgress, greaterThan(0));
+  });
+
+  testWidgets('target word detail can add the searched word to custom cards', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'target-save-user',
+      name: 'Tara',
+      email: 'tara@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    final targetWord = container
+        .read(appControllerProvider)
+        .formalLessons
+        .first
+        .words
+        .first;
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          home: TargetWordDetailScreen(wordId: targetWord.id),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('加入生词本'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(FilledButton, '加入生词本'));
+    await tester.pumpAndSettle();
+
+    final savedWords = container.read(appControllerProvider).customWords;
+    expect(savedWords.any((word) => word.word == targetWord.word), true);
+    expect(find.widgetWithText(FilledButton, '已加入生词本'), findsOneWidget);
   });
 
   testWidgets('home and wordbook tolerate empty lesson words and tags', (
