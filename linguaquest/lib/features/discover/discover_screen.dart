@@ -63,83 +63,87 @@ class DiscoverScreen extends ConsumerWidget {
           subtitle: '完成条件后点“领取”，XP 会立即加入个人主页和排行榜统计。',
         ),
         const SizedBox(height: 12),
-        _RewardTaskCard(
-          icon: Icons.calendar_month_outlined,
-          title: '每日签到',
-          condition: '当天打开并完成一次学习动作',
-          points: 5,
-          isDone: checkedInToday,
-          isClaimed: claimed.contains('daily-checkin'),
-          onTap: () => context.go('/home'),
-          onClaim: () => _claimReward(
-            context,
-            ref,
-            id: 'daily-checkin',
-            title: '每日签到',
-            points: 5,
-            isAvailable: checkedInToday,
-          ),
-        ),
-        _RewardTaskCard(
-          icon: Icons.school_outlined,
-          title: '完成新学',
-          condition: '完成今日新学任务',
-          points: 20,
-          isDone: newLearningDone,
-          isClaimed: claimed.contains('new-learning'),
-          onTap: () => context.push('/study/new'),
-          onClaim: () => _claimReward(
-            context,
-            ref,
-            id: 'new-learning',
-            title: '完成新学',
-            points: 20,
-            isAvailable: newLearningDone,
-          ),
-        ),
-        _RewardTaskCard(
-          icon: Icons.replay_outlined,
-          title: '完成复习',
-          condition: '完成今日到期复习',
-          points: 15,
-          isDone: reviewDone,
-          isClaimed: claimed.contains('review-done'),
-          onTap: () => context.push('/study/review'),
-          onClaim: () => _claimReward(
-            context,
-            ref,
-            id: 'review-done',
-            title: '完成复习',
-            points: 15,
-            isAvailable: reviewDone,
-          ),
-        ),
-        _RewardTaskCard(
-          icon: Icons.sports_esports_outlined,
-          title: '训练场挑战',
-          condition: '完成任意训练场游戏',
-          points: 20,
-          isDone: false,
-          isClaimed: claimed.contains('training-challenge'),
-          onTap: () => context.go('/training'),
-          onClaim: () {},
-        ),
-        _RewardTaskCard(
-          icon: Icons.cleaning_services_outlined,
-          title: '错词清理',
-          condition: '今日错词再次答对',
-          points: 10,
-          isDone: weakCleanupDone,
-          isClaimed: claimed.contains('weak-cleanup'),
-          onTap: () => context.push('/review'),
-          onClaim: () => _claimReward(
-            context,
-            ref,
-            id: 'weak-cleanup',
-            title: '错词清理',
-            points: 10,
-            isAvailable: weakCleanupDone,
-          ),
+        _RewardTaskList(
+          tasks: [
+            _RewardTaskData(
+              icon: Icons.calendar_month_outlined,
+              title: '每日签到',
+              condition: '当天打开并完成一次学习动作',
+              points: 5,
+              isDone: checkedInToday,
+              isClaimed: claimed.contains('daily-checkin'),
+              onTap: () => context.go('/home'),
+              onClaim: () => _claimReward(
+                context,
+                ref,
+                id: 'daily-checkin',
+                title: '每日签到',
+                points: 5,
+                isAvailable: checkedInToday,
+              ),
+            ),
+            _RewardTaskData(
+              icon: Icons.school_outlined,
+              title: '完成新学',
+              condition: '完成今日新学任务',
+              points: 20,
+              isDone: newLearningDone,
+              isClaimed: claimed.contains('new-learning'),
+              onTap: () => context.push('/study/new'),
+              onClaim: () => _claimReward(
+                context,
+                ref,
+                id: 'new-learning',
+                title: '完成新学',
+                points: 20,
+                isAvailable: newLearningDone,
+              ),
+            ),
+            _RewardTaskData(
+              icon: Icons.replay_outlined,
+              title: '完成复习',
+              condition: '完成今日到期复习',
+              points: 15,
+              isDone: reviewDone,
+              isClaimed: claimed.contains('review-done'),
+              onTap: () => context.push('/study/review'),
+              onClaim: () => _claimReward(
+                context,
+                ref,
+                id: 'review-done',
+                title: '完成复习',
+                points: 15,
+                isAvailable: reviewDone,
+              ),
+            ),
+            _RewardTaskData(
+              icon: Icons.sports_esports_outlined,
+              title: '训练场挑战',
+              condition: '完成任意训练场游戏',
+              points: 20,
+              isDone: false,
+              isClaimed: claimed.contains('training-challenge'),
+              onTap: () => context.go('/training'),
+              onClaim: () {},
+            ),
+            _RewardTaskData(
+              icon: Icons.cleaning_services_outlined,
+              title: '错词清理',
+              condition: '今日错词再次答对',
+              points: 10,
+              isDone: weakCleanupDone,
+              isClaimed: claimed.contains('weak-cleanup'),
+              onTap: () => context.push('/review'),
+              onClaim: () => _claimReward(
+                context,
+                ref,
+                id: 'weak-cleanup',
+                title: '错词清理',
+                points: 10,
+                isAvailable: weakCleanupDone,
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 22),
         const SectionHeader(title: '积分抽奖', subtitle: '奖品只做虚拟装饰，不影响学习公平性。'),
@@ -148,15 +152,19 @@ class DiscoverScreen extends ConsumerWidget {
         const SizedBox(height: 22),
         const SectionHeader(title: '社区帖子', subtitle: '学习打卡和错题讨论集中展示。'),
         const SizedBox(height: 12),
-        const _ForumPostCard(
-          title: '今日打卡：用 12 分钟复习了 18 个词',
-          tag: '今日打卡',
-          body: '错词集中在近义辨析，明天准备从训练场的易混词挑战开始。',
-        ),
-        const _ForumPostCard(
-          title: '雅思阅读里怎么记 abstract?',
-          tag: '错题讨论',
-          body: 'abstract 在论文和阅读文章里经常不是“抽象”的意思，要结合语境判断。',
+        const _ForumPostList(
+          posts: [
+            _ForumPostData(
+              title: '今日打卡：用 12 分钟复习了 18 个词',
+              tag: '今日打卡',
+              body: '错词集中在近义辨析，明天准备从训练场的易混词挑战开始。',
+            ),
+            _ForumPostData(
+              title: '雅思阅读里怎么记 abstract?',
+              tag: '错题讨论',
+              body: 'abstract 在论文和阅读文章里经常不是“抽象”的意思，要结合语境判断。',
+            ),
+          ],
         ),
       ],
     );
@@ -263,8 +271,110 @@ class _XpUseStatusLine extends StatelessWidget {
   }
 }
 
-class _RewardTaskCard extends StatelessWidget {
-  const _RewardTaskCard({
+class _RewardTaskList extends StatelessWidget {
+  const _RewardTaskList({required this.tasks});
+
+  final List<_RewardTaskData> tasks;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        for (var index = 0; index < tasks.length; index++) ...[
+          _RewardTaskRow(task: tasks[index]),
+          if (index != tasks.length - 1)
+            Divider(
+              height: 10,
+              color: Theme.of(
+                context,
+              ).colorScheme.outlineVariant.withValues(alpha: 0.7),
+            ),
+        ],
+      ],
+    );
+  }
+}
+
+class _RewardTaskRow extends StatelessWidget {
+  const _RewardTaskRow({required this.task});
+
+  final _RewardTaskData task;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final canClaim = task.isDone && !task.isClaimed;
+    final activeColor = canClaim
+        ? AppTheme.teal
+        : task.isDone
+        ? AppTheme.success
+        : AppTheme.mango;
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(12),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: canClaim
+            ? task.onClaim
+            : task.isDone
+            ? null
+            : task.onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 7),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: activeColor.withValues(alpha: 0.14),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Icon(task.icon, color: activeColor),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(task.title, style: theme.textTheme.titleMedium),
+                    const SizedBox(height: 3),
+                    Text(
+                      task.condition,
+                      style: TextStyle(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 10),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 132),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: PillLabel(
+                    label: task.isClaimed
+                        ? '已入账 +${task.points} XP'
+                        : canClaim
+                        ? '领取 +${task.points} XP'
+                        : '去完成 +${task.points} XP',
+                    icon: task.isDone
+                        ? Icons.check_circle_outline
+                        : Icons.add_circle_outline,
+                    color: activeColor,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _RewardTaskData {
+  const _RewardTaskData({
     required this.icon,
     required this.title,
     required this.condition,
@@ -283,93 +393,36 @@ class _RewardTaskCard extends StatelessWidget {
   final bool isClaimed;
   final VoidCallback onTap;
   final VoidCallback onClaim;
+}
+
+class _ForumPostList extends StatelessWidget {
+  const _ForumPostList({required this.posts});
+
+  final List<_ForumPostData> posts;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final canClaim = isDone && !isClaimed;
-    final activeColor = canClaim
-        ? AppTheme.teal
-        : isDone
-        ? AppTheme.success
-        : AppTheme.mango;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: canClaim
-              ? onClaim
-              : isDone
-              ? null
-              : onTap,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: activeColor.withValues(alpha: 0.14),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Icon(icon, color: activeColor),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(title, style: theme.textTheme.titleMedium),
-                      const SizedBox(height: 3),
-                      Text(
-                        condition,
-                        style: TextStyle(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 10),
-                ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 132),
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: PillLabel(
-                      label: isClaimed
-                          ? '已入账 +$points XP'
-                          : canClaim
-                          ? '领取 +$points XP'
-                          : '去完成 +$points XP',
-                      icon: isDone
-                          ? Icons.check_circle_outline
-                          : Icons.add_circle_outline,
-                      color: activeColor,
-                    ),
-                  ),
-                ),
-              ],
+    return Column(
+      children: [
+        for (var index = 0; index < posts.length; index++) ...[
+          _ForumPostRow(post: posts[index]),
+          if (index != posts.length - 1)
+            Divider(
+              height: 16,
+              color: Theme.of(
+                context,
+              ).colorScheme.outlineVariant.withValues(alpha: 0.7),
             ),
-          ),
-        ),
-      ),
+        ],
+      ],
     );
   }
 }
 
-class _ForumPostCard extends StatelessWidget {
-  const _ForumPostCard({
-    required this.title,
-    required this.tag,
-    required this.body,
-  });
+class _ForumPostRow extends StatelessWidget {
+  const _ForumPostRow({required this.post});
 
-  final String title;
-  final String tag;
-  final String body;
+  final _ForumPostData post;
 
   @override
   Widget build(BuildContext context) {
@@ -380,15 +433,15 @@ class _ForumPostCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           PillLabel(
-            label: tag,
+            label: post.tag,
             icon: Icons.tag_outlined,
             color: AppTheme.coral,
           ),
           const SizedBox(height: 10),
-          Text(title, style: theme.textTheme.titleMedium),
+          Text(post.title, style: theme.textTheme.titleMedium),
           const SizedBox(height: 6),
           Text(
-            body,
+            post.body,
             style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
           ),
           const SizedBox(height: 10),
@@ -407,4 +460,16 @@ class _ForumPostCard extends StatelessWidget {
       ),
     );
   }
+}
+
+class _ForumPostData {
+  const _ForumPostData({
+    required this.title,
+    required this.tag,
+    required this.body,
+  });
+
+  final String title;
+  final String tag;
+  final String body;
 }

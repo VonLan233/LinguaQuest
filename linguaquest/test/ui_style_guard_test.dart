@@ -106,6 +106,20 @@ void main() {
       expect(progress, contains('复习负荷'));
     });
 
+    test('discover rewards and posts stay list based', () {
+      final discover = File(
+        'lib/features/discover/discover_screen.dart',
+      ).readAsStringSync();
+
+      expect(discover, contains('_RewardTaskList'));
+      expect(discover, contains('_RewardTaskRow'));
+      expect(discover, contains('_ForumPostList'));
+      expect(discover, contains('_ForumPostRow'));
+      expect(discover, isNot(contains('_RewardTaskCard')));
+      expect(discover, isNot(contains('_ForumPostCard')));
+      expect(discover, contains('去完成 +'));
+    });
+
     test('new study and review stay separate from campus timed tests', () {
       final home = File(
         'lib/features/home/home_screen.dart',
