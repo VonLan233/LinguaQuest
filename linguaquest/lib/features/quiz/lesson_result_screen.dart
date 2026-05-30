@@ -7,6 +7,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/quest_card.dart';
 import '../../core/widgets/section_header.dart';
+import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
 
 class LessonResultScreen extends ConsumerWidget {
@@ -53,44 +54,10 @@ class LessonResultScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             if (resolved.mistakes.isEmpty)
-              const QuestCard(
-                child: Row(
-                  children: [
-                    ImageCueBadge(cue: '🏆', size: 58),
-                    SizedBox(width: 14),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [Text('全对通关'), Text('没有错题需要加入复习。')],
-                      ),
-                    ),
-                  ],
-                ),
-              )
+              const _PerfectResultRow()
             else
               for (final mistake in resolved.mistakes)
-                QuestCard(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  padding: const EdgeInsets.all(14),
-                  child: Row(
-                    children: [
-                      ImageCueBadge(cue: mistake.word.imageCue, size: 54),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              mistake.word.word,
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                            Text(mistake.explanation),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                _MistakeResultRow(mistake: mistake),
             const SizedBox(height: 20),
             FilledButton.icon(
               onPressed: () => context.go('/review'),
@@ -104,6 +71,72 @@ class LessonResultScreen extends ConsumerWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _PerfectResultRow extends StatelessWidget {
+  const _PerfectResultRow();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        children: [
+          const ImageCueBadge(cue: '🏆', size: 58),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('全对通关', style: theme.textTheme.titleMedium),
+                const SizedBox(height: 3),
+                Text(
+                  '没有错题需要加入复习。',
+                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MistakeResultRow extends StatelessWidget {
+  const _MistakeResultRow({required this.mistake});
+
+  final QuizQuestion mistake;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Row(
+        children: [
+          ImageCueBadge(cue: mistake.word.imageCue, size: 54),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(mistake.word.word, style: theme.textTheme.titleMedium),
+                const SizedBox(height: 3),
+                Text(
+                  mistake.explanation,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

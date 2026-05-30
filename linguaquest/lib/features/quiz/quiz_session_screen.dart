@@ -479,20 +479,28 @@ class _FeedbackPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final color = isCorrect
-        ? (Theme.of(context).brightness == Brightness.dark
-              ? Theme.of(context).colorScheme.primary
+        ? (theme.brightness == Brightness.dark
+              ? theme.colorScheme.primary
               : AppTheme.success)
-        : Theme.of(context).colorScheme.error;
-    return QuestCard(
-      color: color.withValues(alpha: 0.10),
-      borderColor: color.withValues(alpha: 0.28),
+        : theme.colorScheme.error;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            isCorrect ? Icons.check_circle_outline : Icons.info_outline,
-            color: color,
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.12),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              isCorrect ? Icons.check_rounded : Icons.close_rounded,
+              color: color,
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
