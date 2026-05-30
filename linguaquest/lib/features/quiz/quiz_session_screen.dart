@@ -166,9 +166,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
                   ),
                   label: Text(
                     _checked
-                        ? _lastCorrect
-                              ? 'Continue'
-                              : 'Try again'
+                        ? (_lastCorrect ? 'Continue' : 'Try again')
                         : 'Check',
                   ),
                 ),
@@ -436,9 +434,9 @@ class _FeedbackPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = isCorrect
-        ? Theme.of(context).brightness == Brightness.dark
+        ? (Theme.of(context).brightness == Brightness.dark
               ? Colors.green.shade300
-              : Colors.green.shade700
+              : Colors.green.shade700)
         : Theme.of(context).colorScheme.error;
     return QuestCard(
       color: color.withValues(alpha: 0.10),
