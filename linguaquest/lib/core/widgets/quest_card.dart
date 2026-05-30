@@ -25,7 +25,7 @@ class QuestCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final radius = BorderRadius.circular(24);
+    final radius = BorderRadius.circular(16);
     final decoration = BoxDecoration(
       color: color ?? theme.colorScheme.surface,
       gradient: gradient,
@@ -33,17 +33,12 @@ class QuestCard extends StatelessWidget {
       border: Border.all(
         color:
             borderColor ??
-            theme.colorScheme.outlineVariant.withValues(alpha: 0.55),
+            theme.colorScheme.outlineVariant.withValues(alpha: 0.72),
       ),
       boxShadow: const [
         BoxShadow(
           color: AppTheme.cardShadow,
-          blurRadius: 18,
-          offset: Offset(0, 8),
-        ),
-        BoxShadow(
-          color: Color(0x12000000),
-          blurRadius: 0,
+          blurRadius: 8,
           offset: Offset(0, 3),
         ),
       ],
@@ -95,75 +90,57 @@ class GradientHeroCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return QuestCard(
-      gradient: const LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [AppTheme.cyan, AppTheme.deepTeal, AppTheme.teal],
-        stops: [0, 0.58, 1],
-      ),
-      borderColor: Colors.white.withValues(alpha: 0.18),
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 2),
       child: Stack(
+        clipBehavior: Clip.none,
         children: [
           Positioned(
-            right: -58,
-            bottom: -78,
-            child: Container(
-              width: 186,
-              height: 186,
-              decoration: BoxDecoration(
-                color: AppTheme.mango.withValues(alpha: 0.22),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-          Positioned(
-            right: -28,
-            top: -26,
-            child: Icon(
-              icon,
-              size: 132,
-              color: Colors.white.withValues(alpha: 0.12),
+            right: 8,
+            top: -2,
+            child: _SubtleCatMark(
+              color: scheme.primary.withValues(alpha: 0.10),
             ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (badge != null)
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 7,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.18),
-                    borderRadius: BorderRadius.circular(999),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.22),
+              Row(
+                children: [
+                  Container(
+                    width: 42,
+                    height: 42,
+                    decoration: BoxDecoration(
+                      color: AppTheme.accentSurface(context),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: scheme.outlineVariant),
                     ),
+                    child: Icon(icon, color: scheme.primary),
                   ),
-                  child: Text(
-                    badge!,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w900,
+                  if (badge != null) ...[
+                    const SizedBox(width: 10),
+                    Flexible(
+                      child: PillLabel(label: badge!, color: scheme.secondary),
                     ),
-                  ),
-                ),
-              const SizedBox(height: 16),
+                  ],
+                ],
+              ),
+              const SizedBox(height: 12),
               Text(
                 title,
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  color: Colors.white,
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  color: scheme.onSurface,
                   fontWeight: FontWeight.w900,
-                  height: 1.05,
+                  height: 1.10,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
                 subtitle,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Colors.white.withValues(alpha: 0.88),
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: scheme.onSurfaceVariant,
                   height: 1.35,
                 ),
               ),
@@ -173,6 +150,48 @@ class GradientHeroCard extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class _SubtleCatMark extends StatelessWidget {
+  const _SubtleCatMark({required this.color});
+
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      size: const Size(52, 24),
+      painter: _SubtleCatMarkPainter(color),
+    );
+  }
+}
+
+class _SubtleCatMarkPainter extends CustomPainter {
+  const _SubtleCatMarkPainter(this.color);
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = color;
+    final leftEar = Path()
+      ..moveTo(6, size.height)
+      ..lineTo(16, 3)
+      ..lineTo(27, size.height)
+      ..close();
+    final rightEar = Path()
+      ..moveTo(25, size.height)
+      ..lineTo(36, 3)
+      ..lineTo(48, size.height)
+      ..close();
+    canvas.drawPath(leftEar, paint);
+    canvas.drawPath(rightEar, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _SubtleCatMarkPainter oldDelegate) {
+    return oldDelegate.color != color;
   }
 }
 

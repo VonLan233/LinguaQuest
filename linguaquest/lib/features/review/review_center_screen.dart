@@ -23,32 +23,21 @@ class ReviewCenterScreen extends ConsumerWidget {
     final lessonMistakes = state.lastResult?.mistakes ?? const [];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('复习中心')),
+      appBar: AppBar(title: const Text('复习')),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
           children: [
-            GradientHeroCard(
+            SectionHeader(
               title: due.isEmpty ? '今日复习已清空' : '${due.length} 张卡片待复习',
-              subtitle: '间隔复习会在遗忘前把弱项卡片带回来。',
-              icon: Icons.replay_rounded,
-              badge: '错词本 · 弱项词 · 今日到期',
-              action: FilledButton.icon(
-                style: FilledButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: AppTheme.deepTeal,
-                ),
-                onPressed: due.isEmpty
-                    ? () => context.push('/custom-words/new')
-                    : null,
-                icon: const Icon(Icons.add),
-                label: Text(due.isEmpty ? '添加卡片' : '队列在下方'),
-              ),
-            ),
-            const SizedBox(height: 20),
-            const SectionHeader(
-              title: '复习中心',
-              subtitle: '到期词、错词本和弱项卡片统一放在一个队列里。',
+              subtitle: '答对快速进入下一张；答错才展开词卡，并回收到本轮稍后再练。',
+              trailing: due.isEmpty
+                  ? TextButton.icon(
+                      onPressed: () => context.push('/custom-words/new'),
+                      icon: const Icon(Icons.add),
+                      label: const Text('添加'),
+                    )
+                  : null,
             ),
             const SizedBox(height: 16),
             Row(

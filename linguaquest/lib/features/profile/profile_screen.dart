@@ -35,27 +35,27 @@ class ProfileScreen extends ConsumerWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
       children: [
-        GradientHeroCard(
+        SectionHeader(
           title: user?.name ?? '学习者',
           subtitle:
-              '${user?.email ?? '未设置邮箱'}\n${displayTarget(user?.targetExam)} · ${displayLevel(user?.level)}',
-          icon: Icons.person_rounded,
-          badge: '个人数据面板',
-          action: Row(
-            children: [
-              PillLabel(
-                label: '${user?.xp ?? 0} XP',
-                icon: Icons.bolt,
-                color: AppTheme.mango,
-              ),
-              const SizedBox(width: 8),
-              PillLabel(
-                label: '${user?.streak ?? 0} 天连续',
-                icon: Icons.local_fire_department,
-                color: Colors.white.withValues(alpha: 0.92),
-              ),
-            ],
-          ),
+              '${user?.email ?? '未设置邮箱'} · ${displayTarget(user?.targetExam)} · ${displayLevel(user?.level)}',
+        ),
+        const SizedBox(height: 10),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            PillLabel(
+              label: '${user?.xp ?? 0} XP',
+              icon: Icons.bolt,
+              color: AppTheme.mango,
+            ),
+            PillLabel(
+              label: '${user?.streak ?? 0} 天连续',
+              icon: Icons.local_fire_department,
+              color: AppTheme.coral,
+            ),
+          ],
         ),
         const SizedBox(height: 18),
         GridView.count(

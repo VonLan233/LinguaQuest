@@ -9,10 +9,17 @@ import '../../core/widgets/quest_card.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
 
+enum QuizSessionMode { lesson, timed }
+
 class QuizSessionScreen extends ConsumerStatefulWidget {
-  const QuizSessionScreen({required this.lessonId, super.key});
+  const QuizSessionScreen({
+    required this.lessonId,
+    this.mode = QuizSessionMode.lesson,
+    super.key,
+  });
 
   final String lessonId;
+  final QuizSessionMode mode;
 
   @override
   ConsumerState<QuizSessionScreen> createState() => _QuizSessionScreenState();
@@ -53,6 +60,8 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
     final question = lesson.questions[_index];
     final progress = (_index + 1) / lesson.questions.length;
 
+    final isTimed = widget.mode == QuizSessionMode.timed;
+
     return PopScope(
       canPop: _canLeaveWithoutConfirmation,
       onPopInvokedWithResult: (didPop, _) async {
@@ -62,7 +71,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
       child: Scaffold(
         appBar: AppBar(
           leading: BackButton(onPressed: () => _handleBack(context)),
-          title: Text(lesson.title),
+          title: Text(isTimed ? '限时测试' : lesson.title),
         ),
         body: SafeArea(
           child: Padding(
@@ -90,6 +99,14 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
                       label: '${_index + 1}/${lesson.questions.length}',
                       icon: Icons.flag_outlined,
                     ),
+                    if (isTimed) ...[
+                      const SizedBox(width: 8),
+                      const PillLabel(
+                        label: '校园速测',
+                        icon: Icons.timer_outlined,
+                        color: AppTheme.coral,
+                      ),
+                    ],
                   ],
                 ),
                 const SizedBox(height: 14),

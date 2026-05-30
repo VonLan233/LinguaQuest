@@ -10,8 +10,8 @@ class AppTheme {
   static const Color mango = Color(0xFFFFC800);
   static const Color mint = Color(0xFFD7FFB8);
   static const Color ink = Color(0xFF17324D);
-  static const Color paper = Color(0xFFF6FBF0);
-  static const Color cardShadow = Color(0x1F1F5F8B);
+  static const Color paper = Color(0xFFF8FBF5);
+  static const Color cardShadow = Color(0x0F17324D);
   static const Color success = Color(0xFF58CC02);
   static const Color darkPaper = Color(0xFF0B1724);
   static const Color darkSurface = Color(0xFF102033);
@@ -36,14 +36,14 @@ class AppTheme {
           tertiaryContainer: const Color(0xFFFFF1A6),
           onTertiaryContainer: const Color(0xFF463B00),
           surfaceContainerLowest: Colors.white,
-          surfaceContainerLow: const Color(0xFFF9FDF4),
-          surfaceContainer: const Color(0xFFF2FAEB),
-          surfaceContainerHigh: const Color(0xFFEAF6E2),
-          surfaceContainerHighest: const Color(0xFFDCEFD3),
+          surfaceContainerLow: const Color(0xFFFBFDF8),
+          surfaceContainer: const Color(0xFFF3F8EE),
+          surfaceContainerHigh: const Color(0xFFEAF2E5),
+          surfaceContainerHighest: const Color(0xFFDDEBD7),
           onSurface: ink,
           onSurfaceVariant: const Color(0xFF536471),
           outline: const Color(0xFFA9C49F),
-          outlineVariant: const Color(0xFFD6E8D0),
+          outlineVariant: const Color(0xFFE0ECD9),
           error: const Color(0xFFE04F3A),
         );
 
@@ -177,7 +177,7 @@ class AppTheme {
       cardTheme: CardThemeData(
         elevation: 0,
         margin: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       chipTheme: ChipThemeData(
         backgroundColor: isDark ? scheme.surfaceContainerHigh : null,
@@ -197,7 +197,7 @@ class AppTheme {
           textStyle: const TextStyle(fontWeight: FontWeight.w900),
           elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(14),
           ),
         ),
       ),
@@ -206,7 +206,7 @@ class AppTheme {
           minimumSize: const Size(48, 56),
           textStyle: const TextStyle(fontWeight: FontWeight.w900),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(14),
           ),
         ),
       ),

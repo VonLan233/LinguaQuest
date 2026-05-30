@@ -32,8 +32,8 @@ class LearningPathScreen extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
           children: [
             SectionHeader(
-              title: '学习路径',
-              subtitle: '顺着节点闯关，不用规划，一次完成一个小目标。',
+              title: '词书路径',
+              subtitle: '这里只展示词书进度；正式新学和复习回到首页的两个独立入口。',
               trailing: IconButton(
                 tooltip: '单词本',
                 onPressed: () => context.push('/wordbook'),
@@ -41,13 +41,6 @@ class LearningPathScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 18),
-            const GradientHeroCard(
-              title: '校园生活单元',
-              subtitle: '短节点闯关配合图片词卡，每一课都能快速开始、即时反馈。',
-              icon: Icons.route_rounded,
-              badge: '第 1 单元 · 已解锁 33%',
-            ),
-            const SizedBox(height: 22),
             for (var index = 0; index < state.lessons.length; index++) ...[
               _PathNode(lesson: state.lessons[index], index: index),
               if (index != state.lessons.length - 1) const _PathConnector(),

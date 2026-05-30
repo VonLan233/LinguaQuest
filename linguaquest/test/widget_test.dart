@@ -80,7 +80,9 @@ void main() {
     expect(wordInitialCue('apple'), 'A');
   });
 
-  testWidgets('home hero starts at lesson preview before quiz', (tester) async {
+  testWidgets('home new-study entry opens standalone new learning flow', (
+    tester,
+  ) async {
     final now = DateTime(2026, 5, 25);
     final profile = UserProfile(
       uid: 'hero-user',
@@ -101,10 +103,17 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    await tester.tap(find.text('开始新学 12'));
+    await tester.scrollUntilVisible(
+      find.text('新学 12'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, '新学 12'));
     await tester.pumpAndSettle();
 
-    expect(find.text('开始测验'), findsWidgets);
+    expect(find.text('今日新词包'), findsOneWidget);
+    expect(find.text('进入词卡学习'), findsOneWidget);
     expect(find.text('检查'), findsNothing);
   });
 
@@ -385,7 +394,7 @@ void main() {
     await tester.drag(find.text('今日任务控制台'), const Offset(-260, 0));
     await tester.pumpAndSettle();
 
-    expect(find.text('专项训练'), findsOneWidget);
+    expect(find.text('限时测试'), findsOneWidget);
   });
 
   testWidgets('main shell fling direction matches drag direction', (
@@ -414,7 +423,7 @@ void main() {
     await tester.fling(find.text('今日任务控制台'), const Offset(-80, 0), 1000);
     await tester.pumpAndSettle();
 
-    expect(find.text('专项训练'), findsOneWidget);
+    expect(find.text('限时测试'), findsOneWidget);
   });
 
   testWidgets('dark theme keeps headline text readable', (tester) async {
@@ -589,10 +598,11 @@ void main() {
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.text('新学 10'));
+    await tester.tap(find.widgetWithText(FilledButton, '新学 10'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('开始测验').first);
+    await tester.tap(find.text('进入词卡学习'));
     await tester.pumpAndSettle();
+    await _completeNewWordCards(tester);
 
     await tester.tap(find.text('讲座；授课'));
     await tester.pumpAndSettle();
@@ -667,11 +677,20 @@ void main() {
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.text('新学 10'));
+    await tester.tap(find.widgetWithText(FilledButton, '新学 10'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('进入词卡学习'));
     await tester.pumpAndSettle();
 
-    expect(find.text('开始测验'), findsWidgets);
+    expect(find.text('新学词卡'), findsOneWidget);
+    expect(find.text('先判断熟悉度'), findsOneWidget);
     expect(find.byType(BackButtonIcon), findsOneWidget);
+
+    await tester.tap(find.byType(BackButtonIcon));
+    await tester.pumpAndSettle();
+
+    expect(find.text('今日新词包'), findsOneWidget);
+    expect(find.text('进入词卡学习'), findsOneWidget);
 
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
@@ -684,10 +703,11 @@ void main() {
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.text('新学 10'));
+    await tester.tap(find.widgetWithText(FilledButton, '新学 10'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('开始测验').first);
+    await tester.tap(find.text('进入词卡学习'));
     await tester.pumpAndSettle();
+    await _completeNewWordCards(tester);
 
     expect(find.text('检查'), findsOneWidget);
     expect(find.byType(BackButtonIcon), findsOneWidget);
@@ -719,7 +739,7 @@ void main() {
     await tester.tap(find.text('离开'));
     await tester.pumpAndSettle();
 
-    expect(find.text('开始测验'), findsWidgets);
+    expect(find.text('进入语境练习'), findsWidgets);
   });
 
   test('theme and reminder settings persist locally', () async {
@@ -1105,10 +1125,11 @@ void main() {
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.text('新学 10'));
+    await tester.tap(find.widgetWithText(FilledButton, '新学 10'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('开始测验').first);
+    await tester.tap(find.text('进入词卡学习'));
     await tester.pumpAndSettle();
+    await _completeNewWordCards(tester);
 
     await tester.tap(find.text('通勤'));
     await tester.pumpAndSettle();
@@ -1403,6 +1424,19 @@ void main() {
       expect(customWords.any((word) => word.word == 'review-word-7'), false);
     },
   );
+}
+
+Future<void> _completeNewWordCards(WidgetTester tester) async {
+  for (var index = 0; index < 2; index++) {
+    await tester.tap(find.widgetWithText(OutlinedButton, '认识'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('下一张词卡'));
+    await tester.pumpAndSettle();
+  }
+  await tester.tap(find.widgetWithText(OutlinedButton, '认识'));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('进入语境练习'));
+  await tester.pumpAndSettle();
 }
 
 double _contrastRatio(Color foreground, Color background) {

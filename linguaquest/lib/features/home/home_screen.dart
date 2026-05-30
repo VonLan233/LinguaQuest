@@ -70,28 +70,13 @@ class HomeScreen extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: 18),
-        GradientHeroCard(
-          title: '已连续打卡 ${user?.streak ?? 0} 天',
-          subtitle:
-              '今日 $todayWork/${dailyGoal + reviewTarget} 词 · 新学 $dailyGoal · 复习 $reviewTarget。沿着学习路径拿下下一小关。',
-          icon: Icons.local_fire_department_outlined,
-          badge:
-              '${displayTarget(user?.targetExam)} · ${displayLevel(user?.level)}',
-          action: FilledButton.icon(
-            style: FilledButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: AppTheme.ink,
-            ),
-            onPressed: currentLesson == null || pathComplete
-                ? null
-                : () => context.push('/lesson/${currentLesson.id}'),
-            icon: const Icon(Icons.play_arrow_rounded),
-            label: Text(
-              currentLesson == null || pathComplete
-                  ? '暂无新学任务'
-                  : '开始新学 $dailyGoal',
-            ),
-          ),
+        _DailyFocusHeader(
+          streak: user?.streak ?? 0,
+          target: displayTarget(user?.targetExam),
+          level: displayLevel(user?.level),
+          todayWork: todayWork,
+          totalWork: dailyGoal + reviewTarget,
+          progress: dailyProgress,
         ),
         const SizedBox(height: 18),
         Row(
@@ -154,7 +139,7 @@ class HomeScreen extends ConsumerWidget {
                     child: FilledButton.icon(
                       onPressed: currentLesson == null || pathComplete
                           ? null
-                          : () => context.push('/lesson/${currentLesson.id}'),
+                          : () => context.push('/study/new'),
                       icon: const Icon(Icons.add_task_rounded),
                       label: Text('新学 $dailyGoal'),
                     ),
@@ -162,7 +147,7 @@ class HomeScreen extends ConsumerWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: FilledButton.tonalIcon(
-                      onPressed: () => context.push('/review'),
+                      onPressed: () => context.push('/study/review'),
                       icon: const Icon(Icons.replay_rounded),
                       label: Text('复习 $dueCount'),
                     ),
@@ -269,7 +254,7 @@ class HomeScreen extends ConsumerWidget {
           title: '弱项词',
           subtitle: state.weakWords.isEmpty ? '当前还没有高频错词。' : '趁它们堆起来前先复习。',
           trailing: TextButton(
-            onPressed: () => context.go('/review'),
+            onPressed: () => context.push('/study/review'),
             child: const Text('复习'),
           ),
         ),
@@ -310,6 +295,68 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 ),
               ),
+      ],
+    );
+  }
+}
+
+class _DailyFocusHeader extends StatelessWidget {
+  const _DailyFocusHeader({
+    required this.streak,
+    required this.target,
+    required this.level,
+    required this.todayWork,
+    required this.totalWork,
+    required this.progress,
+  });
+
+  final int streak;
+  final String target;
+  final String level;
+  final int todayWork;
+  final int totalWork;
+  final double progress;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            PillLabel(
+              label: '$target · $level',
+              icon: Icons.track_changes_outlined,
+              color: theme.colorScheme.secondary,
+            ),
+            PillLabel(
+              label: '已连续打卡 $streak 天',
+              icon: Icons.local_fire_department_outlined,
+              color: AppTheme.mango,
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Text(
+          '今天完成 $todayWork/$totalWork 词',
+          style: theme.textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.w900,
+            height: 1.08,
+          ),
+        ),
+        const SizedBox(height: 10),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(999),
+          child: LinearProgressIndicator(
+            value: progress,
+            minHeight: 10,
+            backgroundColor: AppTheme.progressTrack(context),
+            valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.teal),
+          ),
+        ),
       ],
     );
   }

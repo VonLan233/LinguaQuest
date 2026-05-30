@@ -20,14 +20,10 @@ class TrainingScreen extends ConsumerWidget {
       children: [
         GradientHeroCard(
           title: '训练场',
-          subtitle: '用已学词、到期词和弱项词做轻竞技训练，积分只奖励有效学习行为。',
+          subtitle: '限时测试、专项训练和排行榜放在这里，正式新学与复习不混在训练场里。',
           icon: Icons.sports_esports_rounded,
           badge: '本周 ${user?.xp ?? 0} 积分 · 今日可得 60',
-          action: FilledButton.icon(
-            style: FilledButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: AppTheme.deepTeal,
-            ),
+          action: OutlinedButton.icon(
             onPressed: () => context.push('/leaderboard'),
             icon: const Icon(Icons.leaderboard_outlined),
             label: const Text('查看排行榜'),
@@ -65,25 +61,35 @@ class TrainingScreen extends ConsumerWidget {
         ),
         const SizedBox(height: 22),
         const SectionHeader(
-          title: '专项训练',
-          subtitle: '先上线单人异步玩法，后续再扩展 PK 和 Boss Quiz。',
+          title: '限时测试',
+          subtitle: '校园词包和抢词挑战归入训练场，不再占用新学入口。',
         ),
         const SizedBox(height: 12),
+        _TrainingGameCard(
+          icon: Icons.school_outlined,
+          title: '校园速测',
+          body: '从校园生活词包抽题，适合课后快速检测，不影响正式复习节奏。',
+          source: '校园生活 · 限时测试',
+          actionLabel: '开始测试',
+          onTap: () => context.push('/timed-test/lesson-campus-1'),
+        ),
         _TrainingGameCard(
           icon: Icons.timer_outlined,
           title: '抢词',
           body: '60 秒内尽可能答对英文选义题，按正确数、连击和准确率给积分。',
           source: '已学词 + 到期词',
-          actionLabel: '开始复习',
-          onTap: () => context.push('/review'),
+          actionLabel: '开始挑战',
+          onTap: () => context.push('/study/review'),
         ),
+        const SizedBox(height: 12),
+        const SectionHeader(title: '专项训练', subtitle: '围绕拼写、听音、搭配和短文挖词补弱项。'),
+        const SizedBox(height: 12),
         _TrainingGameCard(
           icon: Icons.stairs_outlined,
           title: '一站到底',
           body: '从简单到困难连续答题，错词会进入弱项词和错词本。',
           source: '当前词书 + 弱项词',
-          actionLabel: '打开学习路径',
-          onTap: () => context.push('/learn'),
+          actionLabel: '即将开放',
         ),
         _TrainingGameCard(
           icon: Icons.edit_note_outlined,

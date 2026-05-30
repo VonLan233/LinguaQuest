@@ -28,6 +28,7 @@ import '../../features/review/mistake_book_screen.dart';
 import '../../features/review/review_center_screen.dart';
 import '../../features/search/search_screen.dart';
 import '../../features/shell/app_shell.dart';
+import '../../features/study/new_study_screen.dart';
 import '../../features/training/training_screen.dart';
 import '../../features/wordbook/add_edit_custom_word_screen.dart';
 import '../../features/wordbook/custom_word_list_screen.dart';
@@ -89,6 +90,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/learn',
         builder: (context, state) => const LearningPathScreen(),
+      ),
+      GoRoute(
+        path: '/study/new',
+        builder: (context, state) => const NewStudyScreen(),
+      ),
+      GoRoute(
+        path: '/study/review',
+        builder: (context, state) => const ReviewCenterScreen(),
       ),
       GoRoute(
         path: '/review',
@@ -175,6 +184,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/lesson/:id/quiz',
         builder: (context, state) =>
             QuizSessionScreen(lessonId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/timed-test/:id',
+        builder: (context, state) => QuizSessionScreen(
+          lessonId: state.pathParameters['id']!,
+          mode: QuizSessionMode.timed,
+        ),
       ),
       GoRoute(
         path: '/lesson/:id/result',
