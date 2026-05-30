@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/ui_labels.dart';
-import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson.dart';
@@ -41,116 +40,160 @@ class _LessonPreviewScreenState extends ConsumerState<LessonPreviewScreen> {
     final progress = words.isEmpty ? 0.0 : (_wordIndex + 1) / words.length;
     final isLastWord = _wordIndex >= words.length - 1;
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: const FallbackBackButton(fallbackLocation: '/study/new'),
-        title: const Text('新学词卡'),
-      ),
-      bottomNavigationBar: word == null
-          ? null
-          : SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: _wordIndex == 0
-                            ? null
-                            : () => setState(() => _wordIndex--),
-                        icon: const Icon(Icons.arrow_back_rounded),
-                        label: const Text('上一张'),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      flex: 2,
-                      child: FilledButton.icon(
-                        onPressed: selectedConfidence == null
-                            ? null
-                            : () {
-                                if (isLastWord) {
-                                  context.push(
-                                    '/lesson/${widget.lessonId}/quiz',
-                                  );
-                                  return;
-                                }
-                                setState(() => _wordIndex++);
-                              },
-                        icon: Icon(
-                          isLastWord
-                              ? Icons.play_arrow_rounded
-                              : Icons.arrow_forward_rounded,
+    return PopScope(
+      canPop: !_hasStarted,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) return;
+        await _handleBack(context);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: BackButton(onPressed: () => _handleBack(context)),
+          title: const Text('新学词卡'),
+        ),
+        bottomNavigationBar: word == null
+            ? null
+            : SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: _wordIndex == 0
+                              ? null
+                              : () => setState(() => _wordIndex--),
+                          icon: const Icon(Icons.arrow_back_rounded),
+                          label: const Text('上一张'),
                         ),
-                        label: Text(isLastWord ? '进入语境练习' : '下一张词卡'),
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 12),
+                      Expanded(
+                        flex: 2,
+                        child: FilledButton.icon(
+                          onPressed: selectedConfidence == null
+                              ? null
+                              : () {
+                                  if (isLastWord) {
+                                    context.push(
+                                      '/lesson/${widget.lessonId}/quiz',
+                                    );
+                                    return;
+                                  }
+                                  setState(() => _wordIndex++);
+                                },
+                          icon: Icon(
+                            isLastWord
+                                ? Icons.play_arrow_rounded
+                                : Icons.arrow_forward_rounded,
+                          ),
+                          label: Text(isLastWord ? '进入语境练习' : '下一张词卡'),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 112),
-          children: [
-            SectionHeader(
-              title: '先建立理解，再做语境题',
-              subtitle:
-                  '${lesson.section} · ${lesson.estimatedMinutes} 分钟 · 第 ${words.isEmpty ? 0 : _wordIndex + 1}/${words.length} 张',
-            ),
-            const SizedBox(height: 12),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(999),
-              child: LinearProgressIndicator(
-                value: progress,
-                minHeight: 10,
-                backgroundColor: AppTheme.progressTrack(context),
-                valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.teal),
-              ),
-            ),
-            const SizedBox(height: 18),
-            if (word == null)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('暂无词卡', style: Theme.of(context).textTheme.titleLarge),
-                    const SizedBox(height: 8),
-                    const Text('这节课还没有可学习的词。'),
-                  ],
-                ),
-              )
-            else ...[
-              _WordStudyCard(word: word),
-              const SizedBox(height: 14),
-              _ConfidenceSelector(
-                selected: selectedConfidence,
-                onSelected: (value) {
-                  setState(() => _confidenceByWordId[word.id] = value);
-                },
-              ),
-              const SizedBox(height: 14),
-              _ContextCard(word: word),
-              const SizedBox(height: 24),
+        body: SafeArea(
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 112),
+            children: [
               SectionHeader(
-                title: '本课词卡',
+                title: '先建立理解，再做语境题',
                 subtitle:
-                    '${lesson.xpReward} XP · ${lesson.questions.length} 道语境题',
+                    '${lesson.section} · ${lesson.estimatedMinutes} 分钟 · 第 ${words.isEmpty ? 0 : _wordIndex + 1}/${words.length} 张',
               ),
-              const SizedBox(height: 10),
-              for (var index = 0; index < words.length; index++)
-                _MiniWordRow(
-                  word: words[index],
-                  isCurrent: index == _wordIndex,
-                  isChecked: _confidenceByWordId.containsKey(words[index].id),
-                  onTap: () => setState(() => _wordIndex = index),
+              const SizedBox(height: 12),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(999),
+                child: LinearProgressIndicator(
+                  value: progress,
+                  minHeight: 10,
+                  backgroundColor: AppTheme.progressTrack(context),
+                  valueColor: const AlwaysStoppedAnimation<Color>(
+                    AppTheme.teal,
+                  ),
                 ),
+              ),
+              const SizedBox(height: 18),
+              if (word == null)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '暂无词卡',
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      const SizedBox(height: 8),
+                      const Text('这节课还没有可学习的词。'),
+                    ],
+                  ),
+                )
+              else ...[
+                _WordStudyCard(word: word),
+                const SizedBox(height: 14),
+                _ConfidenceSelector(
+                  selected: selectedConfidence,
+                  onSelected: (value) {
+                    setState(() => _confidenceByWordId[word.id] = value);
+                  },
+                ),
+                const SizedBox(height: 14),
+                _ContextCard(word: word),
+                const SizedBox(height: 24),
+                SectionHeader(
+                  title: '本课词卡',
+                  subtitle:
+                      '${lesson.xpReward} XP · ${lesson.questions.length} 道语境题',
+                ),
+                const SizedBox(height: 10),
+                for (var index = 0; index < words.length; index++)
+                  _MiniWordRow(
+                    word: words[index],
+                    isCurrent: index == _wordIndex,
+                    isChecked: _confidenceByWordId.containsKey(words[index].id),
+                    onTap: () => setState(() => _wordIndex = index),
+                  ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
+  }
+
+  bool get _hasStarted => _wordIndex > 0 || _confidenceByWordId.isNotEmpty;
+
+  Future<void> _handleBack(BuildContext activeContext) async {
+    if (_hasStarted) {
+      final confirmed = await showDialog<bool>(
+        context: activeContext,
+        builder: (context) => AlertDialog(
+          title: const Text('离开词卡？'),
+          content: const Text('当前新学词卡进度将被放弃。'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('继续学习'),
+            ),
+            FilledButton.icon(
+              onPressed: () => Navigator.pop(context, true),
+              icon: const Icon(Icons.exit_to_app_rounded),
+              label: const Text('离开'),
+            ),
+          ],
+        ),
+      );
+      if (confirmed != true || !activeContext.mounted) return;
+    }
+    if (!activeContext.mounted) return;
+    if (activeContext.canPop()) {
+      activeContext.pop();
+      return;
+    }
+    activeContext.go('/study/new');
   }
 
   Lesson? _findLesson(WidgetRef ref) {

@@ -1036,6 +1036,60 @@ void main() {
     expect(find.text('进入语境练习'), findsWidgets);
   });
 
+  testWidgets('new word cards confirm before leaving after progress', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'word-card-exit-user',
+      name: 'Wren',
+      email: 'wren@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+
+    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.scrollUntilVisible(
+      find.text('新学 10'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, '新学 10'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('进入词卡学习'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.widgetWithText(OutlinedButton, '认识'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(BackButtonIcon));
+    await tester.pumpAndSettle();
+
+    expect(find.text('离开词卡？'), findsOneWidget);
+
+    await tester.tap(find.text('继续学习'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('新学词卡'), findsOneWidget);
+
+    await tester.tap(find.byType(BackButtonIcon));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('离开'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('今日新词包'), findsOneWidget);
+  });
+
   test('theme and reminder settings persist locally', () async {
     SharedPreferences.setMockInitialValues({});
     final container = ProviderContainer();
