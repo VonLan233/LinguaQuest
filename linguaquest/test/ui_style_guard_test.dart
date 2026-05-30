@@ -96,6 +96,16 @@ void main() {
       expect(review, contains('记住了'));
     });
 
+    test('progress analytics keeps summary status lightweight', () {
+      final progress = File(
+        'lib/features/quests/progress_analytics_screen.dart',
+      ).readAsStringSync();
+
+      expect(progress, contains('_ProgressSignals'));
+      expect(progress, isNot(contains('MetricTile')));
+      expect(progress, contains('复习负荷'));
+    });
+
     test('new study and review stay separate from campus timed tests', () {
       final home = File(
         'lib/features/home/home_screen.dart',
