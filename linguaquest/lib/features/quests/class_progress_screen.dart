@@ -25,10 +25,7 @@ class ClassProgressScreen extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            const SectionHeader(
-              title: '班级概览',
-              subtitle: '教师端完成度和弱项词摘要，当前为产品原型界面。',
-            ),
+            const SectionHeader(title: '班级概览', subtitle: '教师端完成度和弱项词摘要。'),
             const SizedBox(height: 16),
             for (final row in rows) _ClassProgressRow(row: row),
           ],

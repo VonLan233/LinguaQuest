@@ -45,7 +45,7 @@ class AiLearningScreen extends StatelessWidget {
           icon: Icons.rate_review_outlined,
           title: 'AI 作文批改',
           body: '选择考试类型、输入题目和正文，输出总评分、分项评分和逐段修改建议。',
-          status: '后续',
+          status: '待开放',
         ),
         _AiToolCard(
           icon: Icons.account_tree_outlined,

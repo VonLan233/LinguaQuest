@@ -33,7 +33,7 @@ class _ClassModeScreenState extends State<ClassModeScreen> {
           children: [
             const SectionHeader(
               title: '班级学习',
-              subtitle: '先保留班级码和教师看板入口，后续接入服务器后启用同步。',
+              subtitle: '输入班级码加入小组，查看班级进度和弱项摘要。',
             ),
             const SizedBox(height: 16),
             TextField(
@@ -46,7 +46,7 @@ class _ClassModeScreenState extends State<ClassModeScreen> {
             const SizedBox(height: 12),
             FilledButton.icon(
               onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('已加入班级 ${_codeController.text}（模拟）')),
+                SnackBar(content: Text('已加入班级 ${_codeController.text}')),
               ),
               icon: const Icon(Icons.group_add_outlined),
               label: const Text('加入班级'),

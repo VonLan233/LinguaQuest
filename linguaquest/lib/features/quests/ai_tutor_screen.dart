@@ -33,8 +33,8 @@ class _AiTutorScreenState extends State<AiTutorScreen> {
           padding: const EdgeInsets.all(20),
           children: [
             const SectionHeader(
-              title: '模拟反馈',
-              subtitle: '先固定交互模型，后续再接入正式 AI API。',
+              title: '即时反馈',
+              subtitle: '输入单词、语法或错题，获得结构化解释和可练习的例句。',
             ),
             const SizedBox(height: 16),
             TextField(

@@ -159,8 +159,26 @@ void main() {
       expect(aiLearning, isNot(contains("status: 'P2'")));
       expect(aiLearning, isNot(contains('先用模拟流程')));
       expect(aiLearning, contains("status: '规划中'"));
-      expect(aiLearning, contains("status: '后续'"));
+      expect(aiLearning, contains("status: '待开放'"));
       expect(aiLearning, contains("status: '可试用'"));
+    });
+
+    test('quest entry labels avoid development stage wording', () {
+      final sources = [
+        File('lib/features/quests/quest_screen.dart').readAsStringSync(),
+        File('lib/features/quests/ai_tutor_screen.dart').readAsStringSync(),
+        File('lib/features/quests/class_mode_screen.dart').readAsStringSync(),
+        File(
+          'lib/features/quests/class_progress_screen.dart',
+        ).readAsStringSync(),
+      ].join('\n');
+      const developmentLabels = ['模拟', '原型', '预览', 'P1', 'P2'];
+
+      for (final label in developmentLabels) {
+        expect(sources, isNot(contains(label)));
+      }
+      expect(sources, contains('即时反馈'));
+      expect(sources, contains('可试用'));
     });
   });
 }
