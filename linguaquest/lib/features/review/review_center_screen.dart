@@ -162,10 +162,7 @@ class ReviewCenterScreen extends ConsumerWidget {
                   onTap: () => context.push('/custom-words/${word.id}'),
                   child: Row(
                     children: [
-                      ImageCueBadge(
-                        cue: word.word.characters.first.toUpperCase(),
-                        size: 52,
-                      ),
+                      ImageCueBadge(cue: wordInitialCue(word.word), size: 52),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(
@@ -210,10 +207,7 @@ class _ReviewTile extends ConsumerWidget {
         children: [
           Row(
             children: [
-              ImageCueBadge(
-                cue: word.word.characters.first.toUpperCase(),
-                size: 54,
-              ),
+              ImageCueBadge(cue: wordInitialCue(word.word), size: 54),
               const SizedBox(width: 12),
               Expanded(
                 child: ListTile(
