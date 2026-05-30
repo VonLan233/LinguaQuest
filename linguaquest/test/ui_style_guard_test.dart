@@ -73,6 +73,8 @@ void main() {
 
       expect(home, contains("context.push('/study/new')"));
       expect(home, contains("context.push('/study/review')"));
+      expect(home, contains("context.push('/learn')"));
+      expect(home, isNot(contains("context.push('/leaderboard')")));
       expect(discover, contains("context.push('/study/new')"));
       expect(discover, isNot(contains("context.push('/learn')")));
       expect(home, isNot(contains('/timed-test/lesson-campus-1')));
