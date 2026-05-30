@@ -82,6 +82,9 @@ void main() {
       final lessonPreview = File(
         'lib/features/learning/lesson_preview_screen.dart',
       ).readAsStringSync();
+      final quizSession = File(
+        'lib/features/quiz/quiz_session_screen.dart',
+      ).readAsStringSync();
 
       expect(home, contains("context.push('/study/new')"));
       expect(home, contains("context.push('/study/review')"));
@@ -100,6 +103,8 @@ void main() {
         lessonPreview,
         isNot(contains('ref.watch(appControllerProvider).lessons')),
       );
+      expect(quizSession, contains('isTimed ? state.lessons'));
+      expect(quizSession, contains(': state.formalLessons'));
       expect(training, contains('限时测试'));
       expect(newStudy, contains('不做限时测试'));
       expect(router, contains("path: '/study/new'"));

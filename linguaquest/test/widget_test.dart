@@ -19,6 +19,7 @@ import 'package:linguaquest/data/repositories/learning_repository.dart';
 import 'package:linguaquest/data/seed/seed_lessons.dart';
 import 'package:linguaquest/features/auth/goal_setup_screen.dart';
 import 'package:linguaquest/features/learning/lesson_preview_screen.dart';
+import 'package:linguaquest/features/quiz/quiz_session_screen.dart';
 import 'package:linguaquest/features/search/search_screen.dart';
 import 'package:linguaquest/features/wordbook/wordbook_screen.dart';
 import 'package:linguaquest/features/wordbook/target_word_detail_screen.dart';
@@ -846,6 +847,62 @@ void main() {
 
     expect(find.text('没有找到这节课'), findsOneWidget);
     expect(find.text('新学词卡'), findsNothing);
+  });
+
+  testWidgets('regular quiz cannot open training-only timed packs', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'training-quiz-user',
+      name: 'Quinn',
+      email: 'quinn@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          home: const QuizSessionScreen(lessonId: 'lesson-campus-1'),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('没有找到这节课'), findsOneWidget);
+    expect(find.text('限时测试'), findsNothing);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          home: const QuizSessionScreen(
+            lessonId: 'lesson-campus-1',
+            mode: QuizSessionMode.timed,
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('限时测试'), findsOneWidget);
+    expect(find.text('没有找到这节课'), findsNothing);
   });
 
   testWidgets('lesson mistake appears in review center after result', (
