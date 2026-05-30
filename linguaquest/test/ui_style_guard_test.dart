@@ -126,6 +126,17 @@ void main() {
       expect(discover, contains('去完成 +'));
     });
 
+    test('onboarding explains features as a light step list', () {
+      final onboarding = File(
+        'lib/features/onboarding/onboarding_screen.dart',
+      ).readAsStringSync();
+
+      expect(onboarding, contains('_OnboardingStepList'));
+      expect(onboarding, contains('_OnboardingStepRow'));
+      expect(onboarding, isNot(contains('_OnboardingCard')));
+      expect(onboarding, isNot(contains('放在一张卡里')));
+    });
+
     test('new study and review stay separate from campus timed tests', () {
       final home = File(
         'lib/features/home/home_screen.dart',

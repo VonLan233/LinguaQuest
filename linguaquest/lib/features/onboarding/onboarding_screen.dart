@@ -12,20 +12,20 @@ class OnboardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final cards = [
-      const _OnboardingCard(
+    final steps = [
+      const _OnboardingStepData(
         cue: '🖼',
         icon: Icons.image_search_outlined,
         title: '图像词卡',
-        body: '单词、释义、例句、掌握度和视觉线索都放在一张卡里。',
+        body: '单词、释义、例句、掌握度和视觉线索在同一条学习流里串起来。',
       ),
-      const _OnboardingCard(
+      const _OnboardingStepData(
         cue: '🛤',
         icon: Icons.route_outlined,
         title: '清晰路径',
         body: '短课节负责安排下一步学习，让每天打开应用后知道先做什么。',
       ),
-      const _OnboardingCard(
+      const _OnboardingStepData(
         cue: '🔁',
         icon: Icons.replay_outlined,
         title: '准时复习',
@@ -67,7 +67,7 @@ class OnboardingScreen extends StatelessWidget {
             const SizedBox(height: 22),
             Text('像游戏闯关一样完成每日学习', style: theme.textTheme.titleLarge),
             const SizedBox(height: 12),
-            for (final card in cards) ...[card, const SizedBox(height: 12)],
+            _OnboardingStepList(steps: steps),
             const SizedBox(height: 18),
             FilledButton.icon(
               onPressed: () => context.go('/register'),
@@ -87,18 +87,34 @@ class OnboardingScreen extends StatelessWidget {
   }
 }
 
-class _OnboardingCard extends StatelessWidget {
-  const _OnboardingCard({
-    required this.cue,
-    required this.icon,
-    required this.title,
-    required this.body,
-  });
+class _OnboardingStepList extends StatelessWidget {
+  const _OnboardingStepList({required this.steps});
 
-  final String cue;
-  final IconData icon;
-  final String title;
-  final String body;
+  final List<_OnboardingStepData> steps;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        for (var index = 0; index < steps.length; index++) ...[
+          _OnboardingStepRow(step: steps[index]),
+          if (index != steps.length - 1)
+            Divider(
+              height: 18,
+              color: Theme.of(
+                context,
+              ).colorScheme.outlineVariant.withValues(alpha: 0.7),
+            ),
+        ],
+      ],
+    );
+  }
+}
+
+class _OnboardingStepRow extends StatelessWidget {
+  const _OnboardingStepRow({required this.step});
+
+  final _OnboardingStepData step;
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +126,7 @@ class _OnboardingCard extends StatelessWidget {
           Stack(
             alignment: Alignment.center,
             children: [
-              ImageCueBadge(cue: cue, size: 62),
+              ImageCueBadge(cue: step.cue, size: 62),
               Positioned(
                 right: -1,
                 bottom: -1,
@@ -121,7 +137,11 @@ class _OnboardingCard extends StatelessWidget {
                     shape: BoxShape.circle,
                     border: Border.all(color: theme.colorScheme.outlineVariant),
                   ),
-                  child: Icon(icon, color: theme.colorScheme.primary, size: 18),
+                  child: Icon(
+                    step.icon,
+                    color: theme.colorScheme.primary,
+                    size: 18,
+                  ),
                 ),
               ),
             ],
@@ -132,13 +152,13 @@ class _OnboardingCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  step.title,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w900,
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(body),
+                Text(step.body),
               ],
             ),
           ),
@@ -146,4 +166,18 @@ class _OnboardingCard extends StatelessWidget {
       ),
     );
   }
+}
+
+class _OnboardingStepData {
+  const _OnboardingStepData({
+    required this.cue,
+    required this.icon,
+    required this.title,
+    required this.body,
+  });
+
+  final String cue;
+  final IconData icon;
+  final String title;
+  final String body;
 }
