@@ -110,7 +110,8 @@ class _LessonPreviewScreenState extends ConsumerState<LessonPreviewScreen> {
             ),
             const SizedBox(height: 18),
             if (word == null)
-              QuestCard(
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -298,20 +299,28 @@ class _ContextCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return QuestCard(
-      padding: const EdgeInsets.all(16),
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('语境例句', style: Theme.of(context).textTheme.titleMedium),
+          Row(
+            children: [
+              Icon(
+                Icons.format_quote_rounded,
+                color: theme.colorScheme.primary,
+              ),
+              const SizedBox(width: 8),
+              Text('语境例句', style: theme.textTheme.titleMedium),
+            ],
+          ),
           const SizedBox(height: 8),
           Text(word.exampleSentence),
           const SizedBox(height: 6),
           Text(
             word.exampleTranslation,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
+            style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
           ),
         ],
       ),
@@ -334,29 +343,34 @@ class _MiniWordRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return QuestCard(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      color: isCurrent ? AppTheme.accentSurface(context) : null,
-      borderColor: isCurrent ? Theme.of(context).colorScheme.primary : null,
-      onTap: onTap,
-      child: Row(
-        children: [
-          ImageCueBadge(cue: word.imageCue, size: 42),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              word.word,
-              style: Theme.of(context).textTheme.titleMedium,
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Material(
+        color: isCurrent ? AppTheme.accentSurface(context) : Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            child: Row(
+              children: [
+                ImageCueBadge(cue: word.imageCue, size: 42),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(word.word, style: theme.textTheme.titleMedium),
+                ),
+                Icon(
+                  isChecked ? Icons.check_circle : Icons.radio_button_unchecked,
+                  color: isChecked
+                      ? AppTheme.success
+                      : theme.colorScheme.onSurfaceVariant,
+                ),
+              ],
             ),
           ),
-          Icon(
-            isChecked ? Icons.check_circle : Icons.radio_button_unchecked,
-            color: isChecked
-                ? AppTheme.success
-                : Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-        ],
+        ),
       ),
     );
   }
