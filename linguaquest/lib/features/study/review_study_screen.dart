@@ -19,19 +19,20 @@ class ReviewStudyScreen extends ConsumerStatefulWidget {
 }
 
 class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
+  final List<CustomWord> _queue = [];
   final Set<String> _completedIds = {};
+  final Set<String> _reinforcementIds = {};
   var _revealed = false;
   var _reviewedCount = 0;
   var _isSubmitting = false;
+  var _queueInitialized = false;
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(appControllerProvider);
-    final queue = state.dueWords
-        .where((word) => !_completedIds.contains(word.id))
-        .toList();
-    final currentWord = queue.isEmpty ? null : queue.first;
-    final totalCount = _reviewedCount + queue.length;
+    _syncQueue(state.dueWords);
+    final currentWord = _queue.isEmpty ? null : _queue.first;
+    final totalCount = _reviewedCount + _queue.length;
 
     return Scaffold(
       appBar: AppBar(
@@ -62,7 +63,7 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
                 children: [
                   SectionHeader(
                     title: '今日复习',
-                    subtitle: '先回想，再翻开答案；答错会回到更近的复习计划。',
+                    subtitle: '先回想，再翻开答案；答错会回到本轮稍后巩固。',
                     trailing: PillLabel(
                       label: '${_reviewedCount + 1}/$totalCount',
                       icon: Icons.auto_graph,
@@ -91,6 +92,17 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
   Future<void> _review(CustomWord word, {required bool isCorrect}) async {
     if (_isSubmitting) return;
     setState(() => _isSubmitting = true);
+    final isReinforcementPass =
+        isCorrect && _reinforcementIds.contains(word.id);
+    if (isReinforcementPass) {
+      _completeCurrentReview(word, requeue: false);
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('已完成本轮巩固')));
+      return;
+    }
+
     final succeeded = await ref
         .read(appControllerProvider.notifier)
         .reviewWord(word.id, isCorrect);
@@ -109,11 +121,55 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
+    _completeCurrentReview(word, requeue: !isCorrect);
+  }
+
+  void _syncQueue(List<CustomWord> dueWords) {
+    if (!_queueInitialized) {
+      _queue
+        ..clear()
+        ..addAll(dueWords);
+      _queueInitialized = true;
+      return;
+    }
+
+    final queuedIds = _queue.map((word) => word.id).toSet();
+    for (final word in dueWords) {
+      if (_completedIds.contains(word.id) || queuedIds.contains(word.id)) {
+        continue;
+      }
+      _queue.add(word);
+      queuedIds.add(word.id);
+    }
+  }
+
+  CustomWord _latestWordSnapshot(CustomWord fallback) {
+    final words = ref.read(appControllerProvider).customWords;
+    for (final word in words) {
+      if (word.id == fallback.id) return word;
+    }
+    return fallback;
+  }
+
+  void _completeCurrentReview(CustomWord word, {required bool requeue}) {
     setState(() {
-      _completedIds.add(word.id);
+      if (_queue.isNotEmpty && _queue.first.id == word.id) {
+        _queue.removeAt(0);
+      } else {
+        _queue.removeWhere((item) => item.id == word.id);
+      }
       _reviewedCount += 1;
       _revealed = false;
       _isSubmitting = false;
+      if (requeue) {
+        final snapshot = _latestWordSnapshot(word);
+        _reinforcementIds.add(word.id);
+        final insertIndex = _queue.length < 3 ? _queue.length : 3;
+        _queue.insert(insertIndex, snapshot);
+      } else {
+        _completedIds.add(word.id);
+        _reinforcementIds.remove(word.id);
+      }
     });
   }
 }
@@ -240,7 +296,7 @@ class _MemoryHintCard extends StatelessWidget {
           child: Text(
             isRevealed
                 ? '下次复习：${formatRelativeDue(word.nextReviewAt, DateTime.now())}'
-                : '答对不打断；答错才展示知识卡，并安排更近的复习。',
+                : '答对不打断；答错才展示知识卡，并在本轮稍后再出现。',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: colorScheme.onSurfaceVariant,
               height: 1.42,

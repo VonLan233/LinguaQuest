@@ -202,7 +202,14 @@ void main() {
     await tester.tap(find.widgetWithText(FilledButton, '加入巩固队列'));
     await tester.pumpAndSettle();
 
-    expect(find.text('2/2'), findsOneWidget);
+    expect(find.text('2/3'), findsOneWidget);
+    expect(find.text('ambiguous'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(FilledButton, '记住了'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('3/3'), findsOneWidget);
+    expect(find.text('resilient'), findsOneWidget);
   });
 
   testWidgets('discover check-in only counts same-day study', (tester) async {
