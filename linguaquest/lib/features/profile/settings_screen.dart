@@ -139,7 +139,7 @@ class ReminderSettingsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              '该设置会保存在应用内；当前版本暂未启用系统级通知。',
+              '应用会记住提醒时间，方便你按固定节奏打开学习。',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],

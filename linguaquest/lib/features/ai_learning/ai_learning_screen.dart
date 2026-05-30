@@ -27,7 +27,7 @@ class AiLearningScreen extends StatelessWidget {
           spacing: 8,
           runSpacing: 8,
           children: [
-            PillLabel(label: '先用演示流程', icon: Icons.science_outlined),
+            PillLabel(label: '错因讲解', icon: Icons.psychology_alt_outlined),
             PillLabel(
               label: '无需客户端密钥',
               icon: Icons.lock_outline,

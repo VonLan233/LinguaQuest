@@ -275,6 +275,8 @@ void main() {
       expect(aiLearning, isNot(contains("status: 'P1'")));
       expect(aiLearning, isNot(contains("status: 'P2'")));
       expect(aiLearning, isNot(contains('先用模拟流程')));
+      expect(aiLearning, isNot(contains('先用演示流程')));
+      expect(aiLearning, contains('错因讲解'));
       expect(aiLearning, contains("status: '规划中'"));
       expect(aiLearning, contains("status: '待开放'"));
       expect(aiLearning, contains("status: '可试用'"));
@@ -334,11 +336,13 @@ void main() {
         '学习应用原型',
         '后续接入审核',
         '为后续发音',
+        '当前版本暂未启用',
       ];
 
       for (final phrase in prototypePhrases) {
         expect(sources, isNot(contains(phrase)));
       }
+      expect(sources, contains('应用会记住提醒时间'));
       expect(sources, contains('学习打卡和错题讨论集中展示'));
       expect(sources, contains('用于提醒答题结果和练习节奏'));
     });
