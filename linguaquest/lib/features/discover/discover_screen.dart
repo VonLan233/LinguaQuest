@@ -15,7 +15,7 @@ class DiscoverScreen extends ConsumerWidget {
     final state = ref.watch(appControllerProvider);
     final user = state.user;
     final claimed = state.todayClaimedRewardIds;
-    final newLearningDone = state.todayCompletedLessonIds.isNotEmpty;
+    final newLearningDone = state.todayCompletedFormalLessonIds.isNotEmpty;
     final reviewDone = state.todayReviewWordIds.isNotEmpty;
     final reviewedMistakeToday = state.customWords.any(
       (word) =>

@@ -195,6 +195,79 @@ void main() {
     expect(find.textContaining('已入账'), findsNothing);
   });
 
+  testWidgets(
+    'training completion does not unlock formal new-learning reward',
+    (tester) async {
+      final now = DateTime(2026, 5, 25);
+      final profile = UserProfile(
+        uid: 'training-split-user',
+        name: 'Tia',
+        email: 'tia@lingua.quest',
+        targetExam: 'IELTS',
+        level: 'Intermediate',
+        dailyGoal: 12,
+        xp: 0,
+        streak: 0,
+        createdAt: now,
+        updatedAt: now,
+      );
+      SharedPreferences.setMockInitialValues({
+        'linguaquest.profile': jsonEncode(profile.toJson()),
+      });
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      await container.read(appControllerProvider.notifier).bootstrap();
+      final campusLesson = container
+          .read(appControllerProvider)
+          .lessons
+          .singleWhere((lesson) => lesson.id == 'lesson-campus-1');
+      await container
+          .read(appControllerProvider.notifier)
+          .completeLesson(
+            LessonResult(
+              lessonId: campusLesson.id,
+              lessonTitle: campusLesson.title,
+              totalQuestions: campusLesson.questions.length,
+              correctAnswers: campusLesson.questions.length,
+              xpEarned: 8,
+              mistakes: const [],
+              completedAt: DateTime.now(),
+            ),
+          );
+
+      final state = container.read(appControllerProvider);
+      expect(state.todayCompletedLessonIds, contains(campusLesson.id));
+      expect(state.todayCompletedFormalLessonIds, isEmpty);
+      expect(state.todayLearningWords, 0);
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: const LinguaQuestApp(),
+        ),
+      );
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      await tester.tap(find.text('发现'));
+      await tester.pumpAndSettle();
+
+      final newLearningTask = find.ancestor(
+        of: find.text('完成新学'),
+        matching: find.byType(InkWell),
+      );
+      expect(newLearningTask, findsOneWidget);
+      expect(
+        find.descendant(of: newLearningTask, matching: find.text('去完成 +20 XP')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: newLearningTask, matching: find.text('领取 +20 XP')),
+        findsNothing,
+      );
+    },
+  );
+
   testWidgets('discover weak cleanup does not auto-complete without mistakes', (
     tester,
   ) async {

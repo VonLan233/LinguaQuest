@@ -23,17 +23,15 @@ class HomeScreen extends ConsumerWidget {
     final reviewTarget = state.learningPlan == null
         ? dueCount
         : dueCount.clamp(0, state.learningPlan!.dailyWords * 2).toInt();
-    final todayLessonWords = state.lessons
-        .where((lesson) => state.todayCompletedLessonIds.contains(lesson.id))
-        .fold(0, (total, lesson) => total + lesson.words.length);
+    final todayLessonWords = state.todayLearningWords;
     final todayWork = todayLessonWords + state.todayReviewWordIds.length;
     final dailyProgress = dailyGoal <= 0
         ? 0.0
         : (todayWork / dailyGoal).clamp(0.0, 1.0);
     final currentLesson = state.currentLesson;
     final pathComplete =
-        state.lessons.isNotEmpty &&
-        state.lessons.every((lesson) => lesson.status == 'completed');
+        state.formalLessons.isNotEmpty &&
+        state.formalLessons.every((lesson) => lesson.status == 'completed');
     final wordOfDay = (currentLesson?.words.isNotEmpty ?? false)
         ? currentLesson!.words.first
         : null;

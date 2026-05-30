@@ -117,7 +117,7 @@ class ProfileScreen extends ConsumerWidget {
           progress: state.learningPathProgress,
           completedWords: state.completedLearningWords,
           totalWords: state.totalLearningWords,
-          todayLessons: state.todayCompletedLessonIds.length,
+          todayLessons: state.todayCompletedFormalLessonIds.length,
           todayReviews: state.todayReviewWordIds.length,
         ),
         const SizedBox(height: 22),

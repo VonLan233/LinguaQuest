@@ -154,6 +154,15 @@ class AppState {
       .where((lesson) => completedLessonIds.contains(lesson.id))
       .fold(0, (total, lesson) => total + lesson.words.length);
 
+  Set<String> get todayCompletedFormalLessonIds => {
+    for (final lesson in formalLessons)
+      if (todayCompletedLessonIds.contains(lesson.id)) lesson.id,
+  };
+
+  int get todayLearningWords => formalLessons
+      .where((lesson) => todayCompletedLessonIds.contains(lesson.id))
+      .fold(0, (total, lesson) => total + lesson.words.length);
+
   double get learningPathProgress {
     if (totalLearningWords == 0) return 0;
     return (completedLearningWords / totalLearningWords).clamp(0.0, 1.0);
