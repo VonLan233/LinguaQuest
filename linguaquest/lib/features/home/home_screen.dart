@@ -125,31 +125,12 @@ class HomeScreen extends ConsumerWidget {
           onReview: () => context.push('/study/review'),
         ),
         const SizedBox(height: 18),
-        QuestCard(
-          padding: const EdgeInsets.all(16),
+        _HomeInfoLink(
+          cue: '📘',
+          title: '当前计划',
+          body:
+              '${displayTarget(state.learningPlan?.target ?? user?.targetExam ?? '雅思核心词汇')} · 每日新学 $dailyGoal · 复习上限 ${reviewTarget == 0 ? '按到期词' : reviewTarget}',
           onTap: () => context.push('/goal-setup'),
-          child: Row(
-            children: [
-              const ImageCueBadge(cue: '📘', size: 58),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '当前计划',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${displayTarget(state.learningPlan?.target ?? user?.targetExam ?? '雅思核心词汇')} · 每日新学 $dailyGoal · 复习上限 ${reviewTarget == 0 ? '按到期词' : reviewTarget}',
-                    ),
-                  ],
-                ),
-              ),
-              const Icon(Icons.chevron_right_rounded),
-            ],
-          ),
         ),
         const SizedBox(height: 18),
         GridView.count(
@@ -187,34 +168,13 @@ class HomeScreen extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: 22),
-        QuestCard(
-          padding: const EdgeInsets.all(16),
+        _HomeInfoLink(
+          cue: wordOfDay?.imageCue ?? '🌟',
+          title: '今日词条',
+          body: wordOfDay == null
+              ? '打开单词卡片'
+              : '${wordOfDay.word} · ${wordOfDay.meaning}',
           onTap: () => context.push('/wordbook'),
-          color: AppTheme.accentSurface(context),
-          child: Row(
-            children: [
-              ImageCueBadge(cue: wordOfDay?.imageCue ?? '🌟', size: 58),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '今日词条',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      wordOfDay == null
-                          ? '打开单词卡片'
-                          : '${wordOfDay.word} · ${wordOfDay.meaning}',
-                    ),
-                  ],
-                ),
-              ),
-              const Icon(Icons.chevron_right_rounded),
-            ],
-          ),
         ),
         const SizedBox(height: 22),
         SectionHeader(
@@ -261,6 +221,57 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ),
       ],
+    );
+  }
+}
+
+class _HomeInfoLink extends StatelessWidget {
+  const _HomeInfoLink({
+    required this.cue,
+    required this.title,
+    required this.body,
+    required this.onTap,
+  });
+
+  final String cue;
+  final String title;
+  final String body;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Row(
+            children: [
+              ImageCueBadge(cue: cue, size: 52),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: theme.textTheme.titleMedium),
+                    const SizedBox(height: 3),
+                    Text(
+                      body,
+                      style: TextStyle(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right_rounded),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
