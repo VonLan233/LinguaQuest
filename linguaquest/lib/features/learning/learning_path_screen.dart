@@ -14,39 +14,44 @@ class LearningPathScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appControllerProvider);
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
-      children: [
-        SectionHeader(
-          title: 'Learning Path',
-          subtitle:
-              'Follow the path. No planning, just one small win at a time.',
-          trailing: IconButton(
-            tooltip: 'Wordbook',
-            onPressed: () => context.push('/wordbook'),
-            icon: const Icon(Icons.menu_book_outlined),
-          ),
+    return Scaffold(
+      appBar: AppBar(title: const Text('Learning Path')),
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
+          children: [
+            SectionHeader(
+              title: 'Learning Path',
+              subtitle:
+                  'Follow the path. No planning, just one small win at a time.',
+              trailing: IconButton(
+                tooltip: 'Wordbook',
+                onPressed: () => context.push('/wordbook'),
+                icon: const Icon(Icons.menu_book_outlined),
+              ),
+            ),
+            const SizedBox(height: 18),
+            const GradientHeroCard(
+              title: 'Campus Life Unit',
+              subtitle:
+                  'Duolingo-style short nodes with Baicizhan-style visual words inside every lesson.',
+              icon: Icons.route_rounded,
+              badge: 'Section 1 · 33% unlocked',
+            ),
+            const SizedBox(height: 22),
+            for (var index = 0; index < state.lessons.length; index++) ...[
+              _PathNode(lesson: state.lessons[index], index: index),
+              if (index != state.lessons.length - 1) const _PathConnector(),
+            ],
+            const SizedBox(height: 10),
+            OutlinedButton.icon(
+              onPressed: () => context.push('/wordbook'),
+              icon: const Icon(Icons.style_outlined),
+              label: const Text('Open wordbook and custom words'),
+            ),
+          ],
         ),
-        const SizedBox(height: 18),
-        const GradientHeroCard(
-          title: 'Campus Life Unit',
-          subtitle:
-              'Duolingo-style short nodes with Baicizhan-style visual words inside every lesson.',
-          icon: Icons.route_rounded,
-          badge: 'Section 1 · 33% unlocked',
-        ),
-        const SizedBox(height: 22),
-        for (var index = 0; index < state.lessons.length; index++) ...[
-          _PathNode(lesson: state.lessons[index], index: index),
-          if (index != state.lessons.length - 1) const _PathConnector(),
-        ],
-        const SizedBox(height: 10),
-        OutlinedButton.icon(
-          onPressed: () => context.push('/wordbook'),
-          icon: const Icon(Icons.style_outlined),
-          label: const Text('Open wordbook and custom words'),
-        ),
-      ],
+      ),
     );
   }
 }

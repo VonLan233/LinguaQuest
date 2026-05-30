@@ -22,164 +22,171 @@ class ReviewCenterScreen extends ConsumerWidget {
     final weak = state.weakWords;
     final lessonMistakes = state.lastResult?.mistakes ?? const [];
 
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
-      children: [
-        GradientHeroCard(
-          title: due.isEmpty ? 'Review queue clear' : '${due.length} cards due',
-          subtitle:
-              'Spaced repetition brings weak cards back before you forget them.',
-          icon: Icons.replay_rounded,
-          badge: 'Mistake book · Weak words · Due today',
-          action: FilledButton.icon(
-            style: FilledButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: AppTheme.deepTeal,
-            ),
-            onPressed: due.isEmpty
-                ? () => context.push('/custom-words/new')
-                : null,
-            icon: const Icon(Icons.add),
-            label: Text(due.isEmpty ? 'Add cards' : 'Queue ready below'),
-          ),
-        ),
-        const SizedBox(height: 20),
-        const SectionHeader(
-          title: 'Review center',
-          subtitle:
-              'Due words, mistake book, and weak cards stay in one queue.',
-        ),
-        const SizedBox(height: 16),
-        Row(
+    return Scaffold(
+      appBar: AppBar(title: const Text('Review center')),
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
           children: [
-            Expanded(
-              child: MetricTile(
-                label: 'Due today',
-                value: '${due.length}',
-                icon: Icons.today_outlined,
+            GradientHeroCard(
+              title: due.isEmpty
+                  ? 'Review queue clear'
+                  : '${due.length} cards due',
+              subtitle:
+                  'Spaced repetition brings weak cards back before you forget them.',
+              icon: Icons.replay_rounded,
+              badge: 'Mistake book · Weak words · Due today',
+              action: FilledButton.icon(
+                style: FilledButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: AppTheme.deepTeal,
+                ),
+                onPressed: due.isEmpty
+                    ? () => context.push('/custom-words/new')
+                    : null,
+                icon: const Icon(Icons.add),
+                label: Text(due.isEmpty ? 'Add cards' : 'Queue ready below'),
               ),
             ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: MetricTile(
-                label: 'Mistakes',
-                value: '${weak.length}',
-                icon: Icons.warning_amber_outlined,
-                color: Colors.orange,
-              ),
+            const SizedBox(height: 20),
+            const SectionHeader(
+              title: 'Review center',
+              subtitle:
+                  'Due words, mistake book, and weak cards stay in one queue.',
             ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: MetricTile(
-                label: 'Words',
-                value: '${state.customWords.length}',
-                icon: Icons.style_outlined,
-              ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: MetricTile(
+                    label: 'Due today',
+                    value: '${due.length}',
+                    icon: Icons.today_outlined,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: MetricTile(
+                    label: 'Mistakes',
+                    value: '${weak.length}',
+                    icon: Icons.warning_amber_outlined,
+                    color: Colors.orange,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: MetricTile(
+                    label: 'Words',
+                    value: '${state.customWords.length}',
+                    icon: Icons.style_outlined,
+                  ),
+                ),
+              ],
             ),
+            const SizedBox(height: 22),
+            Text(
+              'Due today',
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+            ),
+            const SizedBox(height: 10),
+            if (due.isEmpty)
+              EmptyState(
+                icon: Icons.check_circle_outline,
+                title: 'Review queue is clear',
+                message:
+                    'Add custom words or mark mistakes to create spaced review cards.',
+                action: OutlinedButton.icon(
+                  onPressed: () => context.push('/custom-words/new'),
+                  icon: const Icon(Icons.add),
+                  label: const Text('Add custom word'),
+                ),
+              )
+            else
+              for (final word in due) _ReviewTile(word: word),
+            const SizedBox(height: 22),
+            Text(
+              'Mistake book',
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+            ),
+            const SizedBox(height: 10),
+            if (lessonMistakes.isEmpty && weak.isEmpty)
+              const Text('No weak words or lesson mistakes yet.')
+            else ...[
+              if (lessonMistakes.isNotEmpty)
+                _MistakeWordImporter(mistakes: lessonMistakes),
+              for (final mistake in lessonMistakes.take(5))
+                QuestCard(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.all(14),
+                  child: Row(
+                    children: [
+                      ImageCueBadge(cue: mistake.word.imageCue, size: 52),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              mistake.word.word,
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            Text(mistake.explanation),
+                          ],
+                        ),
+                      ),
+                      PillLabel(
+                        label: 'Lesson',
+                        icon: Icons.school_outlined,
+                        color: AppTheme.coral,
+                      ),
+                    ],
+                  ),
+                ),
+              if (lessonMistakes.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: OutlinedButton.icon(
+                    onPressed: () => context.push('/mistake-book'),
+                    icon: const Icon(Icons.menu_book_outlined),
+                    label: const Text('Open mistake book'),
+                  ),
+                ),
+              for (final word in weak.take(5))
+                QuestCard(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.all(14),
+                  onTap: () => context.push('/custom-words/${word.id}'),
+                  child: Row(
+                    children: [
+                      ImageCueBadge(
+                        cue: word.word.characters.first.toUpperCase(),
+                        size: 52,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              word.word,
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            Text('${word.wrongCount} wrong · ${word.meaning}'),
+                          ],
+                        ),
+                      ),
+                      const Icon(Icons.chevron_right_rounded),
+                    ],
+                  ),
+                ),
+            ],
           ],
         ),
-        const SizedBox(height: 22),
-        Text(
-          'Due today',
-          style: Theme.of(
-            context,
-          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
-        ),
-        const SizedBox(height: 10),
-        if (due.isEmpty)
-          EmptyState(
-            icon: Icons.check_circle_outline,
-            title: 'Review queue is clear',
-            message:
-                'Add custom words or mark mistakes to create spaced review cards.',
-            action: OutlinedButton.icon(
-              onPressed: () => context.push('/custom-words/new'),
-              icon: const Icon(Icons.add),
-              label: const Text('Add custom word'),
-            ),
-          )
-        else
-          for (final word in due) _ReviewTile(word: word),
-        const SizedBox(height: 22),
-        Text(
-          'Mistake book',
-          style: Theme.of(
-            context,
-          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
-        ),
-        const SizedBox(height: 10),
-        if (lessonMistakes.isEmpty && weak.isEmpty)
-          const Text('No weak words or lesson mistakes yet.')
-        else ...[
-          if (lessonMistakes.isNotEmpty)
-            _MistakeWordImporter(mistakes: lessonMistakes),
-          for (final mistake in lessonMistakes.take(5))
-            QuestCard(
-              margin: const EdgeInsets.only(bottom: 10),
-              padding: const EdgeInsets.all(14),
-              child: Row(
-                children: [
-                  ImageCueBadge(cue: mistake.word.imageCue, size: 52),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          mistake.word.word,
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        Text(mistake.explanation),
-                      ],
-                    ),
-                  ),
-                  PillLabel(
-                    label: 'Lesson',
-                    icon: Icons.school_outlined,
-                    color: AppTheme.coral,
-                  ),
-                ],
-              ),
-            ),
-          if (lessonMistakes.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: OutlinedButton.icon(
-                onPressed: () => context.push('/mistake-book'),
-                icon: const Icon(Icons.menu_book_outlined),
-                label: const Text('Open mistake book'),
-              ),
-            ),
-          for (final word in weak.take(5))
-            QuestCard(
-              margin: const EdgeInsets.only(bottom: 10),
-              padding: const EdgeInsets.all(14),
-              onTap: () => context.push('/custom-words/${word.id}'),
-              child: Row(
-                children: [
-                  ImageCueBadge(
-                    cue: word.word.characters.first.toUpperCase(),
-                    size: 52,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          word.word,
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        Text('${word.wrongCount} wrong · ${word.meaning}'),
-                      ],
-                    ),
-                  ),
-                  const Icon(Icons.chevron_right_rounded),
-                ],
-              ),
-            ),
-        ],
-      ],
+      ),
     );
   }
 }

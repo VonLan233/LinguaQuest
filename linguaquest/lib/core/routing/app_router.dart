@@ -79,18 +79,18 @@ final routerProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => const ProfileScreen(),
           ),
           GoRoute(
-            path: '/learn',
-            builder: (context, state) => const LearningPathScreen(),
-          ),
-          GoRoute(
-            path: '/review',
-            builder: (context, state) => const ReviewCenterScreen(),
-          ),
-          GoRoute(
             path: '/quest',
             builder: (context, state) => const QuestScreen(),
           ),
         ],
+      ),
+      GoRoute(
+        path: '/learn',
+        builder: (context, state) => const LearningPathScreen(),
+      ),
+      GoRoute(
+        path: '/review',
+        builder: (context, state) => const ReviewCenterScreen(),
       ),
       GoRoute(
         path: '/mistake-book',
