@@ -47,16 +47,23 @@ class _AiTutorScreenState extends State<AiTutorScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Text(
-                  'Affect is usually a verb: "The weather affects my mood." '
-                  'Effect is usually a noun: "The effect was immediate." '
-                  '你可以分别用两个词各造一个句子。',
-                  style: Theme.of(context).textTheme.bodyLarge,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.psychology_alt_outlined,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
-              ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    'Affect is usually a verb: "The weather affects my mood." '
+                    'Effect is usually a noun: "The effect was immediate." '
+                    '你可以分别用两个词各造一个句子。',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                ),
+              ],
             ),
           ],
         ),

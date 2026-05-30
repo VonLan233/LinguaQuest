@@ -23,12 +23,13 @@ class HelpSupportScreen extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           children: [
             for (final faq in faqs)
-              Card(
-                child: ExpansionTile(
-                  title: Text(faq.$1),
-                  childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                  children: [Text(faq.$2)],
-                ),
+              ExpansionTile(
+                tilePadding: EdgeInsets.zero,
+                title: Text(faq.$1),
+                childrenPadding: const EdgeInsets.only(bottom: 16),
+                children: [
+                  Align(alignment: Alignment.centerLeft, child: Text(faq.$2)),
+                ],
               ),
             const SizedBox(height: 12),
             const ListTile(

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_theme.dart';
 import '../../core/widgets/fallback_back_button.dart';
+import '../../core/widgets/quest_card.dart';
 import '../../core/widgets/section_header.dart';
 
 class LeaderboardScreen extends ConsumerWidget {
@@ -54,12 +56,32 @@ class _LeaderboardTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        leading: CircleAvatar(child: Text('$rank')),
-        title: Text(entry.name),
-        subtitle: const Text('仅统计有效学习 XP'),
-        trailing: Chip(label: Text('${entry.xp} XP')),
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        children: [
+          CircleAvatar(
+            backgroundColor: AppTheme.iconBadgeSurface(context),
+            foregroundColor: theme.colorScheme.primary,
+            child: Text('$rank'),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(entry.name, style: theme.textTheme.titleMedium),
+                const SizedBox(height: 3),
+                Text(
+                  '仅统计有效学习 XP',
+                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                ),
+              ],
+            ),
+          ),
+          PillLabel(label: '${entry.xp} XP', color: AppTheme.mango),
+        ],
       ),
     );
   }
