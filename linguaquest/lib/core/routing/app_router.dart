@@ -195,8 +195,16 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/lesson/:id/result',
-        builder: (context, state) =>
-            LessonResultScreen(result: state.extra as LessonResult?),
+        builder: (context, state) {
+          final extra = state.extra;
+          if (extra is LessonResultViewArgs) {
+            return LessonResultScreen(
+              result: extra.result,
+              source: extra.source,
+            );
+          }
+          return LessonResultScreen(result: extra as LessonResult?);
+        },
       ),
     ],
   );

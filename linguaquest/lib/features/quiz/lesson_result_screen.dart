@@ -10,10 +10,27 @@ import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
 
+enum LessonResultSource { lesson, timed }
+
+class LessonResultViewArgs {
+  const LessonResultViewArgs({
+    required this.result,
+    this.source = LessonResultSource.lesson,
+  });
+
+  final LessonResult result;
+  final LessonResultSource source;
+}
+
 class LessonResultScreen extends ConsumerWidget {
-  const LessonResultScreen({this.result, super.key});
+  const LessonResultScreen({
+    this.result,
+    this.source = LessonResultSource.lesson,
+    super.key,
+  });
 
   final LessonResult? result;
+  final LessonResultSource source;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,25 +40,33 @@ class LessonResultScreen extends ConsumerWidget {
     }
 
     final accuracy = (resolved.accuracy * 100).round();
+    final isTimed = source == LessonResultSource.timed;
     return Scaffold(
       appBar: AppBar(
-        leading: const FallbackBackButton(fallbackLocation: '/learn'),
-        title: const Text('课程结果'),
+        leading: FallbackBackButton(
+          fallbackLocation: isTimed ? '/training' : '/learn',
+        ),
+        title: Text(isTimed ? '限时测试结果' : '课程结果'),
       ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
           children: [
             SectionHeader(
-              title: accuracy >= 80 ? '表现很棒！' : '课程完成',
-              subtitle:
-                  '答对 ${resolved.correctAnswers}/${resolved.totalQuestions} 题 · 获得 ${resolved.xpEarned} XP · 错题已进入复习。',
+              title: isTimed
+                  ? (accuracy >= 80 ? '挑战成功！' : '挑战完成')
+                  : (accuracy >= 80 ? '表现很棒！' : '课程完成'),
+              subtitle: isTimed
+                  ? '答对 ${resolved.correctAnswers}/${resolved.totalQuestions} 题 · 获得 ${resolved.xpEarned} XP · 错题可去复习中心整理。'
+                  : '答对 ${resolved.correctAnswers}/${resolved.totalQuestions} 题 · 获得 ${resolved.xpEarned} XP · 错题已进入复习。',
             ),
             const SizedBox(height: 12),
             PillLabel(
               label: resolved.lessonTitle,
-              icon: Icons.workspace_premium_outlined,
-              color: AppTheme.cyan,
+              icon: isTimed
+                  ? Icons.timer_outlined
+                  : Icons.workspace_premium_outlined,
+              color: isTimed ? AppTheme.coral : AppTheme.cyan,
             ),
             const SizedBox(height: 12),
             _ResultScoreSummary(result: resolved, accuracy: accuracy),
@@ -65,9 +90,11 @@ class LessonResultScreen extends ConsumerWidget {
               label: const Text('去复习中心'),
             ),
             OutlinedButton.icon(
-              onPressed: () => context.go('/learn'),
-              icon: const Icon(Icons.route_outlined),
-              label: const Text('返回学习路径'),
+              onPressed: () => context.go(isTimed ? '/training' : '/learn'),
+              icon: Icon(
+                isTimed ? Icons.sports_esports_outlined : Icons.route_outlined,
+              ),
+              label: Text(isTimed ? '返回训练场' : '返回学习路径'),
             ),
           ],
         ),

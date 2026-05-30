@@ -19,6 +19,7 @@ import 'package:linguaquest/data/repositories/learning_repository.dart';
 import 'package:linguaquest/data/seed/seed_lessons.dart';
 import 'package:linguaquest/features/auth/goal_setup_screen.dart';
 import 'package:linguaquest/features/learning/lesson_preview_screen.dart';
+import 'package:linguaquest/features/quiz/lesson_result_screen.dart';
 import 'package:linguaquest/features/quiz/quiz_session_screen.dart';
 import 'package:linguaquest/features/search/search_screen.dart';
 import 'package:linguaquest/features/wordbook/wordbook_screen.dart';
@@ -947,6 +948,40 @@ void main() {
     expect(find.text('限时测试'), findsOneWidget);
     expect(find.text('没有找到这节课'), findsNothing);
   });
+
+  testWidgets(
+    'timed test result returns to training instead of learning path',
+    (tester) async {
+      final lesson = seedLessons().last;
+      final result = LessonResult(
+        lessonId: lesson.id,
+        lessonTitle: lesson.title,
+        totalQuestions: lesson.questions.length,
+        correctAnswers: lesson.questions.length,
+        xpEarned: lesson.xpReward,
+        mistakes: const [],
+        completedAt: DateTime(2026, 5, 25),
+      );
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            home: LessonResultScreen(
+              result: result,
+              source: LessonResultSource.timed,
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('限时测试结果'), findsOneWidget);
+      expect(find.text('返回训练场'), findsOneWidget);
+      expect(find.text('返回学习路径'), findsNothing);
+      expect(find.text('课程结果'), findsNothing);
+    },
+  );
 
   testWidgets('lesson mistake appears in review center after result', (
     tester,

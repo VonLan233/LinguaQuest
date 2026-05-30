@@ -8,6 +8,7 @@ import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
+import 'lesson_result_screen.dart';
 
 enum QuizSessionMode { lesson, timed }
 
@@ -284,7 +285,15 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
         setState(() => _isSubmitting = false);
         return;
       }
-      context.go('/lesson/${lesson.id}/result', extra: result);
+      context.go(
+        '/lesson/${lesson.id}/result',
+        extra: LessonResultViewArgs(
+          result: result,
+          source: widget.mode == QuizSessionMode.timed
+              ? LessonResultSource.timed
+              : LessonResultSource.lesson,
+        ),
+      );
       return;
     }
 
