@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_theme.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/fallback_back_button.dart';
+import '../../core/widgets/learning_badges.dart';
 import '../../data/models/custom_word.dart';
 
 class AddEditCustomWordScreen extends ConsumerStatefulWidget {
@@ -106,15 +108,9 @@ class _AddEditCustomWordScreenState
                   ),
                 ),
                 const SizedBox(height: 16),
-                SegmentedButton<String>(
-                  segments: const [
-                    ButtonSegment(value: 'Easy', label: Text('简单')),
-                    ButtonSegment(value: 'Medium', label: Text('中等')),
-                    ButtonSegment(value: 'Hard', label: Text('困难')),
-                  ],
-                  selected: {_difficulty},
-                  onSelectionChanged: (values) =>
-                      setState(() => _difficulty = values.first),
+                _DifficultySelector(
+                  selected: _difficulty,
+                  onSelected: (value) => setState(() => _difficulty = value),
                 ),
                 const SizedBox(height: 22),
                 FilledButton.icon(
@@ -188,6 +184,44 @@ class _AddEditCustomWordScreenState
       context,
     ).showSnackBar(const SnackBar(content: Text('单词已保存')));
     context.go('/custom-words');
+  }
+}
+
+class _DifficultySelector extends StatelessWidget {
+  const _DifficultySelector({required this.selected, required this.onSelected});
+
+  final String selected;
+  final ValueChanged<String> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final choices = const [
+      (value: 'Easy', label: '简单', color: AppTheme.teal),
+      (value: 'Medium', label: '中等', color: AppTheme.mango),
+      (value: 'Hard', label: '困难', color: AppTheme.coral),
+    ];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('难度', style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            for (var index = 0; index < choices.length; index++) ...[
+              Expanded(
+                child: FilterPillButton(
+                  label: choices[index].label,
+                  selected: selected == choices[index].value,
+                  onSelected: () => onSelected(choices[index].value),
+                  color: choices[index].color,
+                ),
+              ),
+              if (index != choices.length - 1) const SizedBox(width: 8),
+            ],
+          ],
+        ),
+      ],
+    );
   }
 }
 

@@ -11,6 +11,7 @@ void main() {
         (RegExp(r'\bCard\s*\('), 'Card('),
         (RegExp(r'\bChip\s*\('), 'Chip('),
         (RegExp(r'\bChoiceChip\s*\('), 'ChoiceChip('),
+        (RegExp(r'\bSegmentedButton\s*\('), 'SegmentedButton('),
         (RegExp(r'\bBoxShadow\b'), 'BoxShadow'),
         (RegExp(r'\bLinearGradient\b'), 'LinearGradient'),
         (RegExp(r'\bRadialGradient\b'), 'RadialGradient'),
@@ -112,6 +113,18 @@ void main() {
       expect(badges, contains('class FilterPillButton'));
       expect(customWords, contains('FilterPillButton'));
       expect(customWords, isNot(contains('ChoiceChip')));
+    });
+
+    test('custom word form uses branded difficulty choices', () {
+      final addEdit = File(
+        'lib/features/wordbook/add_edit_custom_word_screen.dart',
+      ).readAsStringSync();
+
+      expect(addEdit, contains('_DifficultySelector'));
+      expect(addEdit, contains('FilterPillButton'));
+      expect(addEdit, contains("value: 'Easy'"));
+      expect(addEdit, isNot(contains('SegmentedButton')));
+      expect(addEdit, isNot(contains('ButtonSegment')));
     });
 
     test('profile dashboard keeps the top area lightweight', () {
