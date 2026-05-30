@@ -19,7 +19,7 @@ class QuestScreen extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         const PillLabel(
-          label: '今日可领 20 XP',
+          label: '任务 XP',
           icon: Icons.bolt,
           color: AppTheme.mango,
         ),

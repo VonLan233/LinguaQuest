@@ -184,6 +184,21 @@ void main() {
       expect(sources, contains('可试用'));
     });
 
+    test('XP overview labels stay clear and non-misleading', () {
+      final training = File(
+        'lib/features/training/training_screen.dart',
+      ).readAsStringSync();
+      final quest = File(
+        'lib/features/quests/quest_screen.dart',
+      ).readAsStringSync();
+
+      expect(training, contains("label: '本周 \${user?.xp ?? 0} XP'"));
+      expect(training, contains('今日可得 60 XP'));
+      expect(training, isNot(contains('本周 \${user?.xp ?? 0} 积分')));
+      expect(quest, contains("label: '任务 XP'"));
+      expect(quest, isNot(contains("label: '今日可领 20 XP'")));
+    });
+
     test('supporting page copy avoids prototype disclaimers', () {
       final sources = [
         File(

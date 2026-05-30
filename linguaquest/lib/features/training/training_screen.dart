@@ -33,7 +33,7 @@ class TrainingScreen extends ConsumerWidget {
           runSpacing: 8,
           children: [
             PillLabel(
-              label: '本周 ${user?.xp ?? 0} 积分',
+              label: '本周 ${user?.xp ?? 0} XP',
               icon: Icons.bolt,
               color: AppTheme.mango,
             ),
