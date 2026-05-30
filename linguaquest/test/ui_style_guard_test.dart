@@ -85,6 +85,15 @@ void main() {
       expect(router, contains("path: '/timed-test/:id'"));
     });
 
+    test('learning path nodes stay line based instead of framed', () {
+      final learningPath = File(
+        'lib/features/learning/learning_path_screen.dart',
+      ).readAsStringSync();
+
+      expect(learningPath, isNot(contains('AppTheme.accentSurface(context)')));
+      expect(learningPath, contains('color: Colors.transparent'));
+    });
+
     test('legacy English UI labels do not reappear', () {
       final source = _readDartSources(Directory('lib'));
       const legacyLabels = ['Campus Starter', 'Goal Setup', 'WordBook'];

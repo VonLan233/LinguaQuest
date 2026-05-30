@@ -81,7 +81,7 @@ class _PathNode extends StatelessWidget {
       color = AppTheme.cyan;
     }
     return Material(
-      color: current ? AppTheme.accentSurface(context) : Colors.transparent,
+      color: Colors.transparent,
       borderRadius: BorderRadius.circular(14),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
