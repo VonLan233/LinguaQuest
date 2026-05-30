@@ -138,36 +138,50 @@ class _TargetWordTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return QuestCard(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(14),
-      onTap: () => context.push('/wordbook/${word.id}'),
-      child: Row(
-        children: [
-          ImageCueBadge(cue: word.imageCue, size: 54),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () => context.push('/wordbook/${word.id}'),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(word.word, style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(height: 2),
-                Text(word.meaning),
-                const SizedBox(height: 4),
-                Text(
-                  word.exampleSentence,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                ImageCueBadge(cue: word.imageCue, size: 54),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(word.word, style: theme.textTheme.titleMedium),
+                      const SizedBox(height: 2),
+                      Text(word.meaning),
+                      const SizedBox(height: 4),
+                      Text(
+                        word.exampleSentence,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                PillLabel(
+                  label: displayDifficulty(word.difficulty),
+                  color: AppTheme.coral,
                 ),
               ],
             ),
           ),
-          const SizedBox(width: 8),
-          PillLabel(
-            label: displayDifficulty(word.difficulty),
-            color: AppTheme.coral,
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -180,33 +194,46 @@ class _CustomWordTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return QuestCard(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(14),
-      onTap: () => context.push('/custom-words/${word.id}'),
-      child: Row(
-        children: [
-          ImageCueBadge(cue: wordInitialCue(word.word), size: 54),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () => context.push('/custom-words/${word.id}'),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(word.word, style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(height: 2),
-                Text(word.meaning),
-                const SizedBox(height: 4),
-                Text(
-                  '${displayDifficulty(word.difficulty)} · ${word.tag}',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ImageCueBadge(cue: wordInitialCue(word.word), size: 54),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(word.word, style: theme.textTheme.titleMedium),
+                      const SizedBox(height: 2),
+                      Text(word.meaning),
+                      const SizedBox(height: 4),
+                      Text(
+                        '${displayDifficulty(word.difficulty)} · ${word.tag}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+                const Icon(Icons.chevron_right_rounded),
               ],
             ),
           ),
-          const Icon(Icons.chevron_right_rounded),
-        ],
+        ),
       ),
     );
   }
