@@ -14,7 +14,7 @@ class AiLearningScreen extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
       children: [
         SectionHeader(
-          title: 'AI学习',
+          title: 'AI 学习',
           subtitle: '解释语法、辨析词义、生成语境；正式学习记录仍由答题结果更新。',
           trailing: IconButton.filledTonal(
             tooltip: '知识问答',

@@ -276,6 +276,8 @@ void main() {
       expect(aiLearning, isNot(contains("status: 'P2'")));
       expect(aiLearning, isNot(contains('先用模拟流程')));
       expect(aiLearning, isNot(contains('先用演示流程')));
+      expect(aiLearning, isNot(contains('AI学习')));
+      expect(aiLearning, contains('AI 学习'));
       expect(aiLearning, contains('错因讲解'));
       expect(aiLearning, contains("status: '规划中'"));
       expect(aiLearning, contains("status: '待开放'"));

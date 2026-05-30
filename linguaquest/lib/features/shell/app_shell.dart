@@ -81,7 +81,7 @@ class _AppShellState extends State<AppShell> {
           NavigationDestination(
             icon: Icon(Icons.psychology_alt_outlined),
             selectedIcon: Icon(Icons.psychology_alt_rounded),
-            label: 'AI学习',
+            label: 'AI 学习',
           ),
           NavigationDestination(
             icon: Icon(Icons.explore_outlined),
