@@ -94,6 +94,18 @@ void main() {
       expect(learningPath, contains('color: Colors.transparent'));
     });
 
+    test('home keeps plan editing to one compact entry', () {
+      final home = File(
+        'lib/features/home/home_screen.dart',
+      ).readAsStringSync();
+
+      expect(home, isNot(contains("title: '当前计划'")));
+      expect(
+        RegExp(r"context\.push\('/goal-setup'\)").allMatches(home),
+        hasLength(1),
+      );
+    });
+
     test('legacy English UI labels do not reappear', () {
       final source = _readDartSources(Directory('lib'));
       const legacyLabels = ['Campus Starter', 'Goal Setup', 'WordBook'];

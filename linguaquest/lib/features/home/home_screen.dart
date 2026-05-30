@@ -125,14 +125,6 @@ class HomeScreen extends ConsumerWidget {
           onReview: () => context.push('/study/review'),
         ),
         const SizedBox(height: 18),
-        _HomeInfoLink(
-          cue: '📘',
-          title: '当前计划',
-          body:
-              '${displayTarget(state.learningPlan?.target ?? user?.targetExam ?? '雅思核心词汇')} · 每日新学 $dailyGoal · 复习上限 ${reviewTarget == 0 ? '按到期词' : reviewTarget}',
-          onTap: () => context.push('/goal-setup'),
-        ),
-        const SizedBox(height: 18),
         GridView.count(
           crossAxisCount: 2,
           shrinkWrap: true,
