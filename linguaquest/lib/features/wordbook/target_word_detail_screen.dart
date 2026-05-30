@@ -144,7 +144,7 @@ class TargetWordDetailScreen extends ConsumerWidget {
   }
 
   Word? _find(AppState state) {
-    for (final lesson in state.lessons) {
+    for (final lesson in state.formalLessons) {
       for (final word in lesson.words) {
         if (word.id == wordId) return word;
       }

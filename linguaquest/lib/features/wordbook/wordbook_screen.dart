@@ -16,7 +16,7 @@ class WordbookScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appControllerProvider);
-    final words = state.lessons.expand((lesson) => lesson.words).toList();
+    final words = state.formalLessons.expand((lesson) => lesson.words).toList();
 
     return Scaffold(
       appBar: AppBar(

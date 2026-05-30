@@ -25,7 +25,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(appControllerProvider);
     final query = _query.trim().toLowerCase();
-    final targetWords = state.lessons
+    final targetWords = state.formalLessons
         .expand((lesson) => lesson.words)
         .where((word) => _matchesTargetWord(word, query))
         .toList();

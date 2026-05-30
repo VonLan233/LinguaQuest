@@ -70,6 +70,15 @@ void main() {
       final router = File(
         'lib/core/routing/app_router.dart',
       ).readAsStringSync();
+      final wordbook = File(
+        'lib/features/wordbook/wordbook_screen.dart',
+      ).readAsStringSync();
+      final search = File(
+        'lib/features/search/search_screen.dart',
+      ).readAsStringSync();
+      final targetDetail = File(
+        'lib/features/wordbook/target_word_detail_screen.dart',
+      ).readAsStringSync();
 
       expect(home, contains("context.push('/study/new')"));
       expect(home, contains("context.push('/study/review')"));
@@ -80,6 +89,9 @@ void main() {
       expect(home, isNot(contains('/timed-test/lesson-campus-1')));
       expect(training, contains("context.push('/timed-test/lesson-campus-1')"));
       expect(training, isNot(contains("context.push('/study/review')")));
+      expect(wordbook, contains('state.formalLessons'));
+      expect(search, contains('state.formalLessons'));
+      expect(targetDetail, contains('state.formalLessons'));
       expect(training, contains('限时测试'));
       expect(newStudy, contains('不做限时测试'));
       expect(router, contains("path: '/study/new'"));

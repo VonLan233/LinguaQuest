@@ -18,6 +18,8 @@ import 'package:linguaquest/data/repositories/custom_word_repository.dart';
 import 'package:linguaquest/data/repositories/learning_repository.dart';
 import 'package:linguaquest/data/seed/seed_lessons.dart';
 import 'package:linguaquest/features/auth/goal_setup_screen.dart';
+import 'package:linguaquest/features/search/search_screen.dart';
+import 'package:linguaquest/features/wordbook/wordbook_screen.dart';
 import 'package:linguaquest/features/wordbook/target_word_detail_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -745,6 +747,65 @@ void main() {
     expect(state.completedLearningWords, state.totalLearningWords);
     expect(state.learningPathProgress, 1);
     expect(state.currentLesson?.id, isNot('lesson-campus-1'));
+  });
+
+  testWidgets('wordbook and search hide training-only target words', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'formal-wordbook-user',
+      name: 'Faye',
+      email: 'faye@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    final state = container.read(appControllerProvider);
+    final fullTargetCount = state.lessons.fold<int>(
+      0,
+      (total, lesson) => total + lesson.words.length,
+    );
+    expect(fullTargetCount, greaterThan(state.totalLearningWords));
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          home: const WordbookScreen(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('${state.totalLearningWords} 个目标词'), findsOneWidget);
+    expect(find.text('$fullTargetCount 个目标词'), findsNothing);
+    expect(find.text('allocate'), findsWidgets);
+    expect(find.text('commute'), findsNothing);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(theme: AppTheme.light(), home: const SearchScreen()),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'commute');
+    await tester.pumpAndSettle();
+
+    expect(find.text('没有找到结果'), findsOneWidget);
   });
 
   testWidgets('lesson mistake appears in review center after result', (
