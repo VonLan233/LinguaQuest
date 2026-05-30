@@ -96,6 +96,7 @@ void main() {
         'lib/features/review/review_center_screen.dart',
       ).readAsStringSync();
 
+      expect(review, contains('FallbackBackButton'));
       expect(review, contains('_ReviewQueueSignals'));
       expect(review, isNot(contains('MetricTile')));
       expect(review, contains('没记住'));

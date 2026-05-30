@@ -6,6 +6,7 @@ import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/date_formatting.dart';
 import '../../core/widgets/empty_state.dart';
+import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/custom_word.dart';
@@ -22,7 +23,10 @@ class ReviewCenterScreen extends ConsumerWidget {
     final lessonMistakes = state.lastResult?.mistakes ?? const [];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('复习')),
+      appBar: AppBar(
+        leading: const FallbackBackButton(fallbackLocation: '/home'),
+        title: const Text('复习'),
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),

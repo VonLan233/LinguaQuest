@@ -1100,6 +1100,13 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('allocate'), findsWidgets);
     expect(find.text('课程'), findsWidgets);
+    expect(find.byType(BackButtonIcon), findsOneWidget);
+
+    await tester.tap(find.byType(BackButtonIcon));
+    await tester.pumpAndSettle();
+
+    expect(find.text('首页'), findsWidgets);
+    expect(find.text('复习'), findsWidgets);
   });
 
   testWidgets('quiz feedback stays visible before continuing', (tester) async {
