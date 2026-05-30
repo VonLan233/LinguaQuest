@@ -180,7 +180,18 @@ void main() {
 
     expect(find.text('allocate'), findsWidgets);
     expect(find.text('加入生词本'), findsOneWidget);
+    expect(find.text('当前计划中'), findsOneWidget);
+
+    await tester.scrollUntilVisible(
+      find.text('AI 学习'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+
     expect(find.text('AI 学习'), findsOneWidget);
+    expect(find.text('词组搭配'), findsOneWidget);
+    expect(find.text('近义 / 反义'), findsOneWidget);
   });
 
   test('word initial cue falls back for empty custom words', () {

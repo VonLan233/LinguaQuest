@@ -10,6 +10,7 @@ import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/pronunciation_controls.dart';
 import '../../data/models/lesson.dart';
+import 'word_knowledge_sections.dart';
 
 class TargetWordDetailScreen extends ConsumerWidget {
   const TargetWordDetailScreen({required this.wordId, super.key});
@@ -35,14 +36,30 @@ class TargetWordDetailScreen extends ConsumerWidget {
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
-          child: FilledButton.icon(
-            onPressed: isSaved
-                ? null
-                : () => _addToCustomWords(context, ref, word),
-            icon: Icon(
-              isSaved ? Icons.check_circle_outline : Icons.add_circle_outline,
-            ),
-            label: Text(isSaved ? '已加入生词本' : '加入生词本'),
+          child: Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: null,
+                  icon: const Icon(Icons.playlist_add_check_rounded),
+                  label: const Text('当前计划中'),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: FilledButton.icon(
+                  onPressed: isSaved
+                      ? null
+                      : () => _addToCustomWords(context, ref, word),
+                  icon: Icon(
+                    isSaved
+                        ? Icons.check_circle_outline
+                        : Icons.add_circle_outline,
+                  ),
+                  label: Text(isSaved ? '已加入生词本' : '加入生词本'),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -112,6 +129,8 @@ class TargetWordDetailScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 16),
+            WordKnowledgeSections(word: word),
+            const SizedBox(height: 22),
             Wrap(
               spacing: 8,
               runSpacing: 8,

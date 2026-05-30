@@ -468,6 +468,24 @@ void main() {
       }
     });
 
+    test('target word detail keeps the full knowledge blocks lightweight', () {
+      final targetDetail = File(
+        'lib/features/wordbook/target_word_detail_screen.dart',
+      ).readAsStringSync();
+      final knowledge = File(
+        'lib/features/wordbook/word_knowledge_sections.dart',
+      ).readAsStringSync();
+
+      expect(targetDetail, contains('当前计划中'));
+      expect(targetDetail, contains('WordKnowledgeSections(word: word)'));
+      expect(knowledge, contains('词汇全解'));
+      expect(knowledge, contains('词组搭配'));
+      expect(knowledge, contains('近义 / 反义'));
+      expect(knowledge, contains('派生词族'));
+      expect(knowledge, contains('词根拆词'));
+      expect(knowledge, isNot(contains('Card(')));
+    });
+
     test('AI learning statuses stay user-facing', () {
       final aiLearning = File(
         'lib/features/ai_learning/ai_learning_screen.dart',
