@@ -8,6 +8,7 @@ import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/metric_tile.dart';
 import '../../core/widgets/quest_card.dart';
 import '../../core/widgets/section_header.dart';
+import '../../data/models/custom_word.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -192,34 +193,7 @@ class HomeScreen extends ConsumerWidget {
             text: '添加生词或完成复习后，这里会展示需要重点处理的词。',
           )
         else
-          ...state.weakWords
-              .take(3)
-              .map(
-                (word) => QuestCard(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  padding: const EdgeInsets.all(14),
-                  onTap: () => context.push('/custom-words/${word.id}'),
-                  child: Row(
-                    children: [
-                      ImageCueBadge(cue: wordInitialCue(word.word), size: 50),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              word.word,
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                            Text('${word.meaning} · 掌握 ${word.masteryLevel}/5'),
-                          ],
-                        ),
-                      ),
-                      const Icon(Icons.chevron_right_rounded),
-                    ],
-                  ),
-                ),
-              ),
+          ...state.weakWords.take(3).map((word) => _WeakWordLink(word: word)),
       ],
     );
   }
@@ -470,25 +444,80 @@ class _QuickAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return QuestCard(
-      padding: const EdgeInsets.all(12),
-      onTap: onTap,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: Theme.of(context).colorScheme.primary),
-          const SizedBox(height: 8),
-          Text(title, style: Theme.of(context).textTheme.titleMedium),
-          Text(
-            subtitle,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+    final theme = Theme.of(context);
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(14),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: theme.colorScheme.primary),
+              const SizedBox(height: 8),
+              Text(title, style: theme.textTheme.titleMedium),
+              Text(
+                subtitle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _WeakWordLink extends StatelessWidget {
+  const _WeakWordLink({required this.word});
+
+  final CustomWord word;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () => context.push('/custom-words/${word.id}'),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Row(
+              children: [
+                ImageCueBadge(cue: wordInitialCue(word.word), size: 50),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(word.word, style: theme.textTheme.titleMedium),
+                      const SizedBox(height: 3),
+                      Text(
+                        '${word.meaning} · 掌握 ${word.masteryLevel}/5',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.chevron_right_rounded),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
