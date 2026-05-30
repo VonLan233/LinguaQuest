@@ -56,32 +56,7 @@ class DiscoverScreen extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: 14),
-        QuestCard(
-          padding: const EdgeInsets.all(16),
-          color: AppTheme.warmSurface(context),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const ImageCueBadge(cue: '⚡', size: 54),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'XP 用途',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '领取后立即同步到个人主页和排行榜；积分抽奖会消耗当前 XP。当前余额 ${user?.xp ?? 0} XP。',
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+        _XpUseStatusLine(currentXp: user?.xp ?? 0),
         const SizedBox(height: 22),
         const SectionHeader(
           title: '积分任务',
@@ -235,6 +210,45 @@ class DiscoverScreen extends ConsumerWidget {
               )
             : null,
       ),
+    );
+  }
+}
+
+class _XpUseStatusLine extends StatelessWidget {
+  const _XpUseStatusLine({required this.currentXp});
+
+  final int currentXp;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 42,
+          height: 42,
+          decoration: BoxDecoration(
+            color: AppTheme.mango.withValues(alpha: 0.18),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: const Icon(Icons.bolt_rounded, color: AppTheme.ink),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('XP 用途', style: theme.textTheme.titleMedium),
+              const SizedBox(height: 2),
+              Text(
+                '领取后同步到个人主页和排行榜；积分抽奖会消耗当前 XP。当前余额 $currentXp XP。',
+                style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
