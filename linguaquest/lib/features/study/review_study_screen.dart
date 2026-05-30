@@ -49,10 +49,10 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
           : _ReviewActions(
               isRevealed: _revealed,
               isSubmitting: _isSubmitting,
-              onForgot: () => setState(() => _revealed = true),
+              onMissed: () => setState(() => _revealed = true),
               onContinueAfterReveal: () =>
                   _review(currentWord, isCorrect: false),
-              onRemembered: () => _review(currentWord, isCorrect: true),
+              onKnown: () => _review(currentWord, isCorrect: true),
             ),
       body: SafeArea(
         child: currentWord == null
@@ -274,20 +274,28 @@ class _ReviewActions extends StatelessWidget {
   const _ReviewActions({
     required this.isRevealed,
     required this.isSubmitting,
-    required this.onForgot,
+    required this.onMissed,
     required this.onContinueAfterReveal,
-    required this.onRemembered,
+    required this.onKnown,
   });
 
   final bool isRevealed;
   final bool isSubmitting;
-  final VoidCallback onForgot;
+  final VoidCallback onMissed;
   final VoidCallback onContinueAfterReveal;
-  final VoidCallback onRemembered;
+  final VoidCallback onKnown;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final compactButtonStyle = FilledButton.styleFrom(
+      minimumSize: const Size.fromHeight(52),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+    );
+    final compactOutlineStyle = OutlinedButton.styleFrom(
+      minimumSize: const Size.fromHeight(52),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+    );
     return Material(
       color: colorScheme.surface,
       child: SafeArea(
@@ -296,24 +304,27 @@ class _ReviewActions extends StatelessWidget {
           child: isRevealed
               ? FilledButton.icon(
                   onPressed: isSubmitting ? null : onContinueAfterReveal,
+                  style: compactButtonStyle,
                   icon: const Icon(Icons.replay_rounded),
-                  label: const Text('加入巩固队列'),
+                  label: const FittedBox(child: Text('加入巩固队列')),
                 )
               : Row(
                   children: [
                     Expanded(
                       child: OutlinedButton.icon(
-                        onPressed: isSubmitting ? null : onForgot,
+                        onPressed: isSubmitting ? null : onMissed,
+                        style: compactOutlineStyle,
                         icon: const Icon(Icons.visibility_outlined),
-                        label: const Text('没记住'),
+                        label: const FittedBox(child: Text('没记住')),
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: FilledButton.icon(
-                        onPressed: isSubmitting ? null : onRemembered,
+                        onPressed: isSubmitting ? null : onKnown,
+                        style: compactButtonStyle,
                         icon: const Icon(Icons.check_rounded),
-                        label: const Text('记住了'),
+                        label: const FittedBox(child: Text('记住了')),
                       ),
                     ),
                   ],

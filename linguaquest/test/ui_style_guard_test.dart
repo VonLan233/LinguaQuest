@@ -110,7 +110,13 @@ void main() {
 
     test('legacy English UI labels do not reappear', () {
       final source = _readDartSources(Directory('lib'));
-      const legacyLabels = ['Campus Starter', 'Goal Setup', 'WordBook'];
+      const legacyLabels = [
+        'Campus Starter',
+        'Goal Setup',
+        'WordBook',
+        'Remembered',
+        'Forgot',
+      ];
 
       for (final label in legacyLabels) {
         expect(source, isNot(contains(label)));
