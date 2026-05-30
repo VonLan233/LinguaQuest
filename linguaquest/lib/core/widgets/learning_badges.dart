@@ -146,6 +146,62 @@ class QuestIconButton extends StatelessWidget {
   }
 }
 
+class FilterPillButton extends StatelessWidget {
+  const FilterPillButton({
+    required this.label,
+    required this.selected,
+    required this.onSelected,
+    this.color = AppTheme.teal,
+    super.key,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onSelected;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final selectedForeground = AppTheme.isDark(context)
+        ? theme.colorScheme.onPrimaryContainer
+        : AppTheme.ink;
+    return Material(
+      color: selected ? AppTheme.selectedSurface(context) : Colors.transparent,
+      borderRadius: BorderRadius.circular(999),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onSelected,
+        child: Container(
+          constraints: const BoxConstraints(minHeight: 42, minWidth: 64),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(999),
+            border: Border.all(
+              color: selected
+                  ? color.withValues(alpha: 0.36)
+                  : theme.colorScheme.outlineVariant,
+              width: selected ? 2 : 1,
+            ),
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.labelLarge?.copyWith(
+              color: selected
+                  ? selectedForeground
+                  : theme.colorScheme.onSurface,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 String wordInitialCue(String value) {
   final trimmed = value.trim();
   if (trimmed.isEmpty) return '?';

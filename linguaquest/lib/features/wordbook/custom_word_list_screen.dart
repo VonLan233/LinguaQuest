@@ -76,10 +76,13 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
                   ])
                     Padding(
                       padding: const EdgeInsets.only(right: 8),
-                      child: ChoiceChip(
-                        label: Text(displayDifficultyFilter(filter)),
+                      child: FilterPillButton(
+                        label: displayDifficultyFilter(filter),
                         selected: _filter == filter,
-                        onSelected: (_) => setState(() => _filter = filter),
+                        onSelected: () => setState(() => _filter = filter),
+                        color: filter == 'Weak'
+                            ? AppTheme.coral
+                            : AppTheme.teal,
                       ),
                     ),
                 ],

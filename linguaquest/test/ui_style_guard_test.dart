@@ -10,6 +10,7 @@ void main() {
         (RegExp(r'\bQuestCard\s*\('), 'QuestCard('),
         (RegExp(r'\bCard\s*\('), 'Card('),
         (RegExp(r'\bChip\s*\('), 'Chip('),
+        (RegExp(r'\bChoiceChip\s*\('), 'ChoiceChip('),
         (RegExp(r'\bBoxShadow\b'), 'BoxShadow'),
         (RegExp(r'\bLinearGradient\b'), 'LinearGradient'),
         (RegExp(r'\bRadialGradient\b'), 'RadialGradient'),
@@ -98,6 +99,19 @@ void main() {
       expect(badges, contains('class QuestIconButton'));
       expect(source, contains('QuestIconButton'));
       expect(source, isNot(contains('IconButton.filledTonal')));
+    });
+
+    test('filter chips use branded pill controls', () {
+      final badges = File(
+        'lib/core/widgets/learning_badges.dart',
+      ).readAsStringSync();
+      final customWords = File(
+        'lib/features/wordbook/custom_word_list_screen.dart',
+      ).readAsStringSync();
+
+      expect(badges, contains('class FilterPillButton'));
+      expect(customWords, contains('FilterPillButton'));
+      expect(customWords, isNot(contains('ChoiceChip')));
     });
 
     test('profile dashboard keeps the top area lightweight', () {
