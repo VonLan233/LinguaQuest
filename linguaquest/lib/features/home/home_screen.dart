@@ -84,7 +84,7 @@ class HomeScreen extends ConsumerWidget {
             ),
             onPressed: currentLesson == null || pathComplete
                 ? null
-                : () => context.push('/lesson/${currentLesson.id}/quiz'),
+                : () => context.push('/lesson/${currentLesson.id}'),
             icon: const Icon(Icons.play_arrow_rounded),
             label: Text(
               currentLesson == null || pathComplete

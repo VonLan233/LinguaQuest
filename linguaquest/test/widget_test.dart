@@ -80,6 +80,34 @@ void main() {
     expect(wordInitialCue('apple'), 'A');
   });
 
+  testWidgets('home hero starts at lesson preview before quiz', (tester) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'hero-user',
+      name: 'Hero',
+      email: 'hero@lingua.quest',
+      targetExam: 'IELTS',
+      level: 'Intermediate',
+      dailyGoal: 12,
+      xp: 240,
+      streak: 6,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+
+    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.tap(find.text('开始新学 12'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Start quiz'), findsWidgets);
+    expect(find.text('Check'), findsNothing);
+  });
+
   testWidgets('discover check-in only counts same-day study', (tester) async {
     final yesterday = DateTime.now().subtract(const Duration(days: 1));
     final profile = UserProfile(
