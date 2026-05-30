@@ -74,6 +74,12 @@ void main() {
     expect(find.text('今日词条'), findsOneWidget);
   });
 
+  test('word initial cue falls back for empty custom words', () {
+    expect(wordInitialCue(''), '?');
+    expect(wordInitialCue('  '), '?');
+    expect(wordInitialCue('apple'), 'A');
+  });
+
   testWidgets('discover check-in only counts same-day study', (tester) async {
     final yesterday = DateTime.now().subtract(const Duration(days: 1));
     final profile = UserProfile(
