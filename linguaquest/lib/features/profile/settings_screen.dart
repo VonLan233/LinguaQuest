@@ -36,14 +36,11 @@ class SettingsScreen extends ConsumerWidget {
               subtitle: _themeModeLabel(state.themeMode),
               route: '/settings/theme',
             ),
-            const QuestCard(
-              margin: EdgeInsets.only(top: 10),
-              child: ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: Icon(Icons.volume_up_outlined),
-                title: Text('答题音效反馈'),
-                subtitle: Text('为后续发音和听力支持预留'),
-              ),
+            const SizedBox(height: 8),
+            const _SettingsInfoLine(
+              icon: Icons.volume_up_outlined,
+              title: '答题音效反馈',
+              subtitle: '为后续发音和听力支持预留',
             ),
           ],
         ),
@@ -194,24 +191,73 @@ class _SettingsAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return QuestCard(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(14),
-      onTap: () => context.push(route),
+    final theme = Theme.of(context);
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: () => context.push(route),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Row(
+            children: [
+              Icon(icon, color: theme.colorScheme.primary),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: theme.textTheme.titleMedium),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right_rounded),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SettingsInfoLine extends StatelessWidget {
+  const _SettingsInfoLine({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         children: [
-          Icon(icon, color: Theme.of(context).colorScheme.primary),
+          Icon(icon, color: theme.colorScheme.onSurfaceVariant),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: Theme.of(context).textTheme.titleMedium),
-                Text(subtitle),
+                Text(title, style: theme.textTheme.titleMedium),
+                Text(
+                  subtitle,
+                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                ),
               ],
             ),
           ),
-          const Icon(Icons.chevron_right_rounded),
         ],
       ),
     );
