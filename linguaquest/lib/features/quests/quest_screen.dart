@@ -21,21 +21,21 @@ class QuestScreen extends StatelessWidget {
           color: AppTheme.mango,
         ),
         const SizedBox(height: 16),
-        const _QuestCard(
+        const _QuestRow(
           icon: Icons.flag_outlined,
           title: '每日任务',
           body: '完成一节课程，并复习 5 个到期词。',
           value: '20 XP',
         ),
         const SizedBox(height: 10),
-        const _QuestCard(
+        const _QuestRow(
           icon: Icons.workspace_premium_outlined,
           title: '成就徽章',
           body: '连续 7 天、已学 100 词、首次满分课程等成就。',
           value: '3 个',
         ),
         const SizedBox(height: 10),
-        _QuestCard(
+        _QuestRow(
           icon: Icons.leaderboard_outlined,
           title: '排行榜',
           body: '好友和未来班级的每周 XP 排名。',
@@ -43,7 +43,7 @@ class QuestScreen extends StatelessWidget {
           route: '/leaderboard',
         ),
         const SizedBox(height: 10),
-        _QuestCard(
+        _QuestRow(
           icon: Icons.insights_outlined,
           title: '学习分析',
           body: '正确率、词汇增长和复习完成趋势。',
@@ -51,7 +51,7 @@ class QuestScreen extends StatelessWidget {
           route: '/progress',
         ),
         const SizedBox(height: 10),
-        _QuestCard(
+        _QuestRow(
           icon: Icons.groups_outlined,
           title: '班级模式',
           body: '通过班级码加入；教师进度看板将在服务器阶段启用。',
@@ -59,7 +59,7 @@ class QuestScreen extends StatelessWidget {
           route: '/class-mode',
         ),
         const SizedBox(height: 10),
-        _QuestCard(
+        _QuestRow(
           icon: Icons.smart_toy_outlined,
           title: 'AI 助教',
           body: '用模拟反馈解释错因，并给出例句建议。',
@@ -71,8 +71,8 @@ class QuestScreen extends StatelessWidget {
   }
 }
 
-class _QuestCard extends StatelessWidget {
-  const _QuestCard({
+class _QuestRow extends StatelessWidget {
+  const _QuestRow({
     required this.icon,
     required this.title,
     required this.body,
