@@ -95,7 +95,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
               children: [
                 Text('每日目标', style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),
-                _ChoiceGrid<int>(
+                _ChoiceList<int>(
                   values: goals,
                   selected: _dailyGoal,
                   labelFor: (goal) => '$goal 词',
@@ -233,7 +233,7 @@ class _ChoiceSection<T> extends StatelessWidget {
       children: [
         Text(title, style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
-        _ChoiceGrid<T>(
+        _ChoiceList<T>(
           values: values,
           selected: selected,
           labelFor: labelFor ?? (value) => value.toString(),
@@ -244,8 +244,8 @@ class _ChoiceSection<T> extends StatelessWidget {
   }
 }
 
-class _ChoiceGrid<T> extends StatelessWidget {
-  const _ChoiceGrid({
+class _ChoiceList<T> extends StatelessWidget {
+  const _ChoiceList({
     required this.values,
     required this.selected,
     required this.labelFor,
@@ -259,30 +259,24 @@ class _ChoiceGrid<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final columns = constraints.maxWidth >= 460 ? 3 : 2;
-        const spacing = 10.0;
-
-        return GridView.count(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          crossAxisCount: columns,
-          mainAxisSpacing: spacing,
-          crossAxisSpacing: spacing,
-          mainAxisExtent: 58,
-          padding: EdgeInsets.zero,
-          children: [
-            for (final value in values)
-              _StableChoiceButton(
-                key: ValueKey('choice-$value'),
-                label: labelFor(value),
-                selected: value == selected,
-                onTap: () => onSelected(value),
-              ),
-          ],
-        );
-      },
+    return Column(
+      children: [
+        for (var index = 0; index < values.length; index++) ...[
+          _StableChoiceButton(
+            key: ValueKey('choice-${values[index]}'),
+            label: labelFor(values[index]),
+            selected: values[index] == selected,
+            onTap: () => onSelected(values[index]),
+          ),
+          if (index != values.length - 1)
+            Divider(
+              height: 4,
+              color: Theme.of(
+                context,
+              ).colorScheme.outlineVariant.withValues(alpha: 0.7),
+            ),
+        ],
+      ],
     );
   }
 }
@@ -305,10 +299,10 @@ class _StableChoiceButton extends StatelessWidget {
     final isDark = AppTheme.isDark(context);
     final background = selected
         ? AppTheme.selectedSurface(context)
-        : theme.colorScheme.surfaceContainerHigh;
+        : Colors.transparent;
     final borderColor = selected
         ? theme.colorScheme.primary
-        : theme.colorScheme.outlineVariant;
+        : Colors.transparent;
     final textColor = selected
         ? (isDark ? theme.colorScheme.onPrimaryContainer : AppTheme.deepTeal)
         : theme.colorScheme.onSurface;
@@ -316,31 +310,45 @@ class _StableChoiceButton extends StatelessWidget {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 140),
       curve: Curves.easeOut,
+      height: 48,
       decoration: BoxDecoration(
         color: background,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(color: borderColor, width: selected ? 2 : 1),
       ),
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(14),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(14),
           onTap: onTap,
-          child: Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Text(
-              label,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.labelLarge?.copyWith(
-                color: textColor,
-                fontWeight: FontWeight.w900,
-                height: 1.1,
-              ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Row(
+              children: [
+                Icon(
+                  selected
+                      ? Icons.check_circle_rounded
+                      : Icons.radio_button_unchecked_rounded,
+                  color: selected
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.outline,
+                  size: 20,
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      color: textColor,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

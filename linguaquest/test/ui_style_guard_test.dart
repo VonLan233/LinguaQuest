@@ -179,6 +179,17 @@ void main() {
       );
     });
 
+    test('goal setup choices stay list based instead of grid cards', () {
+      final goalSetup = File(
+        'lib/features/auth/goal_setup_screen.dart',
+      ).readAsStringSync();
+
+      expect(goalSetup, contains('_ChoiceList'));
+      expect(goalSetup, isNot(contains('_ChoiceGrid')));
+      expect(goalSetup, isNot(contains('GridView.count')));
+      expect(goalSetup, contains('radio_button_unchecked_rounded'));
+    });
+
     test('legacy English UI labels do not reappear', () {
       final source = _readDartSources(Directory('lib'));
       const legacyLabels = [
