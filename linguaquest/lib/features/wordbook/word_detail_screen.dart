@@ -78,7 +78,7 @@ class WordDetailScreen extends ConsumerWidget {
               spacing: 8,
               runSpacing: 8,
               children: [
-                PillLabel(label: word.tag),
+                PillLabel(label: displayCustomTag(word.tag)),
                 PillLabel(
                   label: displayDifficulty(word.difficulty),
                   color: AppTheme.coral,

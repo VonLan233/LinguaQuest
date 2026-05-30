@@ -258,11 +258,43 @@ void main() {
         'Forgot',
         "name: 'Learner'",
         "user?.name ?? 'Learner'",
+        "TextEditingController(text: 'custom')",
+        "? 'custom'",
+        "? 'mistake'",
       ];
 
       for (final label in legacyLabels) {
         expect(source, isNot(contains(label)));
       }
+    });
+
+    test('custom word tags are localized at display boundaries', () {
+      final labels = File('lib/core/utils/ui_labels.dart').readAsStringSync();
+      final addEdit = File(
+        'lib/features/wordbook/add_edit_custom_word_screen.dart',
+      ).readAsStringSync();
+      final customList = File(
+        'lib/features/wordbook/custom_word_list_screen.dart',
+      ).readAsStringSync();
+      final wordDetail = File(
+        'lib/features/wordbook/word_detail_screen.dart',
+      ).readAsStringSync();
+      final search = File(
+        'lib/features/search/search_screen.dart',
+      ).readAsStringSync();
+      final reviewStudy = File(
+        'lib/features/study/review_study_screen.dart',
+      ).readAsStringSync();
+
+      expect(labels, contains('displayCustomTag'));
+      expect(labels, contains("case 'custom'"));
+      expect(labels, contains("case 'mistake'"));
+      expect(addEdit, contains("TextEditingController(text: '自定义')"));
+      expect(addEdit, contains('displayCustomTag(word.tag)'));
+      expect(customList, contains('displayCustomTag(word.tag)'));
+      expect(wordDetail, contains('displayCustomTag(word.tag)'));
+      expect(search, contains('displayCustomTag(word.tag)'));
+      expect(reviewStudy, contains('displayCustomTag(word.tag)'));
     });
 
     test('AI learning statuses stay user-facing', () {

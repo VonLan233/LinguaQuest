@@ -120,7 +120,8 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
           query.isEmpty ||
           word.word.toLowerCase().contains(query) ||
           word.meaning.toLowerCase().contains(query) ||
-          word.tag.toLowerCase().contains(query);
+          word.tag.toLowerCase().contains(query) ||
+          displayCustomTag(word.tag).toLowerCase().contains(query);
       final matchesFilter =
           _filter == 'All' ||
           word.difficulty == _filter ||
@@ -208,7 +209,7 @@ class _CustomWordTile extends StatelessWidget {
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      '${word.meaning} · ${word.tag}',
+                      '${word.meaning} · ${displayCustomTag(word.tag)}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(color: theme.colorScheme.onSurface),

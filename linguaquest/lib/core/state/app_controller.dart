@@ -406,7 +406,7 @@ class AppController extends Notifier<AppState> {
               meaning: word.meaning,
               exampleSentence: word.exampleSentence,
               note: '${word.definition}\n${mistake.explanation}',
-              tag: word.tags.isEmpty ? 'mistake' : word.tags.first,
+              tag: word.tags.isEmpty ? '错题' : word.tags.first,
               difficulty: word.difficulty,
             ),
           ),

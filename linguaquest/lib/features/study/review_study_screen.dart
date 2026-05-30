@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/date_formatting.dart';
+import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
@@ -209,7 +210,7 @@ class _ReviewWordCard extends StatelessWidget {
                       runSpacing: 8,
                       children: [
                         PillLabel(
-                          label: word.tag,
+                          label: displayCustomTag(word.tag),
                           icon: Icons.label_outline,
                           color: AppTheme.teal,
                         ),

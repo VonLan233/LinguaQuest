@@ -68,3 +68,14 @@ String displayWordStatus(String value) {
       return value;
   }
 }
+
+String displayCustomTag(String value) {
+  switch (value.trim().toLowerCase()) {
+    case 'custom':
+      return '自定义';
+    case 'mistake':
+      return '错题';
+    default:
+      return value.trim().isEmpty ? '自定义' : value.trim();
+  }
+}

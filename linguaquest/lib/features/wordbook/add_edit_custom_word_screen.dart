@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../data/models/custom_word.dart';
 
@@ -23,7 +24,7 @@ class _AddEditCustomWordScreenState
   final _meaningController = TextEditingController();
   final _exampleController = TextEditingController();
   final _noteController = TextEditingController();
-  final _tagController = TextEditingController(text: 'custom');
+  final _tagController = TextEditingController(text: '自定义');
   String _difficulty = 'Medium';
   bool _hydrated = false;
 
@@ -143,7 +144,7 @@ class _AddEditCustomWordScreenState
     _meaningController.text = word.meaning;
     _exampleController.text = word.exampleSentence;
     _noteController.text = word.note;
-    _tagController.text = word.tag;
+    _tagController.text = displayCustomTag(word.tag);
     _difficulty = word.difficulty;
     _hydrated = true;
   }
@@ -169,7 +170,7 @@ class _AddEditCustomWordScreenState
           exampleSentence: _exampleController.text.trim(),
           note: _noteController.text.trim(),
           tag: _tagController.text.trim().isEmpty
-              ? 'custom'
+              ? '自定义'
               : _tagController.text.trim(),
           difficulty: _difficulty,
         ),

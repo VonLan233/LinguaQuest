@@ -106,7 +106,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         word.meaning.toLowerCase().contains(query) ||
         word.exampleSentence.toLowerCase().contains(query) ||
         word.note.toLowerCase().contains(query) ||
-        word.tag.toLowerCase().contains(query);
+        word.tag.toLowerCase().contains(query) ||
+        displayCustomTag(word.tag).toLowerCase().contains(query);
   }
 }
 
@@ -219,7 +220,7 @@ class _CustomWordTile extends StatelessWidget {
                       Text(word.meaning),
                       const SizedBox(height: 4),
                       Text(
-                        '${displayDifficulty(word.difficulty)} · ${word.tag}',
+                        '${displayDifficulty(word.difficulty)} · ${displayCustomTag(word.tag)}',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
