@@ -54,7 +54,8 @@ class TargetWordDetailScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 20),
-            QuestCard(
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
