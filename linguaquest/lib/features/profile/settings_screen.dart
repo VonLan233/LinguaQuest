@@ -281,28 +281,48 @@ class _ThemeOption extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return QuestCard(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(14),
-      onTap: () =>
-          ref.read(appControllerProvider.notifier).updateThemeMode(value),
-      child: Row(
-        children: [
-          Icon(icon),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [Text(title), Text(subtitle)],
-            ),
+    final theme = Theme.of(context);
+    final selected = value == groupValue;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: () =>
+            ref.read(appControllerProvider.notifier).updateThemeMode(value),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                color: selected
+                    ? theme.colorScheme.primary
+                    : theme.colorScheme.onSurfaceVariant,
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: theme.textTheme.titleMedium),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                selected
+                    ? Icons.radio_button_checked
+                    : Icons.radio_button_unchecked,
+                color: theme.colorScheme.primary,
+              ),
+            ],
           ),
-          Icon(
-            value == groupValue
-                ? Icons.radio_button_checked
-                : Icons.radio_button_unchecked,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-        ],
+        ),
       ),
     );
   }
