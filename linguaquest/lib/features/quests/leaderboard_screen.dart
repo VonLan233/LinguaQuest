@@ -14,7 +14,7 @@ class LeaderboardScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(appControllerProvider).user;
     final entries = [
-      _Entry(name: user?.name ?? 'Learner', xp: user?.xp ?? 0, rank: 1),
+      _Entry(name: user?.name ?? '学习者', xp: user?.xp ?? 0, rank: 1),
       const _Entry(name: 'Maya', xp: 860, rank: 2),
       const _Entry(name: 'Chen', xp: 790, rank: 3),
       const _Entry(name: 'Aisha', xp: 650, rank: 4),

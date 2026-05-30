@@ -145,6 +145,8 @@ void main() {
         'WordBook',
         'Remembered',
         'Forgot',
+        "name: 'Learner'",
+        "user?.name ?? 'Learner'",
       ];
 
       for (final label in legacyLabels) {
