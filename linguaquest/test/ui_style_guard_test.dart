@@ -67,6 +67,7 @@ void main() {
       expect(home, contains("context.push('/study/review')"));
       expect(home, isNot(contains('/timed-test/lesson-campus-1')));
       expect(training, contains("context.push('/timed-test/lesson-campus-1')"));
+      expect(training, isNot(contains("context.push('/study/review')")));
       expect(training, contains('限时测试'));
       expect(newStudy, contains('不做限时测试'));
       expect(router, contains("path: '/study/new'"));
