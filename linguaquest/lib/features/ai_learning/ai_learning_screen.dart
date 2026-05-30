@@ -27,7 +27,7 @@ class AiLearningScreen extends StatelessWidget {
           spacing: 8,
           runSpacing: 8,
           children: [
-            PillLabel(label: '先用模拟流程', icon: Icons.science_outlined),
+            PillLabel(label: '先用演示流程', icon: Icons.science_outlined),
             PillLabel(
               label: '无需客户端密钥',
               icon: Icons.lock_outline,
@@ -45,20 +45,20 @@ class AiLearningScreen extends StatelessWidget {
           icon: Icons.rate_review_outlined,
           title: 'AI 作文批改',
           body: '选择考试类型、输入题目和正文，输出总评分、分项评分和逐段修改建议。',
-          status: 'P2',
+          status: '后续',
         ),
         _AiToolCard(
           icon: Icons.account_tree_outlined,
           title: 'AI 长难句分析',
           body: '提取主干、划分从句、解释修饰成分和关键词，并给出自然中文翻译。',
-          status: '模拟',
+          status: '可试用',
           onTap: () => context.push('/ai-tutor'),
         ),
         _AiToolCard(
           icon: Icons.auto_stories_outlined,
           title: '今日单词情景填空',
           body: '基于今日新词、错词或本周弱词生成短文，挖空 5 到 10 个目标词。',
-          status: 'P1',
+          status: '规划中',
         ),
         _AiToolCard(
           icon: Icons.question_answer_outlined,
@@ -71,13 +71,13 @@ class AiLearningScreen extends StatelessWidget {
           icon: Icons.compare_arrows_outlined,
           title: '易混词辨析',
           body: '根据错题混淆记录，解释 affect/effect 这类近义或易混词的使用场景。',
-          status: 'P1',
+          status: '规划中',
         ),
         const _AiToolCard(
           icon: Icons.tips_and_updates_outlined,
           title: '例句生成与改写',
           body: '按考试目标生成更自然的例句，并支持一键加入笔记或生词本。',
-          status: 'P1',
+          status: '规划中',
         ),
       ],
     );

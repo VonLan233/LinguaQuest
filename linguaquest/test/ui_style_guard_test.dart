@@ -149,6 +149,19 @@ void main() {
         expect(source, isNot(contains(label)));
       }
     });
+
+    test('AI learning statuses stay user-facing', () {
+      final aiLearning = File(
+        'lib/features/ai_learning/ai_learning_screen.dart',
+      ).readAsStringSync();
+
+      expect(aiLearning, isNot(contains("status: 'P1'")));
+      expect(aiLearning, isNot(contains("status: 'P2'")));
+      expect(aiLearning, isNot(contains('先用模拟流程')));
+      expect(aiLearning, contains("status: '规划中'"));
+      expect(aiLearning, contains("status: '后续'"));
+      expect(aiLearning, contains("status: '可试用'"));
+    });
   });
 }
 
