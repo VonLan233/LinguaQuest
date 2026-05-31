@@ -16,63 +16,80 @@ class HomeScreen extends ConsumerWidget {
     final state = ref.watch(appControllerProvider);
     final user = state.user;
     final dueCount = state.dueWords.length;
-    final dailyProgress = user == null
-        ? 0.35
-        : ((user.dailyGoal - dueCount).clamp(0, user.dailyGoal) /
-                  user.dailyGoal)
-              .clamp(0.0, 1.0);
-    final currentLesson = state.lessons.isEmpty ? null : state.lessons.first;
+    final dailyGoal = state.learningPlan?.dailyWords ?? user?.dailyGoal ?? 10;
+    final reviewTarget = state.learningPlan == null
+        ? dueCount
+        : dueCount.clamp(0, state.learningPlan!.dailyWords * 2).toInt();
+    final todayLessonWords = state.lessons
+        .where((lesson) => state.todayCompletedLessonIds.contains(lesson.id))
+        .fold(0, (total, lesson) => total + lesson.words.length);
+    final todayWork = todayLessonWords + state.todayReviewWordIds.length;
+    final dailyProgress = dailyGoal <= 0
+        ? 0.0
+        : (todayWork / dailyGoal).clamp(0.0, 1.0);
+    final currentLesson = state.currentLesson;
+    final pathComplete =
+        state.lessons.isNotEmpty &&
+        state.lessons.every((lesson) => lesson.status == 'completed');
+    final wordOfDay = (currentLesson?.words.isNotEmpty ?? false)
+        ? currentLesson!.words.first
+        : null;
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 110),
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
       children: [
         Row(
           children: [
+            IconButton.filledTonal(
+              tooltip: '个人空间',
+              onPressed: () => context.go('/profile'),
+              icon: const Icon(Icons.person_outline),
+            ),
+            const SizedBox(width: 10),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Hi, ${user?.name ?? 'Learner'} 👋',
-                    style: Theme.of(context).textTheme.headlineSmall,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(999),
+                onTap: () => context.push('/wordbook'),
+                child: InputDecorator(
+                  decoration: const InputDecoration(
+                    isDense: true,
+                    prefixIcon: Icon(Icons.search),
+                    hintText: '搜索单词、短语或例句',
+                    contentPadding: EdgeInsets.symmetric(vertical: 12),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '${user?.targetExam ?? 'Daily English'} · ${user?.level ?? 'Elementary'}',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
+                  child: const SizedBox.shrink(),
+                ),
               ),
             ),
-            PillLabel(
-              label: '${user?.streak ?? 0} day',
-              icon: Icons.local_fire_department,
-              color: AppTheme.coral,
+            const SizedBox(width: 10),
+            IconButton.filledTonal(
+              tooltip: '消息通知',
+              onPressed: () => context.go('/discover'),
+              icon: const Icon(Icons.notifications_outlined),
             ),
           ],
         ),
         const SizedBox(height: 18),
         GradientHeroCard(
-          title: currentLesson == null
-              ? 'Build your first learning path'
-              : 'Ready for ${currentLesson.title}?',
+          title: '已连续打卡 ${user?.streak ?? 0} 天',
           subtitle:
-              'Complete one bite-sized lesson, then clear review cards before they turn weak.',
-          icon: Icons.rocket_launch_outlined,
-          badge: 'Today’s learning pack',
+              '今日 $todayWork/${dailyGoal + reviewTarget} 词 · 新学 $dailyGoal · 复习 $reviewTarget。先回忆，再看解释。',
+          icon: Icons.local_fire_department_outlined,
+          badge:
+              '${user?.targetExam ?? 'Daily English'} · ${user?.level ?? 'Elementary'}',
           action: FilledButton.icon(
             style: FilledButton.styleFrom(
               backgroundColor: Colors.white,
               foregroundColor: AppTheme.deepTeal,
             ),
-            onPressed: currentLesson == null
+            onPressed: currentLesson == null || pathComplete
                 ? null
-                : () => context.go('/lesson/${currentLesson.id}'),
+                : () => context.push('/lesson/${currentLesson.id}'),
             icon: const Icon(Icons.play_arrow_rounded),
             label: Text(
-              currentLesson == null ? 'No lesson available' : 'Continue lesson',
+              currentLesson == null || pathComplete
+                  ? '暂无新学任务'
+                  : '开始新学 $dailyGoal',
             ),
           ),
         ),
@@ -81,28 +98,29 @@ class HomeScreen extends ConsumerWidget {
           children: [
             Expanded(
               child: MetricTile(
-                label: 'XP',
-                value: '${user?.xp ?? 0}',
-                icon: Icons.bolt,
+                label: '已学',
+                value: '${state.completedLearningWords}',
+                icon: Icons.school_outlined,
+                color: AppTheme.mango,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: MetricTile(
+                label: '掌握',
+                value:
+                    '${state.customWords.where((word) => word.masteryLevel >= 4).length}',
+                icon: Icons.verified_outlined,
                 color: AppTheme.coral,
               ),
             ),
             const SizedBox(width: 10),
             Expanded(
               child: MetricTile(
-                label: 'Streak',
-                value: '${user?.streak ?? 0} days',
-                icon: Icons.local_fire_department,
-                color: AppTheme.coral,
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: MetricTile(
-                label: 'Due',
+                label: '复习',
                 value: '${state.dueWords.length}',
                 icon: Icons.replay,
-                color: AppTheme.teal,
+                color: AppTheme.cyan,
               ),
             ),
           ],
@@ -112,39 +130,38 @@ class HomeScreen extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SectionHeader(
-                title: 'Today’s quest',
-                subtitle: 'Learn one lesson and clear due review cards.',
-              ),
+              const SectionHeader(title: '今日任务控制台'),
               const SizedBox(height: 16),
               ClipRRect(
                 borderRadius: BorderRadius.circular(999),
                 child: LinearProgressIndicator(
                   value: dailyProgress,
                   minHeight: 12,
-                  backgroundColor: AppTheme.mint,
+                  backgroundColor: AppTheme.progressTrack(context),
                 ),
               ),
               const SizedBox(height: 10),
               Text(
-                '${(dailyProgress * 100).round()}% daily focus · $dueCount words due',
+                '今日 $todayWork/${dailyGoal + reviewTarget} 词 · 当前词书 ${currentLesson?.section ?? state.learningPlan?.target ?? '雅思核心词汇'}',
               ),
               const SizedBox(height: 16),
               Row(
                 children: [
                   Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () => context.go('/review'),
-                      icon: const Icon(Icons.replay_rounded),
-                      label: const Text('Review'),
+                    child: FilledButton.icon(
+                      onPressed: currentLesson == null || pathComplete
+                          ? null
+                          : () => context.push('/lesson/${currentLesson.id}'),
+                      icon: const Icon(Icons.add_task_rounded),
+                      label: Text('新学 $dailyGoal'),
                     ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () => context.go('/wordbook'),
-                      icon: const Icon(Icons.style_outlined),
-                      label: const Text('Wordbook'),
+                    child: FilledButton.tonalIcon(
+                      onPressed: () => context.push('/review'),
+                      icon: const Icon(Icons.replay_rounded),
+                      label: Text('复习 $dueCount'),
                     ),
                   ),
                 ],
@@ -152,25 +169,91 @@ class HomeScreen extends ConsumerWidget {
             ],
           ),
         ),
-        const SizedBox(height: 22),
+        const SizedBox(height: 18),
         QuestCard(
           padding: const EdgeInsets.all(16),
-          onTap: () => context.go('/wordbook'),
-          color: const Color(0xFFFFF7E8),
+          onTap: () => context.push('/goal-setup'),
           child: Row(
             children: [
-              const ImageCueBadge(cue: '🌟', size: 58),
+              const ImageCueBadge(cue: '📘', size: 58),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Word of the day',
+                      '当前计划',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${state.learningPlan?.target ?? user?.targetExam ?? '雅思核心词汇'} · 每日新学 $dailyGoal · 复习上限 ${reviewTarget == 0 ? '按到期词' : reviewTarget}',
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right_rounded),
+            ],
+          ),
+        ),
+        const SizedBox(height: 18),
+        GridView.count(
+          crossAxisCount: 2,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
+          childAspectRatio: 1.4,
+          children: [
+            _QuickAction(
+              icon: Icons.language_outlined,
+              title: '学习模式',
+              subtitle: user?.targetExam ?? 'Daily English',
+              onTap: () => context.push('/goal-setup'),
+            ),
+            _QuickAction(
+              icon: Icons.menu_book_outlined,
+              title: '单词本',
+              subtitle: '${state.totalLearningWords} 词',
+              onTap: () => context.push('/wordbook'),
+            ),
+            _QuickAction(
+              icon: Icons.article_outlined,
+              title: '每日短文',
+              subtitle: '情景填空',
+              onTap: () => context.go('/ai-learning'),
+            ),
+            _QuickAction(
+              icon: Icons.leaderboard_outlined,
+              title: '排行榜',
+              subtitle: '训练场积分',
+              onTap: () => context.push('/leaderboard'),
+            ),
+          ],
+        ),
+        const SizedBox(height: 22),
+        QuestCard(
+          padding: const EdgeInsets.all(16),
+          onTap: () => context.push('/wordbook'),
+          color: AppTheme.accentSurface(context),
+          child: Row(
+            children: [
+              ImageCueBadge(cue: wordOfDay?.imageCue ?? '🌟', size: 58),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '今日词条',
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                     const SizedBox(height: 3),
-                    const Text('priority · 优先事项 · tap to open word cards'),
+                    Text(
+                      wordOfDay == null
+                          ? '打开单词卡片'
+                          : '${wordOfDay.word} · ${wordOfDay.meaning}',
+                    ),
                   ],
                 ),
               ),
@@ -180,20 +263,18 @@ class HomeScreen extends ConsumerWidget {
         ),
         const SizedBox(height: 22),
         SectionHeader(
-          title: 'Weak words',
-          subtitle: state.weakWords.isEmpty
-              ? 'No weak custom words yet.'
-              : 'Review these before they pile up.',
+          title: '弱项词',
+          subtitle: state.weakWords.isEmpty ? '当前还没有高频错词。' : '趁它们堆起来前先复习。',
           trailing: TextButton(
             onPressed: () => context.go('/review'),
-            child: const Text('Review'),
+            child: const Text('复习'),
           ),
         ),
         const SizedBox(height: 12),
         if (state.weakWords.isEmpty)
           const _SoftPanel(
             icon: Icons.check_circle_outline,
-            text: 'Add custom words or answer review cards to build this list.',
+            text: '添加生词或完成复习后，这里会展示需要重点处理的词。',
           )
         else
           ...state.weakWords
@@ -202,13 +283,10 @@ class HomeScreen extends ConsumerWidget {
                 (word) => QuestCard(
                   margin: const EdgeInsets.only(bottom: 10),
                   padding: const EdgeInsets.all(14),
-                  onTap: () => context.go('/custom-words/${word.id}'),
+                  onTap: () => context.push('/custom-words/${word.id}'),
                   child: Row(
                     children: [
-                      ImageCueBadge(
-                        cue: word.word.characters.first.toUpperCase(),
-                        size: 50,
-                      ),
+                      ImageCueBadge(cue: wordInitialCue(word.word), size: 50),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(
@@ -230,6 +308,45 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ),
       ],
+    );
+  }
+}
+
+class _QuickAction extends StatelessWidget {
+  const _QuickAction({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return QuestCard(
+      padding: const EdgeInsets.all(12),
+      onTap: onTap,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, color: Theme.of(context).colorScheme.primary),
+          const SizedBox(height: 8),
+          Text(title, style: Theme.of(context).textTheme.titleMedium),
+          Text(
+            subtitle,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

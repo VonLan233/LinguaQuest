@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/quest_card.dart';
 import '../../core/widgets/section_header.dart';
 
@@ -16,15 +17,18 @@ class WordbookScreen extends ConsumerWidget {
     final words = state.lessons.expand((lesson) => lesson.words).toList();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Wordbook')),
+      appBar: AppBar(
+        leading: const FallbackBackButton(fallbackLocation: '/home'),
+        title: const Text('Wordbook'),
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
             GradientHeroCard(
-              title: 'Visual wordbook',
+              title: 'Visual Wordbook',
               subtitle:
-                  'Image-first cards connect words with scenes, meanings, and example sentences.',
+                  'Image-first cards connect pronunciation, meaning, examples, tags, and review signals.',
               icon: Icons.style_outlined,
               badge: '${words.length} target words',
               action: FilledButton.icon(
@@ -32,23 +36,23 @@ class WordbookScreen extends ConsumerWidget {
                   backgroundColor: Colors.white,
                   foregroundColor: AppTheme.deepTeal,
                 ),
-                onPressed: () => context.go('/custom-words'),
+                onPressed: () => context.push('/custom-words'),
                 icon: const Icon(Icons.add_card_outlined),
                 label: const Text('My custom cards'),
               ),
             ),
             const SizedBox(height: 22),
             SectionHeader(
-              title: 'Target words',
+              title: 'Target Words',
               subtitle:
-                  '${words.length} words from your current learning path.',
+                  '${words.length} words · ${(state.learningPathProgress * 100).round()}% path progress',
             ),
             const SizedBox(height: 16),
             for (final word in words)
               QuestCard(
                 margin: const EdgeInsets.only(bottom: 12),
                 padding: const EdgeInsets.all(15),
-                onTap: () => context.go('/wordbook/${word.id}'),
+                onTap: () => context.push('/wordbook/${word.id}'),
                 child: Row(
                   children: [
                     ImageCueBadge(cue: word.imageCue, size: 62),
@@ -63,6 +67,16 @@ class WordbookScreen extends ConsumerWidget {
                           ),
                           const SizedBox(height: 3),
                           Text(word.meaning),
+                          const SizedBox(height: 3),
+                          Text(
+                            '${word.phonetic} · ${word.partOfSpeech}',
+                            style: TextStyle(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                           const SizedBox(height: 5),
                           Text(
                             word.exampleSentence,
@@ -78,7 +92,21 @@ class WordbookScreen extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    PillLabel(label: word.difficulty, color: AppTheme.coral),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        PillLabel(
+                          label: word.difficulty,
+                          color: word.difficulty == 'Hard'
+                              ? Theme.of(context).colorScheme.error
+                              : AppTheme.coral,
+                        ),
+                        if (word.tags.isNotEmpty) ...[
+                          const SizedBox(height: 6),
+                          PillLabel(label: word.tags.first),
+                        ],
+                      ],
+                    ),
                   ],
                 ),
               ),

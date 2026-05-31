@@ -20,6 +20,7 @@ class QuizSessionScreen extends ConsumerStatefulWidget {
 class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
   final _textController = TextEditingController();
   final List<QuizQuestion> _mistakes = [];
+  final Set<String> _mistakeQuestionIds = {};
   int _index = 0;
   int _correct = 0;
   String? _selected;
@@ -35,120 +36,192 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final lesson = _lesson;
+    final lessons = ref.watch(
+      appControllerProvider.select((state) => state.lessons),
+    );
+    final lesson = _findLesson(lessons);
     if (lesson == null) {
       return const Scaffold(body: Center(child: Text('Lesson not found')));
+    }
+    if (lesson.questions.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(title: Text(lesson.title)),
+        body: const Center(child: Text('This lesson has no quiz yet.')),
+      );
     }
     final question = lesson.questions[_index];
     final progress = (_index + 1) / lesson.questions.length;
 
-    return Scaffold(
-      appBar: AppBar(title: Text(lesson.title)),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 8, 20, 18),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(999),
-                      child: LinearProgressIndicator(
-                        value: progress,
-                        minHeight: 12,
-                        backgroundColor: AppTheme.mint,
+    return PopScope(
+      canPop: _canLeaveWithoutConfirmation,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) return;
+        await _handleBack(context);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: BackButton(onPressed: () => _handleBack(context)),
+          title: Text(lesson.title),
+        ),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 18),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(999),
+                        child: LinearProgressIndicator(
+                          value: progress,
+                          minHeight: 12,
+                          backgroundColor: AppTheme.progressTrack(context),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  PillLabel(
-                    label: '${_index + 1}/${lesson.questions.length}',
-                    icon: Icons.flag_outlined,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 14),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      QuestCard(
-                        color: const Color(0xFFFFFBF2),
-                        child: Column(
-                          children: [
-                            ImageCueBadge(
-                              cue: question.word.imageCue,
-                              size: 112,
-                            ),
-                            const SizedBox(height: 14),
-                            Text(
-                              question.prompt,
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.headlineSmall,
-                            ),
-                            const SizedBox(height: 10),
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              alignment: WrapAlignment.center,
-                              children: [
-                                PillLabel(label: question.word.partOfSpeech),
-                                PillLabel(
-                                  label: question.word.difficulty,
-                                  color: AppTheme.coral,
-                                ),
-                              ],
-                            ),
-                          ],
+                    const SizedBox(width: 12),
+                    PillLabel(
+                      label: '${_index + 1}/${lesson.questions.length}',
+                      icon: Icons.flag_outlined,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 14),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        QuestCard(
+                          color: AppTheme.warmSurface(context),
+                          child: Column(
+                            children: [
+                              ImageCueBadge(
+                                cue: question.word.imageCue,
+                                size: 112,
+                              ),
+                              const SizedBox(height: 14),
+                              Text(
+                                question.prompt,
+                                textAlign: TextAlign.center,
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.headlineSmall,
+                              ),
+                              const SizedBox(height: 10),
+                              Wrap(
+                                spacing: 8,
+                                runSpacing: 8,
+                                alignment: WrapAlignment.center,
+                                children: [
+                                  PillLabel(label: question.word.partOfSpeech),
+                                  PillLabel(
+                                    label: question.word.difficulty,
+                                    color: AppTheme.coral,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 18),
-                      _QuestionInput(
-                        question: question,
-                        selected: _selected,
-                        checked: _checked,
-                        controller: _textController,
-                        onSelected: (value) =>
-                            setState(() => _selected = value),
-                        onInputChanged: () => setState(() {}),
-                      ),
-                      if (_checked) ...[
                         const SizedBox(height: 18),
-                        _FeedbackPanel(
-                          isCorrect: _lastCorrect,
-                          explanation: question.explanation,
+                        _QuestionInput(
+                          question: question,
+                          selected: _selected,
+                          checked: _checked,
+                          controller: _textController,
+                          onSelected: (value) =>
+                              setState(() => _selected = value),
+                          onInputChanged: () => setState(() {}),
                         ),
+                        if (_checked) ...[
+                          const SizedBox(height: 18),
+                          _FeedbackPanel(
+                            isCorrect: _lastCorrect,
+                            explanation: question.explanation,
+                          ),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
                 ),
-              ),
-              FilledButton.icon(
-                onPressed: _canContinue(question) && !_isSubmitting
-                    ? () => _handlePrimary(lesson, question)
-                    : null,
-                style: FilledButton.styleFrom(
-                  backgroundColor: _checked && !_lastCorrect
-                      ? Theme.of(context).colorScheme.error
+                FilledButton.icon(
+                  onPressed: _canContinue(question) && !_isSubmitting
+                      ? () => _handlePrimary(lesson, question)
                       : null,
+                  style: FilledButton.styleFrom(
+                    backgroundColor: _checked && !_lastCorrect
+                        ? Theme.of(context).colorScheme.error
+                        : null,
+                    foregroundColor: _checked && !_lastCorrect
+                        ? Theme.of(context).colorScheme.onError
+                        : null,
+                  ),
+                  icon: Icon(
+                    _checked
+                        ? Icons.arrow_forward_rounded
+                        : Icons.check_rounded,
+                  ),
+                  label: Text(
+                    _checked
+                        ? (_lastCorrect ? 'Continue' : 'Try again')
+                        : 'Check',
+                  ),
                 ),
-                icon: Icon(
-                  _checked ? Icons.arrow_forward_rounded : Icons.check_rounded,
-                ),
-                label: Text(_checked ? 'Continue' : 'Check'),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Lesson? get _lesson {
-    final lessons = ref.read(appControllerProvider).lessons;
+  bool get _canLeaveWithoutConfirmation {
+    if (_isSubmitting) return true;
+    return _index == 0 &&
+        !_checked &&
+        _selected == null &&
+        _textController.text.trim().isEmpty &&
+        _correct == 0 &&
+        _mistakes.isEmpty;
+  }
+
+  Future<void> _handleBack(BuildContext activeContext) async {
+    if (!_canLeaveWithoutConfirmation) {
+      final confirmed = await showDialog<bool>(
+        context: activeContext,
+        builder: (context) => AlertDialog(
+          title: const Text('Leave quiz?'),
+          content: const Text('Your current quiz progress will be discarded.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Stay'),
+            ),
+            FilledButton.icon(
+              onPressed: () => Navigator.pop(context, true),
+              icon: const Icon(Icons.exit_to_app_rounded),
+              label: const Text('Leave'),
+            ),
+          ],
+        ),
+      );
+      if (confirmed != true || !activeContext.mounted) return;
+      setState(() => _isSubmitting = true);
+      await Future<void>.delayed(Duration.zero);
+    }
+
+    if (!activeContext.mounted) return;
+    if (activeContext.canPop()) {
+      activeContext.pop();
+      return;
+    }
+    activeContext.go('/learn');
+  }
+
+  Lesson? _findLesson(List<Lesson> lessons) {
     for (final lesson in lessons) {
       if (lesson.id == widget.lessonId) return lesson;
     }
@@ -173,10 +246,20 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
         _checked = true;
         _lastCorrect = isCorrect;
         if (isCorrect) {
-          _correct++;
-        } else {
+          if (!_mistakeQuestionIds.contains(question.id)) {
+            _correct++;
+          }
+        } else if (_mistakeQuestionIds.add(question.id)) {
           _mistakes.add(question);
         }
+      });
+      return;
+    }
+
+    if (!_lastCorrect) {
+      setState(() {
+        _checked = false;
+        _selected = null;
       });
       return;
     }
@@ -255,30 +338,90 @@ class _QuestionInput extends StatelessWidget {
             child: SizedBox(
               width: double.infinity,
               child: OutlinedButton(
-                onPressed: checked ? null : () => onSelected(option),
+                onPressed: checked ? () {} : () => onSelected(option),
                 style: OutlinedButton.styleFrom(
-                  backgroundColor: selected == option
-                      ? AppTheme.mint
-                      : Theme.of(context).colorScheme.surface,
-                  foregroundColor: Theme.of(context).colorScheme.onSurface,
+                  splashFactory: checked ? NoSplash.splashFactory : null,
+                  overlayColor: checked ? Colors.transparent : null,
+                  enabledMouseCursor: checked ? SystemMouseCursors.basic : null,
+                  backgroundColor: _optionBackground(context, option),
+                  foregroundColor: _optionForeground(context, option),
                   side: BorderSide(
-                    color: selected == option
-                        ? AppTheme.teal
-                        : Theme.of(context).colorScheme.outlineVariant,
-                    width: selected == option ? 2 : 1,
+                    color: _optionBorder(context, option),
+                    width: selected == option || _isCorrectOption(option)
+                        ? 2
+                        : 1,
                   ),
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.all(18),
                 ),
-                child: Text(
-                  option,
-                  style: const TextStyle(fontWeight: FontWeight.w900),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        option,
+                        style: const TextStyle(fontWeight: FontWeight.w900),
+                      ),
+                    ),
+                    if (checked && selected == option)
+                      Icon(
+                        _isCorrectOption(option)
+                            ? Icons.check_circle_outline
+                            : Icons.cancel_outlined,
+                      ),
+                    if (checked &&
+                        selected != option &&
+                        _isCorrectOption(option))
+                      const Icon(Icons.check_circle_outline),
+                  ],
                 ),
               ),
             ),
           ),
       ],
     );
+  }
+
+  bool _isCorrectOption(String option) {
+    return option.toLowerCase() == question.answer.toLowerCase();
+  }
+
+  Color _optionBackground(BuildContext context, String option) {
+    if (!checked) {
+      return selected == option
+          ? AppTheme.selectedSurface(context)
+          : Theme.of(context).colorScheme.surface;
+    }
+    if (_isCorrectOption(option)) {
+      return _successColor(context).withValues(alpha: 0.12);
+    }
+    if (selected == option) {
+      return Theme.of(context).colorScheme.error.withValues(alpha: 0.12);
+    }
+    return Theme.of(context).colorScheme.surface;
+  }
+
+  Color _optionForeground(BuildContext context, String option) {
+    if (!checked) return Theme.of(context).colorScheme.onSurface;
+    if (_isCorrectOption(option)) return _successColor(context);
+    if (selected == option) return Theme.of(context).colorScheme.error;
+    return Theme.of(context).colorScheme.onSurface;
+  }
+
+  Color _optionBorder(BuildContext context, String option) {
+    if (!checked) {
+      return selected == option
+          ? AppTheme.teal
+          : Theme.of(context).colorScheme.outlineVariant;
+    }
+    if (_isCorrectOption(option)) return _successColor(context);
+    if (selected == option) return Theme.of(context).colorScheme.error;
+    return Theme.of(context).colorScheme.outlineVariant;
+  }
+
+  Color _successColor(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.dark
+        ? Colors.green.shade300
+        : Colors.green.shade700;
   }
 }
 
@@ -291,7 +434,9 @@ class _FeedbackPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = isCorrect
-        ? Colors.green
+        ? (Theme.of(context).brightness == Brightness.dark
+              ? Colors.green.shade300
+              : Colors.green.shade700)
         : Theme.of(context).colorScheme.error;
     return QuestCard(
       color: color.withValues(alpha: 0.10),

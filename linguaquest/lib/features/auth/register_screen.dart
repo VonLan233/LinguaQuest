@@ -14,9 +14,9 @@ class RegisterScreen extends ConsumerStatefulWidget {
 
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController(text: 'Lingua Learner');
-  final _emailController = TextEditingController(text: 'learner@lingua.quest');
-  final _passwordController = TextEditingController(text: 'password123');
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   void dispose() {
@@ -54,6 +54,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         controller: _nameController,
                         decoration: const InputDecoration(
                           labelText: 'Name',
+                          hintText: 'Enter your name',
                           prefixIcon: Icon(Icons.badge_outlined),
                         ),
                         validator: (value) =>
@@ -66,6 +67,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         controller: _emailController,
                         decoration: const InputDecoration(
                           labelText: 'Email',
+                          hintText: 'name@example.com',
                           prefixIcon: Icon(Icons.mail_outline),
                         ),
                         keyboardType: TextInputType.emailAddress,
@@ -76,6 +78,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         controller: _passwordController,
                         decoration: const InputDecoration(
                           labelText: 'Password',
+                          hintText: 'Create a password',
                           prefixIcon: Icon(Icons.lock_outline),
                         ),
                         obscureText: true,
@@ -128,6 +131,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         );
     if (!mounted) return;
     if (!succeeded) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Account created. Choose your plan next.')),
+    );
     context.go('/goal-setup');
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/metric_tile.dart';
 import '../../core/widgets/section_header.dart';
 
@@ -25,7 +26,10 @@ class ProgressAnalyticsScreen extends ConsumerWidget {
     final accuracy = attempts == 0 ? 0 : (correct / attempts * 100).round();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Progress analytics')),
+      appBar: AppBar(
+        leading: const FallbackBackButton(fallbackLocation: '/quest'),
+        title: const Text('Progress analytics'),
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),

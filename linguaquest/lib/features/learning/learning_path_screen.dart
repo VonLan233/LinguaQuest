@@ -14,39 +14,44 @@ class LearningPathScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appControllerProvider);
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 110),
-      children: [
-        SectionHeader(
-          title: 'Learning path',
-          subtitle:
-              'Follow the path. No planning, just one small win at a time.',
-          trailing: IconButton(
-            tooltip: 'Wordbook',
-            onPressed: () => context.go('/wordbook'),
-            icon: const Icon(Icons.menu_book_outlined),
-          ),
+    return Scaffold(
+      appBar: AppBar(title: const Text('Learning Path')),
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
+          children: [
+            SectionHeader(
+              title: 'Learning Path',
+              subtitle:
+                  'Follow the path. No planning, just one small win at a time.',
+              trailing: IconButton(
+                tooltip: 'Wordbook',
+                onPressed: () => context.push('/wordbook'),
+                icon: const Icon(Icons.menu_book_outlined),
+              ),
+            ),
+            const SizedBox(height: 18),
+            const GradientHeroCard(
+              title: 'Campus Life Unit',
+              subtitle:
+                  'Duolingo-style short nodes with Baicizhan-style visual words inside every lesson.',
+              icon: Icons.route_rounded,
+              badge: 'Section 1 · 33% unlocked',
+            ),
+            const SizedBox(height: 22),
+            for (var index = 0; index < state.lessons.length; index++) ...[
+              _PathNode(lesson: state.lessons[index], index: index),
+              if (index != state.lessons.length - 1) const _PathConnector(),
+            ],
+            const SizedBox(height: 10),
+            OutlinedButton.icon(
+              onPressed: () => context.push('/wordbook'),
+              icon: const Icon(Icons.style_outlined),
+              label: const Text('Open wordbook and custom words'),
+            ),
+          ],
         ),
-        const SizedBox(height: 18),
-        const GradientHeroCard(
-          title: 'Campus Life Unit',
-          subtitle:
-              'Duolingo-style short nodes with Baicizhan-style visual words inside every lesson.',
-          icon: Icons.route_rounded,
-          badge: 'Section 1 · 33% unlocked',
-        ),
-        const SizedBox(height: 22),
-        for (var index = 0; index < state.lessons.length; index++) ...[
-          _PathNode(lesson: state.lessons[index], index: index),
-          if (index != state.lessons.length - 1) const _PathConnector(),
-        ],
-        const SizedBox(height: 10),
-        OutlinedButton.icon(
-          onPressed: () => context.go('/wordbook'),
-          icon: const Icon(Icons.style_outlined),
-          label: const Text('Open wordbook and custom words'),
-        ),
-      ],
+      ),
     );
   }
 }
@@ -61,17 +66,25 @@ class _PathNode extends StatelessWidget {
   Widget build(BuildContext context) {
     final locked = lesson.status == 'locked';
     final current = lesson.status == 'current';
-    final color = locked
-        ? Colors.blueGrey
-        : current
-        ? AppTheme.coral
-        : AppTheme.teal;
+    final completed = lesson.status == 'completed';
+    final Color color;
+    if (locked) {
+      color = Colors.blueGrey;
+    } else if (current) {
+      color = AppTheme.coral;
+    } else if (completed) {
+      color = Colors.green;
+    } else {
+      color = AppTheme.teal;
+    }
+    final theme = Theme.of(context);
+    final lockedCardColor = theme.colorScheme.surfaceContainerLow;
+    final cardColor = locked ? lockedCardColor : theme.colorScheme.surface;
+
     return QuestCard(
       onTap: locked ? null : () => _showPreview(context),
       padding: const EdgeInsets.all(16),
-      color: locked
-          ? const Color(0xFFF0F3F2)
-          : Theme.of(context).colorScheme.surface,
+      color: cardColor,
       borderColor: current ? AppTheme.coral.withValues(alpha: 0.55) : null,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,24 +129,21 @@ class _PathNode extends StatelessWidget {
                     Expanded(
                       child: Text(
                         lesson.section,
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        style: theme.textTheme.labelLarge?.copyWith(
                           color: color,
                           fontWeight: FontWeight.w900,
                         ),
                       ),
                     ),
                     PillLabel(
-                      label: lesson.status,
+                      label: _statusLabel(lesson.status),
                       icon: locked ? Icons.lock_outline : Icons.bolt,
                       color: color,
                     ),
                   ],
                 ),
                 const SizedBox(height: 8),
-                Text(
-                  lesson.title,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
+                Text(lesson.title, style: theme.textTheme.titleLarge),
                 const SizedBox(height: 5),
                 Text(lesson.description),
                 const SizedBox(height: 14),
@@ -165,15 +175,19 @@ class _PathNode extends StatelessWidget {
   }
 
   void _showPreview(BuildContext context) {
+    final parentContext = context;
     showModalBottomSheet<void>(
       context: context,
       showDragHandle: true,
-      builder: (context) => Padding(
+      builder: (sheetContext) => Padding(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ImageCueBadge(cue: lesson.words.first.imageCue, size: 78),
+            ImageCueBadge(
+              cue: lesson.words.isEmpty ? '?' : lesson.words.first.imageCue,
+              size: 78,
+            ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -182,15 +196,15 @@ class _PathNode extends StatelessWidget {
                 children: [
                   Text(
                     lesson.title,
-                    style: Theme.of(context).textTheme.headlineSmall,
+                    style: Theme.of(sheetContext).textTheme.headlineSmall,
                   ),
                   const SizedBox(height: 6),
                   Text(lesson.description),
                   const SizedBox(height: 16),
                   FilledButton.icon(
                     onPressed: () {
-                      Navigator.pop(context);
-                      context.go('/lesson/${lesson.id}');
+                      Navigator.pop(sheetContext);
+                      parentContext.push('/lesson/${lesson.id}');
                     },
                     icon: const Icon(Icons.play_arrow_rounded),
                     label: const Text('Start lesson'),
@@ -202,6 +216,19 @@ class _PathNode extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+String _statusLabel(String status) {
+  switch (status) {
+    case 'completed':
+      return 'Completed';
+    case 'current':
+      return 'Current';
+    case 'locked':
+      return 'Locked';
+    default:
+      return status;
   }
 }
 

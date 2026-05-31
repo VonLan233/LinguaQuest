@@ -168,22 +168,29 @@ class PillLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final luminance = color.computeLuminance();
+    final textColor = isDark
+        ? (luminance < 0.3 ? theme.colorScheme.onSurface : color)
+        : (luminance > 0.5 ? theme.colorScheme.onSurface : color);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: color.withValues(alpha: 0.20)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (icon != null) ...[
-            Icon(icon, size: 15, color: color),
+            Icon(icon, size: 15, color: textColor),
             const SizedBox(width: 5),
           ],
           Text(
             label,
-            style: TextStyle(color: color, fontWeight: FontWeight.w900),
+            style: TextStyle(color: textColor, fontWeight: FontWeight.w900),
           ),
         ],
       ),
@@ -199,6 +206,7 @@ class ImageCueBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       width: size,
       height: size,
@@ -209,7 +217,7 @@ class ImageCueBadge extends StatelessWidget {
           colors: [Color(0xFFFFF4D8), Color(0xFFE2FBF4)],
         ),
         borderRadius: BorderRadius.circular(size * 0.34),
-        border: Border.all(color: Colors.white, width: 3),
+        border: Border.all(color: theme.colorScheme.surface, width: 3),
         boxShadow: const [
           BoxShadow(
             color: Color(0x16006E72),
@@ -222,4 +230,10 @@ class ImageCueBadge extends StatelessWidget {
       child: Text(cue, style: TextStyle(fontSize: size * 0.48)),
     );
   }
+}
+
+String wordInitialCue(String value) {
+  final trimmed = value.trim();
+  if (trimmed.isEmpty) return '?';
+  return trimmed.characters.first.toUpperCase();
 }

@@ -52,7 +52,7 @@ class MetricTile extends StatelessWidget {
             value,
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.w900,
-              letterSpacing: -0.4,
+              letterSpacing: 0,
             ),
           ),
           const SizedBox(height: 2),

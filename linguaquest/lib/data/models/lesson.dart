@@ -70,4 +70,28 @@ class Lesson {
   final int estimatedMinutes;
   final List<Word> words;
   final List<QuizQuestion> questions;
+
+  Lesson copyWith({
+    String? id,
+    String? title,
+    String? section,
+    String? description,
+    String? status,
+    int? xpReward,
+    int? estimatedMinutes,
+    List<Word>? words,
+    List<QuizQuestion>? questions,
+  }) {
+    return Lesson(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      section: section ?? this.section,
+      description: description ?? this.description,
+      status: status ?? this.status,
+      xpReward: xpReward ?? this.xpReward,
+      estimatedMinutes: estimatedMinutes ?? this.estimatedMinutes,
+      words: words ?? this.words,
+      questions: questions ?? this.questions,
+    );
+  }
 }

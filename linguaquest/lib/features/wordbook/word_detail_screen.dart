@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/date_formatting.dart';
+import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/quest_card.dart';
 import '../../data/models/custom_word.dart';
 
@@ -19,14 +20,17 @@ class WordDetailScreen extends ConsumerWidget {
     if (word == null) {
       return const Scaffold(body: Center(child: Text('Word not found')));
     }
+    final state = ref.watch(appControllerProvider);
+    final canReview = word.isDue(DateTime.now()) && !state.isLoading;
 
     return Scaffold(
       appBar: AppBar(
+        leading: const FallbackBackButton(fallbackLocation: '/custom-words'),
         title: Text(word.word),
         actions: [
           IconButton(
             tooltip: 'Edit',
-            onPressed: () => context.go('/custom-words/${word.id}/edit'),
+            onPressed: () => context.push('/custom-words/${word.id}/edit'),
             icon: const Icon(Icons.edit_outlined),
           ),
         ],
@@ -36,14 +40,11 @@ class WordDetailScreen extends ConsumerWidget {
           padding: const EdgeInsets.all(20),
           children: [
             QuestCard(
-              color: const Color(0xFFFFFBF2),
+              color: AppTheme.warmSurface(context),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  ImageCueBadge(
-                    cue: word.word.characters.first.toUpperCase(),
-                    size: 112,
-                  ),
+                  ImageCueBadge(cue: wordInitialCue(word.word), size: 112),
                   const SizedBox(height: 16),
                   Text(
                     word.word,
@@ -90,17 +91,53 @@ class WordDetailScreen extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 20),
+            QuestCard(
+              padding: const EdgeInsets.all(14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Review Stats',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _StatLine(
+                          label: 'Remembered',
+                          value: '${word.correctCount}',
+                        ),
+                      ),
+                      Expanded(
+                        child: _StatLine(
+                          label: 'Missed',
+                          value: '${word.wrongCount}',
+                        ),
+                      ),
+                      Expanded(
+                        child: _StatLine(
+                          label: 'Mastery',
+                          value: '${word.masteryLevel}/5',
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
             FilledButton.icon(
-              onPressed: () => ref
-                  .read(appControllerProvider.notifier)
-                  .reviewWord(word.id, true),
+              onPressed: canReview
+                  ? () => _review(context, ref, word.id, isCorrect: true)
+                  : null,
               icon: const Icon(Icons.check_circle_outline),
               label: const Text('Mark remembered'),
             ),
             OutlinedButton.icon(
-              onPressed: () => ref
-                  .read(appControllerProvider.notifier)
-                  .reviewWord(word.id, false),
+              onPressed: canReview
+                  ? () => _review(context, ref, word.id, isCorrect: false)
+                  : null,
               icon: const Icon(Icons.replay),
               label: const Text('Practice again soon'),
             ),
@@ -115,5 +152,45 @@ class WordDetailScreen extends ConsumerWidget {
       if (word.id == wordId) return word;
     }
     return null;
+  }
+
+  Future<void> _review(
+    BuildContext context,
+    WidgetRef ref,
+    String id, {
+    required bool isCorrect,
+  }) async {
+    final succeeded = await ref
+        .read(appControllerProvider.notifier)
+        .reviewWord(id, isCorrect);
+    if (!context.mounted) return;
+    final message = succeeded
+        ? isCorrect
+              ? 'Marked as remembered'
+              : 'Scheduled for practice'
+        : ref.read(appControllerProvider).errorMessage ??
+              'Could not update this card';
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+}
+
+class _StatLine extends StatelessWidget {
+  const _StatLine({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(value, style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 2),
+        Text(label, style: Theme.of(context).textTheme.bodySmall),
+      ],
+    );
   }
 }

@@ -32,4 +32,57 @@ void main() {
     expect(wrong.masteryLevel, 0);
     expect(wrong.wrongCount, 1);
   });
+
+  test('custom word review updates only the selected mastery dimension', () {
+    final now = DateTime(2026, 5, 25, 10);
+    final word = CustomWord.create(
+      id: '2',
+      uid: 'u1',
+      word: 'spell',
+      meaning: '拼写',
+      exampleSentence: 'Spell the word carefully.',
+      now: now,
+    );
+
+    final reviewed = word.reviewed(
+      isCorrect: true,
+      now: now,
+      dimension: ReviewDimension.spelling,
+    );
+
+    expect(reviewed.spellingScore, word.spellingScore + 12);
+    expect(reviewed.meaningRecognitionScore, word.meaningRecognitionScore);
+    expect(reviewed.meaningRecallScore, word.meaningRecallScore);
+    expect(reviewed.listeningScore, word.listeningScore);
+    expect(reviewed.contextScore, word.contextScore);
+    expect(reviewed.confidenceScore, word.confidenceScore);
+  });
+
+  test('custom word JSON accepts double-backed integer values', () {
+    final word = CustomWord.fromJson({
+      'id': '3',
+      'uid': 'u1',
+      'word': 'robust',
+      'meaning': '健壮的',
+      'masteryLevel': 2.0,
+      'intervalDays': 3.0,
+      'repetitionCount': 4.0,
+      'lapseCount': 1.0,
+      'correctCount': 5.0,
+      'wrongCount': 2.0,
+      'meaningRecognitionScore': 60.0,
+      'spellingScore': 55.0,
+    });
+
+    expect(word.status, 'Review');
+    expect(word.masteryLevel, 2);
+    expect(word.intervalDays, 3);
+    expect(word.repetitionCount, 4);
+    expect(word.lapseCount, 1);
+    expect(word.correctCount, 5);
+    expect(word.wrongCount, 2);
+    expect(word.meaningRecognitionScore, 60);
+    expect(word.spellingScore, 55);
+    expect(word.meaningRecallScore, 40);
+  });
 }
