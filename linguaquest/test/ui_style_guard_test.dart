@@ -491,6 +491,8 @@ void main() {
       expect(knowledge, contains('派生词族'));
       expect(knowledge, contains('词根拆词'));
       expect(knowledge, contains('WordKnowledgeSections.custom'));
+      expect(knowledge, contains('_KnowledgeDisclosure'));
+      expect(knowledge, contains('AnimatedSize'));
       expect(knowledge, isNot(contains('Card(')));
     });
 

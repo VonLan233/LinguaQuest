@@ -5,7 +5,7 @@ import '../../core/widgets/learning_badges.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 
-class WordKnowledgeSections extends StatelessWidget {
+class WordKnowledgeSections extends StatefulWidget {
   WordKnowledgeSections({required Word word, super.key})
     : wordText = word.word,
       meaning = word.meaning,
@@ -21,48 +21,158 @@ class WordKnowledgeSections extends StatelessWidget {
   final String exampleSentence;
 
   @override
+  State<WordKnowledgeSections> createState() => _WordKnowledgeSectionsState();
+}
+
+class _WordKnowledgeSectionsState extends State<WordKnowledgeSections> {
+  final Set<int> _expandedIndexes = {0};
+
+  @override
   Widget build(BuildContext context) {
-    final knowledge = _knowledgeFor(wordText, meaning, exampleSentence);
+    final knowledge = _knowledgeFor(
+      widget.wordText,
+      widget.meaning,
+      widget.exampleSentence,
+    );
+    final items = [
+      _KnowledgePanelData(
+        icon: Icons.hub_outlined,
+        color: AppTheme.cyan,
+        title: '词组搭配',
+        body: knowledge.collocations.join(' · '),
+      ),
+      _KnowledgePanelData(
+        icon: Icons.compare_arrows_rounded,
+        color: AppTheme.teal,
+        title: '近义 / 反义',
+        body:
+            '近义：${knowledge.synonyms.join('、')}；反义：${knowledge.antonyms.join('、')}',
+      ),
+      _KnowledgePanelData(
+        icon: Icons.account_tree_outlined,
+        color: AppTheme.mango,
+        title: '派生词族',
+        body: knowledge.family.join(' · '),
+      ),
+      _KnowledgePanelData(
+        icon: Icons.psychology_outlined,
+        color: AppTheme.coral,
+        title: '词根拆词',
+        body: knowledge.rootNote,
+      ),
+    ];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('词汇全解', style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 12),
-        _KnowledgeLine(
-          icon: Icons.hub_outlined,
-          color: AppTheme.cyan,
-          title: '词组搭配',
-          body: knowledge.collocations.join(' · '),
-        ),
-        const _KnowledgeDivider(),
-        _KnowledgeLine(
-          icon: Icons.compare_arrows_rounded,
-          color: AppTheme.teal,
-          title: '近义 / 反义',
-          body:
-              '近义：${knowledge.synonyms.join('、')}；反义：${knowledge.antonyms.join('、')}',
-        ),
-        const _KnowledgeDivider(),
-        _KnowledgeLine(
-          icon: Icons.account_tree_outlined,
-          color: AppTheme.mango,
-          title: '派生词族',
-          body: knowledge.family.join(' · '),
-        ),
-        const _KnowledgeDivider(),
-        _KnowledgeLine(
-          icon: Icons.psychology_outlined,
-          color: AppTheme.coral,
-          title: '词根拆词',
-          body: knowledge.rootNote,
-        ),
+        for (var index = 0; index < items.length; index++) ...[
+          _KnowledgeDisclosure(
+            data: items[index],
+            expanded: _expandedIndexes.contains(index),
+            onTap: () => _toggle(index),
+          ),
+          if (index != items.length - 1) const _KnowledgeDivider(),
+        ],
       ],
+    );
+  }
+
+  void _toggle(int index) {
+    setState(() {
+      if (!_expandedIndexes.add(index)) {
+        _expandedIndexes.remove(index);
+      }
+    });
+  }
+}
+
+class _KnowledgeDisclosure extends StatelessWidget {
+  const _KnowledgeDisclosure({
+    required this.data,
+    required this.expanded,
+    required this.onTap,
+  });
+
+  final _KnowledgePanelData data;
+  final bool expanded;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Semantics(
+      button: true,
+      expanded: expanded,
+      label: data.title,
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                IconCueBadge(icon: data.icon, color: data.color, size: 38),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              data.title,
+                              style: theme.textTheme.titleMedium,
+                            ),
+                          ),
+                          Icon(
+                            expanded
+                                ? Icons.keyboard_arrow_up_rounded
+                                : Icons.keyboard_arrow_down_rounded,
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ],
+                      ),
+                      AnimatedSize(
+                        duration: const Duration(milliseconds: 180),
+                        curve: Curves.easeOutCubic,
+                        alignment: Alignment.topCenter,
+                        child: expanded
+                            ? Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 4,
+                                  right: 4,
+                                ),
+                                child: Text(
+                                  data.body,
+                                  style: TextStyle(
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                    height: 1.42,
+                                  ),
+                                ),
+                              )
+                            : const SizedBox(width: double.infinity, height: 0),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
 
-class _KnowledgeLine extends StatelessWidget {
-  const _KnowledgeLine({
+class _KnowledgePanelData {
+  const _KnowledgePanelData({
     required this.icon,
     required this.color,
     required this.title,
@@ -73,34 +183,6 @@ class _KnowledgeLine extends StatelessWidget {
   final Color color;
   final String title;
   final String body;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        IconCueBadge(icon: icon, color: color, size: 38),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: theme.textTheme.titleMedium),
-              const SizedBox(height: 4),
-              Text(
-                body,
-                style: TextStyle(
-                  color: theme.colorScheme.onSurfaceVariant,
-                  height: 1.42,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
 }
 
 class _KnowledgeDivider extends StatelessWidget {

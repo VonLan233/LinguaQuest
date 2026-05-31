@@ -1643,6 +1643,12 @@ void main() {
     expect(find.text('近义 / 反义'), findsOneWidget);
     expect(find.text('派生词族'), findsOneWidget);
     expect(find.text('词根拆词'), findsOneWidget);
+    expect(find.textContaining('related word'), findsNothing);
+
+    await tester.tap(find.text('近义 / 反义'));
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('related word'), findsOneWidget);
   });
 
   testWidgets('home and wordbook tolerate empty lesson words and tags', (
