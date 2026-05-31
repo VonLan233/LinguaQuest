@@ -1300,7 +1300,10 @@ void main() {
 
     expect(find.text('答对 3/4 题 · 已入账 +23 XP · 错题已进入复习。'), findsOneWidget);
     expect(find.text('已入账 +23 XP'), findsOneWidget);
+    expect(find.text('刚刚到账 +23 XP'), findsOneWidget);
     expect(find.text('总积分 23 XP'), findsOneWidget);
+    expect(find.text('当前总积分 23 XP。XP 会同步到个人主页、排行榜和发现页抽奖余额。'), findsOneWidget);
+    expect(find.text('查看 XP 用途'), findsOneWidget);
 
     await tester.scrollUntilVisible(
       find.text('去复习中心'),

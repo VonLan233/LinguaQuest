@@ -50,9 +50,10 @@ class LessonResultScreen extends ConsumerWidget {
         ),
         title: Text(isTimed ? '限时测试结果' : '课程结果'),
       ),
+      bottomNavigationBar: _ResultActions(isTimed: isTimed),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 150),
           children: [
             SectionHeader(
               title: isTimed
@@ -76,6 +77,12 @@ class LessonResultScreen extends ConsumerWidget {
               accuracy: accuracy,
               currentXp: currentXp,
             ),
+            const SizedBox(height: 16),
+            _XpImpactNotice(
+              xpEarned: resolved.xpEarned,
+              currentXp: currentXp,
+              isTimed: isTimed,
+            ),
             const SizedBox(height: 20),
             Text(
               '错题',
@@ -89,12 +96,40 @@ class LessonResultScreen extends ConsumerWidget {
             else
               for (final mistake in resolved.mistakes)
                 _MistakeResultRow(mistake: mistake),
-            const SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ResultActions extends StatelessWidget {
+  const _ResultActions({required this.isTimed});
+
+  final bool isTimed;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return SafeArea(
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          border: Border(
+            top: BorderSide(color: theme.colorScheme.outlineVariant),
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
             FilledButton.icon(
               onPressed: () => context.go('/review'),
               icon: const Icon(Icons.replay),
               label: const Text('去复习中心'),
             ),
+            const SizedBox(height: 8),
             OutlinedButton.icon(
               onPressed: () => context.go(isTimed ? '/training' : '/learn'),
               icon: Icon(
@@ -104,6 +139,77 @@ class LessonResultScreen extends ConsumerWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _XpImpactNotice extends StatelessWidget {
+  const _XpImpactNotice({
+    required this.xpEarned,
+    required this.currentXp,
+    required this.isTimed,
+  });
+
+  final int xpEarned;
+  final int? currentXp;
+  final bool isTimed;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final balanceText = currentXp == null ? '总积分已更新' : '当前总积分 $currentXp XP';
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppTheme.mango.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppTheme.mango.withValues(alpha: 0.30)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const IconCueBadge(icon: Icons.bolt, color: AppTheme.mango, size: 48),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '刚刚到账 +$xpEarned XP',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '$balanceText。XP 会同步到个人主页、排行榜和发现页抽奖余额。',
+                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                ),
+                const SizedBox(height: 10),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    PillLabel(
+                      label: isTimed ? '限时测试奖励' : '课程奖励',
+                      icon: isTimed
+                          ? Icons.timer_outlined
+                          : Icons.workspace_premium_outlined,
+                      color: isTimed ? AppTheme.coral : AppTheme.cyan,
+                    ),
+                    OutlinedButton.icon(
+                      onPressed: () => context.go('/discover'),
+                      icon: const Icon(Icons.help_outline_rounded),
+                      label: const Text('查看 XP 用途'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
