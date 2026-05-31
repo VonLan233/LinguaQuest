@@ -52,7 +52,7 @@ class MistakeBookScreen extends ConsumerWidget {
               EmptyState(
                 icon: Icons.check_circle_outline,
                 title: '错词本已清空',
-                message: '测验答错，或把自定义词标记为没记住后，这里会出现复习项。',
+                message: '测验答错，或把生词本词卡标记为没记住后，这里会出现复习项。',
                 action: OutlinedButton.icon(
                   onPressed: () => context.go('/learn'),
                   icon: const Icon(Icons.play_arrow_rounded),
@@ -68,10 +68,10 @@ class MistakeBookScreen extends ConsumerWidget {
                 for (final mistake in lessonMistakes)
                   _MistakeWordRow(mistake: mistake),
               const SizedBox(height: 18),
-              Text('弱项自定义词', style: Theme.of(context).textTheme.titleLarge),
+              Text('弱项生词', style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 10),
               if (weakWords.isEmpty)
-                const Text('还没有弱项自定义词。')
+                const Text('还没有弱项生词。')
               else
                 for (final word in weakWords) _WeakCustomWordRow(word: word),
             ],

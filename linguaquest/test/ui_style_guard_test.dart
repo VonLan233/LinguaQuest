@@ -413,6 +413,35 @@ void main() {
       expect(reviewStudy, contains('displayCustomTag(word.tag)'));
     });
 
+    test('custom word surfaces use wordbook-facing Chinese wording', () {
+      final files = [
+        File('lib/features/wordbook/custom_word_list_screen.dart'),
+        File('lib/features/search/search_screen.dart'),
+        File('lib/features/learning/learning_path_screen.dart'),
+        File('lib/features/wordbook/wordbook_screen.dart'),
+        File('lib/features/review/mistake_book_screen.dart'),
+        File('lib/features/review/review_center_screen.dart'),
+        File('lib/features/study/review_study_screen.dart'),
+        File('lib/features/profile/about_screen.dart'),
+      ];
+      final source = files.map((file) => file.readAsStringSync()).join('\n');
+
+      expect(source, contains("title: const Text('生词本')"));
+      expect(source, contains("_SearchSectionTitle(title: '生词本'"));
+      expect(source, contains('打开单词本和生词本'));
+      expect(source, contains("tooltip: '生词本'"));
+      expect(source, contains('弱项生词'));
+      expect(source, contains('添加生词本词卡'));
+      expect(source, contains('添加生词'));
+      expect(source, contains('生词本和学习记录'));
+
+      for (final file in files) {
+        final text = file.readAsStringSync();
+        expect(text, isNot(contains('自定义词卡')), reason: file.path);
+        expect(text, isNot(contains('自定义词')), reason: file.path);
+      }
+    });
+
     test('target word tags are localized at display boundaries', () {
       final labels = File('lib/core/utils/ui_labels.dart').readAsStringSync();
       final wordbook = File(

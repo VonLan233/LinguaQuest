@@ -47,7 +47,7 @@ class AboutScreen extends StatelessWidget {
             const ListTile(
               leading: Icon(Icons.privacy_tip_outlined),
               title: Text('隐私'),
-              subtitle: Text('自定义词卡和学习记录仅归属于当前登录用户。'),
+              subtitle: Text('生词本和学习记录仅归属于当前登录用户。'),
             ),
           ],
         ),

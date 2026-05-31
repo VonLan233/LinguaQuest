@@ -451,7 +451,7 @@ class _QueueCompleteView extends StatelessWidget {
           title: hasReviewed ? '今日复习完成' : '复习队列已清空',
           message: hasReviewed
               ? '已更新本轮词卡的下次复习时间。'
-              : '添加自定义词，或把错题加入错词卡后，这里会生成复习任务。',
+              : '添加生词，或把错题加入错词卡后，这里会生成复习任务。',
           action: Wrap(
             alignment: WrapAlignment.center,
             spacing: 10,

@@ -57,7 +57,7 @@ class LearningPathScreen extends ConsumerWidget {
             OutlinedButton.icon(
               onPressed: () => context.push('/wordbook'),
               icon: const Icon(Icons.style_outlined),
-              label: const Text('打开单词本和自定义词卡'),
+              label: const Text('打开单词本和生词本'),
             ),
           ],
         ),

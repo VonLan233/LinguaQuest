@@ -30,7 +30,7 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/wordbook'),
-        title: const Text('自定义词卡'),
+        title: const Text('生词本'),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/custom-words/new'),
@@ -93,7 +93,7 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
                   ? EmptyState(
                       icon: Icons.style_outlined,
                       title: '没有匹配的词卡',
-                      message: '可以添加一张自定义词卡，或调整搜索条件。',
+                      message: '可以添加一张个人词卡，或调整搜索条件。',
                       action: FilledButton.icon(
                         onPressed: () => context.push('/custom-words/new'),
                         icon: const Icon(Icons.add),
@@ -138,7 +138,7 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text('删除“${word.word}”？'),
-        content: const Text('这会同时删除自定义词卡和它的复习计划。'),
+        content: const Text('这会同时删除这张个人词卡和它的复习计划。'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),

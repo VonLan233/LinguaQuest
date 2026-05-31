@@ -1097,6 +1097,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('没有找到结果'), findsOneWidget);
+    expect(find.text('添加生词'), findsOneWidget);
   });
 
   testWidgets('lesson preview does not open training-only timed packs', (

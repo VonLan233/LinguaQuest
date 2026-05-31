@@ -58,17 +58,17 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               const EmptyState(
                 icon: Icons.search,
                 title: '输入关键词开始搜索',
-                message: '可以搜索目标词、自定义词卡、中文释义、例句或标签。',
+                message: '可以搜索目标词、生词本、中文释义、例句或标签。',
               )
             else if (!hasResults)
               EmptyState(
                 icon: Icons.manage_search_outlined,
                 title: '没有找到结果',
-                message: '换一个关键词，或添加一张自定义词卡。',
+                message: '换一个关键词，或添加一张个人词卡。',
                 action: OutlinedButton.icon(
                   onPressed: () => context.push('/custom-words/new'),
                   icon: const Icon(Icons.add),
-                  label: const Text('添加自定义词'),
+                  label: const Text('添加生词'),
                 ),
               )
             else ...[
@@ -79,7 +79,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               ],
               if (customWords.isNotEmpty) ...[
                 const SizedBox(height: 12),
-                _SearchSectionTitle(title: '自定义词卡', count: customWords.length),
+                _SearchSectionTitle(title: '生词本', count: customWords.length),
                 for (final word in customWords.take(20))
                   _CustomWordTile(word: word),
               ],

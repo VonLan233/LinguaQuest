@@ -60,11 +60,11 @@ class ReviewCenterScreen extends ConsumerWidget {
               EmptyState(
                 icon: Icons.check_circle_outline,
                 title: '复习队列已清空',
-                message: '添加自定义词卡，或把错题加入错词本后，这里会生成复习队列。',
+                message: '添加生词本词卡，或把错题加入错词本后，这里会生成复习队列。',
                 action: OutlinedButton.icon(
                   onPressed: () => context.push('/custom-words/new'),
                   icon: const Icon(Icons.add),
-                  label: const Text('添加自定义词'),
+                  label: const Text('添加生词'),
                 ),
               )
             else
@@ -461,7 +461,7 @@ class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
         children: [
           Text('加入错词卡', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 4),
-          Text(selectableCount == 0 ? '最近错题已经全部在自定义词卡里。' : '选择错词后，可以直接加入复习卡片。'),
+          Text(selectableCount == 0 ? '最近错题已经全部在生词本里。' : '选择错词后，可以直接加入复习卡片。'),
           const SizedBox(height: 10),
           for (final mistake in visibleMistakes) ...[
             Builder(
