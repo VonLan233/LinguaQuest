@@ -252,6 +252,14 @@ List<Lesson> seedLessons() {
       tags: ['health', 'daily'],
     ),
   ];
+  final allWords = [
+    ...examWords,
+    ...travelWords,
+    ...workWords,
+    ...foodWords,
+    ...healthWords,
+    ...campusWords,
+  ];
 
   return [
     _lesson(
@@ -262,6 +270,7 @@ List<Lesson> seedLessons() {
       status: 'current',
       xpReward: 30,
       words: examWords,
+      distractorWords: allWords,
     ),
     _lesson(
       id: 'lesson-travel-1',
@@ -271,6 +280,7 @@ List<Lesson> seedLessons() {
       status: 'locked',
       xpReward: 25,
       words: travelWords,
+      distractorWords: allWords,
     ),
     _lesson(
       id: 'lesson-work-1',
@@ -280,6 +290,7 @@ List<Lesson> seedLessons() {
       status: 'locked',
       xpReward: 30,
       words: workWords,
+      distractorWords: allWords,
     ),
     _lesson(
       id: 'lesson-food-1',
@@ -289,6 +300,7 @@ List<Lesson> seedLessons() {
       status: 'locked',
       xpReward: 20,
       words: foodWords,
+      distractorWords: allWords,
     ),
     _lesson(
       id: 'lesson-health-1',
@@ -298,6 +310,7 @@ List<Lesson> seedLessons() {
       status: 'locked',
       xpReward: 20,
       words: healthWords,
+      distractorWords: allWords,
     ),
     _lesson(
       id: 'lesson-campus-1',
@@ -307,6 +320,7 @@ List<Lesson> seedLessons() {
       status: 'locked',
       xpReward: 20,
       words: campusWords,
+      distractorWords: allWords,
     ),
   ];
 }
@@ -319,6 +333,7 @@ Lesson _lesson({
   required String status,
   required int xpReward,
   required List<Word> words,
+  required List<Word> distractorWords,
 }) {
   return Lesson(
     id: id,
@@ -335,7 +350,11 @@ Lesson _lesson({
         type: QuizQuestionType.meaningChoice,
         prompt: '选择“${words[0].word}”的中文释义。',
         answer: words[0].meaning,
-        options: [words[0].meaning, words[1].meaning, words[2].meaning],
+        options: _choiceOptions(
+          answer: words[0].meaning,
+          localDistractors: [words[1].meaning, words[2].meaning],
+          fallbackDistractors: distractorWords.map((word) => word.meaning),
+        ),
         explanation:
             '“${words[0].word}”的意思是${words[0].meaning}。${words[0].exampleSentence}',
         word: words[0],
@@ -345,7 +364,11 @@ Lesson _lesson({
         type: QuizQuestionType.chineseChoice,
         prompt: '根据中文释义选择英文单词：${words[1].meaning}',
         answer: words[1].word,
-        options: [words[1].word, words[0].word, words[2].word],
+        options: _choiceOptions(
+          answer: words[1].word,
+          localDistractors: [words[0].word, words[2].word],
+          fallbackDistractors: distractorWords.map((word) => word.word),
+        ),
         explanation:
             '“${words[1].meaning}”对应“${words[1].word}”。${words[1].exampleSentence}',
         word: words[1],
@@ -355,7 +378,11 @@ Lesson _lesson({
         type: QuizQuestionType.contextChoice,
         prompt: '根据语境选择“${words[2].word}”的中文释义：${words[2].exampleSentence}',
         answer: words[2].meaning,
-        options: [words[2].meaning, words[0].meaning, words[1].meaning],
+        options: _choiceOptions(
+          answer: words[2].meaning,
+          localDistractors: [words[0].meaning, words[1].meaning],
+          fallbackDistractors: distractorWords.map((word) => word.meaning),
+        ),
         explanation:
             '这句话里“${words[2].word}”表示${words[2].meaning}。${words[2].exampleTranslation}',
         word: words[2],
@@ -371,4 +398,32 @@ Lesson _lesson({
       ),
     ],
   );
+}
+
+List<String> _choiceOptions({
+  required String answer,
+  required Iterable<String> localDistractors,
+  required Iterable<String> fallbackDistractors,
+}) {
+  final options = <String>[];
+  final seen = <String>{};
+
+  void addOption(String value) {
+    final cleaned = value.trim();
+    if (cleaned.isEmpty) return;
+    final key = cleaned.toLowerCase();
+    if (seen.add(key)) options.add(cleaned);
+  }
+
+  addOption(answer);
+  for (final option in localDistractors) {
+    addOption(option);
+    if (options.length == 4) return List.unmodifiable(options);
+  }
+  for (final option in fallbackDistractors) {
+    addOption(option);
+    if (options.length == 4) return List.unmodifiable(options);
+  }
+
+  return List.unmodifiable(options);
 }

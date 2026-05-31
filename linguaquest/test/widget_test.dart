@@ -845,6 +845,9 @@ void main() {
     final firstLessonTypes = {
       for (final question in lessons.first.questions) question.type,
     };
+    final choiceQuestions = lessons
+        .expand((lesson) => lesson.questions)
+        .where((question) => question.type != QuizQuestionType.spelling);
 
     expect(lessons, hasLength(greaterThanOrEqualTo(6)));
     expect(lessons, hasLength(lessThanOrEqualTo(10)));
@@ -857,6 +860,11 @@ void main() {
         QuizQuestionType.spelling,
       }),
     );
+    for (final question in choiceQuestions) {
+      expect(question.options, hasLength(4));
+      expect(question.options.toSet(), hasLength(4));
+      expect(question.options, contains(question.answer));
+    }
   });
 
   test('formal wordbook follows the selected learning target', () {
