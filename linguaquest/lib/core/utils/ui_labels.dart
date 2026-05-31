@@ -2,12 +2,21 @@ import '../../data/models/lesson.dart';
 
 String displayTarget(String? value) {
   switch (value) {
+    case 'CET-4':
+      return '四级核心词汇';
+    case 'CET-6':
+      return '六级核心词汇';
+    case 'IELTS':
+    case '雅思核心词汇':
+      return '雅思核心词汇';
+    case 'TOEFL':
+      return '托福高频词汇';
+    case 'MUET':
+      return 'MUET 高频词汇';
     case 'Daily English':
       return '日常英语';
     case 'Business English':
       return '商务英语';
-    case '雅思核心词汇':
-      return '雅思核心词汇';
     case null:
       return '日常英语';
     default:

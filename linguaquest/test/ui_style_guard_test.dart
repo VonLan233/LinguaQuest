@@ -371,6 +371,17 @@ void main() {
       }
     });
 
+    test('exam target labels are localized for display', () {
+      final labels = File('lib/core/utils/ui_labels.dart').readAsStringSync();
+
+      expect(labels, contains("case 'IELTS'"));
+      expect(labels, contains('雅思核心词汇'));
+      expect(labels, contains('托福高频词汇'));
+      expect(labels, contains('四级核心词汇'));
+      expect(labels, contains('六级核心词汇'));
+      expect(labels, contains('MUET 高频词汇'));
+    });
+
     test('custom word tags are localized at display boundaries', () {
       final labels = File('lib/core/utils/ui_labels.dart').readAsStringSync();
       final addEdit = File(

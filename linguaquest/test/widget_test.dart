@@ -68,7 +68,7 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     expect(find.text('已连续打卡 6 天'), findsOneWidget);
-    expect(find.text('IELTS · 中级'), findsOneWidget);
+    expect(find.text('雅思核心词汇 · 中级'), findsOneWidget);
     expect(find.text('首页'), findsWidgets);
     expect(find.text('训练场'), findsWidgets);
 
@@ -844,10 +844,10 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('目标设置'), findsOneWidget);
-    expect(find.text('IELTS'), findsWidgets);
+    expect(find.text('雅思核心词汇'), findsWidgets);
     expect(find.text('15/天'), findsOneWidget);
     expect(find.text('当前词书'), findsOneWidget);
-    expect(find.text('IELTS · 已学 0/3 词'), findsOneWidget);
+    expect(find.text('雅思核心词汇 · 已学 0/3 词'), findsOneWidget);
     expect(find.text('新学 15 词'), findsOneWidget);
     expect(find.text('复习上限 30 词'), findsOneWidget);
     expect(find.text('查看完整词汇表'), findsOneWidget);
