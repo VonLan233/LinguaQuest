@@ -1,3 +1,5 @@
+import '../../data/models/lesson.dart';
+
 String displayTarget(String? value) {
   switch (value) {
     case 'Daily English':
@@ -10,6 +12,21 @@ String displayTarget(String? value) {
       return '日常英语';
     default:
       return value;
+  }
+}
+
+String displayQuestionType(QuizQuestionType type) {
+  switch (type) {
+    case QuizQuestionType.meaningChoice:
+      return '英文选义';
+    case QuizQuestionType.chineseChoice:
+      return '中文选词';
+    case QuizQuestionType.contextChoice:
+      return '语境选义';
+    case QuizQuestionType.imageChoice:
+      return '图片选词';
+    case QuizQuestionType.spelling:
+      return '拼写';
   }
 }
 

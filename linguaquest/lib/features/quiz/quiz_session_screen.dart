@@ -344,6 +344,11 @@ class _QuestionPromptPanel extends StatelessWidget {
             runSpacing: 8,
             alignment: WrapAlignment.center,
             children: [
+              PillLabel(
+                label: displayQuestionType(question.type),
+                icon: _questionTypeIcon(question.type),
+                color: AppTheme.cyan,
+              ),
               PillLabel(label: question.word.partOfSpeech),
               PillLabel(
                 label: displayDifficulty(question.word.difficulty),
@@ -354,6 +359,21 @@ class _QuestionPromptPanel extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  IconData _questionTypeIcon(QuizQuestionType type) {
+    switch (type) {
+      case QuizQuestionType.meaningChoice:
+        return Icons.translate_outlined;
+      case QuizQuestionType.chineseChoice:
+        return Icons.swap_horiz_rounded;
+      case QuizQuestionType.contextChoice:
+        return Icons.format_quote_outlined;
+      case QuizQuestionType.imageChoice:
+        return Icons.image_search_outlined;
+      case QuizQuestionType.spelling:
+        return Icons.edit_outlined;
+    }
   }
 }
 

@@ -1255,6 +1255,7 @@ void main() {
     await tester.pumpAndSettle();
     await _completeNewWordCards(tester);
 
+    expect(find.text('英文选义'), findsOneWidget);
     await tester.tap(find.text('分配'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));

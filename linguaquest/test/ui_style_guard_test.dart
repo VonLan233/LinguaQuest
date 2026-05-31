@@ -553,6 +553,20 @@ void main() {
       expect(lessonResult, contains('总积分 \$currentXp XP'));
     });
 
+    test('quiz question types stay localized on the learning page', () {
+      final labels = File('lib/core/utils/ui_labels.dart').readAsStringSync();
+      final quiz = File(
+        'lib/features/quiz/quiz_session_screen.dart',
+      ).readAsStringSync();
+
+      expect(labels, contains('displayQuestionType'));
+      expect(labels, contains('英文选义'));
+      expect(labels, contains('中文选词'));
+      expect(labels, contains('语境选义'));
+      expect(labels, contains('拼写'));
+      expect(quiz, contains('displayQuestionType(question.type)'));
+    });
+
     test('supporting page copy avoids prototype disclaimers', () {
       final sources = [
         File(
