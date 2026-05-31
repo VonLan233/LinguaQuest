@@ -42,12 +42,18 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(appControllerProvider);
     _initializeFromState(state);
+    final selectedLessons = learningLessonsForTarget(state.lessons, _target);
+    final totalWords = selectedLessons.fold<int>(
+      0,
+      (total, lesson) => total + lesson.words.length,
+    );
+    final completedWords = selectedLessons
+        .where((lesson) => state.completedLessonIds.contains(lesson.id))
+        .fold<int>(0, (total, lesson) => total + lesson.words.length);
     final plannedDailyWords = _deadline == null
         ? null
-        : _dailyWordsForDeadline(
-            learningLessonsForTarget(state.lessons, _target),
-            state.completedLessonIds,
-          );
+        : _dailyWordsForDeadline(selectedLessons, state.completedLessonIds);
+    final dailyWords = plannedDailyWords ?? _dailyGoal;
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/home'),
@@ -73,11 +79,20 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
                   icon: Icons.flag_outlined,
                 ),
                 PillLabel(
-                  label: '${plannedDailyWords ?? _dailyGoal}/天',
+                  label: '$dailyWords/天',
                   icon: Icons.today_outlined,
                   color: AppTheme.mango,
                 ),
               ],
+            ),
+            const SizedBox(height: 16),
+            _PlanSnapshotLine(
+              target: displayTarget(_target),
+              totalWords: totalWords,
+              completedWords: completedWords,
+              dailyWords: dailyWords,
+              reviewLimit: dailyWords * 2,
+              onOpenWordbook: () => context.push('/wordbook'),
             ),
             const SizedBox(height: 20),
             _ChoiceSection<String>(
@@ -226,6 +241,94 @@ DateTime clampDeadlinePickerInitialDate({
   if (selectedDay.isBefore(today)) return today.add(const Duration(days: 30));
   if (selectedDay.isAfter(lastDate)) return lastDate;
   return selectedDay;
+}
+
+class _PlanSnapshotLine extends StatelessWidget {
+  const _PlanSnapshotLine({
+    required this.target,
+    required this.totalWords,
+    required this.completedWords,
+    required this.dailyWords,
+    required this.reviewLimit,
+    required this.onOpenWordbook,
+  });
+
+  final String target;
+  final int totalWords;
+  final int completedWords;
+  final int dailyWords;
+  final int reviewLimit;
+  final VoidCallback onOpenWordbook;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final progress = totalWords == 0
+        ? 0.0
+        : (completedWords / totalWords).clamp(0.0, 1.0);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            IconCueBadge(
+              icon: Icons.menu_book_outlined,
+              color: AppTheme.cyan,
+              size: 44,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('当前词书', style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 3),
+                  Text(
+                    '$target · 已学 $completedWords/$totalWords 词',
+                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(999),
+          child: LinearProgressIndicator(
+            value: progress,
+            minHeight: 10,
+            backgroundColor: AppTheme.progressTrack(context),
+            valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.teal),
+          ),
+        ),
+        const SizedBox(height: 10),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            PillLabel(
+              label: '新学 $dailyWords 词',
+              icon: Icons.add_task_rounded,
+              color: AppTheme.teal,
+            ),
+            PillLabel(
+              label: '复习上限 $reviewLimit 词',
+              icon: Icons.replay_rounded,
+              color: AppTheme.mango,
+            ),
+            TextButton.icon(
+              onPressed: onOpenWordbook,
+              icon: const Icon(Icons.style_outlined),
+              label: const Text('查看完整词汇表'),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 }
 
 class _ChoiceSection<T> extends StatelessWidget {

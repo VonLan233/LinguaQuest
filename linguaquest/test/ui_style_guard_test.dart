@@ -343,6 +343,9 @@ void main() {
       ).readAsStringSync();
 
       expect(goalSetup, contains('_ChoiceList'));
+      expect(goalSetup, contains('_PlanSnapshotLine'));
+      expect(goalSetup, contains('当前词书'));
+      expect(goalSetup, contains('查看完整词汇表'));
       expect(goalSetup, isNot(contains('_ChoiceGrid')));
       expect(goalSetup, isNot(contains('GridView.count')));
       expect(goalSetup, contains('radio_button_unchecked_rounded'));

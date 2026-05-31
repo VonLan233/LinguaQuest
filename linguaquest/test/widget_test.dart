@@ -784,6 +784,12 @@ void main() {
     final dailyEnglishSize = tester.getSize(dailyEnglish);
     final businessEnglishSize = tester.getSize(businessEnglish);
 
+    await tester.scrollUntilVisible(
+      businessEnglish,
+      120,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
     await tester.tap(businessEnglish);
     await tester.pumpAndSettle();
 
@@ -840,6 +846,11 @@ void main() {
     expect(find.text('目标设置'), findsOneWidget);
     expect(find.text('IELTS'), findsWidgets);
     expect(find.text('15/天'), findsOneWidget);
+    expect(find.text('当前词书'), findsOneWidget);
+    expect(find.text('IELTS · 已学 0/3 词'), findsOneWidget);
+    expect(find.text('新学 15 词'), findsOneWidget);
+    expect(find.text('复习上限 30 词'), findsOneWidget);
+    expect(find.text('查看完整词汇表'), findsOneWidget);
   });
 
   test('deadline picker initial date stays inside selectable bounds', () {
