@@ -7,7 +7,6 @@ import '../../core/theme/app_theme.dart';
 import '../../core/utils/date_formatting.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/empty_state.dart';
-import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/custom_word.dart';
@@ -35,59 +34,109 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
     final currentWord = _queue.isEmpty ? null : _queue.first;
     final totalCount = _reviewedCount + _queue.length;
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: const FallbackBackButton(fallbackLocation: '/home'),
-        title: const Text('复习'),
+    return PopScope(
+      canPop: !_needsExitConfirmation && !_isSubmitting,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) return;
+        await _handleBack(context);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: BackButton(onPressed: () => _handleBack(context)),
+          title: const Text('复习'),
+          actions: [
+            TextButton(
+              onPressed: () => _openReviewCenter(context),
+              child: const Text('管理复习队列'),
+            ),
+          ],
+        ),
+        bottomNavigationBar: currentWord == null
+            ? null
+            : _ReviewActions(
+                isRevealed: _revealed,
+                isSubmitting: _isSubmitting,
+                onMissed: () => setState(() => _revealed = true),
+                onContinueAfterReveal: () =>
+                    _review(currentWord, isCorrect: false),
+                onKnown: () => _review(currentWord, isCorrect: true),
+              ),
+        body: SafeArea(
+          child: currentWord == null
+              ? _QueueCompleteView(hasReviewed: _reviewedCount > 0)
+              : ListView(
+                  padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
+                  children: [
+                    SectionHeader(
+                      title: '今日复习',
+                      subtitle: '先回想，再翻开答案；答错会回到本轮稍后巩固。',
+                      trailing: PillLabel(
+                        label: '${_reviewedCount + 1}/$totalCount',
+                        icon: Icons.auto_graph,
+                        color: AppTheme.cyan,
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    LinearProgressIndicator(
+                      value: totalCount == 0
+                          ? 1
+                          : (_reviewedCount / totalCount).clamp(0.0, 1.0),
+                      minHeight: 9,
+                      borderRadius: BorderRadius.circular(999),
+                      backgroundColor: AppTheme.progressTrack(context),
+                    ),
+                    const SizedBox(height: 18),
+                    _ReviewWordCard(word: currentWord, isRevealed: _revealed),
+                    const SizedBox(height: 14),
+                    _MemoryHintLine(word: currentWord, isRevealed: _revealed),
+                  ],
+                ),
+        ),
+      ),
+    );
+  }
+
+  bool get _needsExitConfirmation =>
+      _reviewedCount > 0 || _revealed || _reinforcementIds.isNotEmpty;
+
+  Future<void> _handleBack(BuildContext activeContext) async {
+    final canLeave = await _confirmExitIfNeeded(activeContext);
+    if (!canLeave || !activeContext.mounted) return;
+    if (activeContext.canPop()) {
+      activeContext.pop();
+      return;
+    }
+    activeContext.go('/home');
+  }
+
+  Future<void> _openReviewCenter(BuildContext activeContext) async {
+    final canLeave = await _confirmExitIfNeeded(activeContext);
+    if (!canLeave || !activeContext.mounted) return;
+    activeContext.push('/review');
+  }
+
+  Future<bool> _confirmExitIfNeeded(BuildContext activeContext) async {
+    if (_isSubmitting) return false;
+    if (!_needsExitConfirmation) return true;
+    final confirmed = await showDialog<bool>(
+      context: activeContext,
+      builder: (context) => AlertDialog(
+        title: const Text('离开复习？'),
+        content: const Text('已完成的词卡已经保存；未完成的词仍会保留在复习队列。'),
         actions: [
           TextButton(
-            onPressed: () => context.push('/review'),
-            child: const Text('管理复习队列'),
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('继续复习'),
+          ),
+          FilledButton.icon(
+            onPressed: () => Navigator.pop(context, true),
+            icon: const Icon(Icons.exit_to_app_rounded),
+            label: const Text('离开'),
           ),
         ],
       ),
-      bottomNavigationBar: currentWord == null
-          ? null
-          : _ReviewActions(
-              isRevealed: _revealed,
-              isSubmitting: _isSubmitting,
-              onMissed: () => setState(() => _revealed = true),
-              onContinueAfterReveal: () =>
-                  _review(currentWord, isCorrect: false),
-              onKnown: () => _review(currentWord, isCorrect: true),
-            ),
-      body: SafeArea(
-        child: currentWord == null
-            ? _QueueCompleteView(hasReviewed: _reviewedCount > 0)
-            : ListView(
-                padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
-                children: [
-                  SectionHeader(
-                    title: '今日复习',
-                    subtitle: '先回想，再翻开答案；答错会回到本轮稍后巩固。',
-                    trailing: PillLabel(
-                      label: '${_reviewedCount + 1}/$totalCount',
-                      icon: Icons.auto_graph,
-                      color: AppTheme.cyan,
-                    ),
-                  ),
-                  const SizedBox(height: 14),
-                  LinearProgressIndicator(
-                    value: totalCount == 0
-                        ? 1
-                        : (_reviewedCount / totalCount).clamp(0.0, 1.0),
-                    minHeight: 9,
-                    borderRadius: BorderRadius.circular(999),
-                    backgroundColor: AppTheme.progressTrack(context),
-                  ),
-                  const SizedBox(height: 18),
-                  _ReviewWordCard(word: currentWord, isRevealed: _revealed),
-                  const SizedBox(height: 14),
-                  _MemoryHintLine(word: currentWord, isRevealed: _revealed),
-                ],
-              ),
-      ),
     );
+    return confirmed == true;
   }
 
   Future<void> _review(CustomWord word, {required bool isCorrect}) async {

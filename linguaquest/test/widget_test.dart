@@ -317,6 +317,59 @@ void main() {
     expect(find.text('resilient'), findsOneWidget);
   });
 
+  testWidgets('review flow confirms before leaving after progress', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'review-exit-user',
+      name: 'Rina',
+      email: 'rina@lingua.quest',
+      targetExam: 'IELTS',
+      level: 'Intermediate',
+      dailyGoal: 12,
+      xp: 240,
+      streak: 6,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+
+    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.scrollUntilVisible(
+      find.text('复习 2'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, '复习 2'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(OutlinedButton, '没记住'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(BackButtonIcon));
+    await tester.pumpAndSettle();
+
+    expect(find.text('离开复习？'), findsOneWidget);
+    expect(find.text('已完成的词卡已经保存；未完成的词仍会保留在复习队列。'), findsOneWidget);
+
+    await tester.tap(find.text('继续复习'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('今日复习'), findsOneWidget);
+
+    await tester.tap(find.byType(BackButtonIcon));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, '离开'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('今日任务控制台'), findsOneWidget);
+  });
+
   testWidgets('discover check-in only counts same-day study', (tester) async {
     final yesterday = DateTime.now().subtract(const Duration(days: 1));
     final profile = UserProfile(

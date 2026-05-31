@@ -233,6 +233,9 @@ void main() {
       expect(lessonPreview, isNot(contains('_ContextCard')));
       expect(reviewStudy, contains('_ReviewWordCard'));
       expect(reviewStudy, contains('_MemoryHintLine'));
+      expect(reviewStudy, contains('PopScope'));
+      expect(reviewStudy, contains('离开复习？'));
+      expect(reviewStudy, contains('已完成的词卡已经保存'));
       expect(reviewStudy, isNot(contains('_MemoryHintCard')));
     });
 
