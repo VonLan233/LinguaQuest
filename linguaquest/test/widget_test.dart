@@ -805,6 +805,43 @@ void main() {
     expect(tester.getSize(visibleAdvanced), advancedSize);
   });
 
+  testWidgets('goal setup starts from the current learning profile', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'goal-current-user',
+      name: 'Gina',
+      email: 'gina@lingua.quest',
+      targetExam: 'IELTS',
+      level: 'Advanced',
+      dailyGoal: 15,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+
+    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.scrollUntilVisible(
+      find.text('学习模式'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('学习模式'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('目标设置'), findsOneWidget);
+    expect(find.text('IELTS'), findsWidgets);
+    expect(find.text('15/天'), findsOneWidget);
+  });
+
   test('deadline picker initial date stays inside selectable bounds', () {
     final now = DateTime(2026, 5, 25, 15, 45);
     final today = DateTime(2026, 5, 25);

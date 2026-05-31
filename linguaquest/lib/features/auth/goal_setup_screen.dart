@@ -24,6 +24,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
   String _level = 'Elementary';
   int _dailyGoal = 10;
   DateTime? _deadline;
+  var _initializedFromState = false;
 
   static const targets = [
     'CET-4',
@@ -40,6 +41,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(appControllerProvider);
+    _initializeFromState(state);
     final plannedDailyWords = _deadline == null
         ? null
         : _dailyWordsForDeadline(
@@ -151,6 +153,16 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
         ),
       ),
     );
+  }
+
+  void _initializeFromState(AppState state) {
+    if (_initializedFromState) return;
+    final user = state.user;
+    if (user == null) return;
+    _target = state.learningPlan?.target ?? user.targetExam;
+    _level = user.level;
+    _dailyGoal = state.learningPlan?.dailyWords ?? user.dailyGoal;
+    _initializedFromState = true;
   }
 
   Future<void> _save() async {
