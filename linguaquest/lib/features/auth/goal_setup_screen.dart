@@ -25,6 +25,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
   int _dailyGoal = 10;
   DateTime? _deadline;
   var _initializedFromState = false;
+  late final ProviderSubscription<AppState> _stateSubscription;
 
   static const targets = [
     'CET-4',
@@ -39,9 +40,25 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
   static const goals = [5, 10, 15, 20];
 
   @override
+  void initState() {
+    super.initState();
+    _stateSubscription = ref.listenManual<AppState>(appControllerProvider, (
+      previous,
+      next,
+    ) {
+      _initializeFromState(next, notify: previous != null);
+    }, fireImmediately: true);
+  }
+
+  @override
+  void dispose() {
+    _stateSubscription.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final state = ref.watch(appControllerProvider);
-    _initializeFromState(state);
     final selectedLessons = learningLessonsForTarget(state.lessons, _target);
     final totalWords = selectedLessons.fold<int>(
       0,
@@ -170,14 +187,22 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
     );
   }
 
-  void _initializeFromState(AppState state) {
+  void _initializeFromState(AppState state, {required bool notify}) {
     if (_initializedFromState) return;
     final user = state.user;
     if (user == null) return;
-    _target = state.learningPlan?.target ?? user.targetExam;
-    _level = user.level;
-    _dailyGoal = state.learningPlan?.dailyWords ?? user.dailyGoal;
-    _initializedFromState = true;
+    void updateFields() {
+      _target = state.learningPlan?.target ?? user.targetExam;
+      _level = user.level;
+      _dailyGoal = state.learningPlan?.dailyWords ?? user.dailyGoal;
+      _initializedFromState = true;
+    }
+
+    if (notify && mounted) {
+      setState(updateFields);
+    } else {
+      updateFields();
+    }
   }
 
   Future<void> _save() async {

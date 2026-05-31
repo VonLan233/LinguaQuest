@@ -237,6 +237,9 @@ void main() {
       expect(reviewStudy, contains('离开复习？'));
       expect(reviewStudy, contains('已完成的词卡已经保存'));
       expect(reviewStudy, isNot(contains('_MemoryHintCard')));
+      expect(lessonPreview, contains('didUpdateWidget'));
+      expect(reviewStudy, contains('listenManual<AppState>'));
+      expect(reviewStudy, isNot(contains('_syncQueue(state.dueWords)')));
     });
 
     test('new study and review stay separate from campus timed tests', () {
@@ -349,6 +352,8 @@ void main() {
       expect(goalSetup, isNot(contains('_ChoiceGrid')));
       expect(goalSetup, isNot(contains('GridView.count')));
       expect(goalSetup, contains('radio_button_unchecked_rounded'));
+      expect(goalSetup, contains('listenManual<AppState>'));
+      expect(goalSetup, isNot(contains('_initializeFromState(state);')));
     });
 
     test('legacy English UI labels do not reappear', () {
@@ -605,6 +610,23 @@ void main() {
       expect(lessonResult, contains('刚刚到账 +\$xpEarned XP'));
       expect(lessonResult, contains('XP 会同步到个人主页、排行榜和发现页抽奖余额'));
       expect(lessonResult, contains('查看 XP 用途'));
+    });
+
+    test('async and route safety checks stay explicit', () {
+      final pronunciation = File(
+        'lib/core/widgets/pronunciation_controls.dart',
+      ).readAsStringSync();
+      final router = File(
+        'lib/core/routing/app_router.dart',
+      ).readAsStringSync();
+
+      expect(pronunciation, contains('if (!mounted) return;'));
+      expect(
+        pronunciation.indexOf('ScaffoldMessenger.maybeOf(context)'),
+        greaterThan(pronunciation.indexOf('await Future<void>.delayed')),
+      );
+      expect(router, contains('extra is LessonResult ? extra : null'));
+      expect(router, isNot(contains('extra as LessonResult?')));
     });
 
     test('quiz question types stay localized on the learning page', () {

@@ -74,7 +74,6 @@ class _PronunciationControlsState extends State<PronunciationControls> {
 
   Future<void> _play(_PronunciationAccent accent) async {
     if (_loadingAccent != null) return;
-    final messenger = ScaffoldMessenger.maybeOf(context);
     final view = View.of(context);
     setState(() {
       _loadingAccent = accent;
@@ -88,6 +87,7 @@ class _PronunciationControlsState extends State<PronunciationControls> {
     final hasWord = word.isNotEmpty;
     if (hasWord) {
       await HapticFeedback.selectionClick();
+      if (!mounted) return;
       SemanticsService.sendAnnouncement(
         view,
         '${accent.label} $word',
@@ -100,6 +100,7 @@ class _PronunciationControlsState extends State<PronunciationControls> {
       _failedAccent = hasWord ? null : accent;
     });
 
+    final messenger = ScaffoldMessenger.maybeOf(context);
     messenger?.clearSnackBars();
     messenger?.showSnackBar(
       SnackBar(

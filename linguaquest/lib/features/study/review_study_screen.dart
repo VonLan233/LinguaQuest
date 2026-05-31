@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/state/app_state.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/date_formatting.dart';
 import '../../core/utils/ui_labels.dart';
@@ -26,11 +27,27 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
   var _reviewedCount = 0;
   var _isSubmitting = false;
   var _queueInitialized = false;
+  late final ProviderSubscription<AppState> _stateSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _stateSubscription = ref.listenManual<AppState>(appControllerProvider, (
+      previous,
+      next,
+    ) {
+      _syncQueue(next.dueWords, notify: previous != null);
+    }, fireImmediately: true);
+  }
+
+  @override
+  void dispose() {
+    _stateSubscription.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(appControllerProvider);
-    _syncQueue(state.dueWords);
     final currentWord = _queue.isEmpty ? null : _queue.first;
     final totalCount = _reviewedCount + _queue.length;
 
@@ -174,15 +191,22 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
     _completeCurrentReview(word, requeue: !isCorrect);
   }
 
-  void _syncQueue(List<CustomWord> dueWords) {
+  void _syncQueue(List<CustomWord> dueWords, {required bool notify}) {
+    final changed = _applyQueueSync(dueWords);
+    if (!changed || !notify || !mounted) return;
+    setState(() {});
+  }
+
+  bool _applyQueueSync(List<CustomWord> dueWords) {
     if (!_queueInitialized) {
       _queue
         ..clear()
         ..addAll(dueWords);
       _queueInitialized = true;
-      return;
+      return dueWords.isNotEmpty;
     }
 
+    var changed = false;
     final queuedIds = _queue.map((word) => word.id).toSet();
     for (final word in dueWords) {
       if (_completedIds.contains(word.id) || queuedIds.contains(word.id)) {
@@ -190,7 +214,9 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
       }
       _queue.add(word);
       queuedIds.add(word.id);
+      changed = true;
     }
+    return changed;
   }
 
   CustomWord _latestWordSnapshot(CustomWord fallback) {

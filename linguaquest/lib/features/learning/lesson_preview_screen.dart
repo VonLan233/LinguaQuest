@@ -25,6 +25,14 @@ class _LessonPreviewScreenState extends ConsumerState<LessonPreviewScreen> {
   int _wordIndex = 0;
 
   @override
+  void didUpdateWidget(LessonPreviewScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.lessonId == widget.lessonId) return;
+    _confidenceByWordId.clear();
+    _wordIndex = 0;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final lesson = _findLesson(ref);
     if (lesson == null) {
@@ -32,14 +40,15 @@ class _LessonPreviewScreenState extends ConsumerState<LessonPreviewScreen> {
     }
 
     final words = lesson.words;
-    final word = words.isEmpty
-        ? null
-        : words[_wordIndex.clamp(0, words.length - 1)];
+    final currentIndex = words.isEmpty
+        ? 0
+        : _wordIndex.clamp(0, words.length - 1).toInt();
+    final word = words.isEmpty ? null : words[currentIndex];
     final selectedConfidence = word == null
         ? null
         : _confidenceByWordId[word.id];
-    final progress = words.isEmpty ? 0.0 : (_wordIndex + 1) / words.length;
-    final isLastWord = _wordIndex >= words.length - 1;
+    final progress = words.isEmpty ? 0.0 : (currentIndex + 1) / words.length;
+    final isLastWord = currentIndex >= words.length - 1;
 
     return PopScope(
       canPop: !_hasStarted,
@@ -102,7 +111,7 @@ class _LessonPreviewScreenState extends ConsumerState<LessonPreviewScreen> {
               SectionHeader(
                 title: '先建立理解，再做语境题',
                 subtitle:
-                    '${lesson.section} · ${lesson.estimatedMinutes} 分钟 · 第 ${words.isEmpty ? 0 : _wordIndex + 1}/${words.length} 张',
+                    '${lesson.section} · ${lesson.estimatedMinutes} 分钟 · 第 ${words.isEmpty ? 0 : currentIndex + 1}/${words.length} 张',
               ),
               const SizedBox(height: 12),
               ClipRRect(
@@ -153,7 +162,7 @@ class _LessonPreviewScreenState extends ConsumerState<LessonPreviewScreen> {
                 for (var index = 0; index < words.length; index++)
                   _MiniWordRow(
                     word: words[index],
-                    isCurrent: index == _wordIndex,
+                    isCurrent: index == currentIndex,
                     isChecked: _confidenceByWordId.containsKey(words[index].id),
                     onTap: () => setState(() => _wordIndex = index),
                   ),

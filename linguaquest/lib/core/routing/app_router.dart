@@ -203,7 +203,9 @@ final routerProvider = Provider<GoRouter>((ref) {
               source: extra.source,
             );
           }
-          return LessonResultScreen(result: extra as LessonResult?);
+          return LessonResultScreen(
+            result: extra is LessonResult ? extra : null,
+          );
         },
       ),
     ],
