@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'quest_card.dart';
+import 'learning_badges.dart';
 
 class EmptyState extends StatelessWidget {
   const EmptyState({
@@ -20,9 +20,8 @@ class EmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Center(
-      child: QuestCard(
-        margin: const EdgeInsets.symmetric(vertical: 8),
-        padding: const EdgeInsets.all(24),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

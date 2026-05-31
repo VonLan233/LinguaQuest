@@ -4,20 +4,31 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
-import '../../core/widgets/quest_card.dart';
+import '../../core/utils/ui_labels.dart';
+import '../../core/widgets/learning_badges.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
+import 'lesson_result_screen.dart';
+
+enum QuizSessionMode { lesson, timed }
 
 class QuizSessionScreen extends ConsumerStatefulWidget {
-  const QuizSessionScreen({required this.lessonId, super.key});
+  const QuizSessionScreen({
+    required this.lessonId,
+    this.mode = QuizSessionMode.lesson,
+    super.key,
+  });
 
   final String lessonId;
+  final QuizSessionMode mode;
 
   @override
   ConsumerState<QuizSessionScreen> createState() => _QuizSessionScreenState();
 }
 
 class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
+  static const _feedbackHoldDuration = Duration(milliseconds: 500);
+
   final _textController = TextEditingController();
   final List<QuizQuestion> _mistakes = [];
   final Set<String> _mistakeQuestionIds = {};
@@ -27,6 +38,8 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
   bool _checked = false;
   bool _lastCorrect = false;
   bool _isSubmitting = false;
+  bool _feedbackReady = true;
+  int _feedbackHoldToken = 0;
 
   @override
   void dispose() {
@@ -36,17 +49,20 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isTimed = widget.mode == QuizSessionMode.timed;
     final lessons = ref.watch(
-      appControllerProvider.select((state) => state.lessons),
+      appControllerProvider.select(
+        (state) => isTimed ? state.lessons : state.formalLessons,
+      ),
     );
     final lesson = _findLesson(lessons);
     if (lesson == null) {
-      return const Scaffold(body: Center(child: Text('Lesson not found')));
+      return const Scaffold(body: Center(child: Text('没有找到这节课')));
     }
     if (lesson.questions.isEmpty) {
       return Scaffold(
         appBar: AppBar(title: Text(lesson.title)),
-        body: const Center(child: Text('This lesson has no quiz yet.')),
+        body: const Center(child: Text('这节课还没有测验。')),
       );
     }
     final question = lesson.questions[_index];
@@ -61,7 +77,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
       child: Scaffold(
         appBar: AppBar(
           leading: BackButton(onPressed: () => _handleBack(context)),
-          title: Text(lesson.title),
+          title: Text(isTimed ? '限时测试' : lesson.title),
         ),
         body: SafeArea(
           child: Padding(
@@ -78,6 +94,9 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
                           value: progress,
                           minHeight: 12,
                           backgroundColor: AppTheme.progressTrack(context),
+                          valueColor: const AlwaysStoppedAnimation<Color>(
+                            AppTheme.teal,
+                          ),
                         ),
                       ),
                     ),
@@ -86,6 +105,14 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
                       label: '${_index + 1}/${lesson.questions.length}',
                       icon: Icons.flag_outlined,
                     ),
+                    if (isTimed) ...[
+                      const SizedBox(width: 8),
+                      const PillLabel(
+                        label: '校园速测',
+                        icon: Icons.timer_outlined,
+                        color: AppTheme.coral,
+                      ),
+                    ],
                   ],
                 ),
                 const SizedBox(height: 14),
@@ -94,38 +121,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        QuestCard(
-                          color: AppTheme.warmSurface(context),
-                          child: Column(
-                            children: [
-                              ImageCueBadge(
-                                cue: question.word.imageCue,
-                                size: 112,
-                              ),
-                              const SizedBox(height: 14),
-                              Text(
-                                question.prompt,
-                                textAlign: TextAlign.center,
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.headlineSmall,
-                              ),
-                              const SizedBox(height: 10),
-                              Wrap(
-                                spacing: 8,
-                                runSpacing: 8,
-                                alignment: WrapAlignment.center,
-                                children: [
-                                  PillLabel(label: question.word.partOfSpeech),
-                                  PillLabel(
-                                    label: question.word.difficulty,
-                                    color: AppTheme.coral,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
+                        _QuestionPromptPanel(question: question),
                         const SizedBox(height: 18),
                         _QuestionInput(
                           question: question,
@@ -137,10 +133,10 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
                           onInputChanged: () => setState(() {}),
                         ),
                         if (_checked) ...[
-                          const SizedBox(height: 18),
+                          const SizedBox(height: 14),
                           _FeedbackPanel(
                             isCorrect: _lastCorrect,
-                            explanation: question.explanation,
+                            question: question,
                           ),
                         ],
                       ],
@@ -148,7 +144,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
                   ),
                 ),
                 FilledButton.icon(
-                  onPressed: _canContinue(question) && !_isSubmitting
+                  onPressed: _canUsePrimaryAction(question) && !_isSubmitting
                       ? () => _handlePrimary(lesson, question)
                       : null,
                   style: FilledButton.styleFrom(
@@ -164,11 +160,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
                         ? Icons.arrow_forward_rounded
                         : Icons.check_rounded,
                   ),
-                  label: Text(
-                    _checked
-                        ? (_lastCorrect ? 'Continue' : 'Try again')
-                        : 'Check',
-                  ),
+                  label: Text(_checked ? (_lastCorrect ? '继续' : '再试一次') : '检查'),
                 ),
               ],
             ),
@@ -193,17 +185,17 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
       final confirmed = await showDialog<bool>(
         context: activeContext,
         builder: (context) => AlertDialog(
-          title: const Text('Leave quiz?'),
-          content: const Text('Your current quiz progress will be discarded.'),
+          title: const Text('离开测验？'),
+          content: const Text('当前测验进度将被放弃。'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Stay'),
+              child: const Text('继续答题'),
             ),
             FilledButton.icon(
               onPressed: () => Navigator.pop(context, true),
               icon: const Icon(Icons.exit_to_app_rounded),
-              label: const Text('Leave'),
+              label: const Text('离开'),
             ),
           ],
         ),
@@ -218,8 +210,11 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
       activeContext.pop();
       return;
     }
-    activeContext.go('/learn');
+    activeContext.go(_fallbackExitRoute);
   }
+
+  String get _fallbackExitRoute =>
+      widget.mode == QuizSessionMode.timed ? '/training' : '/learn';
 
   Lesson? _findLesson(List<Lesson> lessons) {
     for (final lesson in lessons) {
@@ -228,8 +223,12 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
     return null;
   }
 
-  bool _canContinue(QuizQuestion question) {
-    if (_checked) return true;
+  bool _canUsePrimaryAction(QuizQuestion question) {
+    if (_checked) return _feedbackReady;
+    return _hasAnswer(question);
+  }
+
+  bool _hasAnswer(QuizQuestion question) {
     if (question.type == QuizQuestionType.spelling) {
       return _textController.text.trim().isNotEmpty;
     }
@@ -245,6 +244,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
       setState(() {
         _checked = true;
         _lastCorrect = isCorrect;
+        _feedbackReady = false;
         if (isCorrect) {
           if (!_mistakeQuestionIds.contains(question.id)) {
             _correct++;
@@ -253,6 +253,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
           _mistakes.add(question);
         }
       });
+      _holdFeedback();
       return;
     }
 
@@ -260,6 +261,8 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
       setState(() {
         _checked = false;
         _selected = null;
+        _feedbackReady = true;
+        _feedbackHoldToken++;
       });
       return;
     }
@@ -285,7 +288,15 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
         setState(() => _isSubmitting = false);
         return;
       }
-      context.go('/lesson/${lesson.id}/result', extra: result);
+      context.go(
+        '/lesson/${lesson.id}/result',
+        extra: LessonResultViewArgs(
+          result: result,
+          source: widget.mode == QuizSessionMode.timed
+              ? LessonResultSource.timed
+              : LessonResultSource.lesson,
+        ),
+      );
       return;
     }
 
@@ -294,8 +305,75 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
       _selected = null;
       _checked = false;
       _lastCorrect = false;
+      _feedbackReady = true;
+      _feedbackHoldToken++;
       _textController.clear();
     });
+  }
+
+  void _holdFeedback() {
+    final token = ++_feedbackHoldToken;
+    Future<void>.delayed(_feedbackHoldDuration, () {
+      if (!mounted || token != _feedbackHoldToken) return;
+      setState(() => _feedbackReady = true);
+    });
+  }
+}
+
+class _QuestionPromptPanel extends StatelessWidget {
+  const _QuestionPromptPanel({required this.question});
+
+  final QuizQuestion question;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Column(
+        children: [
+          ImageCueBadge(cue: question.word.imageCue, size: 104),
+          const SizedBox(height: 14),
+          Text(
+            question.prompt,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            alignment: WrapAlignment.center,
+            children: [
+              PillLabel(
+                label: displayQuestionType(question.type),
+                icon: _questionTypeIcon(question.type),
+                color: AppTheme.cyan,
+              ),
+              PillLabel(label: question.word.partOfSpeech),
+              PillLabel(
+                label: displayDifficulty(question.word.difficulty),
+                color: AppTheme.coral,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  IconData _questionTypeIcon(QuizQuestionType type) {
+    switch (type) {
+      case QuizQuestionType.meaningChoice:
+        return Icons.translate_outlined;
+      case QuizQuestionType.chineseChoice:
+        return Icons.swap_horiz_rounded;
+      case QuizQuestionType.contextChoice:
+        return Icons.format_quote_outlined;
+      case QuizQuestionType.imageChoice:
+        return Icons.image_search_outlined;
+      case QuizQuestionType.spelling:
+        return Icons.edit_outlined;
+    }
   }
 }
 
@@ -323,7 +401,7 @@ class _QuestionInput extends StatelessWidget {
         controller: controller,
         enabled: !checked,
         decoration: const InputDecoration(
-          labelText: 'Type the word',
+          labelText: '输入单词',
           prefixIcon: Icon(Icons.edit_outlined),
         ),
         onChanged: (_) => onInputChanged(),
@@ -337,6 +415,7 @@ class _QuestionInput extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 10),
             child: SizedBox(
               width: double.infinity,
+              height: 66,
               child: OutlinedButton(
                 onPressed: checked ? () {} : () => onSelected(option),
                 style: OutlinedButton.styleFrom(
@@ -410,7 +489,7 @@ class _QuestionInput extends StatelessWidget {
   Color _optionBorder(BuildContext context, String option) {
     if (!checked) {
       return selected == option
-          ? AppTheme.teal
+          ? Theme.of(context).colorScheme.primary
           : Theme.of(context).colorScheme.outlineVariant;
     }
     if (_isCorrectOption(option)) return _successColor(context);
@@ -420,39 +499,74 @@ class _QuestionInput extends StatelessWidget {
 
   Color _successColor(BuildContext context) {
     return Theme.of(context).brightness == Brightness.dark
-        ? Colors.green.shade300
-        : Colors.green.shade700;
+        ? Theme.of(context).colorScheme.primary
+        : AppTheme.success;
   }
 }
 
 class _FeedbackPanel extends StatelessWidget {
-  const _FeedbackPanel({required this.isCorrect, required this.explanation});
+  const _FeedbackPanel({required this.isCorrect, required this.question});
 
   final bool isCorrect;
-  final String explanation;
+  final QuizQuestion question;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final color = isCorrect
-        ? (Theme.of(context).brightness == Brightness.dark
-              ? Colors.green.shade300
-              : Colors.green.shade700)
-        : Theme.of(context).colorScheme.error;
-    return QuestCard(
-      color: color.withValues(alpha: 0.10),
-      borderColor: color.withValues(alpha: 0.28),
+        ? (theme.brightness == Brightness.dark
+              ? theme.colorScheme.primary
+              : AppTheme.success)
+        : theme.colorScheme.error;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            isCorrect ? Icons.check_circle_outline : Icons.info_outline,
-            color: color,
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.12),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              isCorrect ? Icons.check_rounded : Icons.close_rounded,
+              color: color,
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: Text(
-              isCorrect ? 'Correct. $explanation' : 'Not yet. $explanation',
-              style: TextStyle(color: color),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  isCorrect
+                      ? '答对了。${question.explanation}'
+                      : '还不对。${question.explanation}',
+                  style: TextStyle(color: color),
+                ),
+                if (isCorrect) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    '强化记忆：${question.word.word} · ${question.word.meaning}',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  if (question.word.exampleSentence.isNotEmpty) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      question.word.exampleSentence,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        height: 1.35,
+                      ),
+                    ),
+                  ],
+                ],
+              ],
             ),
           ),
         ],

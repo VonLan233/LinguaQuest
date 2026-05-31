@@ -18,6 +18,7 @@ import '../../data/repositories/learning_repository.dart';
 import '../../data/repositories/mock_repositories.dart';
 import '../../data/repositories/review_repository.dart';
 import '../constants/app_constants.dart';
+import '../utils/ui_labels.dart';
 import 'app_state.dart';
 
 final apiClientProvider = Provider<ApiClient>((ref) => ApiClient());
@@ -62,6 +63,7 @@ class AppController extends Notifier<AppState> {
   static const _todayDateKey = 'linguaquest.today.date';
   static const _todayLessonIdsKey = 'linguaquest.today.lessons';
   static const _todayReviewIdsKey = 'linguaquest.today.reviews';
+  static const _todayRewardIdsKey = 'linguaquest.today.rewards';
 
   late final AuthRepository _authRepository;
   late final CustomWordRepository _customWordRepository;
@@ -91,6 +93,9 @@ class AppController extends Notifier<AppState> {
       final todayReviewWordIds = hasTodayState
           ? _stringSet(prefs, _todayReviewIdsKey)
           : <String>{};
+      final todayClaimedRewardIds = hasTodayState
+          ? _stringSet(prefs, _todayRewardIdsKey)
+          : <String>{};
       final lessons = _applyLessonProgression(
         await _learningRepository.listLessons(),
         completedLessonIds,
@@ -111,12 +116,13 @@ class AppController extends Notifier<AppState> {
         completedLessonIds: completedLessonIds,
         todayCompletedLessonIds: todayCompletedLessonIds,
         todayReviewWordIds: todayReviewWordIds,
+        todayClaimedRewardIds: todayClaimedRewardIds,
       );
     } catch (error) {
       state = state.copyWith(
         isBootstrapped: false,
         isLoading: false,
-        errorMessage: 'Could not start LinguaQuest: ${_friendlyError(error)}',
+        errorMessage: 'LinguaQuest 启动失败：${_friendlyError(error)}',
       );
     }
   }
@@ -317,9 +323,7 @@ class AppController extends Notifier<AppState> {
     if (word == null) return false;
     final now = DateTime.now();
     if (isCorrect && !word.isDue(now)) {
-      state = state.copyWith(
-        errorMessage: 'This word is already marked for today.',
-      );
+      state = state.copyWith(errorMessage: '这张词卡今天已经完成复习。');
       return false;
     }
     return _run(() async {
@@ -353,6 +357,28 @@ class AppController extends Notifier<AppState> {
     });
   }
 
+  Future<bool> claimReward({
+    required String id,
+    required int points,
+    required bool isAvailable,
+  }) async {
+    final user = state.user;
+    if (user == null || points <= 0 || !isAvailable) return false;
+    if (state.todayClaimedRewardIds.contains(id)) return false;
+    return _run(() async {
+      final now = DateTime.now();
+      final claimedRewardIds = {...state.todayClaimedRewardIds, id};
+      final updatedUser = await _authRepository.updateProfile(
+        user.copyWith(xp: user.xp + points, updatedAt: now),
+      );
+      await _saveTodayClaimedRewards(claimedRewardIds);
+      state = state.copyWith(
+        user: updatedUser,
+        todayClaimedRewardIds: claimedRewardIds,
+      );
+    });
+  }
+
   Future<int> addMistakesToCustomWords(Set<String> wordIds) async {
     final user = state.user;
     final mistakes = state.lastResult?.mistakes ?? const [];
@@ -381,7 +407,7 @@ class AppController extends Notifier<AppState> {
               meaning: word.meaning,
               exampleSentence: word.exampleSentence,
               note: '${word.definition}\n${mistake.explanation}',
-              tag: word.tags.isEmpty ? 'mistake' : word.tags.first,
+              tag: word.tags.isEmpty ? '错题' : displayWordTag(word.tags.first),
               difficulty: word.difficulty,
             ),
           ),
@@ -422,15 +448,15 @@ class AppController extends Notifier<AppState> {
       final data = error.response?.data;
       final message = data is Map ? data['error']?.toString() : null;
       if (message == 'email already registered') {
-        return 'This email is already registered. Try logging in instead.';
+        return '该邮箱已经注册，请直接登录。';
       }
       if (message != null && message.isNotEmpty) return message;
-      return 'Network request failed. Please try again.';
+      return '网络请求失败，请稍后重试。';
     }
     if (error is StateError) {
       final message = error.message;
       if (message == 'email already registered') {
-        return 'This email is already registered. Try logging in instead.';
+        return '该邮箱已经注册，请直接登录。';
       }
       return message;
     }
@@ -463,7 +489,7 @@ class AppController extends Notifier<AppState> {
     required DateTime deadline,
   }) {
     final completed = state.completedLessonIds;
-    final remainingWords = state.lessons
+    final remainingWords = learningLessonsForTarget(state.lessons, target)
         .where((lesson) => !completed.contains(lesson.id))
         .fold(0, (total, lesson) => total + lesson.words.length);
     final now = DateTime.now();
@@ -488,17 +514,23 @@ class AppController extends Notifier<AppState> {
   ) {
     if (lessons.isEmpty) return lessons;
     final firstIncomplete = lessons.indexWhere(
-      (lesson) => !completedLessonIds.contains(lesson.id),
+      (lesson) =>
+          !lesson.isTrainingPack && !completedLessonIds.contains(lesson.id),
     );
     if (firstIncomplete == -1) {
       return [
-        for (final lesson in lessons) lesson.copyWith(status: 'completed'),
+        for (final lesson in lessons)
+          lesson.copyWith(
+            status: lesson.isTrainingPack ? 'locked' : 'completed',
+          ),
       ];
     }
     return [
       for (var index = 0; index < lessons.length; index++)
         lessons[index].copyWith(
-          status: completedLessonIds.contains(lessons[index].id)
+          status: lessons[index].isTrainingPack
+              ? 'locked'
+              : completedLessonIds.contains(lessons[index].id)
               ? 'completed'
               : index == firstIncomplete
               ? 'current'
@@ -537,6 +569,17 @@ class AppController extends Notifier<AppState> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_todayDateKey, _dateKey(DateTime.now()));
     await prefs.setStringList(_todayReviewIdsKey, todayReviewWordIds.toList());
+  }
+
+  Future<void> _saveTodayClaimedRewards(
+    Set<String> todayClaimedRewardIds,
+  ) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_todayDateKey, _dateKey(DateTime.now()));
+    await prefs.setStringList(
+      _todayRewardIdsKey,
+      todayClaimedRewardIds.toList(),
+    );
   }
 
   ThemeMode _themeModeFromName(String? value) {

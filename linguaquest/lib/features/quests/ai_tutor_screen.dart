@@ -12,7 +12,7 @@ class AiTutorScreen extends StatefulWidget {
 
 class _AiTutorScreenState extends State<AiTutorScreen> {
   final _promptController = TextEditingController(
-    text: 'Explain affect vs effect',
+    text: '解释 affect 和 effect 的区别',
   );
 
   @override
@@ -26,16 +26,15 @@ class _AiTutorScreenState extends State<AiTutorScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/quest'),
-        title: const Text('AI tutor'),
+        title: const Text('AI 助教'),
       ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
             const SectionHeader(
-              title: 'Mock feedback',
-              subtitle:
-                  'This screen locks the interaction model before any paid AI API is connected.',
+              title: '即时反馈',
+              subtitle: '输入单词、语法或错题，获得结构化解释和可练习的例句。',
             ),
             const SizedBox(height: 16),
             TextField(
@@ -43,21 +42,28 @@ class _AiTutorScreenState extends State<AiTutorScreen> {
               minLines: 2,
               maxLines: 4,
               decoration: const InputDecoration(
-                labelText: 'Ask about a word or mistake',
+                labelText: '询问单词、语法或错题',
                 prefixIcon: Icon(Icons.smart_toy_outlined),
               ),
             ),
             const SizedBox(height: 16),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Text(
-                  'Affect is usually a verb: "The weather affects my mood." '
-                  'Effect is usually a noun: "The effect was immediate." '
-                  'Try making one sentence with each word.',
-                  style: Theme.of(context).textTheme.bodyLarge,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.psychology_alt_outlined,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
-              ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    'Affect is usually a verb: "The weather affects my mood." '
+                    'Effect is usually a noun: "The effect was immediate." '
+                    '你可以分别用两个词各造一个句子。',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                ),
+              ],
             ),
           ],
         ),

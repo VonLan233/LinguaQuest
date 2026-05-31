@@ -4,9 +4,16 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
-import '../../core/widgets/quest_card.dart';
+import '../../core/widgets/fallback_back_button.dart';
+import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson.dart';
+
+const _pathRailWidth = 74.0;
+const _pathNodeHorizontalPadding = 8.0;
+const _pathConnectorWidth = 6.0;
+const _pathConnectorLeft =
+    _pathNodeHorizontalPadding + (_pathRailWidth - _pathConnectorWidth) / 2;
 
 class LearningPathScreen extends ConsumerWidget {
   const LearningPathScreen({super.key});
@@ -14,40 +21,43 @@ class LearningPathScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appControllerProvider);
+    final lessons = state.formalLessons;
     return Scaffold(
-      appBar: AppBar(title: const Text('Learning Path')),
+      appBar: AppBar(
+        leading: const FallbackBackButton(fallbackLocation: '/home'),
+        title: const Text('学习路径'),
+        actions: [
+          QuestIconButton(
+            tooltip: '回到首页',
+            onPressed: () => context.go('/home'),
+            icon: Icons.home_outlined,
+          ),
+          const SizedBox(width: 12),
+        ],
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
           children: [
             SectionHeader(
-              title: 'Learning Path',
-              subtitle:
-                  'Follow the path. No planning, just one small win at a time.',
-              trailing: IconButton(
-                tooltip: 'Wordbook',
+              title: '词书路径',
+              subtitle: '这里只展示词书进度；正式新学和复习回到首页的两个独立入口。',
+              trailing: QuestIconButton(
+                tooltip: '单词本',
                 onPressed: () => context.push('/wordbook'),
-                icon: const Icon(Icons.menu_book_outlined),
+                icon: Icons.menu_book_outlined,
               ),
             ),
             const SizedBox(height: 18),
-            const GradientHeroCard(
-              title: 'Campus Life Unit',
-              subtitle:
-                  'Duolingo-style short nodes with Baicizhan-style visual words inside every lesson.',
-              icon: Icons.route_rounded,
-              badge: 'Section 1 · 33% unlocked',
-            ),
-            const SizedBox(height: 22),
-            for (var index = 0; index < state.lessons.length; index++) ...[
-              _PathNode(lesson: state.lessons[index], index: index),
-              if (index != state.lessons.length - 1) const _PathConnector(),
+            for (var index = 0; index < lessons.length; index++) ...[
+              _PathNode(lesson: lessons[index], index: index),
+              if (index != lessons.length - 1) const _PathConnector(),
             ],
             const SizedBox(height: 10),
             OutlinedButton.icon(
               onPressed: () => context.push('/wordbook'),
               icon: const Icon(Icons.style_outlined),
-              label: const Text('Open wordbook and custom words'),
+              label: const Text('打开单词本和生词本'),
             ),
           ],
         ),
@@ -67,109 +77,109 @@ class _PathNode extends StatelessWidget {
     final locked = lesson.status == 'locked';
     final current = lesson.status == 'current';
     final completed = lesson.status == 'completed';
+    final theme = Theme.of(context);
     final Color color;
     if (locked) {
-      color = Colors.blueGrey;
+      color = theme.colorScheme.onSurfaceVariant;
     } else if (current) {
-      color = AppTheme.coral;
+      color = AppTheme.mango;
     } else if (completed) {
-      color = Colors.green;
+      color = AppTheme.success;
     } else {
-      color = AppTheme.teal;
+      color = AppTheme.cyan;
     }
-    final theme = Theme.of(context);
-    final lockedCardColor = theme.colorScheme.surfaceContainerLow;
-    final cardColor = locked ? lockedCardColor : theme.colorScheme.surface;
-
-    return QuestCard(
-      onTap: locked ? null : () => _showPreview(context),
-      padding: const EdgeInsets.all(16),
-      color: cardColor,
-      borderColor: current ? AppTheme.coral.withValues(alpha: 0.55) : null,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(14),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: locked ? null : () => _showPreview(context),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: current ? 74 : 62,
-                height: current ? 74 : 62,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                  boxShadow: current
-                      ? [
-                          BoxShadow(
-                            color: AppTheme.coral.withValues(alpha: 0.35),
-                            blurRadius: 22,
-                            offset: const Offset(0, 10),
-                          ),
-                        ]
-                      : null,
+              SizedBox(
+                width: _pathRailWidth,
+                child: Center(
+                  child: Container(
+                    width: current ? _pathRailWidth : 62,
+                    height: current ? _pathRailWidth : 62,
+                    decoration: BoxDecoration(
+                      color: color,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: theme.colorScheme.surface,
+                        width: 4,
+                      ),
+                    ),
+                    child: Icon(
+                      locked
+                          ? Icons.lock_rounded
+                          : current
+                          ? Icons.play_arrow_rounded
+                          : completed
+                          ? Icons.check_rounded
+                          : Icons.star_rounded,
+                      color: current ? AppTheme.ink : Colors.white,
+                      size: current ? 38 : 30,
+                    ),
+                  ),
                 ),
-                child: Icon(
-                  locked
-                      ? Icons.lock_rounded
-                      : current
-                      ? Icons.play_arrow_rounded
-                      : Icons.check_rounded,
-                  color: Colors.white,
-                  size: current ? 38 : 30,
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            lesson.section,
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              color: color,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ),
+                        PillLabel(
+                          label: _statusLabel(lesson.status),
+                          icon: locked ? Icons.lock_outline : Icons.bolt,
+                          color: color,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(lesson.title, style: theme.textTheme.titleLarge),
+                    const SizedBox(height: 5),
+                    Text(lesson.description),
+                    const SizedBox(height: 14),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        PillLabel(
+                          label: '${lesson.xpReward} XP',
+                          icon: Icons.bolt,
+                          color: AppTheme.mango,
+                        ),
+                        PillLabel(
+                          label: '${lesson.estimatedMinutes} 分钟',
+                          icon: Icons.timer_outlined,
+                        ),
+                        PillLabel(
+                          label: '${lesson.words.length} 词',
+                          icon: Icons.style_outlined,
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        lesson.section,
-                        style: theme.textTheme.labelLarge?.copyWith(
-                          color: color,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
-                    PillLabel(
-                      label: _statusLabel(lesson.status),
-                      icon: locked ? Icons.lock_outline : Icons.bolt,
-                      color: color,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Text(lesson.title, style: theme.textTheme.titleLarge),
-                const SizedBox(height: 5),
-                Text(lesson.description),
-                const SizedBox(height: 14),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [
-                    PillLabel(
-                      label: '${lesson.xpReward} XP',
-                      icon: Icons.bolt,
-                      color: AppTheme.mango,
-                    ),
-                    PillLabel(
-                      label: '${lesson.estimatedMinutes} min',
-                      icon: Icons.timer_outlined,
-                    ),
-                    PillLabel(
-                      label: '${lesson.words.length} words',
-                      icon: Icons.style_outlined,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -207,7 +217,7 @@ class _PathNode extends StatelessWidget {
                       parentContext.push('/lesson/${lesson.id}');
                     },
                     icon: const Icon(Icons.play_arrow_rounded),
-                    label: const Text('Start lesson'),
+                    label: const Text('开始学习'),
                   ),
                 ],
               ),
@@ -222,11 +232,11 @@ class _PathNode extends StatelessWidget {
 String _statusLabel(String status) {
   switch (status) {
     case 'completed':
-      return 'Completed';
+      return '已完成';
     case 'current':
-      return 'Current';
+      return '当前';
     case 'locked':
-      return 'Locked';
+      return '未解锁';
     default:
       return status;
   }
@@ -237,14 +247,18 @@ class _PathConnector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        width: 6,
-        height: 28,
-        margin: const EdgeInsets.symmetric(vertical: 4),
-        decoration: BoxDecoration(
-          color: AppTheme.teal.withValues(alpha: 0.22),
-          borderRadius: BorderRadius.circular(99),
+    return Padding(
+      padding: const EdgeInsets.only(left: _pathConnectorLeft),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Container(
+          width: _pathConnectorWidth,
+          height: 28,
+          margin: const EdgeInsets.symmetric(vertical: 4),
+          decoration: BoxDecoration(
+            color: AppTheme.teal.withValues(alpha: 0.22),
+            borderRadius: BorderRadius.circular(99),
+          ),
         ),
       ),
     );

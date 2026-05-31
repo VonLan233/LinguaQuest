@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_theme.dart';
 import '../../core/widgets/fallback_back_button.dart';
-import '../../core/widgets/metric_tile.dart';
 import '../../core/widgets/section_header.dart';
 
 class ProgressAnalyticsScreen extends ConsumerWidget {
@@ -28,48 +28,25 @@ class ProgressAnalyticsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/quest'),
-        title: const Text('Progress analytics'),
+        title: const Text('学习分析'),
       ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
             const SectionHeader(
-              title: 'Learning data',
-              subtitle:
-                  'A first-pass analytics view from custom words and review history.',
+              title: '学习数据',
+              subtitle: '根据生词卡和复习记录生成的首版分析视图。',
             ),
             const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: MetricTile(
-                    label: 'Custom words',
-                    value: '${state.customWords.length}',
-                    icon: Icons.style_outlined,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: MetricTile(
-                    label: 'Mastered',
-                    value: '$mastered',
-                    icon: Icons.verified_outlined,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: MetricTile(
-                    label: 'Accuracy',
-                    value: '$accuracy%',
-                    icon: Icons.insights_outlined,
-                  ),
-                ),
-              ],
+            _ProgressSignals(
+              cardCount: state.customWords.length,
+              masteredCount: mastered,
+              accuracy: accuracy,
             ),
             const SizedBox(height: 20),
             Text(
-              'Review load',
+              '复习负荷',
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
@@ -85,10 +62,120 @@ class ProgressAnalyticsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              '${state.dueWords.length} due words out of ${state.customWords.length} custom cards',
+              '${state.customWords.length} 张生词卡中有 ${state.dueWords.length} 张到期',
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _ProgressSignals extends StatelessWidget {
+  const _ProgressSignals({
+    required this.cardCount,
+    required this.masteredCount,
+    required this.accuracy,
+  });
+
+  final int cardCount;
+  final int masteredCount;
+  final int accuracy;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: _ProgressSignal(
+            label: '生词卡',
+            value: '$cardCount',
+            icon: Icons.style_outlined,
+            color: AppTheme.cyan,
+          ),
+        ),
+        const _ProgressSignalDivider(),
+        Expanded(
+          child: _ProgressSignal(
+            label: '已掌握',
+            value: '$masteredCount',
+            icon: Icons.verified_outlined,
+            color: AppTheme.success,
+          ),
+        ),
+        const _ProgressSignalDivider(),
+        Expanded(
+          child: _ProgressSignal(
+            label: '正确率',
+            value: '$accuracy%',
+            icon: Icons.insights_outlined,
+            color: AppTheme.mango,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ProgressSignal extends StatelessWidget {
+  const _ProgressSignal({
+    required this.label,
+    required this.value,
+    required this.icon,
+    required this.color,
+  });
+
+  final String label;
+  final String value;
+  final IconData icon;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(icon, color: color, size: 20),
+        const SizedBox(width: 6),
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                value,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.titleMedium,
+              ),
+              Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ProgressSignalDivider extends StatelessWidget {
+  const _ProgressSignalDivider();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 34,
+      child: VerticalDivider(
+        width: 16,
+        thickness: 1,
+        color: Theme.of(context).colorScheme.outlineVariant,
       ),
     );
   }

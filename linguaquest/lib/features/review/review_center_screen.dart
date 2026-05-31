@@ -6,8 +6,8 @@ import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/date_formatting.dart';
 import '../../core/widgets/empty_state.dart';
-import '../../core/widgets/metric_tile.dart';
-import '../../core/widgets/quest_card.dart';
+import '../../core/widgets/fallback_back_button.dart';
+import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
@@ -23,69 +23,34 @@ class ReviewCenterScreen extends ConsumerWidget {
     final lessonMistakes = state.lastResult?.mistakes ?? const [];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Review center')),
+      appBar: AppBar(
+        leading: const FallbackBackButton(fallbackLocation: '/home'),
+        title: const Text('复习'),
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
           children: [
-            GradientHeroCard(
-              title: due.isEmpty
-                  ? 'Review queue clear'
-                  : '${due.length} cards due',
-              subtitle:
-                  'Spaced repetition brings weak cards back before you forget them.',
-              icon: Icons.replay_rounded,
-              badge: 'Mistake book · Weak words · Due today',
-              action: FilledButton.icon(
-                style: FilledButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: AppTheme.deepTeal,
-                ),
-                onPressed: due.isEmpty
-                    ? () => context.push('/custom-words/new')
-                    : null,
-                icon: const Icon(Icons.add),
-                label: Text(due.isEmpty ? 'Add cards' : 'Queue ready below'),
-              ),
-            ),
-            const SizedBox(height: 20),
-            const SectionHeader(
-              title: 'Review center',
-              subtitle:
-                  'Due words, mistake book, and weak cards stay in one queue.',
+            SectionHeader(
+              title: due.isEmpty ? '今日复习已清空' : '${due.length} 张卡片待复习',
+              subtitle: '答对快速进入下一张；答错才展开词卡，并回收到本轮稍后再练。',
+              trailing: due.isEmpty
+                  ? TextButton.icon(
+                      onPressed: () => context.push('/custom-words/new'),
+                      icon: const Icon(Icons.add),
+                      label: const Text('添加'),
+                    )
+                  : null,
             ),
             const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: MetricTile(
-                    label: 'Due today',
-                    value: '${due.length}',
-                    icon: Icons.today_outlined,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: MetricTile(
-                    label: 'Mistakes',
-                    value: '${weak.length}',
-                    icon: Icons.warning_amber_outlined,
-                    color: Colors.orange,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: MetricTile(
-                    label: 'Words',
-                    value: '${state.customWords.length}',
-                    icon: Icons.style_outlined,
-                  ),
-                ),
-              ],
+            _ReviewQueueSignals(
+              dueCount: due.length,
+              weakCount: weak.length,
+              cardCount: state.customWords.length,
             ),
             const SizedBox(height: 22),
             Text(
-              'Due today',
+              '今日到期',
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
@@ -94,95 +59,154 @@ class ReviewCenterScreen extends ConsumerWidget {
             if (due.isEmpty)
               EmptyState(
                 icon: Icons.check_circle_outline,
-                title: 'Review queue is clear',
-                message:
-                    'Add custom words or mark mistakes to create spaced review cards.',
+                title: '复习队列已清空',
+                message: '添加生词本词卡，或把错题加入错词本后，这里会生成复习队列。',
                 action: OutlinedButton.icon(
                   onPressed: () => context.push('/custom-words/new'),
                   icon: const Icon(Icons.add),
-                  label: const Text('Add custom word'),
+                  label: const Text('添加生词'),
                 ),
               )
             else
               for (final word in due) _ReviewTile(word: word),
             const SizedBox(height: 22),
             Text(
-              'Mistake book',
+              '错词本',
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 10),
             if (lessonMistakes.isEmpty && weak.isEmpty)
-              const Text('No weak words or lesson mistakes yet.')
+              const Text('还没有弱项词或课程错题。')
             else ...[
               if (lessonMistakes.isNotEmpty)
                 _MistakeWordImporter(mistakes: lessonMistakes),
               for (final mistake in lessonMistakes.take(5))
-                QuestCard(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  padding: const EdgeInsets.all(14),
-                  child: Row(
-                    children: [
-                      ImageCueBadge(cue: mistake.word.imageCue, size: 52),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              mistake.word.word,
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                            Text(mistake.explanation),
-                          ],
-                        ),
-                      ),
-                      PillLabel(
-                        label: 'Lesson',
-                        icon: Icons.school_outlined,
-                        color: AppTheme.coral,
-                      ),
-                    ],
-                  ),
-                ),
+                _LessonMistakeRow(mistake: mistake),
               if (lessonMistakes.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: OutlinedButton.icon(
                     onPressed: () => context.push('/mistake-book'),
                     icon: const Icon(Icons.menu_book_outlined),
-                    label: const Text('Open mistake book'),
+                    label: const Text('打开错词本'),
                   ),
                 ),
-              for (final word in weak.take(5))
-                QuestCard(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  padding: const EdgeInsets.all(14),
-                  onTap: () => context.push('/custom-words/${word.id}'),
-                  child: Row(
-                    children: [
-                      ImageCueBadge(cue: wordInitialCue(word.word), size: 52),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              word.word,
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                            Text('${word.wrongCount} wrong · ${word.meaning}'),
-                          ],
-                        ),
-                      ),
-                      const Icon(Icons.chevron_right_rounded),
-                    ],
-                  ),
-                ),
+              for (final word in weak.take(5)) _WeakWordRow(word: word),
             ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _ReviewQueueSignals extends StatelessWidget {
+  const _ReviewQueueSignals({
+    required this.dueCount,
+    required this.weakCount,
+    required this.cardCount,
+  });
+
+  final int dueCount;
+  final int weakCount;
+  final int cardCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: _ReviewSignal(
+            label: '今日到期',
+            value: '$dueCount',
+            icon: Icons.today_outlined,
+            color: AppTheme.teal,
+          ),
+        ),
+        const _ReviewSignalDivider(),
+        Expanded(
+          child: _ReviewSignal(
+            label: '错词',
+            value: '$weakCount',
+            icon: Icons.warning_amber_outlined,
+            color: AppTheme.coral,
+          ),
+        ),
+        const _ReviewSignalDivider(),
+        Expanded(
+          child: _ReviewSignal(
+            label: '词卡',
+            value: '$cardCount',
+            icon: Icons.style_outlined,
+            color: AppTheme.cyan,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ReviewSignal extends StatelessWidget {
+  const _ReviewSignal({
+    required this.label,
+    required this.value,
+    required this.icon,
+    required this.color,
+  });
+
+  final String label;
+  final String value;
+  final IconData icon;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(icon, color: color, size: 20),
+        const SizedBox(width: 6),
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                value,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.titleMedium,
+              ),
+              Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ReviewSignalDivider extends StatelessWidget {
+  const _ReviewSignalDivider();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 34,
+      child: VerticalDivider(
+        width: 16,
+        thickness: 1,
+        color: Theme.of(context).colorScheme.outlineVariant,
       ),
     );
   }
@@ -199,9 +223,9 @@ class _ReviewTile extends ConsumerWidget {
       appControllerProvider.select((state) => state.isLoading),
     );
     final canReview = word.isDue(DateTime.now()) && !isLoading;
-    return QuestCard(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(14),
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -210,40 +234,60 @@ class _ReviewTile extends ConsumerWidget {
               ImageCueBadge(cue: wordInitialCue(word.word), size: 54),
               const SizedBox(width: 12),
               Expanded(
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(word.word),
-                  subtitle: Text(
-                    '${word.meaning} · ${formatRelativeDue(word.nextReviewAt, DateTime.now())}',
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(word.word, style: theme.textTheme.titleMedium),
+                    const SizedBox(height: 3),
+                    Text(
+                      '${word.meaning} · ${formatRelativeDue(word.nextReviewAt, DateTime.now())}',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              Chip(label: Text('${word.masteryLevel}/5')),
+              PillLabel(
+                label: '掌握 ${word.masteryLevel}/5',
+                icon: Icons.psychology_outlined,
+                color: AppTheme.mango,
+              ),
             ],
           ),
           Row(
             children: [
               Expanded(
                 child: OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(48),
+                  ),
                   onPressed: canReview
                       ? () => _review(context, ref, isCorrect: false)
                       : null,
                   icon: const Icon(Icons.close),
-                  label: const Text('Missed'),
+                  label: const FittedBox(child: Text('没记住')),
                 ),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child: FilledButton.icon(
+                  style: FilledButton.styleFrom(
+                    minimumSize: const Size.fromHeight(48),
+                  ),
                   onPressed: canReview
                       ? () => _review(context, ref, isCorrect: true)
                       : null,
                   icon: const Icon(Icons.check),
-                  label: const Text('Remembered'),
+                  label: const FittedBox(child: Text('记住了')),
                 ),
               ),
             ],
           ),
+          const SizedBox(height: 14),
+          Divider(height: 1, color: theme.colorScheme.outlineVariant),
         ],
       ),
     );
@@ -260,13 +304,101 @@ class _ReviewTile extends ConsumerWidget {
     if (!context.mounted) return;
     final message = succeeded
         ? isCorrect
-              ? 'Marked as remembered'
-              : 'Scheduled for practice'
-        : ref.read(appControllerProvider).errorMessage ??
-              'Could not update this card';
+              ? '已标记为记住，下次复习会延后'
+              : '已加入更近的复习计划'
+        : ref.read(appControllerProvider).errorMessage ?? '暂时无法更新这张卡片';
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
+  }
+}
+
+class _LessonMistakeRow extends StatelessWidget {
+  const _LessonMistakeRow({required this.mistake});
+
+  final QuizQuestion mistake;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Row(
+        children: [
+          ImageCueBadge(cue: mistake.word.imageCue, size: 52),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(mistake.word.word, style: theme.textTheme.titleMedium),
+                const SizedBox(height: 3),
+                Text(
+                  mistake.explanation,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 10),
+          PillLabel(
+            label: '课程',
+            icon: Icons.school_outlined,
+            color: AppTheme.coral,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _WeakWordRow extends StatelessWidget {
+  const _WeakWordRow({required this.word});
+
+  final CustomWord word;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: () => context.push('/custom-words/${word.id}'),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Row(
+              children: [
+                ImageCueBadge(cue: wordInitialCue(word.word), size: 52),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(word.word, style: theme.textTheme.titleMedium),
+                      const SizedBox(height: 3),
+                      Text(
+                        '错 ${word.wrongCount} 次 · ${word.meaning}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.chevron_right_rounded),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -322,23 +454,14 @@ class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
         )
         .length;
 
-    return QuestCard(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(14),
-      color: AppTheme.warmSurface(context),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Add Mistake Cards',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+          Text('加入错词卡', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 4),
-          Text(
-            selectableCount == 0
-                ? 'All recent mistakes are already in your custom word cards.'
-                : 'Select wrong words to add directly to your review cards.',
-          ),
+          Text(selectableCount == 0 ? '最近错题已经全部在生词本里。' : '选择错词后，可以直接加入复习卡片。'),
           const SizedBox(height: 10),
           for (final mistake in visibleMistakes) ...[
             Builder(
@@ -346,23 +469,21 @@ class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
                 final exists = existingWords.contains(
                   mistake.word.word.trim().toLowerCase(),
                 );
-                return CheckboxListTile(
-                  contentPadding: EdgeInsets.zero,
-                  value: !exists && _selectedIds.contains(mistake.word.id),
+                return _MistakeSelectionRow(
+                  key: ValueKey('mistake-select-${mistake.word.id}'),
+                  word: mistake.word.word,
+                  meaning: exists ? '已加入' : mistake.word.meaning,
+                  selected: !exists && _selectedIds.contains(mistake.word.id),
                   enabled: !exists,
                   onChanged: (checked) {
                     setState(() {
-                      if (checked ?? false) {
+                      if (checked) {
                         _selectedIds.add(mistake.word.id);
                       } else {
                         _selectedIds.remove(mistake.word.id);
                       }
                     });
                   },
-                  title: Text(mistake.word.word),
-                  subtitle: Text(
-                    exists ? 'Already added' : mistake.word.meaning,
-                  ),
                 );
               },
             ),
@@ -373,7 +494,7 @@ class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
                 ? null
                 : _addSelected,
             icon: const Icon(Icons.add_card_outlined),
-            label: Text('Add Selected ($selectedAddableCount)'),
+            label: Text('加入已选 ($selectedAddableCount)'),
           ),
         ],
       ),
@@ -389,7 +510,7 @@ class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
     if (!mounted) return;
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text('$added mistake cards added')));
+    ).showSnackBar(SnackBar(content: Text('已加入 $added 张错词卡')));
     if (added > 0) setState(() => _selectedIds.clear());
   }
 
@@ -398,5 +519,90 @@ class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
         .take(_visibleMistakeLimit)
         .map((mistake) => mistake.word.id)
         .toSet();
+  }
+}
+
+class _MistakeSelectionRow extends StatelessWidget {
+  const _MistakeSelectionRow({
+    required this.word,
+    required this.meaning,
+    required this.selected,
+    required this.enabled,
+    required this.onChanged,
+    super.key,
+  });
+
+  final String word;
+  final String meaning;
+  final bool selected;
+  final bool enabled;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final color = selected ? AppTheme.teal : theme.colorScheme.outline;
+    return Semantics(
+      button: true,
+      checked: selected,
+      enabled: enabled,
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: enabled ? () => onChanged(!selected) : null,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Row(
+              children: [
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 160),
+                  curve: Curves.easeOutCubic,
+                  width: 30,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    color: selected
+                        ? AppTheme.selectedSurface(context)
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: color, width: selected ? 2 : 1),
+                  ),
+                  child: Icon(
+                    selected ? Icons.check_rounded : Icons.add_rounded,
+                    color: selected ? AppTheme.teal : color,
+                    size: 19,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(word, style: theme.textTheme.titleMedium),
+                      const SizedBox(height: 2),
+                      Text(
+                        meaning,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (!enabled)
+                  const PillLabel(
+                    label: '已加入',
+                    icon: Icons.check_circle_outline,
+                    color: AppTheme.cyan,
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -3,7 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_theme.dart';
+import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/fallback_back_button.dart';
+import '../../core/widgets/learning_badges.dart';
 import '../../data/models/custom_word.dart';
 
 class AddEditCustomWordScreen extends ConsumerStatefulWidget {
@@ -23,7 +26,7 @@ class _AddEditCustomWordScreenState
   final _meaningController = TextEditingController();
   final _exampleController = TextEditingController();
   final _noteController = TextEditingController();
-  final _tagController = TextEditingController(text: 'custom');
+  final _tagController = TextEditingController(text: '自定义');
   String _difficulty = 'Medium';
   bool _hydrated = false;
 
@@ -48,7 +51,7 @@ class _AddEditCustomWordScreenState
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/custom-words'),
-        title: Text(isEditing ? 'Edit word' : 'Add word'),
+        title: Text(isEditing ? '编辑单词' : '添加单词'),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -61,7 +64,7 @@ class _AddEditCustomWordScreenState
                 TextFormField(
                   controller: _wordController,
                   decoration: const InputDecoration(
-                    labelText: 'Word',
+                    labelText: '单词',
                     prefixIcon: Icon(Icons.abc),
                   ),
                   validator: _required,
@@ -70,7 +73,7 @@ class _AddEditCustomWordScreenState
                 TextFormField(
                   controller: _meaningController,
                   decoration: const InputDecoration(
-                    labelText: 'Meaning',
+                    labelText: '释义',
                     prefixIcon: Icon(Icons.translate),
                   ),
                   validator: _required,
@@ -79,7 +82,7 @@ class _AddEditCustomWordScreenState
                 TextFormField(
                   controller: _exampleController,
                   decoration: const InputDecoration(
-                    labelText: 'Example sentence',
+                    labelText: '例句',
                     prefixIcon: Icon(Icons.notes_outlined),
                   ),
                   minLines: 2,
@@ -90,7 +93,7 @@ class _AddEditCustomWordScreenState
                 TextFormField(
                   controller: _noteController,
                   decoration: const InputDecoration(
-                    labelText: 'Note',
+                    labelText: '笔记',
                     prefixIcon: Icon(Icons.edit_note),
                   ),
                   minLines: 2,
@@ -100,26 +103,20 @@ class _AddEditCustomWordScreenState
                 TextFormField(
                   controller: _tagController,
                   decoration: const InputDecoration(
-                    labelText: 'Tag',
+                    labelText: '标签',
                     prefixIcon: Icon(Icons.sell_outlined),
                   ),
                 ),
                 const SizedBox(height: 16),
-                SegmentedButton<String>(
-                  segments: const [
-                    ButtonSegment(value: 'Easy', label: Text('Easy')),
-                    ButtonSegment(value: 'Medium', label: Text('Medium')),
-                    ButtonSegment(value: 'Hard', label: Text('Hard')),
-                  ],
-                  selected: {_difficulty},
-                  onSelectionChanged: (values) =>
-                      setState(() => _difficulty = values.first),
+                _DifficultySelector(
+                  selected: _difficulty,
+                  onSelected: (value) => setState(() => _difficulty = value),
                 ),
                 const SizedBox(height: 22),
                 FilledButton.icon(
                   onPressed: () => _save(existing),
                   icon: const Icon(Icons.save_outlined),
-                  label: Text(isEditing ? 'Save changes' : 'Create word'),
+                  label: Text(isEditing ? '保存修改' : '创建单词'),
                 ),
               ],
             ),
@@ -143,7 +140,7 @@ class _AddEditCustomWordScreenState
     _meaningController.text = word.meaning;
     _exampleController.text = word.exampleSentence;
     _noteController.text = word.note;
-    _tagController.text = word.tag;
+    _tagController.text = displayCustomTag(word.tag);
     _difficulty = word.difficulty;
     _hydrated = true;
   }
@@ -169,7 +166,7 @@ class _AddEditCustomWordScreenState
           exampleSentence: _exampleController.text.trim(),
           note: _noteController.text.trim(),
           tag: _tagController.text.trim().isEmpty
-              ? 'custom'
+              ? '自定义'
               : _tagController.text.trim(),
           difficulty: _difficulty,
         ),
@@ -178,19 +175,57 @@ class _AddEditCustomWordScreenState
     if (!mounted) return;
     if (!succeeded) {
       final message = ref.read(appControllerProvider).errorMessage;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message ?? 'Could not save this word')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message ?? '暂时无法保存这个单词')));
       return;
     }
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Word saved')));
+    ).showSnackBar(const SnackBar(content: Text('单词已保存')));
     context.go('/custom-words');
   }
 }
 
+class _DifficultySelector extends StatelessWidget {
+  const _DifficultySelector({required this.selected, required this.onSelected});
+
+  final String selected;
+  final ValueChanged<String> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final choices = const [
+      (value: 'Easy', label: '简单', color: AppTheme.teal),
+      (value: 'Medium', label: '中等', color: AppTheme.mango),
+      (value: 'Hard', label: '困难', color: AppTheme.coral),
+    ];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('难度', style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            for (var index = 0; index < choices.length; index++) ...[
+              Expanded(
+                child: FilterPillButton(
+                  label: choices[index].label,
+                  selected: selected == choices[index].value,
+                  onSelected: () => onSelected(choices[index].value),
+                  color: choices[index].color,
+                ),
+              ),
+              if (index != choices.length - 1) const SizedBox(width: 8),
+            ],
+          ],
+        ),
+      ],
+    );
+  }
+}
+
 String? _required(String? value) {
-  if (value == null || value.trim().isEmpty) return 'Required';
+  if (value == null || value.trim().isEmpty) return '必填';
   return null;
 }

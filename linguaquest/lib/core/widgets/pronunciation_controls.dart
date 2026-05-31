@@ -1,0 +1,169 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
+import 'package:flutter/services.dart';
+
+import '../theme/app_theme.dart';
+
+enum _PronunciationAccent {
+  uk('英音'),
+  us('美音');
+
+  const _PronunciationAccent(this.label);
+
+  final String label;
+}
+
+class PronunciationControls extends StatefulWidget {
+  const PronunciationControls({
+    required this.word,
+    this.compact = false,
+    super.key,
+  });
+
+  final String word;
+  final bool compact;
+
+  @override
+  State<PronunciationControls> createState() => _PronunciationControlsState();
+}
+
+class _PronunciationControlsState extends State<PronunciationControls> {
+  _PronunciationAccent? _loadingAccent;
+  _PronunciationAccent? _failedAccent;
+
+  @override
+  Widget build(BuildContext context) {
+    final failedAccent = _failedAccent;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _PronunciationButton(
+              accent: _PronunciationAccent.uk,
+              compact: widget.compact,
+              isLoading: _loadingAccent == _PronunciationAccent.uk,
+              hasFailed: failedAccent == _PronunciationAccent.uk,
+              onPressed: () => _play(_PronunciationAccent.uk),
+            ),
+            const SizedBox(width: 8),
+            _PronunciationButton(
+              accent: _PronunciationAccent.us,
+              compact: widget.compact,
+              isLoading: _loadingAccent == _PronunciationAccent.us,
+              hasFailed: failedAccent == _PronunciationAccent.us,
+              onPressed: () => _play(_PronunciationAccent.us),
+            ),
+          ],
+        ),
+        if (failedAccent != null) ...[
+          const SizedBox(height: 6),
+          Text(
+            '${failedAccent.label}发音失败，请重试',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.error,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Future<void> _play(_PronunciationAccent accent) async {
+    if (_loadingAccent != null) return;
+    final view = View.of(context);
+    setState(() {
+      _loadingAccent = accent;
+      _failedAccent = null;
+    });
+
+    await Future<void>.delayed(const Duration(milliseconds: 420));
+    if (!mounted) return;
+
+    final word = widget.word.trim();
+    final hasWord = word.isNotEmpty;
+    if (hasWord) {
+      await HapticFeedback.selectionClick();
+      if (!mounted) return;
+      SemanticsService.sendAnnouncement(
+        view,
+        '${accent.label} $word',
+        TextDirection.ltr,
+      );
+    }
+
+    setState(() {
+      _loadingAccent = null;
+      _failedAccent = hasWord ? null : accent;
+    });
+
+    final messenger = ScaffoldMessenger.maybeOf(context);
+    messenger?.clearSnackBars();
+    messenger?.showSnackBar(
+      SnackBar(
+        duration: const Duration(milliseconds: 900),
+        content: Text(
+          hasWord ? '${accent.label}发音：$word' : '${accent.label}发音失败，请重试',
+        ),
+      ),
+    );
+  }
+}
+
+class _PronunciationButton extends StatelessWidget {
+  const _PronunciationButton({
+    required this.accent,
+    required this.compact,
+    required this.isLoading,
+    required this.hasFailed,
+    required this.onPressed,
+  });
+
+  final _PronunciationAccent accent;
+  final bool compact;
+  final bool isLoading;
+  final bool hasFailed;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final color = hasFailed ? theme.colorScheme.error : AppTheme.teal;
+    return OutlinedButton.icon(
+      key: ValueKey('pronunciation-${accent.name}'),
+      onPressed: isLoading ? null : onPressed,
+      style: OutlinedButton.styleFrom(
+        minimumSize: Size(compact ? 64 : 72, compact ? 36 : 40),
+        padding: EdgeInsets.symmetric(horizontal: compact ? 9 : 11),
+        foregroundColor: color,
+        disabledForegroundColor: color.withValues(alpha: 0.72),
+        backgroundColor: isLoading
+            ? AppTheme.selectedSurface(context)
+            : Colors.transparent,
+        side: BorderSide(color: theme.colorScheme.outlineVariant),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(compact ? 12 : 14),
+        ),
+      ),
+      icon: isLoading
+          ? SizedBox.square(
+              dimension: compact ? 13 : 15,
+              child: CircularProgressIndicator(strokeWidth: compact ? 2 : 2.2),
+            )
+          : Icon(
+              hasFailed ? Icons.refresh_rounded : Icons.volume_up_outlined,
+              size: compact ? 16 : 18,
+            ),
+      label: Text(
+        isLoading
+            ? '${accent.label}加载'
+            : hasFailed
+            ? '${accent.label}重试'
+            : accent.label,
+      ),
+    );
+  }
+}

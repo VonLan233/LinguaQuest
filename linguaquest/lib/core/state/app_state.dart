@@ -108,6 +108,7 @@ class AppState {
     required this.completedLessonIds,
     required this.todayCompletedLessonIds,
     required this.todayReviewWordIds,
+    required this.todayClaimedRewardIds,
     this.user,
     this.lastResult,
     this.learningPlan,
@@ -125,28 +126,45 @@ class AppState {
   final Set<String> completedLessonIds;
   final Set<String> todayCompletedLessonIds;
   final Set<String> todayReviewWordIds;
+  final Set<String> todayClaimedRewardIds;
   final LessonResult? lastResult;
   final String? errorMessage;
 
   bool get isAuthenticated => user != null;
 
+  String? get learningTarget => learningPlan?.target ?? user?.targetExam;
+
+  List<Lesson> get formalLessons => applyLearningTargetProgression(
+    learningLessonsForTarget(lessons, learningTarget),
+    completedLessonIds,
+  );
+
   Lesson? get currentLesson {
-    for (final lesson in lessons) {
+    for (final lesson in formalLessons) {
       if (lesson.status == 'current') return lesson;
     }
-    for (final lesson in lessons) {
+    for (final lesson in formalLessons) {
       if (lesson.status != 'completed' && lesson.status != 'locked') {
         return lesson;
       }
     }
-    return lessons.isEmpty ? null : lessons.last;
+    return formalLessons.isEmpty ? null : formalLessons.last;
   }
 
   int get totalLearningWords =>
-      lessons.fold(0, (total, lesson) => total + lesson.words.length);
+      formalLessons.fold(0, (total, lesson) => total + lesson.words.length);
 
-  int get completedLearningWords => lessons
+  int get completedLearningWords => formalLessons
       .where((lesson) => completedLessonIds.contains(lesson.id))
+      .fold(0, (total, lesson) => total + lesson.words.length);
+
+  Set<String> get todayCompletedFormalLessonIds => {
+    for (final lesson in formalLessons)
+      if (todayCompletedLessonIds.contains(lesson.id)) lesson.id,
+  };
+
+  int get todayLearningWords => formalLessons
+      .where((lesson) => todayCompletedLessonIds.contains(lesson.id))
       .fold(0, (total, lesson) => total + lesson.words.length);
 
   double get learningPathProgress {
@@ -179,6 +197,7 @@ class AppState {
     Set<String>? completedLessonIds,
     Set<String>? todayCompletedLessonIds,
     Set<String>? todayReviewWordIds,
+    Set<String>? todayClaimedRewardIds,
     LessonResult? lastResult,
     String? errorMessage,
     bool clearError = false,
@@ -198,6 +217,8 @@ class AppState {
       todayCompletedLessonIds:
           todayCompletedLessonIds ?? this.todayCompletedLessonIds,
       todayReviewWordIds: todayReviewWordIds ?? this.todayReviewWordIds,
+      todayClaimedRewardIds:
+          todayClaimedRewardIds ?? this.todayClaimedRewardIds,
       lastResult: lastResult ?? this.lastResult,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
     );
@@ -214,6 +235,74 @@ class AppState {
       completedLessonIds: {},
       todayCompletedLessonIds: {},
       todayReviewWordIds: {},
+      todayClaimedRewardIds: {},
     );
   }
+}
+
+List<Lesson> learningLessonsForTarget(List<Lesson> lessons, String? target) {
+  final formal = lessons.where((lesson) => !lesson.isTrainingPack).toList();
+  final focused = formal
+      .where((lesson) => lessonMatchesLearningTarget(lesson, target))
+      .toList();
+  return focused.isEmpty ? formal : focused;
+}
+
+List<Lesson> applyLearningTargetProgression(
+  List<Lesson> lessons,
+  Set<String> completedLessonIds,
+) {
+  if (lessons.isEmpty) return lessons;
+  final firstIncomplete = lessons.indexWhere(
+    (lesson) => !completedLessonIds.contains(lesson.id),
+  );
+  if (firstIncomplete == -1) {
+    return [for (final lesson in lessons) lesson.copyWith(status: 'completed')];
+  }
+  return [
+    for (var index = 0; index < lessons.length; index++)
+      lessons[index].copyWith(
+        status: completedLessonIds.contains(lessons[index].id)
+            ? 'completed'
+            : index == firstIncomplete
+            ? 'current'
+            : 'locked',
+      ),
+  ];
+}
+
+bool lessonMatchesLearningTarget(Lesson lesson, String? target) {
+  final normalized = target?.trim().toLowerCase() ?? '';
+  if (normalized.isEmpty) return true;
+
+  if (normalized.contains('business') || normalized.contains('商务')) {
+    return lesson.section == '商务英语' || _lessonHasTag(lesson, 'business');
+  }
+  if (normalized.contains('daily') || normalized.contains('日常')) {
+    return lesson.section == '日常英语' || _lessonHasTag(lesson, 'daily');
+  }
+  if (normalized.contains('travel') || normalized.contains('旅行')) {
+    return lesson.section == '旅行英语' || _lessonHasTag(lesson, 'travel');
+  }
+  if (normalized.contains('ielts') ||
+      normalized.contains('toefl') ||
+      normalized.contains('muet') ||
+      normalized.contains('cet') ||
+      normalized.contains('exam') ||
+      normalized.contains('雅思') ||
+      normalized.contains('托福') ||
+      normalized.contains('考试') ||
+      normalized.contains('大学英语')) {
+    return lesson.section == '考试高频' ||
+        _lessonHasTag(lesson, 'exam') ||
+        _lessonHasTag(lesson, 'academic');
+  }
+
+  return true;
+}
+
+bool _lessonHasTag(Lesson lesson, String tag) {
+  return lesson.words.any(
+    (word) => word.tags.any((item) => item.toLowerCase() == tag),
+  );
 }

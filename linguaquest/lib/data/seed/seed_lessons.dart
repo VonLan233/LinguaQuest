@@ -252,62 +252,75 @@ List<Lesson> seedLessons() {
       tags: ['health', 'daily'],
     ),
   ];
+  final allWords = [
+    ...examWords,
+    ...travelWords,
+    ...workWords,
+    ...foodWords,
+    ...healthWords,
+    ...campusWords,
+  ];
 
   return [
     _lesson(
-      id: 'lesson-campus-1',
-      title: 'Campus Starter',
-      section: 'Campus Life',
-      description:
-          'Core words for lectures, assignments, and daily campus movement.',
+      id: 'lesson-exam-1',
+      title: '考试信号词',
+      section: '考试高频',
+      description: '阅读、写作和题干里常见的学术动词。',
       status: 'current',
-      xpReward: 20,
-      words: campusWords,
+      xpReward: 30,
+      words: examWords,
+      distractorWords: allWords,
     ),
     _lesson(
       id: 'lesson-travel-1',
-      title: 'Travel Basics',
-      section: 'Travel English',
-      description: 'Airport and itinerary words for short conversations.',
-      status: 'unlocked',
+      title: '旅行基础',
+      section: '旅行英语',
+      description: '机场、行程和短对话中最常用的旅行词。',
+      status: 'locked',
       xpReward: 25,
       words: travelWords,
+      distractorWords: allWords,
     ),
     _lesson(
       id: 'lesson-work-1',
-      title: 'Workplace Moves',
-      section: 'Business English',
-      description: 'High-frequency words for meetings and project updates.',
+      title: '职场表达',
+      section: '商务英语',
+      description: '会议、协作和项目更新中的高频表达。',
       status: 'locked',
       xpReward: 30,
       words: workWords,
-    ),
-    _lesson(
-      id: 'lesson-exam-1',
-      title: 'Exam Signals',
-      section: 'Exam High Frequency',
-      description: 'Academic verbs for reading, writing, and test prompts.',
-      status: 'locked',
-      xpReward: 30,
-      words: examWords,
+      distractorWords: allWords,
     ),
     _lesson(
       id: 'lesson-food-1',
-      title: 'Food Moments',
-      section: 'Daily English',
-      description: 'Useful words for meals, restaurants, and daily routines.',
+      title: '饮食场景',
+      section: '日常英语',
+      description: '用餐、餐厅和日常安排里会遇到的实用词。',
       status: 'locked',
       xpReward: 20,
       words: foodWords,
+      distractorWords: allWords,
     ),
     _lesson(
       id: 'lesson-health-1',
-      title: 'Health Check',
-      section: 'Daily English',
-      description: 'Health and recovery words for everyday situations.',
+      title: '健康表达',
+      section: '日常英语',
+      description: '健康、恢复和日常求助场景里的常用词。',
       status: 'locked',
       xpReward: 20,
       words: healthWords,
+      distractorWords: allWords,
+    ),
+    _lesson(
+      id: 'lesson-campus-1',
+      title: '校园速测词包',
+      section: '训练场',
+      description: '校园生活词汇保留给限时测试，不作为默认新学入口。',
+      status: 'locked',
+      xpReward: 20,
+      words: campusWords,
+      distractorWords: allWords,
     ),
   ];
 }
@@ -320,6 +333,7 @@ Lesson _lesson({
   required String status,
   required int xpReward,
   required List<Word> words,
+  required List<Word> distractorWords,
 }) {
   return Lesson(
     id: id,
@@ -334,32 +348,82 @@ Lesson _lesson({
       QuizQuestion(
         id: '$id-q1',
         type: QuizQuestionType.meaningChoice,
-        prompt: 'Choose the Chinese meaning of "${words[0].word}".',
+        prompt: '选择“${words[0].word}”的中文释义。',
         answer: words[0].meaning,
-        options: [words[0].meaning, words[1].meaning, words[2].meaning],
+        options: _choiceOptions(
+          answer: words[0].meaning,
+          localDistractors: [words[1].meaning, words[2].meaning],
+          fallbackDistractors: distractorWords.map((word) => word.meaning),
+        ),
         explanation:
-            '"${words[0].word}" means ${words[0].meaning}. ${words[0].exampleSentence}',
+            '“${words[0].word}”的意思是${words[0].meaning}。${words[0].exampleSentence}',
         word: words[0],
       ),
       QuizQuestion(
         id: '$id-q2',
-        type: QuizQuestionType.imageChoice,
-        prompt: 'Which word matches this image cue: ${words[1].imageCue}',
+        type: QuizQuestionType.chineseChoice,
+        prompt: '根据中文释义选择英文单词：${words[1].meaning}',
         answer: words[1].word,
-        options: [words[1].word, words[0].word, words[2].word],
+        options: _choiceOptions(
+          answer: words[1].word,
+          localDistractors: [words[0].word, words[2].word],
+          fallbackDistractors: distractorWords.map((word) => word.word),
+        ),
         explanation:
-            '${words[1].imageCue} points to "${words[1].word}", ${words[1].meaning}.',
+            '“${words[1].meaning}”对应“${words[1].word}”。${words[1].exampleSentence}',
         word: words[1],
       ),
       QuizQuestion(
         id: '$id-q3',
+        type: QuizQuestionType.contextChoice,
+        prompt: '根据语境选择“${words[2].word}”的中文释义：${words[2].exampleSentence}',
+        answer: words[2].meaning,
+        options: _choiceOptions(
+          answer: words[2].meaning,
+          localDistractors: [words[0].meaning, words[1].meaning],
+          fallbackDistractors: distractorWords.map((word) => word.meaning),
+        ),
+        explanation:
+            '这句话里“${words[2].word}”表示${words[2].meaning}。${words[2].exampleTranslation}',
+        word: words[2],
+      ),
+      QuizQuestion(
+        id: '$id-q4',
         type: QuizQuestionType.spelling,
-        prompt: 'Spell the word: ${words[2].meaning}',
+        prompt: '根据释义拼写单词：${words[2].meaning}',
         answer: words[2].word,
         options: const [],
-        explanation: 'The correct spelling is "${words[2].word}".',
+        explanation: '正确拼写是“${words[2].word}”。',
         word: words[2],
       ),
     ],
   );
+}
+
+List<String> _choiceOptions({
+  required String answer,
+  required Iterable<String> localDistractors,
+  required Iterable<String> fallbackDistractors,
+}) {
+  final options = <String>[];
+  final seen = <String>{};
+
+  void addOption(String value) {
+    final cleaned = value.trim();
+    if (cleaned.isEmpty) return;
+    final key = cleaned.toLowerCase();
+    if (seen.add(key)) options.add(cleaned);
+  }
+
+  addOption(answer);
+  for (final option in localDistractors) {
+    addOption(option);
+    if (options.length == 4) return List.unmodifiable(options);
+  }
+  for (final option in fallbackDistractors) {
+    addOption(option);
+    if (options.length == 4) return List.unmodifiable(options);
+  }
+
+  return List.unmodifiable(options);
 }

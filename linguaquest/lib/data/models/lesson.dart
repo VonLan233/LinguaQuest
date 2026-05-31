@@ -1,4 +1,10 @@
-enum QuizQuestionType { meaningChoice, imageChoice, spelling }
+enum QuizQuestionType {
+  meaningChoice,
+  chineseChoice,
+  contextChoice,
+  imageChoice,
+  spelling,
+}
 
 class Word {
   const Word({
@@ -70,6 +76,8 @@ class Lesson {
   final int estimatedMinutes;
   final List<Word> words;
   final List<QuizQuestion> questions;
+
+  bool get isTrainingPack => section == '训练场';
 
   Lesson copyWith({
     String? id,
