@@ -17,7 +17,7 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appControllerProvider);
     final user = state.user;
-    final dueCount = state.dueWords.length;
+    final dueCount = state.dueWords.length + state.dueTargetWords.length;
     final dailyGoal = state.learningPlan?.dailyWords ?? user?.dailyGoal ?? 10;
     final reviewTarget = state.learningPlan == null
         ? dueCount
@@ -44,7 +44,7 @@ class HomeScreen extends ConsumerWidget {
             BrandMark(
               size: 48,
               tooltip: '个人空间',
-              onTap: () => context.go('/profile'),
+              onTap: () => context.push('/profile-space'),
             ),
             const SizedBox(width: 10),
             Expanded(
@@ -65,7 +65,7 @@ class HomeScreen extends ConsumerWidget {
             const SizedBox(width: 10),
             QuestIconButton(
               tooltip: '消息通知',
-              onPressed: () => context.go('/discover'),
+              onPressed: () => context.push('/notifications'),
               icon: Icons.notifications_outlined,
               color: AppTheme.coral,
             ),
@@ -86,11 +86,12 @@ class HomeScreen extends ConsumerWidget {
           masteredWords: state.customWords
               .where((word) => word.masteryLevel >= 4)
               .length,
-          dueWords: state.dueWords.length,
+          dueWords: dueCount,
         ),
         const SizedBox(height: 18),
         _DailyTaskPanel(
           currentSection:
+              state.currentWordBook?.title ??
               currentLesson?.section ??
               displayTarget(state.learningPlan?.target ?? '雅思核心词汇'),
           dailyGoal: dailyGoal,

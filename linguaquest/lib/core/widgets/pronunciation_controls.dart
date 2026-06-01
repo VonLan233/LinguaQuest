@@ -17,11 +17,13 @@ class PronunciationControls extends StatefulWidget {
   const PronunciationControls({
     required this.word,
     this.compact = false,
+    this.revealWord = true,
     super.key,
   });
 
   final String word;
   final bool compact;
+  final bool revealWord;
 
   @override
   State<PronunciationControls> createState() => _PronunciationControlsState();
@@ -90,7 +92,7 @@ class _PronunciationControlsState extends State<PronunciationControls> {
       if (!mounted) return;
       SemanticsService.sendAnnouncement(
         view,
-        '${accent.label} $word',
+        widget.revealWord ? '${accent.label} $word' : '${accent.label}音频',
         TextDirection.ltr,
       );
     }
@@ -106,7 +108,11 @@ class _PronunciationControlsState extends State<PronunciationControls> {
       SnackBar(
         duration: const Duration(milliseconds: 900),
         content: Text(
-          hasWord ? '${accent.label}发音：$word' : '${accent.label}发音失败，请重试',
+          hasWord
+              ? (widget.revealWord
+                    ? '${accent.label}发音：$word'
+                    : '${accent.label}音频已播放')
+              : '${accent.label}发音失败，请重试',
         ),
       ),
     );

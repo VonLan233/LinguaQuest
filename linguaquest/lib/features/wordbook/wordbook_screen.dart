@@ -16,7 +16,10 @@ class WordbookScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appControllerProvider);
-    final words = state.formalLessons.expand((lesson) => lesson.words).toList();
+    final book = state.currentWordBook;
+    final words =
+        book?.words ??
+        state.formalLessons.expand((lesson) => lesson.words).toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -28,8 +31,8 @@ class WordbookScreen extends ConsumerWidget {
           padding: const EdgeInsets.all(20),
           children: [
             SectionHeader(
-              title: '图片单词本',
-              subtitle: '用图片词卡串联发音、释义、例句、标签和复习信号。',
+              title: book?.title ?? '图片单词本',
+              subtitle: book?.description ?? '用图片词卡串联发音、释义、例句、标签和复习信号。',
               trailing: QuestIconButton(
                 tooltip: '生词本',
                 onPressed: () => context.push('/custom-words'),
@@ -57,7 +60,7 @@ class WordbookScreen extends ConsumerWidget {
             SectionHeader(
               title: '目标词',
               subtitle:
-                  '${words.length} 词 · 学习路径完成 ${(state.learningPathProgress * 100).round()}%',
+                  '${words.length}/${book?.totalWords ?? words.length} 词 · 学习路径完成 ${(state.learningPathProgress * 100).round()}%',
             ),
             const SizedBox(height: 16),
             for (final word in words) _TargetWordRow(word: word),

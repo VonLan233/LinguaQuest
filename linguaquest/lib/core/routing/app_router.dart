@@ -7,6 +7,8 @@ import '../../features/auth/login_screen.dart';
 import '../../features/auth/register_screen.dart';
 import '../../features/ai_learning/ai_learning_screen.dart';
 import '../../features/discover/discover_screen.dart';
+import '../../features/discover/forum_compose_screen.dart';
+import '../../features/discover/forum_post_detail_screen.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/learning/learning_path_screen.dart';
 import '../../features/learning/lesson_preview_screen.dart';
@@ -15,7 +17,10 @@ import '../../features/onboarding/splash_screen.dart';
 import '../../features/profile/profile_screen.dart';
 import '../../features/profile/about_screen.dart';
 import '../../features/profile/help_support_screen.dart';
+import '../../features/profile/notifications_screen.dart';
+import '../../features/profile/personal_space_screen.dart';
 import '../../features/profile/settings_screen.dart';
+import '../../features/quests/ai_conversation_history_screen.dart';
 import '../../features/quests/ai_tutor_screen.dart';
 import '../../features/quests/class_mode_screen.dart';
 import '../../features/quests/class_progress_screen.dart';
@@ -105,6 +110,15 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const ReviewCenterScreen(),
       ),
       GoRoute(
+        path: '/forum/new',
+        builder: (context, state) => const ForumComposeScreen(),
+      ),
+      GoRoute(
+        path: '/forum/posts/:id',
+        builder: (context, state) =>
+            ForumPostDetailScreen(postId: state.pathParameters['id']!),
+      ),
+      GoRoute(
         path: '/mistake-book',
         builder: (context, state) => const MistakeBookScreen(),
       ),
@@ -122,15 +136,37 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/class-progress',
-        builder: (context, state) => const ClassProgressScreen(),
+        builder: (context, state) =>
+            ClassProgressScreen(classId: state.uri.queryParameters['classId']),
       ),
       GoRoute(
         path: '/ai-tutor',
-        builder: (context, state) => const AiTutorScreen(),
+        builder: (context, state) => AiTutorScreen(
+          initialFeature: state.uri.queryParameters['feature'] ?? 'qa',
+          initialConversationId: state.uri.queryParameters['conversationId'],
+        ),
+      ),
+      GoRoute(
+        path: '/ai-history',
+        builder: (context, state) => const AiConversationHistoryScreen(),
+      ),
+      GoRoute(
+        path: '/ai-history/:id',
+        builder: (context, state) => AiConversationHistoryScreen(
+          conversationId: state.pathParameters['id'],
+        ),
       ),
       GoRoute(
         path: '/settings',
         builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: '/notifications',
+        builder: (context, state) => const NotificationsScreen(),
+      ),
+      GoRoute(
+        path: '/profile-space',
+        builder: (context, state) => const PersonalSpaceScreen(),
       ),
       GoRoute(
         path: '/settings/theme',
@@ -215,8 +251,11 @@ final routerProvider = Provider<GoRouter>((ref) {
 int _tabIndexForPath(String path) {
   if (path.startsWith('/training')) return 1;
   if (path.startsWith('/ai-learning')) return 2;
+  if (path.startsWith('/ai-history')) return 2;
+  if (path.startsWith('/ai-tutor')) return 2;
   if (path.startsWith('/discover')) return 3;
   if (path.startsWith('/quest')) return 3;
+  if (path.startsWith('/profile-space')) return 4;
   if (path.startsWith('/profile')) return 4;
   return 0;
 }

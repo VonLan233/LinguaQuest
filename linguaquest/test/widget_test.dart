@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:linguaquest/app.dart';
 import 'package:linguaquest/core/state/app_controller.dart';
@@ -9,15 +11,29 @@ import 'package:linguaquest/core/state/app_state.dart';
 import 'package:linguaquest/core/theme/app_theme.dart';
 import 'package:linguaquest/core/widgets/learning_badges.dart';
 import 'package:linguaquest/core/widgets/pronunciation_controls.dart';
+import 'package:linguaquest/data/models/activity_summary.dart';
+import 'package:linguaquest/data/models/achievement.dart';
+import 'package:linguaquest/data/models/ai_conversation.dart';
+import 'package:linguaquest/data/models/app_notification.dart';
+import 'package:linguaquest/data/models/analytics_summary.dart';
+import 'package:linguaquest/data/models/class_group.dart';
 import 'package:linguaquest/data/models/custom_word.dart';
+import 'package:linguaquest/data/models/forum_post.dart';
+import 'package:linguaquest/data/models/leaderboard_entry.dart';
 import 'package:linguaquest/data/models/lesson.dart';
 import 'package:linguaquest/data/models/lesson_result.dart';
+import 'package:linguaquest/data/models/lottery_draw.dart';
+import 'package:linguaquest/data/models/review_event.dart';
+import 'package:linguaquest/data/models/reward_task.dart';
 import 'package:linguaquest/data/models/study_session.dart';
+import 'package:linguaquest/data/models/target_word_progress.dart';
 import 'package:linguaquest/data/models/user_profile.dart';
 import 'package:linguaquest/data/repositories/auth_repository.dart';
+import 'package:linguaquest/data/repositories/app_services_repository.dart';
 import 'package:linguaquest/data/repositories/custom_word_repository.dart';
 import 'package:linguaquest/data/repositories/learning_repository.dart';
-import 'package:linguaquest/data/seed/seed_lessons.dart';
+import 'package:linguaquest/data/repositories/review_repository.dart';
+import 'package:linguaquest/data/lesson_factory.dart';
 import 'package:linguaquest/features/auth/goal_setup_screen.dart';
 import 'package:linguaquest/features/learning/lesson_preview_screen.dart';
 import 'package:linguaquest/features/quiz/lesson_result_screen.dart';
@@ -28,15 +44,87 @@ import 'package:linguaquest/features/wordbook/word_detail_screen.dart';
 import 'package:linguaquest/features/wordbook/wordbook_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'fixtures/lesson_fixtures.dart';
+
+Widget _testApp({
+  Widget? child,
+  AuthRepository? authRepository,
+  CustomWordRepository? customWordRepository,
+  LearningRepository? learningRepository,
+  ReviewRepository? reviewRepository,
+  AppServicesRepository? appServicesRepository,
+}) {
+  return ProviderScope(
+    overrides: _testOverrides(
+      authRepository: authRepository,
+      customWordRepository: customWordRepository,
+      learningRepository: learningRepository,
+      reviewRepository: reviewRepository,
+      appServicesRepository: appServicesRepository,
+    ),
+    child: child ?? const LinguaQuestApp(),
+  );
+}
+
+ProviderContainer _testContainer({
+  AuthRepository? authRepository,
+  CustomWordRepository? customWordRepository,
+  LearningRepository? learningRepository,
+  ReviewRepository? reviewRepository,
+  AppServicesRepository? appServicesRepository,
+}) {
+  return ProviderContainer(
+    overrides: _testOverrides(
+      authRepository: authRepository,
+      customWordRepository: customWordRepository,
+      learningRepository: learningRepository,
+      reviewRepository: reviewRepository,
+      appServicesRepository: appServicesRepository,
+    ),
+  );
+}
+
+List<Override> _testOverrides({
+  AuthRepository? authRepository,
+  CustomWordRepository? customWordRepository,
+  LearningRepository? learningRepository,
+  ReviewRepository? reviewRepository,
+  AppServicesRepository? appServicesRepository,
+}) {
+  return [
+    authRepositoryProvider.overrideWithValue(
+      authRepository ?? _PrefsAuthRepository(),
+    ),
+    customWordRepositoryProvider.overrideWithValue(
+      customWordRepository ?? _MemoryCustomWordRepository(),
+    ),
+    learningRepositoryProvider.overrideWithValue(
+      learningRepository ?? _FileLearningRepository(),
+    ),
+    reviewRepositoryProvider.overrideWithValue(
+      reviewRepository ?? _MemoryReviewRepository(),
+    ),
+    appServicesRepositoryProvider.overrideWithValue(
+      appServicesRepository ?? _MemoryAppServicesRepository(),
+    ),
+  ];
+}
+
+Future<void> _settleBoot(WidgetTester tester) async {
+  await tester.pump();
+  await tester.pump(const Duration(seconds: 2));
+  await tester.pumpAndSettle();
+}
+
 void main() {
   testWidgets('starts at onboarding when no session exists', (tester) async {
     SharedPreferences.setMockInitialValues({});
 
-    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.pumpWidget(_testApp());
+    await _settleBoot(tester);
 
     expect(find.text('LinguaQuest'), findsWidgets);
-    expect(find.byIcon(Icons.route_outlined), findsWidgets);
+    expect(find.text('清晰路径'), findsWidgets);
 
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -500));
     await tester.pumpAndSettle();
@@ -64,8 +152,8 @@ void main() {
       'linguaquest.profile': jsonEncode(profile.toJson()),
     });
 
-    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.pumpWidget(_testApp());
+    await _settleBoot(tester);
 
     expect(find.text('已连续打卡 6 天'), findsOneWidget);
     expect(find.text('雅思核心词汇 · 中级'), findsOneWidget);
@@ -101,12 +189,12 @@ void main() {
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
       'linguaquest.today.date': _todayDateKey(DateTime.now()),
-      'linguaquest.today.lessons': ['lesson-exam-1'],
+      'linguaquest.today.lessons': ['ielts-lesson-1'],
       'linguaquest.today.reviews': ['seed-1'],
     });
 
-    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.pumpWidget(_testApp());
+    await _settleBoot(tester);
 
     expect(find.text('今天完成 4/14 词'), findsOneWidget);
     expect(find.text('29%'), findsOneWidget);
@@ -138,8 +226,8 @@ void main() {
       'linguaquest.profile': jsonEncode(profile.toJson()),
     });
 
-    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.pumpWidget(_testApp());
+    await _settleBoot(tester);
 
     await tester.tap(find.text('搜索单词、短语或例句'));
     await tester.pumpAndSettle();
@@ -167,8 +255,8 @@ void main() {
       'linguaquest.profile': jsonEncode(profile.toJson()),
     });
 
-    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.pumpWidget(_testApp());
+    await _settleBoot(tester);
 
     await tester.scrollUntilVisible(
       find.text('今日词条'),
@@ -179,7 +267,7 @@ void main() {
     await tester.tap(find.text('今日词条'));
     await tester.pumpAndSettle();
 
-    expect(find.text('allocate'), findsWidgets);
+    expect(find.text('cancel'), findsWidgets);
     expect(find.text('加入生词本'), findsOneWidget);
     expect(find.text('当前计划中'), findsOneWidget);
 
@@ -246,8 +334,8 @@ void main() {
       'linguaquest.profile': jsonEncode(profile.toJson()),
     });
 
-    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.pumpWidget(_testApp());
+    await _settleBoot(tester);
 
     await tester.scrollUntilVisible(
       find.text('新学 12'),
@@ -281,8 +369,8 @@ void main() {
       'linguaquest.profile': jsonEncode(profile.toJson()),
     });
 
-    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.pumpWidget(_testApp());
+    await _settleBoot(tester);
 
     await tester.scrollUntilVisible(
       find.text('复习 2'),
@@ -337,8 +425,8 @@ void main() {
       'linguaquest.profile': jsonEncode(profile.toJson()),
     });
 
-    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.pumpWidget(_testApp());
+    await _settleBoot(tester);
 
     await tester.scrollUntilVisible(
       find.text('复习 2'),
@@ -389,8 +477,8 @@ void main() {
       'linguaquest.profile': jsonEncode(profile.toJson()),
     });
 
-    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.pumpWidget(_testApp());
+    await _settleBoot(tester);
 
     await tester.tap(find.text('发现'));
     await tester.pumpAndSettle();
@@ -420,14 +508,11 @@ void main() {
       SharedPreferences.setMockInitialValues({
         'linguaquest.profile': jsonEncode(profile.toJson()),
       });
-      final container = ProviderContainer();
+      final container = _testContainer();
       addTearDown(container.dispose);
 
       await container.read(appControllerProvider.notifier).bootstrap();
-      final campusLesson = container
-          .read(appControllerProvider)
-          .lessons
-          .singleWhere((lesson) => lesson.id == 'lesson-campus-1');
+      final campusLesson = seedLessons().last;
       await container
           .read(appControllerProvider.notifier)
           .completeLesson(
@@ -453,7 +538,7 @@ void main() {
           child: const LinguaQuestApp(),
         ),
       );
-      await tester.pumpAndSettle(const Duration(seconds: 1));
+      await _settleBoot(tester);
 
       await tester.tap(find.text('发现'));
       await tester.pumpAndSettle();
@@ -464,11 +549,11 @@ void main() {
       );
       expect(newLearningTask, findsOneWidget);
       expect(
-        find.descendant(of: newLearningTask, matching: find.text('去完成 +20 XP')),
+        find.descendant(of: newLearningTask, matching: find.text('去完成 +12 XP')),
         findsOneWidget,
       );
       expect(
-        find.descendant(of: newLearningTask, matching: find.text('领取 +20 XP')),
+        find.descendant(of: newLearningTask, matching: find.text('领取 +12 XP')),
         findsNothing,
       );
     },
@@ -506,14 +591,9 @@ void main() {
     });
 
     await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          customWordRepositoryProvider.overrideWithValue(customWordRepository),
-        ],
-        child: const LinguaQuestApp(),
-      ),
+      _testApp(customWordRepository: customWordRepository),
     );
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await _settleBoot(tester);
 
     await tester.tap(find.text('发现'));
     await tester.pumpAndSettle();
@@ -531,7 +611,7 @@ void main() {
     );
     expect(cleanupTask, findsOneWidget);
     expect(
-      find.descendant(of: cleanupTask, matching: find.text('去完成 +10 XP')),
+      find.descendant(of: cleanupTask, matching: find.text('去完成 +8 XP')),
       findsOneWidget,
     );
     expect(
@@ -595,14 +675,9 @@ void main() {
     });
 
     await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          customWordRepositoryProvider.overrideWithValue(customWordRepository),
-        ],
-        child: const LinguaQuestApp(),
-      ),
+      _testApp(customWordRepository: customWordRepository),
     );
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await _settleBoot(tester);
 
     await tester.tap(find.text('发现'));
     await tester.pumpAndSettle();
@@ -620,7 +695,7 @@ void main() {
     );
     expect(cleanupTask, findsOneWidget);
     expect(
-      find.descendant(of: cleanupTask, matching: find.text('去完成 +10 XP')),
+      find.descendant(of: cleanupTask, matching: find.text('去完成 +8 XP')),
       findsOneWidget,
     );
     expect(
@@ -634,13 +709,8 @@ void main() {
   ) async {
     SharedPreferences.setMockInitialValues({});
 
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [authRepositoryProvider.overrideWithValue(_FailingAuth())],
-        child: const LinguaQuestApp(),
-      ),
-    );
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.pumpWidget(_testApp(authRepository: _FailingAuth()));
+    await _settleBoot(tester);
 
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -500));
     await tester.pumpAndSettle();
@@ -669,22 +739,15 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     final learningRepository = _FlakyLearningRepository();
 
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          learningRepositoryProvider.overrideWithValue(learningRepository),
-        ],
-        child: const LinguaQuestApp(),
-      ),
-    );
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.pumpWidget(_testApp(learningRepository: learningRepository));
+    await _settleBoot(tester);
 
     expect(learningRepository.listAttempts, 1);
     expect(find.textContaining('LinguaQuest 启动失败'), findsOneWidget);
     expect(find.text('重试'), findsOneWidget);
 
     await tester.tap(find.text('重试'));
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await _settleBoot(tester);
 
     expect(learningRepository.listAttempts, 2);
     expect(find.byIcon(Icons.route_outlined), findsWidgets);
@@ -710,8 +773,8 @@ void main() {
       'linguaquest.profile': jsonEncode(profile.toJson()),
     });
 
-    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.pumpWidget(_testApp());
+    await _settleBoot(tester);
 
     await tester.fling(find.text('今日任务控制台'), const Offset(-24, 0), 1000);
     await tester.pumpAndSettle();
@@ -744,8 +807,8 @@ void main() {
       'linguaquest.profile': jsonEncode(profile.toJson()),
     });
 
-    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.pumpWidget(_testApp());
+    await _settleBoot(tester);
 
     await tester.fling(find.text('今日任务控制台'), const Offset(-80, 0), 1000);
     await tester.pumpAndSettle();
@@ -767,7 +830,7 @@ void main() {
     SharedPreferences.setMockInitialValues({});
 
     await tester.pumpWidget(
-      ProviderScope(
+      _testApp(
         child: MaterialApp(
           theme: AppTheme.light(),
           home: const GoalSetupScreen(),
@@ -777,9 +840,7 @@ void main() {
     await tester.pumpAndSettle();
 
     final dailyEnglish = find.byKey(const ValueKey('choice-Daily English'));
-    final businessEnglish = find.byKey(
-      const ValueKey('choice-Business English'),
-    );
+    final businessEnglish = find.byKey(const ValueKey('choice-SAT'));
 
     final dailyEnglishSize = tester.getSize(dailyEnglish);
     final businessEnglishSize = tester.getSize(businessEnglish);
@@ -831,8 +892,8 @@ void main() {
       'linguaquest.profile': jsonEncode(profile.toJson()),
     });
 
-    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.pumpWidget(_testApp());
+    await _settleBoot(tester);
 
     await tester.scrollUntilVisible(
       find.text('学习模式'),
@@ -847,7 +908,7 @@ void main() {
     expect(find.text('雅思核心词汇'), findsWidgets);
     expect(find.text('15/天'), findsOneWidget);
     expect(find.text('当前词书'), findsOneWidget);
-    expect(find.text('雅思核心词汇 · 已学 0/3 词'), findsOneWidget);
+    expect(find.text('雅思核心词汇 · 已学 0/160 词'), findsOneWidget);
     expect(find.text('新学 15 词'), findsOneWidget);
     expect(find.text('复习上限 30 词'), findsOneWidget);
     expect(find.text('查看完整词汇表'), findsOneWidget);
@@ -941,10 +1002,14 @@ void main() {
     );
   });
 
-  test('seed learning path contains blueprint-sized lesson range', () {
+  test('seed learning path contains the PRD lesson range', () {
     final lessons = seedLessons();
     final firstLessonTypes = {
       for (final question in lessons.first.questions) question.type,
+    };
+    final allQuestionTypes = {
+      for (final question in lessons.expand((lesson) => lesson.questions))
+        question.type,
     };
     final choiceQuestions = lessons
         .expand((lesson) => lesson.questions)
@@ -959,6 +1024,13 @@ void main() {
         QuizQuestionType.chineseChoice,
         QuizQuestionType.contextChoice,
         QuizQuestionType.spelling,
+      }),
+    );
+    expect(
+      allQuestionTypes,
+      containsAll({
+        QuizQuestionType.listeningWordChoice,
+        QuizQuestionType.listeningMeaningChoice,
       }),
     );
     for (final question in choiceQuestions) {
@@ -1058,7 +1130,7 @@ void main() {
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
     });
-    final container = ProviderContainer();
+    final container = _testContainer();
     addTearDown(container.dispose);
 
     await container.read(appControllerProvider.notifier).bootstrap();
@@ -1082,7 +1154,7 @@ void main() {
 
     expect(find.text('${state.totalLearningWords} 个目标词'), findsOneWidget);
     expect(find.text('$fullTargetCount 个目标词'), findsNothing);
-    expect(find.text('appetite'), findsWidgets);
+    expect(find.text('abandon'), findsWidgets);
     expect(find.text('allocate'), findsNothing);
     expect(find.text('commute'), findsNothing);
 
@@ -1119,17 +1191,22 @@ void main() {
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
     });
-    final container = ProviderContainer();
+    final container = _testContainer();
     addTearDown(container.dispose);
 
     await container.read(appControllerProvider.notifier).bootstrap();
+    final trainingLessonId = container
+        .read(appControllerProvider)
+        .lessons
+        .firstWhere((lesson) => lesson.isTrainingPack)
+        .id;
 
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
         child: MaterialApp(
           theme: AppTheme.light(),
-          home: const LessonPreviewScreen(lessonId: 'lesson-campus-1'),
+          home: LessonPreviewScreen(lessonId: trainingLessonId),
         ),
       ),
     );
@@ -1158,17 +1235,22 @@ void main() {
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
     });
-    final container = ProviderContainer();
+    final container = _testContainer();
     addTearDown(container.dispose);
 
     await container.read(appControllerProvider.notifier).bootstrap();
+    final trainingLessonId = container
+        .read(appControllerProvider)
+        .lessons
+        .firstWhere((lesson) => lesson.isTrainingPack)
+        .id;
 
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
         child: MaterialApp(
           theme: AppTheme.light(),
-          home: const QuizSessionScreen(lessonId: 'lesson-campus-1'),
+          home: QuizSessionScreen(lessonId: trainingLessonId),
         ),
       ),
     );
@@ -1182,8 +1264,8 @@ void main() {
         container: container,
         child: MaterialApp(
           theme: AppTheme.light(),
-          home: const QuizSessionScreen(
-            lessonId: 'lesson-campus-1',
+          home: QuizSessionScreen(
+            lessonId: trainingLessonId,
             mode: QuizSessionMode.timed,
           ),
         ),
@@ -1198,7 +1280,7 @@ void main() {
   testWidgets(
     'timed test result returns to training instead of learning path',
     (tester) async {
-      final lesson = seedLessons().last;
+      final lesson = seedLessons().firstWhere((item) => item.isTrainingPack);
       final result = LessonResult(
         lessonId: lesson.id,
         lessonTitle: lesson.title,
@@ -1210,7 +1292,7 @@ void main() {
       );
 
       await tester.pumpWidget(
-        ProviderScope(
+        _testApp(
           child: MaterialApp(
             theme: AppTheme.light(),
             home: LessonResultScreen(
@@ -1249,8 +1331,8 @@ void main() {
       'linguaquest.profile': jsonEncode(profile.toJson()),
     });
 
-    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.pumpWidget(_testApp());
+    await _settleBoot(tester);
 
     await tester.scrollUntilVisible(
       find.text('新学 10'),
@@ -1264,45 +1346,45 @@ void main() {
     await tester.pumpAndSettle();
     await _completeNewWordCards(tester);
 
-    await tester.tap(find.text('评估'));
+    await tester.tap(find.text('爆炸的， 爆发的'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('再试一次'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('分配'));
+    await tester.tap(find.text('取消， 废除'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('evaluate'));
+    await tester.tap(find.text('explosive'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('对比'));
+    await tester.tap(find.text('准备， 预备'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
-    await tester.enterText(find.byType(TextField), 'contrast');
+    await tester.enterText(find.byType(TextField), 'prepare');
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
-    expect(find.text('答对 3/4 题 · 已入账 +23 XP · 错题已进入复习。'), findsOneWidget);
-    expect(find.text('已入账 +23 XP'), findsOneWidget);
-    expect(find.text('刚刚到账 +23 XP'), findsOneWidget);
-    expect(find.text('总积分 23 XP'), findsOneWidget);
-    expect(find.text('当前总积分 23 XP。XP 会同步到个人主页、排行榜和发现页抽奖余额。'), findsOneWidget);
+    expect(find.text('答对 3/4 题 · 已入账 +17 XP · 错题已进入复习。'), findsOneWidget);
+    expect(find.text('已入账 +17 XP'), findsOneWidget);
+    expect(find.text('刚刚到账 +17 XP'), findsOneWidget);
+    expect(find.text('总积分 17 XP'), findsOneWidget);
+    expect(find.text('当前总积分 17 XP。XP 会同步到个人主页、排行榜和发现页抽奖余额。'), findsOneWidget);
     expect(find.text('查看 XP 用途'), findsOneWidget);
 
     await tester.scrollUntilVisible(
@@ -1316,7 +1398,7 @@ void main() {
 
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -900));
     await tester.pumpAndSettle();
-    expect(find.text('allocate'), findsWidgets);
+    expect(find.text('cancel'), findsWidgets);
     expect(find.text('课程'), findsWidgets);
     expect(find.byType(BackButtonIcon), findsOneWidget);
 
@@ -1345,8 +1427,8 @@ void main() {
       'linguaquest.profile': jsonEncode(profile.toJson()),
     });
 
-    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.pumpWidget(_testApp());
+    await _settleBoot(tester);
 
     await tester.scrollUntilVisible(
       find.text('新学 10'),
@@ -1361,7 +1443,7 @@ void main() {
     await _completeNewWordCards(tester);
 
     expect(find.text('英文选义'), findsOneWidget);
-    await tester.tap(find.text('分配'));
+    await tester.tap(find.text('取消， 废除'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));
     await tester.pump();
@@ -1369,7 +1451,7 @@ void main() {
     Finder continueButton() => find.widgetWithText(FilledButton, '继续');
 
     expect(find.textContaining('答对了'), findsOneWidget);
-    expect(find.textContaining('强化记忆：allocate · 分配'), findsOneWidget);
+    expect(find.textContaining('强化记忆：cancel · 取消， 废除'), findsOneWidget);
     expect(continueButton(), findsOneWidget);
     expect(tester.widget<FilledButton>(continueButton()).onPressed, isNull);
 
@@ -1400,8 +1482,8 @@ void main() {
       'linguaquest.profile': jsonEncode(profile.toJson()),
     });
 
-    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.pumpWidget(_testApp());
+    await _settleBoot(tester);
 
     await tester.scrollUntilVisible(
       find.text('新学 10'),
@@ -1444,7 +1526,7 @@ void main() {
     expect(find.text('检查'), findsOneWidget);
     expect(find.byType(BackButtonIcon), findsOneWidget);
 
-    await tester.tap(find.text('评估'));
+    await tester.tap(find.text('爆炸的， 爆发的'));
     await tester.pumpAndSettle();
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
@@ -1459,7 +1541,10 @@ void main() {
     await tester.pumpAndSettle();
 
     final selectedOptionButton = tester.widget<OutlinedButton>(
-      find.ancestor(of: find.text('评估'), matching: find.byType(OutlinedButton)),
+      find.ancestor(
+        of: find.text('爆炸的， 爆发的'),
+        matching: find.byType(OutlinedButton),
+      ),
     );
     expect(selectedOptionButton.onPressed, isNotNull);
 
@@ -1491,8 +1576,8 @@ void main() {
       'linguaquest.profile': jsonEncode(profile.toJson()),
     });
 
-    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.pumpWidget(_testApp());
+    await _settleBoot(tester);
 
     await tester.scrollUntilVisible(
       find.text('新学 10'),
@@ -1527,7 +1612,7 @@ void main() {
 
   test('theme and reminder settings persist locally', () async {
     SharedPreferences.setMockInitialValues({});
-    final container = ProviderContainer();
+    final container = _testContainer();
     addTearDown(container.dispose);
 
     await container.read(appControllerProvider.notifier).bootstrap();
@@ -1553,9 +1638,9 @@ void main() {
     );
   });
 
-  test('mock register rejects duplicate email', () async {
+  test('test auth repository rejects duplicate email', () async {
     SharedPreferences.setMockInitialValues({});
-    final container = ProviderContainer();
+    final container = _testContainer();
     addTearDown(container.dispose);
 
     final controller = container.read(appControllerProvider.notifier);
@@ -1589,7 +1674,7 @@ void main() {
       'linguaquest.reminderSettings': '{bad json',
       'linguaquest.learningPlan': 'not-json',
     });
-    final container = ProviderContainer();
+    final container = _testContainer();
     addTearDown(container.dispose);
 
     await container.read(appControllerProvider.notifier).bootstrap();
@@ -1616,12 +1701,12 @@ void main() {
       createdAt: now,
       updatedAt: now,
     );
-    final completedLessonId = seedLessons().first.id;
+    const completedLessonId = 'beginner-lesson-1';
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
       'linguaquest.completedLessons': [completedLessonId],
     });
-    final container = ProviderContainer();
+    final container = _testContainer();
     addTearDown(container.dispose);
 
     await container.read(appControllerProvider.notifier).bootstrap();
@@ -1657,7 +1742,7 @@ void main() {
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
     });
-    final container = ProviderContainer();
+    final container = _testContainer();
     addTearDown(container.dispose);
 
     await container.read(appControllerProvider.notifier).bootstrap();
@@ -1708,7 +1793,7 @@ void main() {
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
     });
-    final container = ProviderContainer();
+    final container = _testContainer();
     addTearDown(container.dispose);
 
     await container.read(appControllerProvider.notifier).bootstrap();
@@ -1804,16 +1889,14 @@ void main() {
     });
 
     await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          learningRepositoryProvider.overrideWithValue(
-            _StaticLearningRepository([emptyLesson, taglessLesson]),
-          ),
-        ],
-        child: const LinguaQuestApp(),
+      _testApp(
+        learningRepository: _StaticLearningRepository([
+          emptyLesson,
+          taglessLesson,
+        ]),
       ),
     );
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await _settleBoot(tester);
 
     expect(find.text('今日任务控制台'), findsOneWidget);
 
@@ -1857,7 +1940,7 @@ void main() {
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
     });
-    final container = ProviderContainer();
+    final container = _testContainer();
     addTearDown(container.dispose);
 
     await container.read(appControllerProvider.notifier).bootstrap();
@@ -1905,7 +1988,7 @@ void main() {
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
     });
-    final container = ProviderContainer();
+    final container = _testContainer();
     addTearDown(container.dispose);
 
     await container.read(appControllerProvider.notifier).bootstrap();
@@ -1953,7 +2036,7 @@ void main() {
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
     });
-    final container = ProviderContainer();
+    final container = _testContainer();
     addTearDown(container.dispose);
 
     await container.read(appControllerProvider.notifier).bootstrap();
@@ -2027,8 +2110,8 @@ void main() {
       'linguaquest.profile': jsonEncode(profile.toJson()),
     });
 
-    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.pumpWidget(_testApp());
+    await _settleBoot(tester);
 
     await tester.scrollUntilVisible(
       find.text('新学 10'),
@@ -2042,35 +2125,35 @@ void main() {
     await tester.pumpAndSettle();
     await _completeNewWordCards(tester);
 
-    await tester.tap(find.text('分配'));
+    await tester.tap(find.text('取消， 废除'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('evaluate'));
+    await tester.tap(find.text('explosive'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('对比'));
+    await tester.tap(find.text('准备， 预备'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
-    await tester.enterText(find.byType(TextField), 'contras');
+    await tester.enterText(find.byType(TextField), 'prepar');
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('再试一次'));
     await tester.pumpAndSettle();
 
-    expect(find.text('contras'), findsOneWidget);
+    expect(find.text('prepar'), findsOneWidget);
   });
 
   test(
@@ -2092,7 +2175,7 @@ void main() {
       SharedPreferences.setMockInitialValues({
         'linguaquest.profile': jsonEncode(profile.toJson()),
       });
-      final container = ProviderContainer();
+      final container = _testContainer();
       addTearDown(container.dispose);
 
       await container.read(appControllerProvider.notifier).bootstrap();
@@ -2147,10 +2230,8 @@ void main() {
       'linguaquest.profile': jsonEncode(profile.toJson()),
     });
     final customWordRepository = _ConcurrentCustomWordRepository();
-    final container = ProviderContainer(
-      overrides: [
-        customWordRepositoryProvider.overrideWithValue(customWordRepository),
-      ],
+    final container = _testContainer(
+      customWordRepository: customWordRepository,
     );
     addTearDown(container.dispose);
 
@@ -2198,7 +2279,7 @@ void main() {
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
     });
-    final container = ProviderContainer();
+    final container = _testContainer();
     addTearDown(container.dispose);
 
     await container.read(appControllerProvider.notifier).bootstrap();
@@ -2224,7 +2305,7 @@ void main() {
         child: const LinguaQuestApp(),
       ),
     );
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await _settleBoot(tester);
 
     await tester.scrollUntilVisible(
       find.text('复习 2'),
@@ -2277,7 +2358,7 @@ void main() {
       SharedPreferences.setMockInitialValues({
         'linguaquest.profile': jsonEncode(profile.toJson()),
       });
-      final container = ProviderContainer();
+      final container = _testContainer();
       addTearDown(container.dispose);
 
       await container.read(appControllerProvider.notifier).bootstrap();
@@ -2303,7 +2384,7 @@ void main() {
           child: const LinguaQuestApp(),
         ),
       );
-      await tester.pumpAndSettle(const Duration(seconds: 1));
+      await _settleBoot(tester);
 
       await tester.scrollUntilVisible(
         find.text('复习 2'),
@@ -2358,16 +2439,18 @@ void main() {
 }
 
 Future<void> _completeNewWordCards(WidgetTester tester) async {
-  for (var index = 0; index < 2; index++) {
+  for (var index = 0; index < 20; index++) {
     await tester.tap(find.widgetWithText(OutlinedButton, '认识'));
     await tester.pumpAndSettle();
+    if (find.text('进入语境练习').evaluate().isNotEmpty) {
+      await tester.tap(find.text('进入语境练习'));
+      await tester.pumpAndSettle();
+      return;
+    }
     await tester.tap(find.text('下一张词卡'));
     await tester.pumpAndSettle();
   }
-  await tester.tap(find.widgetWithText(OutlinedButton, '认识'));
-  await tester.pumpAndSettle();
-  await tester.tap(find.text('进入语境练习'));
-  await tester.pumpAndSettle();
+  fail('Could not reach the quiz entry from new word cards.');
 }
 
 double _contrastRatio(Color foreground, Color background) {
@@ -2407,20 +2490,848 @@ class _FailingAuth implements AuthRepository {
   Future<void> logout() async {}
 }
 
+class _PrefsAuthRepository implements AuthRepository {
+  static const _profileKey = 'linguaquest.profile';
+  static const _registeredEmailsKey = 'linguaquest.test.registered_emails';
+  UserProfile? _profile;
+
+  @override
+  Future<UserProfile?> loadSession() async {
+    if (_profile != null) return _profile;
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString(_profileKey);
+    if (raw == null) return null;
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! Map) return null;
+      _profile = UserProfile.fromJson(Map<String, dynamic>.from(decoded));
+    } catch (_) {
+      await prefs.remove(_profileKey);
+      return null;
+    }
+    return _profile;
+  }
+
+  @override
+  Future<UserProfile> register({
+    required String name,
+    required String email,
+    required String password,
+  }) async {
+    final normalizedEmail = email.trim().toLowerCase();
+    final prefs = await SharedPreferences.getInstance();
+    final registeredEmails =
+        prefs.getStringList(_registeredEmailsKey) ?? const <String>[];
+    final normalizedRegisteredEmails = registeredEmails
+        .map((email) => email.trim().toLowerCase())
+        .toSet();
+    if (normalizedRegisteredEmails.contains(normalizedEmail)) {
+      throw StateError('email already registered');
+    }
+    final now = DateTime.now();
+    final profile = UserProfile(
+      uid: 'user-${now.microsecondsSinceEpoch}',
+      name: name.trim(),
+      email: normalizedEmail,
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    await prefs.setStringList(_registeredEmailsKey, [
+      ...normalizedRegisteredEmails,
+      normalizedEmail,
+    ]);
+    return updateProfile(profile);
+  }
+
+  @override
+  Future<UserProfile> login({
+    required String email,
+    required String password,
+  }) async {
+    final existing = await loadSession();
+    if (existing != null && existing.email == email.trim().toLowerCase()) {
+      return existing;
+    }
+    final profile = UserProfile.demo().copyWith(
+      email: email.trim().toLowerCase(),
+      updatedAt: DateTime.now(),
+    );
+    return updateProfile(profile);
+  }
+
+  @override
+  Future<UserProfile> updateProfile(UserProfile profile) async {
+    _profile = profile;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_profileKey, jsonEncode(profile.toJson()));
+    return profile;
+  }
+
+  @override
+  Future<void> logout() async {
+    _profile = null;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_profileKey);
+  }
+}
+
+class _MemoryCustomWordRepository implements CustomWordRepository {
+  final List<CustomWord> _words = [];
+
+  @override
+  Future<List<CustomWord>> list(String uid) async {
+    if (_words.where((word) => word.uid == uid).isEmpty) {
+      _seed(uid);
+    }
+    final scoped = _words.where((word) => word.uid == uid).toList()
+      ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+    return scoped;
+  }
+
+  @override
+  Future<CustomWord> create(CustomWord word) async {
+    _words.add(word);
+    return word;
+  }
+
+  @override
+  Future<void> delete(String uid, String id) async {
+    _words.removeWhere((word) => word.uid == uid && word.id == id);
+  }
+
+  @override
+  Future<CustomWord> update(CustomWord word) async {
+    final index = _words.indexWhere(
+      (item) => item.uid == word.uid && item.id == word.id,
+    );
+    if (index == -1) {
+      _words.add(word);
+    } else {
+      _words[index] = word;
+    }
+    return word;
+  }
+
+  void _seed(String uid) {
+    final now = DateTime.now();
+    _words.addAll([
+      CustomWord.create(
+        id: 'seed-1',
+        uid: uid,
+        word: 'resilient',
+        meaning: '有韧性的',
+        exampleSentence: 'A resilient learner keeps practicing after mistakes.',
+        note: 'Useful for essays and interviews.',
+        tag: 'character',
+        difficulty: 'Medium',
+        now: now.subtract(const Duration(days: 1)),
+      ).copyWith(masteryLevel: 2, correctCount: 3, wrongCount: 1),
+      CustomWord.create(
+        id: 'seed-2',
+        uid: uid,
+        word: 'ambiguous',
+        meaning: '含糊的',
+        exampleSentence:
+            'The instruction was ambiguous, so I asked for an example.',
+        note: 'Often appears in reading passages.',
+        tag: 'academic',
+        difficulty: 'Hard',
+        now: now.subtract(const Duration(days: 2)),
+      ).copyWith(
+        masteryLevel: 1,
+        correctCount: 1,
+        wrongCount: 3,
+        nextReviewAt: now,
+      ),
+    ]);
+  }
+}
+
+class _MemoryReviewRepository implements ReviewRepository {
+  final List<ReviewEvent> _events = [];
+
+  @override
+  Future<void> recordReviewEvent(ReviewEvent event) async {
+    _events.add(event);
+  }
+}
+
+class _MemoryAppServicesRepository implements AppServicesRepository {
+  final List<ForumPost> _forumPosts = [];
+  final Map<String, List<ForumComment>> _forumComments = {};
+  final List<ClassGroup> _classes = [];
+
+  @override
+  Future<List<RewardTask>> listRewardTasks() async {
+    final profile = await _loadProfile();
+    final checkedInToday = DateUtils.isSameDay(
+      profile.lastStudyDate?.toLocal(),
+      DateTime.now(),
+    );
+    final claimed = await _claimedRewardIds();
+    return [
+      _rewardTask(
+        id: 'daily-checkin',
+        title: '每日签到',
+        condition: '当天完成一次学习或复习动作',
+        points: 5,
+        available: checkedInToday,
+        claimed: claimed.contains('daily-checkin'),
+      ),
+      _rewardTask(
+        id: 'complete-new',
+        title: '完成新学',
+        condition: '完成任意正式学习 Session',
+        points: 12,
+        available: false,
+        claimed: claimed.contains('complete-new'),
+      ),
+      _rewardTask(
+        id: 'complete-review',
+        title: '完成复习',
+        condition: '完成任意复习题',
+        points: 10,
+        available: false,
+        claimed: claimed.contains('complete-review'),
+      ),
+      _rewardTask(
+        id: 'training-challenge',
+        title: '训练场挑战',
+        condition: '完成任意训练场游戏',
+        points: 10,
+        available: false,
+        claimed: claimed.contains('training-challenge'),
+      ),
+      _rewardTask(
+        id: 'mistake-cleanup',
+        title: '错词清理',
+        condition: '今日错词再次答对',
+        points: 8,
+        available: false,
+        claimed: claimed.contains('mistake-cleanup'),
+      ),
+      _rewardTask(
+        id: 'forum-interaction',
+        title: '论坛互动',
+        condition: '发帖或评论通过审核',
+        points: 3,
+        available:
+            _forumPosts.isNotEmpty ||
+            _forumComments.values.any((items) => items.isNotEmpty),
+        claimed: claimed.contains('forum-interaction'),
+      ),
+    ];
+  }
+
+  @override
+  Future<RewardClaimResult> claimReward(String taskId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final profile = await _loadProfile();
+    final points = switch (taskId) {
+      'daily-checkin' => 5,
+      'complete-new' => 12,
+      'complete-review' => 10,
+      'training-challenge' => 10,
+      'mistake-cleanup' => 8,
+      'forum-interaction' => 3,
+      _ => 5,
+    };
+    final updated = profile.copyWith(
+      xp: profile.xp + points,
+      points: profile.points + points,
+      updatedAt: DateTime.now(),
+    );
+    await prefs.setString('linguaquest.profile', jsonEncode(updated.toJson()));
+    final claimed = await _claimedRewardIds();
+    await prefs.setStringList('test.claimedRewards', [...claimed, taskId]);
+    return RewardClaimResult(user: updated, tasks: await listRewardTasks());
+  }
+
+  @override
+  Future<List<LeaderboardEntry>> listLeaderboard() async {
+    final profile = await _loadProfile();
+    return [
+      LeaderboardEntry(
+        uid: profile.uid,
+        name: profile.name,
+        points: profile.points,
+        xp: profile.xp,
+        streak: profile.streak,
+        totalStudyDays: profile.totalStudyDays,
+      ),
+    ];
+  }
+
+  @override
+  Future<AnalyticsSummary> loadAnalyticsSummary() async {
+    final profile = await _loadProfile();
+    return AnalyticsSummary(
+      sessions: profile.totalStudyDays,
+      totalQuestions: 20,
+      correctAnswers: 16,
+      accuracy: 0.8,
+      studyMinutes: profile.totalStudyMinutes,
+      earnedPoints: profile.points,
+      weakWords: 2,
+      forumPosts: 0,
+      streakDays: profile.streak,
+      totalStudyDays: profile.totalStudyDays,
+      totalStudyMinutes: profile.totalStudyMinutes,
+      points: profile.points,
+      xp: profile.xp,
+    );
+  }
+
+  @override
+  Future<List<Achievement>> listAchievements() async {
+    final profile = await _loadProfile();
+    return [
+      Achievement(
+        id: 'first-session',
+        title: '启航学习者',
+        description: '完成第 1 次学习 Session',
+        unlocked: profile.totalStudyDays > 0 || profile.xp > 0,
+      ),
+      Achievement(
+        id: 'seven-day',
+        title: '七日旅人',
+        description: '累计学习 7 天',
+        unlocked: profile.totalStudyDays >= 7,
+      ),
+      Achievement(
+        id: 'point-100',
+        title: '积分新星',
+        description: '累计获得 100 积分',
+        unlocked: profile.points >= 100 || profile.xp >= 100,
+      ),
+      Achievement(
+        id: 'community-voice',
+        title: '社区发声',
+        description: '发布第 1 篇帖子',
+        unlocked: _forumPosts.isNotEmpty,
+      ),
+    ];
+  }
+
+  @override
+  Future<List<ClassGroup>> listClasses() async => [..._classes];
+
+  @override
+  Future<ClassGroup> joinClass(String code) async {
+    final normalized = code.trim().toUpperCase();
+    final existing = _classes
+        .where((item) => item.code == normalized)
+        .cast<ClassGroup?>()
+        .firstOrNull;
+    if (existing != null) return existing;
+    final now = DateTime.now();
+    final group = ClassGroup(
+      id: 'class-$normalized',
+      code: normalized,
+      name: '$normalized 学习班',
+      description: '测试班级',
+      teacherName: 'LinguaQuest',
+      role: 'student',
+      memberCount: 1,
+      joinedAt: now,
+      createdAt: now,
+      updatedAt: now,
+    );
+    _classes.add(group);
+    return group;
+  }
+
+  @override
+  Future<ClassProgressSummary> loadClassProgress({String? classId}) async {
+    final group = _classes.isEmpty
+        ? await joinClass('LQ-2048')
+        : _classes.firstWhere(
+            (item) => classId == null || classId.isEmpty || item.id == classId,
+            orElse: () => _classes.first,
+          );
+    final profile = await _loadProfile();
+    return ClassProgressSummary(
+      classGroup: group,
+      memberCount: 1,
+      totalQuestions: 20,
+      correctAnswers: 16,
+      accuracy: 0.8,
+      members: [
+        ClassMemberProgress(
+          uid: profile.uid,
+          name: profile.name,
+          role: 'student',
+          points: profile.points,
+          xp: profile.xp,
+          streak: profile.streak,
+          totalStudyDays: profile.totalStudyDays,
+          totalStudyMinutes: profile.totalStudyMinutes,
+          sessions: 2,
+          totalQuestions: 20,
+          correctAnswers: 16,
+          accuracy: 0.8,
+          earnedPoints: profile.points,
+          joinedAt: group.joinedAt,
+        ),
+      ],
+      lessons: const [
+        ClassLessonProgress(
+          lessonId: 'beginner-lesson-1',
+          sessions: 2,
+          totalQuestions: 20,
+          correctAnswers: 16,
+          accuracy: 0.8,
+        ),
+      ],
+      weakWords: const [ClassWeakWord(wordId: 'seed-2', mistakeCount: 2)],
+    );
+  }
+
+  @override
+  Future<LotteryDrawResult> drawLottery() async {
+    final prefs = await SharedPreferences.getInstance();
+    final profile = await _loadProfile();
+    final updated = profile.copyWith(
+      points: (profile.points - 20).clamp(0, 999999).toInt(),
+      xp: (profile.xp - 20).clamp(0, 999999).toInt(),
+      updatedAt: DateTime.now(),
+    );
+    await prefs.setString('linguaquest.profile', jsonEncode(updated.toJson()));
+    return LotteryDrawResult(
+      draw: LotteryDraw(
+        id: 'test-draw',
+        prize: '学习徽章',
+        pointsCost: 20,
+        drawnAt: DateTime.now(),
+      ),
+      user: updated,
+    );
+  }
+
+  @override
+  Future<List<ForumPost>> listForumPosts() async {
+    if (_forumPosts.isNotEmpty) return [..._forumPosts];
+    final now = DateTime.now();
+    final seeded = ForumPost(
+      id: 'test-post-1',
+      authorId: 'test-user',
+      authorName: '学习者',
+      title: '今日打卡：复习完成',
+      content: '错词集中在近义辨析，明天继续从训练场开始。',
+      tags: const ['今日打卡'],
+      likeCount: 3,
+      commentCount: 1,
+      status: 'published',
+      createdAt: now,
+    );
+    _forumPosts.add(seeded);
+    _forumComments[seeded.id] = [
+      ForumComment(
+        id: 'test-comment-1',
+        postId: seeded.id,
+        authorId: 'test-user',
+        authorName: '学习者',
+        content: '继续保持复习节奏。',
+        status: 'published',
+        createdAt: now,
+      ),
+    ];
+    return [..._forumPosts];
+  }
+
+  @override
+  Future<ForumPostDetail> loadForumPost(String id) async {
+    await listForumPosts();
+    final post = _forumPosts.firstWhere((item) => item.id == id);
+    return ForumPostDetail(
+      post: post,
+      comments: [...(_forumComments[id] ?? const <ForumComment>[])],
+    );
+  }
+
+  @override
+  Future<ForumPost> createForumPost({
+    required String title,
+    required String content,
+    required List<String> tags,
+  }) async {
+    final profile = await _loadProfile();
+    final post = ForumPost(
+      id: 'test-post-${_forumPosts.length + 1}',
+      authorId: profile.uid,
+      authorName: profile.name,
+      title: title,
+      content: content,
+      tags: tags,
+      likeCount: 0,
+      commentCount: 0,
+      status: 'published',
+      createdAt: DateTime.now(),
+    );
+    _forumPosts.insert(0, post);
+    return post;
+  }
+
+  @override
+  Future<ForumComment> addForumComment({
+    required String postId,
+    required String content,
+  }) async {
+    final profile = await _loadProfile();
+    final comment = ForumComment(
+      id: 'test-comment-${DateTime.now().microsecondsSinceEpoch}',
+      postId: postId,
+      authorId: profile.uid,
+      authorName: profile.name,
+      content: content,
+      status: 'published',
+      createdAt: DateTime.now(),
+    );
+    (_forumComments[postId] ??= []).add(comment);
+    for (var index = 0; index < _forumPosts.length; index++) {
+      final post = _forumPosts[index];
+      if (post.id == postId) {
+        _forumPosts[index] = ForumPost(
+          id: post.id,
+          authorId: post.authorId,
+          authorName: post.authorName,
+          authorAvatarUrl: post.authorAvatarUrl,
+          title: post.title,
+          content: post.content,
+          imageUrls: post.imageUrls,
+          tags: post.tags,
+          likeCount: post.likeCount,
+          commentCount: post.commentCount + 1,
+          status: post.status,
+          createdAt: post.createdAt,
+        );
+      }
+    }
+    return comment;
+  }
+
+  @override
+  Future<ForumPost> likeForumPost(String id) async {
+    await listForumPosts();
+    for (var index = 0; index < _forumPosts.length; index++) {
+      final post = _forumPosts[index];
+      if (post.id == id) {
+        final liked = ForumPost(
+          id: post.id,
+          authorId: post.authorId,
+          authorName: post.authorName,
+          authorAvatarUrl: post.authorAvatarUrl,
+          title: post.title,
+          content: post.content,
+          imageUrls: post.imageUrls,
+          tags: post.tags,
+          likeCount: post.likeCount + 1,
+          commentCount: post.commentCount,
+          status: post.status,
+          createdAt: post.createdAt,
+        );
+        _forumPosts[index] = liked;
+        return liked;
+      }
+    }
+    throw StateError('post not found');
+  }
+
+  @override
+  Future<List<AppNotification>> listNotifications() async {
+    return [
+      AppNotification(
+        id: 'test-notification',
+        type: 'reward',
+        title: '抽奖结果',
+        body: '你抽中了学习徽章。',
+        targetRoute: '/discover',
+        isRead: false,
+        createdAt: DateTime.now(),
+      ),
+    ];
+  }
+
+  @override
+  Future<void> markNotificationRead(String id) async {}
+
+  @override
+  Future<List<AiConversation>> listAiConversations() async {
+    final now = DateTime.now();
+    return [
+      AiConversation(
+        id: 'test-ai',
+        feature: 'qa',
+        title: '知识问答 · affect',
+        createdAt: now,
+        updatedAt: now,
+      ),
+    ];
+  }
+
+  @override
+  Future<AiConversationDetail> loadAiConversation(String id) async {
+    final now = DateTime.now();
+    return AiConversationDetail(
+      conversation: AiConversation(
+        id: id,
+        feature: 'qa',
+        title: '知识问答 · affect',
+        createdAt: now,
+        updatedAt: now,
+      ),
+      messages: [
+        AiMessage(
+          id: 'test-ai-user',
+          conversationId: id,
+          role: 'user',
+          content: '解释 affect 和 effect 的区别',
+          payload: const {},
+          createdAt: now,
+        ),
+        AiMessage(
+          id: 'test-ai-assistant',
+          conversationId: id,
+          role: 'assistant',
+          content: '测试解释：affect 是动词，effect 常作名词。',
+          payload: const {
+            'sections': [
+              {'title': '词性', 'body': 'affect 常作动词；effect 常作名词。'},
+            ],
+          },
+          createdAt: now,
+        ),
+      ],
+    );
+  }
+
+  @override
+  Future<void> deleteAiConversation(String id) async {}
+
+  @override
+  Future<AiCompletionResult> completeAi({
+    required String feature,
+    required String prompt,
+    String? conversationId,
+  }) async {
+    return AiCompletionResult(
+      conversationId: conversationId ?? 'test-ai',
+      feature: feature,
+      title: 'AI 学习',
+      response: '测试解释：$prompt',
+      payload: {
+        'points': ['测试解释'],
+      },
+    );
+  }
+
+  Future<UserProfile> _loadProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString('linguaquest.profile');
+    return raw == null
+        ? UserProfile.demo()
+        : UserProfile.fromJson(jsonDecode(raw) as Map<String, dynamic>);
+  }
+
+  Future<Set<String>> _claimedRewardIds() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getStringList('test.claimedRewards')?.toSet() ?? <String>{};
+  }
+
+  RewardTask _rewardTask({
+    required String id,
+    required String title,
+    required String condition,
+    required int points,
+    required bool available,
+    required bool claimed,
+  }) {
+    return RewardTask(
+      id: id,
+      title: title,
+      taskType: 'test',
+      condition: condition,
+      points: points,
+      isAvailable: available,
+      isClaimed: claimed,
+      claimedAt: claimed ? DateTime.now() : null,
+    );
+  }
+}
+
 class _StaticLearningRepository implements LearningRepository {
   const _StaticLearningRepository(this.lessons);
 
   final List<Lesson> lessons;
 
   @override
+  Future<List<WordBook>> listWordBooks() async => const [];
+
+  @override
   Future<List<Lesson>> listLessons() async => lessons;
 
   @override
-  Future<void> recordStudySession(StudySession session) async {}
+  Future<Map<String, dynamic>?> loadStudyPlan(String uid) async => null;
+
+  @override
+  Future<Map<String, dynamic>?> saveStudyPlan(
+    String uid,
+    Map<String, dynamic> data,
+  ) async => data;
+
+  @override
+  Future<void> clearStudyPlan(String uid) async {}
+
+  @override
+  Future<List<TargetWordProgress>> listTargetWordProgress(String uid) async =>
+      const [];
+
+  @override
+  Future<ActivitySummary> loadActivitySummary(String uid) async =>
+      ActivitySummary.empty;
+
+  @override
+  Future<UserProfile> recordStudySession(StudySession session) async {
+    return UserProfile.demo().copyWith(
+      uid: session.uid,
+      xp: session.xpEarned,
+      points: session.xpEarned,
+      lastStudyDate: session.endedAt,
+      updatedAt: session.endedAt,
+    );
+  }
+
+  @override
+  Future<void> upsertTargetWordProgress(
+    String uid,
+    TargetWordProgress progress,
+  ) async {}
+}
+
+class _FileLearningRepository implements LearningRepository {
+  List<WordBook>? _wordBooks;
+  final Map<String, Map<String, TargetWordProgress>> _targetProgress = {};
+  final Map<String, Map<String, dynamic>> _studyPlans = {};
+  final List<StudySession> _sessions = [];
+
+  @override
+  Future<List<WordBook>> listWordBooks() async {
+    final cached = _wordBooks;
+    if (cached != null) return cached;
+    final candidates = [
+      File('../server/data/wordbooks_p0.json'),
+      File('server/data/wordbooks_p0.json'),
+    ];
+    final file = candidates.firstWhere((item) => item.existsSync());
+    final decoded = jsonDecode(file.readAsStringSync()) as List<dynamic>;
+    return _wordBooks = decoded
+        .cast<Map<String, dynamic>>()
+        .map(WordBook.fromJson)
+        .toList(growable: false);
+  }
+
+  @override
+  Future<List<Lesson>> listLessons() async {
+    final books = await listWordBooks();
+    if (books.isEmpty) return const [];
+    return lessonsFromWordBook(books.first);
+  }
+
+  @override
+  Future<Map<String, dynamic>?> loadStudyPlan(String uid) async {
+    return _studyPlans[uid];
+  }
+
+  @override
+  Future<Map<String, dynamic>?> saveStudyPlan(
+    String uid,
+    Map<String, dynamic> data,
+  ) async {
+    return _studyPlans[uid] = Map<String, dynamic>.from(data);
+  }
+
+  @override
+  Future<void> clearStudyPlan(String uid) async {
+    _studyPlans.remove(uid);
+  }
+
+  @override
+  Future<List<TargetWordProgress>> listTargetWordProgress(String uid) async {
+    return (_targetProgress[uid] ?? const <String, TargetWordProgress>{}).values
+        .toList(growable: false);
+  }
+
+  @override
+  Future<void> upsertTargetWordProgress(
+    String uid,
+    TargetWordProgress progress,
+  ) async {
+    (_targetProgress[uid] ??= {})[progress.wordId] = progress;
+  }
+
+  @override
+  Future<ActivitySummary> loadActivitySummary(String uid) async {
+    final today = DateTime.now();
+    final prefs = await SharedPreferences.getInstance();
+    final todayKey =
+        '${today.year}-${today.month.toString().padLeft(2, '0')}-'
+        '${today.day.toString().padLeft(2, '0')}';
+    final persistedReviewIds =
+        prefs.getString('linguaquest.today.date') == todayKey
+        ? prefs.getStringList('linguaquest.today.reviews') ?? const <String>[]
+        : const <String>[];
+    final persistedLessonIds =
+        prefs.getString('linguaquest.today.date') == todayKey
+        ? prefs.getStringList('linguaquest.today.lessons') ?? const <String>[]
+        : const <String>[];
+    final persistedCompletedIds =
+        prefs.getStringList('linguaquest.completedLessons') ?? const <String>[];
+    return ActivitySummary(
+      completedLessonIds: {
+        ...persistedCompletedIds,
+        for (final session in _sessions)
+          if (session.uid == uid) session.lessonId,
+      },
+      todayCompletedLessonIds: {
+        ...persistedLessonIds,
+        for (final session in _sessions)
+          if (session.uid == uid &&
+              DateUtils.isSameDay(session.endedAt.toLocal(), today))
+            session.lessonId,
+      },
+      todayReviewWordIds: persistedReviewIds.toSet(),
+    );
+  }
+
+  @override
+  Future<UserProfile> recordStudySession(StudySession session) async {
+    _sessions.add(session);
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString('linguaquest.profile');
+    final profile = raw == null
+        ? UserProfile.demo().copyWith(uid: session.uid)
+        : UserProfile.fromJson(jsonDecode(raw) as Map<String, dynamic>);
+    final updated = profile.copyWith(
+      xp: profile.xp + session.xpEarned,
+      points: profile.points + session.xpEarned,
+      lastStudyDate: session.endedAt,
+      updatedAt: session.endedAt,
+    );
+    await prefs.setString('linguaquest.profile', jsonEncode(updated.toJson()));
+    return updated;
+  }
 }
 
 class _FlakyLearningRepository implements LearningRepository {
   int listAttempts = 0;
+
+  @override
+  Future<List<WordBook>> listWordBooks() async => const [];
 
   @override
   Future<List<Lesson>> listLessons() async {
@@ -2432,7 +3343,41 @@ class _FlakyLearningRepository implements LearningRepository {
   }
 
   @override
-  Future<void> recordStudySession(StudySession session) async {}
+  Future<Map<String, dynamic>?> loadStudyPlan(String uid) async => null;
+
+  @override
+  Future<Map<String, dynamic>?> saveStudyPlan(
+    String uid,
+    Map<String, dynamic> data,
+  ) async => data;
+
+  @override
+  Future<void> clearStudyPlan(String uid) async {}
+
+  @override
+  Future<List<TargetWordProgress>> listTargetWordProgress(String uid) async =>
+      const [];
+
+  @override
+  Future<ActivitySummary> loadActivitySummary(String uid) async =>
+      ActivitySummary.empty;
+
+  @override
+  Future<UserProfile> recordStudySession(StudySession session) async {
+    return UserProfile.demo().copyWith(
+      uid: session.uid,
+      xp: session.xpEarned,
+      points: session.xpEarned,
+      lastStudyDate: session.endedAt,
+      updatedAt: session.endedAt,
+    );
+  }
+
+  @override
+  Future<void> upsertTargetWordProgress(
+    String uid,
+    TargetWordProgress progress,
+  ) async {}
 }
 
 class _ConcurrentCustomWordRepository implements CustomWordRepository {

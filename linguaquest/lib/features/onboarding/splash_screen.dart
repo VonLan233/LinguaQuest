@@ -49,7 +49,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     if (!mounted) return;
     final state = ref.read(appControllerProvider);
     if (!state.isBootstrapped && state.errorMessage != null) return;
-    await Future<void>.delayed(const Duration(milliseconds: 1400));
+    await Future<void>.delayed(const Duration(milliseconds: 700));
     if (!mounted) return;
     context.go(state.isAuthenticated ? '/home' : '/onboarding');
   }

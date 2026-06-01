@@ -6,6 +6,8 @@ import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
+import '../../data/models/forum_post.dart';
+import '../../data/models/reward_task.dart';
 
 class DiscoverScreen extends ConsumerWidget {
   const DiscoverScreen({super.key});
@@ -13,6 +15,7 @@ class DiscoverScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appControllerProvider);
+    final forumPosts = ref.watch(forumPostsProvider);
     final user = state.user;
     final claimed = state.todayClaimedRewardIds;
     final newLearningDone = state.todayCompletedFormalLessonIds.isNotEmpty;
@@ -26,6 +29,41 @@ class DiscoverScreen extends ConsumerWidget {
       user?.lastStudyDate?.toLocal(),
       DateTime.now(),
     );
+    final serverTasks = <String, RewardTask>{
+      for (final task in state.rewardTasks) task.id: task,
+    };
+    _RewardTaskData taskData({
+      required String id,
+      required IconData icon,
+      required String title,
+      required String condition,
+      required int points,
+      required bool fallbackDone,
+      required VoidCallback onTap,
+    }) {
+      final task = serverTasks[id];
+      final resolvedPoints = task?.points ?? points;
+      final resolvedTitle = task?.title ?? title;
+      final isAvailable = task?.isAvailable ?? fallbackDone;
+      return _RewardTaskData(
+        icon: icon,
+        title: resolvedTitle,
+        condition: task?.condition ?? condition,
+        points: resolvedPoints,
+        isDone: isAvailable,
+        isClaimed: task?.isClaimed ?? claimed.contains(id),
+        onTap: onTap,
+        onClaim: () => _claimReward(
+          context,
+          ref,
+          id: id,
+          title: resolvedTitle,
+          points: resolvedPoints,
+          isAvailable: isAvailable,
+        ),
+      );
+    }
+
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
       children: [
@@ -66,106 +104,85 @@ class DiscoverScreen extends ConsumerWidget {
         const SizedBox(height: 12),
         _RewardTaskList(
           tasks: [
-            _RewardTaskData(
+            taskData(
+              id: 'daily-checkin',
               icon: Icons.calendar_month_outlined,
               title: '每日签到',
-              condition: '当天打开并完成一次学习动作',
+              condition: '当天完成一次学习或复习动作',
               points: 5,
-              isDone: checkedInToday,
-              isClaimed: claimed.contains('daily-checkin'),
+              fallbackDone: checkedInToday,
               onTap: () => context.go('/home'),
-              onClaim: () => _claimReward(
-                context,
-                ref,
-                id: 'daily-checkin',
-                title: '每日签到',
-                points: 5,
-                isAvailable: checkedInToday,
-              ),
             ),
-            _RewardTaskData(
+            taskData(
+              id: 'complete-new',
               icon: Icons.school_outlined,
               title: '完成新学',
               condition: '完成今日新学任务',
-              points: 20,
-              isDone: newLearningDone,
-              isClaimed: claimed.contains('new-learning'),
+              points: 12,
+              fallbackDone: newLearningDone,
               onTap: () => context.push('/study/new'),
-              onClaim: () => _claimReward(
-                context,
-                ref,
-                id: 'new-learning',
-                title: '完成新学',
-                points: 20,
-                isAvailable: newLearningDone,
-              ),
             ),
-            _RewardTaskData(
+            taskData(
+              id: 'complete-review',
               icon: Icons.replay_outlined,
               title: '完成复习',
               condition: '完成今日到期复习',
-              points: 15,
-              isDone: reviewDone,
-              isClaimed: claimed.contains('review-done'),
+              points: 10,
+              fallbackDone: reviewDone,
               onTap: () => context.push('/study/review'),
-              onClaim: () => _claimReward(
-                context,
-                ref,
-                id: 'review-done',
-                title: '完成复习',
-                points: 15,
-                isAvailable: reviewDone,
-              ),
             ),
-            _RewardTaskData(
+            taskData(
+              id: 'training-challenge',
               icon: Icons.sports_esports_outlined,
               title: '训练场挑战',
               condition: '完成任意训练场游戏',
-              points: 20,
-              isDone: false,
-              isClaimed: claimed.contains('training-challenge'),
+              points: 10,
+              fallbackDone: false,
               onTap: () => context.go('/training'),
-              onClaim: () {},
             ),
-            _RewardTaskData(
+            taskData(
+              id: 'mistake-cleanup',
               icon: Icons.cleaning_services_outlined,
               title: '错词清理',
               condition: '今日错词再次答对',
-              points: 10,
-              isDone: weakCleanupDone,
-              isClaimed: claimed.contains('weak-cleanup'),
+              points: 8,
+              fallbackDone: weakCleanupDone,
               onTap: () => context.push('/review'),
-              onClaim: () => _claimReward(
-                context,
-                ref,
-                id: 'weak-cleanup',
-                title: '错词清理',
-                points: 10,
-                isAvailable: weakCleanupDone,
-              ),
+            ),
+            taskData(
+              id: 'forum-interaction',
+              icon: Icons.forum_outlined,
+              title: '论坛互动',
+              condition: '发帖或评论通过审核',
+              points: 3,
+              fallbackDone: false,
+              onTap: () => context.push('/forum/new'),
             ),
           ],
         ),
         const SizedBox(height: 22),
         const SectionHeader(title: '积分抽奖', subtitle: '奖品只做虚拟装饰，不影响学习公平性。'),
         const SizedBox(height: 12),
-        const _LotteryInfoLine(),
+        _LotteryInfoLine(
+          isBusy: state.isLoading,
+          onDraw: () => _drawLottery(context, ref),
+        ),
         const SizedBox(height: 22),
-        const SectionHeader(title: '社区帖子', subtitle: '学习打卡和错题讨论集中展示。'),
+        SectionHeader(
+          title: '社区帖子',
+          subtitle: '学习打卡和错题讨论集中展示。',
+          trailing: QuestIconButton(
+            tooltip: '发布帖子',
+            onPressed: () => context.push('/forum/new'),
+            icon: Icons.edit_outlined,
+            color: AppTheme.coral,
+          ),
+        ),
         const SizedBox(height: 12),
-        const _ForumPostList(
-          posts: [
-            _ForumPostData(
-              title: '今日打卡：用 12 分钟复习了 18 个词',
-              tag: '今日打卡',
-              body: '错词集中在近义辨析，明天准备从训练场的易混词挑战开始。',
-            ),
-            _ForumPostData(
-              title: '雅思阅读里怎么记 abstract?',
-              tag: '错题讨论',
-              body: 'abstract 在论文和阅读文章里经常不是“抽象”的意思，要结合语境判断。',
-            ),
-          ],
+        forumPosts.when(
+          data: (posts) => _ForumPostList(posts: posts),
+          loading: () => const LinearProgressIndicator(),
+          error: (error, stackTrace) => const _ForumPostError(),
         ),
       ],
     );
@@ -199,10 +216,25 @@ class DiscoverScreen extends ConsumerWidget {
       ),
     );
   }
+
+  Future<void> _drawLottery(BuildContext context, WidgetRef ref) async {
+    final draw = await ref.read(appControllerProvider.notifier).drawLottery();
+    if (!context.mounted) return;
+    final errorMessage = ref.read(appControllerProvider).errorMessage;
+    final message = draw == null
+        ? errorMessage ?? '暂时无法抽奖'
+        : '抽奖完成：${draw.prize}，消耗 ${draw.pointsCost} XP';
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
 }
 
 class _LotteryInfoLine extends StatelessWidget {
-  const _LotteryInfoLine();
+  const _LotteryInfoLine({required this.isBusy, required this.onDraw});
+
+  final bool isBusy;
+  final VoidCallback onDraw;
 
   @override
   Widget build(BuildContext context) {
@@ -222,8 +254,17 @@ class _LotteryInfoLine extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                '消耗 30 积分抽一次；稀有概率透明展示，未中奖也给碎片。',
+                '消耗 20 积分抽一次；稀有概率透明展示，未中奖也给碎片。',
                 style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+              ),
+              const SizedBox(height: 10),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: FilledButton.icon(
+                  onPressed: isBusy ? null : onDraw,
+                  icon: const Icon(Icons.casino_outlined),
+                  label: Text(isBusy ? '处理中' : '抽一次'),
+                ),
               ),
             ],
           ),
@@ -391,10 +432,16 @@ class _RewardTaskData {
 class _ForumPostList extends StatelessWidget {
   const _ForumPostList({required this.posts});
 
-  final List<_ForumPostData> posts;
+  final List<ForumPost> posts;
 
   @override
   Widget build(BuildContext context) {
+    if (posts.isEmpty) {
+      return Text(
+        '暂无社区帖子，发布学习打卡后会在这里展示。',
+        style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+      );
+    }
     return Column(
       children: [
         for (var index = 0; index < posts.length; index++) ...[
@@ -415,54 +462,62 @@ class _ForumPostList extends StatelessWidget {
 class _ForumPostRow extends StatelessWidget {
   const _ForumPostRow({required this.post});
 
-  final _ForumPostData post;
+  final ForumPost post;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 18),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          PillLabel(
-            label: post.tag,
-            icon: Icons.tag_outlined,
-            color: AppTheme.coral,
-          ),
-          const SizedBox(height: 10),
-          Text(post.title, style: theme.textTheme.titleMedium),
-          const SizedBox(height: 6),
-          Text(
-            post.body,
-            style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
-          ),
-          const SizedBox(height: 10),
-          const Row(
+    final tag = post.tags.isEmpty ? '学习讨论' : post.tags.first;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: () => context.push('/forum/posts/${post.id}'),
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 18, top: 4),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.thumb_up_alt_outlined, size: 18),
-              SizedBox(width: 4),
-              Text('24'),
-              SizedBox(width: 16),
-              Icon(Icons.mode_comment_outlined, size: 18),
-              SizedBox(width: 4),
-              Text('6'),
+              PillLabel(
+                label: tag,
+                icon: Icons.tag_outlined,
+                color: AppTheme.coral,
+              ),
+              const SizedBox(height: 10),
+              Text(post.title, style: theme.textTheme.titleMedium),
+              const SizedBox(height: 6),
+              Text(
+                post.content,
+                style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  const Icon(Icons.thumb_up_alt_outlined, size: 18),
+                  const SizedBox(width: 4),
+                  Text('${post.likeCount}'),
+                  const SizedBox(width: 16),
+                  const Icon(Icons.mode_comment_outlined, size: 18),
+                  const SizedBox(width: 4),
+                  Text('${post.commentCount}'),
+                ],
+              ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
 }
 
-class _ForumPostData {
-  const _ForumPostData({
-    required this.title,
-    required this.tag,
-    required this.body,
-  });
+class _ForumPostError extends StatelessWidget {
+  const _ForumPostError();
 
-  final String title;
-  final String tag;
-  final String body;
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      '暂时无法同步社区帖子，请稍后重试。',
+      style: TextStyle(color: Theme.of(context).colorScheme.error),
+    );
+  }
 }

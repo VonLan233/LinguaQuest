@@ -170,7 +170,8 @@ void main() {
       expect(training, contains('_TrainingGameRow'));
       expect(training, isNot(contains('MetricTile')));
       expect(training, isNot(contains('_TrainingGameCard')));
-      expect(training, contains('校园生活 · 限时测试'));
+      expect(training, contains('校园词包 · 听音题'));
+      expect(training, contains("context.push('/timed-test/lesson-campus-1')"));
     });
 
     test('review center keeps queue status lightweight', () {
@@ -361,7 +362,6 @@ void main() {
       const legacyLabels = [
         'Campus Starter',
         'Goal Setup',
-        'WordBook',
         'Remembered',
         'Forgot',
         "name: 'Learner'",
@@ -562,9 +562,9 @@ void main() {
       expect(aiLearning, isNot(contains('AI学习')));
       expect(aiLearning, contains('AI 学习'));
       expect(aiLearning, contains('错因讲解'));
-      expect(aiLearning, contains("status: '规划中'"));
-      expect(aiLearning, contains("status: '待开放'"));
-      expect(aiLearning, contains("status: '可试用'"));
+      expect(aiLearning, contains("status: '后端服务'"));
+      expect(aiLearning, isNot(contains("status: '规划中'")));
+      expect(aiLearning, isNot(contains("status: '待开放'")));
     });
 
     test('quest entry labels avoid development stage wording', () {
@@ -583,7 +583,7 @@ void main() {
         expect(sources, isNot(contains(label)));
       }
       expect(sources, contains('即时反馈'));
-      expect(sources, contains('可试用'));
+      expect(sources, contains('后端'));
     });
 
     test('XP overview labels stay clear and non-misleading', () {

@@ -31,11 +31,12 @@ class QuestScreen extends StatelessWidget {
           value: '20 XP',
         ),
         const SizedBox(height: 10),
-        const _QuestRow(
+        _QuestRow(
           icon: Icons.workspace_premium_outlined,
           title: '成就徽章',
           body: '连续 7 天、已学 100 词、首次满分课程等成就。',
           value: '3 个',
+          route: '/profile-space',
         ),
         const SizedBox(height: 10),
         _QuestRow(
@@ -66,7 +67,7 @@ class QuestScreen extends StatelessWidget {
           icon: Icons.smart_toy_outlined,
           title: 'AI 助教',
           body: '解释错因，并给出例句建议。',
-          value: '可试用',
+          value: '后端',
           route: '/ai-tutor',
         ),
       ],

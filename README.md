@@ -9,10 +9,10 @@
   <a href="https://dart.dev"><img alt="Dart" src="https://img.shields.io/badge/Dart-3.11-0175C2?logo=dart&logoColor=white"></a>
   <img alt="Platform" src="https://img.shields.io/badge/platform-Android-brightgreen?logo=android&logoColor=white">
   <img alt="Backend" src="https://img.shields.io/badge/API-Dart%20Shelf-2F74C0">
-  <img alt="Status" src="https://img.shields.io/badge/status-active%20prototype-orange">
+  <img alt="Status" src="https://img.shields.io/badge/status-active%20development-blue">
 </p>
 
-LinguaQuest is a mobile-first English learning prototype that combines **Baicizhan-style visual vocabulary memory** with **Duolingo-style game progression**. It provides a complete learning loop: onboarding, goal setup, learning paths, short quizzes, mistake review, spaced repetition, custom word cards, quests, profile data, and an optional Dart API backend.
+LinguaQuest is a mobile-first English learning app that combines **Baicizhan-style visual vocabulary memory** with **Duolingo-style game progression**. It uses a separated Flutter client and Dart API backend for onboarding, goal setup, word books, learning paths, quizzes, mistake review, spaced repetition, custom word cards, quests, and profile data.
 
 ## Table of Contents
 
@@ -36,8 +36,8 @@ LinguaQuest is a mobile-first English learning prototype that combines **Baicizh
 - **Quiz and result loop** - lesson preview, quiz session, result summary, accuracy feedback, and mistake collection.
 - **Review center** - spaced repetition utilities, due words, weak words, and a dedicated Mistake Book.
 - **Custom word CRUD** - add, edit, view, delete, and review personal vocabulary cards.
-- **Offline-first demo mode** - the Flutter app runs with mock repositories by default, so the full flow works without a server.
-- **Cloud-ready API mode** - optional Dart `shelf` server with JWT auth, PostgreSQL persistence, custom words, study sessions, and review events.
+- **Separated app/API runtime** - the Flutter app talks to the Dart `shelf` API by default; user data is persisted by the backend.
+- **Cloud-ready API mode** - Dart `shelf` server with JWT auth, PostgreSQL persistence, word books, study plans, target word progress, custom words, study sessions, and review events.
 - **Production-oriented UI** - Material 3 theme, dark mode support, shared cards, empty states, metrics, and mobile-friendly navigation.
 
 ## Product Flow
@@ -66,7 +66,7 @@ The target daily learning loop is simple: open the app, check today's task, comp
 | State management | Riverpod |
 | Navigation | GoRouter |
 | HTTP client | Dio |
-| Local persistence | SharedPreferences / mock repositories |
+| Local persistence | SharedPreferences for device settings and auth token only |
 | Backend API | Dart `shelf`, `shelf_router` |
 | Auth | JWT |
 | Database | PostgreSQL |
@@ -76,7 +76,11 @@ The target daily learning loop is simple: open the app, check today's task, comp
 
 ```text
 .
-├── LinguaQuest_Product_Blueprint.md   # Product planning blueprint
+├── LinguaQuest_PRD_Development_Guide.md # Product requirements and development guide
+├── docs/
+│   ├── development/                   # Development notes and research assets
+│   └── reference/                     # Reference materials kept for future work
+│       └── vocab_plans.zip            # Vocabulary plan source package
 ├── linguaquest/                       # Flutter mobile app
 │   ├── lib/
 │   │   ├── core/                      # Routing, theme, state, shared widgets, utilities
@@ -96,11 +100,20 @@ The target daily learning loop is simple: open the app, check today's task, comp
 
 - Flutter SDK with Dart `^3.11.4`
 - Android Studio or Android SDK for emulator/device builds
-- Docker and Docker Compose if you want to run the backend
+- Docker and Docker Compose for the backend database/API stack
+
+### Run the backend
+
+Start the API and PostgreSQL database first:
+
+```bash
+cd server
+docker compose up --build
+```
 
 ### Run the Flutter app
 
-The app runs in offline demo mode by default.
+The Flutter app defaults to `http://127.0.0.1:8080` for desktop/web development.
 
 ```bash
 cd linguaquest
@@ -108,21 +121,9 @@ flutter pub get
 flutter run
 ```
 
-Offline demo mode uses mock repositories, so you can test the complete user journey without starting the backend.
-
-## Run with Backend API
-
-Start the API and PostgreSQL database:
+For Android emulator testing, point the client at the host machine API:
 
 ```bash
-cd server
-docker compose up --build
-```
-
-Then run the Flutter app against the API:
-
-```bash
-cd ../linguaquest
 flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8080
 ```
 
@@ -181,6 +182,12 @@ linguaquest/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
 | `POST` | `/auth/login` | Login and receive JWT |
 | `GET` | `/me` | Get current profile |
 | `PATCH` | `/me` | Update profile and learning goals |
+| `GET` | `/word-books` | List available word books and words |
+| `GET` | `/study-plan` | Get the current learner study plan |
+| `PUT` | `/study-plan` | Create or update the study plan |
+| `DELETE` | `/study-plan` | Clear the study plan |
+| `GET` | `/user-words` | List target word learning progress |
+| `PUT` | `/user-words/:wordId` | Upsert target word learning progress |
 | `GET` | `/custom-words` | List custom words |
 | `POST` | `/custom-words` | Create a custom word |
 | `PATCH` | `/custom-words/:id` | Update a custom word |
@@ -188,6 +195,27 @@ linguaquest/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
 | `POST` | `/study-sessions` | Record lesson completion |
 | `GET` | `/review/due` | Fetch due review words |
 | `POST` | `/review-events` | Record review outcome |
+| `GET` | `/activity/summary` | Sync today's learning counters |
+| `GET` | `/classes` | List joined classes |
+| `POST` | `/classes/join` | Join or create a class by code |
+| `GET` | `/classes/progress` | Fetch class member, lesson, and weak-word progress |
+| `GET` | `/rewards/tasks` | List claimable XP tasks |
+| `POST` | `/rewards/claim` | Claim a reward task |
+| `POST` | `/rewards/lottery` | Spend XP on a virtual lottery draw |
+| `GET` | `/notifications` | List user notifications |
+| `PATCH` | `/notifications/:id/read` | Mark a notification as read |
+| `GET` | `/forum/posts` | List forum posts |
+| `POST` | `/forum/posts` | Create a forum post |
+| `GET` | `/forum/posts/:id` | Fetch a post with comments |
+| `POST` | `/forum/posts/:id/comments` | Add a post comment |
+| `POST` | `/forum/posts/:id/like` | Like or unlike a post |
+| `GET` | `/ai/conversations` | List AI tutor conversations |
+| `GET` | `/ai/conversations/:id` | Fetch AI conversation messages |
+| `DELETE` | `/ai/conversations/:id` | Delete an AI conversation |
+| `POST` | `/ai/complete` | Generate a backend AI tutor response |
+| `GET` | `/analytics/summary` | Fetch learner analytics |
+| `GET` | `/leaderboard` | Fetch XP leaderboard |
+| `GET` | `/achievements` | List unlocked achievements |
 
 ## Roadmap
 
@@ -196,11 +224,18 @@ linguaquest/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
 - [x] Custom word CRUD
 - [x] Mistake Book and review entry points
 - [x] Android release APK build
+- [x] API-backed class mode, leaderboard, notifications, rewards, forum, analytics, and AI tutor routes
+- [x] Training arena entries for speed challenge, gauntlet, spelling practice, and cloze-style timed sessions
+- [x] Listening-word and listening-meaning timed quiz support in the training arena
+- [x] Personal space with backend achievements and user forum posts
+- [x] Server-side AI service layer with structured payloads, safety checks, and provider configuration
+- [x] AI conversation history, message detail view, continuation, and server-side deletion
 - [ ] Add real screenshot assets to `docs/screenshots/`
 - [ ] Add CI workflow for analyze/test/build checks
 - [ ] Add signed release configuration for production APK/AAB distribution
-- [ ] Expand backend coverage and deployment documentation
-- [ ] Implement class mode, leaderboard, and AI tutor as full production flows
+- [ ] Expand backend deployment documentation with production secrets, TLS, backups, and monitoring
+- [ ] Connect production AI credentials and richer conversation management controls
+- [ ] Add production pronunciation media and device audio playback beyond the current in-app pronunciation control
 
 ## Contributing
 

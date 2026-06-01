@@ -11,6 +11,67 @@ import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/custom_word.dart';
+import '../../data/models/lesson.dart';
+import '../../data/models/target_word_progress.dart';
+
+class _ReviewItem {
+  const _ReviewItem._({
+    required this.id,
+    required this.word,
+    required this.meaning,
+    required this.exampleSentence,
+    required this.note,
+    required this.sourceLabel,
+    required this.masteryLevel,
+    required this.nextReviewAt,
+    required this.cue,
+    required this.isTarget,
+  });
+
+  factory _ReviewItem.custom(CustomWord word) {
+    return _ReviewItem._(
+      id: word.id,
+      word: word.word,
+      meaning: word.meaning,
+      exampleSentence: word.exampleSentence,
+      note: word.note,
+      sourceLabel: displayCustomTag(word.tag),
+      masteryLevel: word.masteryLevel,
+      nextReviewAt: word.nextReviewAt,
+      cue: wordInitialCue(word.word),
+      isTarget: false,
+    );
+  }
+
+  factory _ReviewItem.target({
+    required Word word,
+    required TargetWordProgress progress,
+  }) {
+    return _ReviewItem._(
+      id: word.id,
+      word: word.word,
+      meaning: word.meaning,
+      exampleSentence: word.exampleSentence,
+      note: word.definition,
+      sourceLabel: '当前词书',
+      masteryLevel: progress.masteryLevel,
+      nextReviewAt: progress.nextReviewAt,
+      cue: word.imageCue,
+      isTarget: true,
+    );
+  }
+
+  final String id;
+  final String word;
+  final String meaning;
+  final String exampleSentence;
+  final String note;
+  final String sourceLabel;
+  final int masteryLevel;
+  final DateTime nextReviewAt;
+  final String cue;
+  final bool isTarget;
+}
 
 class ReviewStudyScreen extends ConsumerStatefulWidget {
   const ReviewStudyScreen({super.key});
@@ -20,7 +81,7 @@ class ReviewStudyScreen extends ConsumerStatefulWidget {
 }
 
 class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
-  final List<CustomWord> _queue = [];
+  final List<_ReviewItem> _queue = [];
   final Set<String> _completedIds = {};
   final Set<String> _reinforcementIds = {};
   var _revealed = false;
@@ -36,7 +97,7 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
       previous,
       next,
     ) {
-      _syncQueue(next.dueWords, notify: previous != null);
+      _syncQueue(_reviewItems(next), notify: previous != null);
     }, fireImmediately: true);
   }
 
@@ -48,7 +109,7 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final currentWord = _queue.isEmpty ? null : _queue.first;
+    final currentItem = _queue.isEmpty ? null : _queue.first;
     final totalCount = _reviewedCount + _queue.length;
 
     return PopScope(
@@ -68,18 +129,18 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
             ),
           ],
         ),
-        bottomNavigationBar: currentWord == null
+        bottomNavigationBar: currentItem == null
             ? null
             : _ReviewActions(
                 isRevealed: _revealed,
                 isSubmitting: _isSubmitting,
                 onMissed: () => setState(() => _revealed = true),
                 onContinueAfterReveal: () =>
-                    _review(currentWord, isCorrect: false),
-                onKnown: () => _review(currentWord, isCorrect: true),
+                    _review(currentItem, isCorrect: false),
+                onKnown: () => _review(currentItem, isCorrect: true),
               ),
         body: SafeArea(
-          child: currentWord == null
+          child: currentItem == null
               ? _QueueCompleteView(hasReviewed: _reviewedCount > 0)
               : ListView(
                   padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
@@ -103,9 +164,9 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
                       backgroundColor: AppTheme.progressTrack(context),
                     ),
                     const SizedBox(height: 18),
-                    _ReviewWordCard(word: currentWord, isRevealed: _revealed),
+                    _ReviewWordCard(item: currentItem, isRevealed: _revealed),
                     const SizedBox(height: 14),
-                    _MemoryHintLine(word: currentWord, isRevealed: _revealed),
+                    _MemoryHintLine(item: currentItem, isRevealed: _revealed),
                   ],
                 ),
         ),
@@ -156,13 +217,13 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
     return confirmed == true;
   }
 
-  Future<void> _review(CustomWord word, {required bool isCorrect}) async {
+  Future<void> _review(_ReviewItem item, {required bool isCorrect}) async {
     if (_isSubmitting) return;
     setState(() => _isSubmitting = true);
     final isReinforcementPass =
-        isCorrect && _reinforcementIds.contains(word.id);
+        isCorrect && _reinforcementIds.contains(item.id);
     if (isReinforcementPass) {
-      _completeCurrentReview(word, requeue: false);
+      _completeCurrentReview(item, requeue: false);
       if (!mounted) return;
       ScaffoldMessenger.of(
         context,
@@ -170,9 +231,10 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
       return;
     }
 
-    final succeeded = await ref
-        .read(appControllerProvider.notifier)
-        .reviewWord(word.id, isCorrect);
+    final controller = ref.read(appControllerProvider.notifier);
+    final succeeded = item.isTarget
+        ? await controller.reviewTargetWord(item.id, isCorrect)
+        : await controller.reviewWord(item.id, isCorrect);
     if (!mounted) return;
     if (!succeeded) {
       final message =
@@ -188,16 +250,24 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
-    _completeCurrentReview(word, requeue: !isCorrect);
+    _completeCurrentReview(item, requeue: !isCorrect);
   }
 
-  void _syncQueue(List<CustomWord> dueWords, {required bool notify}) {
+  List<_ReviewItem> _reviewItems(AppState state) {
+    return [
+      for (final item in state.dueTargetWords)
+        _ReviewItem.target(word: item.word, progress: item.progress),
+      for (final word in state.dueWords) _ReviewItem.custom(word),
+    ];
+  }
+
+  void _syncQueue(List<_ReviewItem> dueWords, {required bool notify}) {
     final changed = _applyQueueSync(dueWords);
     if (!changed || !notify || !mounted) return;
     setState(() {});
   }
 
-  bool _applyQueueSync(List<CustomWord> dueWords) {
+  bool _applyQueueSync(List<_ReviewItem> dueWords) {
     if (!_queueInitialized) {
       _queue
         ..clear()
@@ -219,41 +289,49 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
     return changed;
   }
 
-  CustomWord _latestWordSnapshot(CustomWord fallback) {
-    final words = ref.read(appControllerProvider).customWords;
-    for (final word in words) {
-      if (word.id == fallback.id) return word;
+  _ReviewItem _latestWordSnapshot(_ReviewItem fallback) {
+    final state = ref.read(appControllerProvider);
+    if (fallback.isTarget) {
+      final word = state.targetWordById(fallback.id);
+      final progress = state.targetWordProgress[fallback.id];
+      if (word != null && progress != null) {
+        return _ReviewItem.target(word: word, progress: progress);
+      }
+    } else {
+      for (final word in state.customWords) {
+        if (word.id == fallback.id) return _ReviewItem.custom(word);
+      }
     }
     return fallback;
   }
 
-  void _completeCurrentReview(CustomWord word, {required bool requeue}) {
+  void _completeCurrentReview(_ReviewItem item, {required bool requeue}) {
     setState(() {
-      if (_queue.isNotEmpty && _queue.first.id == word.id) {
+      if (_queue.isNotEmpty && _queue.first.id == item.id) {
         _queue.removeAt(0);
       } else {
-        _queue.removeWhere((item) => item.id == word.id);
+        _queue.removeWhere((queued) => queued.id == item.id);
       }
       _reviewedCount += 1;
       _revealed = false;
       _isSubmitting = false;
       if (requeue) {
-        final snapshot = _latestWordSnapshot(word);
-        _reinforcementIds.add(word.id);
+        final snapshot = _latestWordSnapshot(item);
+        _reinforcementIds.add(item.id);
         final insertIndex = _queue.length < 3 ? _queue.length : 3;
         _queue.insert(insertIndex, snapshot);
       } else {
-        _completedIds.add(word.id);
-        _reinforcementIds.remove(word.id);
+        _completedIds.add(item.id);
+        _reinforcementIds.remove(item.id);
       }
     });
   }
 }
 
 class _ReviewWordCard extends StatelessWidget {
-  const _ReviewWordCard({required this.word, required this.isRevealed});
+  const _ReviewWordCard({required this.item, required this.isRevealed});
 
-  final CustomWord word;
+  final _ReviewItem item;
   final bool isRevealed;
 
   @override
@@ -267,14 +345,14 @@ class _ReviewWordCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ImageCueBadge(cue: wordInitialCue(word.word), size: 66),
+              ImageCueBadge(cue: item.cue, size: 66),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      word.word,
+                      item.word,
                       style: textTheme.headlineMedium?.copyWith(
                         fontWeight: FontWeight.w900,
                       ),
@@ -285,12 +363,12 @@ class _ReviewWordCard extends StatelessWidget {
                       runSpacing: 8,
                       children: [
                         PillLabel(
-                          label: displayCustomTag(word.tag),
+                          label: item.sourceLabel,
                           icon: Icons.label_outline,
                           color: AppTheme.teal,
                         ),
                         PillLabel(
-                          label: '熟练度 ${word.masteryLevel}/5',
+                          label: '熟练度 ${item.masteryLevel}/5',
                           icon: Icons.psychology_alt_outlined,
                           color: AppTheme.mango,
                         ),
@@ -302,26 +380,26 @@ class _ReviewWordCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 18),
-          _MasteryMeter(value: word.masteryLevel / 5),
+          _MasteryMeter(value: item.masteryLevel / 5),
           if (isRevealed) ...[
             const SizedBox(height: 18),
             Text(
-              word.meaning,
+              item.meaning,
               style: textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.w900,
               ),
             ),
-            if (word.exampleSentence.isNotEmpty) ...[
+            if (item.exampleSentence.isNotEmpty) ...[
               const SizedBox(height: 10),
               Text(
-                word.exampleSentence,
+                item.exampleSentence,
                 style: textTheme.bodyLarge?.copyWith(height: 1.45),
               ),
             ],
-            if (word.note.isNotEmpty) ...[
+            if (item.note.isNotEmpty) ...[
               const SizedBox(height: 10),
               Text(
-                word.note,
+                item.note,
                 style: textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
@@ -344,9 +422,9 @@ class _ReviewWordCard extends StatelessWidget {
 }
 
 class _MemoryHintLine extends StatelessWidget {
-  const _MemoryHintLine({required this.word, required this.isRevealed});
+  const _MemoryHintLine({required this.item, required this.isRevealed});
 
-  final CustomWord word;
+  final _ReviewItem item;
   final bool isRevealed;
 
   @override
@@ -366,7 +444,7 @@ class _MemoryHintLine extends StatelessWidget {
         Expanded(
           child: Text(
             isRevealed
-                ? '下次复习：${formatRelativeDue(word.nextReviewAt, DateTime.now())}'
+                ? '下次复习：${formatRelativeDue(item.nextReviewAt, DateTime.now())}'
                 : '答对不打断；答错才展示知识卡，并在本轮稍后再出现。',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: colorScheme.onSurfaceVariant,

@@ -3,7 +3,7 @@ import 'package:linguaquest/core/utils/spaced_repetition.dart';
 import 'package:linguaquest/data/models/custom_word.dart';
 
 void main() {
-  test('review intervals follow the blueprint', () {
+  test('review intervals follow the PRD guide', () {
     expect(reviewIntervalForLevel(0), Duration.zero);
     expect(reviewIntervalForLevel(1), const Duration(days: 1));
     expect(reviewIntervalForLevel(2), const Duration(days: 3));

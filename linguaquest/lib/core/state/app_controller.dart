@@ -5,50 +5,97 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../data/models/activity_summary.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
+import '../../data/models/lottery_draw.dart';
 import '../../data/models/review_event.dart';
+import '../../data/models/reward_task.dart';
 import '../../data/models/study_session.dart';
+import '../../data/models/target_word_progress.dart';
 import '../../data/remote/api_client.dart';
 import '../../data/repositories/api_repositories.dart';
+import '../../data/repositories/app_services_repository.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../data/repositories/custom_word_repository.dart';
 import '../../data/repositories/learning_repository.dart';
-import '../../data/repositories/mock_repositories.dart';
 import '../../data/repositories/review_repository.dart';
-import '../constants/app_constants.dart';
+import '../../data/lesson_factory.dart';
 import '../utils/ui_labels.dart';
 import 'app_state.dart';
 
 final apiClientProvider = Provider<ApiClient>((ref) => ApiClient());
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
-  if (AppConstants.apiBaseUrl.isNotEmpty) {
-    return ApiAuthRepository(ref.watch(apiClientProvider));
-  }
-  return MockAuthRepository();
+  return ApiAuthRepository(ref.watch(apiClientProvider));
 });
 
 final customWordRepositoryProvider = Provider<CustomWordRepository>((ref) {
-  if (AppConstants.apiBaseUrl.isNotEmpty) {
-    return ApiCustomWordRepository(ref.watch(apiClientProvider));
-  }
-  return MockCustomWordRepository();
+  return ApiCustomWordRepository(ref.watch(apiClientProvider));
 });
 
 final learningRepositoryProvider = Provider<LearningRepository>((ref) {
-  if (AppConstants.apiBaseUrl.isNotEmpty) {
-    return ApiLearningRepository(ref.watch(apiClientProvider));
-  }
-  return MockLearningRepository();
+  return ApiLearningRepository(ref.watch(apiClientProvider));
 });
 
 final reviewRepositoryProvider = Provider<ReviewRepository>((ref) {
-  if (AppConstants.apiBaseUrl.isNotEmpty) {
-    return ApiReviewRepository(ref.watch(apiClientProvider));
-  }
-  return MockReviewRepository();
+  return ApiReviewRepository(ref.watch(apiClientProvider));
+});
+
+final appServicesRepositoryProvider = Provider<AppServicesRepository>((ref) {
+  return ApiAppServicesRepository(ref.watch(apiClientProvider));
+});
+
+final leaderboardProvider = FutureProvider.autoDispose((ref) {
+  return ref.watch(appServicesRepositoryProvider).listLeaderboard();
+});
+
+final analyticsSummaryProvider = FutureProvider.autoDispose((ref) {
+  return ref.watch(appServicesRepositoryProvider).loadAnalyticsSummary();
+});
+
+final achievementsProvider = FutureProvider.autoDispose((ref) {
+  return ref.watch(appServicesRepositoryProvider).listAchievements();
+});
+
+final classesProvider = FutureProvider.autoDispose((ref) {
+  return ref.watch(appServicesRepositoryProvider).listClasses();
+});
+
+final classProgressProvider = FutureProvider.autoDispose.family((
+  ref,
+  String classId,
+) {
+  return ref
+      .watch(appServicesRepositoryProvider)
+      .loadClassProgress(classId: classId.isEmpty ? null : classId);
+});
+
+final forumPostsProvider = FutureProvider.autoDispose((ref) {
+  return ref.watch(appServicesRepositoryProvider).listForumPosts();
+});
+
+final forumPostDetailProvider = FutureProvider.autoDispose.family((
+  ref,
+  String id,
+) {
+  return ref.watch(appServicesRepositoryProvider).loadForumPost(id);
+});
+
+final notificationsProvider = FutureProvider.autoDispose((ref) {
+  return ref.watch(appServicesRepositoryProvider).listNotifications();
+});
+
+final aiConversationsProvider = FutureProvider.autoDispose((ref) {
+  return ref.watch(appServicesRepositoryProvider).listAiConversations();
+});
+
+final aiConversationDetailProvider = FutureProvider.autoDispose.family((
+  ref,
+  String id,
+) {
+  return ref.watch(appServicesRepositoryProvider).loadAiConversation(id);
 });
 
 final appControllerProvider = NotifierProvider<AppController, AppState>(
@@ -58,17 +105,12 @@ final appControllerProvider = NotifierProvider<AppController, AppState>(
 class AppController extends Notifier<AppState> {
   static const _themeModeKey = 'linguaquest.themeMode';
   static const _reminderKey = 'linguaquest.reminderSettings';
-  static const _learningPlanKey = 'linguaquest.learningPlan';
-  static const _completedLessonIdsKey = 'linguaquest.completedLessons';
-  static const _todayDateKey = 'linguaquest.today.date';
-  static const _todayLessonIdsKey = 'linguaquest.today.lessons';
-  static const _todayReviewIdsKey = 'linguaquest.today.reviews';
-  static const _todayRewardIdsKey = 'linguaquest.today.rewards';
 
   late final AuthRepository _authRepository;
   late final CustomWordRepository _customWordRepository;
   late final LearningRepository _learningRepository;
   late final ReviewRepository _reviewRepository;
+  late final AppServicesRepository _appServicesRepository;
 
   @override
   AppState build() {
@@ -76,6 +118,7 @@ class AppController extends Notifier<AppState> {
     _customWordRepository = ref.watch(customWordRepositoryProvider);
     _learningRepository = ref.watch(learningRepositoryProvider);
     _reviewRepository = ref.watch(reviewRepositoryProvider);
+    _appServicesRepository = ref.watch(appServicesRepositoryProvider);
     return AppState.initial();
   }
 
@@ -84,39 +127,56 @@ class AppController extends Notifier<AppState> {
     state = state.copyWith(isLoading: true, clearError: true);
     try {
       final prefs = await SharedPreferences.getInstance();
-      final completedLessonIds = _stringSet(prefs, _completedLessonIdsKey);
-      final todayKey = _dateKey(DateTime.now());
-      final hasTodayState = prefs.getString(_todayDateKey) == todayKey;
-      final todayCompletedLessonIds = hasTodayState
-          ? _stringSet(prefs, _todayLessonIdsKey)
-          : <String>{};
-      final todayReviewWordIds = hasTodayState
-          ? _stringSet(prefs, _todayReviewIdsKey)
-          : <String>{};
-      final todayClaimedRewardIds = hasTodayState
-          ? _stringSet(prefs, _todayRewardIdsKey)
-          : <String>{};
-      final lessons = _applyLessonProgression(
-        await _learningRepository.listLessons(),
-        completedLessonIds,
-      );
       final user = await _authRepository.loadSession();
+      final wordBooks = await _learningRepository.listWordBooks();
+      final activity = user == null
+          ? ActivitySummary.empty
+          : await _learningRepository.loadActivitySummary(user.uid);
+      final targetProgress = user == null
+          ? <String, TargetWordProgress>{}
+          : await _loadTargetWordProgressForUser(user.uid);
+      final learningPlan = user == null
+          ? null
+          : await _loadLearningPlanForUser(
+              user.uid,
+              wordBooks,
+              targetProgress,
+              fallbackTarget: user.targetExam,
+            );
+      final activeBook = _activeWordBook(
+        wordBooks,
+        learningPlan?.wordBookId ?? wordBookIdForTarget(user?.targetExam),
+      );
+      final baseLessons = activeBook == null
+          ? await _learningRepository.listLessons()
+          : lessonsFromWordBook(activeBook);
+      final completedLessonIds = {
+        ...activity.completedLessonIds,
+        ..._completedLessonIdsFromTargetProgress(baseLessons, targetProgress),
+      };
+      final lessons = _applyLessonProgression(baseLessons, completedLessonIds);
       final words = user == null
           ? <CustomWord>[]
           : await _customWordRepository.list(user.uid);
+      final rewardTasks = user == null
+          ? <RewardTask>[]
+          : await _appServicesRepository.listRewardTasks();
       state = state.copyWith(
         isBootstrapped: true,
         isLoading: false,
         user: user,
         lessons: lessons,
+        wordBooks: wordBooks,
+        targetWordProgress: targetProgress,
         customWords: words,
         themeMode: _themeModeFromName(prefs.getString(_themeModeKey)),
         reminderSettings: _loadReminderSettings(prefs),
-        learningPlan: _loadLearningPlan(prefs),
+        learningPlan: learningPlan,
         completedLessonIds: completedLessonIds,
-        todayCompletedLessonIds: todayCompletedLessonIds,
-        todayReviewWordIds: todayReviewWordIds,
-        todayClaimedRewardIds: todayClaimedRewardIds,
+        todayCompletedLessonIds: activity.todayCompletedLessonIds,
+        todayReviewWordIds: activity.todayReviewWordIds,
+        todayClaimedRewardIds: _claimedRewardIds(rewardTasks),
+        rewardTasks: rewardTasks,
       );
     } catch (error) {
       state = state.copyWith(
@@ -146,9 +206,18 @@ class AppController extends Notifier<AppState> {
         email: email,
         password: password,
       );
+      final plan = state.learningPlan;
+      final rewardTasks = await _appServicesRepository.listRewardTasks();
       state = state.copyWith(
         user: user,
+        lessons: _applyLessonProgression(
+          _lessonsForTarget(plan?.target ?? user.targetExam, plan?.wordBookId),
+          state.completedLessonIds,
+        ),
+        targetWordProgress: await _loadTargetWordProgressForUser(user.uid),
         customWords: await _customWordRepository.list(user.uid),
+        rewardTasks: rewardTasks,
+        todayClaimedRewardIds: _claimedRewardIds(rewardTasks),
       );
     });
   }
@@ -159,9 +228,18 @@ class AppController extends Notifier<AppState> {
         email: email,
         password: password,
       );
+      final plan = state.learningPlan;
+      final rewardTasks = await _appServicesRepository.listRewardTasks();
       state = state.copyWith(
         user: user,
+        lessons: _applyLessonProgression(
+          _lessonsForTarget(plan?.target ?? user.targetExam, plan?.wordBookId),
+          state.completedLessonIds,
+        ),
+        targetWordProgress: await _loadTargetWordProgressForUser(user.uid),
         customWords: await _customWordRepository.list(user.uid),
+        rewardTasks: rewardTasks,
+        todayClaimedRewardIds: _claimedRewardIds(rewardTasks),
       );
     });
   }
@@ -187,14 +265,18 @@ class AppController extends Notifier<AppState> {
         ),
       );
       if (plan == null) {
-        await _clearLearningPlan();
+        await _clearLearningPlan(user.uid);
       } else {
-        await _saveLearningPlan(plan);
+        await _saveLearningPlan(user.uid, plan);
       }
       state = state.copyWith(
         user: updated,
         learningPlan: plan,
         clearLearningPlan: plan == null,
+        lessons: _applyLessonProgression(
+          _lessonsForTarget(targetExam, plan?.wordBookId),
+          state.completedLessonIds,
+        ),
       );
     });
   }
@@ -203,11 +285,13 @@ class AppController extends Notifier<AppState> {
     final themeMode = state.themeMode;
     final reminderSettings = state.reminderSettings;
     final lessons = state.lessons;
+    final wordBooks = state.wordBooks;
     final completedLessonIds = state.completedLessonIds;
     await _authRepository.logout();
     state = AppState.initial().copyWith(
       isBootstrapped: true,
       lessons: _applyLessonProgression(lessons, completedLessonIds),
+      wordBooks: wordBooks,
       completedLessonIds: completedLessonIds,
       themeMode: themeMode,
       reminderSettings: reminderSettings,
@@ -278,15 +362,10 @@ class AppController extends Notifier<AppState> {
         ...state.todayCompletedLessonIds,
         result.lessonId,
       };
-      final updatedUser = await _authRepository.updateProfile(
-        user.copyWith(
-          xp: user.xp + result.xpEarned,
-          streak: streak,
-          lastStudyDate: now,
-          updatedAt: now,
-        ),
+      final streakUser = await _authRepository.updateProfile(
+        user.copyWith(streak: streak, lastStudyDate: now, updatedAt: now),
       );
-      await _learningRepository.recordStudySession(
+      final updatedUser = await _learningRepository.recordStudySession(
         StudySession(
           id: 'session-${now.microsecondsSinceEpoch}',
           uid: user.uid,
@@ -296,17 +375,25 @@ class AppController extends Notifier<AppState> {
           totalQuestions: result.totalQuestions,
           correctAnswers: result.correctAnswers,
           xpEarned: result.xpEarned,
+          mode: result.sessionMode,
+          source: result.sessionSource,
           mistakeWordIds: result.mistakes
               .map((question) => question.word.id)
               .toList(),
+          exerciseRecords: result.exerciseRecords,
         ),
       );
-      await _saveLessonProgress(completedLessonIds, todayCompletedLessonIds);
+      final targetProgress = _targetProgressAfterLesson(result, now);
+      await _saveTargetWordProgress(user.uid, targetProgress);
+      final rewardTasks = await _appServicesRepository.listRewardTasks();
       state = state.copyWith(
-        user: updatedUser,
+        user: updatedUser.copyWith(streak: streakUser.streak),
         lessons: _applyLessonProgression(state.lessons, completedLessonIds),
+        targetWordProgress: targetProgress,
         completedLessonIds: completedLessonIds,
         todayCompletedLessonIds: todayCompletedLessonIds,
+        todayClaimedRewardIds: _claimedRewardIds(rewardTasks),
+        rewardTasks: rewardTasks,
         lastResult: result,
       );
     });
@@ -347,12 +434,59 @@ class AppController extends Notifier<AppState> {
         ),
       );
       final todayReviewWordIds = {...state.todayReviewWordIds, id};
-      await _saveTodayReviewWords(todayReviewWordIds);
+      final rewardTasks = await _appServicesRepository.listRewardTasks();
       state = state.copyWith(
         customWords: [
           for (final item in state.customWords) item.id == id ? reviewed : item,
         ],
         todayReviewWordIds: todayReviewWordIds,
+        todayClaimedRewardIds: _claimedRewardIds(rewardTasks),
+        rewardTasks: rewardTasks,
+      );
+    });
+  }
+
+  Future<bool> reviewTargetWord(
+    String id,
+    bool isCorrect, {
+    ReviewDimension dimension = ReviewDimension.context,
+  }) async {
+    final user = state.user;
+    final word = state.targetWordById(id);
+    final book = state.currentWordBook;
+    if (user == null || word == null || book == null) return false;
+    final now = DateTime.now();
+    final current =
+        state.targetWordProgress[id] ??
+        TargetWordProgress.newWord(wordId: id, wordBookId: book.id, now: now);
+    return _run(() async {
+      final reviewed = current.reviewed(
+        isCorrect: isCorrect,
+        dimension: dimension,
+        now: now,
+      );
+      final targetProgress = {...state.targetWordProgress, id: reviewed};
+      await _reviewRepository.recordReviewEvent(
+        ReviewEvent(
+          id: 'target-review-${now.microsecondsSinceEpoch}',
+          uid: user.uid,
+          wordId: id,
+          isCorrect: isCorrect,
+          answerTimeMs: 2600,
+          reviewedAt: now,
+          masteryBefore: current.masteryLevel,
+          masteryAfter: reviewed.masteryLevel,
+          nextReviewAt: reviewed.nextReviewAt,
+        ),
+      );
+      final todayReviewWordIds = {...state.todayReviewWordIds, id};
+      await _saveTargetWordProgress(user.uid, targetProgress);
+      final rewardTasks = await _appServicesRepository.listRewardTasks();
+      state = state.copyWith(
+        targetWordProgress: targetProgress,
+        todayReviewWordIds: todayReviewWordIds,
+        todayClaimedRewardIds: _claimedRewardIds(rewardTasks),
+        rewardTasks: rewardTasks,
       );
     });
   }
@@ -366,15 +500,45 @@ class AppController extends Notifier<AppState> {
     if (user == null || points <= 0 || !isAvailable) return false;
     if (state.todayClaimedRewardIds.contains(id)) return false;
     return _run(() async {
-      final now = DateTime.now();
-      final claimedRewardIds = {...state.todayClaimedRewardIds, id};
-      final updatedUser = await _authRepository.updateProfile(
-        user.copyWith(xp: user.xp + points, updatedAt: now),
-      );
-      await _saveTodayClaimedRewards(claimedRewardIds);
+      final result = await _appServicesRepository.claimReward(id);
+      final rewardTasks = result.tasks.isEmpty
+          ? _markRewardClaimed(state.rewardTasks, id)
+          : result.tasks;
+      final claimedRewardIds = rewardTasks.isEmpty
+          ? {...state.todayClaimedRewardIds, id}
+          : _claimedRewardIds(rewardTasks);
       state = state.copyWith(
-        user: updatedUser,
+        user: result.user,
         todayClaimedRewardIds: claimedRewardIds,
+        rewardTasks: rewardTasks,
+      );
+    });
+  }
+
+  Future<LotteryDraw?> drawLottery() async {
+    if (state.user == null) return null;
+    LotteryDraw? draw;
+    final succeeded = await _run(() async {
+      final result = await _appServicesRepository.drawLottery();
+      draw = result.draw;
+      state = state.copyWith(user: result.user);
+    });
+    return succeeded ? draw : null;
+  }
+
+  Future<bool> markNotificationRead(String id) {
+    return _run(() async {
+      await _appServicesRepository.markNotificationRead(id);
+      ref.invalidate(notificationsProvider);
+    });
+  }
+
+  Future<bool> refreshRewardTasks() {
+    return _run(() async {
+      final rewardTasks = await _appServicesRepository.listRewardTasks();
+      state = state.copyWith(
+        rewardTasks: rewardTasks,
+        todayClaimedRewardIds: _claimedRewardIds(rewardTasks),
       );
     });
   }
@@ -488,10 +652,18 @@ class AppController extends Notifier<AppState> {
     required String target,
     required DateTime deadline,
   }) {
-    final completed = state.completedLessonIds;
-    final remainingWords = learningLessonsForTarget(state.lessons, target)
-        .where((lesson) => !completed.contains(lesson.id))
-        .fold(0, (total, lesson) => total + lesson.words.length);
+    final wordBookId = wordBookIdForTarget(target);
+    final book = _activeWordBook(state.wordBooks, wordBookId);
+    final remainingWords = book == null
+        ? _lessonsForTarget(target, wordBookId)
+              .where((lesson) => !state.completedLessonIds.contains(lesson.id))
+              .fold(0, (total, lesson) => total + lesson.words.length)
+        : book.words
+              .where(
+                (word) =>
+                    !(state.targetWordProgress[word.id]?.isLearned ?? false),
+              )
+              .length;
     final now = DateTime.now();
     final today = DateTime.utc(now.year, now.month, now.day);
     final targetDay = DateTime.utc(deadline.year, deadline.month, deadline.day);
@@ -501,11 +673,84 @@ class AppController extends Notifier<AppState> {
         : ((remainingWords + days - 1) ~/ days).clamp(1, 999).toInt();
     return LearningPlan(
       target: target,
+      wordBookId: wordBookId,
       deadline: targetDay,
       dailyWords: dailyWords,
+      dailyReviewLimit: (dailyWords * 2).clamp(10, 80).toInt(),
       remainingWords: remainingWords,
       createdAt: now,
     );
+  }
+
+  WordBook? _activeWordBook(List<WordBook> books, String id) {
+    for (final book in books) {
+      if (book.id == id) return book;
+    }
+    return books.isEmpty ? null : books.first;
+  }
+
+  List<Lesson> _lessonsForTarget(String target, String? wordBookId) {
+    final book = _activeWordBook(
+      state.wordBooks,
+      wordBookId ?? wordBookIdForTarget(target),
+    );
+    if (book == null) return learningLessonsForTarget(state.lessons, target);
+    return lessonsFromWordBook(book);
+  }
+
+  int _remainingWordsForPlan(
+    List<WordBook> wordBooks,
+    Map<String, TargetWordProgress> progress,
+    LearningPlan plan,
+  ) {
+    final book = _activeWordBook(wordBooks, plan.wordBookId);
+    if (book == null) return plan.remainingWords;
+    return book.words
+        .where((word) => !(progress[word.id]?.isLearned ?? false))
+        .length;
+  }
+
+  Set<String> _completedLessonIdsFromTargetProgress(
+    List<Lesson> lessons,
+    Map<String, TargetWordProgress> progress,
+  ) {
+    return {
+      for (final lesson in lessons)
+        if (!lesson.isTrainingPack &&
+            lesson.words.isNotEmpty &&
+            lesson.words.every((word) => progress[word.id]?.isLearned ?? false))
+          lesson.id,
+    };
+  }
+
+  Map<String, TargetWordProgress> _targetProgressAfterLesson(
+    LessonResult result,
+    DateTime now,
+  ) {
+    Lesson? lesson;
+    for (final item in state.lessons) {
+      if (item.id == result.lessonId) {
+        lesson = item;
+        break;
+      }
+    }
+    if (lesson == null) return state.targetWordProgress;
+    final mistakeWordIds = result.mistakes.map((item) => item.word.id).toSet();
+    final updated = {...state.targetWordProgress};
+    for (final word in lesson.words) {
+      final current =
+          updated[word.id] ??
+          TargetWordProgress.newWord(
+            wordId: word.id,
+            wordBookId: state.activeWordBookId,
+            now: now,
+          );
+      updated[word.id] = current.learnedToday(
+        hadMistake: mistakeWordIds.contains(word.id),
+        now: now,
+      );
+    }
+    return updated;
   }
 
   List<Lesson> _applyLessonProgression(
@@ -539,47 +784,28 @@ class AppController extends Notifier<AppState> {
     ];
   }
 
-  Future<void> _saveLearningPlan(LearningPlan plan) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_learningPlanKey, jsonEncode(plan.toJson()));
+  Future<void> _saveLearningPlan(String uid, LearningPlan plan) async {
+    await _learningRepository.saveStudyPlan(uid, plan.toJson());
   }
 
-  Future<void> _clearLearningPlan() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_learningPlanKey);
+  Future<void> _clearLearningPlan(String uid) async {
+    await _learningRepository.clearStudyPlan(uid);
   }
 
-  Future<void> _saveLessonProgress(
-    Set<String> completedLessonIds,
-    Set<String> todayCompletedLessonIds,
-  ) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList(
-      _completedLessonIdsKey,
-      completedLessonIds.toList(),
-    );
-    await prefs.setString(_todayDateKey, _dateKey(DateTime.now()));
-    await prefs.setStringList(
-      _todayLessonIdsKey,
-      todayCompletedLessonIds.toList(),
-    );
+  Set<String> _claimedRewardIds(List<RewardTask> tasks) {
+    return {
+      for (final task in tasks)
+        if (task.isClaimed) task.id,
+    };
   }
 
-  Future<void> _saveTodayReviewWords(Set<String> todayReviewWordIds) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_todayDateKey, _dateKey(DateTime.now()));
-    await prefs.setStringList(_todayReviewIdsKey, todayReviewWordIds.toList());
-  }
-
-  Future<void> _saveTodayClaimedRewards(
-    Set<String> todayClaimedRewardIds,
-  ) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_todayDateKey, _dateKey(DateTime.now()));
-    await prefs.setStringList(
-      _todayRewardIdsKey,
-      todayClaimedRewardIds.toList(),
-    );
+  List<RewardTask> _markRewardClaimed(List<RewardTask> tasks, String id) {
+    return [
+      for (final task in tasks)
+        task.id == id
+            ? task.copyWith(isAvailable: false, isClaimed: true)
+            : task,
+    ];
   }
 
   ThemeMode _themeModeFromName(String? value) {
@@ -616,25 +842,33 @@ class AppController extends Notifier<AppState> {
     }
   }
 
-  LearningPlan? _loadLearningPlan(SharedPreferences prefs) {
-    final raw = prefs.getString(_learningPlanKey);
+  Future<LearningPlan?> _loadLearningPlanForUser(
+    String uid,
+    List<WordBook> wordBooks,
+    Map<String, TargetWordProgress> targetProgress, {
+    required String fallbackTarget,
+  }) async {
+    final raw = await _learningRepository.loadStudyPlan(uid);
     if (raw == null) return null;
-    try {
-      final decoded = jsonDecode(raw);
-      if (decoded is! Map) return null;
-      return LearningPlan.fromJson(Map<String, dynamic>.from(decoded));
-    } catch (_) {
-      return null;
+    final plan = LearningPlan.fromJson({'target': fallbackTarget, ...raw});
+    return plan.copyWith(
+      remainingWords: _remainingWordsForPlan(wordBooks, targetProgress, plan),
+    );
+  }
+
+  Future<Map<String, TargetWordProgress>> _loadTargetWordProgressForUser(
+    String uid,
+  ) async {
+    final remote = await _learningRepository.listTargetWordProgress(uid);
+    return {for (final item in remote) item.wordId: item};
+  }
+
+  Future<void> _saveTargetWordProgress(
+    String uid,
+    Map<String, TargetWordProgress> progress,
+  ) async {
+    for (final item in progress.values) {
+      await _learningRepository.upsertTargetWordProgress(uid, item);
     }
-  }
-
-  Set<String> _stringSet(SharedPreferences prefs, String key) {
-    return (prefs.getStringList(key) ?? const <String>[]).toSet();
-  }
-
-  String _dateKey(DateTime date) {
-    final month = date.month.toString().padLeft(2, '0');
-    final day = date.day.toString().padLeft(2, '0');
-    return '${date.year}-$month-$day';
   }
 }

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
+import '../../data/models/reward_task.dart';
+import '../../data/models/target_word_progress.dart';
 import '../../data/models/user_profile.dart';
 
 class DailyReminderSettings {
@@ -56,12 +58,18 @@ class LearningPlan {
     required this.dailyWords,
     required this.remainingWords,
     required this.createdAt,
+    this.wordBookId = 'beginner',
+    this.dailyReviewLimit = 20,
+    this.status = 'active',
   });
 
   final String target;
+  final String wordBookId;
   final DateTime deadline;
   final int dailyWords;
+  final int dailyReviewLimit;
   final int remainingWords;
+  final String status;
   final DateTime createdAt;
 
   int daysLeft(DateTime now) {
@@ -73,19 +81,49 @@ class LearningPlan {
   Map<String, dynamic> toJson() {
     return {
       'target': target,
+      'wordBookId': wordBookId,
       'deadline': deadline.toIso8601String(),
       'dailyWords': dailyWords,
+      'dailyReviewLimit': dailyReviewLimit,
       'remainingWords': remainingWords,
+      'status': status,
       'createdAt': createdAt.toIso8601String(),
     };
+  }
+
+  LearningPlan copyWith({
+    String? target,
+    String? wordBookId,
+    DateTime? deadline,
+    int? dailyWords,
+    int? dailyReviewLimit,
+    int? remainingWords,
+    String? status,
+    DateTime? createdAt,
+  }) {
+    return LearningPlan(
+      target: target ?? this.target,
+      wordBookId: wordBookId ?? this.wordBookId,
+      deadline: deadline ?? this.deadline,
+      dailyWords: dailyWords ?? this.dailyWords,
+      dailyReviewLimit: dailyReviewLimit ?? this.dailyReviewLimit,
+      remainingWords: remainingWords ?? this.remainingWords,
+      status: status ?? this.status,
+      createdAt: createdAt ?? this.createdAt,
+    );
   }
 
   factory LearningPlan.fromJson(Map<String, dynamic> json) {
     return LearningPlan(
       target: json['target'] as String? ?? 'Daily English',
+      wordBookId:
+          json['wordBookId'] as String? ??
+          wordBookIdForTarget(json['target'] as String?),
       deadline: _date(json['deadline']) ?? DateTime.now(),
       dailyWords: json['dailyWords'] as int? ?? 10,
+      dailyReviewLimit: json['dailyReviewLimit'] as int? ?? 20,
       remainingWords: json['remainingWords'] as int? ?? 0,
+      status: json['status'] as String? ?? 'active',
       createdAt: _date(json['createdAt']) ?? DateTime.now(),
     );
   }
@@ -102,6 +140,8 @@ class AppState {
     required this.isBootstrapped,
     required this.isLoading,
     required this.lessons,
+    required this.wordBooks,
+    required this.targetWordProgress,
     required this.customWords,
     required this.themeMode,
     required this.reminderSettings,
@@ -109,6 +149,7 @@ class AppState {
     required this.todayCompletedLessonIds,
     required this.todayReviewWordIds,
     required this.todayClaimedRewardIds,
+    required this.rewardTasks,
     this.user,
     this.lastResult,
     this.learningPlan,
@@ -119,6 +160,8 @@ class AppState {
   final bool isLoading;
   final UserProfile? user;
   final List<Lesson> lessons;
+  final List<WordBook> wordBooks;
+  final Map<String, TargetWordProgress> targetWordProgress;
   final List<CustomWord> customWords;
   final ThemeMode themeMode;
   final DailyReminderSettings reminderSettings;
@@ -127,12 +170,23 @@ class AppState {
   final Set<String> todayCompletedLessonIds;
   final Set<String> todayReviewWordIds;
   final Set<String> todayClaimedRewardIds;
+  final List<RewardTask> rewardTasks;
   final LessonResult? lastResult;
   final String? errorMessage;
 
   bool get isAuthenticated => user != null;
 
   String? get learningTarget => learningPlan?.target ?? user?.targetExam;
+
+  String get activeWordBookId =>
+      learningPlan?.wordBookId ?? wordBookIdForTarget(learningTarget);
+
+  WordBook? get currentWordBook {
+    for (final book in wordBooks) {
+      if (book.id == activeWordBookId) return book;
+    }
+    return wordBooks.isEmpty ? null : wordBooks.first;
+  }
 
   List<Lesson> get formalLessons => applyLearningTargetProgression(
     learningLessonsForTarget(lessons, learningTarget),
@@ -152,11 +206,21 @@ class AppState {
   }
 
   int get totalLearningWords =>
+      currentWordBook?.includedWords ??
       formalLessons.fold(0, (total, lesson) => total + lesson.words.length);
 
-  int get completedLearningWords => formalLessons
-      .where((lesson) => completedLessonIds.contains(lesson.id))
-      .fold(0, (total, lesson) => total + lesson.words.length);
+  int get completedLearningWords {
+    final bookId = activeWordBookId;
+    final progressed = targetWordProgress.values
+        .where(
+          (progress) => progress.wordBookId == bookId && progress.isLearned,
+        )
+        .length;
+    if (progressed > 0) return progressed;
+    return formalLessons
+        .where((lesson) => completedLessonIds.contains(lesson.id))
+        .fold(0, (total, lesson) => total + lesson.words.length);
+  }
 
   Set<String> get todayCompletedFormalLessonIds => {
     for (final lesson in formalLessons)
@@ -177,6 +241,43 @@ class AppState {
     return customWords.where((word) => word.isDue(now)).toList();
   }
 
+  List<TargetReviewWord> get dueTargetWords {
+    final book = currentWordBook;
+    if (book == null) return const [];
+    final now = DateTime.now();
+    final due = <TargetReviewWord>[];
+    for (final word in book.words) {
+      final progress = targetWordProgress[word.id];
+      if (progress == null || !progress.isDue(now)) continue;
+      due.add(TargetReviewWord(word: word, progress: progress));
+    }
+    return due;
+  }
+
+  List<TargetReviewWord> get weakTargetWords {
+    final book = currentWordBook;
+    if (book == null) return const [];
+    final weak = <TargetReviewWord>[];
+    for (final word in book.words) {
+      final progress = targetWordProgress[word.id];
+      if (progress == null || !progress.isLearned || !progress.isWeak) {
+        continue;
+      }
+      weak.add(TargetReviewWord(word: word, progress: progress));
+    }
+    weak.sort((a, b) => b.progress.wrongCount.compareTo(a.progress.wrongCount));
+    return weak;
+  }
+
+  Word? targetWordById(String id) {
+    for (final book in wordBooks) {
+      for (final word in book.words) {
+        if (word.id == id) return word;
+      }
+    }
+    return null;
+  }
+
   List<CustomWord> get weakWords {
     final weak = customWords.where((word) => word.isWeak).toList()
       ..sort((a, b) => b.wrongCount.compareTo(a.wrongCount));
@@ -189,6 +290,8 @@ class AppState {
     UserProfile? user,
     bool clearUser = false,
     List<Lesson>? lessons,
+    List<WordBook>? wordBooks,
+    Map<String, TargetWordProgress>? targetWordProgress,
     List<CustomWord>? customWords,
     ThemeMode? themeMode,
     DailyReminderSettings? reminderSettings,
@@ -198,6 +301,7 @@ class AppState {
     Set<String>? todayCompletedLessonIds,
     Set<String>? todayReviewWordIds,
     Set<String>? todayClaimedRewardIds,
+    List<RewardTask>? rewardTasks,
     LessonResult? lastResult,
     String? errorMessage,
     bool clearError = false,
@@ -207,6 +311,8 @@ class AppState {
       isLoading: isLoading ?? this.isLoading,
       user: clearUser ? null : user ?? this.user,
       lessons: lessons ?? this.lessons,
+      wordBooks: wordBooks ?? this.wordBooks,
+      targetWordProgress: targetWordProgress ?? this.targetWordProgress,
       customWords: customWords ?? this.customWords,
       themeMode: themeMode ?? this.themeMode,
       reminderSettings: reminderSettings ?? this.reminderSettings,
@@ -219,6 +325,7 @@ class AppState {
       todayReviewWordIds: todayReviewWordIds ?? this.todayReviewWordIds,
       todayClaimedRewardIds:
           todayClaimedRewardIds ?? this.todayClaimedRewardIds,
+      rewardTasks: rewardTasks ?? this.rewardTasks,
       lastResult: lastResult ?? this.lastResult,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
     );
@@ -229,6 +336,8 @@ class AppState {
       isBootstrapped: false,
       isLoading: false,
       lessons: [],
+      wordBooks: [],
+      targetWordProgress: {},
       customWords: [],
       themeMode: ThemeMode.system,
       reminderSettings: DailyReminderSettings.defaults,
@@ -236,8 +345,30 @@ class AppState {
       todayCompletedLessonIds: {},
       todayReviewWordIds: {},
       todayClaimedRewardIds: {},
+      rewardTasks: [],
     );
   }
+}
+
+class TargetReviewWord {
+  const TargetReviewWord({required this.word, required this.progress});
+
+  final Word word;
+  final TargetWordProgress progress;
+}
+
+String wordBookIdForTarget(String? target) {
+  final normalized = target?.trim().toLowerCase() ?? '';
+  if (normalized.contains('ielts') || normalized.contains('雅思')) {
+    return 'ielts';
+  }
+  if (normalized.contains('toefl') || normalized.contains('托福')) {
+    return 'toefl';
+  }
+  if (normalized.contains('gre')) return 'gre';
+  if (normalized.contains('gmat')) return 'gmat';
+  if (normalized.contains('sat')) return 'sat';
+  return 'beginner';
 }
 
 List<Lesson> learningLessonsForTarget(List<Lesson> lessons, String? target) {

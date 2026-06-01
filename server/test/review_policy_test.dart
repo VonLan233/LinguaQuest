@@ -2,7 +2,7 @@ import 'package:linguaquest_server/src/review_policy.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('review intervals match the product blueprint', () {
+  test('review intervals match the PRD guide', () {
     expect(reviewIntervalForLevel(0), Duration.zero);
     expect(reviewIntervalForLevel(1), const Duration(days: 1));
     expect(reviewIntervalForLevel(2), const Duration(days: 3));

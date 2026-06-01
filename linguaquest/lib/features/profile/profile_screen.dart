@@ -110,6 +110,12 @@ class ProfileScreen extends ConsumerWidget {
         ],
         const SectionHeader(title: '设置与支持'),
         const SizedBox(height: 10),
+        const _ProfileAction(
+          icon: Icons.account_circle_outlined,
+          title: '个人空间',
+          subtitle: '公开学习数据、成就徽章和社区发布',
+          route: '/profile-space',
+        ),
         _ProfileAction(
           icon: Icons.flag_outlined,
           title: '学习目标',
@@ -133,6 +139,12 @@ class ProfileScreen extends ConsumerWidget {
           title: '错题本',
           subtitle: '课程错词与弱项词',
           route: '/mistake-book',
+        ),
+        const _ProfileAction(
+          icon: Icons.history_outlined,
+          title: 'AI 对话记录',
+          subtitle: '查看或删除后端保存的 AI 对话',
+          route: '/ai-history',
         ),
         const _ProfileAction(
           icon: Icons.notifications_outlined,

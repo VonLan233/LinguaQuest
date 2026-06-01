@@ -6,6 +6,8 @@ import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/pronunciation_controls.dart';
+import '../../data/models/exercise_record.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
 import 'lesson_result_screen.dart';
@@ -31,7 +33,10 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
 
   final _textController = TextEditingController();
   final List<QuizQuestion> _mistakes = [];
+  final List<ExerciseRecordDraft> _exerciseRecords = [];
   final Set<String> _mistakeQuestionIds = {};
+  final DateTime _startedAt = DateTime.now();
+  DateTime _questionStartedAt = DateTime.now();
   int _index = 0;
   int _correct = 0;
   String? _selected;
@@ -241,6 +246,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
           ? _textController.text.trim()
           : _selected;
       final isCorrect = answer?.toLowerCase() == question.answer.toLowerCase();
+      _recordAttempt(question, answer ?? '', isCorrect);
       setState(() {
         _checked = true;
         _lastCorrect = isCorrect;
@@ -263,6 +269,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
         _selected = null;
         _feedbackReady = true;
         _feedbackHoldToken++;
+        _questionStartedAt = DateTime.now();
       });
       return;
     }
@@ -277,6 +284,13 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
         xpEarned: (_correct / lesson.questions.length * lesson.xpReward)
             .round(),
         mistakes: List.unmodifiable(_mistakes),
+        exerciseRecords: List.unmodifiable(_exerciseRecords),
+        sessionMode: widget.mode == QuizSessionMode.timed
+            ? 'training'
+            : 'lesson',
+        sessionSource: widget.mode == QuizSessionMode.timed
+            ? 'training'
+            : 'home',
         completedAt: DateTime.now(),
       );
       setState(() => _isSubmitting = true);
@@ -307,8 +321,31 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
       _lastCorrect = false;
       _feedbackReady = true;
       _feedbackHoldToken++;
+      _questionStartedAt = DateTime.now();
       _textController.clear();
     });
+  }
+
+  void _recordAttempt(QuizQuestion question, String answer, bool isCorrect) {
+    final answeredAt = DateTime.now();
+    _exerciseRecords.add(
+      ExerciseRecordDraft(
+        id: '${widget.lessonId}-${question.id}-${_startedAt.microsecondsSinceEpoch}-${_exerciseRecords.length}',
+        wordId: question.word.id,
+        exerciseType: question.type.name,
+        prompt: question.prompt,
+        options: question.options,
+        correctAnswer: question.answer,
+        userAnswer: answer,
+        isCorrect: isCorrect,
+        responseTimeMs: answeredAt
+            .difference(_questionStartedAt)
+            .inMilliseconds
+            .clamp(0, 3600000)
+            .toInt(),
+        createdAt: answeredAt,
+      ),
+    );
   }
 
   void _holdFeedback() {
@@ -327,17 +364,32 @@ class _QuestionPromptPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isListening = _isListeningQuestion(question.type);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Column(
         children: [
-          ImageCueBadge(cue: question.word.imageCue, size: 104),
+          isListening
+              ? const IconCueBadge(
+                  icon: Icons.volume_up_outlined,
+                  color: AppTheme.cyan,
+                  size: 104,
+                )
+              : ImageCueBadge(cue: question.word.imageCue, size: 104),
           const SizedBox(height: 14),
           Text(
             question.prompt,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.headlineSmall,
           ),
+          if (isListening) ...[
+            const SizedBox(height: 12),
+            PronunciationControls(
+              word: question.word.word,
+              compact: true,
+              revealWord: false,
+            ),
+          ],
           const SizedBox(height: 10),
           Wrap(
             spacing: 8,
@@ -371,9 +423,17 @@ class _QuestionPromptPanel extends StatelessWidget {
         return Icons.format_quote_outlined;
       case QuizQuestionType.imageChoice:
         return Icons.image_search_outlined;
+      case QuizQuestionType.listeningWordChoice:
+      case QuizQuestionType.listeningMeaningChoice:
+        return Icons.hearing_outlined;
       case QuizQuestionType.spelling:
         return Icons.edit_outlined;
     }
+  }
+
+  bool _isListeningQuestion(QuizQuestionType type) {
+    return type == QuizQuestionType.listeningWordChoice ||
+        type == QuizQuestionType.listeningMeaningChoice;
   }
 }
 

@@ -11,6 +11,14 @@ String displayTarget(String? value) {
       return '雅思核心词汇';
     case 'TOEFL':
       return '托福高频词汇';
+    case 'GRE':
+      return 'GRE 高频词汇';
+    case 'GMAT':
+      return 'GMAT 高频词汇';
+    case 'SAT':
+      return 'SAT 高频词汇';
+    case 'Beginner':
+      return '入门基础词汇';
     case 'MUET':
       return 'MUET 高频词汇';
     case 'Daily English':
@@ -34,6 +42,10 @@ String displayQuestionType(QuizQuestionType type) {
       return '语境选义';
     case QuizQuestionType.imageChoice:
       return '图片选词';
+    case QuizQuestionType.listeningWordChoice:
+      return '听音选词';
+    case QuizQuestionType.listeningMeaningChoice:
+      return '听音选义';
     case QuizQuestionType.spelling:
       return '拼写';
   }

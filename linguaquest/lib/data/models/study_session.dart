@@ -1,3 +1,5 @@
+import 'exercise_record.dart';
+
 class StudySession {
   const StudySession({
     required this.id,
@@ -9,6 +11,9 @@ class StudySession {
     required this.correctAnswers,
     required this.xpEarned,
     required this.mistakeWordIds,
+    this.exerciseRecords = const [],
+    this.mode = 'lesson',
+    this.source = 'home',
   });
 
   final String id;
@@ -20,6 +25,9 @@ class StudySession {
   final int correctAnswers;
   final int xpEarned;
   final List<String> mistakeWordIds;
+  final List<ExerciseRecordDraft> exerciseRecords;
+  final String mode;
+  final String source;
 
   Map<String, dynamic> toJson() {
     return {
@@ -31,7 +39,14 @@ class StudySession {
       'totalQuestions': totalQuestions,
       'correctAnswers': correctAnswers,
       'xpEarned': xpEarned,
+      'earnedPoints': xpEarned,
+      'mode': mode,
+      'source': source,
       'mistakeWordIds': mistakeWordIds,
+      'exerciseRecords': [
+        for (final record in exerciseRecords)
+          record.toJson(uid: uid, sessionId: id),
+      ],
     };
   }
 }

@@ -1,4 +1,4 @@
-import '../models/lesson.dart';
+import 'package:linguaquest/data/models/lesson.dart';
 
 List<Lesson> seedLessons() {
   const campusWords = [
@@ -312,14 +312,49 @@ List<Lesson> seedLessons() {
       words: healthWords,
       distractorWords: allWords,
     ),
-    _lesson(
+    _listeningLesson(
       id: 'lesson-campus-1',
-      title: '校园速测词包',
-      section: '训练场',
-      description: '校园生活词汇保留给限时测试，不作为默认新学入口。',
-      status: 'locked',
+      title: '听音速答',
+      description: '播放校园生活词汇发音后选择单词或释义，训练听力识别。',
       xpReward: 20,
       words: campusWords,
+      distractorWords: allWords,
+    ),
+    _lesson(
+      id: 'lesson-speed-1',
+      title: '抢词挑战',
+      section: '训练场',
+      description: '从已学、到期和高频词里快速辨义，按正确率结算训练 XP。',
+      status: 'locked',
+      xpReward: 25,
+      words: [examWords[0], travelWords[0], workWords[0]],
+      distractorWords: allWords,
+    ),
+    _lesson(
+      id: 'lesson-gauntlet-1',
+      title: '一站到底',
+      section: '训练场',
+      description: '连续完成多题型挑战，错词会进入弱项和后续复习记录。',
+      status: 'locked',
+      xpReward: 30,
+      words: [healthWords[0], foodWords[0], examWords[1]],
+      distractorWords: allWords,
+    ),
+    _spellingLesson(
+      id: 'lesson-spelling-1',
+      title: '单词拼写专项',
+      description: '围绕拼写弱项进行输入训练，强化可产出能力。',
+      xpReward: 24,
+      words: [workWords[1], examWords[2], travelWords[1], healthWords[2]],
+    ),
+    _lesson(
+      id: 'lesson-cloze-1',
+      title: '文章挖词',
+      section: '训练场',
+      description: '把今日词汇放回短文语境，用选择和拼写连接阅读理解。',
+      status: 'locked',
+      xpReward: 28,
+      words: [foodWords[1], healthWords[1], travelWords[2]],
       distractorWords: allWords,
     ),
   ];
@@ -391,6 +426,108 @@ Lesson _lesson({
         id: '$id-q4',
         type: QuizQuestionType.spelling,
         prompt: '根据释义拼写单词：${words[2].meaning}',
+        answer: words[2].word,
+        options: const [],
+        explanation: '正确拼写是“${words[2].word}”。',
+        word: words[2],
+      ),
+    ],
+  );
+}
+
+Lesson _spellingLesson({
+  required String id,
+  required String title,
+  required String description,
+  required int xpReward,
+  required List<Word> words,
+}) {
+  return Lesson(
+    id: id,
+    title: title,
+    section: '训练场',
+    description: description,
+    status: 'locked',
+    xpReward: xpReward,
+    estimatedMinutes: 5,
+    words: words,
+    questions: [
+      for (var index = 0; index < words.length; index++)
+        QuizQuestion(
+          id: '$id-q${index + 1}',
+          type: QuizQuestionType.spelling,
+          prompt: '根据释义拼写单词：${words[index].meaning}',
+          answer: words[index].word,
+          options: const [],
+          explanation:
+              '正确拼写是“${words[index].word}”。${words[index].exampleSentence}',
+          word: words[index],
+        ),
+    ],
+  );
+}
+
+Lesson _listeningLesson({
+  required String id,
+  required String title,
+  required String description,
+  required int xpReward,
+  required List<Word> words,
+  required List<Word> distractorWords,
+}) {
+  return Lesson(
+    id: id,
+    title: title,
+    section: '训练场',
+    description: description,
+    status: 'locked',
+    xpReward: xpReward,
+    estimatedMinutes: 5,
+    words: words,
+    questions: [
+      QuizQuestion(
+        id: '$id-q1',
+        type: QuizQuestionType.listeningWordChoice,
+        prompt: '播放发音，选择你听到的英文单词。',
+        answer: words[0].word,
+        options: _choiceOptions(
+          answer: words[0].word,
+          localDistractors: [words[1].word, words[2].word],
+          fallbackDistractors: distractorWords.map((word) => word.word),
+        ),
+        explanation: '你听到的是“${words[0].word}”。${words[0].exampleSentence}',
+        word: words[0],
+      ),
+      QuizQuestion(
+        id: '$id-q2',
+        type: QuizQuestionType.listeningMeaningChoice,
+        prompt: '播放发音，选择对应的中文释义。',
+        answer: words[1].meaning,
+        options: _choiceOptions(
+          answer: words[1].meaning,
+          localDistractors: [words[0].meaning, words[2].meaning],
+          fallbackDistractors: distractorWords.map((word) => word.meaning),
+        ),
+        explanation: '“${words[1].word}”对应${words[1].meaning}。',
+        word: words[1],
+      ),
+      QuizQuestion(
+        id: '$id-q3',
+        type: QuizQuestionType.listeningWordChoice,
+        prompt: '播放发音，选择你听到的英文单词。',
+        answer: words[2].word,
+        options: _choiceOptions(
+          answer: words[2].word,
+          localDistractors: [words[0].word, words[1].word],
+          fallbackDistractors: distractorWords.map((word) => word.word),
+        ),
+        explanation: '你听到的是“${words[2].word}”。${words[2].exampleSentence}',
+        word: words[2],
+      ),
+      QuizQuestion(
+        id: '$id-q4',
+        type: QuizQuestionType.spelling,
+        prompt: '根据发音和释义拼写单词：${words[2].meaning}',
         answer: words[2].word,
         options: const [],
         explanation: '正确拼写是“${words[2].word}”。',

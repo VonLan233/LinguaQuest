@@ -28,13 +28,12 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
   late final ProviderSubscription<AppState> _stateSubscription;
 
   static const targets = [
-    'CET-4',
-    'CET-6',
+    'Daily English',
     'IELTS',
     'TOEFL',
-    'MUET',
-    'Daily English',
-    'Business English',
+    'GRE',
+    'GMAT',
+    'SAT',
   ];
   static const levels = ['Beginner', 'Elementary', 'Intermediate', 'Advanced'];
   static const goals = [5, 10, 15, 20];
@@ -59,17 +58,18 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(appControllerProvider);
-    final selectedLessons = learningLessonsForTarget(state.lessons, _target);
-    final totalWords = selectedLessons.fold<int>(
-      0,
-      (total, lesson) => total + lesson.words.length,
-    );
-    final completedWords = selectedLessons
-        .where((lesson) => state.completedLessonIds.contains(lesson.id))
-        .fold<int>(0, (total, lesson) => total + lesson.words.length);
+    final selectedBook = _wordBookForTarget(state, _target);
+    final totalWords = selectedBook?.includedWords ?? 0;
+    final completedWords = selectedBook == null
+        ? 0
+        : selectedBook.words
+              .where(
+                (word) => state.targetWordProgress[word.id]?.isLearned ?? false,
+              )
+              .length;
     final plannedDailyWords = _deadline == null
         ? null
-        : _dailyWordsForDeadline(selectedLessons, state.completedLessonIds);
+        : _dailyWordsForDeadline(totalWords - completedWords);
     final dailyWords = plannedDailyWords ?? _dailyGoal;
     return Scaffold(
       appBar: AppBar(
@@ -237,13 +237,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
     setState(() => _deadline = picked);
   }
 
-  int _dailyWordsForDeadline(
-    List<Lesson> lessons,
-    Set<String> completedLessonIds,
-  ) {
-    final remainingWords = lessons
-        .where((lesson) => !completedLessonIds.contains(lesson.id))
-        .fold(0, (total, lesson) => total + lesson.words.length);
+  int _dailyWordsForDeadline(int remainingWords) {
     final now = DateTime.now();
     final deadline = _deadline ?? now;
     final today = DateTime.utc(now.year, now.month, now.day);
@@ -251,6 +245,14 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
     final days = targetDay.difference(today).inDays.clamp(0, 9999).toInt() + 1;
     if (remainingWords == 0) return 1;
     return ((remainingWords + days - 1) ~/ days).clamp(1, 999).toInt();
+  }
+
+  WordBook? _wordBookForTarget(AppState state, String target) {
+    final id = wordBookIdForTarget(target);
+    for (final book in state.wordBooks) {
+      if (book.id == id) return book;
+    }
+    return state.wordBooks.isEmpty ? null : state.wordBooks.first;
   }
 }
 

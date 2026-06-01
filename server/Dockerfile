@@ -6,7 +6,9 @@ COPY . .
 RUN dart compile exe bin/server.dart -o bin/server
 
 FROM scratch
+WORKDIR /app
 COPY --from=build /runtime/ /
 COPY --from=build /app/bin/server /app/bin/server
+COPY --from=build /app/data /app/data
 EXPOSE 8080
 CMD ["/app/bin/server"]

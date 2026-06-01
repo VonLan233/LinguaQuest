@@ -58,19 +58,20 @@ class TrainingScreen extends ConsumerWidget {
         _TrainingGameList(
           games: [
             _TrainingGameData(
-              icon: Icons.school_outlined,
-              title: '校园速测',
-              body: '从校园生活词包抽题，适合课后快速检测，不影响正式复习节奏。',
-              source: '校园生活 · 限时测试',
-              actionLabel: '开始测试',
+              icon: Icons.hearing_outlined,
+              title: '听音速答',
+              body: '播放发音后选择单词或释义，反应速度和正确率共同影响积分。',
+              source: '校园词包 · 听音题',
+              actionLabel: '开始听音',
               onTap: () => context.push('/timed-test/lesson-campus-1'),
             ),
-            const _TrainingGameData(
+            _TrainingGameData(
               icon: Icons.timer_outlined,
               title: '抢词',
               body: '60 秒内尽可能答对英文选义题，按正确数、连击和准确率给积分。',
               source: '已学词 + 到期词',
-              actionLabel: '即将开放',
+              actionLabel: '开始抢词',
+              onTap: () => context.push('/timed-test/lesson-speed-1'),
             ),
           ],
         ),
@@ -79,34 +80,37 @@ class TrainingScreen extends ConsumerWidget {
         const SizedBox(height: 12),
         _TrainingGameList(
           games: [
-            const _TrainingGameData(
+            _TrainingGameData(
               icon: Icons.stairs_outlined,
               title: '一站到底',
               body: '从简单到困难连续答题，错词会进入弱项词和错词本。',
               source: '当前词书 + 弱项词',
-              actionLabel: '即将开放',
+              actionLabel: '开始闯关',
+              onTap: () => context.push('/timed-test/lesson-gauntlet-1'),
             ),
             _TrainingGameData(
               icon: Icons.edit_note_outlined,
               title: '单词拼写',
               body: '看中文、听发音或看例句空格后输入英文，强化可产出能力。',
               source: '拼写弱项词',
-              actionLabel: '进入生词本',
-              onTap: () => context.push('/custom-words'),
+              actionLabel: '开始拼写',
+              onTap: () => context.push('/timed-test/lesson-spelling-1'),
             ),
-            const _TrainingGameData(
+            _TrainingGameData(
               icon: Icons.article_outlined,
               title: '文章挖词',
               body: '用今日词汇生成短文并挖空，连接背词和阅读理解。',
               source: '今日学习词 + AI 短文',
-              actionLabel: '即将开放',
+              actionLabel: '开始挖词',
+              onTap: () => context.push('/timed-test/lesson-cloze-1'),
             ),
-            const _TrainingGameData(
+            _TrainingGameData(
               icon: Icons.hearing_outlined,
-              title: '听音速答',
-              body: '播放发音后选择单词或释义，反应时间影响得分。',
+              title: '听音复练',
+              body: '复练听音选词和听音选义，错误记录会进入训练统计。',
               source: '听力弱项词',
-              actionLabel: '即将开放',
+              actionLabel: '开始复练',
+              onTap: () => context.push('/timed-test/lesson-campus-1'),
             ),
           ],
         ),
