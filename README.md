@@ -191,6 +191,8 @@ linguaquest/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
 
 ## Roadmap
 
+Detailed PRD issue tracking now lives in [`PROJECT_TODO.md`](PROJECT_TODO.md).
+
 - [x] Core Flutter navigation and learning loop
 - [x] Redesigned mobile UI for onboarding, home, learning, quiz, review, wordbook, quests, and profile
 - [x] Custom word CRUD
