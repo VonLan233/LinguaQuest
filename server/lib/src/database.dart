@@ -77,6 +77,22 @@ CREATE TABLE IF NOT EXISTS review_events (
   next_review_at TIMESTAMPTZ NOT NULL
 );
 ''');
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS notifications (
+  id TEXT PRIMARY KEY,
+  uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  type TEXT NOT NULL,
+  title TEXT NOT NULL,
+  body TEXT NOT NULL,
+  target_route TEXT NOT NULL DEFAULT '/home',
+  is_read BOOLEAN NOT NULL DEFAULT FALSE,
+  source_key TEXT,
+  read_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL,
+  UNIQUE (uid, source_key)
+);
+''');
   }
 
   Future<Map<String, dynamic>?> userByEmail(String email) async {
@@ -292,6 +308,122 @@ INSERT INTO review_events (
         'nextReviewAt': _date(data['nextReviewAt']) ?? DateTime.now().toUtc(),
       },
     );
+  }
+
+  Future<List<Map<String, dynamic>>> notifications(
+    String uid, {
+    bool unreadOnly = false,
+    String? type,
+  }) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT * FROM notifications
+WHERE uid=@uid
+  ${unreadOnly ? 'AND is_read = FALSE' : ''}
+  ${type == null ? '' : 'AND type = @type'}
+ORDER BY created_at DESC
+'''),
+      parameters: {'uid': uid, if (type != null) 'type': type},
+    );
+    return rows.map((row) => row.toColumnMap()).toList();
+  }
+
+  Future<Map<String, dynamic>?> notificationById(String uid, String id) async {
+    final rows = await connection.execute(
+      Sql.named(
+        'SELECT * FROM notifications WHERE uid=@uid AND id=@id LIMIT 1',
+      ),
+      parameters: {'uid': uid, 'id': id},
+    );
+    if (rows.isEmpty) return null;
+    return rows.first.toColumnMap();
+  }
+
+  Future<void> upsertNotification(String uid, Map<String, dynamic> data) async {
+    await connection.execute(
+      Sql.named('''
+INSERT INTO notifications (
+  id, uid, type, title, body, target_route, is_read, source_key, read_at, created_at
+) VALUES (
+  @id, @uid, @type, @title, @body, @targetRoute, @isRead, @sourceKey, @readAt, @createdAt
+)
+ON CONFLICT (uid, source_key) DO UPDATE SET
+  type=EXCLUDED.type,
+  title=EXCLUDED.title,
+  body=EXCLUDED.body,
+  target_route=EXCLUDED.target_route
+'''),
+      parameters: {
+        'id': data['id'],
+        'uid': uid,
+        'type': data['type'],
+        'title': data['title'],
+        'body': data['body'],
+        'targetRoute': data['targetRoute'] ?? '/home',
+        'isRead': data['isRead'] ?? false,
+        'sourceKey': data['sourceKey'],
+        'readAt': _date(data['readAt']),
+        'createdAt': _date(data['createdAt']) ?? DateTime.now().toUtc(),
+      },
+    );
+  }
+
+  Future<Map<String, dynamic>?> markNotificationRead(
+    String uid,
+    String id,
+  ) async {
+    final existing = await notificationById(uid, id);
+    if (existing == null) return null;
+    await connection.execute(
+      Sql.named('''
+UPDATE notifications
+SET is_read = TRUE,
+    read_at = COALESCE(read_at, @readAt)
+WHERE uid=@uid AND id=@id
+'''),
+      parameters: {'uid': uid, 'id': id, 'readAt': DateTime.now().toUtc()},
+    );
+    return notificationById(uid, id);
+  }
+
+  Future<int> markAllNotificationsRead(String uid) async {
+    final rows = await connection.execute(
+      Sql.named('''
+UPDATE notifications
+SET is_read = TRUE,
+    read_at = COALESCE(read_at, @readAt)
+WHERE uid=@uid AND is_read = FALSE
+RETURNING id
+'''),
+      parameters: {'uid': uid, 'readAt': DateTime.now().toUtc()},
+    );
+    return rows.length;
+  }
+
+  Future<bool> hasStudySessionToday(String uid) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT id FROM study_sessions
+WHERE uid=@uid AND ended_at::date = CURRENT_DATE
+LIMIT 1
+'''),
+      parameters: {'uid': uid},
+    );
+    return rows.isNotEmpty;
+  }
+
+  Future<int> dueReviewCount(String uid) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT COUNT(*) AS count FROM custom_words
+WHERE uid=@uid AND next_review_at <= NOW()
+'''),
+      parameters: {'uid': uid},
+    );
+    if (rows.isEmpty) return 0;
+    final value = rows.first.toColumnMap()['count'];
+    if (value is int) return value;
+    return int.tryParse(value.toString()) ?? 0;
   }
 }
 
