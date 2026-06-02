@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:linguaquest/app.dart';
+import 'package:linguaquest/core/state/app_controller.dart';
 import 'package:linguaquest/data/models/app_notification.dart';
 import 'package:linguaquest/data/models/user_profile.dart';
 import 'package:linguaquest/data/repositories/mock_repositories.dart';
+import 'package:linguaquest/data/repositories/notification_repository.dart';
 import 'package:linguaquest/services/local_notification_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -109,6 +111,71 @@ void main() {
     },
   );
 
+  test(
+    'notification read actions update optimistically on repository failure',
+    () async {
+      final now = DateTime(2026, 6, 2);
+      final profile = UserProfile(
+        uid: 'optimistic-user',
+        name: 'Ava',
+        email: 'optimistic@lingua.quest',
+        targetExam: 'IELTS',
+        level: 'Intermediate',
+        dailyGoal: 12,
+        xp: 240,
+        streak: 6,
+        createdAt: now,
+        updatedAt: now,
+      );
+      SharedPreferences.setMockInitialValues({
+        'linguaquest.profile': jsonEncode(profile.toJson()),
+      });
+      final notifications = _FailingNotificationRepository();
+      final container = ProviderContainer(
+        overrides: [
+          notificationRepositoryProvider.overrideWithValue(notifications),
+          localNotificationServiceProvider.overrideWithValue(
+            NoopLocalNotificationService(),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await container.read(appControllerProvider.notifier).bootstrap();
+      final notification = container
+          .read(appControllerProvider)
+          .notifications
+          .firstWhere((item) => !item.isRead);
+
+      final route = await container
+          .read(appControllerProvider.notifier)
+          .openNotification(notification);
+
+      expect(route, notification.targetRoute);
+      expect(
+        container
+            .read(appControllerProvider)
+            .notifications
+            .firstWhere((item) => item.id == notification.id)
+            .isRead,
+        isTrue,
+      );
+
+      final updatedCount = await container
+          .read(appControllerProvider.notifier)
+          .markAllNotificationsRead();
+
+      expect(updatedCount, 0);
+      expect(
+        container
+            .read(appControllerProvider)
+            .notifications
+            .every((notification) => notification.isRead),
+        isTrue,
+      );
+    },
+  );
+
   testWidgets(
     'home badge opens notifications and mark all read clears unread',
     (tester) async {
@@ -160,4 +227,39 @@ void main() {
       expect(find.text('当前没有未读消息。'), findsOneWidget);
     },
   );
+}
+
+class _FailingNotificationRepository implements NotificationRepository {
+  final List<AppNotification> _notifications = [];
+
+  @override
+  Future<void> ensureGenerated(
+    String uid,
+    List<AppNotification> notifications,
+  ) async {
+    _notifications.addAll(notifications);
+  }
+
+  @override
+  Future<List<AppNotification>> list(
+    String uid, {
+    bool unreadOnly = false,
+    AppNotificationType? type,
+  }) async {
+    return _notifications.where((notification) {
+      if (unreadOnly && notification.isRead) return false;
+      if (type != null && notification.type != type) return false;
+      return true;
+    }).toList();
+  }
+
+  @override
+  Future<AppNotification?> markRead(String uid, String id) async {
+    throw StateError('network unavailable');
+  }
+
+  @override
+  Future<int> markAllRead(String uid) async {
+    throw StateError('network unavailable');
+  }
 }

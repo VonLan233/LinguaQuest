@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -197,8 +198,12 @@ class FlutterLocalNotificationService implements LocalNotificationService {
       await action();
     } on MissingPluginException {
       return;
-    } catch (_) {
-      return;
+    } catch (error, stackTrace) {
+      assert(() {
+        debugPrint('LocalNotificationService error: $error');
+        debugPrintStack(stackTrace: stackTrace);
+        return true;
+      }());
     }
   }
 }

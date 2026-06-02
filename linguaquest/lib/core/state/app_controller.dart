@@ -1,5 +1,5 @@
-import 'dart:convert';
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -423,7 +423,7 @@ class AppController extends Notifier<AppState> {
   }
 
   Future<String> openNotification(AppNotification notification) async {
-    await markNotificationRead(notification.id);
+    unawaited(markNotificationRead(notification.id));
     return notification.targetRoute.trim().isEmpty
         ? '/home'
         : notification.targetRoute;
@@ -432,8 +432,22 @@ class AppController extends Notifier<AppState> {
   Future<void> markNotificationRead(String id) async {
     final user = state.user;
     if (user == null) return;
-    final updated = await _notificationRepository.markRead(user.uid, id);
-    if (updated == null) return;
+    final now = DateTime.now().toUtc();
+    state = state.copyWith(
+      notifications: [
+        for (final notification in state.notifications)
+          notification.id == id
+              ? notification.markRead(now: now)
+              : notification,
+      ],
+    );
+    AppNotification? updated;
+    try {
+      updated = await _notificationRepository.markRead(user.uid, id);
+    } catch (_) {
+      return;
+    }
+    if (!ref.mounted || updated == null || state.user?.uid != user.uid) return;
     state = state.copyWith(
       notifications: [
         for (final notification in state.notifications)
@@ -445,7 +459,6 @@ class AppController extends Notifier<AppState> {
   Future<int> markAllNotificationsRead() async {
     final user = state.user;
     if (user == null) return 0;
-    final updatedCount = await _notificationRepository.markAllRead(user.uid);
     final now = DateTime.now().toUtc();
     state = state.copyWith(
       notifications: [
@@ -453,7 +466,11 @@ class AppController extends Notifier<AppState> {
           notification.isRead ? notification : notification.markRead(now: now),
       ],
     );
-    return updatedCount;
+    try {
+      return await _notificationRepository.markAllRead(user.uid);
+    } catch (_) {
+      return 0;
+    }
   }
 
   Future<int> addMistakesToCustomWords(Set<String> wordIds) async {
