@@ -340,31 +340,51 @@ ORDER BY created_at DESC
   }
 
   Future<void> upsertNotification(String uid, Map<String, dynamic> data) async {
+    await upsertNotifications(uid, [data]);
+  }
+
+  Future<void> upsertNotifications(
+    String uid,
+    List<Map<String, dynamic>> notifications,
+  ) async {
+    if (notifications.isEmpty) return;
+    final values = <String>[];
+    final parameters = <String, dynamic>{'uid': uid};
+    for (var index = 0; index < notifications.length; index++) {
+      final data = notifications[index];
+      values.add('''
+(@id$index, @uid, @type$index, @title$index, @body$index, @targetRoute$index,
+ @isRead$index, @sourceKey$index, @readAt$index, @createdAt$index)
+''');
+      parameters.addAll({
+        'id$index': data['id'],
+        'type$index': data['type'],
+        'title$index': data['title'],
+        'body$index': data['body'],
+        'targetRoute$index': data['targetRoute'] ?? '/home',
+        'isRead$index': data['isRead'] ?? false,
+        'sourceKey$index': data['sourceKey'],
+        'readAt$index': _date(data['readAt']),
+        'createdAt$index': _date(data['createdAt']) ?? DateTime.now().toUtc(),
+      });
+    }
     await connection.execute(
       Sql.named('''
 INSERT INTO notifications (
   id, uid, type, title, body, target_route, is_read, source_key, read_at, created_at
-) VALUES (
-  @id, @uid, @type, @title, @body, @targetRoute, @isRead, @sourceKey, @readAt, @createdAt
-)
+) VALUES
+  ${values.join(',\n')}
 ON CONFLICT (uid, source_key) DO UPDATE SET
   type=EXCLUDED.type,
   title=EXCLUDED.title,
   body=EXCLUDED.body,
   target_route=EXCLUDED.target_route
+WHERE notifications.type IS DISTINCT FROM EXCLUDED.type
+   OR notifications.title IS DISTINCT FROM EXCLUDED.title
+   OR notifications.body IS DISTINCT FROM EXCLUDED.body
+   OR notifications.target_route IS DISTINCT FROM EXCLUDED.target_route
 '''),
-      parameters: {
-        'id': data['id'],
-        'uid': uid,
-        'type': data['type'],
-        'title': data['title'],
-        'body': data['body'],
-        'targetRoute': data['targetRoute'] ?? '/home',
-        'isRead': data['isRead'] ?? false,
-        'sourceKey': data['sourceKey'],
-        'readAt': _date(data['readAt']),
-        'createdAt': _date(data['createdAt']) ?? DateTime.now().toUtc(),
-      },
+      parameters: parameters,
     );
   }
 
@@ -400,14 +420,18 @@ RETURNING id
     return rows.length;
   }
 
-  Future<bool> hasStudySessionToday(String uid) async {
+  Future<bool> hasStudySessionInRange(
+    String uid,
+    DateTime startUtc,
+    DateTime endUtc,
+  ) async {
     final rows = await connection.execute(
       Sql.named('''
 SELECT id FROM study_sessions
-WHERE uid=@uid AND ended_at::date = CURRENT_DATE
+WHERE uid=@uid AND ended_at >= @startUtc AND ended_at < @endUtc
 LIMIT 1
 '''),
-      parameters: {'uid': uid},
+      parameters: {'uid': uid, 'startUtc': startUtc, 'endUtc': endUtc},
     );
     return rows.isNotEmpty;
   }

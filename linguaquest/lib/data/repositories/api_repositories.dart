@@ -177,11 +177,14 @@ class ApiNotificationRepository implements NotificationRepository {
     bool unreadOnly = false,
     AppNotificationType? type,
   }) async {
+    final now = DateTime.now();
     final response = await _client.dio.get<List<dynamic>>(
       '/notifications',
       queryParameters: {
         if (unreadOnly) 'unreadOnly': true,
         if (type != null) 'type': type.name,
+        'localDate': _localDateKey(now),
+        'timezoneOffsetMinutes': now.timeZoneOffset.inMinutes,
       },
     );
     return response.data!
@@ -207,4 +210,10 @@ class ApiNotificationRepository implements NotificationRepository {
       response.data!['notification'] as Map<String, dynamic>,
     );
   }
+}
+
+String _localDateKey(DateTime date) {
+  final month = date.month.toString().padLeft(2, '0');
+  final day = date.day.toString().padLeft(2, '0');
+  return '${date.year}-$month-$day';
 }

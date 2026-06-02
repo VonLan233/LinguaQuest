@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -133,7 +134,7 @@ class AppController extends Notifier<AppState> {
         todayClaimedRewardIds: todayClaimedRewardIds,
       );
       await refreshNotifications();
-      await _scheduleLocalNotifications();
+      unawaited(_scheduleLocalNotifications());
     } catch (error) {
       state = state.copyWith(
         isBootstrapped: false,
@@ -153,7 +154,7 @@ class AppController extends Notifier<AppState> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_reminderKey, jsonEncode(settings.toJson()));
     state = state.copyWith(reminderSettings: settings);
-    await _scheduleLocalNotifications();
+    unawaited(_scheduleLocalNotifications());
   }
 
   Future<bool> register(String name, String email, String password) async {
@@ -168,7 +169,7 @@ class AppController extends Notifier<AppState> {
         customWords: await _customWordRepository.list(user.uid),
       );
       await refreshNotifications();
-      await _scheduleLocalNotifications();
+      unawaited(_scheduleLocalNotifications());
     });
   }
 
@@ -183,7 +184,7 @@ class AppController extends Notifier<AppState> {
         customWords: await _customWordRepository.list(user.uid),
       );
       await refreshNotifications();
-      await _scheduleLocalNotifications();
+      unawaited(_scheduleLocalNotifications());
     });
   }
 
@@ -218,7 +219,7 @@ class AppController extends Notifier<AppState> {
         clearLearningPlan: plan == null,
       );
       await refreshNotifications();
-      await _scheduleLocalNotifications();
+      unawaited(_scheduleLocalNotifications());
     });
   }
 
@@ -236,7 +237,7 @@ class AppController extends Notifier<AppState> {
       reminderSettings: reminderSettings,
       notifications: [],
     );
-    await _scheduleLocalNotifications();
+    unawaited(_scheduleLocalNotifications());
   }
 
   Future<bool> addCustomWord({
@@ -335,7 +336,7 @@ class AppController extends Notifier<AppState> {
         lastResult: result,
       );
       await refreshNotifications();
-      await _scheduleLocalNotifications();
+      unawaited(_scheduleLocalNotifications());
     });
   }
 
@@ -382,7 +383,7 @@ class AppController extends Notifier<AppState> {
         todayReviewWordIds: todayReviewWordIds,
       );
       await refreshNotifications();
-      await _scheduleLocalNotifications();
+      unawaited(_scheduleLocalNotifications());
     });
   }
 
@@ -445,7 +446,7 @@ class AppController extends Notifier<AppState> {
     final user = state.user;
     if (user == null) return 0;
     final updatedCount = await _notificationRepository.markAllRead(user.uid);
-    final now = DateTime.now();
+    final now = DateTime.now().toUtc();
     state = state.copyWith(
       notifications: [
         for (final notification in state.notifications)
@@ -631,7 +632,7 @@ class AppController extends Notifier<AppState> {
           type: AppNotificationType.checkInReminder,
           title: '今天还没有打卡',
           body: '完成一次学习或复习即可延续连续打卡。',
-          targetRoute: '/home',
+          targetRoute: '/discover',
           sourceKey: 'checkInReminder:$dateKey',
           now: now,
         ),
@@ -668,25 +669,31 @@ class AppController extends Notifier<AppState> {
       body: body,
       targetRoute: targetRoute,
       isRead: false,
-      createdAt: now,
+      createdAt: now.toUtc(),
       sourceKey: sourceKey,
     );
   }
 
   Future<void> _scheduleLocalNotifications() async {
-    final user = state.user;
+    if (!ref.mounted) return;
+    final snapshot = state;
+    final user = snapshot.user;
+    final reminderSettings = snapshot.reminderSettings;
+    final dueCount = user == null ? 0 : snapshot.dueWords.length;
     await _localNotificationService.initialize(
       onSelectRoute: (route) {
+        if (!ref.mounted) return;
         ref.read(localNotificationTapRouteProvider.notifier).show(route);
       },
     );
+    if (!ref.mounted) return;
     await _localNotificationService.scheduleDailyStudyReminder(
-      enabled: user != null && state.reminderSettings.enabled,
-      hour: state.reminderSettings.hour,
-      minute: state.reminderSettings.minute,
+      enabled: user != null && reminderSettings.enabled,
+      hour: reminderSettings.hour,
+      minute: reminderSettings.minute,
     );
     await _localNotificationService.scheduleReviewDueReminder(
-      dueCount: user == null ? 0 : state.dueWords.length,
+      dueCount: dueCount,
     );
   }
 

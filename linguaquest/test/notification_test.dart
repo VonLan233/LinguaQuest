@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   test('app notification JSON roundtrips and marks read', () {
-    final createdAt = DateTime(2026, 6, 2, 9, 30);
+    final createdAt = DateTime.utc(2026, 6, 2, 9, 30);
     final notification = AppNotification(
       id: 'n1',
       uid: 'u1',
@@ -52,12 +52,36 @@ void main() {
     expect(notification.isRead, isFalse);
   });
 
+  test('app notification timestamp fallbacks are UTC', () {
+    final before = DateTime.now().toUtc();
+    final notification = AppNotification.fromJson({
+      'id': 'n2b',
+      'uid': 'u1',
+      'type': 'activity',
+    });
+    final read = notification.markRead();
+    final after = DateTime.now().toUtc();
+
+    expect(notification.createdAt.isUtc, isTrue);
+    expect(
+      notification.createdAt.isAfter(
+        before.subtract(const Duration(seconds: 1)),
+      ),
+      isTrue,
+    );
+    expect(
+      notification.createdAt.isBefore(after.add(const Duration(seconds: 1))),
+      isTrue,
+    );
+    expect(read.readAt?.isUtc, isTrue);
+  });
+
   test(
     'mock notifications persist read state and avoid daily duplicates',
     () async {
       SharedPreferences.setMockInitialValues({});
       final repo = MockNotificationRepository();
-      final now = DateTime(2026, 6, 2, 9);
+      final now = DateTime.utc(2026, 6, 2, 9);
       final notification = AppNotification(
         id: 'n3',
         uid: 'persist-user',

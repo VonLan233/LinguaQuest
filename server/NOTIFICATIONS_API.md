@@ -57,11 +57,13 @@ Supported query parameters:
 | --- | --- | --- | --- |
 | `unreadOnly` | boolean | `true` | When true, only unread notifications are returned. |
 | `type` | string | `reviewDue` | Optional notification type filter. |
+| `localDate` | string | `2026-06-03` | Client local natural day used for daily source keys. |
+| `timezoneOffsetMinutes` | integer | `480` | Local offset from UTC in minutes, used to build the UTC query range. |
 
 Example:
 
 ```text
-GET /notifications?unreadOnly=true&type=reviewDue
+GET /notifications?unreadOnly=true&type=reviewDue&localDate=2026-06-03&timezoneOffsetMinutes=480
 ```
 
 Response:
@@ -83,15 +85,17 @@ Response:
 ]
 ```
 
-Before returning, the backend generates or fills deterministic daily
-notifications for the current user:
+Before returning, the backend validates query parameters and then generates or
+fills deterministic daily notifications for the current user:
 
 - `learningReminder` when the daily learning goal is not complete.
 - `reviewDue` when there are due review words.
 - `checkInReminder` when the user has not checked in today.
 - `activity` once per day.
 
-Daily de-duplication uses the unique `uid + source_key` constraint.
+Daily de-duplication uses the unique `uid + source_key` constraint. The
+`sourceKey` date suffix is based on the client local `localDate`, while
+timestamps stored by the backend remain UTC.
 
 ### `PATCH /notifications/read-all`
 
@@ -141,4 +145,3 @@ The mobile app still owns local scheduled system notifications through
 - Local notification payloads carry `targetRoute`.
 - At most two local reminder categories are scheduled per day: combined
   learning/check-in and review due.
-

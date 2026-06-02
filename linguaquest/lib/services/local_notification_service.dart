@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest.dart' as timezone_data;
 import 'package:timezone/timezone.dart' as timezone;
 
@@ -73,7 +74,7 @@ class FlutterLocalNotificationService implements LocalNotificationService {
   }) async {
     if (_isInitialized) return;
     try {
-      timezone_data.initializeTimeZones();
+      await _initializeLocalTimezone();
       const android = AndroidInitializationSettings('@mipmap/ic_launcher');
       const darwin = DarwinInitializationSettings(
         requestAlertPermission: true,
@@ -102,6 +103,16 @@ class FlutterLocalNotificationService implements LocalNotificationService {
       _isInitialized = true;
     } catch (_) {
       _isInitialized = true;
+    }
+  }
+
+  Future<void> _initializeLocalTimezone() async {
+    timezone_data.initializeTimeZones();
+    try {
+      final localTimezone = await FlutterTimezone.getLocalTimezone();
+      timezone.setLocalLocation(timezone.getLocation(localTimezone.identifier));
+    } catch (_) {
+      timezone.setLocalLocation(timezone.getLocation('UTC'));
     }
   }
 

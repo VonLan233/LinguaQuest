@@ -37,7 +37,7 @@ class AppNotification {
 
   AppNotification markRead({DateTime? now}) {
     if (isRead) return this;
-    return copyWith(isRead: true, readAt: now ?? DateTime.now());
+    return copyWith(isRead: true, readAt: (now ?? DateTime.now()).toUtc());
   }
 
   AppNotification copyWith({
@@ -92,7 +92,7 @@ class AppNotification {
       body: json['body'] as String? ?? '',
       targetRoute: json['targetRoute'] as String? ?? '/home',
       isRead: json['isRead'] as bool? ?? false,
-      createdAt: _date(json['createdAt']) ?? DateTime.now(),
+      createdAt: _date(json['createdAt']) ?? DateTime.now().toUtc(),
       readAt: _date(json['readAt']),
       sourceKey: json['sourceKey'] as String?,
     );
@@ -121,6 +121,6 @@ String appNotificationTypeLabel(AppNotificationType type) {
 
 DateTime? _date(Object? value) {
   if (value == null) return null;
-  if (value is DateTime) return value;
-  return DateTime.tryParse(value.toString());
+  if (value is DateTime) return value.toUtc();
+  return DateTime.tryParse(value.toString())?.toUtc();
 }

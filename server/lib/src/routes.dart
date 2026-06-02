@@ -144,13 +144,30 @@ Router buildRouter(AppConfig config, AppDatabase database) {
 
   router.get('/notifications', (Request request) async {
     return _protected(config, request, (uid) async {
-      await _ensureNotificationsForToday(database, uid);
       final type = request.url.queryParameters['type'];
       if (type != null && !notificationTypes.contains(type)) {
         return jsonResponse({
           'error': 'invalid notification type',
         }, status: 400);
       }
+      final localDate = request.url.queryParameters['localDate'];
+      if (localDate != null && !isNotificationDateKey(localDate)) {
+        return jsonResponse({'error': 'invalid localDate'}, status: 400);
+      }
+      final timezoneOffsetMinutes = parseNotificationTimezoneOffsetMinutes(
+        request.url.queryParameters['timezoneOffsetMinutes'],
+      );
+      if (timezoneOffsetMinutes == null) {
+        return jsonResponse({
+          'error': 'invalid timezoneOffsetMinutes',
+        }, status: 400);
+      }
+      final dayWindow = notificationDayWindow(
+        nowUtc: DateTime.now().toUtc(),
+        localDate: localDate,
+        timezoneOffsetMinutes: timezoneOffsetMinutes,
+      );
+      await _ensureNotificationsForToday(database, uid, dayWindow);
       final unreadOnly =
           request.url.queryParameters['unreadOnly']?.toLowerCase() == 'true';
       final notifications = await database.notifications(
@@ -267,46 +284,43 @@ Map<String, dynamic> notificationDto(Map<String, dynamic> row) {
 Future<void> _ensureNotificationsForToday(
   AppDatabase database,
   String uid,
+  NotificationDayWindow dayWindow,
 ) async {
   final now = DateTime.now().toUtc();
-  final dateKey = notificationDateKey(now);
   final user = await database.userById(uid);
   if (user == null) return;
-  final hasStudyToday = await database.hasStudySessionToday(uid);
+  final hasStudyToday = await database.hasStudySessionInRange(
+    uid,
+    dayWindow.startUtc,
+    dayWindow.endUtc,
+  );
   final dueReviewCount = await database.dueReviewCount(uid);
   final lastStudyDate = user['last_study_date'];
   final hasCheckedIn =
       lastStudyDate is DateTime &&
-      notificationDateKey(lastStudyDate.toUtc()) == dateKey;
+      !lastStudyDate.toUtc().isBefore(dayWindow.startUtc) &&
+      lastStudyDate.toUtc().isBefore(dayWindow.endUtc);
   final dailyGoal = user['daily_goal'] ?? 10;
   final generated = generatedNotificationsForToday(
-    now: now,
+    dateKey: dayWindow.dateKey,
     dailyGoal: dailyGoal is int ? dailyGoal : int.tryParse('$dailyGoal') ?? 10,
     hasStudyToday: hasStudyToday,
     dueReviewCount: dueReviewCount,
     hasCheckedIn: hasCheckedIn,
   );
-  for (final notification in generated) {
-    await _upsertGeneratedNotification(database, uid, now, notification);
-  }
-}
-
-Future<void> _upsertGeneratedNotification(
-  AppDatabase database,
-  String uid,
-  DateTime now,
-  Map<String, dynamic> notification,
-) {
-  return database.upsertNotification(uid, {
-    'id': newId(),
-    'type': notification['type'],
-    'title': notification['title'],
-    'body': notification['body'],
-    'targetRoute': notification['targetRoute'],
-    'isRead': false,
-    'sourceKey': notification['sourceKey'],
-    'createdAt': now,
-  });
+  await database.upsertNotifications(uid, [
+    for (final notification in generated)
+      {
+        'id': newId(),
+        'type': notification['type'],
+        'title': notification['title'],
+        'body': notification['body'],
+        'targetRoute': notification['targetRoute'],
+        'isRead': false,
+        'sourceKey': notification['sourceKey'],
+        'createdAt': now,
+      },
+  ]);
 }
 
 String _dateValue(Object? value) {
