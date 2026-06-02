@@ -418,7 +418,9 @@ class AppController extends Notifier<AppState> {
     }
     final generated = _buildGeneratedNotifications(user.uid, DateTime.now());
     await _notificationRepository.ensureGenerated(user.uid, generated);
+    if (!ref.mounted || state.user?.uid != user.uid) return;
     final notifications = await _notificationRepository.list(user.uid);
+    if (!ref.mounted || state.user?.uid != user.uid) return;
     state = state.copyWith(notifications: notifications);
   }
 

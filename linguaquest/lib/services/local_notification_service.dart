@@ -110,8 +110,11 @@ class FlutterLocalNotificationService implements LocalNotificationService {
   Future<void> _initializeLocalTimezone() async {
     timezone_data.initializeTimeZones();
     try {
-      final localTimezone = await FlutterTimezone.getLocalTimezone();
-      timezone.setLocalLocation(timezone.getLocation(localTimezone.identifier));
+      final Object localTimezone = await FlutterTimezone.getLocalTimezone();
+      final timezoneIdentifier = localTimezone is TimezoneInfo
+          ? localTimezone.identifier
+          : localTimezone.toString();
+      timezone.setLocalLocation(timezone.getLocation(timezoneIdentifier));
     } catch (_) {
       timezone.setLocalLocation(timezone.getLocation('UTC'));
     }

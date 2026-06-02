@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -176,6 +177,48 @@ void main() {
     },
   );
 
+  test('notification refresh ignores stale user results', () async {
+    final now = DateTime(2026, 6, 2);
+    final profile = UserProfile(
+      uid: 'stale-user',
+      name: 'Ava',
+      email: 'stale@lingua.quest',
+      targetExam: 'IELTS',
+      level: 'Intermediate',
+      dailyGoal: 12,
+      xp: 240,
+      streak: 6,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final notifications = _DelayedListNotificationRepository();
+    final container = ProviderContainer(
+      overrides: [
+        notificationRepositoryProvider.overrideWithValue(notifications),
+        localNotificationServiceProvider.overrideWithValue(
+          NoopLocalNotificationService(),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    final controller = container.read(appControllerProvider.notifier);
+    await controller.bootstrap();
+
+    final refresh = controller.refreshNotifications();
+    await notifications.secondListStarted.future;
+    await controller.logout();
+    notifications.releaseSecondList();
+    await refresh;
+
+    final state = container.read(appControllerProvider);
+    expect(state.user, isNull);
+    expect(state.notifications, isEmpty);
+  });
+
   testWidgets(
     'home badge opens notifications and mark all read clears unread',
     (tester) async {
@@ -262,4 +305,52 @@ class _FailingNotificationRepository implements NotificationRepository {
   Future<int> markAllRead(String uid) async {
     throw StateError('network unavailable');
   }
+}
+
+class _DelayedListNotificationRepository implements NotificationRepository {
+  final secondListStarted = Completer<void>();
+  final _releaseSecondList = Completer<void>();
+  var _listCalls = 0;
+
+  void releaseSecondList() {
+    if (!_releaseSecondList.isCompleted) {
+      _releaseSecondList.complete();
+    }
+  }
+
+  @override
+  Future<void> ensureGenerated(
+    String uid,
+    List<AppNotification> notifications,
+  ) async {}
+
+  @override
+  Future<List<AppNotification>> list(
+    String uid, {
+    bool unreadOnly = false,
+    AppNotificationType? type,
+  }) async {
+    _listCalls += 1;
+    if (_listCalls == 1) return [];
+    secondListStarted.complete();
+    await _releaseSecondList.future;
+    return [
+      AppNotification(
+        id: 'stale-notification',
+        uid: uid,
+        type: AppNotificationType.activity,
+        title: '旧账号消息',
+        body: '不应写入当前状态',
+        targetRoute: '/discover',
+        isRead: false,
+        createdAt: DateTime.utc(2026, 6, 2, 9),
+      ),
+    ];
+  }
+
+  @override
+  Future<AppNotification?> markRead(String uid, String id) async => null;
+
+  @override
+  Future<int> markAllRead(String uid) async => 0;
 }

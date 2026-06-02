@@ -189,7 +189,7 @@ class _NotificationBellButton extends StatelessWidget {
               alignment: Alignment.center,
               decoration: const BoxDecoration(
                 color: AppTheme.coral,
-                shape: BoxShape.circle,
+                borderRadius: BorderRadius.all(Radius.circular(10)),
               ),
               child: Text(
                 unreadCount > 9 ? '9+' : '$unreadCount',
