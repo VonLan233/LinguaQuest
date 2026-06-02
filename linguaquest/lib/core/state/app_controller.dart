@@ -416,12 +416,16 @@ class AppController extends Notifier<AppState> {
       state = state.copyWith(notifications: []);
       return;
     }
-    final generated = _buildGeneratedNotifications(user.uid, DateTime.now());
-    await _notificationRepository.ensureGenerated(user.uid, generated);
-    if (!ref.mounted || state.user?.uid != user.uid) return;
-    final notifications = await _notificationRepository.list(user.uid);
-    if (!ref.mounted || state.user?.uid != user.uid) return;
-    state = state.copyWith(notifications: notifications);
+    try {
+      final generated = _buildGeneratedNotifications(user.uid, DateTime.now());
+      await _notificationRepository.ensureGenerated(user.uid, generated);
+      if (!ref.mounted || state.user?.uid != user.uid) return;
+      final notifications = await _notificationRepository.list(user.uid);
+      if (!ref.mounted || state.user?.uid != user.uid) return;
+      state = state.copyWith(notifications: notifications);
+    } catch (error) {
+      debugPrint('Failed to refresh notifications: $error');
+    }
   }
 
   Future<String> openNotification(AppNotification notification) async {
@@ -434,6 +438,7 @@ class AppController extends Notifier<AppState> {
   Future<void> markNotificationRead(String id) async {
     final user = state.user;
     if (user == null) return;
+    final oldNotifications = state.notifications;
     final now = DateTime.now().toUtc();
     state = state.copyWith(
       notifications: [
@@ -443,24 +448,27 @@ class AppController extends Notifier<AppState> {
               : notification,
       ],
     );
-    AppNotification? updated;
     try {
-      updated = await _notificationRepository.markRead(user.uid, id);
+      final updated = await _notificationRepository.markRead(user.uid, id);
+      if (!ref.mounted || state.user?.uid != user.uid) return;
+      if (updated == null) return;
+      state = state.copyWith(
+        notifications: [
+          for (final notification in state.notifications)
+            notification.id == id ? updated : notification,
+        ],
+      );
     } catch (_) {
-      return;
+      if (ref.mounted && state.user?.uid == user.uid) {
+        state = state.copyWith(notifications: oldNotifications);
+      }
     }
-    if (!ref.mounted || updated == null || state.user?.uid != user.uid) return;
-    state = state.copyWith(
-      notifications: [
-        for (final notification in state.notifications)
-          notification.id == id ? updated : notification,
-      ],
-    );
   }
 
   Future<int> markAllNotificationsRead() async {
     final user = state.user;
     if (user == null) return 0;
+    final oldNotifications = state.notifications;
     final now = DateTime.now().toUtc();
     state = state.copyWith(
       notifications: [
@@ -471,6 +479,9 @@ class AppController extends Notifier<AppState> {
     try {
       return await _notificationRepository.markAllRead(user.uid);
     } catch (_) {
+      if (ref.mounted && state.user?.uid == user.uid) {
+        state = state.copyWith(notifications: oldNotifications);
+      }
       return 0;
     }
   }

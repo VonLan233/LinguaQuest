@@ -112,70 +112,117 @@ void main() {
     },
   );
 
-  test(
-    'notification read actions update optimistically on repository failure',
-    () async {
-      final now = DateTime(2026, 6, 2);
-      final profile = UserProfile(
-        uid: 'optimistic-user',
-        name: 'Ava',
-        email: 'optimistic@lingua.quest',
-        targetExam: 'IELTS',
-        level: 'Intermediate',
-        dailyGoal: 12,
-        xp: 240,
-        streak: 6,
-        createdAt: now,
-        updatedAt: now,
-      );
-      SharedPreferences.setMockInitialValues({
-        'linguaquest.profile': jsonEncode(profile.toJson()),
-      });
-      final notifications = _FailingNotificationRepository();
-      final container = ProviderContainer(
-        overrides: [
-          notificationRepositoryProvider.overrideWithValue(notifications),
-          localNotificationServiceProvider.overrideWithValue(
-            NoopLocalNotificationService(),
-          ),
-        ],
-      );
-      addTearDown(container.dispose);
+  test('notification read actions rollback on repository failure', () async {
+    final now = DateTime(2026, 6, 2);
+    final profile = UserProfile(
+      uid: 'optimistic-user',
+      name: 'Ava',
+      email: 'optimistic@lingua.quest',
+      targetExam: 'IELTS',
+      level: 'Intermediate',
+      dailyGoal: 12,
+      xp: 240,
+      streak: 6,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final notifications = _FailingNotificationRepository();
+    final container = ProviderContainer(
+      overrides: [
+        notificationRepositoryProvider.overrideWithValue(notifications),
+        localNotificationServiceProvider.overrideWithValue(
+          NoopLocalNotificationService(),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
 
-      await container.read(appControllerProvider.notifier).bootstrap();
-      final notification = container
+    await container.read(appControllerProvider.notifier).bootstrap();
+    final notification = container
+        .read(appControllerProvider)
+        .notifications
+        .firstWhere((item) => !item.isRead);
+    final controller = container.read(appControllerProvider.notifier);
+
+    final readFuture = controller.markNotificationRead(notification.id);
+
+    expect(
+      container
           .read(appControllerProvider)
           .notifications
-          .firstWhere((item) => !item.isRead);
+          .firstWhere((item) => item.id == notification.id)
+          .isRead,
+      isTrue,
+    );
+    await readFuture;
+    expect(
+      container
+          .read(appControllerProvider)
+          .notifications
+          .firstWhere((item) => item.id == notification.id)
+          .isRead,
+      isFalse,
+    );
 
-      final route = await container
-          .read(appControllerProvider.notifier)
-          .openNotification(notification);
+    final allReadFuture = controller.markAllNotificationsRead();
+    expect(
+      container
+          .read(appControllerProvider)
+          .notifications
+          .every((notification) => notification.isRead),
+      isTrue,
+    );
+    final updatedCount = await allReadFuture;
 
-      expect(route, notification.targetRoute);
-      expect(
-        container
-            .read(appControllerProvider)
-            .notifications
-            .firstWhere((item) => item.id == notification.id)
-            .isRead,
-        isTrue,
-      );
+    expect(updatedCount, 0);
+    expect(
+      container
+          .read(appControllerProvider)
+          .notifications
+          .every((notification) => notification.isRead),
+      isFalse,
+    );
+  });
 
-      final updatedCount = await container
-          .read(appControllerProvider.notifier)
-          .markAllNotificationsRead();
+  test('notification refresh failure does not block bootstrap', () async {
+    final now = DateTime(2026, 6, 2);
+    final profile = UserProfile(
+      uid: 'refresh-failure-user',
+      name: 'Ava',
+      email: 'refresh-failure@lingua.quest',
+      targetExam: 'IELTS',
+      level: 'Intermediate',
+      dailyGoal: 12,
+      xp: 240,
+      streak: 6,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer(
+      overrides: [
+        notificationRepositoryProvider.overrideWithValue(
+          _ThrowingRefreshNotificationRepository(),
+        ),
+        localNotificationServiceProvider.overrideWithValue(
+          NoopLocalNotificationService(),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
 
-      expect(updatedCount, 0);
-      expect(
-        container
-            .read(appControllerProvider)
-            .notifications
-            .every((notification) => notification.isRead),
-        isTrue,
-      );
-    },
-  );
+    await container.read(appControllerProvider.notifier).bootstrap();
+
+    final state = container.read(appControllerProvider);
+    expect(state.isBootstrapped, isTrue);
+    expect(state.user?.uid, profile.uid);
+    expect(state.notifications, isEmpty);
+  });
 
   test('notification refresh ignores stale user results', () async {
     final now = DateTime(2026, 6, 2);
@@ -305,6 +352,31 @@ class _FailingNotificationRepository implements NotificationRepository {
   Future<int> markAllRead(String uid) async {
     throw StateError('network unavailable');
   }
+}
+
+class _ThrowingRefreshNotificationRepository implements NotificationRepository {
+  @override
+  Future<void> ensureGenerated(
+    String uid,
+    List<AppNotification> notifications,
+  ) async {
+    throw StateError('network unavailable');
+  }
+
+  @override
+  Future<List<AppNotification>> list(
+    String uid, {
+    bool unreadOnly = false,
+    AppNotificationType? type,
+  }) async {
+    throw StateError('network unavailable');
+  }
+
+  @override
+  Future<AppNotification?> markRead(String uid, String id) async => null;
+
+  @override
+  Future<int> markAllRead(String uid) async => 0;
 }
 
 class _DelayedListNotificationRepository implements NotificationRepository {

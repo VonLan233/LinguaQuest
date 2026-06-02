@@ -111,9 +111,9 @@ class FlutterLocalNotificationService implements LocalNotificationService {
     timezone_data.initializeTimeZones();
     try {
       final Object localTimezone = await FlutterTimezone.getLocalTimezone();
-      final timezoneIdentifier = localTimezone is TimezoneInfo
-          ? localTimezone.identifier
-          : localTimezone.toString();
+      final timezoneIdentifier = localTimezone is String
+          ? localTimezone
+          : (localTimezone as dynamic).identifier.toString();
       timezone.setLocalLocation(timezone.getLocation(timezoneIdentifier));
     } catch (_) {
       timezone.setLocalLocation(timezone.getLocation('UTC'));

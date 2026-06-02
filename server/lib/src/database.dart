@@ -392,18 +392,18 @@ WHERE notifications.type IS DISTINCT FROM EXCLUDED.type
     String uid,
     String id,
   ) async {
-    final existing = await notificationById(uid, id);
-    if (existing == null) return null;
-    await connection.execute(
+    final rows = await connection.execute(
       Sql.named('''
 UPDATE notifications
 SET is_read = TRUE,
     read_at = COALESCE(read_at, @readAt)
 WHERE uid=@uid AND id=@id
+RETURNING *
 '''),
       parameters: {'uid': uid, 'id': id, 'readAt': DateTime.now().toUtc()},
     );
-    return notificationById(uid, id);
+    if (rows.isEmpty) return null;
+    return rows.first.toColumnMap();
   }
 
   Future<int> markAllNotificationsRead(String uid) async {
