@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../data/models/app_notification.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
@@ -16,7 +17,9 @@ import '../../data/repositories/auth_repository.dart';
 import '../../data/repositories/custom_word_repository.dart';
 import '../../data/repositories/learning_repository.dart';
 import '../../data/repositories/mock_repositories.dart';
+import '../../data/repositories/notification_repository.dart';
 import '../../data/repositories/review_repository.dart';
+import '../../services/local_notification_service.dart';
 import '../constants/app_constants.dart';
 import '../utils/ui_labels.dart';
 import 'app_state.dart';
@@ -51,6 +54,13 @@ final reviewRepositoryProvider = Provider<ReviewRepository>((ref) {
   return MockReviewRepository();
 });
 
+final notificationRepositoryProvider = Provider<NotificationRepository>((ref) {
+  if (AppConstants.apiBaseUrl.isNotEmpty) {
+    return ApiNotificationRepository(ref.watch(apiClientProvider));
+  }
+  return MockNotificationRepository();
+});
+
 final appControllerProvider = NotifierProvider<AppController, AppState>(
   AppController.new,
 );
@@ -69,6 +79,8 @@ class AppController extends Notifier<AppState> {
   late final CustomWordRepository _customWordRepository;
   late final LearningRepository _learningRepository;
   late final ReviewRepository _reviewRepository;
+  late final NotificationRepository _notificationRepository;
+  late final LocalNotificationService _localNotificationService;
 
   @override
   AppState build() {
@@ -76,6 +88,8 @@ class AppController extends Notifier<AppState> {
     _customWordRepository = ref.watch(customWordRepositoryProvider);
     _learningRepository = ref.watch(learningRepositoryProvider);
     _reviewRepository = ref.watch(reviewRepositoryProvider);
+    _notificationRepository = ref.watch(notificationRepositoryProvider);
+    _localNotificationService = ref.watch(localNotificationServiceProvider);
     return AppState.initial();
   }
 
@@ -118,6 +132,8 @@ class AppController extends Notifier<AppState> {
         todayReviewWordIds: todayReviewWordIds,
         todayClaimedRewardIds: todayClaimedRewardIds,
       );
+      await refreshNotifications();
+      await _scheduleLocalNotifications();
     } catch (error) {
       state = state.copyWith(
         isBootstrapped: false,
@@ -137,6 +153,7 @@ class AppController extends Notifier<AppState> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_reminderKey, jsonEncode(settings.toJson()));
     state = state.copyWith(reminderSettings: settings);
+    await _scheduleLocalNotifications();
   }
 
   Future<bool> register(String name, String email, String password) async {
@@ -150,6 +167,8 @@ class AppController extends Notifier<AppState> {
         user: user,
         customWords: await _customWordRepository.list(user.uid),
       );
+      await refreshNotifications();
+      await _scheduleLocalNotifications();
     });
   }
 
@@ -163,6 +182,8 @@ class AppController extends Notifier<AppState> {
         user: user,
         customWords: await _customWordRepository.list(user.uid),
       );
+      await refreshNotifications();
+      await _scheduleLocalNotifications();
     });
   }
 
@@ -196,6 +217,8 @@ class AppController extends Notifier<AppState> {
         learningPlan: plan,
         clearLearningPlan: plan == null,
       );
+      await refreshNotifications();
+      await _scheduleLocalNotifications();
     });
   }
 
@@ -211,7 +234,9 @@ class AppController extends Notifier<AppState> {
       completedLessonIds: completedLessonIds,
       themeMode: themeMode,
       reminderSettings: reminderSettings,
+      notifications: [],
     );
+    await _scheduleLocalNotifications();
   }
 
   Future<bool> addCustomWord({
@@ -309,6 +334,8 @@ class AppController extends Notifier<AppState> {
         todayCompletedLessonIds: todayCompletedLessonIds,
         lastResult: result,
       );
+      await refreshNotifications();
+      await _scheduleLocalNotifications();
     });
   }
 
@@ -354,6 +381,8 @@ class AppController extends Notifier<AppState> {
         ],
         todayReviewWordIds: todayReviewWordIds,
       );
+      await refreshNotifications();
+      await _scheduleLocalNotifications();
     });
   }
 
@@ -376,7 +405,54 @@ class AppController extends Notifier<AppState> {
         user: updatedUser,
         todayClaimedRewardIds: claimedRewardIds,
       );
+      await refreshNotifications();
     });
+  }
+
+  Future<void> refreshNotifications() async {
+    final user = state.user;
+    if (user == null) {
+      state = state.copyWith(notifications: []);
+      return;
+    }
+    final generated = _buildGeneratedNotifications(user.uid, DateTime.now());
+    await _notificationRepository.ensureGenerated(user.uid, generated);
+    final notifications = await _notificationRepository.list(user.uid);
+    state = state.copyWith(notifications: notifications);
+  }
+
+  Future<String> openNotification(AppNotification notification) async {
+    await markNotificationRead(notification.id);
+    return notification.targetRoute.trim().isEmpty
+        ? '/home'
+        : notification.targetRoute;
+  }
+
+  Future<void> markNotificationRead(String id) async {
+    final user = state.user;
+    if (user == null) return;
+    final updated = await _notificationRepository.markRead(user.uid, id);
+    if (updated == null) return;
+    state = state.copyWith(
+      notifications: [
+        for (final notification in state.notifications)
+          notification.id == id ? updated : notification,
+      ],
+    );
+  }
+
+  Future<int> markAllNotificationsRead() async {
+    final user = state.user;
+    if (user == null) return 0;
+    final updatedCount = await _notificationRepository.markAllRead(user.uid);
+    final now = DateTime.now();
+    state = state.copyWith(
+      notifications: [
+        for (final notification in state.notifications)
+          notification.isRead ? notification : notification.markRead(now: now),
+      ],
+    );
+    return updatedCount;
   }
 
   Future<int> addMistakesToCustomWords(Set<String> wordIds) async {
@@ -508,6 +584,112 @@ class AppController extends Notifier<AppState> {
     );
   }
 
+  List<AppNotification> _buildGeneratedNotifications(String uid, DateTime now) {
+    final dateKey = _dateKey(now);
+    final notifications = <AppNotification>[];
+    final dueCount = state.dueWords.length;
+    final dailyGoal =
+        state.learningPlan?.dailyWords ?? state.user?.dailyGoal ?? 10;
+    final todayWork =
+        state.todayLearningWords + state.todayReviewWordIds.length;
+    final hasStudyToday =
+        state.todayCompletedFormalLessonIds.isNotEmpty ||
+        todayWork >= dailyGoal;
+    final hasCheckedIn =
+        _isSameDay(state.user?.lastStudyDate, now) || todayWork > 0;
+
+    if (!hasStudyToday) {
+      notifications.add(
+        _generatedNotification(
+          uid: uid,
+          type: AppNotificationType.learningReminder,
+          title: '今日学习计划待完成',
+          body: '今天目标新学 $dailyGoal 词，先从当前词书开始。',
+          targetRoute: '/study/new',
+          sourceKey: 'learningReminder:$dateKey',
+          now: now,
+        ),
+      );
+    }
+    if (dueCount > 0) {
+      notifications.add(
+        _generatedNotification(
+          uid: uid,
+          type: AppNotificationType.reviewDue,
+          title: '$dueCount 个词到期复习',
+          body: '先清理复习队列，答错词会自动进入强化阶段。',
+          targetRoute: '/study/review',
+          sourceKey: 'reviewDue:$dateKey',
+          now: now,
+        ),
+      );
+    }
+    if (!hasCheckedIn) {
+      notifications.add(
+        _generatedNotification(
+          uid: uid,
+          type: AppNotificationType.checkInReminder,
+          title: '今天还没有打卡',
+          body: '完成一次学习或复习即可延续连续打卡。',
+          targetRoute: '/home',
+          sourceKey: 'checkInReminder:$dateKey',
+          now: now,
+        ),
+      );
+    }
+    notifications.add(
+      _generatedNotification(
+        uid: uid,
+        type: AppNotificationType.activity,
+        title: '发现页积分任务已刷新',
+        body: '完成新学、复习和错词清理后可领取 XP。',
+        targetRoute: '/discover',
+        sourceKey: 'activity:$dateKey',
+        now: now,
+      ),
+    );
+    return notifications;
+  }
+
+  AppNotification _generatedNotification({
+    required String uid,
+    required AppNotificationType type,
+    required String title,
+    required String body,
+    required String targetRoute,
+    required String sourceKey,
+    required DateTime now,
+  }) {
+    return AppNotification(
+      id: 'notification-${sourceKey.replaceAll(':', '-')}-${now.year}',
+      uid: uid,
+      type: type,
+      title: title,
+      body: body,
+      targetRoute: targetRoute,
+      isRead: false,
+      createdAt: now,
+      sourceKey: sourceKey,
+    );
+  }
+
+  Future<void> _scheduleLocalNotifications() async {
+    final user = state.user;
+    await _localNotificationService.initialize(
+      onSelectRoute: (route) {
+        ref.read(localNotificationTapRouteProvider.notifier).show(route);
+      },
+    );
+    await _localNotificationService.scheduleDailyStudyReminder(
+      enabled: user != null && state.reminderSettings.enabled,
+      hour: state.reminderSettings.hour,
+      minute: state.reminderSettings.minute,
+    );
+    await _localNotificationService.scheduleReviewDueReminder(
+      dueCount: user == null ? 0 : state.dueWords.length,
+    );
+  }
+
   List<Lesson> _applyLessonProgression(
     List<Lesson> lessons,
     Set<String> completedLessonIds,
@@ -636,5 +818,13 @@ class AppController extends Notifier<AppState> {
     final month = date.month.toString().padLeft(2, '0');
     final day = date.day.toString().padLeft(2, '0');
     return '${date.year}-$month-$day';
+  }
+
+  bool _isSameDay(DateTime? value, DateTime now) {
+    if (value == null) return false;
+    final local = value.toLocal();
+    return local.year == now.year &&
+        local.month == now.month &&
+        local.day == now.day;
   }
 }

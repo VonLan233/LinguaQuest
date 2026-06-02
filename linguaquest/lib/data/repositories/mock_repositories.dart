@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/app_notification.dart';
 import '../models/custom_word.dart';
 import '../models/lesson.dart';
 import '../models/review_event.dart';
@@ -11,6 +12,7 @@ import '../seed/seed_lessons.dart';
 import 'auth_repository.dart';
 import 'custom_word_repository.dart';
 import 'learning_repository.dart';
+import 'notification_repository.dart';
 import 'review_repository.dart';
 
 class MockAuthRepository implements AuthRepository {
@@ -193,5 +195,109 @@ class MockReviewRepository implements ReviewRepository {
   @override
   Future<void> recordReviewEvent(ReviewEvent event) async {
     _events.add(event);
+  }
+}
+
+class MockNotificationRepository implements NotificationRepository {
+  static const _keyPrefix = 'linguaquest.notifications';
+
+  @override
+  Future<void> ensureGenerated(
+    String uid,
+    List<AppNotification> notifications,
+  ) async {
+    if (notifications.isEmpty) return;
+    final existing = await _load(uid);
+    final sourceKeys = existing
+        .map((notification) => notification.sourceKey)
+        .whereType<String>()
+        .toSet();
+    final ids = existing.map((notification) => notification.id).toSet();
+    final merged = [...existing];
+    for (final notification in notifications) {
+      final sourceKey = notification.sourceKey;
+      if (sourceKey != null && sourceKeys.contains(sourceKey)) continue;
+      if (ids.contains(notification.id)) continue;
+      merged.add(notification);
+      if (sourceKey != null) sourceKeys.add(sourceKey);
+      ids.add(notification.id);
+    }
+    await _save(uid, merged);
+  }
+
+  @override
+  Future<List<AppNotification>> list(
+    String uid, {
+    bool unreadOnly = false,
+    AppNotificationType? type,
+  }) async {
+    final notifications = await _load(uid);
+    return notifications.where((notification) {
+      if (unreadOnly && notification.isRead) return false;
+      if (type != null && notification.type != type) return false;
+      return true;
+    }).toList()..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+  }
+
+  @override
+  Future<int> markAllRead(String uid) async {
+    final now = DateTime.now();
+    final existing = await _load(uid);
+    final updated = existing
+        .where((notification) => !notification.isRead)
+        .length;
+    final notifications = [
+      for (final notification in existing)
+        if (notification.isRead)
+          notification
+        else
+          notification.markRead(now: now),
+    ];
+    await _save(uid, notifications);
+    return updated;
+  }
+
+  @override
+  Future<AppNotification?> markRead(String uid, String id) async {
+    final now = DateTime.now();
+    AppNotification? updated;
+    final notifications = [
+      for (final notification in await _load(uid))
+        if (notification.id == id)
+          updated = notification.markRead(now: now)
+        else
+          notification,
+    ];
+    await _save(uid, notifications);
+    return updated;
+  }
+
+  Future<List<AppNotification>> _load(String uid) async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString('$_keyPrefix.$uid');
+    if (raw == null) return [];
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! List) return [];
+      return decoded
+          .whereType<Map>()
+          .map(
+            (item) => AppNotification.fromJson(Map<String, dynamic>.from(item)),
+          )
+          .toList();
+    } catch (_) {
+      await prefs.remove('$_keyPrefix.$uid');
+      return [];
+    }
+  }
+
+  Future<void> _save(String uid, List<AppNotification> notifications) async {
+    final prefs = await SharedPreferences.getInstance();
+    final sorted = [...notifications]
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    await prefs.setString(
+      '$_keyPrefix.$uid',
+      jsonEncode([for (final notification in sorted) notification.toJson()]),
+    );
   }
 }
