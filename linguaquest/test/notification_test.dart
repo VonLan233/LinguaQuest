@@ -1,12 +1,17 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:linguaquest/app.dart';
 import 'package:linguaquest/core/state/app_controller.dart';
+import 'package:linguaquest/core/state/app_state.dart';
 import 'package:linguaquest/data/models/app_notification.dart';
 import 'package:linguaquest/data/models/user_profile.dart';
+import 'package:linguaquest/data/remote/api_client.dart';
+import 'package:linguaquest/data/repositories/api_repositories.dart';
 import 'package:linguaquest/data/repositories/mock_repositories.dart';
 import 'package:linguaquest/data/repositories/notification_repository.dart';
 import 'package:linguaquest/services/local_notification_service.dart';
@@ -111,6 +116,49 @@ void main() {
       expect(notifications.single.isRead, isTrue);
     },
   );
+
+  test('api notification list treats null response as empty', () async {
+    final client = ApiClient();
+    client.dio.httpClientAdapter = _StaticResponseAdapter('null');
+    final repo = ApiNotificationRepository(client);
+
+    final notifications = await repo.list('api-user');
+
+    expect(notifications, isEmpty);
+  });
+
+  test('local notifications initialize once during bootstrap', () async {
+    final now = DateTime(2026, 6, 2);
+    final profile = UserProfile(
+      uid: 'init-user',
+      name: 'Ava',
+      email: 'init@lingua.quest',
+      targetExam: 'IELTS',
+      level: 'Intermediate',
+      dailyGoal: 12,
+      xp: 240,
+      streak: 6,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final service = _CountingLocalNotificationService();
+    final container = ProviderContainer(
+      overrides: [localNotificationServiceProvider.overrideWithValue(service)],
+    );
+    addTearDown(container.dispose);
+    final controller = container.read(appControllerProvider.notifier);
+
+    await controller.bootstrap();
+    await controller.updateReminderSettings(
+      const DailyReminderSettings(enabled: true, hour: 8, minute: 30),
+    );
+
+    expect(service.initializeCalls, 1);
+    expect(service.dailyScheduleCalls, greaterThanOrEqualTo(2));
+  });
 
   test('notification read actions rollback on repository failure', () async {
     final now = DateTime(2026, 6, 2);
@@ -317,6 +365,54 @@ void main() {
       expect(find.text('当前没有未读消息。'), findsOneWidget);
     },
   );
+}
+
+class _StaticResponseAdapter implements HttpClientAdapter {
+  const _StaticResponseAdapter(this.body);
+
+  final String body;
+
+  @override
+  Future<ResponseBody> fetch(
+    RequestOptions options,
+    Stream<Uint8List>? requestStream,
+    Future<void>? cancelFuture,
+  ) async {
+    return ResponseBody.fromString(
+      body,
+      200,
+      headers: {
+        Headers.contentTypeHeader: [Headers.jsonContentType],
+      },
+    );
+  }
+
+  @override
+  void close({bool force = false}) {}
+}
+
+class _CountingLocalNotificationService implements LocalNotificationService {
+  var initializeCalls = 0;
+  var dailyScheduleCalls = 0;
+
+  @override
+  Future<void> initialize({
+    required void Function(String route) onSelectRoute,
+  }) async {
+    initializeCalls += 1;
+  }
+
+  @override
+  Future<void> scheduleDailyStudyReminder({
+    required bool enabled,
+    required int hour,
+    required int minute,
+  }) async {
+    dailyScheduleCalls += 1;
+  }
+
+  @override
+  Future<void> scheduleReviewDueReminder({required int dueCount}) async {}
 }
 
 class _FailingNotificationRepository implements NotificationRepository {

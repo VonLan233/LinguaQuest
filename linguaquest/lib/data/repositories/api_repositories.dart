@@ -187,9 +187,11 @@ class ApiNotificationRepository implements NotificationRepository {
         'timezoneOffsetMinutes': now.timeZoneOffset.inMinutes,
       },
     );
-    return response.data!
-        .cast<Map<String, dynamic>>()
-        .map(AppNotification.fromJson)
+    return (response.data ?? const <dynamic>[])
+        .whereType<Map>()
+        .map(
+          (item) => AppNotification.fromJson(Map<String, dynamic>.from(item)),
+        )
         .toList();
   }
 

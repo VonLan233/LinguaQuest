@@ -82,6 +82,7 @@ class AppController extends Notifier<AppState> {
   late final ReviewRepository _reviewRepository;
   late final NotificationRepository _notificationRepository;
   late final LocalNotificationService _localNotificationService;
+  var _localNotificationsInitialized = false;
 
   @override
   AppState build() {
@@ -134,7 +135,7 @@ class AppController extends Notifier<AppState> {
         todayClaimedRewardIds: todayClaimedRewardIds,
       );
       await refreshNotifications();
-      unawaited(_scheduleLocalNotifications());
+      unawaited(_initializeThenScheduleLocalNotifications());
     } catch (error) {
       state = state.copyWith(
         isBootstrapped: false,
@@ -710,13 +711,6 @@ class AppController extends Notifier<AppState> {
     final user = snapshot.user;
     final reminderSettings = snapshot.reminderSettings;
     final dueCount = user == null ? 0 : snapshot.dueWords.length;
-    await _localNotificationService.initialize(
-      onSelectRoute: (route) {
-        if (!ref.mounted) return;
-        ref.read(localNotificationTapRouteProvider.notifier).show(route);
-      },
-    );
-    if (!ref.mounted) return;
     await _localNotificationService.scheduleDailyStudyReminder(
       enabled: user != null && reminderSettings.enabled,
       hour: reminderSettings.hour,
@@ -725,6 +719,22 @@ class AppController extends Notifier<AppState> {
     await _localNotificationService.scheduleReviewDueReminder(
       dueCount: dueCount,
     );
+  }
+
+  Future<void> _initializeLocalNotifications() async {
+    if (_localNotificationsInitialized || !ref.mounted) return;
+    _localNotificationsInitialized = true;
+    await _localNotificationService.initialize(
+      onSelectRoute: (route) {
+        if (!ref.mounted) return;
+        ref.read(localNotificationTapRouteProvider.notifier).show(route);
+      },
+    );
+  }
+
+  Future<void> _initializeThenScheduleLocalNotifications() async {
+    await _initializeLocalNotifications();
+    await _scheduleLocalNotifications();
   }
 
   List<Lesson> _applyLessonProgression(
