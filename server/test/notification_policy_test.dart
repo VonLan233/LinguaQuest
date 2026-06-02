@@ -90,6 +90,8 @@ void main() {
     expect(isNotificationDateKey('2026-06-02'), isTrue);
     expect(isNotificationDateKey('2026-02-30'), isFalse);
     expect(parseNotificationTimezoneOffsetMinutes('480'), 480);
+    expect(parseNotificationTimezoneOffsetMinutes(null), isNull);
+    expect(parseNotificationTimezoneOffsetMinutes(''), isNull);
     expect(parseNotificationTimezoneOffsetMinutes('invalid'), isNull);
     expect(parseNotificationTimezoneOffsetMinutes('900'), isNull);
   });

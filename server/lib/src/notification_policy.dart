@@ -66,7 +66,7 @@ bool isNotificationDateKey(String value) {
 }
 
 int? parseNotificationTimezoneOffsetMinutes(String? value) {
-  if (value == null || value.trim().isEmpty) return 0;
+  if (value == null || value.trim().isEmpty) return null;
   final parsed = int.tryParse(value);
   if (parsed == null || parsed < -14 * 60 || parsed > 14 * 60) return null;
   return parsed;

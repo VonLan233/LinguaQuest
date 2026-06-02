@@ -57,8 +57,8 @@ Supported query parameters:
 | --- | --- | --- | --- |
 | `unreadOnly` | boolean | `true` | When true, only unread notifications are returned. |
 | `type` | string | `reviewDue` | Optional notification type filter. |
-| `localDate` | string | `2026-06-03` | Client local natural day used for daily source keys. |
-| `timezoneOffsetMinutes` | integer | `480` | Local offset from UTC in minutes, used to build the UTC query range. |
+| `localDate` | string | `2026-06-03` | Required. Client local natural day used for daily source keys. |
+| `timezoneOffsetMinutes` | integer | `480` | Required. Local offset from UTC in minutes, used to build the UTC query range. |
 
 Example:
 
