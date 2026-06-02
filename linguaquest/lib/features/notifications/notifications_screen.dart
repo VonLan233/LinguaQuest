@@ -42,45 +42,128 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
         ],
       ),
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
+        child: Column(
           children: [
-            SectionHeader(
-              title: '消息中心',
-              subtitle: state.unreadNotificationCount == 0
-                  ? '学习提醒、复习到期、打卡和活动消息都会集中在这里。'
-                  : '${state.unreadNotificationCount} 条未读消息',
-            ),
-            const SizedBox(height: 14),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                for (final filter in _NotificationFilter.values)
-                  FilterPillButton(
-                    label: filter.label,
-                    selected: _filter == filter,
-                    onSelected: () => setState(() => _filter = filter),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 18, 20, 14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SectionHeader(
+                    title: '消息中心',
+                    subtitle: state.unreadNotificationCount == 0
+                        ? '学习提醒、复习到期、打卡和活动消息都会集中在这里。'
+                        : '${state.unreadNotificationCount} 条未读消息',
                   ),
-              ],
+                  const SizedBox(height: 14),
+                  _NotificationFilterTabs(
+                    selected: _filter,
+                    onSelected: (filter) => setState(() => _filter = filter),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 18),
-            if (notifications.isEmpty)
-              EmptyState(
-                icon: Icons.notifications_none_outlined,
-                title: '没有符合条件的消息',
-                message: _filter == _NotificationFilter.unread
-                    ? '当前没有未读消息。'
-                    : '完成学习和复习后，这里会继续沉淀学习提醒和活动消息。',
-                action: OutlinedButton.icon(
-                  onPressed: () => context.go('/home'),
-                  icon: const Icon(Icons.home_outlined),
-                  label: const Text('回到首页'),
-                ),
-              )
-            else
-              _NotificationList(notifications: notifications),
+            Expanded(
+              child: notifications.isEmpty
+                  ? ListView(
+                      padding: const EdgeInsets.fromLTRB(20, 12, 20, 88),
+                      children: [
+                        EmptyState(
+                          icon: Icons.notifications_none_outlined,
+                          title: '没有符合条件的消息',
+                          message: _filter == _NotificationFilter.unread
+                              ? '当前没有未读消息。'
+                              : '完成学习和复习后，这里会继续沉淀学习提醒和活动消息。',
+                          action: OutlinedButton.icon(
+                            onPressed: () => context.go('/home'),
+                            icon: const Icon(Icons.home_outlined),
+                            label: const Text('回到首页'),
+                          ),
+                        ),
+                      ],
+                    )
+                  : _NotificationList(notifications: notifications),
+            ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _NotificationFilterTabs extends StatelessWidget {
+  const _NotificationFilterTabs({
+    required this.selected,
+    required this.onSelected,
+  });
+
+  final _NotificationFilter selected;
+  final ValueChanged<_NotificationFilter> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      height: 52,
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: AppTheme.isDark(context)
+            ? theme.colorScheme.surfaceContainerHigh
+            : theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: theme.colorScheme.outlineVariant),
+      ),
+      child: Row(
+        children: [
+          for (final filter in _NotificationFilter.values)
+            Expanded(
+              child: _NotificationFilterTab(
+                filter: filter,
+                selected: selected == filter,
+                onPressed: () => onSelected(filter),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _NotificationFilterTab extends StatelessWidget {
+  const _NotificationFilterTab({
+    required this.filter,
+    required this.selected,
+    required this.onPressed,
+  });
+
+  final _NotificationFilter filter;
+  final bool selected;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final selectedForeground = AppTheme.isDark(context)
+        ? theme.colorScheme.onPrimaryContainer
+        : AppTheme.ink;
+    return Material(
+      color: selected ? AppTheme.selectedSurface(context) : Colors.transparent,
+      borderRadius: BorderRadius.circular(14),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onPressed,
+        child: Center(
+          child: Text(
+            filter.label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.labelLarge?.copyWith(
+              color: selected
+                  ? selectedForeground
+                  : theme.colorScheme.onSurfaceVariant,
+              fontWeight: selected ? FontWeight.w900 : FontWeight.w800,
+            ),
+          ),
         ),
       ),
     );
@@ -94,19 +177,17 @@ class _NotificationList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        for (var index = 0; index < notifications.length; index++) ...[
+    return ListView.separated(
+      padding: const EdgeInsets.fromLTRB(20, 4, 20, 88),
+      itemCount: notifications.length,
+      itemBuilder: (context, index) =>
           _NotificationRow(notification: notifications[index]),
-          if (index != notifications.length - 1)
-            Divider(
-              height: 10,
-              color: Theme.of(
-                context,
-              ).colorScheme.outlineVariant.withValues(alpha: 0.7),
-            ),
-        ],
-      ],
+      separatorBuilder: (context, index) => Divider(
+        height: 10,
+        color: Theme.of(
+          context,
+        ).colorScheme.outlineVariant.withValues(alpha: 0.7),
+      ),
     );
   }
 }

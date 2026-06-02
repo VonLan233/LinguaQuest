@@ -123,6 +123,10 @@ void main() {
 
       expect(find.text('消息通知'), findsOneWidget);
       expect(find.text('4 条未读消息'), findsOneWidget);
+      final filterTop = tester.getTopLeft(find.text('全部')).dy;
+      for (final label in ['未读', '学习', '活动']) {
+        expect(tester.getTopLeft(find.text(label)).dy, closeTo(filterTop, 1));
+      }
 
       await tester.tap(find.text('全部已读'));
       await tester.pumpAndSettle();
