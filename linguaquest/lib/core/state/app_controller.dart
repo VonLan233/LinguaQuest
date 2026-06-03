@@ -10,6 +10,7 @@ import '../../data/models/app_notification.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
+import '../../data/models/lottery.dart';
 import '../../data/models/review_event.dart';
 import '../../data/models/study_session.dart';
 import '../../data/remote/api_client.dart';
@@ -17,6 +18,7 @@ import '../../data/repositories/api_repositories.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../data/repositories/custom_word_repository.dart';
 import '../../data/repositories/learning_repository.dart';
+import '../../data/repositories/lottery_repository.dart';
 import '../../data/repositories/mock_repositories.dart';
 import '../../data/repositories/notification_repository.dart';
 import '../../data/repositories/review_repository.dart';
@@ -62,6 +64,13 @@ final notificationRepositoryProvider = Provider<NotificationRepository>((ref) {
   return MockNotificationRepository();
 });
 
+final lotteryRepositoryProvider = Provider<LotteryRepository>((ref) {
+  if (AppConstants.apiBaseUrl.isNotEmpty) {
+    return ApiLotteryRepository(ref.watch(apiClientProvider));
+  }
+  return MockLotteryRepository();
+});
+
 final appControllerProvider = NotifierProvider<AppController, AppState>(
   AppController.new,
 );
@@ -81,6 +90,7 @@ class AppController extends Notifier<AppState> {
   late final LearningRepository _learningRepository;
   late final ReviewRepository _reviewRepository;
   late final NotificationRepository _notificationRepository;
+  late final LotteryRepository _lotteryRepository;
   late final LocalNotificationService _localNotificationService;
   var _localNotificationsInitialized = false;
 
@@ -91,6 +101,7 @@ class AppController extends Notifier<AppState> {
     _learningRepository = ref.watch(learningRepositoryProvider);
     _reviewRepository = ref.watch(reviewRepositoryProvider);
     _notificationRepository = ref.watch(notificationRepositoryProvider);
+    _lotteryRepository = ref.watch(lotteryRepositoryProvider);
     _localNotificationService = ref.watch(localNotificationServiceProvider);
     return AppState.initial();
   }
@@ -120,12 +131,20 @@ class AppController extends Notifier<AppState> {
       final words = user == null
           ? <CustomWord>[]
           : await _customWordRepository.list(user.uid);
+      final lotteryPrizes = user == null
+          ? <LotteryPrize>[]
+          : await _lotteryRepository.prizePool();
+      final userAssets = user == null
+          ? <UserAsset>[]
+          : await _lotteryRepository.assets(user.uid);
       state = state.copyWith(
         isBootstrapped: true,
         isLoading: false,
         user: user,
         lessons: lessons,
         customWords: words,
+        lotteryPrizes: lotteryPrizes,
+        userAssets: userAssets,
         themeMode: _themeModeFromName(prefs.getString(_themeModeKey)),
         reminderSettings: _loadReminderSettings(prefs),
         learningPlan: _loadLearningPlan(prefs),
@@ -168,6 +187,8 @@ class AppController extends Notifier<AppState> {
       state = state.copyWith(
         user: user,
         customWords: await _customWordRepository.list(user.uid),
+        lotteryPrizes: await _lotteryRepository.prizePool(),
+        userAssets: await _lotteryRepository.assets(user.uid),
       );
       await refreshNotifications();
       unawaited(_scheduleLocalNotifications());
@@ -183,6 +204,8 @@ class AppController extends Notifier<AppState> {
       state = state.copyWith(
         user: user,
         customWords: await _customWordRepository.list(user.uid),
+        lotteryPrizes: await _lotteryRepository.prizePool(),
+        userAssets: await _lotteryRepository.assets(user.uid),
       );
       await refreshNotifications();
       unawaited(_scheduleLocalNotifications());
@@ -237,6 +260,8 @@ class AppController extends Notifier<AppState> {
       themeMode: themeMode,
       reminderSettings: reminderSettings,
       notifications: [],
+      lotteryPrizes: [],
+      userAssets: [],
     );
     unawaited(_scheduleLocalNotifications());
   }
@@ -408,6 +433,45 @@ class AppController extends Notifier<AppState> {
         todayClaimedRewardIds: claimedRewardIds,
       );
       await refreshNotifications();
+    });
+  }
+
+  Future<bool> drawLottery() async {
+    final user = state.user;
+    if (user == null) return false;
+    if (user.xp < lotteryDrawCost) {
+      state = state.copyWith(
+        errorMessage: '当前余额 ${user.xp} XP，不足 $lotteryDrawCost XP。先完成积分任务再抽奖。',
+      );
+      return false;
+    }
+    return _run(() async {
+      final response = await _lotteryRepository.draw(
+        uid: user.uid,
+        currentXp: user.xp,
+      );
+      if (response.notifications.isNotEmpty) {
+        await _notificationRepository.ensureGenerated(
+          user.uid,
+          response.notifications,
+        );
+      }
+      final updatedUser =
+          response.user ??
+          await _authRepository.updateProfile(
+            user.copyWith(
+              xp: response.result.balanceAfter,
+              updatedAt: DateTime.now(),
+            ),
+          );
+      final assets = await _lotteryRepository.assets(user.uid);
+      final notifications = await _notificationRepository.list(user.uid);
+      state = state.copyWith(
+        user: updatedUser,
+        userAssets: assets,
+        lastLotteryResult: response.result,
+        notifications: notifications,
+      );
     });
   }
 

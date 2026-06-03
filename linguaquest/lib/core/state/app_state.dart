@@ -4,6 +4,7 @@ import '../../data/models/app_notification.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
+import '../../data/models/lottery.dart';
 import '../../data/models/user_profile.dart';
 
 class DailyReminderSettings {
@@ -111,8 +112,11 @@ class AppState {
     required this.todayReviewWordIds,
     required this.todayClaimedRewardIds,
     required this.notifications,
+    required this.lotteryPrizes,
+    required this.userAssets,
     this.user,
     this.lastResult,
+    this.lastLotteryResult,
     this.learningPlan,
     this.errorMessage,
   });
@@ -130,7 +134,10 @@ class AppState {
   final Set<String> todayReviewWordIds;
   final Set<String> todayClaimedRewardIds;
   final List<AppNotification> notifications;
+  final List<LotteryPrize> lotteryPrizes;
+  final List<UserAsset> userAssets;
   final LessonResult? lastResult;
+  final LotteryDrawResult? lastLotteryResult;
   final String? errorMessage;
 
   bool get isAuthenticated => user != null;
@@ -205,7 +212,10 @@ class AppState {
     Set<String>? todayReviewWordIds,
     Set<String>? todayClaimedRewardIds,
     List<AppNotification>? notifications,
+    List<LotteryPrize>? lotteryPrizes,
+    List<UserAsset>? userAssets,
     LessonResult? lastResult,
+    LotteryDrawResult? lastLotteryResult,
     String? errorMessage,
     bool clearError = false,
   }) {
@@ -227,7 +237,10 @@ class AppState {
       todayClaimedRewardIds:
           todayClaimedRewardIds ?? this.todayClaimedRewardIds,
       notifications: notifications ?? this.notifications,
+      lotteryPrizes: lotteryPrizes ?? this.lotteryPrizes,
+      userAssets: userAssets ?? this.userAssets,
       lastResult: lastResult ?? this.lastResult,
+      lastLotteryResult: lastLotteryResult ?? this.lastLotteryResult,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
     );
   }
@@ -245,6 +258,8 @@ class AppState {
       todayReviewWordIds: {},
       todayClaimedRewardIds: {},
       notifications: [],
+      lotteryPrizes: [],
+      userAssets: [],
     );
   }
 }
