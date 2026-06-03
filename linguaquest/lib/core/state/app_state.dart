@@ -109,6 +109,7 @@ class AppState {
     required this.completedLessonIds,
     required this.todayCompletedLessonIds,
     required this.todayReviewWordIds,
+    required this.todayTrainingSessionIds,
     required this.todayClaimedRewardIds,
     required this.notifications,
     this.user,
@@ -128,6 +129,7 @@ class AppState {
   final Set<String> completedLessonIds;
   final Set<String> todayCompletedLessonIds;
   final Set<String> todayReviewWordIds;
+  final Set<String> todayTrainingSessionIds;
   final Set<String> todayClaimedRewardIds;
   final List<AppNotification> notifications;
   final LessonResult? lastResult;
@@ -203,6 +205,7 @@ class AppState {
     Set<String>? completedLessonIds,
     Set<String>? todayCompletedLessonIds,
     Set<String>? todayReviewWordIds,
+    Set<String>? todayTrainingSessionIds,
     Set<String>? todayClaimedRewardIds,
     List<AppNotification>? notifications,
     LessonResult? lastResult,
@@ -224,6 +227,8 @@ class AppState {
       todayCompletedLessonIds:
           todayCompletedLessonIds ?? this.todayCompletedLessonIds,
       todayReviewWordIds: todayReviewWordIds ?? this.todayReviewWordIds,
+      todayTrainingSessionIds:
+          todayTrainingSessionIds ?? this.todayTrainingSessionIds,
       todayClaimedRewardIds:
           todayClaimedRewardIds ?? this.todayClaimedRewardIds,
       notifications: notifications ?? this.notifications,
@@ -243,6 +248,7 @@ class AppState {
       completedLessonIds: {},
       todayCompletedLessonIds: {},
       todayReviewWordIds: {},
+      todayTrainingSessionIds: {},
       todayClaimedRewardIds: {},
       notifications: [],
     );

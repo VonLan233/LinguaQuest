@@ -10,8 +10,10 @@ import '../../data/models/app_notification.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
+import '../../data/models/point_grant_result.dart';
 import '../../data/models/review_event.dart';
 import '../../data/models/study_session.dart';
+import '../../data/models/user_profile.dart';
 import '../../data/remote/api_client.dart';
 import '../../data/repositories/api_repositories.dart';
 import '../../data/repositories/auth_repository.dart';
@@ -20,6 +22,7 @@ import '../../data/repositories/learning_repository.dart';
 import '../../data/repositories/mock_repositories.dart';
 import '../../data/repositories/notification_repository.dart';
 import '../../data/repositories/review_repository.dart';
+import '../../data/repositories/reward_repository.dart';
 import '../../services/local_notification_service.dart';
 import '../constants/app_constants.dart';
 import '../utils/ui_labels.dart';
@@ -62,6 +65,13 @@ final notificationRepositoryProvider = Provider<NotificationRepository>((ref) {
   return MockNotificationRepository();
 });
 
+final rewardRepositoryProvider = Provider<RewardRepository>((ref) {
+  if (AppConstants.apiBaseUrl.isNotEmpty) {
+    return ApiRewardRepository(ref.watch(apiClientProvider));
+  }
+  return MockRewardRepository();
+});
+
 final appControllerProvider = NotifierProvider<AppController, AppState>(
   AppController.new,
 );
@@ -74,6 +84,7 @@ class AppController extends Notifier<AppState> {
   static const _todayDateKey = 'linguaquest.today.date';
   static const _todayLessonIdsKey = 'linguaquest.today.lessons';
   static const _todayReviewIdsKey = 'linguaquest.today.reviews';
+  static const _todayTrainingIdsKey = 'linguaquest.today.training';
   static const _todayRewardIdsKey = 'linguaquest.today.rewards';
 
   late final AuthRepository _authRepository;
@@ -81,6 +92,7 @@ class AppController extends Notifier<AppState> {
   late final LearningRepository _learningRepository;
   late final ReviewRepository _reviewRepository;
   late final NotificationRepository _notificationRepository;
+  late final RewardRepository _rewardRepository;
   late final LocalNotificationService _localNotificationService;
   var _localNotificationsInitialized = false;
 
@@ -91,6 +103,7 @@ class AppController extends Notifier<AppState> {
     _learningRepository = ref.watch(learningRepositoryProvider);
     _reviewRepository = ref.watch(reviewRepositoryProvider);
     _notificationRepository = ref.watch(notificationRepositoryProvider);
+    _rewardRepository = ref.watch(rewardRepositoryProvider);
     _localNotificationService = ref.watch(localNotificationServiceProvider);
     return AppState.initial();
   }
@@ -108,6 +121,9 @@ class AppController extends Notifier<AppState> {
           : <String>{};
       final todayReviewWordIds = hasTodayState
           ? _stringSet(prefs, _todayReviewIdsKey)
+          : <String>{};
+      final todayTrainingSessionIds = hasTodayState
+          ? _stringSet(prefs, _todayTrainingIdsKey)
           : <String>{};
       final todayClaimedRewardIds = hasTodayState
           ? _stringSet(prefs, _todayRewardIdsKey)
@@ -132,6 +148,7 @@ class AppController extends Notifier<AppState> {
         completedLessonIds: completedLessonIds,
         todayCompletedLessonIds: todayCompletedLessonIds,
         todayReviewWordIds: todayReviewWordIds,
+        todayTrainingSessionIds: todayTrainingSessionIds,
         todayClaimedRewardIds: todayClaimedRewardIds,
       );
       await refreshNotifications();
@@ -301,13 +318,28 @@ class AppController extends Notifier<AppState> {
       final lastStudy = user.lastStudyDate;
       final streak = _nextStreak(lastStudy, now, user.streak);
       final completedLessonIds = {...state.completedLessonIds, result.lessonId};
+      final lesson = _lessonById(result.lessonId);
+      final isTraining = lesson?.isTrainingPack ?? false;
+      final shouldAdvanceLesson = !isTraining;
       final todayCompletedLessonIds = {
         ...state.todayCompletedLessonIds,
-        result.lessonId,
+        if (shouldAdvanceLesson) result.lessonId,
       };
+      final todayTrainingSessionIds = {
+        ...state.todayTrainingSessionIds,
+        if (isTraining) result.lessonId,
+      };
+      final pointGrant = await _grantPoints(
+        user: user,
+        sourceType: isTraining ? 'training_session' : 'study_lesson',
+        sourceId: isTraining
+            ? '${result.lessonId}:${_dateKey(result.completedAt)}'
+            : result.lessonId,
+        points: result.xpEarned,
+        description: isTraining ? '完成训练场挑战' : '完成新学课程',
+      );
       final updatedUser = await _authRepository.updateProfile(
-        user.copyWith(
-          xp: user.xp + result.xpEarned,
+        pointGrant.user.copyWith(
           streak: streak,
           lastStudyDate: now,
           updatedAt: now,
@@ -328,12 +360,22 @@ class AppController extends Notifier<AppState> {
               .toList(),
         ),
       );
-      await _saveLessonProgress(completedLessonIds, todayCompletedLessonIds);
+      if (shouldAdvanceLesson) {
+        await _saveLessonProgress(completedLessonIds, todayCompletedLessonIds);
+      }
+      if (isTraining) {
+        await _saveTodayTrainingSessions(todayTrainingSessionIds);
+      }
       state = state.copyWith(
         user: updatedUser,
-        lessons: _applyLessonProgression(state.lessons, completedLessonIds),
-        completedLessonIds: completedLessonIds,
+        lessons: shouldAdvanceLesson
+            ? _applyLessonProgression(state.lessons, completedLessonIds)
+            : state.lessons,
+        completedLessonIds: shouldAdvanceLesson
+            ? completedLessonIds
+            : state.completedLessonIds,
         todayCompletedLessonIds: todayCompletedLessonIds,
+        todayTrainingSessionIds: todayTrainingSessionIds,
         lastResult: result,
       );
       await refreshNotifications();
@@ -376,8 +418,22 @@ class AppController extends Notifier<AppState> {
         ),
       );
       final todayReviewWordIds = {...state.todayReviewWordIds, id};
+      final rewardedUser = isCorrect
+          ? await _grantPoints(
+              user: user,
+              sourceType: 'review_word',
+              sourceId: '$id:${_dateKey(now)}',
+              points: 3,
+              description: '完成到期复习',
+            )
+          : _PointGrantOutcome(
+              user: user,
+              awarded: false,
+              alreadyGranted: false,
+            );
       await _saveTodayReviewWords(todayReviewWordIds);
       state = state.copyWith(
+        user: rewardedUser.user,
         customWords: [
           for (final item in state.customWords) item.id == id ? reviewed : item,
         ],
@@ -399,12 +455,19 @@ class AppController extends Notifier<AppState> {
     return _run(() async {
       final now = DateTime.now();
       final claimedRewardIds = {...state.todayClaimedRewardIds, id};
-      final updatedUser = await _authRepository.updateProfile(
-        user.copyWith(xp: user.xp + points, updatedAt: now),
+      final pointGrant = await _grantPoints(
+        user: user,
+        sourceType: 'reward_task',
+        sourceId: '$id:${_dateKey(now)}',
+        points: points,
+        description: '领取积分任务奖励',
       );
+      if (pointGrant.alreadyGranted) {
+        throw StateError('这个积分来源已经领取过了。');
+      }
       await _saveTodayClaimedRewards(claimedRewardIds);
       state = state.copyWith(
-        user: updatedUser,
+        user: pointGrant.user.copyWith(updatedAt: now),
         todayClaimedRewardIds: claimedRewardIds,
       );
       await refreshNotifications();
@@ -590,6 +653,55 @@ class AppController extends Notifier<AppState> {
       if (word.id == id) return word;
     }
     return null;
+  }
+
+  Lesson? _lessonById(String id) {
+    for (final lesson in state.lessons) {
+      if (lesson.id == id) return lesson;
+    }
+    return null;
+  }
+
+  Future<_PointGrantOutcome> _grantPoints({
+    required UserProfile user,
+    required String sourceType,
+    required String sourceId,
+    required int points,
+    required String description,
+  }) async {
+    if (points <= 0) {
+      return _PointGrantOutcome(
+        user: user,
+        awarded: false,
+        alreadyGranted: false,
+      );
+    }
+    final result = await _rewardRepository.grantPoints(
+      uid: user.uid,
+      sourceType: sourceType,
+      sourceId: sourceId,
+      points: points,
+      description: description,
+    );
+    return _PointGrantOutcome(
+      user: await _rewardedUser(user, result),
+      awarded: result.awarded,
+      alreadyGranted: result.alreadyGranted,
+    );
+  }
+
+  Future<UserProfile> _rewardedUser(
+    UserProfile user,
+    PointGrantResult result,
+  ) async {
+    if (result.user != null) return result.user!;
+    if (!result.awarded) return user;
+    return await _authRepository.updateProfile(
+      user.copyWith(
+        xp: user.xp + result.pointsAwarded,
+        updatedAt: DateTime.now(),
+      ),
+    );
   }
 
   LearningPlan _buildLearningPlan({
@@ -800,6 +912,17 @@ class AppController extends Notifier<AppState> {
     await prefs.setStringList(_todayReviewIdsKey, todayReviewWordIds.toList());
   }
 
+  Future<void> _saveTodayTrainingSessions(
+    Set<String> todayTrainingSessionIds,
+  ) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_todayDateKey, _dateKey(DateTime.now()));
+    await prefs.setStringList(
+      _todayTrainingIdsKey,
+      todayTrainingSessionIds.toList(),
+    );
+  }
+
   Future<void> _saveTodayClaimedRewards(
     Set<String> todayClaimedRewardIds,
   ) async {
@@ -874,4 +997,16 @@ class AppController extends Notifier<AppState> {
         local.month == now.month &&
         local.day == now.day;
   }
+}
+
+class _PointGrantOutcome {
+  const _PointGrantOutcome({
+    required this.user,
+    required this.awarded,
+    required this.alreadyGranted,
+  });
+
+  final UserProfile user;
+  final bool awarded;
+  final bool alreadyGranted;
 }
