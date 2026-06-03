@@ -491,7 +491,7 @@ class AppController extends Notifier<AppState> {
     try {
       final snapshot = await _rewardRepository.claimTask(user.uid, id);
       await _applyRewardSnapshot(snapshot);
-      final credited = snapshot.claimed != false && !snapshot.alreadyClaimed;
+      final credited = snapshot.claimed == true && !snapshot.alreadyClaimed;
       if (snapshot.user == null) {
         if (credited) {
           final updated = await _authRepository.updateProfile(

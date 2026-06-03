@@ -2081,6 +2081,43 @@ void main() {
     expect(container.read(appControllerProvider).user?.xp, 35);
   });
 
+  test('discover reward claim requires explicit claimed response', () async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'null-claim-user',
+      name: 'Nia',
+      email: 'nia@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      createdAt: now,
+      updatedAt: now,
+      xp: 30,
+      streak: 1,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer(
+      overrides: [
+        rewardRepositoryProvider.overrideWithValue(
+          _NullClaimRewardRepository(),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+
+    expect(
+      await container
+          .read(appControllerProvider.notifier)
+          .claimReward('dailyCheckIn'),
+      false,
+    );
+    expect(container.read(appControllerProvider).user?.xp, 30);
+  });
+
   test('custom word review status follows mastery thresholds', () {
     final now = DateTime(2026, 5, 25);
     final word = CustomWord.create(
@@ -2593,6 +2630,40 @@ class _RecordEventFailingRewardRepository implements RewardRepository {
       dateKey: _todayDateKey(DateTime.now()),
       tasks: const [],
     );
+  }
+}
+
+class _NullClaimRewardRepository implements RewardRepository {
+  static const _task = DailyRewardTask(
+    id: 'dailyCheckIn',
+    title: '每日签到',
+    condition: '当天打开并点击签到',
+    points: 5,
+    targetRoute: '/discover',
+    status: DailyRewardTaskStatus.claimable,
+  );
+
+  @override
+  Future<RewardTaskSnapshot> checkIn(String uid) async => _snapshot();
+
+  @override
+  Future<RewardTaskSnapshot> claimTask(String uid, String taskId) async {
+    return Future.value(
+      const RewardTaskSnapshot(dateKey: '2026-05-25', tasks: [_task]),
+    );
+  }
+
+  @override
+  Future<RewardTaskSnapshot> listTasks(String uid) async => _snapshot();
+
+  @override
+  Future<RewardTaskSnapshot> recordEvent(
+    String uid,
+    RewardEventType type,
+  ) async => _snapshot();
+
+  Future<RewardTaskSnapshot> _snapshot() async {
+    return const RewardTaskSnapshot(dateKey: '2026-05-25', tasks: [_task]);
   }
 }
 
