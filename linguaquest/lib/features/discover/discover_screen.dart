@@ -148,7 +148,7 @@ class DiscoverScreen extends ConsumerWidget {
       );
       return;
     }
-    if (task.targetRoute.startsWith('/')) {
+    if (task.targetRoute.startsWith('/') && task.targetRoute != '/discover') {
       context.push(task.targetRoute);
     }
   }
@@ -314,6 +314,8 @@ class _DailyCheckInPanel extends StatelessWidget {
                 Text(
                   currentTask == null
                       ? '任务加载后即可签到。'
+                      : currentTask.isClaimed
+                      ? '今天已签到，并已领取 +${currentTask.points} XP。'
                       : checkedIn
                       ? '今天已签到，记得领取 +${currentTask.points} XP。'
                       : '点击签到后，签到任务会进入可领取状态。',
@@ -345,7 +347,8 @@ class _DailyCheckInPanel extends StatelessWidget {
                       ),
                     ),
                     OutlinedButton.icon(
-                      onPressed: currentTask?.isClaimable == true
+                      onPressed:
+                          currentTask?.isClaimable == true && !isCheckingIn
                           ? onClaim
                           : null,
                       icon: const Icon(Icons.bolt),
@@ -444,7 +447,9 @@ class _RewardTaskRow extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: canClaim
+        onTap: task.isPending
+            ? null
+            : canClaim
             ? task.onClaim
             : task.task.isClaimed
             ? null
