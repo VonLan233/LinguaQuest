@@ -7,7 +7,6 @@ import '../models/review_event.dart';
 import '../models/study_session.dart';
 import '../models/user_profile.dart';
 import '../remote/api_client.dart';
-import '../seed/seed_lessons.dart';
 import 'auth_repository.dart';
 import 'custom_word_repository.dart';
 import 'learning_repository.dart';
@@ -141,11 +140,47 @@ class ApiLearningRepository implements LearningRepository {
   final ApiClient _client;
 
   @override
-  Future<List<Lesson>> listLessons() async => seedLessons();
+  Future<List<Lesson>> listLessons() async {
+    final response = await _client.dio.get<List<dynamic>>('/lessons');
+    return response.data!
+        .cast<Map<String, dynamic>>()
+        .map(Lesson.fromJson)
+        .toList();
+  }
+
+  @override
+  Future<LearningProgress?> loadLearningProgress(DateTime now) async {
+    final response = await _client.dio.get<Map<String, dynamic>>(
+      '/learning-progress',
+      queryParameters: {
+        'localDate': _localDateKey(now),
+        'timezoneOffsetMinutes': now.timeZoneOffset.inMinutes,
+      },
+    );
+    return LearningProgress.fromJson(response.data!);
+  }
 
   @override
   Future<void> recordStudySession(StudySession session) async {
     await _client.dio.post<void>('/study-sessions', data: session.toJson());
+  }
+
+  @override
+  Future<RewardClaimResult?> claimReward({
+    required String id,
+    required int points,
+    required DateTime now,
+  }) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/reward-claims',
+      data: {
+        'id': id,
+        'points': points,
+        'localDate': _localDateKey(now),
+        'timezoneOffsetMinutes': now.timeZoneOffset.inMinutes,
+      },
+    );
+    return RewardClaimResult.fromJson(response.data!);
   }
 }
 

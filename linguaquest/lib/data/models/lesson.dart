@@ -32,6 +32,38 @@ class Word {
   final String imageCue;
   final String difficulty;
   final List<String> tags;
+
+  factory Word.fromJson(Map<String, dynamic> json) {
+    return Word(
+      id: json['id'] as String,
+      word: json['word'] as String,
+      phonetic: json['phonetic'] as String? ?? '',
+      meaning: json['meaning'] as String,
+      definition: json['definition'] as String? ?? '',
+      partOfSpeech: json['partOfSpeech'] as String? ?? '',
+      exampleSentence: json['exampleSentence'] as String? ?? '',
+      exampleTranslation: json['exampleTranslation'] as String? ?? '',
+      imageCue: json['imageCue'] as String? ?? '',
+      difficulty: json['difficulty'] as String? ?? 'Medium',
+      tags: _stringList(json['tags']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'word': word,
+      'phonetic': phonetic,
+      'meaning': meaning,
+      'definition': definition,
+      'partOfSpeech': partOfSpeech,
+      'exampleSentence': exampleSentence,
+      'exampleTranslation': exampleTranslation,
+      'imageCue': imageCue,
+      'difficulty': difficulty,
+      'tags': tags,
+    };
+  }
 }
 
 class QuizQuestion {
@@ -52,6 +84,30 @@ class QuizQuestion {
   final List<String> options;
   final String explanation;
   final Word word;
+
+  factory QuizQuestion.fromJson(Map<String, dynamic> json) {
+    return QuizQuestion(
+      id: json['id'] as String,
+      type: _questionType(json['type']),
+      prompt: json['prompt'] as String,
+      answer: json['answer'] as String,
+      options: _stringList(json['options']),
+      explanation: json['explanation'] as String? ?? '',
+      word: Word.fromJson(Map<String, dynamic>.from(json['word'] as Map)),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'type': type.name,
+      'prompt': prompt,
+      'answer': answer,
+      'options': options,
+      'explanation': explanation,
+      'word': word.toJson(),
+    };
+  }
 }
 
 class Lesson {
@@ -79,6 +135,36 @@ class Lesson {
 
   bool get isTrainingPack => section == '训练场';
 
+  factory Lesson.fromJson(Map<String, dynamic> json) {
+    return Lesson(
+      id: json['id'] as String,
+      title: json['title'] as String,
+      section: json['section'] as String,
+      description: json['description'] as String? ?? '',
+      status: json['status'] as String? ?? 'locked',
+      xpReward: _int(json['xpReward']) ?? 0,
+      estimatedMinutes: _int(json['estimatedMinutes']) ?? 5,
+      words: _mapList(json['words']).map(Word.fromJson).toList(),
+      questions: _mapList(
+        json['questions'],
+      ).map(QuizQuestion.fromJson).toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'section': section,
+      'description': description,
+      'status': status,
+      'xpReward': xpReward,
+      'estimatedMinutes': estimatedMinutes,
+      'words': words.map((word) => word.toJson()).toList(),
+      'questions': questions.map((question) => question.toJson()).toList(),
+    };
+  }
+
   Lesson copyWith({
     String? id,
     String? title,
@@ -102,4 +188,32 @@ class Lesson {
       questions: questions ?? this.questions,
     );
   }
+}
+
+QuizQuestionType _questionType(Object? value) {
+  final name = value?.toString();
+  return QuizQuestionType.values.firstWhere(
+    (type) => type.name == name,
+    orElse: () => QuizQuestionType.meaningChoice,
+  );
+}
+
+List<String> _stringList(Object? value) {
+  if (value is! Iterable) return const [];
+  return value.map((item) => item.toString()).toList();
+}
+
+List<Map<String, dynamic>> _mapList(Object? value) {
+  if (value is! Iterable) return const [];
+  return value
+      .whereType<Map>()
+      .map((item) => Map<String, dynamic>.from(item))
+      .toList();
+}
+
+int? _int(Object? value) {
+  if (value == null) return null;
+  if (value is int) return value;
+  if (value is double) return value.toInt();
+  return int.tryParse(value.toString());
 }

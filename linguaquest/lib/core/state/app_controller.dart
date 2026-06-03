@@ -100,23 +100,32 @@ class AppController extends Notifier<AppState> {
     state = state.copyWith(isLoading: true, clearError: true);
     try {
       final prefs = await SharedPreferences.getInstance();
-      final completedLessonIds = _stringSet(prefs, _completedLessonIdsKey);
+      final localCompletedLessonIds = _stringSet(prefs, _completedLessonIdsKey);
       final todayKey = _dateKey(DateTime.now());
       final hasTodayState = prefs.getString(_todayDateKey) == todayKey;
-      final todayCompletedLessonIds = hasTodayState
+      final localTodayCompletedLessonIds = hasTodayState
           ? _stringSet(prefs, _todayLessonIdsKey)
           : <String>{};
-      final todayReviewWordIds = hasTodayState
+      final localTodayReviewWordIds = hasTodayState
           ? _stringSet(prefs, _todayReviewIdsKey)
           : <String>{};
-      final todayClaimedRewardIds = hasTodayState
+      final localTodayClaimedRewardIds = hasTodayState
           ? _stringSet(prefs, _todayRewardIdsKey)
           : <String>{};
-      final lessons = _applyLessonProgression(
-        await _learningRepository.listLessons(),
-        completedLessonIds,
-      );
+      final rawLessons = await _learningRepository.listLessons();
       final user = await _authRepository.loadSession();
+      final progress = user == null
+          ? null
+          : await _learningRepository.loadLearningProgress(DateTime.now());
+      final completedLessonIds =
+          progress?.completedLessonIds ?? localCompletedLessonIds;
+      final todayCompletedLessonIds =
+          progress?.todayCompletedLessonIds ?? localTodayCompletedLessonIds;
+      final todayReviewWordIds =
+          progress?.todayReviewWordIds ?? localTodayReviewWordIds;
+      final todayClaimedRewardIds =
+          progress?.todayClaimedRewardIds ?? localTodayClaimedRewardIds;
+      final lessons = _applyLessonProgression(rawLessons, completedLessonIds);
       final words = user == null
           ? <CustomWord>[]
           : await _customWordRepository.list(user.uid);
@@ -328,7 +337,9 @@ class AppController extends Notifier<AppState> {
               .toList(),
         ),
       );
-      await _saveLessonProgress(completedLessonIds, todayCompletedLessonIds);
+      if (!_usesApi) {
+        await _saveLessonProgress(completedLessonIds, todayCompletedLessonIds);
+      }
       state = state.copyWith(
         user: updatedUser,
         lessons: _applyLessonProgression(state.lessons, completedLessonIds),
@@ -376,7 +387,9 @@ class AppController extends Notifier<AppState> {
         ),
       );
       final todayReviewWordIds = {...state.todayReviewWordIds, id};
-      await _saveTodayReviewWords(todayReviewWordIds);
+      if (!_usesApi) {
+        await _saveTodayReviewWords(todayReviewWordIds);
+      }
       state = state.copyWith(
         customWords: [
           for (final item in state.customWords) item.id == id ? reviewed : item,
@@ -398,6 +411,22 @@ class AppController extends Notifier<AppState> {
     if (state.todayClaimedRewardIds.contains(id)) return false;
     return _run(() async {
       final now = DateTime.now();
+      final remoteClaim = await _learningRepository.claimReward(
+        id: id,
+        points: points,
+        now: now,
+      );
+      if (remoteClaim != null) {
+        state = state.copyWith(
+          user: remoteClaim.user,
+          completedLessonIds: remoteClaim.progress.completedLessonIds,
+          todayCompletedLessonIds: remoteClaim.progress.todayCompletedLessonIds,
+          todayReviewWordIds: remoteClaim.progress.todayReviewWordIds,
+          todayClaimedRewardIds: remoteClaim.progress.todayClaimedRewardIds,
+        );
+        await refreshNotifications();
+        return;
+      }
       final claimedRewardIds = {...state.todayClaimedRewardIds, id};
       final updatedUser = await _authRepository.updateProfile(
         user.copyWith(xp: user.xp + points, updatedAt: now),
@@ -874,4 +903,6 @@ class AppController extends Notifier<AppState> {
         local.month == now.month &&
         local.day == now.day;
   }
+
+  bool get _usesApi => AppConstants.apiBaseUrl.isNotEmpty;
 }

@@ -2416,7 +2416,19 @@ class _StaticLearningRepository implements LearningRepository {
   Future<List<Lesson>> listLessons() async => lessons;
 
   @override
+  Future<LearningProgress?> loadLearningProgress(DateTime now) async => null;
+
+  @override
   Future<void> recordStudySession(StudySession session) async {}
+
+  @override
+  Future<RewardClaimResult?> claimReward({
+    required String id,
+    required int points,
+    required DateTime now,
+  }) async {
+    return null;
+  }
 }
 
 class _FlakyLearningRepository implements LearningRepository {
@@ -2432,7 +2444,19 @@ class _FlakyLearningRepository implements LearningRepository {
   }
 
   @override
+  Future<LearningProgress?> loadLearningProgress(DateTime now) async => null;
+
+  @override
   Future<void> recordStudySession(StudySession session) async {}
+
+  @override
+  Future<RewardClaimResult?> claimReward({
+    required String id,
+    required int points,
+    required DateTime now,
+  }) async {
+    return null;
+  }
 }
 
 class _ConcurrentCustomWordRepository implements CustomWordRepository {
