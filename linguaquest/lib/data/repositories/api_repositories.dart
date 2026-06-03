@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/app_notification.dart';
 import '../models/custom_word.dart';
 import '../models/lesson.dart';
+import '../models/lottery.dart';
 import '../models/review_event.dart';
 import '../models/study_session.dart';
 import '../models/user_profile.dart';
@@ -11,6 +12,7 @@ import '../seed/seed_lessons.dart';
 import 'auth_repository.dart';
 import 'custom_word_repository.dart';
 import 'learning_repository.dart';
+import 'lottery_repository.dart';
 import 'notification_repository.dart';
 import 'review_repository.dart';
 
@@ -210,6 +212,65 @@ class ApiNotificationRepository implements NotificationRepository {
     );
     return AppNotification.fromJson(
       response.data!['notification'] as Map<String, dynamic>,
+    );
+  }
+}
+
+class ApiLotteryRepository implements LotteryRepository {
+  ApiLotteryRepository(this._client);
+
+  final ApiClient _client;
+
+  @override
+  Future<List<LotteryPrize>> prizePool() async {
+    final response = await _client.dio.get<Map<String, dynamic>>(
+      '/lottery/prizes',
+    );
+    final prizes = response.data!['prizes'] as List<dynamic>? ?? const [];
+    return prizes
+        .whereType<Map>()
+        .map((item) => LotteryPrize.fromJson(Map<String, dynamic>.from(item)))
+        .toList();
+  }
+
+  @override
+  Future<List<UserAsset>> assets(String uid) async {
+    final response = await _client.dio.get<Map<String, dynamic>>(
+      '/lottery/assets',
+    );
+    final assets = response.data!['assets'] as List<dynamic>? ?? const [];
+    return assets
+        .whereType<Map>()
+        .map((item) => UserAsset.fromJson(Map<String, dynamic>.from(item)))
+        .toList();
+  }
+
+  @override
+  Future<LotteryDrawResponse> draw({
+    required String uid,
+    required int currentXp,
+  }) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/lottery/draw',
+    );
+    final data = response.data!;
+    final rawNotifications =
+        data['notifications'] as List<dynamic>? ?? const [];
+    return LotteryDrawResponse(
+      result: LotteryDrawResult.fromJson(
+        Map<String, dynamic>.from(data['result'] as Map),
+      ),
+      user: data['user'] == null
+          ? null
+          : UserProfile.fromJson(
+              Map<String, dynamic>.from(data['user'] as Map),
+            ),
+      notifications: rawNotifications
+          .whereType<Map>()
+          .map(
+            (item) => AppNotification.fromJson(Map<String, dynamic>.from(item)),
+          )
+          .toList(),
     );
   }
 }

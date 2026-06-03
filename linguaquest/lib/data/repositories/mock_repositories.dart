@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/app_notification.dart';
 import '../models/custom_word.dart';
 import '../models/lesson.dart';
+import '../models/lottery.dart';
 import '../models/review_event.dart';
 import '../models/study_session.dart';
 import '../models/user_profile.dart';
@@ -12,6 +14,7 @@ import '../seed/seed_lessons.dart';
 import 'auth_repository.dart';
 import 'custom_word_repository.dart';
 import 'learning_repository.dart';
+import 'lottery_repository.dart';
 import 'notification_repository.dart';
 import 'review_repository.dart';
 
@@ -301,3 +304,184 @@ class MockNotificationRepository implements NotificationRepository {
     );
   }
 }
+
+class MockLotteryRepository implements LotteryRepository {
+  static const _assetKeyPrefix = 'linguaquest.assets';
+  final Random _random = Random();
+
+  @override
+  Future<List<LotteryPrize>> prizePool() async => _mockPrizePool;
+
+  @override
+  Future<List<UserAsset>> assets(String uid) async {
+    final assets = await _loadAssets(uid);
+    return assets..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+  }
+
+  @override
+  Future<LotteryDrawResponse> draw({
+    required String uid,
+    required int currentXp,
+  }) async {
+    if (currentXp < lotteryDrawCost) {
+      throw StateError('not enough XP for this draw');
+    }
+    final now = DateTime.now();
+    final prize = _choosePrize(_mockPrizePool);
+    final existing = await _loadAssets(uid);
+    final index = existing.indexWhere((asset) => asset.prizeId == prize.id);
+    final asset = index == -1
+        ? UserAsset(
+            id: 'asset-${now.microsecondsSinceEpoch}',
+            uid: uid,
+            prizeId: prize.id,
+            category: prize.category,
+            rarity: prize.rarity,
+            name: prize.name,
+            description: prize.description,
+            quantity: 1,
+            fragmentValue: prize.fragmentValue,
+            acquiredAt: now,
+            updatedAt: now,
+          )
+        : UserAsset(
+            id: existing[index].id,
+            uid: existing[index].uid,
+            prizeId: existing[index].prizeId,
+            category: existing[index].category,
+            rarity: existing[index].rarity,
+            name: existing[index].name,
+            description: existing[index].description,
+            quantity: existing[index].quantity + 1,
+            fragmentValue: existing[index].fragmentValue,
+            acquiredAt: existing[index].acquiredAt,
+            updatedAt: now,
+          );
+    final updatedAssets = [...existing];
+    if (index == -1) {
+      updatedAssets.add(asset);
+    } else {
+      updatedAssets[index] = asset;
+    }
+    await _saveAssets(uid, updatedAssets);
+    return LotteryDrawResponse(
+      result: LotteryDrawResult(
+        drawId: 'draw-${now.microsecondsSinceEpoch}',
+        prize: prize,
+        asset: asset,
+        cost: lotteryDrawCost,
+        balanceAfter: currentXp - lotteryDrawCost,
+        createdAt: now,
+      ),
+      notifications: [
+        AppNotification(
+          id: 'lottery-${now.microsecondsSinceEpoch}',
+          uid: uid,
+          type: AppNotificationType.activity,
+          title: '积分抽奖结果',
+          body: '获得「${prize.name}」，已放入个人资产。',
+          targetRoute: '/profile',
+          isRead: false,
+          createdAt: now.toUtc(),
+          sourceKey: 'lottery:${now.microsecondsSinceEpoch}',
+        ),
+      ],
+    );
+  }
+
+  LotteryPrize _choosePrize(List<LotteryPrize> prizes) {
+    final total = prizes.fold<double>(
+      0,
+      (sum, prize) => sum + prize.probability,
+    );
+    final roll = _random.nextDouble() * total;
+    var cursor = 0.0;
+    for (final prize in prizes) {
+      cursor += prize.probability;
+      if (roll <= cursor) return prize;
+    }
+    return prizes.last;
+  }
+
+  Future<List<UserAsset>> _loadAssets(String uid) async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString('$_assetKeyPrefix.$uid');
+    if (raw == null) return [];
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! List) return [];
+      return decoded
+          .whereType<Map>()
+          .map((item) => UserAsset.fromJson(Map<String, dynamic>.from(item)))
+          .toList();
+    } catch (_) {
+      await prefs.remove('$_assetKeyPrefix.$uid');
+      return [];
+    }
+  }
+
+  Future<void> _saveAssets(String uid, List<UserAsset> assets) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+      '$_assetKeyPrefix.$uid',
+      jsonEncode([for (final asset in assets) asset.toJson()]),
+    );
+  }
+}
+
+const _mockPrizePool = [
+  LotteryPrize(
+    id: 'avatar-frame-starry',
+    name: '星轨头像框',
+    category: 'avatarFrame',
+    rarity: 'rare',
+    description: '围绕头像的星轨装饰，不提供学习分数加成。',
+    probability: 6,
+    fragmentValue: 18,
+  ),
+  LotteryPrize(
+    id: 'profile-bg-aurora',
+    name: '极光主页背景',
+    category: 'profileBackground',
+    rarity: 'rare',
+    description: '个人空间可展示的极光背景，不影响学习公平性。',
+    probability: 7,
+    fragmentValue: 16,
+  ),
+  LotteryPrize(
+    id: 'badge-focus-sprinter',
+    name: '专注冲刺徽章',
+    category: 'badge',
+    rarity: 'uncommon',
+    description: '学习资料页展示徽章，仅作荣誉装饰。',
+    probability: 16,
+    fragmentValue: 8,
+  ),
+  LotteryPrize(
+    id: 'title-arena-scout',
+    name: '训练场侦察员称号',
+    category: 'title',
+    rarity: 'uncommon',
+    description: '训练场称号展示，不提高答题分数。',
+    probability: 14,
+    fragmentValue: 8,
+  ),
+  LotteryPrize(
+    id: 'card-skin-mint',
+    name: '薄荷卡片皮肤',
+    category: 'cardSkin',
+    rarity: 'common',
+    description: '单词卡片视觉皮肤，不改变记忆算法。',
+    probability: 22,
+    fragmentValue: 5,
+  ),
+  LotteryPrize(
+    id: 'comfort-star-fragments',
+    name: '星尘碎片',
+    category: 'fragment',
+    rarity: 'comfort',
+    description: '安慰奖励，可累计兑换装饰资产。',
+    probability: 35,
+    fragmentValue: 3,
+  ),
+];
