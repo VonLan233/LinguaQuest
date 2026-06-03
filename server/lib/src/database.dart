@@ -1,6 +1,7 @@
 import 'package:postgres/postgres.dart';
 
 import 'config.dart';
+import 'lottery_policy.dart';
 
 class AppDatabase {
   AppDatabase(this.connection);
@@ -93,6 +94,81 @@ CREATE TABLE IF NOT EXISTS notifications (
   UNIQUE (uid, source_key)
 );
 ''');
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS lottery_prizes (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  category TEXT NOT NULL,
+  rarity TEXT NOT NULL,
+  description TEXT NOT NULL,
+  probability DOUBLE PRECISION NOT NULL,
+  fragment_value INTEGER NOT NULL DEFAULT 0,
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMPTZ NOT NULL,
+  updated_at TIMESTAMPTZ NOT NULL
+);
+''');
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS lottery_draws (
+  id TEXT PRIMARY KEY,
+  uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  prize_id TEXT NOT NULL REFERENCES lottery_prizes(id),
+  cost INTEGER NOT NULL,
+  balance_after INTEGER NOT NULL,
+  prize_name TEXT NOT NULL,
+  prize_category TEXT NOT NULL,
+  prize_rarity TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL
+);
+''');
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS user_assets (
+  id TEXT PRIMARY KEY,
+  uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  prize_id TEXT NOT NULL REFERENCES lottery_prizes(id),
+  category TEXT NOT NULL,
+  rarity TEXT NOT NULL,
+  name TEXT NOT NULL,
+  description TEXT NOT NULL,
+  quantity INTEGER NOT NULL DEFAULT 1,
+  fragment_value INTEGER NOT NULL DEFAULT 0,
+  acquired_at TIMESTAMPTZ NOT NULL,
+  updated_at TIMESTAMPTZ NOT NULL,
+  UNIQUE (uid, prize_id)
+);
+''');
+
+    await _seedLotteryPrizes();
+  }
+
+  Future<void> _seedLotteryPrizes() async {
+    final now = DateTime.now().toUtc();
+    for (final prize in lotteryPrizeSeed) {
+      await connection.execute(
+        Sql.named('''
+INSERT INTO lottery_prizes (
+  id, name, category, rarity, description, probability, fragment_value,
+  is_active, created_at, updated_at
+) VALUES (
+  @id, @name, @category, @rarity, @description, @probability, @fragmentValue,
+  TRUE, @createdAt, @updatedAt
+)
+ON CONFLICT (id) DO UPDATE SET
+  name=EXCLUDED.name,
+  category=EXCLUDED.category,
+  rarity=EXCLUDED.rarity,
+  description=EXCLUDED.description,
+  probability=EXCLUDED.probability,
+  fragment_value=EXCLUDED.fragment_value,
+  is_active=TRUE,
+  updated_at=EXCLUDED.updated_at
+'''),
+        parameters: {...prize, 'createdAt': now, 'updatedAt': now},
+      );
+    }
   }
 
   Future<Map<String, dynamic>?> userByEmail(String email) async {
@@ -418,6 +494,135 @@ RETURNING id
       parameters: {'uid': uid, 'readAt': DateTime.now().toUtc()},
     );
     return rows.length;
+  }
+
+  Future<List<Map<String, dynamic>>> lotteryPrizes() async {
+    final rows = await connection.execute('''
+SELECT * FROM lottery_prizes
+WHERE is_active = TRUE
+ORDER BY probability DESC, rarity, name
+''');
+    return rows.map((row) => row.toColumnMap()).toList();
+  }
+
+  Future<List<Map<String, dynamic>>> userAssets(String uid) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT * FROM user_assets
+WHERE uid=@uid
+ORDER BY updated_at DESC
+'''),
+      parameters: {'uid': uid},
+    );
+    return rows.map((row) => row.toColumnMap()).toList();
+  }
+
+  Future<Map<String, dynamic>?> drawLottery({
+    required String uid,
+    required String drawId,
+    required String assetId,
+    required String notificationId,
+  }) async {
+    final now = DateTime.now().toUtc();
+    await connection.execute('BEGIN');
+    try {
+      final userRows = await connection.execute(
+        Sql.named('''
+UPDATE users
+SET xp = xp - @cost,
+    updated_at = @updatedAt
+WHERE id=@uid AND xp >= @cost
+RETURNING xp
+'''),
+        parameters: {'uid': uid, 'cost': lotteryDrawCost, 'updatedAt': now},
+      );
+      if (userRows.isEmpty) {
+        await connection.execute('ROLLBACK');
+        return null;
+      }
+      final prizes = await lotteryPrizes();
+      final prize = chooseLotteryPrize(prizes);
+      final balanceAfter = userRows.first.toColumnMap()['xp'] as int;
+
+      await connection.execute(
+        Sql.named('''
+INSERT INTO lottery_draws (
+  id, uid, prize_id, cost, balance_after, prize_name, prize_category,
+  prize_rarity, created_at
+) VALUES (
+  @id, @uid, @prizeId, @cost, @balanceAfter, @prizeName, @prizeCategory,
+  @prizeRarity, @createdAt
+)
+'''),
+        parameters: {
+          'id': drawId,
+          'uid': uid,
+          'prizeId': prize['id'],
+          'cost': lotteryDrawCost,
+          'balanceAfter': balanceAfter,
+          'prizeName': prize['name'],
+          'prizeCategory': prize['category'],
+          'prizeRarity': prize['rarity'],
+          'createdAt': now,
+        },
+      );
+
+      final assetRows = await connection.execute(
+        Sql.named('''
+INSERT INTO user_assets (
+  id, uid, prize_id, category, rarity, name, description, quantity,
+  fragment_value, acquired_at, updated_at
+) VALUES (
+  @id, @uid, @prizeId, @category, @rarity, @name, @description, 1,
+  @fragmentValue, @acquiredAt, @updatedAt
+)
+ON CONFLICT (uid, prize_id) DO UPDATE SET
+  quantity=user_assets.quantity + 1,
+  updated_at=EXCLUDED.updated_at
+RETURNING *
+'''),
+        parameters: {
+          'id': assetId,
+          'uid': uid,
+          'prizeId': prize['id'],
+          'category': prize['category'],
+          'rarity': prize['rarity'],
+          'name': prize['name'],
+          'description': prize['description'],
+          'fragmentValue': prize['fragment_value'],
+          'acquiredAt': now,
+          'updatedAt': now,
+        },
+      );
+
+      await upsertNotification(uid, {
+        'id': notificationId,
+        'type': 'activity',
+        'title': '积分抽奖结果',
+        'body': '获得「${prize['name']}」，已放入个人资产。',
+        'targetRoute': '/profile',
+        'isRead': false,
+        'sourceKey': 'lottery:$drawId',
+        'createdAt': now,
+      });
+      await connection.execute('COMMIT');
+      return {
+        'draw': {
+          'id': drawId,
+          'uid': uid,
+          'prizeId': prize['id'],
+          'cost': lotteryDrawCost,
+          'balanceAfter': balanceAfter,
+          'createdAt': now,
+        },
+        'prize': prize,
+        'asset': assetRows.first.toColumnMap(),
+        'balanceAfter': balanceAfter,
+      };
+    } catch (error) {
+      await connection.execute('ROLLBACK');
+      rethrow;
+    }
   }
 
   Future<bool> hasStudySessionInRange(

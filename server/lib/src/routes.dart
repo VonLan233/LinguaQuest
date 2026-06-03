@@ -5,6 +5,7 @@ import 'auth.dart';
 import 'config.dart';
 import 'database.dart';
 import 'json_response.dart';
+import 'lottery_policy.dart';
 import 'notification_policy.dart';
 
 Router buildRouter(AppConfig config, AppDatabase database) {
@@ -139,6 +140,52 @@ Router buildRouter(AppConfig config, AppDatabase database) {
       final body = await readJsonMap(request);
       await database.insertReviewEvent(uid, body);
       return jsonResponse({'recorded': true}, status: 201);
+    });
+  });
+
+  router.get('/lottery/prizes', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final prizes = await database.lotteryPrizes();
+      return jsonResponse({
+        'cost': lotteryDrawCost,
+        'prizes': prizes.map(prizeDto).toList(),
+      });
+    });
+  });
+
+  router.get('/lottery/assets', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final assets = await database.userAssets(uid);
+      return jsonResponse({'assets': assets.map(assetDto).toList()});
+    });
+  });
+
+  router.post('/lottery/draw', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final result = await database.drawLottery(
+        uid: uid,
+        drawId: newId(),
+        assetId: newId(),
+        notificationId: newId(),
+      );
+      if (result == null) {
+        return jsonResponse({
+          'error': 'not enough XP for this draw',
+          'cost': lotteryDrawCost,
+        }, status: 409);
+      }
+      final user = await database.userById(uid);
+      final notifications = await database.notifications(uid, unreadOnly: true);
+      return jsonResponse({
+        'result': {
+          'draw': result['draw'],
+          'prize': prizeDto(result['prize'] as Map<String, dynamic>),
+          'asset': assetDto(result['asset'] as Map<String, dynamic>),
+          'balanceAfter': result['balanceAfter'],
+        },
+        'user': user == null ? null : userDto(user),
+        'notifications': notifications.map(notificationDto).toList(),
+      }, status: 201);
     });
   });
 
@@ -278,6 +325,35 @@ Map<String, dynamic> notificationDto(Map<String, dynamic> row) {
     'sourceKey': row['source_key'] ?? row['sourceKey'],
     'readAt': (row['read_at'] as DateTime?)?.toIso8601String(),
     'createdAt': _dateValue(row['created_at'] ?? row['createdAt']),
+  };
+}
+
+Map<String, dynamic> prizeDto(Map<String, dynamic> row) {
+  return {
+    'id': row['id'],
+    'name': row['name'],
+    'category': row['category'],
+    'rarity': row['rarity'],
+    'description': row['description'],
+    'probability': row['probability'],
+    'fragmentValue': row['fragment_value'] ?? row['fragmentValue'] ?? 0,
+    'isActive': row['is_active'] ?? row['isActive'] ?? true,
+  };
+}
+
+Map<String, dynamic> assetDto(Map<String, dynamic> row) {
+  return {
+    'id': row['id'],
+    'uid': row['uid'],
+    'prizeId': row['prize_id'] ?? row['prizeId'],
+    'category': row['category'],
+    'rarity': row['rarity'],
+    'name': row['name'],
+    'description': row['description'],
+    'quantity': row['quantity'] ?? 1,
+    'fragmentValue': row['fragment_value'] ?? row['fragmentValue'] ?? 0,
+    'acquiredAt': _dateValue(row['acquired_at'] ?? row['acquiredAt']),
+    'updatedAt': _dateValue(row['updated_at'] ?? row['updatedAt']),
   };
 }
 
