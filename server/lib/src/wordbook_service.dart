@@ -124,8 +124,10 @@ class WordBookService {
 
   List<WordEntry> getWords(String bookId, {int? limit, int? offset}) {
     final ids = _wordIdsByBook[bookId] ?? [];
-    final start = offset ?? 0;
-    final end = limit == null ? ids.length : (start + limit).clamp(0, ids.length);
+    final start = (offset ?? 0).clamp(0, ids.length);
+    final end = limit == null
+        ? ids.length
+        : (start + limit).clamp(0, ids.length);
     return [
       for (var i = start; i < end; i++)
         if (_words.containsKey(ids[i])) _words[ids[i]]!,

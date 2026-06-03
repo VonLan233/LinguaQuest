@@ -127,7 +127,7 @@ class LessonFactory {
       if (entry.exampleSentences.isNotEmpty) {
         final sentence = entry.exampleSentences.first.en;
         final blanked = sentence.replaceFirst(
-          RegExp(entry.word, caseSensitive: false),
+          RegExp(RegExp.escape(entry.word), caseSensitive: false),
           '_____',
         );
         if (blanked != sentence) {

@@ -55,10 +55,12 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
     final targets = wordBooks.isEmpty
         ? const ['IELTS', 'TOEFL', 'GRE', 'SAT', 'GMAT', 'Daily English']
         : wordBooks.map((b) => b.id).toList();
-    // Ensure _target is valid within current targets
+    // Ensure _target is valid within current targets (case-insensitive)
+    final targetLower = _target.toLowerCase();
+    final hasMatch = targets.any((t) => t.toLowerCase() == targetLower);
     if (_target.isEmpty && targets.isNotEmpty) {
       _target = targets.first;
-    } else if (!targets.contains(_target) && targets.isNotEmpty) {
+    } else if (!hasMatch && targets.isNotEmpty) {
       _target = targets.first;
     }
     final selectedLessons = learningLessonsForTarget(state.lessons, _target);

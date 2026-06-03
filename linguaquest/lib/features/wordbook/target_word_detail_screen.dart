@@ -33,10 +33,10 @@ class _TargetWordDetailScreenState extends ConsumerState<TargetWordDetailScreen>
 
   Future<void> _loadEntry() async {
     final controller = ref.read(appControllerProvider.notifier);
-    final result = await controller.searchWords(widget.wordId, limit: 1);
+    final result = await controller.getWord(widget.wordId);
     if (mounted) {
       setState(() {
-        _entry = result.isNotEmpty ? result.first : null;
+        _entry = result;
       });
     }
   }

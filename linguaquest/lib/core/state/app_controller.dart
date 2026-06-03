@@ -128,6 +128,7 @@ class AppController extends Notifier<AppState> {
           ? _stringSet(prefs, _todayRewardIdsKey)
           : <String>{};
       final user = await _authRepository.loadSession();
+      await loadWordBooks();
       final currentWordBookId = user != null && user.targetExam.isNotEmpty
           ? _mapTargetToWordBookId(user.targetExam, state.wordBooks)
           : null;
@@ -154,7 +155,6 @@ class AppController extends Notifier<AppState> {
       );
       await refreshNotifications();
       unawaited(_initializeThenScheduleLocalNotifications());
-      unawaited(loadWordBooks());
     } catch (error) {
       state = state.copyWith(
         isBootstrapped: false,
@@ -196,6 +196,15 @@ class AppController extends Notifier<AppState> {
         errorMessage: '搜索失败：${_friendlyError(error)}',
       );
       return [];
+    }
+  }
+
+  Future<WordEntry?> getWord(String wordId) async {
+    if (wordId.trim().isEmpty) return null;
+    try {
+      return await _wordBookRepository.getWord(wordId);
+    } catch (error) {
+      return null;
     }
   }
 
