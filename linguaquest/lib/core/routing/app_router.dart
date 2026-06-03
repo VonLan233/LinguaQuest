@@ -10,6 +10,7 @@ import '../../features/discover/discover_screen.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/learning/learning_path_screen.dart';
 import '../../features/learning/lesson_preview_screen.dart';
+import '../../features/notifications/notifications_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/onboarding/splash_screen.dart';
 import '../../features/profile/profile_screen.dart';
@@ -103,6 +104,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/review',
         builder: (context, state) => const ReviewCenterScreen(),
+      ),
+      GoRoute(
+        path: '/notifications',
+        builder: (context, state) => const NotificationsScreen(),
       ),
       GoRoute(
         path: '/mistake-book',

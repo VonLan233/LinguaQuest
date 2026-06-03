@@ -122,7 +122,7 @@ class ReminderSettingsScreen extends ConsumerWidget {
               subtitle: Text(
                 settings.enabled
                     ? '提醒时间：${settings.formattedTime}'
-                    : '应用内不会显示提醒',
+                    : '不会安排本地提醒',
               ),
             ),
             const Divider(height: 20),
@@ -139,7 +139,7 @@ class ReminderSettingsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              '应用会记住提醒时间，方便你按固定节奏打开学习。',
+              '应用会记住提醒时间，并按这个时间安排本地系统提醒，提醒你开始学习和打卡。',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],

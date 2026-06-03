@@ -63,11 +63,9 @@ class HomeScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(width: 10),
-            QuestIconButton(
-              tooltip: '消息通知',
-              onPressed: () => context.go('/discover'),
-              icon: Icons.notifications_outlined,
-              color: AppTheme.coral,
+            _NotificationBellButton(
+              unreadCount: state.unreadNotificationCount,
+              onPressed: () => context.push('/notifications'),
             ),
           ],
         ),
@@ -156,6 +154,53 @@ class HomeScreen extends ConsumerWidget {
           )
         else
           ...state.weakWords.take(3).map((word) => _WeakWordLink(word: word)),
+      ],
+    );
+  }
+}
+
+class _NotificationBellButton extends StatelessWidget {
+  const _NotificationBellButton({
+    required this.unreadCount,
+    required this.onPressed,
+  });
+
+  final int unreadCount;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        QuestIconButton(
+          tooltip: '消息通知',
+          onPressed: onPressed,
+          icon: Icons.notifications_outlined,
+          color: AppTheme.coral,
+        ),
+        if (unreadCount > 0)
+          Positioned(
+            right: -4,
+            top: -5,
+            child: Container(
+              constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              alignment: Alignment.center,
+              decoration: const BoxDecoration(
+                color: AppTheme.coral,
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              ),
+              child: Text(
+                unreadCount > 9 ? '9+' : '$unreadCount',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+            ),
+          ),
       ],
     );
   }

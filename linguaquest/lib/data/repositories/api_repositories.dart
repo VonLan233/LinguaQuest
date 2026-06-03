@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/app_notification.dart';
 import '../models/custom_word.dart';
 import '../models/lesson.dart';
 import '../models/review_event.dart';
@@ -10,6 +11,7 @@ import '../seed/seed_lessons.dart';
 import 'auth_repository.dart';
 import 'custom_word_repository.dart';
 import 'learning_repository.dart';
+import 'notification_repository.dart';
 import 'review_repository.dart';
 
 class ApiAuthRepository implements AuthRepository {
@@ -156,4 +158,64 @@ class ApiReviewRepository implements ReviewRepository {
   Future<void> recordReviewEvent(ReviewEvent event) async {
     await _client.dio.post<void>('/review-events', data: event.toJson());
   }
+}
+
+class ApiNotificationRepository implements NotificationRepository {
+  ApiNotificationRepository(this._client);
+
+  final ApiClient _client;
+
+  @override
+  Future<void> ensureGenerated(
+    String uid,
+    List<AppNotification> notifications,
+  ) async {}
+
+  @override
+  Future<List<AppNotification>> list(
+    String uid, {
+    bool unreadOnly = false,
+    AppNotificationType? type,
+  }) async {
+    final now = DateTime.now();
+    final response = await _client.dio.get<List<dynamic>>(
+      '/notifications',
+      queryParameters: {
+        if (unreadOnly) 'unreadOnly': true,
+        if (type != null) 'type': type.name,
+        'localDate': _localDateKey(now),
+        'timezoneOffsetMinutes': now.timeZoneOffset.inMinutes,
+      },
+    );
+    return (response.data ?? const <dynamic>[])
+        .whereType<Map>()
+        .map(
+          (item) => AppNotification.fromJson(Map<String, dynamic>.from(item)),
+        )
+        .toList();
+  }
+
+  @override
+  Future<int> markAllRead(String uid) async {
+    final response = await _client.dio.patch<Map<String, dynamic>>(
+      '/notifications/read-all',
+    );
+    return response.data!['updated'] as int? ?? 0;
+  }
+
+  @override
+  Future<AppNotification?> markRead(String uid, String id) async {
+    final response = await _client.dio.patch<Map<String, dynamic>>(
+      '/notifications/$id/read',
+    );
+    return AppNotification.fromJson(
+      response.data!['notification'] as Map<String, dynamic>,
+    );
+  }
+}
+
+String _localDateKey(DateTime date) {
+  final month = date.month.toString().padLeft(2, '0');
+  final day = date.day.toString().padLeft(2, '0');
+  return '${date.year}-$month-$day';
 }

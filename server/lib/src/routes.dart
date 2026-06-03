@@ -5,6 +5,7 @@ import 'auth.dart';
 import 'config.dart';
 import 'database.dart';
 import 'json_response.dart';
+import 'notification_policy.dart';
 
 Router buildRouter(AppConfig config, AppDatabase database) {
   final router = Router();
@@ -141,6 +142,60 @@ Router buildRouter(AppConfig config, AppDatabase database) {
     });
   });
 
+  router.get('/notifications', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final type = request.url.queryParameters['type'];
+      if (type != null && !notificationTypes.contains(type)) {
+        return jsonResponse({
+          'error': 'invalid notification type',
+        }, status: 400);
+      }
+      final localDate = request.url.queryParameters['localDate'];
+      if (localDate != null && !isNotificationDateKey(localDate)) {
+        return jsonResponse({'error': 'invalid localDate'}, status: 400);
+      }
+      final timezoneOffsetMinutes = parseNotificationTimezoneOffsetMinutes(
+        request.url.queryParameters['timezoneOffsetMinutes'],
+      );
+      if (timezoneOffsetMinutes == null) {
+        return jsonResponse({
+          'error': 'invalid timezoneOffsetMinutes',
+        }, status: 400);
+      }
+      final dayWindow = notificationDayWindow(
+        nowUtc: DateTime.now().toUtc(),
+        localDate: localDate,
+        timezoneOffsetMinutes: timezoneOffsetMinutes,
+      );
+      await _ensureNotificationsForToday(database, uid, dayWindow);
+      final unreadOnly =
+          request.url.queryParameters['unreadOnly']?.toLowerCase() == 'true';
+      final notifications = await database.notifications(
+        uid,
+        unreadOnly: unreadOnly,
+        type: type,
+      );
+      return jsonResponse(notifications.map(notificationDto).toList());
+    });
+  });
+
+  router.patch('/notifications/read-all', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final updated = await database.markAllNotificationsRead(uid);
+      return jsonResponse({'updated': updated});
+    });
+  });
+
+  router.patch('/notifications/<id>/read', (Request request, String id) async {
+    return _protected(config, request, (uid) async {
+      final notification = await database.markNotificationRead(uid, id);
+      if (notification == null) {
+        return jsonResponse({'error': 'notification not found'}, status: 404);
+      }
+      return jsonResponse({'notification': notificationDto(notification)});
+    });
+  });
+
   return router;
 }
 
@@ -209,6 +264,63 @@ Map<String, dynamic> wordDto(Map<String, dynamic> row) {
     'createdAt': _dateValue(row['created_at'] ?? row['createdAt']),
     'updatedAt': _dateValue(row['updated_at'] ?? row['updatedAt']),
   };
+}
+
+Map<String, dynamic> notificationDto(Map<String, dynamic> row) {
+  return {
+    'id': row['id'],
+    'uid': row['uid'],
+    'type': row['type'],
+    'title': row['title'],
+    'body': row['body'],
+    'targetRoute': row['target_route'] ?? row['targetRoute'] ?? '/home',
+    'isRead': row['is_read'] ?? row['isRead'] ?? false,
+    'sourceKey': row['source_key'] ?? row['sourceKey'],
+    'readAt': (row['read_at'] as DateTime?)?.toIso8601String(),
+    'createdAt': _dateValue(row['created_at'] ?? row['createdAt']),
+  };
+}
+
+Future<void> _ensureNotificationsForToday(
+  AppDatabase database,
+  String uid,
+  NotificationDayWindow dayWindow,
+) async {
+  final now = DateTime.now().toUtc();
+  final user = await database.userById(uid);
+  if (user == null) return;
+  final hasStudyToday = await database.hasStudySessionInRange(
+    uid,
+    dayWindow.startUtc,
+    dayWindow.endUtc,
+  );
+  final dueReviewCount = await database.dueReviewCount(uid);
+  final lastStudyDate = user['last_study_date'];
+  final hasCheckedIn =
+      lastStudyDate is DateTime &&
+      !lastStudyDate.toUtc().isBefore(dayWindow.startUtc) &&
+      lastStudyDate.toUtc().isBefore(dayWindow.endUtc);
+  final dailyGoal = user['daily_goal'] ?? 10;
+  final generated = generatedNotificationsForToday(
+    dateKey: dayWindow.dateKey,
+    dailyGoal: dailyGoal is int ? dailyGoal : int.tryParse('$dailyGoal') ?? 10,
+    hasStudyToday: hasStudyToday,
+    dueReviewCount: dueReviewCount,
+    hasCheckedIn: hasCheckedIn,
+  );
+  await database.upsertNotifications(uid, [
+    for (final notification in generated)
+      {
+        'id': newId(),
+        'type': notification['type'],
+        'title': notification['title'],
+        'body': notification['body'],
+        'targetRoute': notification['targetRoute'],
+        'isRead': false,
+        'sourceKey': notification['sourceKey'],
+        'createdAt': now,
+      },
+  ]);
 }
 
 String _dateValue(Object? value) {

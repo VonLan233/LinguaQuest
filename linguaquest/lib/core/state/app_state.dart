@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../data/models/app_notification.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
@@ -109,6 +110,7 @@ class AppState {
     required this.todayCompletedLessonIds,
     required this.todayReviewWordIds,
     required this.todayClaimedRewardIds,
+    required this.notifications,
     this.user,
     this.lastResult,
     this.learningPlan,
@@ -127,10 +129,14 @@ class AppState {
   final Set<String> todayCompletedLessonIds;
   final Set<String> todayReviewWordIds;
   final Set<String> todayClaimedRewardIds;
+  final List<AppNotification> notifications;
   final LessonResult? lastResult;
   final String? errorMessage;
 
   bool get isAuthenticated => user != null;
+
+  int get unreadNotificationCount =>
+      notifications.where((notification) => !notification.isRead).length;
 
   String? get learningTarget => learningPlan?.target ?? user?.targetExam;
 
@@ -198,6 +204,7 @@ class AppState {
     Set<String>? todayCompletedLessonIds,
     Set<String>? todayReviewWordIds,
     Set<String>? todayClaimedRewardIds,
+    List<AppNotification>? notifications,
     LessonResult? lastResult,
     String? errorMessage,
     bool clearError = false,
@@ -219,6 +226,7 @@ class AppState {
       todayReviewWordIds: todayReviewWordIds ?? this.todayReviewWordIds,
       todayClaimedRewardIds:
           todayClaimedRewardIds ?? this.todayClaimedRewardIds,
+      notifications: notifications ?? this.notifications,
       lastResult: lastResult ?? this.lastResult,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
     );
@@ -236,6 +244,7 @@ class AppState {
       todayCompletedLessonIds: {},
       todayReviewWordIds: {},
       todayClaimedRewardIds: {},
+      notifications: [],
     );
   }
 }
