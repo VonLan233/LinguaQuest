@@ -126,6 +126,15 @@ CREATE TABLE IF NOT EXISTS reward_claims (
   UNIQUE (uid, date_key, task_id)
 );
 ''');
+
+    await connection.execute('''
+CREATE INDEX IF NOT EXISTS idx_study_sessions_uid_ended_at
+ON study_sessions (uid, ended_at);
+CREATE INDEX IF NOT EXISTS idx_review_events_uid_reviewed_at
+ON review_events (uid, reviewed_at);
+CREATE INDEX IF NOT EXISTS idx_custom_words_uid
+ON custom_words (uid);
+''');
   }
 
   Future<Map<String, dynamic>?> userByEmail(String email) async {
@@ -504,12 +513,13 @@ LIMIT 1
     return rows.isNotEmpty;
   }
 
-  Future<void> upsertCheckIn(String uid, String dateKey) async {
-    await connection.execute(
+  Future<bool> upsertCheckIn(String uid, String dateKey) async {
+    final rows = await connection.execute(
       Sql.named('''
 INSERT INTO daily_checkins (uid, date_key, checked_in_at)
 VALUES (@uid, @dateKey, @checkedInAt)
 ON CONFLICT (uid, date_key) DO NOTHING
+RETURNING uid
 '''),
       parameters: {
         'uid': uid,
@@ -517,6 +527,7 @@ ON CONFLICT (uid, date_key) DO NOTHING
         'checkedInAt': DateTime.now().toUtc(),
       },
     );
+    return rows.isNotEmpty;
   }
 
   Future<Map<String, dynamic>> dailyActivity(String uid, String dateKey) async {

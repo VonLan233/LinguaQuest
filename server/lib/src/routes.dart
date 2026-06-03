@@ -223,11 +223,8 @@ Router buildRouter(AppConfig config, AppDatabase database) {
       if (user == null) {
         return jsonResponse({'error': 'user not found'}, status: 404);
       }
-      final hadCheckedInToday = await database.hasCheckIn(
-        uid,
-        dayWindow.dateKey,
-      );
-      await database.upsertCheckIn(uid, dayWindow.dateKey);
+      final inserted = await database.upsertCheckIn(uid, dayWindow.dateKey);
+      final hadCheckedInToday = !inserted;
       var updatedUser = user;
       if (!hadCheckedInToday) {
         final now = DateTime.now().toUtc();
