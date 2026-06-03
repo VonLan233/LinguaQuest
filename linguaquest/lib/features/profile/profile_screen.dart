@@ -73,10 +73,22 @@ class ProfileScreen extends ConsumerWidget {
               color: AppTheme.mango,
             ),
             _ProfileStatData(
+              label: '总积分',
+              value: '${user?.xp ?? 0} XP',
+              icon: Icons.bolt,
+              color: AppTheme.mango,
+            ),
+            _ProfileStatData(
               label: '完成计划',
               value: '$completedPlans',
               icon: Icons.flag_outlined,
               color: AppTheme.teal,
+            ),
+            _ProfileStatData(
+              label: '训练场',
+              value: '${state.todayTrainingSessionIds.length} 次',
+              icon: Icons.sports_esports_outlined,
+              color: AppTheme.coral,
             ),
             _ProfileStatData(
               label: '连续打卡',
