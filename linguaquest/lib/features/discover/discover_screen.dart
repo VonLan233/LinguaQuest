@@ -100,7 +100,9 @@ class DiscoverScreen extends ConsumerWidget {
         const SectionHeader(title: '社区帖子', subtitle: '学习打卡和错题讨论集中展示。'),
         const SizedBox(height: 12),
         _ForumPostList(
-          onInteract: () => _recordForumInteraction(context, ref),
+          onInteract: state.pendingRewardTaskIds.contains('forumInteraction')
+              ? null
+              : () => _recordForumInteraction(context, ref),
           posts: [
             _ForumPostData(
               title: '今日打卡：用 12 分钟复习了 18 个词',
@@ -531,10 +533,10 @@ class _RewardTaskData {
 }
 
 class _ForumPostList extends StatelessWidget {
-  const _ForumPostList({required this.posts, required this.onInteract});
+  const _ForumPostList({required this.posts, this.onInteract});
 
   final List<_ForumPostData> posts;
-  final VoidCallback onInteract;
+  final VoidCallback? onInteract;
 
   @override
   Widget build(BuildContext context) {
@@ -556,10 +558,10 @@ class _ForumPostList extends StatelessWidget {
 }
 
 class _ForumPostRow extends StatelessWidget {
-  const _ForumPostRow({required this.post, required this.onInteract});
+  const _ForumPostRow({required this.post, this.onInteract});
 
   final _ForumPostData post;
-  final VoidCallback onInteract;
+  final VoidCallback? onInteract;
 
   @override
   Widget build(BuildContext context) {

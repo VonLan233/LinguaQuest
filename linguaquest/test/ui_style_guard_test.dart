@@ -284,6 +284,11 @@ void main() {
       expect(discover, contains('task.isPending'));
       expect(discover, contains('&& !isCheckingIn'));
       expect(discover, contains('今天已签到，并已领取'));
+      expect(
+        discover,
+        contains("state.pendingRewardTaskIds.contains('forumInteraction')"),
+      );
+      expect(discover, contains('final VoidCallback? onInteract'));
       expect(discover, isNot(contains("context.push('/learn')")));
       expect(home, isNot(contains('/timed-test/lesson-campus-1')));
       expect(training, contains("context.push('/timed-test/lesson-campus-1')"));
