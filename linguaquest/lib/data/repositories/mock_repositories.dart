@@ -25,10 +25,12 @@ class MockAuthRepository implements AuthRepository {
 
   @override
   Future<UserProfile?> loadSession() async {
-    if (_profile != null) return _profile;
     final prefs = await SharedPreferences.getInstance();
     final raw = prefs.getString(_profileKey);
-    if (raw == null) return null;
+    if (raw == null) {
+      _profile = null;
+      return null;
+    }
     try {
       final decoded = jsonDecode(raw);
       if (decoded is! Map) return null;
@@ -307,6 +309,7 @@ class MockNotificationRepository implements NotificationRepository {
 
 class MockLotteryRepository implements LotteryRepository {
   static const _assetKeyPrefix = 'linguaquest.assets';
+  static const _profileKey = 'linguaquest.profile';
   final Random _random = Random();
 
   @override
@@ -364,6 +367,11 @@ class MockLotteryRepository implements LotteryRepository {
       updatedAssets[index] = asset;
     }
     await _saveAssets(uid, updatedAssets);
+    final updatedUser = await _deductProfileXp(
+      uid: uid,
+      balanceAfter: currentXp - lotteryDrawCost,
+      now: now,
+    );
     return LotteryDrawResponse(
       result: LotteryDrawResult(
         drawId: 'draw-${now.microsecondsSinceEpoch}',
@@ -373,6 +381,7 @@ class MockLotteryRepository implements LotteryRepository {
         balanceAfter: currentXp - lotteryDrawCost,
         createdAt: now,
       ),
+      user: updatedUser,
       notifications: [
         AppNotification(
           id: 'lottery-${now.microsecondsSinceEpoch}',
@@ -387,6 +396,31 @@ class MockLotteryRepository implements LotteryRepository {
         ),
       ],
     );
+  }
+
+  Future<UserProfile?> _deductProfileXp({
+    required String uid,
+    required int balanceAfter,
+    required DateTime now,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString(_profileKey);
+    if (raw == null) return null;
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! Map) {
+        await prefs.remove(_profileKey);
+        return null;
+      }
+      final profile = UserProfile.fromJson(Map<String, dynamic>.from(decoded));
+      if (profile.uid != uid) return null;
+      final updated = profile.copyWith(xp: balanceAfter, updatedAt: now);
+      await prefs.setString(_profileKey, jsonEncode(updated.toJson()));
+      return updated;
+    } catch (_) {
+      await prefs.remove(_profileKey);
+      return null;
+    }
   }
 
   LotteryPrize _choosePrize(List<LotteryPrize> prizes) {

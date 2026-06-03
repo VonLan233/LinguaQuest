@@ -16,12 +16,25 @@ void main() {
     () async {
       SharedPreferences.setMockInitialValues({});
       final repo = MockLotteryRepository();
+      final profile = UserProfile.demo().copyWith(uid: 'lottery-user', xp: 120);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(
+        'linguaquest.profile',
+        jsonEncode(profile.toJson()),
+      );
 
       final response = await repo.draw(uid: 'lottery-user', currentXp: 120);
       final assets = await repo.assets('lottery-user');
+      final storedProfile = UserProfile.fromJson(
+        Map<String, dynamic>.from(
+          jsonDecode(prefs.getString('linguaquest.profile')!) as Map,
+        ),
+      );
 
       expect(response.result.cost, lotteryDrawCost);
       expect(response.result.balanceAfter, 90);
+      expect(response.user?.xp, 90);
+      expect(storedProfile.xp, 90);
       expect(response.result.prize.category, isNot('learningBoost'));
       expect(response.result.prize.category, isNot('scoreBoost'));
       expect(assets, hasLength(1));
@@ -31,6 +44,96 @@ void main() {
       expect(response.notifications.single.targetRoute, '/profile');
     },
   );
+
+  test('lottery models parse snake case API fields', () {
+    final prize = LotteryPrize.fromJson({
+      'id': 'snake-prize',
+      'name': 'Snake Prize',
+      'category': 'badge',
+      'rarity': 'common',
+      'description': 'Decorative only.',
+      'probability': '12.5',
+      'fragment_value': 7,
+      'is_active': false,
+    });
+    final acquiredAt = DateTime.utc(2026, 6, 3, 1);
+    final updatedAt = DateTime.utc(2026, 6, 3, 2);
+    final asset = UserAsset.fromJson({
+      'id': 'asset-1',
+      'uid': 'user-1',
+      'prize_id': 'snake-prize',
+      'category': 'badge',
+      'rarity': 'common',
+      'name': 'Snake Prize',
+      'description': 'Decorative only.',
+      'quantity': 2,
+      'fragment_value': 7,
+      'acquired_at': acquiredAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
+    });
+
+    expect(prize.fragmentValue, 7);
+    expect(prize.isActive, isFalse);
+    expect(asset.prizeId, 'snake-prize');
+    expect(asset.fragmentValue, 7);
+    expect(asset.acquiredAt, acquiredAt);
+    expect(asset.updatedAt, updatedAt);
+  });
+
+  test('lottery draw result parses snake case draw fields', () {
+    final createdAt = DateTime.utc(2026, 6, 3, 3);
+    final result = LotteryDrawResult.fromJson({
+      'draw': {
+        'id': 'draw-1',
+        'cost': 30,
+        'balance_after': 90,
+        'created_at': createdAt.toIso8601String(),
+      },
+      'prize': {
+        'id': 'snake-prize',
+        'name': 'Snake Prize',
+        'fragment_value': 7,
+      },
+      'asset': {
+        'id': 'asset-1',
+        'uid': 'user-1',
+        'prize_id': 'snake-prize',
+        'fragment_value': 7,
+        'acquired_at': createdAt.toIso8601String(),
+        'updated_at': createdAt.toIso8601String(),
+      },
+    });
+
+    expect(result.drawId, 'draw-1');
+    expect(result.cost, 30);
+    expect(result.balanceAfter, 90);
+    expect(result.createdAt, createdAt);
+  });
+
+  test('mock lottery draw refreshes cached auth session profile', () async {
+    SharedPreferences.setMockInitialValues({});
+    final auth = MockAuthRepository();
+    final repo = MockLotteryRepository();
+    final profile = UserProfile.demo().copyWith(uid: 'cached-user', xp: 120);
+    await auth.updateProfile(profile);
+    expect((await auth.loadSession())?.xp, 120);
+
+    final response = await repo.draw(uid: 'cached-user', currentXp: 120);
+
+    expect(response.user?.xp, 90);
+    expect((await auth.loadSession())?.xp, 90);
+  });
+
+  test('mock lottery draw removes corrupted persisted profile JSON', () async {
+    SharedPreferences.setMockInitialValues({'linguaquest.profile': '[]'});
+    final repo = MockLotteryRepository();
+
+    final response = await repo.draw(uid: 'corrupt-user', currentXp: 120);
+    final prefs = await SharedPreferences.getInstance();
+
+    expect(response.user, isNull);
+    expect(prefs.getString('linguaquest.profile'), isNull);
+  });
 
   test('mock lottery draw accumulates repeated prize quantities', () async {
     SharedPreferences.setMockInitialValues({});

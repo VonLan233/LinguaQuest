@@ -63,8 +63,8 @@ class LotteryPrize {
       rarity: json['rarity'] as String? ?? 'comfort',
       description: json['description'] as String? ?? '',
       probability: _double(json['probability']),
-      fragmentValue: json['fragmentValue'] as int? ?? 0,
-      isActive: json['isActive'] as bool? ?? true,
+      fragmentValue: _int(json['fragmentValue'] ?? json['fragment_value']),
+      isActive: _bool(json['isActive'] ?? json['is_active']) ?? true,
     );
   }
 
@@ -132,9 +132,9 @@ class UserAsset {
       name: json['name'] as String? ?? '',
       description: json['description'] as String? ?? '',
       quantity: json['quantity'] as int? ?? 1,
-      fragmentValue: json['fragmentValue'] as int? ?? 0,
-      acquiredAt: _date(json['acquiredAt']) ?? now,
-      updatedAt: _date(json['updatedAt']) ?? now,
+      fragmentValue: _int(json['fragmentValue'] ?? json['fragment_value']),
+      acquiredAt: _date(json['acquiredAt'] ?? json['acquired_at']) ?? now,
+      updatedAt: _date(json['updatedAt'] ?? json['updated_at']) ?? now,
     );
   }
 
@@ -174,6 +174,7 @@ class LotteryDrawResult {
 
   factory LotteryDrawResult.fromJson(Map<String, dynamic> json) {
     final draw = Map<String, dynamic>.from(json['draw'] as Map? ?? const {});
+    final balanceAfterJson = json['balanceAfter'] ?? json['balance_after'];
     return LotteryDrawResult(
       drawId: draw['id'] as String? ?? '',
       prize: LotteryPrize.fromJson(
@@ -182,10 +183,12 @@ class LotteryDrawResult {
       asset: UserAsset.fromJson(
         Map<String, dynamic>.from(json['asset'] as Map? ?? const {}),
       ),
-      cost: draw['cost'] as int? ?? 0,
-      balanceAfter:
-          json['balanceAfter'] as int? ?? draw['balanceAfter'] as int? ?? 0,
-      createdAt: _date(draw['createdAt']) ?? DateTime.now(),
+      cost: _int(draw['cost']),
+      balanceAfter: balanceAfterJson == null
+          ? _int(draw['balanceAfter'] ?? draw['balance_after'])
+          : _int(balanceAfterJson),
+      createdAt:
+          _date(draw['createdAt'] ?? draw['created_at']) ?? DateTime.now(),
     );
   }
 }
@@ -193,6 +196,18 @@ class LotteryDrawResult {
 double _double(Object? value) {
   if (value is num) return value.toDouble();
   return double.tryParse(value.toString()) ?? 0;
+}
+
+int _int(Object? value) {
+  if (value is int) return value;
+  if (value is num) return value.toInt();
+  return int.tryParse(value.toString()) ?? 0;
+}
+
+bool? _bool(Object? value) {
+  if (value is bool) return value;
+  if (value is String) return bool.tryParse(value);
+  return null;
 }
 
 DateTime? _date(Object? value) {
