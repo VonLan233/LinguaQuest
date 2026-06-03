@@ -44,19 +44,19 @@ class _TargetWordDetailScreenState extends ConsumerState<TargetWordDetailScreen>
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(appControllerProvider);
-    final word = _find(state);
-    if (word == null && _entry == null) {
+    final foundWord = _find(state);
+    if (foundWord == null && _entry == null) {
       return const Scaffold(body: Center(child: Text('没有找到这个词')));
     }
-    final displayWord = word ?? _wordFromEntry(_entry!);
+    final word = foundWord ?? _wordFromEntry(_entry!);
     final isSaved = state.customWords.any(
-      (item) => item.word.trim().toLowerCase() == displayWord.word.toLowerCase(),
+      (item) => item.word.trim().toLowerCase() == word.word.toLowerCase(),
     );
 
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/wordbook'),
-        title: Text(displayWord.word),
+        title: Text(word.word),
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
@@ -75,7 +75,7 @@ class _TargetWordDetailScreenState extends ConsumerState<TargetWordDetailScreen>
                 child: FilledButton.icon(
                   onPressed: isSaved
                       ? null
-                      : () => _addToCustomWords(context, ref, displayWord),
+                      : () => _addToCustomWords(context, ref, word),
                   icon: Icon(
                     isSaved
                         ? Icons.check_circle_outline
@@ -96,7 +96,7 @@ class _TargetWordDetailScreenState extends ConsumerState<TargetWordDetailScreen>
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: Column(
                 children: [
-                  ImageCueBadge(cue: displayWord.imageCue, size: 108),
+                  ImageCueBadge(cue: word.imageCue, size: 108),
                   const SizedBox(height: 16),
                   Wrap(
                     alignment: WrapAlignment.center,
@@ -105,23 +105,23 @@ class _TargetWordDetailScreenState extends ConsumerState<TargetWordDetailScreen>
                     runSpacing: 8,
                     children: [
                       Text(
-                        displayWord.word,
+                        word.word,
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.displaySmall,
                       ),
-                      PronunciationControls(word: displayWord.word, compact: true),
+                      PronunciationControls(word: word.word, compact: true),
                     ],
                   ),
                   const SizedBox(height: 4),
-                  Text(displayWord.phonetic),
+                  Text(word.phonetic),
                   const SizedBox(height: 12),
                   Text(
-                    displayWord.meaning,
+                    word.meaning,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 12),
-                  Text(displayWord.definition, textAlign: TextAlign.center),
+                  Text(word.definition, textAlign: TextAlign.center),
                 ],
               ),
             ),
@@ -137,10 +137,10 @@ class _TargetWordDetailScreenState extends ConsumerState<TargetWordDetailScreen>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(displayWord.exampleSentence),
+                        Text(word.exampleSentence),
                         const SizedBox(height: 6),
                         Text(
-                          displayWord.exampleTranslation,
+                          word.exampleTranslation,
                           style: TextStyle(
                             color: Theme.of(
                               context,
@@ -154,18 +154,18 @@ class _TargetWordDetailScreenState extends ConsumerState<TargetWordDetailScreen>
               ),
             ),
             const SizedBox(height: 16),
-            WordKnowledgeSections(word: displayWord),
+            WordKnowledgeSections(word: word),
             const SizedBox(height: 22),
             Wrap(
               spacing: 8,
               runSpacing: 8,
               children: [
-                PillLabel(label: displayWord.partOfSpeech),
+                PillLabel(label: word.partOfSpeech),
                 PillLabel(
-                  label: displayDifficulty(displayWord.difficulty),
+                  label: displayDifficulty(word.difficulty),
                   color: AppTheme.coral,
                 ),
-                for (final tag in displayWord.tags)
+                for (final tag in word.tags)
                   PillLabel(label: displayWordTag(tag)),
               ],
             ),
@@ -174,7 +174,7 @@ class _TargetWordDetailScreenState extends ConsumerState<TargetWordDetailScreen>
               _buildRichEntry(context, _entry!),
               const SizedBox(height: 22),
             ],
-            AiWordSupportLink(word: displayWord.word),
+            AiWordSupportLink(word: word.word),
           ],
         ),
       ),
@@ -225,7 +225,7 @@ class _TargetWordDetailScreenState extends ConsumerState<TargetWordDetailScreen>
       sections.add(_buildSectionTitle('近义词'));
       sections.add(Wrap(
         spacing: 8,
-        children: entry.synonyms.take(8).map((s) => Chip(label: Text(s))).toList(),
+        children: entry.synonyms.take(8).map((s) => PillLabel(label: s)).toList(),
       ));
       sections.add(const SizedBox(height: 16));
     }
@@ -234,7 +234,7 @@ class _TargetWordDetailScreenState extends ConsumerState<TargetWordDetailScreen>
       sections.add(_buildSectionTitle('反义词'));
       sections.add(Wrap(
         spacing: 8,
-        children: entry.antonyms.take(8).map((s) => Chip(label: Text(s))).toList(),
+        children: entry.antonyms.take(8).map((s) => PillLabel(label: s)).toList(),
       ));
       sections.add(const SizedBox(height: 16));
     }
@@ -243,7 +243,7 @@ class _TargetWordDetailScreenState extends ConsumerState<TargetWordDetailScreen>
       sections.add(_buildSectionTitle('派生词'));
       sections.add(Wrap(
         spacing: 8,
-        children: entry.derivatives.take(8).map((s) => Chip(label: Text(s))).toList(),
+        children: entry.derivatives.take(8).map((s) => PillLabel(label: s)).toList(),
       ));
       sections.add(const SizedBox(height: 16));
     }
@@ -256,14 +256,15 @@ class _TargetWordDetailScreenState extends ConsumerState<TargetWordDetailScreen>
 
     if (sections.isEmpty) return const SizedBox.shrink();
 
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: sections,
-        ),
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: sections,
       ),
     );
   }
