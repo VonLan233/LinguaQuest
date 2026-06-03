@@ -79,6 +79,17 @@ CREATE TABLE IF NOT EXISTS review_events (
 ''');
 
     await connection.execute('''
+CREATE TABLE IF NOT EXISTS reward_claims (
+  uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  reward_id TEXT NOT NULL,
+  local_date TEXT NOT NULL,
+  points INTEGER NOT NULL,
+  claimed_at TIMESTAMPTZ NOT NULL,
+  PRIMARY KEY (uid, reward_id, local_date)
+);
+''');
+
+    await connection.execute('''
 CREATE TABLE IF NOT EXISTS notifications (
   id TEXT PRIMARY KEY,
   uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -308,6 +319,113 @@ INSERT INTO review_events (
         'nextReviewAt': _date(data['nextReviewAt']) ?? DateTime.now().toUtc(),
       },
     );
+  }
+
+  Future<List<String>> completedLessonIds(String uid) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT DISTINCT lesson_id FROM study_sessions
+WHERE uid=@uid
+ORDER BY lesson_id
+'''),
+      parameters: {'uid': uid},
+    );
+    return [
+      for (final row in rows)
+        if (row.toColumnMap()['lesson_id'] != null)
+          row.toColumnMap()['lesson_id'].toString(),
+    ];
+  }
+
+  Future<List<String>> lessonIdsInRange(
+    String uid,
+    DateTime startUtc,
+    DateTime endUtc,
+  ) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT DISTINCT lesson_id FROM study_sessions
+WHERE uid=@uid AND ended_at >= @startUtc AND ended_at < @endUtc
+ORDER BY lesson_id
+'''),
+      parameters: {'uid': uid, 'startUtc': startUtc, 'endUtc': endUtc},
+    );
+    return [
+      for (final row in rows)
+        if (row.toColumnMap()['lesson_id'] != null)
+          row.toColumnMap()['lesson_id'].toString(),
+    ];
+  }
+
+  Future<List<String>> reviewWordIdsInRange(
+    String uid,
+    DateTime startUtc,
+    DateTime endUtc,
+  ) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT DISTINCT word_id FROM review_events
+WHERE uid=@uid AND reviewed_at >= @startUtc AND reviewed_at < @endUtc
+ORDER BY word_id
+'''),
+      parameters: {'uid': uid, 'startUtc': startUtc, 'endUtc': endUtc},
+    );
+    return [
+      for (final row in rows)
+        if (row.toColumnMap()['word_id'] != null)
+          row.toColumnMap()['word_id'].toString(),
+    ];
+  }
+
+  Future<List<String>> rewardIdsForDate(String uid, String localDate) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT reward_id FROM reward_claims
+WHERE uid=@uid AND local_date=@localDate
+ORDER BY claimed_at
+'''),
+      parameters: {'uid': uid, 'localDate': localDate},
+    );
+    return [
+      for (final row in rows)
+        if (row.toColumnMap()['reward_id'] != null)
+          row.toColumnMap()['reward_id'].toString(),
+    ];
+  }
+
+  Future<bool> claimReward({
+    required String uid,
+    required String rewardId,
+    required String localDate,
+    required int points,
+  }) async {
+    final now = DateTime.now().toUtc();
+    final rows = await connection.execute(
+      Sql.named('''
+INSERT INTO reward_claims (uid, reward_id, local_date, points, claimed_at)
+VALUES (@uid, @rewardId, @localDate, @points, @claimedAt)
+ON CONFLICT (uid, reward_id, local_date) DO NOTHING
+RETURNING reward_id
+'''),
+      parameters: {
+        'uid': uid,
+        'rewardId': rewardId,
+        'localDate': localDate,
+        'points': points,
+        'claimedAt': now,
+      },
+    );
+    if (rows.isEmpty) return false;
+    await connection.execute(
+      Sql.named('''
+UPDATE users
+SET xp = xp + @points,
+    updated_at = @updatedAt
+WHERE id=@uid
+'''),
+      parameters: {'uid': uid, 'points': points, 'updatedAt': now},
+    );
+    return true;
   }
 
   Future<List<Map<String, dynamic>>> notifications(

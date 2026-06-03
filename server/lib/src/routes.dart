@@ -5,6 +5,7 @@ import 'auth.dart';
 import 'config.dart';
 import 'database.dart';
 import 'json_response.dart';
+import 'lesson_catalog.dart';
 import 'notification_policy.dart';
 
 Router buildRouter(AppConfig config, AppDatabase database) {
@@ -12,6 +13,10 @@ Router buildRouter(AppConfig config, AppDatabase database) {
 
   router.get('/health', (Request request) {
     return jsonResponse({'status': 'ok'});
+  });
+
+  router.get('/lessons', (Request request) {
+    return jsonResponse(lessonCatalog());
   });
 
   router.post('/auth/register', (Request request) async {
@@ -142,6 +147,49 @@ Router buildRouter(AppConfig config, AppDatabase database) {
     });
   });
 
+  router.get('/learning-progress', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final dayWindow = _dayWindowFromQuery(request);
+      if (dayWindow == null) {
+        return jsonResponse({
+          'error': 'invalid localDate or timezoneOffsetMinutes',
+        }, status: 400);
+      }
+      return jsonResponse(await learningProgressDto(database, uid, dayWindow));
+    });
+  });
+
+  router.post('/reward-claims', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      final rewardId = (body['id'] as String? ?? '').trim();
+      final points = _intValue(body['points']) ?? 0;
+      if (rewardId.isEmpty || points <= 0) {
+        return jsonResponse({
+          'error': 'reward id and positive points are required',
+        }, status: 400);
+      }
+      final dayWindow = _dayWindowFromBody(body);
+      if (dayWindow == null) {
+        return jsonResponse({
+          'error': 'invalid localDate or timezoneOffsetMinutes',
+        }, status: 400);
+      }
+      final claimed = await database.claimReward(
+        uid: uid,
+        rewardId: rewardId,
+        localDate: dayWindow.dateKey,
+        points: points,
+      );
+      final user = await database.userById(uid);
+      return jsonResponse({
+        'claimed': claimed,
+        'user': userDto(user!),
+        'progress': await learningProgressDto(database, uid, dayWindow),
+      }, status: claimed ? 201 : 200);
+    });
+  });
+
   router.get('/notifications', (Request request) async {
     return _protected(config, request, (uid) async {
       final type = request.url.queryParameters['type'];
@@ -197,6 +245,31 @@ Router buildRouter(AppConfig config, AppDatabase database) {
   });
 
   return router;
+}
+
+Future<Map<String, dynamic>> learningProgressDto(
+  AppDatabase database,
+  String uid,
+  NotificationDayWindow dayWindow,
+) async {
+  return {
+    'localDate': dayWindow.dateKey,
+    'completedLessonIds': await database.completedLessonIds(uid),
+    'todayCompletedLessonIds': await database.lessonIdsInRange(
+      uid,
+      dayWindow.startUtc,
+      dayWindow.endUtc,
+    ),
+    'todayReviewWordIds': await database.reviewWordIdsInRange(
+      uid,
+      dayWindow.startUtc,
+      dayWindow.endUtc,
+    ),
+    'todayClaimedRewardIds': await database.rewardIdsForDate(
+      uid,
+      dayWindow.dateKey,
+    ),
+  };
 }
 
 Middleware corsMiddleware() {
@@ -326,4 +399,41 @@ Future<void> _ensureNotificationsForToday(
 String _dateValue(Object? value) {
   if (value is DateTime) return value.toIso8601String();
   return value?.toString() ?? DateTime.now().toUtc().toIso8601String();
+}
+
+NotificationDayWindow? _dayWindowFromQuery(Request request) {
+  final localDate = request.url.queryParameters['localDate'];
+  if (localDate != null && !isNotificationDateKey(localDate)) return null;
+  final offsetParam = request.url.queryParameters['timezoneOffsetMinutes'];
+  final timezoneOffsetMinutes = offsetParam == null
+      ? 0
+      : parseNotificationTimezoneOffsetMinutes(offsetParam);
+  if (timezoneOffsetMinutes == null) return null;
+  return notificationDayWindow(
+    nowUtc: DateTime.now().toUtc(),
+    localDate: localDate,
+    timezoneOffsetMinutes: timezoneOffsetMinutes,
+  );
+}
+
+NotificationDayWindow? _dayWindowFromBody(Map<String, dynamic> body) {
+  final localDate = body['localDate']?.toString();
+  if (localDate != null && !isNotificationDateKey(localDate)) return null;
+  final offsetValue = body['timezoneOffsetMinutes'];
+  final timezoneOffsetMinutes = offsetValue == null
+      ? 0
+      : parseNotificationTimezoneOffsetMinutes(offsetValue.toString());
+  if (timezoneOffsetMinutes == null) return null;
+  return notificationDayWindow(
+    nowUtc: DateTime.now().toUtc(),
+    localDate: localDate,
+    timezoneOffsetMinutes: timezoneOffsetMinutes,
+  );
+}
+
+int? _intValue(Object? value) {
+  if (value == null) return null;
+  if (value is int) return value;
+  if (value is double) return value.toInt();
+  return int.tryParse(value.toString());
 }
