@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/app_notification.dart';
 import '../models/custom_word.dart';
 import '../models/lesson.dart';
+import '../models/point_grant_result.dart';
 import '../models/review_event.dart';
 import '../models/study_session.dart';
 import '../models/user_profile.dart';
@@ -14,6 +15,7 @@ import 'custom_word_repository.dart';
 import 'learning_repository.dart';
 import 'notification_repository.dart';
 import 'review_repository.dart';
+import 'reward_repository.dart';
 
 class MockAuthRepository implements AuthRepository {
   static const _profileKey = 'linguaquest.profile';
@@ -299,5 +301,32 @@ class MockNotificationRepository implements NotificationRepository {
       '$_keyPrefix.$uid',
       jsonEncode([for (final notification in sorted) notification.toJson()]),
     );
+  }
+}
+
+class MockRewardRepository implements RewardRepository {
+  static const _grantedSourceKeys = 'linguaquest.mock.point_sources';
+
+  @override
+  Future<PointGrantResult> grantPoints({
+    required String uid,
+    required String sourceType,
+    required String sourceId,
+    required int points,
+    required String description,
+  }) async {
+    if (points <= 0) {
+      return const PointGrantResult(pointsAwarded: 0, alreadyGranted: false);
+    }
+    final prefs = await SharedPreferences.getInstance();
+    final key = '$uid::$sourceType::$sourceId';
+    final granted =
+        (prefs.getStringList(_grantedSourceKeys) ?? const <String>[]).toSet();
+    if (granted.contains(key)) {
+      return const PointGrantResult(pointsAwarded: 0, alreadyGranted: true);
+    }
+    granted.add(key);
+    await prefs.setStringList(_grantedSourceKeys, granted.toList());
+    return PointGrantResult(pointsAwarded: points, alreadyGranted: false);
   }
 }
