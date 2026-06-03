@@ -49,6 +49,16 @@ void main() {
         'id': 'inactive-prize',
         'is_active': false,
       };
+      final camelInactivePrize = {
+        'id': 'camel-inactive-prize',
+        'name': 'Camel Inactive Prize',
+        'category': 'badge',
+        'rarity': 'common',
+        'description': 'Decorative only.',
+        'probability': 100,
+        'fragment_value': 1,
+        'isActive': false,
+      };
 
       expect(
         chooseLotteryPrize([inactivePrize, activePrize])['id'],
@@ -57,6 +67,10 @@ void main() {
       expect(
         lotteryPrizeSeed.map((prize) => prize['id']),
         contains(chooseLotteryPrize([inactivePrize])['id']),
+      );
+      expect(
+        lotteryPrizeSeed.map((prize) => prize['id']),
+        contains(chooseLotteryPrize([camelInactivePrize])['id']),
       );
       expect(chooseLotteryPrize([inactivePrize])['fragmentValue'], isA<int>());
     },

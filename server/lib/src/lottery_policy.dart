@@ -63,7 +63,9 @@ Map<String, dynamic> chooseLotteryPrize(
   List<Map<String, dynamic>> prizes, {
   Random? random,
 }) {
-  final active = prizes.where((prize) => prize['is_active'] != false).toList();
+  final active = prizes
+      .where((prize) => (prize['is_active'] ?? prize['isActive']) != false)
+      .toList();
   final pool = active.isEmpty ? lotteryPrizeSeed : active;
   final totalWeight = pool.fold<double>(0, (total, prize) {
     return total + _probability(prize['probability']);
