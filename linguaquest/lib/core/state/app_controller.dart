@@ -354,16 +354,20 @@ class AppController extends Notifier<AppState> {
         todayCompletedLessonIds: todayCompletedLessonIds,
         lastResult: result,
       );
-      final isTrainingReward =
-          isTrainingChallenge || _isTrainingLessonId(result.lessonId);
-      await _applyRewardSnapshot(
-        await _rewardRepository.recordEvent(
-          user.uid,
-          isTrainingReward
-              ? RewardEventType.trainingChallenge
-              : RewardEventType.newLearning,
-        ),
-      );
+      try {
+        final isTrainingReward =
+            isTrainingChallenge || _isTrainingLessonId(result.lessonId);
+        await _applyRewardSnapshot(
+          await _rewardRepository.recordEvent(
+            user.uid,
+            isTrainingReward
+                ? RewardEventType.trainingChallenge
+                : RewardEventType.newLearning,
+          ),
+        );
+      } catch (error) {
+        debugPrint('Failed to record lesson reward event: $error');
+      }
       await refreshNotifications();
       unawaited(_scheduleLocalNotifications());
     });
@@ -411,19 +415,23 @@ class AppController extends Notifier<AppState> {
         ],
         todayReviewWordIds: todayReviewWordIds,
       );
-      await _applyRewardSnapshot(
-        await _rewardRepository.recordEvent(
-          user.uid,
-          RewardEventType.reviewDone,
-        ),
-      );
-      if (isCorrect && word.wrongCount > 0) {
+      try {
         await _applyRewardSnapshot(
           await _rewardRepository.recordEvent(
             user.uid,
-            RewardEventType.wrongCleanup,
+            RewardEventType.reviewDone,
           ),
         );
+        if (isCorrect && word.wrongCount > 0) {
+          await _applyRewardSnapshot(
+            await _rewardRepository.recordEvent(
+              user.uid,
+              RewardEventType.wrongCleanup,
+            ),
+          );
+        }
+      } catch (error) {
+        debugPrint('Failed to record review reward events: $error');
       }
       await refreshNotifications();
       unawaited(_scheduleLocalNotifications());
