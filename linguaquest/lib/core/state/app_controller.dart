@@ -478,7 +478,14 @@ class AppController extends Notifier<AppState> {
         description: '领取积分任务奖励',
       );
       if (pointGrant.alreadyGranted) {
-        throw StateError('这个积分来源已经领取过了。');
+        await _saveTodayClaimedRewards(claimedRewardIds, now);
+        state = state.copyWith(
+          isLoading: false,
+          user: pointGrant.user.copyWith(updatedAt: now),
+          todayClaimedRewardIds: claimedRewardIds,
+        );
+        await refreshNotifications();
+        return true;
       }
       await _saveTodayClaimedRewards(claimedRewardIds, now);
       state = state.copyWith(

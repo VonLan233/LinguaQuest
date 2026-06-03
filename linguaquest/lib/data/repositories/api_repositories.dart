@@ -241,7 +241,9 @@ class ApiRewardRepository implements RewardRepository {
     return PointGrantResult(
       pointsAwarded: data['pointsAwarded'] as int? ?? 0,
       alreadyGranted: data['alreadyGranted'] as bool? ?? false,
-      user: UserProfile.fromJson(data['user'] as Map<String, dynamic>),
+      user: data['user'] != null
+          ? UserProfile.fromJson(data['user'] as Map<String, dynamic>)
+          : null,
     );
   }
 }

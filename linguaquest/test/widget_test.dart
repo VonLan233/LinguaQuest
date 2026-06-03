@@ -1987,6 +1987,54 @@ void main() {
     expect(container.read(appControllerProvider).user?.xp, 35);
   });
 
+  test('claiming a server-granted reward syncs local claimed state', () async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'already-granted-user',
+      name: 'Sync',
+      email: 'sync@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      createdAt: now,
+      updatedAt: now,
+      xp: 30,
+      streak: 1,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer(
+      overrides: [
+        rewardRepositoryProvider.overrideWithValue(_AlreadyGrantedReward()),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    final controller = container.read(appControllerProvider.notifier);
+
+    expect(
+      await controller.claimReward(
+        id: 'daily-checkin',
+        points: 5,
+        isAvailable: true,
+      ),
+      true,
+    );
+
+    final state = container.read(appControllerProvider);
+    expect(state.errorMessage, isNull);
+    expect(state.user?.xp, 30);
+    expect(state.todayClaimedRewardIds, contains('daily-checkin'));
+
+    final prefs = await SharedPreferences.getInstance();
+    expect(
+      prefs.getStringList('linguaquest.today.rewards'),
+      contains('daily-checkin'),
+    );
+  });
+
   test('custom word review status follows mastery thresholds', () {
     final now = DateTime(2026, 5, 25);
     final word = CustomWord.create(
@@ -2691,6 +2739,19 @@ class _ThrowingReward implements RewardRepository {
     required String description,
   }) {
     throw Exception('reward service unavailable');
+  }
+}
+
+class _AlreadyGrantedReward implements RewardRepository {
+  @override
+  Future<PointGrantResult> grantPoints({
+    required String uid,
+    required String sourceType,
+    required String sourceId,
+    required int points,
+    required String description,
+  }) async {
+    return const PointGrantResult(pointsAwarded: 0, alreadyGranted: true);
   }
 }
 
