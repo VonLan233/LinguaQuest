@@ -51,6 +51,21 @@ CREATE TABLE IF NOT EXISTS custom_words (
 ''');
 
     await connection.execute('''
+ALTER TABLE custom_words
+  ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'Learning',
+  ADD COLUMN IF NOT EXISTS ease_factor DOUBLE PRECISION NOT NULL DEFAULT 2.5,
+  ADD COLUMN IF NOT EXISTS interval_days INTEGER NOT NULL DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS repetition_count INTEGER NOT NULL DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS lapse_count INTEGER NOT NULL DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS meaning_recognition_score INTEGER NOT NULL DEFAULT 20,
+  ADD COLUMN IF NOT EXISTS meaning_recall_score INTEGER NOT NULL DEFAULT 10,
+  ADD COLUMN IF NOT EXISTS spelling_score INTEGER NOT NULL DEFAULT 10,
+  ADD COLUMN IF NOT EXISTS listening_score INTEGER NOT NULL DEFAULT 10,
+  ADD COLUMN IF NOT EXISTS context_score INTEGER NOT NULL DEFAULT 10,
+  ADD COLUMN IF NOT EXISTS confidence_score INTEGER NOT NULL DEFAULT 10;
+''');
+
+    await connection.execute('''
 CREATE TABLE IF NOT EXISTS study_sessions (
   id TEXT PRIMARY KEY,
   uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -75,6 +90,23 @@ CREATE TABLE IF NOT EXISTS review_events (
   mastery_before INTEGER NOT NULL,
   mastery_after INTEGER NOT NULL,
   next_review_at TIMESTAMPTZ NOT NULL
+);
+''');
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS exercise_records (
+  id TEXT PRIMARY KEY,
+  uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  session_id TEXT NOT NULL,
+  game_id TEXT NOT NULL,
+  word_id TEXT NOT NULL,
+  prompt_type TEXT NOT NULL,
+  is_correct BOOLEAN NOT NULL,
+  answer TEXT NOT NULL DEFAULT '',
+  correct_answer TEXT NOT NULL DEFAULT '',
+  answer_time_ms INTEGER NOT NULL DEFAULT 0,
+  dimension TEXT NOT NULL DEFAULT 'confidence',
+  created_at TIMESTAMPTZ NOT NULL
 );
 ''');
   }
@@ -200,10 +232,18 @@ ORDER BY updated_at DESC
       Sql.named('''
 INSERT INTO custom_words (
   id, uid, word, meaning, example_sentence, note, tag, difficulty,
-  mastery_level, correct_count, wrong_count, next_review_at, created_at, updated_at
+  status, ease_factor, interval_days, repetition_count, lapse_count,
+  mastery_level, correct_count, wrong_count,
+  meaning_recognition_score, meaning_recall_score, spelling_score,
+  listening_score, context_score, confidence_score,
+  next_review_at, created_at, updated_at
 ) VALUES (
   @id, @uid, @word, @meaning, @exampleSentence, @note, @tag, @difficulty,
-  @masteryLevel, @correctCount, @wrongCount, @nextReviewAt, @createdAt, @updatedAt
+  @status, @easeFactor, @intervalDays, @repetitionCount, @lapseCount,
+  @masteryLevel, @correctCount, @wrongCount,
+  @meaningRecognitionScore, @meaningRecallScore, @spellingScore,
+  @listeningScore, @contextScore, @confidenceScore,
+  @nextReviewAt, @createdAt, @updatedAt
 )
 ON CONFLICT (id) DO UPDATE SET
   word=EXCLUDED.word,
@@ -212,9 +252,20 @@ ON CONFLICT (id) DO UPDATE SET
   note=EXCLUDED.note,
   tag=EXCLUDED.tag,
   difficulty=EXCLUDED.difficulty,
+  status=EXCLUDED.status,
+  ease_factor=EXCLUDED.ease_factor,
+  interval_days=EXCLUDED.interval_days,
+  repetition_count=EXCLUDED.repetition_count,
+  lapse_count=EXCLUDED.lapse_count,
   mastery_level=EXCLUDED.mastery_level,
   correct_count=EXCLUDED.correct_count,
   wrong_count=EXCLUDED.wrong_count,
+  meaning_recognition_score=EXCLUDED.meaning_recognition_score,
+  meaning_recall_score=EXCLUDED.meaning_recall_score,
+  spelling_score=EXCLUDED.spelling_score,
+  listening_score=EXCLUDED.listening_score,
+  context_score=EXCLUDED.context_score,
+  confidence_score=EXCLUDED.confidence_score,
   next_review_at=EXCLUDED.next_review_at,
   updated_at=EXCLUDED.updated_at
 '''),
@@ -227,9 +278,20 @@ ON CONFLICT (id) DO UPDATE SET
         'note': data['note'] ?? '',
         'tag': data['tag'] ?? 'custom',
         'difficulty': data['difficulty'] ?? 'Medium',
+        'status': data['status'] ?? 'Learning',
+        'easeFactor': data['easeFactor'] ?? 2.5,
+        'intervalDays': data['intervalDays'] ?? 0,
+        'repetitionCount': data['repetitionCount'] ?? 0,
+        'lapseCount': data['lapseCount'] ?? 0,
         'masteryLevel': data['masteryLevel'] ?? 0,
         'correctCount': data['correctCount'] ?? 0,
         'wrongCount': data['wrongCount'] ?? 0,
+        'meaningRecognitionScore': data['meaningRecognitionScore'] ?? 20,
+        'meaningRecallScore': data['meaningRecallScore'] ?? 10,
+        'spellingScore': data['spellingScore'] ?? 10,
+        'listeningScore': data['listeningScore'] ?? 10,
+        'contextScore': data['contextScore'] ?? 10,
+        'confidenceScore': data['confidenceScore'] ?? 10,
         'nextReviewAt': nextReviewAt,
         'createdAt': createdAt,
         'updatedAt': now,
@@ -292,6 +354,39 @@ INSERT INTO review_events (
         'nextReviewAt': _date(data['nextReviewAt']) ?? DateTime.now().toUtc(),
       },
     );
+  }
+
+  Future<void> insertExerciseRecords(
+    String uid,
+    List<Map<String, dynamic>> records,
+  ) async {
+    for (final data in records) {
+      await connection.execute(
+        Sql.named('''
+INSERT INTO exercise_records (
+  id, uid, session_id, game_id, word_id, prompt_type, is_correct,
+  answer, correct_answer, answer_time_ms, dimension, created_at
+) VALUES (
+  @id, @uid, @sessionId, @gameId, @wordId, @promptType, @isCorrect,
+  @answer, @correctAnswer, @answerTimeMs, @dimension, @createdAt
+)
+'''),
+        parameters: {
+          'id': data['id'],
+          'uid': uid,
+          'sessionId': data['sessionId'],
+          'gameId': data['gameId'],
+          'wordId': data['wordId'],
+          'promptType': data['promptType'] ?? 'choice',
+          'isCorrect': data['isCorrect'] ?? false,
+          'answer': data['answer'] ?? '',
+          'correctAnswer': data['correctAnswer'] ?? '',
+          'answerTimeMs': data['answerTimeMs'] ?? 0,
+          'dimension': data['dimension'] ?? 'confidence',
+          'createdAt': _date(data['createdAt']) ?? DateTime.now().toUtc(),
+        },
+      );
+    }
   }
 }
 

@@ -141,6 +141,37 @@ Router buildRouter(AppConfig config, AppDatabase database) {
     });
   });
 
+  router.post('/exercise-records', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      final rawRecords = body['records'];
+      if (rawRecords is! List) {
+        return jsonResponse({'error': 'records must be a list'}, status: 400);
+      }
+      if (rawRecords.length > 100) {
+        return jsonResponse({
+          'error': 'too many exercise records',
+        }, status: 400);
+      }
+      final records = <Map<String, dynamic>>[];
+      for (final rawRecord in rawRecords) {
+        if (rawRecord is! Map) {
+          return jsonResponse({
+            'error': 'invalid exercise record',
+          }, status: 400);
+        }
+        final record = Map<String, dynamic>.from(rawRecord);
+        final validationError = _validateExerciseRecord(record);
+        if (validationError != null) {
+          return jsonResponse({'error': validationError}, status: 400);
+        }
+        records.add(record);
+      }
+      await database.insertExerciseRecords(uid, records);
+      return jsonResponse({'recorded': true}, status: 201);
+    });
+  });
+
   return router;
 }
 
@@ -202,9 +233,24 @@ Map<String, dynamic> wordDto(Map<String, dynamic> row) {
     'note': row['note'] ?? '',
     'tag': row['tag'] ?? 'custom',
     'difficulty': row['difficulty'] ?? 'Medium',
+    'status': row['status'] ?? 'Learning',
+    'easeFactor': row['ease_factor'] ?? row['easeFactor'] ?? 2.5,
+    'intervalDays': row['interval_days'] ?? row['intervalDays'] ?? 0,
+    'repetitionCount': row['repetition_count'] ?? row['repetitionCount'] ?? 0,
+    'lapseCount': row['lapse_count'] ?? row['lapseCount'] ?? 0,
     'masteryLevel': row['mastery_level'] ?? row['masteryLevel'] ?? 0,
     'correctCount': row['correct_count'] ?? row['correctCount'] ?? 0,
     'wrongCount': row['wrong_count'] ?? row['wrongCount'] ?? 0,
+    'meaningRecognitionScore':
+        row['meaning_recognition_score'] ??
+        row['meaningRecognitionScore'] ??
+        20,
+    'meaningRecallScore':
+        row['meaning_recall_score'] ?? row['meaningRecallScore'] ?? 10,
+    'spellingScore': row['spelling_score'] ?? row['spellingScore'] ?? 10,
+    'listeningScore': row['listening_score'] ?? row['listeningScore'] ?? 10,
+    'contextScore': row['context_score'] ?? row['contextScore'] ?? 10,
+    'confidenceScore': row['confidence_score'] ?? row['confidenceScore'] ?? 10,
     'nextReviewAt': _dateValue(row['next_review_at'] ?? row['nextReviewAt']),
     'createdAt': _dateValue(row['created_at'] ?? row['createdAt']),
     'updatedAt': _dateValue(row['updated_at'] ?? row['updatedAt']),
@@ -214,4 +260,21 @@ Map<String, dynamic> wordDto(Map<String, dynamic> row) {
 String _dateValue(Object? value) {
   if (value is DateTime) return value.toIso8601String();
   return value?.toString() ?? DateTime.now().toUtc().toIso8601String();
+}
+
+String? _validateExerciseRecord(Map<String, dynamic> record) {
+  for (final field in ['id', 'sessionId', 'gameId', 'wordId', 'promptType']) {
+    final value = record[field];
+    if (value is! String || value.trim().isEmpty) return '$field is required';
+  }
+  if (record['isCorrect'] is! bool) return 'isCorrect must be a boolean';
+  final answerTimeMs = record['answerTimeMs'];
+  if (answerTimeMs is! int || answerTimeMs < 0) {
+    return 'answerTimeMs must be a non-negative integer';
+  }
+  final createdAt = record['createdAt'];
+  if (createdAt is! String || DateTime.tryParse(createdAt) == null) {
+    return 'createdAt must be an ISO timestamp';
+  }
+  return null;
 }
