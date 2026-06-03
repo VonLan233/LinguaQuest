@@ -1,6 +1,13 @@
+import 'dart:convert';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:linguaquest/core/state/app_controller.dart';
+import 'package:linguaquest/data/models/lottery.dart';
+import 'package:linguaquest/data/models/user_profile.dart';
 import 'package:linguaquest/data/repositories/lottery_repository.dart';
 import 'package:linguaquest/data/repositories/mock_repositories.dart';
+import 'package:linguaquest/services/local_notification_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -57,4 +64,80 @@ void main() {
       expect(await repo.assets('poor-user'), isEmpty);
     },
   );
+
+  test('bootstrap tolerates lottery data failures', () async {
+    final now = DateTime(2026, 6, 3);
+    final profile = UserProfile(
+      uid: 'lottery-failure-user',
+      name: 'Ava',
+      email: 'ava@lingua.quest',
+      targetExam: 'IELTS',
+      level: 'Intermediate',
+      dailyGoal: 12,
+      xp: 120,
+      streak: 4,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer(
+      overrides: [
+        lotteryRepositoryProvider.overrideWithValue(
+          _FailingLotteryRepository(),
+        ),
+        localNotificationServiceProvider.overrideWithValue(
+          _NoopLocalNotificationService(),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    final state = container.read(appControllerProvider);
+
+    expect(state.isBootstrapped, isTrue);
+    expect(state.user?.uid, 'lottery-failure-user');
+    expect(state.lotteryPrizes, isEmpty);
+    expect(state.userAssets, isEmpty);
+    expect(state.errorMessage, isNull);
+  });
+}
+
+class _FailingLotteryRepository implements LotteryRepository {
+  @override
+  Future<List<LotteryPrize>> prizePool() async {
+    throw StateError('lottery service unavailable');
+  }
+
+  @override
+  Future<List<UserAsset>> assets(String uid) async {
+    throw StateError('lottery service unavailable');
+  }
+
+  @override
+  Future<LotteryDrawResponse> draw({
+    required String uid,
+    required int currentXp,
+  }) async {
+    throw StateError('lottery service unavailable');
+  }
+}
+
+class _NoopLocalNotificationService implements LocalNotificationService {
+  @override
+  Future<void> initialize({
+    required void Function(String route) onSelectRoute,
+  }) async {}
+
+  @override
+  Future<void> scheduleDailyStudyReminder({
+    required bool enabled,
+    required int hour,
+    required int minute,
+  }) async {}
+
+  @override
+  Future<void> scheduleReviewDueReminder({required int dueCount}) async {}
 }

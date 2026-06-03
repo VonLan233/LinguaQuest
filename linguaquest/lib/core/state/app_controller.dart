@@ -13,6 +13,7 @@ import '../../data/models/lesson_result.dart';
 import '../../data/models/lottery.dart';
 import '../../data/models/review_event.dart';
 import '../../data/models/study_session.dart';
+import '../../data/models/user_profile.dart';
 import '../../data/remote/api_client.dart';
 import '../../data/repositories/api_repositories.dart';
 import '../../data/repositories/auth_repository.dart';
@@ -131,20 +132,15 @@ class AppController extends Notifier<AppState> {
       final words = user == null
           ? <CustomWord>[]
           : await _customWordRepository.list(user.uid);
-      final lotteryPrizes = user == null
-          ? <LotteryPrize>[]
-          : await _lotteryRepository.prizePool();
-      final userAssets = user == null
-          ? <UserAsset>[]
-          : await _lotteryRepository.assets(user.uid);
+      final lotteryData = await _loadLotteryData(user);
       state = state.copyWith(
         isBootstrapped: true,
         isLoading: false,
         user: user,
         lessons: lessons,
         customWords: words,
-        lotteryPrizes: lotteryPrizes,
-        userAssets: userAssets,
+        lotteryPrizes: lotteryData.prizes,
+        userAssets: lotteryData.assets,
         themeMode: _themeModeFromName(prefs.getString(_themeModeKey)),
         reminderSettings: _loadReminderSettings(prefs),
         learningPlan: _loadLearningPlan(prefs),
@@ -184,11 +180,12 @@ class AppController extends Notifier<AppState> {
         email: email,
         password: password,
       );
+      final lotteryData = await _loadLotteryData(user);
       state = state.copyWith(
         user: user,
         customWords: await _customWordRepository.list(user.uid),
-        lotteryPrizes: await _lotteryRepository.prizePool(),
-        userAssets: await _lotteryRepository.assets(user.uid),
+        lotteryPrizes: lotteryData.prizes,
+        userAssets: lotteryData.assets,
       );
       await refreshNotifications();
       unawaited(_scheduleLocalNotifications());
@@ -201,11 +198,12 @@ class AppController extends Notifier<AppState> {
         email: email,
         password: password,
       );
+      final lotteryData = await _loadLotteryData(user);
       state = state.copyWith(
         user: user,
         customWords: await _customWordRepository.list(user.uid),
-        lotteryPrizes: await _lotteryRepository.prizePool(),
-        userAssets: await _lotteryRepository.assets(user.uid),
+        lotteryPrizes: lotteryData.prizes,
+        userAssets: lotteryData.assets,
       );
       await refreshNotifications();
       unawaited(_scheduleLocalNotifications());
@@ -473,6 +471,22 @@ class AppController extends Notifier<AppState> {
         notifications: notifications,
       );
     });
+  }
+
+  Future<({List<LotteryPrize> prizes, List<UserAsset> assets})>
+  _loadLotteryData(UserProfile? user) async {
+    if (user == null) {
+      return (prizes: <LotteryPrize>[], assets: <UserAsset>[]);
+    }
+    try {
+      return (
+        prizes: await _lotteryRepository.prizePool(),
+        assets: await _lotteryRepository.assets(user.uid),
+      );
+    } catch (error) {
+      debugPrint('Failed to load lottery data: $error');
+      return (prizes: <LotteryPrize>[], assets: <UserAsset>[]);
+    }
   }
 
   Future<void> refreshNotifications() async {
