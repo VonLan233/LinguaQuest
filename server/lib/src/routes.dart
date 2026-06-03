@@ -225,6 +225,7 @@ Router buildRouter(AppConfig config, AppDatabase database) {
       );
       await database.upsertCheckIn(uid, dayWindow.dateKey);
       final user = await database.userById(uid);
+      var updatedUser = user;
       if (user != null && !hadCheckedInToday) {
         final now = DateTime.now().toUtc();
         final currentStreak = user['streak'] is int ? user['streak'] as int : 0;
@@ -232,7 +233,7 @@ Router buildRouter(AppConfig config, AppDatabase database) {
           uid,
           _previousDateKey(dayWindow.dateKey),
         );
-        await database.updateUser(uid, {
+        updatedUser = await database.updateUser(uid, {
           'streak': hasPreviousDayCheckIn ? currentStreak + 1 : 1,
           'lastStudyDate': now,
         });
@@ -242,7 +243,7 @@ Router buildRouter(AppConfig config, AppDatabase database) {
         'checkedIn': true,
         'dateKey': dayWindow.dateKey,
         'tasks': tasks,
-        'user': userDto((await database.userById(uid))!),
+        'user': userDto(updatedUser!),
       });
     });
   });
@@ -313,22 +314,19 @@ Router buildRouter(AppConfig config, AppDatabase database) {
           ),
         }, status: 409);
       }
-      final inserted = await database.insertRewardClaim(
+      final claim = await database.claimRewardTask(
         id: newId(),
         uid: uid,
         dateKey: dayWindow.dateKey,
         taskId: id,
         points: definition.points,
       );
-      if (inserted) {
-        await database.addUserXp(uid, definition.points);
-      }
       final tasks = await _dailyRewardTasks(database, uid, dayWindow);
       return jsonResponse({
-        'claimed': inserted,
+        'claimed': claim.inserted,
         'dateKey': dayWindow.dateKey,
         'tasks': tasks,
-        'user': userDto((await database.userById(uid))!),
+        'user': userDto(claim.user!),
       });
     });
   });

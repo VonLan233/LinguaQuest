@@ -599,6 +599,62 @@ RETURNING id
     return rows.isNotEmpty;
   }
 
+  Future<({bool inserted, Map<String, dynamic>? user})> claimRewardTask({
+    required String id,
+    required String uid,
+    required String dateKey,
+    required String taskId,
+    required int points,
+  }) async {
+    return connection.runTx((tx) async {
+      final insertedRows = await tx.execute(
+        Sql.named('''
+INSERT INTO reward_claims (id, uid, date_key, task_id, points, claimed_at)
+VALUES (@id, @uid, @dateKey, @taskId, @points, @claimedAt)
+ON CONFLICT (uid, date_key, task_id) DO NOTHING
+RETURNING id
+'''),
+        parameters: {
+          'id': id,
+          'uid': uid,
+          'dateKey': dateKey,
+          'taskId': taskId,
+          'points': points,
+          'claimedAt': DateTime.now().toUtc(),
+        },
+      );
+      final inserted = insertedRows.isNotEmpty;
+      if (!inserted) {
+        final rows = await tx.execute(
+          Sql.named('SELECT * FROM users WHERE id=@uid LIMIT 1'),
+          parameters: {'uid': uid},
+        );
+        return (
+          inserted: false,
+          user: rows.isEmpty ? null : rows.first.toColumnMap(),
+        );
+      }
+      final rows = await tx.execute(
+        Sql.named('''
+UPDATE users
+SET xp = xp + @points,
+    updated_at = @updatedAt
+WHERE id=@uid
+RETURNING *
+'''),
+        parameters: {
+          'uid': uid,
+          'points': points,
+          'updatedAt': DateTime.now().toUtc(),
+        },
+      );
+      return (
+        inserted: inserted,
+        user: rows.isEmpty ? null : rows.first.toColumnMap(),
+      );
+    });
+  }
+
   Future<Map<String, dynamic>?> addUserXp(String uid, int points) async {
     final rows = await connection.execute(
       Sql.named('''
