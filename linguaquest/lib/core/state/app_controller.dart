@@ -354,10 +354,12 @@ class AppController extends Notifier<AppState> {
         todayCompletedLessonIds: todayCompletedLessonIds,
         lastResult: result,
       );
+      final isTrainingReward =
+          isTrainingChallenge || _isTrainingLessonId(result.lessonId);
       await _applyRewardSnapshot(
         await _rewardRepository.recordEvent(
           user.uid,
-          isTrainingChallenge
+          isTrainingReward
               ? RewardEventType.trainingChallenge
               : RewardEventType.newLearning,
         ),
@@ -790,6 +792,13 @@ class AppController extends Notifier<AppState> {
       if (word.id == id) return word;
     }
     return null;
+  }
+
+  bool _isTrainingLessonId(String lessonId) {
+    for (final lesson in state.lessons) {
+      if (lesson.id == lessonId) return lesson.isTrainingPack;
+    }
+    return lessonId.startsWith('lesson-campus-');
   }
 
   LearningPlan _buildLearningPlan({

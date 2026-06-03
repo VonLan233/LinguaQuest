@@ -278,7 +278,8 @@ void main() {
       expect(home, contains("context.push('/study/review')"));
       expect(home, contains("context.push('/learn')"));
       expect(home, isNot(contains("context.push('/leaderboard')")));
-      expect(discover, contains("context.push('/study/new')"));
+      expect(discover, contains('task.targetRoute'));
+      expect(discover, contains('_openTaskEntry'));
       expect(discover, isNot(contains("context.push('/learn')")));
       expect(home, isNot(contains('/timed-test/lesson-campus-1')));
       expect(training, contains("context.push('/timed-test/lesson-campus-1')"));
