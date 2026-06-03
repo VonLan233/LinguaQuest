@@ -10,6 +10,7 @@ import 'package:linguaquest/core/theme/app_theme.dart';
 import 'package:linguaquest/core/widgets/learning_badges.dart';
 import 'package:linguaquest/core/widgets/pronunciation_controls.dart';
 import 'package:linguaquest/data/models/custom_word.dart';
+import 'package:linguaquest/data/models/exercise_record.dart';
 import 'package:linguaquest/data/models/lesson.dart';
 import 'package:linguaquest/data/models/lesson_result.dart';
 import 'package:linguaquest/data/models/study_session.dart';
@@ -2417,6 +2418,9 @@ class _StaticLearningRepository implements LearningRepository {
 
   @override
   Future<void> recordStudySession(StudySession session) async {}
+
+  @override
+  Future<void> recordExerciseRecords(List<ExerciseRecord> records) async {}
 }
 
 class _FlakyLearningRepository implements LearningRepository {
@@ -2433,6 +2437,9 @@ class _FlakyLearningRepository implements LearningRepository {
 
   @override
   Future<void> recordStudySession(StudySession session) async {}
+
+  @override
+  Future<void> recordExerciseRecords(List<ExerciseRecord> records) async {}
 }
 
 class _ConcurrentCustomWordRepository implements CustomWordRepository {

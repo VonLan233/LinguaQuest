@@ -1,6 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/custom_word.dart';
+import '../models/exercise_record.dart';
 import '../models/lesson.dart';
 import '../models/review_event.dart';
 import '../models/study_session.dart';
@@ -144,6 +145,15 @@ class ApiLearningRepository implements LearningRepository {
   @override
   Future<void> recordStudySession(StudySession session) async {
     await _client.dio.post<void>('/study-sessions', data: session.toJson());
+  }
+
+  @override
+  Future<void> recordExerciseRecords(List<ExerciseRecord> records) async {
+    if (records.isEmpty) return;
+    await _client.dio.post<void>(
+      '/exercise-records',
+      data: {'records': records.map((record) => record.toJson()).toList()},
+    );
   }
 }
 
