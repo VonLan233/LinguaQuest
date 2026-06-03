@@ -2183,6 +2183,43 @@ void main() {
     expect(container.read(appControllerProvider).user?.xp, 30);
   });
 
+  test('server reward user snapshot does not patch profile again', () async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'server-snapshot-user',
+      name: 'Sol',
+      email: 'sol@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      createdAt: now,
+      updatedAt: now,
+      xp: 30,
+      streak: 1,
+    );
+    final serverUser = profile.copyWith(xp: 35, updatedAt: now);
+    SharedPreferences.setMockInitialValues({});
+    final authRepository = _SnapshotAuthRepository(profile);
+    final container = ProviderContainer(
+      overrides: [
+        authRepositoryProvider.overrideWithValue(authRepository),
+        rewardRepositoryProvider.overrideWithValue(
+          _ServerUserRewardRepository(serverUser),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+
+    expect(
+      await container.read(appControllerProvider.notifier).checkInToday(),
+      true,
+    );
+    expect(container.read(appControllerProvider).user?.xp, 35);
+    expect(authRepository.updateProfileCalls, 0);
+  });
+
   test('custom word review status follows mastery thresholds', () {
     final now = DateTime(2026, 5, 25);
     final word = CustomWord.create(
@@ -2606,6 +2643,39 @@ class _FailingAuth implements AuthRepository {
   Future<void> logout() async {}
 }
 
+class _SnapshotAuthRepository implements AuthRepository {
+  _SnapshotAuthRepository(this._profile);
+
+  final UserProfile _profile;
+  int updateProfileCalls = 0;
+
+  @override
+  Future<UserProfile?> loadSession() async => _profile;
+
+  @override
+  Future<UserProfile> login({required String email, required String password}) {
+    throw Exception('login not expected');
+  }
+
+  @override
+  Future<UserProfile> register({
+    required String name,
+    required String email,
+    required String password,
+  }) {
+    throw Exception('register not expected');
+  }
+
+  @override
+  Future<UserProfile> updateProfile(UserProfile profile) async {
+    updateProfileCalls++;
+    return profile;
+  }
+
+  @override
+  Future<void> logout() async {}
+}
+
 class _StaticLearningRepository implements LearningRepository {
   const _StaticLearningRepository(this.lessons);
 
@@ -2789,6 +2859,38 @@ class _NullClaimRewardRepository implements RewardRepository {
 
   Future<RewardTaskSnapshot> _snapshot() async {
     return const RewardTaskSnapshot(dateKey: '2026-05-25', tasks: [_task]);
+  }
+}
+
+class _ServerUserRewardRepository implements RewardRepository {
+  const _ServerUserRewardRepository(this._user);
+
+  final UserProfile _user;
+
+  @override
+  Future<RewardTaskSnapshot> checkIn(String uid) async =>
+      _snapshot(user: _user);
+
+  @override
+  Future<RewardTaskSnapshot> claimTask(String uid, String taskId) async =>
+      _snapshot(user: _user, claimed: true);
+
+  @override
+  Future<RewardTaskSnapshot> listTasks(String uid) async => _snapshot();
+
+  @override
+  Future<RewardTaskSnapshot> recordEvent(
+    String uid,
+    RewardEventType type,
+  ) async => _snapshot();
+
+  RewardTaskSnapshot _snapshot({UserProfile? user, bool? claimed}) {
+    return RewardTaskSnapshot(
+      dateKey: '2026-05-25',
+      tasks: const [],
+      user: user,
+      claimed: claimed,
+    );
   }
 }
 

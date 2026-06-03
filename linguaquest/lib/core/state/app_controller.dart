@@ -588,7 +588,9 @@ class AppController extends Notifier<AppState> {
       },
     );
     if (user != null) {
-      await _authRepository.updateProfile(user);
+      if (_authRepository is MockAuthRepository) {
+        await _authRepository.updateProfile(user);
+      }
     }
   }
 
