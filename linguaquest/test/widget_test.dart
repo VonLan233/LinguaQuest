@@ -2033,6 +2033,71 @@ void main() {
     });
   });
 
+  test('wrong cleanup records one combined reward event', () async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'single-cleanup-event-user',
+      name: 'Wyn',
+      email: 'wyn@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      createdAt: now,
+      updatedAt: now,
+      xp: 0,
+      streak: 0,
+    );
+    final customWordRepository = _ConcurrentCustomWordRepository()
+      ..words.add(
+        CustomWord.create(
+          id: 'cleanup-word',
+          uid: profile.uid,
+          word: 'cleanup',
+          meaning: '清理',
+          exampleSentence: 'Cleanup removes repeated reward calls.',
+          now: now,
+        ).copyWith(wrongCount: 2, nextReviewAt: now),
+      );
+    final rewardRepository = _RecordingRewardRepository();
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer(
+      overrides: [
+        customWordRepositoryProvider.overrideWithValue(customWordRepository),
+        rewardRepositoryProvider.overrideWithValue(rewardRepository),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+
+    expect(
+      await container
+          .read(appControllerProvider.notifier)
+          .reviewWord('cleanup-word', true),
+      true,
+    );
+
+    expect(rewardRepository.recordedEvents, [RewardEventType.wrongCleanup]);
+    expect(
+      container
+          .read(appControllerProvider)
+          .rewardTasks
+          .singleWhere((task) => task.id == 'reviewDone')
+          .isClaimable,
+      true,
+    );
+    expect(
+      container
+          .read(appControllerProvider)
+          .rewardTasks
+          .singleWhere((task) => task.id == 'wrongCleanup')
+          .isClaimable,
+      true,
+    );
+  });
+
   test('claiming a discover reward updates XP once per day', () async {
     final now = DateTime(2026, 5, 25);
     final profile = UserProfile(
@@ -2629,6 +2694,66 @@ class _RecordEventFailingRewardRepository implements RewardRepository {
     return RewardTaskSnapshot(
       dateKey: _todayDateKey(DateTime.now()),
       tasks: const [],
+    );
+  }
+}
+
+class _RecordingRewardRepository implements RewardRepository {
+  final List<RewardEventType> recordedEvents = [];
+  bool _reviewDone = false;
+  bool _wrongCleanupDone = false;
+
+  @override
+  Future<RewardTaskSnapshot> checkIn(String uid) async => _snapshot();
+
+  @override
+  Future<RewardTaskSnapshot> claimTask(String uid, String taskId) async =>
+      _snapshot();
+
+  @override
+  Future<RewardTaskSnapshot> listTasks(String uid) async => _snapshot();
+
+  @override
+  Future<RewardTaskSnapshot> recordEvent(
+    String uid,
+    RewardEventType type,
+  ) async {
+    recordedEvents.add(type);
+    if (type == RewardEventType.reviewDone) {
+      _reviewDone = true;
+    }
+    if (type == RewardEventType.wrongCleanup) {
+      _reviewDone = true;
+      _wrongCleanupDone = true;
+    }
+    return _snapshot();
+  }
+
+  Future<RewardTaskSnapshot> _snapshot() async {
+    return RewardTaskSnapshot(
+      dateKey: _todayDateKey(DateTime.now()),
+      tasks: [
+        DailyRewardTask(
+          id: 'reviewDone',
+          title: '完成复习',
+          condition: '完成今日到期复习',
+          points: 15,
+          targetRoute: '/study/review',
+          status: _reviewDone
+              ? DailyRewardTaskStatus.claimable
+              : DailyRewardTaskStatus.incomplete,
+        ),
+        DailyRewardTask(
+          id: 'wrongCleanup',
+          title: '错词清理',
+          condition: '今日错词再次答对',
+          points: 10,
+          targetRoute: '/review',
+          status: _wrongCleanupDone
+              ? DailyRewardTaskStatus.claimable
+              : DailyRewardTaskStatus.incomplete,
+        ),
+      ],
     );
   }
 }

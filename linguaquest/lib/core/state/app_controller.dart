@@ -416,17 +416,18 @@ class AppController extends Notifier<AppState> {
         todayReviewWordIds: todayReviewWordIds,
       );
       try {
-        await _applyRewardSnapshot(
-          await _rewardRepository.recordEvent(
-            user.uid,
-            RewardEventType.reviewDone,
-          ),
-        );
         if (isCorrect && word.wrongCount > 0) {
           await _applyRewardSnapshot(
             await _rewardRepository.recordEvent(
               user.uid,
               RewardEventType.wrongCleanup,
+            ),
+          );
+        } else {
+          await _applyRewardSnapshot(
+            await _rewardRepository.recordEvent(
+              user.uid,
+              RewardEventType.reviewDone,
             ),
           );
         }

@@ -365,6 +365,7 @@ class MockRewardRepository implements RewardRepository {
       case RewardEventType.trainingChallenge:
         state.trainingChallengeDone = true;
       case RewardEventType.wrongCleanup:
+        state.reviewDone = true;
         state.wrongCleanupDone = true;
       case RewardEventType.forumInteraction:
         state.forumInteractionDone = true;
