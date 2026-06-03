@@ -5,6 +5,7 @@ import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
 import '../../data/models/user_profile.dart';
+import '../../data/models/word_book.dart';
 
 class DailyReminderSettings {
   const DailyReminderSettings({
@@ -115,6 +116,8 @@ class AppState {
     this.lastResult,
     this.learningPlan,
     this.errorMessage,
+    this.wordBooks = const [],
+    this.currentWordBookId,
   });
 
   final bool isBootstrapped;
@@ -132,6 +135,8 @@ class AppState {
   final List<AppNotification> notifications;
   final LessonResult? lastResult;
   final String? errorMessage;
+  final List<WordBook> wordBooks;
+  final String? currentWordBookId;
 
   bool get isAuthenticated => user != null;
 
@@ -208,6 +213,9 @@ class AppState {
     LessonResult? lastResult,
     String? errorMessage,
     bool clearError = false,
+    List<WordBook>? wordBooks,
+    String? currentWordBookId,
+    bool clearCurrentWordBookId = false,
   }) {
     return AppState(
       isBootstrapped: isBootstrapped ?? this.isBootstrapped,
@@ -229,6 +237,10 @@ class AppState {
       notifications: notifications ?? this.notifications,
       lastResult: lastResult ?? this.lastResult,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
+      wordBooks: wordBooks ?? this.wordBooks,
+      currentWordBookId: clearCurrentWordBookId
+          ? null
+          : currentWordBookId ?? this.currentWordBookId,
     );
   }
 
