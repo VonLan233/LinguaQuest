@@ -6,6 +6,7 @@ import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
+import '../../data/models/daily_reward_task.dart';
 
 class DiscoverScreen extends ConsumerWidget {
   const DiscoverScreen({super.key});
@@ -14,18 +15,9 @@ class DiscoverScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appControllerProvider);
     final user = state.user;
-    final claimed = state.todayClaimedRewardIds;
-    final newLearningDone = state.todayCompletedFormalLessonIds.isNotEmpty;
-    final reviewDone = state.todayReviewWordIds.isNotEmpty;
-    final reviewedMistakeToday = state.customWords.any(
-      (word) =>
-          state.todayReviewWordIds.contains(word.id) && word.wrongCount > 0,
-    );
-    final weakCleanupDone = reviewedMistakeToday && state.weakWords.isEmpty;
-    final checkedInToday = DateUtils.isSameDay(
-      user?.lastStudyDate?.toLocal(),
-      DateTime.now(),
-    );
+    final tasks = state.rewardTasks;
+    final checkInTask = _taskById(tasks, 'dailyCheckIn');
+    final isCheckingIn = state.pendingRewardTaskIds.contains('dailyCheckIn');
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
       children: [
@@ -58,94 +50,48 @@ class DiscoverScreen extends ConsumerWidget {
         ),
         const SizedBox(height: 14),
         _XpUseStatusLine(currentXp: user?.xp ?? 0),
+        const SizedBox(height: 16),
+        _DailyCheckInPanel(
+          task: checkInTask,
+          isCheckingIn: isCheckingIn,
+          onCheckIn: () => _checkIn(context, ref),
+          onClaim: checkInTask == null
+              ? null
+              : () => _claimReward(context, ref, checkInTask),
+        ),
         const SizedBox(height: 22),
         const SectionHeader(
           title: '积分任务',
           subtitle: '完成条件后点“领取”，XP 会立即加入个人主页和排行榜统计。',
         ),
         const SizedBox(height: 12),
-        _RewardTaskList(
-          tasks: [
-            _RewardTaskData(
-              icon: Icons.calendar_month_outlined,
-              title: '每日签到',
-              condition: '当天打开并完成一次学习动作',
-              points: 5,
-              isDone: checkedInToday,
-              isClaimed: claimed.contains('daily-checkin'),
-              onTap: () => context.go('/home'),
-              onClaim: () => _claimReward(
-                context,
-                ref,
-                id: 'daily-checkin',
-                title: '每日签到',
-                points: 5,
-                isAvailable: checkedInToday,
-              ),
-            ),
-            _RewardTaskData(
-              icon: Icons.school_outlined,
-              title: '完成新学',
-              condition: '完成今日新学任务',
-              points: 20,
-              isDone: newLearningDone,
-              isClaimed: claimed.contains('new-learning'),
-              onTap: () => context.push('/study/new'),
-              onClaim: () => _claimReward(
-                context,
-                ref,
-                id: 'new-learning',
-                title: '完成新学',
-                points: 20,
-                isAvailable: newLearningDone,
-              ),
-            ),
-            _RewardTaskData(
-              icon: Icons.replay_outlined,
-              title: '完成复习',
-              condition: '完成今日到期复习',
-              points: 15,
-              isDone: reviewDone,
-              isClaimed: claimed.contains('review-done'),
-              onTap: () => context.push('/study/review'),
-              onClaim: () => _claimReward(
-                context,
-                ref,
-                id: 'review-done',
-                title: '完成复习',
-                points: 15,
-                isAvailable: reviewDone,
-              ),
-            ),
-            _RewardTaskData(
-              icon: Icons.sports_esports_outlined,
-              title: '训练场挑战',
-              condition: '完成任意训练场游戏',
-              points: 20,
-              isDone: false,
-              isClaimed: claimed.contains('training-challenge'),
-              onTap: () => context.go('/training'),
-              onClaim: () {},
-            ),
-            _RewardTaskData(
-              icon: Icons.cleaning_services_outlined,
-              title: '错词清理',
-              condition: '今日错词再次答对',
-              points: 10,
-              isDone: weakCleanupDone,
-              isClaimed: claimed.contains('weak-cleanup'),
-              onTap: () => context.push('/review'),
-              onClaim: () => _claimReward(
-                context,
-                ref,
-                id: 'weak-cleanup',
-                title: '错词清理',
-                points: 10,
-                isAvailable: weakCleanupDone,
-              ),
-            ),
-          ],
-        ),
+        if (state.isRewardLoading && tasks.isEmpty)
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 18),
+            child: Center(child: CircularProgressIndicator()),
+          )
+        else if (tasks.isEmpty)
+          _RewardEmptyState(
+            message: state.errorMessage ?? '今天的积分任务暂时没有加载出来。',
+            isLoading: state.isRewardLoading,
+            onRetry: () =>
+                ref.read(appControllerProvider.notifier).refreshRewardTasks(),
+          )
+        else
+          _RewardTaskList(
+            tasks: [
+              for (final task in tasks.where(
+                (item) => item.id != 'dailyCheckIn',
+              ))
+                _RewardTaskData(
+                  icon: _iconForTask(task.id),
+                  task: task,
+                  isPending: state.pendingRewardTaskIds.contains(task.id),
+                  onTap: () => _openTaskEntry(context, task),
+                  onClaim: () => _claimReward(context, ref, task),
+                ),
+            ],
+          ),
         const SizedBox(height: 22),
         const SectionHeader(title: '积分抽奖', subtitle: '奖品只做虚拟装饰，不影响学习公平性。'),
         const SizedBox(height: 12),
@@ -153,7 +99,8 @@ class DiscoverScreen extends ConsumerWidget {
         const SizedBox(height: 22),
         const SectionHeader(title: '社区帖子', subtitle: '学习打卡和错题讨论集中展示。'),
         const SizedBox(height: 12),
-        const _ForumPostList(
+        _ForumPostList(
+          onInteract: () => _recordForumInteraction(context, ref),
           posts: [
             _ForumPostData(
               title: '今日打卡：用 12 分钟复习了 18 个词',
@@ -171,21 +118,63 @@ class DiscoverScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _claimReward(
-    BuildContext context,
-    WidgetRef ref, {
-    required String id,
-    required String title,
-    required int points,
-    required bool isAvailable,
-  }) async {
+  DailyRewardTask? _taskById(List<DailyRewardTask> tasks, String id) {
+    for (final task in tasks) {
+      if (task.id == id) return task;
+    }
+    return null;
+  }
+
+  IconData _iconForTask(String id) {
+    switch (id) {
+      case 'newLearning':
+        return Icons.school_outlined;
+      case 'reviewDone':
+        return Icons.replay_outlined;
+      case 'trainingChallenge':
+        return Icons.sports_esports_outlined;
+      case 'wrongCleanup':
+        return Icons.cleaning_services_outlined;
+      case 'forumInteraction':
+        return Icons.forum_outlined;
+    }
+    return Icons.task_alt_outlined;
+  }
+
+  void _openTaskEntry(BuildContext context, DailyRewardTask task) {
+    if (task.id == 'forumInteraction') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('在下方社区帖子点击“记录互动”，即可完成论坛互动任务。')),
+      );
+      return;
+    }
+    if (task.targetRoute.startsWith('/')) {
+      context.push(task.targetRoute);
+    }
+  }
+
+  Future<void> _checkIn(BuildContext context, WidgetRef ref) async {
     final succeeded = await ref
         .read(appControllerProvider.notifier)
-        .claimReward(id: id, points: points, isAvailable: isAvailable);
+        .checkInToday();
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(succeeded ? '签到成功，今天的签到积分可以领取了。' : '签到失败，请稍后重试。')),
+    );
+  }
+
+  Future<void> _claimReward(
+    BuildContext context,
+    WidgetRef ref,
+    DailyRewardTask task,
+  ) async {
+    final succeeded = await ref
+        .read(appControllerProvider.notifier)
+        .claimReward(task.id);
     if (!context.mounted) return;
     final currentXp = ref.read(appControllerProvider).user?.xp ?? 0;
     final message = succeeded
-        ? '$title 已入账 +$points XP，当前总积分 $currentXp XP'
+        ? '${task.title} 已入账 +${task.points} XP，当前总积分 $currentXp XP'
         : ref.read(appControllerProvider).errorMessage ?? '暂时无法领取这个任务';
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -196,6 +185,21 @@ class DiscoverScreen extends ConsumerWidget {
                 onPressed: () => context.go('/profile'),
               )
             : null,
+      ),
+    );
+  }
+
+  Future<void> _recordForumInteraction(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
+    final succeeded = await ref
+        .read(appControllerProvider.notifier)
+        .recordForumInteraction();
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(succeeded ? '论坛互动已通过，积分任务可领取。' : '论坛互动记录失败，请稍后重试。'),
       ),
     );
   }
@@ -264,6 +268,139 @@ class _XpUseStatusLine extends StatelessWidget {
   }
 }
 
+class _DailyCheckInPanel extends StatelessWidget {
+  const _DailyCheckInPanel({
+    required this.task,
+    required this.isCheckingIn,
+    required this.onCheckIn,
+    required this.onClaim,
+  });
+
+  final DailyRewardTask? task;
+  final bool isCheckingIn;
+  final VoidCallback onCheckIn;
+  final VoidCallback? onClaim;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final currentTask = task;
+    final checkedIn =
+        currentTask?.isClaimable == true || currentTask?.isClaimed == true;
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppTheme.teal.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppTheme.teal.withValues(alpha: 0.24)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          IconCueBadge(
+            icon: checkedIn
+                ? Icons.check_circle_outline
+                : Icons.calendar_month_outlined,
+            color: checkedIn ? AppTheme.success : AppTheme.teal,
+            size: 50,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('每日签到', style: theme.textTheme.titleMedium),
+                const SizedBox(height: 4),
+                Text(
+                  currentTask == null
+                      ? '任务加载后即可签到。'
+                      : checkedIn
+                      ? '今天已签到，记得领取 +${currentTask.points} XP。'
+                      : '点击签到后，签到任务会进入可领取状态。',
+                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                ),
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    FilledButton.icon(
+                      onPressed:
+                          checkedIn || isCheckingIn || currentTask == null
+                          ? null
+                          : onCheckIn,
+                      icon: isCheckingIn
+                          ? const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(Icons.edit_calendar_outlined),
+                      label: Text(
+                        isCheckingIn
+                            ? '签到中'
+                            : checkedIn
+                            ? '已签到'
+                            : '签到',
+                      ),
+                    ),
+                    OutlinedButton.icon(
+                      onPressed: currentTask?.isClaimable == true
+                          ? onClaim
+                          : null,
+                      icon: const Icon(Icons.bolt),
+                      label: Text(
+                        currentTask?.isClaimed == true ? '已领取' : '领取签到积分',
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RewardEmptyState extends StatelessWidget {
+  const _RewardEmptyState({
+    required this.message,
+    required this.isLoading,
+    required this.onRetry,
+  });
+
+  final String message;
+  final bool isLoading;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(message),
+          const SizedBox(height: 10),
+          OutlinedButton.icon(
+            onPressed: isLoading ? null : onRetry,
+            icon: isLoading
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.refresh_outlined),
+            label: Text(isLoading ? '加载中' : '重新加载任务'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _RewardTaskList extends StatelessWidget {
   const _RewardTaskList({required this.tasks});
 
@@ -296,10 +433,10 @@ class _RewardTaskRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final canClaim = task.isDone && !task.isClaimed;
+    final canClaim = task.task.isClaimable;
     final activeColor = canClaim
         ? AppTheme.teal
-        : task.isDone
+        : task.task.isClaimed
         ? AppTheme.success
         : AppTheme.mango;
     return Material(
@@ -309,7 +446,7 @@ class _RewardTaskRow extends StatelessWidget {
       child: InkWell(
         onTap: canClaim
             ? task.onClaim
-            : task.isDone
+            : task.task.isClaimed
             ? null
             : task.onTap,
         child: Padding(
@@ -329,10 +466,12 @@ class _RewardTaskRow extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(task.title, style: theme.textTheme.titleMedium),
+                    Text(task.task.title, style: theme.textTheme.titleMedium),
                     const SizedBox(height: 3),
                     Text(
-                      task.condition,
+                      task.task.isClaimable
+                          ? '已完成条件，点击领取奖励。'
+                          : task.task.condition,
                       style: TextStyle(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
@@ -346,12 +485,16 @@ class _RewardTaskRow extends StatelessWidget {
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: PillLabel(
-                    label: task.isClaimed
-                        ? '已入账 +${task.points} XP'
+                    label: task.isPending
+                        ? '处理中'
+                        : task.task.isClaimed
+                        ? '已入账 +${task.task.points} XP'
                         : canClaim
-                        ? '领取 +${task.points} XP'
-                        : '去完成 +${task.points} XP',
-                    icon: task.isDone
+                        ? '可领取 +${task.task.points} XP'
+                        : '去完成 +${task.task.points} XP',
+                    icon: task.isPending
+                        ? Icons.hourglass_empty_rounded
+                        : task.task.isClaimed || task.task.isClaimable
                         ? Icons.check_circle_outline
                         : Icons.add_circle_outline,
                     color: activeColor,
@@ -369,36 +512,31 @@ class _RewardTaskRow extends StatelessWidget {
 class _RewardTaskData {
   const _RewardTaskData({
     required this.icon,
-    required this.title,
-    required this.condition,
-    required this.points,
-    required this.isDone,
-    required this.isClaimed,
+    required this.task,
+    required this.isPending,
     required this.onTap,
     required this.onClaim,
   });
 
   final IconData icon;
-  final String title;
-  final String condition;
-  final int points;
-  final bool isDone;
-  final bool isClaimed;
+  final DailyRewardTask task;
+  final bool isPending;
   final VoidCallback onTap;
   final VoidCallback onClaim;
 }
 
 class _ForumPostList extends StatelessWidget {
-  const _ForumPostList({required this.posts});
+  const _ForumPostList({required this.posts, required this.onInteract});
 
   final List<_ForumPostData> posts;
+  final VoidCallback onInteract;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         for (var index = 0; index < posts.length; index++) ...[
-          _ForumPostRow(post: posts[index]),
+          _ForumPostRow(post: posts[index], onInteract: onInteract),
           if (index != posts.length - 1)
             Divider(
               height: 16,
@@ -413,9 +551,10 @@ class _ForumPostList extends StatelessWidget {
 }
 
 class _ForumPostRow extends StatelessWidget {
-  const _ForumPostRow({required this.post});
+  const _ForumPostRow({required this.post, required this.onInteract});
 
   final _ForumPostData post;
+  final VoidCallback onInteract;
 
   @override
   Widget build(BuildContext context) {
@@ -438,15 +577,21 @@ class _ForumPostRow extends StatelessWidget {
             style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
           ),
           const SizedBox(height: 10),
-          const Row(
+          Row(
             children: [
-              Icon(Icons.thumb_up_alt_outlined, size: 18),
-              SizedBox(width: 4),
-              Text('24'),
-              SizedBox(width: 16),
-              Icon(Icons.mode_comment_outlined, size: 18),
-              SizedBox(width: 4),
-              Text('6'),
+              const Icon(Icons.thumb_up_alt_outlined, size: 18),
+              const SizedBox(width: 4),
+              const Text('24'),
+              const SizedBox(width: 16),
+              const Icon(Icons.mode_comment_outlined, size: 18),
+              const SizedBox(width: 4),
+              const Text('6'),
+              const SizedBox(width: 16),
+              TextButton.icon(
+                onPressed: onInteract,
+                icon: const Icon(Icons.task_alt_outlined, size: 18),
+                label: const Text('记录互动'),
+              ),
             ],
           ),
         ],
