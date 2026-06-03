@@ -443,7 +443,8 @@ void main() {
           );
 
       final state = container.read(appControllerProvider);
-      expect(state.todayCompletedLessonIds, contains(campusLesson.id));
+      expect(state.todayCompletedLessonIds, isNot(contains(campusLesson.id)));
+      expect(state.todayTrainingSessionIds, contains(campusLesson.id));
       expect(state.todayCompletedFormalLessonIds, isEmpty);
       expect(state.todayLearningWords, 0);
 
