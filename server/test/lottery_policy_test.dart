@@ -58,6 +58,7 @@ void main() {
         lotteryPrizeSeed.map((prize) => prize['id']),
         contains(chooseLotteryPrize([inactivePrize])['id']),
       );
+      expect(chooseLotteryPrize([inactivePrize])['fragmentValue'], isA<int>());
     },
   );
 }

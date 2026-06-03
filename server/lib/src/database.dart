@@ -415,15 +415,21 @@ ORDER BY created_at DESC
     return rows.first.toColumnMap();
   }
 
-  Future<void> upsertNotification(String uid, Map<String, dynamic> data) async {
-    await upsertNotifications(uid, [data]);
+  Future<void> upsertNotification(
+    String uid,
+    Map<String, dynamic> data, {
+    Session? session,
+  }) async {
+    await upsertNotifications(uid, [data], session: session);
   }
 
   Future<void> upsertNotifications(
     String uid,
-    List<Map<String, dynamic>> notifications,
-  ) async {
+    List<Map<String, dynamic>> notifications, {
+    Session? session,
+  }) async {
     if (notifications.isEmpty) return;
+    final executor = session ?? connection;
     final values = <String>[];
     final parameters = <String, dynamic>{'uid': uid};
     for (var index = 0; index < notifications.length; index++) {
@@ -444,7 +450,7 @@ ORDER BY created_at DESC
         'createdAt$index': _date(data['createdAt']) ?? DateTime.now().toUtc(),
       });
     }
-    await connection.execute(
+    await executor.execute(
       Sql.named('''
 INSERT INTO notifications (
   id, uid, type, title, body, target_route, is_read, source_key, read_at, created_at
@@ -496,8 +502,9 @@ RETURNING id
     return rows.length;
   }
 
-  Future<List<Map<String, dynamic>>> lotteryPrizes() async {
-    final rows = await connection.execute('''
+  Future<List<Map<String, dynamic>>> lotteryPrizes({Session? session}) async {
+    final executor = session ?? connection;
+    final rows = await executor.execute('''
 SELECT * FROM lottery_prizes
 WHERE is_active = TRUE
 ORDER BY probability DESC, rarity, name
@@ -505,8 +512,12 @@ ORDER BY probability DESC, rarity, name
     return rows.map((row) => row.toColumnMap()).toList();
   }
 
-  Future<List<Map<String, dynamic>>> userAssets(String uid) async {
-    final rows = await connection.execute(
+  Future<List<Map<String, dynamic>>> userAssets(
+    String uid, {
+    Session? session,
+  }) async {
+    final executor = session ?? connection;
+    final rows = await executor.execute(
       Sql.named('''
 SELECT * FROM user_assets
 WHERE uid=@uid
@@ -524,9 +535,8 @@ ORDER BY updated_at DESC
     required String notificationId,
   }) async {
     final now = DateTime.now().toUtc();
-    await connection.execute('BEGIN');
-    try {
-      final userRows = await connection.execute(
+    return connection.runTx((tx) async {
+      final userRows = await tx.execute(
         Sql.named('''
 UPDATE users
 SET xp = xp - @cost,
@@ -537,14 +547,13 @@ RETURNING xp
         parameters: {'uid': uid, 'cost': lotteryDrawCost, 'updatedAt': now},
       );
       if (userRows.isEmpty) {
-        await connection.execute('ROLLBACK');
         return null;
       }
-      final prizes = await lotteryPrizes();
+      final prizes = await lotteryPrizes(session: tx);
       final prize = chooseLotteryPrize(prizes);
       final balanceAfter = userRows.first.toColumnMap()['xp'] as int;
 
-      await connection.execute(
+      await tx.execute(
         Sql.named('''
 INSERT INTO lottery_draws (
   id, uid, prize_id, cost, balance_after, prize_name, prize_category,
@@ -567,7 +576,7 @@ INSERT INTO lottery_draws (
         },
       );
 
-      final assetRows = await connection.execute(
+      final assetRows = await tx.execute(
         Sql.named('''
 INSERT INTO user_assets (
   id, uid, prize_id, category, rarity, name, description, quantity,
@@ -589,7 +598,8 @@ RETURNING *
           'rarity': prize['rarity'],
           'name': prize['name'],
           'description': prize['description'],
-          'fragmentValue': prize['fragment_value'],
+          'fragmentValue':
+              prize['fragment_value'] ?? prize['fragmentValue'] ?? 0,
           'acquiredAt': now,
           'updatedAt': now,
         },
@@ -604,8 +614,7 @@ RETURNING *
         'isRead': false,
         'sourceKey': 'lottery:$drawId',
         'createdAt': now,
-      });
-      await connection.execute('COMMIT');
+      }, session: tx);
       return {
         'draw': {
           'id': drawId,
@@ -619,10 +628,7 @@ RETURNING *
         'asset': assetRows.first.toColumnMap(),
         'balanceAfter': balanceAfter,
       };
-    } catch (error) {
-      await connection.execute('ROLLBACK');
-      rethrow;
-    }
+    });
   }
 
   Future<bool> hasStudySessionInRange(
