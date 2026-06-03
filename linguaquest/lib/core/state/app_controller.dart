@@ -338,6 +338,9 @@ class AppController extends Notifier<AppState> {
         points: result.xpEarned,
         description: isTraining ? '完成训练场挑战' : '完成新学课程',
       );
+      final resolvedResult = result.copyWith(
+        xpEarned: pointGrant.awarded ? pointGrant.pointsAwarded : 0,
+      );
       final updatedUser = await _authRepository.updateProfile(
         pointGrant.user.copyWith(
           streak: streak,
@@ -354,7 +357,7 @@ class AppController extends Notifier<AppState> {
           endedAt: now,
           totalQuestions: result.totalQuestions,
           correctAnswers: result.correctAnswers,
-          xpEarned: result.xpEarned,
+          xpEarned: resolvedResult.xpEarned,
           mistakeWordIds: result.mistakes
               .map((question) => question.word.id)
               .toList(),
@@ -376,7 +379,7 @@ class AppController extends Notifier<AppState> {
             : state.completedLessonIds,
         todayCompletedLessonIds: todayCompletedLessonIds,
         todayTrainingSessionIds: todayTrainingSessionIds,
-        lastResult: result,
+        lastResult: resolvedResult,
       );
       await refreshNotifications();
       unawaited(_scheduleLocalNotifications());
@@ -430,6 +433,7 @@ class AppController extends Notifier<AppState> {
               user: user,
               awarded: false,
               alreadyGranted: false,
+              pointsAwarded: 0,
             );
       await _saveTodayReviewWords(todayReviewWordIds);
       state = state.copyWith(
@@ -674,6 +678,7 @@ class AppController extends Notifier<AppState> {
         user: user,
         awarded: false,
         alreadyGranted: false,
+        pointsAwarded: 0,
       );
     }
     final result = await _rewardRepository.grantPoints(
@@ -687,6 +692,7 @@ class AppController extends Notifier<AppState> {
       user: await _rewardedUser(user, result),
       awarded: result.awarded,
       alreadyGranted: result.alreadyGranted,
+      pointsAwarded: result.pointsAwarded,
     );
   }
 
@@ -1004,9 +1010,11 @@ class _PointGrantOutcome {
     required this.user,
     required this.awarded,
     required this.alreadyGranted,
+    required this.pointsAwarded,
   });
 
   final UserProfile user;
   final bool awarded;
   final bool alreadyGranted;
+  final int pointsAwarded;
 }

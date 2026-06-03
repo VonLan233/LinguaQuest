@@ -23,4 +23,16 @@ class LessonResult {
     if (totalQuestions == 0) return 0;
     return correctAnswers / totalQuestions;
   }
+
+  LessonResult copyWith({int? xpEarned}) {
+    return LessonResult(
+      lessonId: lessonId,
+      lessonTitle: lessonTitle,
+      totalQuestions: totalQuestions,
+      correctAnswers: correctAnswers,
+      xpEarned: xpEarned ?? this.xpEarned,
+      mistakes: mistakes,
+      completedAt: completedAt,
+    );
+  }
 }

@@ -70,7 +70,6 @@ class ApiAuthRepository implements AuthRepository {
         'targetExam': profile.targetExam,
         'level': profile.level,
         'dailyGoal': profile.dailyGoal,
-        'xp': profile.xp,
         'streak': profile.streak,
         'lastStudyDate': profile.lastStudyDate?.toIso8601String(),
       },

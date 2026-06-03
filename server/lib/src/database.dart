@@ -143,7 +143,6 @@ UPDATE users SET
   target_exam=@targetExam,
   level=@level,
   daily_goal=@dailyGoal,
-  xp=@xp,
   streak=@streak,
   last_study_date=@lastStudyDate,
   updated_at=@updatedAt
@@ -155,7 +154,6 @@ WHERE id=@uid
         'targetExam': data['targetExam'] ?? existing['target_exam'],
         'level': data['level'] ?? existing['level'],
         'dailyGoal': data['dailyGoal'] ?? existing['daily_goal'],
-        'xp': data['xp'] ?? existing['xp'],
         'streak': data['streak'] ?? existing['streak'],
         'lastStudyDate':
             _date(data['lastStudyDate']) ?? existing['last_study_date'],
@@ -329,7 +327,19 @@ WITH inserted AS (
 SELECT
   EXISTS (SELECT 1 FROM inserted) AS awarded,
   COALESCE((SELECT points FROM inserted), 0) AS points_awarded,
-  COALESCE((SELECT row_to_json(updated) FROM updated), row_to_json(users)) AS user_json
+  COALESCE((SELECT id FROM updated), users.id) AS id,
+  COALESCE((SELECT email FROM updated), users.email) AS email,
+  COALESCE((SELECT password_hash FROM updated), users.password_hash) AS password_hash,
+  COALESCE((SELECT password_salt FROM updated), users.password_salt) AS password_salt,
+  COALESCE((SELECT name FROM updated), users.name) AS name,
+  COALESCE((SELECT target_exam FROM updated), users.target_exam) AS target_exam,
+  COALESCE((SELECT level FROM updated), users.level) AS level,
+  COALESCE((SELECT daily_goal FROM updated), users.daily_goal) AS daily_goal,
+  COALESCE((SELECT xp FROM updated), users.xp) AS xp,
+  COALESCE((SELECT streak FROM updated), users.streak) AS streak,
+  COALESCE((SELECT last_study_date FROM updated), users.last_study_date) AS last_study_date,
+  COALESCE((SELECT created_at FROM updated), users.created_at) AS created_at,
+  COALESCE((SELECT updated_at FROM updated), users.updated_at) AS updated_at
 FROM users
 WHERE id = @uid
 LIMIT 1

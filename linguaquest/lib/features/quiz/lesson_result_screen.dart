@@ -43,6 +43,9 @@ class LessonResultScreen extends ConsumerWidget {
     final accuracy = (resolved.accuracy * 100).round();
     final currentXp = state.user?.xp;
     final isTimed = source == LessonResultSource.timed;
+    final rewardText = resolved.xpEarned > 0
+        ? '已入账 +${resolved.xpEarned} XP'
+        : '本次未重复入账';
     return Scaffold(
       appBar: AppBar(
         leading: FallbackBackButton(
@@ -60,8 +63,8 @@ class LessonResultScreen extends ConsumerWidget {
                   ? (accuracy >= 80 ? '挑战成功！' : '挑战完成')
                   : (accuracy >= 80 ? '表现很棒！' : '课程完成'),
               subtitle: isTimed
-                  ? '答对 ${resolved.correctAnswers}/${resolved.totalQuestions} 题 · 已入账 +${resolved.xpEarned} XP · 错题可去复习中心整理。'
-                  : '答对 ${resolved.correctAnswers}/${resolved.totalQuestions} 题 · 已入账 +${resolved.xpEarned} XP · 错题已进入复习。',
+                  ? '答对 ${resolved.correctAnswers}/${resolved.totalQuestions} 题 · $rewardText · 错题可去复习中心整理。'
+                  : '答对 ${resolved.correctAnswers}/${resolved.totalQuestions} 题 · $rewardText · 错题已进入复习。',
             ),
             const SizedBox(height: 12),
             PillLabel(
@@ -176,7 +179,7 @@ class _XpImpactNotice extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '刚刚到账 +$xpEarned XP',
+                  xpEarned > 0 ? '刚刚到账 +$xpEarned XP' : '本次未重复入账',
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w900,
                   ),

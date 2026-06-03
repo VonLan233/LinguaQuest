@@ -291,7 +291,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
       context.go(
         '/lesson/${lesson.id}/result',
         extra: LessonResultViewArgs(
-          result: result,
+          result: ref.read(appControllerProvider).lastResult ?? result,
           source: widget.mode == QuizSessionMode.timed
               ? LessonResultSource.timed
               : LessonResultSource.lesson,

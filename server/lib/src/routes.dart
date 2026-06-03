@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
@@ -149,11 +147,16 @@ Router buildRouter(AppConfig config, AppDatabase database) {
       final body = await readJsonMap(request);
       final sourceType = (body['sourceType'] as String? ?? '').trim();
       final sourceId = (body['sourceId'] as String? ?? '').trim();
-      final points = body['points'] as int? ?? 0;
+      final requestedPoints = body['points'] as int? ?? 0;
       final description = (body['description'] as String? ?? '').trim();
-      if (sourceType.isEmpty || sourceId.isEmpty || points <= 0) {
+      final points = _validatedRewardPoints(
+        sourceType: sourceType,
+        sourceId: sourceId,
+        requestedPoints: requestedPoints,
+      );
+      if (sourceType.isEmpty || sourceId.isEmpty || points == null) {
         return jsonResponse({
-          'error': 'sourceType, sourceId, and positive points are required',
+          'error': 'invalid reward source or point rule',
         }, status: 400);
       }
       final result = await database.grantPoints(
@@ -164,12 +167,10 @@ Router buildRouter(AppConfig config, AppDatabase database) {
         description: description,
       );
       final awarded = result['awarded'] == true;
-      final userJson = result['user_json'];
-      final user = _rowJson(userJson) ?? await database.userById(uid);
       return jsonResponse({
         'pointsAwarded': result['points_awarded'] ?? 0,
         'alreadyGranted': !awarded,
-        'user': userDto(user!),
+        'user': userDto(result),
       }, status: awarded ? 201 : 200);
     });
   });
@@ -360,15 +361,29 @@ String _dateValue(Object? value) {
   return value?.toString() ?? DateTime.now().toUtc().toIso8601String();
 }
 
-Map<String, dynamic>? _rowJson(Object? value) {
-  if (value is Map) return Map<String, dynamic>.from(value);
-  if (value is String) {
-    try {
-      final decoded = jsonDecode(value);
-      if (decoded is Map) return Map<String, dynamic>.from(decoded);
-    } on FormatException {
+int? _validatedRewardPoints({
+  required String sourceType,
+  required String sourceId,
+  required int requestedPoints,
+}) {
+  if (requestedPoints <= 0) return null;
+  switch (sourceType) {
+    case 'study_lesson':
+    case 'training_session':
+      return requestedPoints <= 30 ? requestedPoints : null;
+    case 'review_word':
+      return requestedPoints == 3 ? requestedPoints : null;
+    case 'reward_task':
+      final taskId = sourceId.split(':').first;
+      return switch (taskId) {
+        'daily-checkin' => requestedPoints == 5 ? requestedPoints : null,
+        'new-learning' => requestedPoints == 20 ? requestedPoints : null,
+        'review-done' => requestedPoints == 15 ? requestedPoints : null,
+        'training-challenge' => requestedPoints == 20 ? requestedPoints : null,
+        'weak-cleanup' => requestedPoints == 10 ? requestedPoints : null,
+        _ => null,
+      };
+    default:
       return null;
-    }
   }
-  return null;
 }
