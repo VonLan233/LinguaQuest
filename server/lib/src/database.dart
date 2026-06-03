@@ -93,6 +93,39 @@ CREATE TABLE IF NOT EXISTS notifications (
   UNIQUE (uid, source_key)
 );
 ''');
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS daily_checkins (
+  uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  date_key TEXT NOT NULL,
+  checked_in_at TIMESTAMPTZ NOT NULL,
+  PRIMARY KEY (uid, date_key)
+);
+''');
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS daily_activity (
+  uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  date_key TEXT NOT NULL,
+  training_challenge_completed BOOLEAN NOT NULL DEFAULT FALSE,
+  wrong_cleanup_completed BOOLEAN NOT NULL DEFAULT FALSE,
+  forum_interaction_completed BOOLEAN NOT NULL DEFAULT FALSE,
+  updated_at TIMESTAMPTZ NOT NULL,
+  PRIMARY KEY (uid, date_key)
+);
+''');
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS reward_claims (
+  id TEXT PRIMARY KEY,
+  uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  date_key TEXT NOT NULL,
+  task_id TEXT NOT NULL,
+  points INTEGER NOT NULL,
+  claimed_at TIMESTAMPTZ NOT NULL,
+  UNIQUE (uid, date_key, task_id)
+);
+''');
   }
 
   Future<Map<String, dynamic>?> userByEmail(String email) async {
@@ -423,17 +456,166 @@ RETURNING id
   Future<bool> hasStudySessionInRange(
     String uid,
     DateTime startUtc,
-    DateTime endUtc,
-  ) async {
+    DateTime endUtc, {
+    bool? trainingOnly,
+  }) async {
+    final trainingClause = trainingOnly == null
+        ? ''
+        : trainingOnly
+        ? "AND lesson_id LIKE 'lesson-campus-%'"
+        : "AND lesson_id NOT LIKE 'lesson-campus-%'";
     final rows = await connection.execute(
       Sql.named('''
 SELECT id FROM study_sessions
 WHERE uid=@uid AND ended_at >= @startUtc AND ended_at < @endUtc
+$trainingClause
 LIMIT 1
 '''),
       parameters: {'uid': uid, 'startUtc': startUtc, 'endUtc': endUtc},
     );
     return rows.isNotEmpty;
+  }
+
+  Future<bool> hasReviewEventInRange(
+    String uid,
+    DateTime startUtc,
+    DateTime endUtc,
+  ) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT id FROM review_events
+WHERE uid=@uid AND reviewed_at >= @startUtc AND reviewed_at < @endUtc
+LIMIT 1
+'''),
+      parameters: {'uid': uid, 'startUtc': startUtc, 'endUtc': endUtc},
+    );
+    return rows.isNotEmpty;
+  }
+
+  Future<bool> hasCheckIn(String uid, String dateKey) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT uid FROM daily_checkins
+WHERE uid=@uid AND date_key=@dateKey
+LIMIT 1
+'''),
+      parameters: {'uid': uid, 'dateKey': dateKey},
+    );
+    return rows.isNotEmpty;
+  }
+
+  Future<void> upsertCheckIn(String uid, String dateKey) async {
+    await connection.execute(
+      Sql.named('''
+INSERT INTO daily_checkins (uid, date_key, checked_in_at)
+VALUES (@uid, @dateKey, @checkedInAt)
+ON CONFLICT (uid, date_key) DO NOTHING
+'''),
+      parameters: {
+        'uid': uid,
+        'dateKey': dateKey,
+        'checkedInAt': DateTime.now().toUtc(),
+      },
+    );
+  }
+
+  Future<Map<String, dynamic>> dailyActivity(String uid, String dateKey) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT * FROM daily_activity
+WHERE uid=@uid AND date_key=@dateKey
+LIMIT 1
+'''),
+      parameters: {'uid': uid, 'dateKey': dateKey},
+    );
+    if (rows.isEmpty) return const <String, dynamic>{};
+    return rows.first.toColumnMap();
+  }
+
+  Future<void> recordDailyActivity(
+    String uid,
+    String dateKey,
+    String type,
+  ) async {
+    final field = switch (type) {
+      'trainingChallenge' => 'training_challenge_completed',
+      'wrongCleanup' => 'wrong_cleanup_completed',
+      'forumInteraction' => 'forum_interaction_completed',
+      _ => throw ArgumentError.value(type, 'type', 'unsupported activity type'),
+    };
+    await connection.execute(
+      Sql.named('''
+INSERT INTO daily_activity (uid, date_key, $field, updated_at)
+VALUES (@uid, @dateKey, TRUE, @updatedAt)
+ON CONFLICT (uid, date_key) DO UPDATE SET
+  $field = TRUE,
+  updated_at = EXCLUDED.updated_at
+'''),
+      parameters: {
+        'uid': uid,
+        'dateKey': dateKey,
+        'updatedAt': DateTime.now().toUtc(),
+      },
+    );
+  }
+
+  Future<Set<String>> rewardClaimsForDate(String uid, String dateKey) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT task_id FROM reward_claims
+WHERE uid=@uid AND date_key=@dateKey
+'''),
+      parameters: {'uid': uid, 'dateKey': dateKey},
+    );
+    return rows
+        .map((row) => row.toColumnMap()['task_id']?.toString())
+        .whereType<String>()
+        .toSet();
+  }
+
+  Future<bool> insertRewardClaim({
+    required String id,
+    required String uid,
+    required String dateKey,
+    required String taskId,
+    required int points,
+  }) async {
+    final rows = await connection.execute(
+      Sql.named('''
+INSERT INTO reward_claims (id, uid, date_key, task_id, points, claimed_at)
+VALUES (@id, @uid, @dateKey, @taskId, @points, @claimedAt)
+ON CONFLICT (uid, date_key, task_id) DO NOTHING
+RETURNING id
+'''),
+      parameters: {
+        'id': id,
+        'uid': uid,
+        'dateKey': dateKey,
+        'taskId': taskId,
+        'points': points,
+        'claimedAt': DateTime.now().toUtc(),
+      },
+    );
+    return rows.isNotEmpty;
+  }
+
+  Future<Map<String, dynamic>?> addUserXp(String uid, int points) async {
+    final rows = await connection.execute(
+      Sql.named('''
+UPDATE users
+SET xp = xp + @points,
+    updated_at = @updatedAt
+WHERE id=@uid
+RETURNING *
+'''),
+      parameters: {
+        'uid': uid,
+        'points': points,
+        'updatedAt': DateTime.now().toUtc(),
+      },
+    );
+    if (rows.isEmpty) return null;
+    return rows.first.toColumnMap();
   }
 
   Future<int> dueReviewCount(String uid) async {
