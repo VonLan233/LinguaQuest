@@ -587,6 +587,11 @@ INSERT INTO user_assets (
 )
 ON CONFLICT (uid, prize_id) DO UPDATE SET
   quantity=user_assets.quantity + 1,
+  category=EXCLUDED.category,
+  rarity=EXCLUDED.rarity,
+  name=EXCLUDED.name,
+  description=EXCLUDED.description,
+  fragment_value=EXCLUDED.fragment_value,
   updated_at=EXCLUDED.updated_at
 RETURNING *
 '''),
