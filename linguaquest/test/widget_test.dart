@@ -517,6 +517,14 @@ void main() {
 
       expect(find.text(entry.value), findsAtLeastNWidgets(1));
       expect(find.text('训练题源不足'), findsNothing);
+      if (entry.key == 'spelling') {
+        expect(find.text('输入英文拼写'), findsOneWidget);
+        expect(find.textContaining('拼写'), findsAtLeastNWidgets(1));
+      } else {
+        expect(find.byType(OutlinedButton), findsAtLeastNWidgets(3));
+        final promptSnippet = entry.key == 'word-rush' ? '抢答' : '选择';
+        expect(find.textContaining(promptSnippet), findsAtLeastNWidgets(1));
+      }
     });
   }
 
