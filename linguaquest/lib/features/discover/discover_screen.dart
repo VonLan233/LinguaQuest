@@ -297,7 +297,7 @@ class _LotteryPanel extends ConsumerWidget {
     }
     await showDialog<void>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('抽奖成功'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -314,13 +314,15 @@ class _LotteryPanel extends ConsumerWidget {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.of(dialogContext).pop(),
             child: const Text('继续看看'),
           ),
           FilledButton(
             onPressed: () {
-              Navigator.of(context).pop();
-              context.go('/profile');
+              Navigator.of(dialogContext).pop();
+              if (context.mounted) {
+                context.go('/profile');
+              }
             },
             child: const Text('查看个人资产'),
           ),
