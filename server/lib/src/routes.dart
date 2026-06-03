@@ -150,12 +150,12 @@ Router buildRouter(AppConfig config, AppDatabase database) {
       final sourceId = (body['sourceId'] as String? ?? '').trim();
       final requestedPoints = body['points'] as int? ?? 0;
       final description = (body['description'] as String? ?? '').trim();
-      final points = validatedRewardPoints(
+      final reward = validatedRewardPoints(
         sourceType: sourceType,
         sourceId: sourceId,
         requestedPoints: requestedPoints,
       );
-      if (sourceType.isEmpty || sourceId.isEmpty || points == null) {
+      if (sourceType.isEmpty || sourceId.isEmpty || reward == null) {
         return jsonResponse({
           'error': 'invalid reward source or point rule',
         }, status: 400);
@@ -163,8 +163,8 @@ Router buildRouter(AppConfig config, AppDatabase database) {
       final result = await database.grantPoints(
         uid,
         sourceType: sourceType,
-        sourceId: sourceId,
-        points: points,
+        sourceId: reward.canonicalSourceId,
+        points: reward.points,
         description: description,
       );
       final awarded = result['awarded'] == true;

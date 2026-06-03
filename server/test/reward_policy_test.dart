@@ -3,39 +3,72 @@ import 'package:test/test.dart';
 
 void main() {
   group('validatedRewardPoints', () {
+    final nowUtc = DateTime.utc(2026, 6, 3, 12);
+
     test('allows current client reward source id shapes', () {
-      expect(
-        validatedRewardPoints(
-          sourceType: 'study_lesson',
-          sourceId: 'lesson-campus-1',
-          requestedPoints: 20,
-        ),
-        20,
+      final lesson = validatedRewardPoints(
+        sourceType: 'study_lesson',
+        sourceId: 'lesson-campus-1',
+        requestedPoints: 20,
+        nowUtc: nowUtc,
       );
-      expect(
-        validatedRewardPoints(
-          sourceType: 'training_session',
-          sourceId: 'lesson-campus-1:2026-06-03',
-          requestedPoints: 20,
-        ),
-        20,
+      expect(lesson?.points, 20);
+      expect(lesson?.canonicalSourceId, 'lesson-campus-1');
+
+      final training = validatedRewardPoints(
+        sourceType: 'training_session',
+        sourceId: 'lesson-campus-1:2026-06-03',
+        requestedPoints: 20,
+        nowUtc: nowUtc,
       );
-      expect(
-        validatedRewardPoints(
-          sourceType: 'review_word',
-          sourceId: 'custom-1:2026-06-03',
-          requestedPoints: 3,
-        ),
-        3,
+      expect(training?.points, 20);
+      expect(training?.canonicalSourceId, 'lesson-campus-1:2026-06-03');
+
+      final review = validatedRewardPoints(
+        sourceType: 'review_word',
+        sourceId: 'custom-1:2026-06-03',
+        requestedPoints: 3,
+        nowUtc: nowUtc,
       );
-      expect(
-        validatedRewardPoints(
-          sourceType: 'reward_task',
-          sourceId: 'daily-checkin:2026-06-03',
-          requestedPoints: 5,
-        ),
-        5,
+      expect(review?.points, 3);
+      expect(review?.canonicalSourceId, 'custom-1:2026-06-03');
+
+      final reward = validatedRewardPoints(
+        sourceType: 'reward_task',
+        sourceId: 'daily-checkin:2026-06-03',
+        requestedPoints: 5,
+        nowUtc: nowUtc,
       );
+      expect(reward?.points, 5);
+      expect(reward?.canonicalSourceId, 'daily-checkin:2026-06-03');
+    });
+
+    test('canonicalizes adjacent local dates to one server reward day', () {
+      final canonicalIds = [
+        for (final dateKey in ['2026-06-02', '2026-06-03', '2026-06-04'])
+          validatedRewardPoints(
+            sourceType: 'reward_task',
+            sourceId: 'daily-checkin:$dateKey',
+            requestedPoints: 5,
+            nowUtc: nowUtc,
+          )?.canonicalSourceId,
+      ];
+
+      expect(canonicalIds.toSet(), {'daily-checkin:2026-06-03'});
+    });
+
+    test('rejects arbitrary dates outside the server reward window', () {
+      for (final dateKey in ['2026-06-01', '2026-06-05', '2099-01-01']) {
+        expect(
+          validatedRewardPoints(
+            sourceType: 'reward_task',
+            sourceId: 'daily-checkin:$dateKey',
+            requestedPoints: 5,
+            nowUtc: nowUtc,
+          ),
+          isNull,
+        );
+      }
     });
 
     test(
@@ -46,6 +79,7 @@ void main() {
             sourceType: 'reward_task',
             sourceId: 'daily-checkin:random1',
             requestedPoints: 5,
+            nowUtc: nowUtc,
           ),
           isNull,
         );
@@ -54,6 +88,7 @@ void main() {
             sourceType: 'reward_task',
             sourceId: 'daily-checkin:2026-06-03:extra',
             requestedPoints: 5,
+            nowUtc: nowUtc,
           ),
           isNull,
         );
@@ -67,6 +102,7 @@ void main() {
             sourceType: sourceType,
             sourceId: 'source-1',
             requestedPoints: sourceType == 'review_word' ? 3 : 20,
+            nowUtc: nowUtc,
           ),
           isNull,
         );
@@ -75,6 +111,7 @@ void main() {
             sourceType: sourceType,
             sourceId: 'source-1:2026-6-3',
             requestedPoints: sourceType == 'review_word' ? 3 : 20,
+            nowUtc: nowUtc,
           ),
           isNull,
         );
@@ -83,6 +120,7 @@ void main() {
             sourceType: sourceType,
             sourceId: 'source-1:2026-06-03T00:00:00Z',
             requestedPoints: sourceType == 'review_word' ? 3 : 20,
+            nowUtc: nowUtc,
           ),
           isNull,
         );
@@ -91,6 +129,7 @@ void main() {
             sourceType: sourceType,
             sourceId: 'source-1:2026-02-30',
             requestedPoints: sourceType == 'review_word' ? 3 : 20,
+            nowUtc: nowUtc,
           ),
           isNull,
         );
@@ -103,6 +142,7 @@ void main() {
           sourceType: 'study_lesson',
           sourceId: 'lesson-campus-1:2026-06-03',
           requestedPoints: 20,
+          nowUtc: nowUtc,
         ),
         isNull,
       );
@@ -114,6 +154,7 @@ void main() {
           sourceType: 'reward_task',
           sourceId: 'daily-checkin:2026-06-03',
           requestedPoints: 6,
+          nowUtc: nowUtc,
         ),
         isNull,
       );
@@ -122,6 +163,7 @@ void main() {
           sourceType: 'reward_task',
           sourceId: 'unknown-task:2026-06-03',
           requestedPoints: 5,
+          nowUtc: nowUtc,
         ),
         isNull,
       );
@@ -130,6 +172,7 @@ void main() {
           sourceType: 'review_word',
           sourceId: 'custom-1:2026-06-03',
           requestedPoints: 4,
+          nowUtc: nowUtc,
         ),
         isNull,
       );
