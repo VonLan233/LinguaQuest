@@ -327,7 +327,7 @@ Router buildRouter(AppConfig config, AppDatabase database) {
       final behavior = await _dailyRewardBehavior(database, uid, dayWindow);
       if (!isRewardTaskDone(id, behavior)) {
         return jsonResponse({
-          'error': 'task is not complete yet',
+          'error': 'task_not_complete',
           'tasks': dailyRewardTaskDtos(
             behavior: behavior,
             claimedTaskIds: claimed,
