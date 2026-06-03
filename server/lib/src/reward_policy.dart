@@ -75,10 +75,10 @@ RewardValidation? validatedRewardPoints({
 }
 
 List<String>? _dailySourceIdParts(String sourceId, DateTime nowUtc) {
-  final parts = sourceId.split(':');
-  if (parts.length != 2) return null;
-  final id = parts.first.trim();
-  final dateKey = parts.last.trim();
+  final lastColon = sourceId.lastIndexOf(':');
+  if (lastColon == -1) return null;
+  final id = sourceId.substring(0, lastColon).trim();
+  final dateKey = sourceId.substring(lastColon + 1).trim();
   if (id.isEmpty || dateKey.isEmpty) return null;
   if (!isNotificationDateKey(dateKey)) return null;
   if (!_isDateKeyInRewardWindow(dateKey, nowUtc)) return null;
@@ -87,8 +87,9 @@ List<String>? _dailySourceIdParts(String sourceId, DateTime nowUtc) {
 
 bool _isDateKeyInRewardWindow(String dateKey, DateTime nowUtc) {
   final rewardDay = DateTime.utc(nowUtc.year, nowUtc.month, nowUtc.day);
-  final parts = dateKey.split('-').map(int.parse).toList();
-  final requestedDay = DateTime.utc(parts[0], parts[1], parts[2]);
+  final parts = dateKey.split('-').map(int.tryParse).toList();
+  if (parts.length != 3 || parts.any((part) => part == null)) return false;
+  final requestedDay = DateTime.utc(parts[0]!, parts[1]!, parts[2]!);
   final difference = requestedDay.difference(rewardDay).inDays;
   return difference >= -1 && difference <= 1;
 }

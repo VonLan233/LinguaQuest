@@ -57,6 +57,32 @@ void main() {
       expect(canonicalIds.toSet(), {'daily-checkin:2026-06-03'});
     });
 
+    test(
+      'allows repeatable source ids that contain colons before the date',
+      () {
+        final training = validatedRewardPoints(
+          sourceType: 'training_session',
+          sourceId: 'namespace:lesson-campus-1:2026-06-03',
+          requestedPoints: 20,
+          nowUtc: nowUtc,
+        );
+        expect(training?.points, 20);
+        expect(
+          training?.canonicalSourceId,
+          'namespace:lesson-campus-1:2026-06-03',
+        );
+
+        final review = validatedRewardPoints(
+          sourceType: 'review_word',
+          sourceId: 'custom:word:1:2026-06-03',
+          requestedPoints: 3,
+          nowUtc: nowUtc,
+        );
+        expect(review?.points, 3);
+        expect(review?.canonicalSourceId, 'custom:word:1:2026-06-03');
+      },
+    );
+
     test('rejects arbitrary dates outside the server reward window', () {
       for (final dateKey in ['2026-06-01', '2026-06-05', '2099-01-01']) {
         expect(
