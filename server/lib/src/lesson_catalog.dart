@@ -1,4 +1,8 @@
-List<Map<String, dynamic>> lessonCatalog() {
+final List<Map<String, dynamic>> _cachedCatalog = _buildLessonCatalog();
+
+List<Map<String, dynamic>> lessonCatalog() => _cachedCatalog;
+
+List<Map<String, dynamic>> _buildLessonCatalog() {
   final examWords = [
     _word(
       id: 'w-allocate',

@@ -432,6 +432,9 @@ class AppController extends Notifier<AppState> {
           todayClaimedRewardIds: remoteClaim.progress.todayClaimedRewardIds,
         );
         await refreshNotifications();
+        if (!remoteClaim.claimed) {
+          throw StateError('奖励已领取或领取失败');
+        }
         return;
       }
       final claimedRewardIds = {...state.todayClaimedRewardIds, id};

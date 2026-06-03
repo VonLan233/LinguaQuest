@@ -144,7 +144,10 @@ class ApiLearningRepository implements LearningRepository {
     final response = await _client.dio.get<List<dynamic>>('/lessons');
     final data = response.data;
     if (data == null) return const [];
-    return data.cast<Map<String, dynamic>>().map(Lesson.fromJson).toList();
+    return data
+        .whereType<Map>()
+        .map((item) => Lesson.fromJson(Map<String, dynamic>.from(item)))
+        .toList();
   }
 
   @override
