@@ -344,9 +344,7 @@ class AppController extends Notifier<AppState> {
               .toList(),
         ),
       );
-      if (!_usesApi) {
-        await _saveLessonProgress(completedLessonIds, todayCompletedLessonIds);
-      }
+      await _saveLessonProgress(completedLessonIds, todayCompletedLessonIds);
       state = state.copyWith(
         user: updatedUser,
         lessons: _applyLessonProgression(state.lessons, completedLessonIds),
@@ -394,9 +392,7 @@ class AppController extends Notifier<AppState> {
         ),
       );
       final todayReviewWordIds = {...state.todayReviewWordIds, id};
-      if (!_usesApi) {
-        await _saveTodayReviewWords(todayReviewWordIds);
-      }
+      await _saveTodayReviewWords(todayReviewWordIds);
       state = state.copyWith(
         customWords: [
           for (final item in state.customWords) item.id == id ? reviewed : item,
@@ -913,6 +909,4 @@ class AppController extends Notifier<AppState> {
         local.month == now.month &&
         local.day == now.day;
   }
-
-  bool get _usesApi => AppConstants.apiBaseUrl.isNotEmpty;
 }

@@ -90,6 +90,16 @@ CREATE TABLE IF NOT EXISTS reward_claims (
 ''');
 
     await connection.execute('''
+CREATE INDEX IF NOT EXISTS idx_study_sessions_uid_ended_at
+ON study_sessions (uid, ended_at);
+''');
+
+    await connection.execute('''
+CREATE INDEX IF NOT EXISTS idx_review_events_uid_reviewed_at
+ON review_events (uid, reviewed_at);
+''');
+
+    await connection.execute('''
 CREATE TABLE IF NOT EXISTS notifications (
   id TEXT PRIMARY KEY,
   uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,

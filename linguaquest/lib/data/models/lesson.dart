@@ -86,6 +86,7 @@ class QuizQuestion {
   final Word word;
 
   factory QuizQuestion.fromJson(Map<String, dynamic> json) {
+    final wordData = json['word'];
     return QuizQuestion(
       id: json['id'] as String,
       type: _questionType(json['type']),
@@ -93,7 +94,7 @@ class QuizQuestion {
       answer: json['answer'] as String,
       options: _stringList(json['options']),
       explanation: json['explanation'] as String? ?? '',
-      word: Word.fromJson(Map<String, dynamic>.from(json['word'] as Map)),
+      word: Word.fromJson(_questionWordJson(json, wordData)),
     );
   }
 
@@ -209,6 +210,31 @@ List<Map<String, dynamic>> _mapList(Object? value) {
       .whereType<Map>()
       .map((item) => Map<String, dynamic>.from(item))
       .toList();
+}
+
+Map<String, dynamic> _questionWordJson(
+  Map<String, dynamic> json,
+  Object? wordData,
+) {
+  if (wordData is Map) return Map<String, dynamic>.from(wordData);
+
+  final fallbackWord = json['answer']?.toString() ?? '';
+  final fallbackId = fallbackWord.isNotEmpty
+      ? fallbackWord
+      : json['id']?.toString() ?? 'question-word';
+  return {
+    'id': fallbackId,
+    'word': fallbackWord,
+    'phonetic': '',
+    'meaning': '',
+    'definition': json['prompt']?.toString() ?? '',
+    'partOfSpeech': '',
+    'exampleSentence': '',
+    'exampleTranslation': '',
+    'imageCue': '',
+    'difficulty': 'Medium',
+    'tags': const <String>[],
+  };
 }
 
 int? _int(Object? value) {
