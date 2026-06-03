@@ -1,5 +1,6 @@
 import 'package:postgres/postgres.dart';
 
+import 'auth.dart';
 import 'config.dart';
 
 class AppDatabase {
@@ -91,6 +92,19 @@ CREATE TABLE IF NOT EXISTS notifications (
   read_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL,
   UNIQUE (uid, source_key)
+);
+''');
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS point_transactions (
+  id TEXT PRIMARY KEY,
+  uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  source_type TEXT NOT NULL,
+  source_id TEXT NOT NULL,
+  points INTEGER NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
+  created_at TIMESTAMPTZ NOT NULL,
+  UNIQUE (uid, source_type, source_id)
 );
 ''');
   }
@@ -285,6 +299,53 @@ INSERT INTO study_sessions (
         ),
       },
     );
+  }
+
+  Future<Map<String, dynamic>> grantPoints(
+    String uid, {
+    required String sourceType,
+    required String sourceId,
+    required int points,
+    required String description,
+  }) async {
+    final now = DateTime.now().toUtc();
+    final rows = await connection.execute(
+      Sql.named('''
+WITH inserted AS (
+  INSERT INTO point_transactions (
+    id, uid, source_type, source_id, points, description, created_at
+  ) VALUES (
+    @id, @uid, @sourceType, @sourceId, @points, @description, @createdAt
+  )
+  ON CONFLICT (uid, source_type, source_id) DO NOTHING
+  RETURNING points
+), updated AS (
+  UPDATE users
+  SET xp = xp + COALESCE((SELECT points FROM inserted), 0),
+      updated_at = @createdAt
+  WHERE id = @uid AND EXISTS (SELECT 1 FROM inserted)
+  RETURNING *
+)
+SELECT
+  EXISTS (SELECT 1 FROM inserted) AS awarded,
+  COALESCE((SELECT points FROM inserted), 0) AS points_awarded,
+  COALESCE((SELECT row_to_json(updated) FROM updated), row_to_json(users)) AS user_json
+FROM users
+WHERE id = @uid
+LIMIT 1
+'''),
+      parameters: {
+        'id': newId(),
+        'uid': uid,
+        'sourceType': sourceType,
+        'sourceId': sourceId,
+        'points': points,
+        'description': description,
+        'createdAt': now,
+      },
+    );
+    if (rows.isEmpty) throw StateError('user not found');
+    return rows.first.toColumnMap();
   }
 
   Future<void> insertReviewEvent(String uid, Map<String, dynamic> data) async {
