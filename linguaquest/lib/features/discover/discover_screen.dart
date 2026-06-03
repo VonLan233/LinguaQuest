@@ -361,7 +361,7 @@ class _ProbabilityList extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  '${prize.rarityLabel} ${prize.probability.toStringAsFixed(0)}%',
+                  '${prize.rarityLabel} ${_formatProbability(prize.probability)}%',
                   style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                 ),
               ],
@@ -370,6 +370,11 @@ class _ProbabilityList extends StatelessWidget {
       ],
     );
   }
+}
+
+String _formatProbability(double probability) {
+  if (probability % 1 == 0) return probability.toStringAsFixed(0);
+  return probability.toString();
 }
 
 class _XpUseStatusLine extends StatelessWidget {
