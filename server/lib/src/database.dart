@@ -622,7 +622,7 @@ RETURNING *
           'prizeId': prize['id'],
           'cost': lotteryDrawCost,
           'balanceAfter': balanceAfter,
-          'createdAt': now,
+          'createdAt': now.toIso8601String(),
         },
         'prize': prize,
         'asset': assetRows.first.toColumnMap(),
