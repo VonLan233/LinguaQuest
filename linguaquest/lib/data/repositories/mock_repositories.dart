@@ -329,7 +329,7 @@ class MockLotteryRepository implements LotteryRepository {
     if (currentXp < lotteryDrawCost) {
       throw StateError('not enough XP for this draw');
     }
-    final now = DateTime.now();
+    final now = DateTime.now().toUtc();
     final prize = _choosePrize(_mockPrizePool);
     final existing = await _loadAssets(uid);
     final index = existing.indexWhere((asset) => asset.prizeId == prize.id);
@@ -351,12 +351,12 @@ class MockLotteryRepository implements LotteryRepository {
             id: existing[index].id,
             uid: existing[index].uid,
             prizeId: existing[index].prizeId,
-            category: existing[index].category,
-            rarity: existing[index].rarity,
-            name: existing[index].name,
-            description: existing[index].description,
+            category: prize.category,
+            rarity: prize.rarity,
+            name: prize.name,
+            description: prize.description,
             quantity: existing[index].quantity + 1,
-            fragmentValue: existing[index].fragmentValue,
+            fragmentValue: prize.fragmentValue,
             acquiredAt: existing[index].acquiredAt,
             updatedAt: now,
           );
@@ -391,7 +391,7 @@ class MockLotteryRepository implements LotteryRepository {
           body: '获得「${prize.name}」，已放入个人资产。',
           targetRoute: '/profile',
           isRead: false,
-          createdAt: now.toUtc(),
+          createdAt: now,
           sourceKey: 'lottery:${now.microsecondsSinceEpoch}',
         ),
       ],

@@ -456,11 +456,9 @@ class AppController extends Notifier<AppState> {
       }
       final updatedUser =
           response.user ??
-          await _authRepository.updateProfile(
-            user.copyWith(
-              xp: response.result.balanceAfter,
-              updatedAt: DateTime.now(),
-            ),
+          user.copyWith(
+            xp: response.result.balanceAfter,
+            updatedAt: DateTime.now(),
           );
       final assets = await _lotteryRepository.assets(user.uid);
       final notifications = await _notificationRepository.list(user.uid);
@@ -479,10 +477,11 @@ class AppController extends Notifier<AppState> {
       return (prizes: <LotteryPrize>[], assets: <UserAsset>[]);
     }
     try {
-      return (
-        prizes: await _lotteryRepository.prizePool(),
-        assets: await _lotteryRepository.assets(user.uid),
-      );
+      final (prizes, assets) = await (
+        _lotteryRepository.prizePool(),
+        _lotteryRepository.assets(user.uid),
+      ).wait;
+      return (prizes: prizes, assets: assets);
     } catch (error) {
       debugPrint('Failed to load lottery data: $error');
       return (prizes: <LotteryPrize>[], assets: <UserAsset>[]);

@@ -3,10 +3,13 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:linguaquest/core/state/app_controller.dart';
+import 'package:linguaquest/data/models/app_notification.dart';
 import 'package:linguaquest/data/models/lottery.dart';
 import 'package:linguaquest/data/models/user_profile.dart';
+import 'package:linguaquest/data/repositories/auth_repository.dart';
 import 'package:linguaquest/data/repositories/lottery_repository.dart';
 import 'package:linguaquest/data/repositories/mock_repositories.dart';
+import 'package:linguaquest/data/repositories/notification_repository.dart';
 import 'package:linguaquest/services/local_notification_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -33,15 +36,21 @@ void main() {
 
       expect(response.result.cost, lotteryDrawCost);
       expect(response.result.balanceAfter, 90);
+      expect(response.result.createdAt.isUtc, isTrue);
       expect(response.user?.xp, 90);
+      expect(response.user?.updatedAt.isUtc, isTrue);
       expect(storedProfile.xp, 90);
+      expect(storedProfile.updatedAt.isUtc, isTrue);
       expect(response.result.prize.category, isNot('learningBoost'));
       expect(response.result.prize.category, isNot('scoreBoost'));
       expect(assets, hasLength(1));
       expect(assets.single.prizeId, response.result.prize.id);
       expect(assets.single.quantity, 1);
+      expect(assets.single.acquiredAt.isUtc, isTrue);
+      expect(assets.single.updatedAt.isUtc, isTrue);
       expect(response.notifications.single.title, '积分抽奖结果');
       expect(response.notifications.single.targetRoute, '/profile');
+      expect(response.notifications.single.createdAt.isUtc, isTrue);
     },
   );
 
@@ -135,6 +144,46 @@ void main() {
     expect(prefs.getString('linguaquest.profile'), isNull);
   });
 
+  test(
+    'controller draw fallback updates state without persisting profile',
+    () async {
+      final now = DateTime.utc(2026, 6, 3);
+      final profile = UserProfile.demo().copyWith(
+        uid: 'fallback-user',
+        xp: 120,
+        updatedAt: now,
+      );
+      SharedPreferences.setMockInitialValues({
+        'linguaquest.profile': jsonEncode(profile.toJson()),
+      });
+      final auth = _CountingAuthRepository(profile);
+      final container = ProviderContainer(
+        overrides: [
+          authRepositoryProvider.overrideWithValue(auth),
+          lotteryRepositoryProvider.overrideWithValue(
+            _UserlessLotteryRepository(),
+          ),
+          notificationRepositoryProvider.overrideWithValue(
+            _EmptyNotificationRepository(),
+          ),
+          localNotificationServiceProvider.overrideWithValue(
+            _NoopLocalNotificationService(),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await container.read(appControllerProvider.notifier).bootstrap();
+      final succeeded = await container
+          .read(appControllerProvider.notifier)
+          .drawLottery();
+
+      expect(succeeded, isTrue);
+      expect(container.read(appControllerProvider).user?.xp, 90);
+      expect(auth.updateCount, 0);
+    },
+  );
+
   test('mock lottery draw accumulates repeated prize quantities', () async {
     SharedPreferences.setMockInitialValues({});
     final repo = MockLotteryRepository();
@@ -206,6 +255,107 @@ void main() {
     expect(state.userAssets, isEmpty);
     expect(state.errorMessage, isNull);
   });
+}
+
+class _CountingAuthRepository implements AuthRepository {
+  _CountingAuthRepository(this.profile);
+
+  UserProfile profile;
+  var updateCount = 0;
+
+  @override
+  Future<UserProfile?> loadSession() async => profile;
+
+  @override
+  Future<UserProfile> login({required String email, required String password}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> logout() async {}
+
+  @override
+  Future<UserProfile> register({
+    required String name,
+    required String email,
+    required String password,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<UserProfile> updateProfile(UserProfile profile) async {
+    updateCount++;
+    this.profile = profile;
+    return profile;
+  }
+}
+
+class _UserlessLotteryRepository implements LotteryRepository {
+  @override
+  Future<List<UserAsset>> assets(String uid) async => [];
+
+  @override
+  Future<LotteryDrawResponse> draw({
+    required String uid,
+    required int currentXp,
+  }) async {
+    final now = DateTime.utc(2026, 6, 3);
+    return LotteryDrawResponse(
+      result: LotteryDrawResult(
+        drawId: 'draw-fallback',
+        prize: const LotteryPrize(
+          id: 'fallback-prize',
+          name: 'Fallback Prize',
+          category: 'badge',
+          rarity: 'common',
+          description: 'Decorative only.',
+          probability: 100,
+          fragmentValue: 1,
+        ),
+        asset: UserAsset(
+          id: 'asset-fallback',
+          uid: uid,
+          prizeId: 'fallback-prize',
+          category: 'badge',
+          rarity: 'common',
+          name: 'Fallback Prize',
+          description: 'Decorative only.',
+          quantity: 1,
+          fragmentValue: 1,
+          acquiredAt: now,
+          updatedAt: now,
+        ),
+        cost: lotteryDrawCost,
+        balanceAfter: currentXp - lotteryDrawCost,
+        createdAt: now,
+      ),
+    );
+  }
+
+  @override
+  Future<List<LotteryPrize>> prizePool() async => [];
+}
+
+class _EmptyNotificationRepository implements NotificationRepository {
+  @override
+  Future<void> ensureGenerated(
+    String uid,
+    List<AppNotification> notifications,
+  ) async {}
+
+  @override
+  Future<List<AppNotification>> list(
+    String uid, {
+    bool unreadOnly = false,
+    AppNotificationType? type,
+  }) async => [];
+
+  @override
+  Future<int> markAllRead(String uid) async => 0;
+
+  @override
+  Future<AppNotification?> markRead(String uid, String id) async => null;
 }
 
 class _FailingLotteryRepository implements LotteryRepository {
