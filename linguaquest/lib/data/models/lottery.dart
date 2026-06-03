@@ -21,7 +21,9 @@ class LotteryPrize {
 
   bool get isComfortReward => category == 'fragment' || rarity == 'comfort';
 
-  String get categoryLabel {
+  String get categoryLabel => categoryLabelFor(category);
+
+  static String categoryLabelFor(String category) {
     switch (category) {
       case 'avatarFrame':
         return '头像框';
@@ -111,18 +113,10 @@ class UserAsset {
 
   int get totalFragments => fragmentValue * quantity;
 
-  String get categoryLabel => LotteryPrize(
-    id: prizeId,
-    name: name,
-    category: category,
-    rarity: rarity,
-    description: description,
-    probability: 0,
-    fragmentValue: fragmentValue,
-  ).categoryLabel;
+  String get categoryLabel => LotteryPrize.categoryLabelFor(category);
 
   factory UserAsset.fromJson(Map<String, dynamic> json) {
-    final now = DateTime.now();
+    final now = DateTime.timestamp();
     return UserAsset(
       id: json['id'] as String,
       uid: json['uid'] as String,
@@ -131,7 +125,7 @@ class UserAsset {
       rarity: json['rarity'] as String? ?? 'comfort',
       name: json['name'] as String? ?? '',
       description: json['description'] as String? ?? '',
-      quantity: json['quantity'] as int? ?? 1,
+      quantity: _int(json['quantity'] ?? 1),
       fragmentValue: _int(json['fragmentValue'] ?? json['fragment_value']),
       acquiredAt: _date(json['acquiredAt'] ?? json['acquired_at']) ?? now,
       updatedAt: _date(json['updatedAt'] ?? json['updated_at']) ?? now,
@@ -188,7 +182,8 @@ class LotteryDrawResult {
           ? _int(draw['balanceAfter'] ?? draw['balance_after'])
           : _int(balanceAfterJson),
       createdAt:
-          _date(draw['createdAt'] ?? draw['created_at']) ?? DateTime.now(),
+          _date(draw['createdAt'] ?? draw['created_at']) ??
+          DateTime.timestamp(),
     );
   }
 }

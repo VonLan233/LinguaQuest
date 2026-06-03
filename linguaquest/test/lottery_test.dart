@@ -75,7 +75,7 @@ void main() {
       'rarity': 'common',
       'name': 'Snake Prize',
       'description': 'Decorative only.',
-      'quantity': 2,
+      'quantity': '2',
       'fragment_value': 7,
       'acquired_at': acquiredAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
@@ -84,6 +84,8 @@ void main() {
     expect(prize.fragmentValue, 7);
     expect(prize.isActive, isFalse);
     expect(asset.prizeId, 'snake-prize');
+    expect(asset.categoryLabel, '学习徽章');
+    expect(asset.quantity, 2);
     expect(asset.fragmentValue, 7);
     expect(asset.acquiredAt, acquiredAt);
     expect(asset.updatedAt, updatedAt);
@@ -117,6 +119,22 @@ void main() {
     expect(result.cost, 30);
     expect(result.balanceAfter, 90);
     expect(result.createdAt, createdAt);
+  });
+
+  test('lottery models use UTC fallback timestamps', () {
+    final asset = UserAsset.fromJson({
+      'id': 'asset-fallback-time',
+      'uid': 'user-1',
+    });
+    final result = LotteryDrawResult.fromJson({
+      'draw': {'id': 'draw-fallback-time'},
+      'prize': {'id': 'fallback-prize'},
+      'asset': {'id': 'asset-fallback-time', 'uid': 'user-1'},
+    });
+
+    expect(asset.acquiredAt.isUtc, isTrue);
+    expect(asset.updatedAt.isUtc, isTrue);
+    expect(result.createdAt.isUtc, isTrue);
   });
 
   test('mock lottery draw refreshes cached auth session profile', () async {
