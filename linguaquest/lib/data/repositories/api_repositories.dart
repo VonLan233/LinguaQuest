@@ -142,10 +142,9 @@ class ApiLearningRepository implements LearningRepository {
   @override
   Future<List<Lesson>> listLessons() async {
     final response = await _client.dio.get<List<dynamic>>('/lessons');
-    return response.data!
-        .cast<Map<String, dynamic>>()
-        .map(Lesson.fromJson)
-        .toList();
+    final data = response.data;
+    if (data == null) return const [];
+    return data.cast<Map<String, dynamic>>().map(Lesson.fromJson).toList();
   }
 
   @override
@@ -157,7 +156,9 @@ class ApiLearningRepository implements LearningRepository {
         'timezoneOffsetMinutes': now.timeZoneOffset.inMinutes,
       },
     );
-    return LearningProgress.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) return null;
+    return LearningProgress.fromJson(data);
   }
 
   @override
@@ -180,7 +181,9 @@ class ApiLearningRepository implements LearningRepository {
         'timezoneOffsetMinutes': now.timeZoneOffset.inMinutes,
       },
     );
-    return RewardClaimResult.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) return null;
+    return RewardClaimResult.fromJson(data);
   }
 }
 

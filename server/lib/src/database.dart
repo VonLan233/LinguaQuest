@@ -332,8 +332,7 @@ ORDER BY lesson_id
     );
     return [
       for (final row in rows)
-        if (row.toColumnMap()['lesson_id'] != null)
-          row.toColumnMap()['lesson_id'].toString(),
+        if (row[0] != null) row[0].toString(),
     ];
   }
 
@@ -352,8 +351,7 @@ ORDER BY lesson_id
     );
     return [
       for (final row in rows)
-        if (row.toColumnMap()['lesson_id'] != null)
-          row.toColumnMap()['lesson_id'].toString(),
+        if (row[0] != null) row[0].toString(),
     ];
   }
 
@@ -372,8 +370,7 @@ ORDER BY word_id
     );
     return [
       for (final row in rows)
-        if (row.toColumnMap()['word_id'] != null)
-          row.toColumnMap()['word_id'].toString(),
+        if (row[0] != null) row[0].toString(),
     ];
   }
 
@@ -388,8 +385,7 @@ ORDER BY claimed_at
     );
     return [
       for (final row in rows)
-        if (row.toColumnMap()['reward_id'] != null)
-          row.toColumnMap()['reward_id'].toString(),
+        if (row[0] != null) row[0].toString(),
     ];
   }
 
@@ -400,32 +396,34 @@ ORDER BY claimed_at
     required int points,
   }) async {
     final now = DateTime.now().toUtc();
-    final rows = await connection.execute(
-      Sql.named('''
+    return connection.runTx((tx) async {
+      final rows = await tx.execute(
+        Sql.named('''
 INSERT INTO reward_claims (uid, reward_id, local_date, points, claimed_at)
 VALUES (@uid, @rewardId, @localDate, @points, @claimedAt)
 ON CONFLICT (uid, reward_id, local_date) DO NOTHING
 RETURNING reward_id
 '''),
-      parameters: {
-        'uid': uid,
-        'rewardId': rewardId,
-        'localDate': localDate,
-        'points': points,
-        'claimedAt': now,
-      },
-    );
-    if (rows.isEmpty) return false;
-    await connection.execute(
-      Sql.named('''
+        parameters: {
+          'uid': uid,
+          'rewardId': rewardId,
+          'localDate': localDate,
+          'points': points,
+          'claimedAt': now,
+        },
+      );
+      if (rows.isEmpty) return false;
+      await tx.execute(
+        Sql.named('''
 UPDATE users
 SET xp = xp + @points,
     updated_at = @updatedAt
 WHERE id=@uid
 '''),
-      parameters: {'uid': uid, 'points': points, 'updatedAt': now},
-    );
-    return true;
+        parameters: {'uid': uid, 'points': points, 'updatedAt': now},
+      );
+      return true;
+    });
   }
 
   Future<List<Map<String, dynamic>>> notifications(
