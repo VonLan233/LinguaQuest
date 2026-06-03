@@ -6,6 +6,7 @@ import 'config.dart';
 import 'database.dart';
 import 'json_response.dart';
 import 'notification_policy.dart';
+import 'reward_policy.dart';
 
 Router buildRouter(AppConfig config, AppDatabase database) {
   final router = Router();
@@ -149,7 +150,7 @@ Router buildRouter(AppConfig config, AppDatabase database) {
       final sourceId = (body['sourceId'] as String? ?? '').trim();
       final requestedPoints = body['points'] as int? ?? 0;
       final description = (body['description'] as String? ?? '').trim();
-      final points = _validatedRewardPoints(
+      final points = validatedRewardPoints(
         sourceType: sourceType,
         sourceId: sourceId,
         requestedPoints: requestedPoints,
@@ -359,31 +360,4 @@ Future<void> _ensureNotificationsForToday(
 String _dateValue(Object? value) {
   if (value is DateTime) return value.toIso8601String();
   return value?.toString() ?? DateTime.now().toUtc().toIso8601String();
-}
-
-int? _validatedRewardPoints({
-  required String sourceType,
-  required String sourceId,
-  required int requestedPoints,
-}) {
-  if (requestedPoints <= 0) return null;
-  switch (sourceType) {
-    case 'study_lesson':
-    case 'training_session':
-      return requestedPoints <= 30 ? requestedPoints : null;
-    case 'review_word':
-      return requestedPoints == 3 ? requestedPoints : null;
-    case 'reward_task':
-      final taskId = sourceId.split(':').first;
-      return switch (taskId) {
-        'daily-checkin' => requestedPoints == 5 ? requestedPoints : null,
-        'new-learning' => requestedPoints == 20 ? requestedPoints : null,
-        'review-done' => requestedPoints == 15 ? requestedPoints : null,
-        'training-challenge' => requestedPoints == 20 ? requestedPoints : null,
-        'weak-cleanup' => requestedPoints == 10 ? requestedPoints : null,
-        _ => null,
-      };
-    default:
-      return null;
-  }
 }
