@@ -8,6 +8,7 @@ import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/brand_mark.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
+import '../../data/models/lottery.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -108,6 +109,10 @@ class ProfileScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 22),
         ],
+        const SectionHeader(title: '个人资产', subtitle: '抽奖获得的装饰资产只用于展示，不影响学习分数。'),
+        const SizedBox(height: 10),
+        _AssetInventory(assets: state.userAssets),
+        const SizedBox(height: 22),
         const SectionHeader(title: '设置与支持'),
         const SizedBox(height: 10),
         _ProfileAction(
@@ -169,6 +174,121 @@ class ProfileScreen extends ConsumerWidget {
         ),
       ],
     );
+  }
+}
+
+class _AssetInventory extends StatelessWidget {
+  const _AssetInventory({required this.assets});
+
+  final List<UserAsset> assets;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    if (assets.isEmpty) {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const IconCueBadge(
+            icon: Icons.inventory_2_outlined,
+            color: AppTheme.mango,
+            size: 38,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              '暂无装饰资产。前往发现页使用 XP 抽奖后，头像框、主页背景、徽章、称号、卡片皮肤和碎片会显示在这里。',
+              style: TextStyle(
+                color: theme.colorScheme.onSurfaceVariant,
+                height: 1.42,
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+    return Column(
+      children: [
+        for (var index = 0; index < assets.length; index++) ...[
+          _AssetRow(asset: assets[index]),
+          if (index != assets.length - 1)
+            Divider(
+              height: 14,
+              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.7),
+            ),
+        ],
+      ],
+    );
+  }
+}
+
+class _AssetRow extends StatelessWidget {
+  const _AssetRow({required this.asset});
+
+  final UserAsset asset;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        IconCueBadge(
+          icon: _assetIcon(asset.category),
+          color: _assetColor(asset.rarity),
+          size: 38,
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(asset.name, style: theme.textTheme.titleMedium),
+              const SizedBox(height: 2),
+              Text(
+                '${asset.categoryLabel} · 数量 ${asset.quantity} · 碎片值 ${asset.totalFragments}',
+                style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                asset.description,
+                style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  IconData _assetIcon(String category) {
+    switch (category) {
+      case 'avatarFrame':
+        return Icons.account_circle_outlined;
+      case 'profileBackground':
+        return Icons.wallpaper_outlined;
+      case 'badge':
+        return Icons.workspace_premium_outlined;
+      case 'title':
+        return Icons.military_tech_outlined;
+      case 'cardSkin':
+        return Icons.style_outlined;
+      default:
+        return Icons.auto_awesome_outlined;
+    }
+  }
+
+  Color _assetColor(String rarity) {
+    switch (rarity) {
+      case 'rare':
+        return AppTheme.coral;
+      case 'uncommon':
+        return AppTheme.teal;
+      case 'common':
+        return AppTheme.cyan;
+      default:
+        return AppTheme.mango;
+    }
   }
 }
 
