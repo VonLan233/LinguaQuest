@@ -182,9 +182,12 @@ Router buildRouter(AppConfig config, AppDatabase database) {
         points: points,
       );
       final user = await database.userById(uid);
+      if (user == null) {
+        return jsonResponse({'error': 'user not found'}, status: 404);
+      }
       return jsonResponse({
         'claimed': claimed,
-        'user': userDto(user!),
+        'user': userDto(user),
         'progress': await learningProgressDto(database, uid, dayWindow),
       }, status: claimed ? 201 : 200);
     });
@@ -252,23 +255,18 @@ Future<Map<String, dynamic>> learningProgressDto(
   String uid,
   NotificationDayWindow dayWindow,
 ) async {
+  final results = await Future.wait([
+    database.completedLessonIds(uid),
+    database.lessonIdsInRange(uid, dayWindow.startUtc, dayWindow.endUtc),
+    database.reviewWordIdsInRange(uid, dayWindow.startUtc, dayWindow.endUtc),
+    database.rewardIdsForDate(uid, dayWindow.dateKey),
+  ]);
   return {
     'localDate': dayWindow.dateKey,
-    'completedLessonIds': await database.completedLessonIds(uid),
-    'todayCompletedLessonIds': await database.lessonIdsInRange(
-      uid,
-      dayWindow.startUtc,
-      dayWindow.endUtc,
-    ),
-    'todayReviewWordIds': await database.reviewWordIdsInRange(
-      uid,
-      dayWindow.startUtc,
-      dayWindow.endUtc,
-    ),
-    'todayClaimedRewardIds': await database.rewardIdsForDate(
-      uid,
-      dayWindow.dateKey,
-    ),
+    'completedLessonIds': results[0],
+    'todayCompletedLessonIds': results[1],
+    'todayReviewWordIds': results[2],
+    'todayClaimedRewardIds': results[3],
   };
 }
 

@@ -114,9 +114,16 @@ class AppController extends Notifier<AppState> {
           : <String>{};
       final rawLessons = await _learningRepository.listLessons();
       final user = await _authRepository.loadSession();
-      final progress = user == null
-          ? null
-          : await _learningRepository.loadLearningProgress(DateTime.now());
+      LearningProgress? progress;
+      if (user != null) {
+        try {
+          progress = await _learningRepository.loadLearningProgress(
+            DateTime.now(),
+          );
+        } catch (error) {
+          debugPrint('Failed to load remote learning progress: $error');
+        }
+      }
       final completedLessonIds =
           progress?.completedLessonIds ?? localCompletedLessonIds;
       final todayCompletedLessonIds =
