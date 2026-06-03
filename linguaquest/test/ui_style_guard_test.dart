@@ -597,8 +597,8 @@ void main() {
         'lib/features/quiz/lesson_result_screen.dart',
       ).readAsStringSync();
 
-      expect(training, contains("label: '本周 \${user?.xp ?? 0} XP'"));
-      expect(training, contains('今日可得 60 XP'));
+      expect(training, contains("label: '总计 \${user?.xp ?? 0} XP'"));
+      expect(training, contains(r'今日训练 ${state.todayTrainingXp} XP'));
       expect(training, isNot(contains('本周 \${user?.xp ?? 0} 积分')));
       expect(quest, contains("label: '任务 XP'"));
       expect(quest, isNot(contains("label: '今日可领 20 XP'")));

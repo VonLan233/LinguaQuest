@@ -271,8 +271,11 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
     if (_initialized && _game == game) return;
     _game = game;
     final words = _sourceWordsForGame(state, game);
-    final distinctWords = _distinctWords(words);
+    var distinctWords = _distinctWords(words);
     final minimumWords = game == TrainingGameType.spelling ? 1 : 3;
+    if (!widget.mistakesOnly && distinctWords.length < minimumWords) {
+      distinctWords = _distinctWords(state.trainingWords);
+    }
     if (distinctWords.length < minimumWords) {
       _initialized = true;
       return;

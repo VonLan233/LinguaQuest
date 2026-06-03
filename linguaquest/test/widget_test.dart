@@ -24,6 +24,7 @@ import 'package:linguaquest/features/learning/lesson_preview_screen.dart';
 import 'package:linguaquest/features/quiz/lesson_result_screen.dart';
 import 'package:linguaquest/features/quiz/quiz_session_screen.dart';
 import 'package:linguaquest/features/search/search_screen.dart';
+import 'package:linguaquest/features/training/training_session_screen.dart';
 import 'package:linguaquest/features/wordbook/target_word_detail_screen.dart';
 import 'package:linguaquest/features/wordbook/word_detail_screen.dart';
 import 'package:linguaquest/features/wordbook/wordbook_screen.dart';
@@ -474,6 +475,50 @@ void main() {
       );
     },
   );
+
+  for (final entry in const {
+    'word-rush': '抢词',
+    'survival': '一站到底',
+    'spelling': '单词拼写',
+  }.entries) {
+    testWidgets('training game ${entry.key} opens with usable questions', (
+      tester,
+    ) async {
+      final now = DateTime(2026, 5, 25);
+      final profile = UserProfile(
+        uid: 'training-game-${entry.key}',
+        name: 'Tia',
+        email: 'tia-${entry.key}@lingua.quest',
+        targetExam: 'IELTS',
+        level: 'Intermediate',
+        dailyGoal: 12,
+        xp: 0,
+        streak: 0,
+        createdAt: now,
+        updatedAt: now,
+      );
+      SharedPreferences.setMockInitialValues({
+        'linguaquest.profile': jsonEncode(profile.toJson()),
+      });
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      await container.read(appControllerProvider.notifier).bootstrap();
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            home: TrainingSessionScreen(gameId: entry.key),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text(entry.value), findsAtLeastNWidgets(1));
+      expect(find.text('训练题源不足'), findsNothing);
+    });
+  }
 
   testWidgets('discover weak cleanup does not auto-complete without mistakes', (
     tester,
@@ -1223,7 +1268,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('限时测试结果'), findsOneWidget);
+      expect(find.text('训练结果'), findsOneWidget);
       expect(find.text('返回训练场'), findsOneWidget);
       expect(find.text('返回学习路径'), findsNothing);
       expect(find.text('课程结果'), findsNothing);
