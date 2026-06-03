@@ -43,6 +43,7 @@ class ProgressAnalyticsScreen extends ConsumerWidget {
               cardCount: state.customWords.length,
               masteredCount: mastered,
               accuracy: accuracy,
+              trainingXp: state.todayTrainingXp,
             ),
             const SizedBox(height: 20),
             Text(
@@ -76,11 +77,13 @@ class _ProgressSignals extends StatelessWidget {
     required this.cardCount,
     required this.masteredCount,
     required this.accuracy,
+    required this.trainingXp,
   });
 
   final int cardCount;
   final int masteredCount;
   final int accuracy;
+  final int trainingXp;
 
   @override
   Widget build(BuildContext context) {
@@ -106,10 +109,19 @@ class _ProgressSignals extends StatelessWidget {
         const _ProgressSignalDivider(),
         Expanded(
           child: _ProgressSignal(
+            label: '训练 XP',
+            value: '$trainingXp',
+            icon: Icons.sports_esports_outlined,
+            color: AppTheme.mango,
+          ),
+        ),
+        const _ProgressSignalDivider(),
+        Expanded(
+          child: _ProgressSignal(
             label: '正确率',
             value: '$accuracy%',
             icon: Icons.insights_outlined,
-            color: AppTheme.mango,
+            color: AppTheme.coral,
           ),
         ),
       ],

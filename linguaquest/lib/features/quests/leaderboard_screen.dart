@@ -12,13 +12,17 @@ class LeaderboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(appControllerProvider).user;
-    final entries = [
-      _Entry(name: user?.name ?? '学习者', xp: user?.xp ?? 0, rank: 1),
-      const _Entry(name: 'Maya', xp: 860, rank: 2),
-      const _Entry(name: 'Chen', xp: 790, rank: 3),
-      const _Entry(name: 'Aisha', xp: 650, rank: 4),
-    ]..sort((a, b) => b.xp.compareTo(a.xp));
+    final state = ref.watch(appControllerProvider);
+    final user = state.user;
+    final entries = state.todayTrainingXp > 0
+        ? [
+            _Entry(
+              name: user?.name ?? '学习者',
+              xp: state.todayTrainingXp,
+              rank: 1,
+            ),
+          ]
+        : const <_Entry>[];
 
     return Scaffold(
       appBar: AppBar(
@@ -29,13 +33,51 @@ class LeaderboardScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            const SectionHeader(title: '本周 XP', subtitle: '好友和班级小组的轻量排名。'),
+            const SectionHeader(
+              title: '训练场排行榜',
+              subtitle: '仅统计真实完成的训练 XP，不再展示静态演示榜单。',
+            ),
             const SizedBox(height: 16),
-            for (var index = 0; index < entries.length; index++)
-              _LeaderboardTile(entry: entries[index], rank: index + 1),
+            if (entries.isEmpty)
+              const _EmptyTrainingLeaderboard()
+            else
+              for (var index = 0; index < entries.length; index++)
+                _LeaderboardTile(entry: entries[index], rank: index + 1),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _EmptyTrainingLeaderboard extends StatelessWidget {
+  const _EmptyTrainingLeaderboard();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const IconCueBadge(
+          icon: Icons.leaderboard_outlined,
+          color: AppTheme.mango,
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('暂无训练成绩', style: theme.textTheme.titleMedium),
+              const SizedBox(height: 4),
+              Text(
+                '完成抢词、一站到底或单词拼写后，会用真实训练 XP 生成排名。',
+                style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

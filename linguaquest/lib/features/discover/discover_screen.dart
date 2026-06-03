@@ -17,6 +17,7 @@ class DiscoverScreen extends ConsumerWidget {
     final claimed = state.todayClaimedRewardIds;
     final newLearningDone = state.todayCompletedFormalLessonIds.isNotEmpty;
     final reviewDone = state.todayReviewWordIds.isNotEmpty;
+    final trainingDone = state.todayTrainingGameIds.isNotEmpty;
     final reviewedMistakeToday = state.customWords.any(
       (word) =>
           state.todayReviewWordIds.contains(word.id) && word.wrongCount > 0,
@@ -122,10 +123,17 @@ class DiscoverScreen extends ConsumerWidget {
               title: '训练场挑战',
               condition: '完成任意训练场游戏',
               points: 20,
-              isDone: false,
+              isDone: trainingDone,
               isClaimed: claimed.contains('training-challenge'),
               onTap: () => context.go('/training'),
-              onClaim: () {},
+              onClaim: () => _claimReward(
+                context,
+                ref,
+                id: 'training-challenge',
+                title: '训练场挑战',
+                points: 20,
+                isAvailable: trainingDone,
+              ),
             ),
             _RewardTaskData(
               icon: Icons.cleaning_services_outlined,
