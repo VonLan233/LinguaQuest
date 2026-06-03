@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/models/app_notification.dart';
 import '../../data/models/custom_word.dart';
+import '../../data/models/daily_reward_task.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
 import '../../data/models/user_profile.dart';
@@ -110,6 +111,9 @@ class AppState {
     required this.todayCompletedLessonIds,
     required this.todayReviewWordIds,
     required this.todayClaimedRewardIds,
+    required this.rewardTasks,
+    required this.pendingRewardTaskIds,
+    required this.isRewardLoading,
     required this.notifications,
     this.user,
     this.lastResult,
@@ -129,6 +133,9 @@ class AppState {
   final Set<String> todayCompletedLessonIds;
   final Set<String> todayReviewWordIds;
   final Set<String> todayClaimedRewardIds;
+  final List<DailyRewardTask> rewardTasks;
+  final Set<String> pendingRewardTaskIds;
+  final bool isRewardLoading;
   final List<AppNotification> notifications;
   final LessonResult? lastResult;
   final String? errorMessage;
@@ -204,6 +211,9 @@ class AppState {
     Set<String>? todayCompletedLessonIds,
     Set<String>? todayReviewWordIds,
     Set<String>? todayClaimedRewardIds,
+    List<DailyRewardTask>? rewardTasks,
+    Set<String>? pendingRewardTaskIds,
+    bool? isRewardLoading,
     List<AppNotification>? notifications,
     LessonResult? lastResult,
     String? errorMessage,
@@ -226,6 +236,9 @@ class AppState {
       todayReviewWordIds: todayReviewWordIds ?? this.todayReviewWordIds,
       todayClaimedRewardIds:
           todayClaimedRewardIds ?? this.todayClaimedRewardIds,
+      rewardTasks: rewardTasks ?? this.rewardTasks,
+      pendingRewardTaskIds: pendingRewardTaskIds ?? this.pendingRewardTaskIds,
+      isRewardLoading: isRewardLoading ?? this.isRewardLoading,
       notifications: notifications ?? this.notifications,
       lastResult: lastResult ?? this.lastResult,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
@@ -244,6 +257,9 @@ class AppState {
       todayCompletedLessonIds: {},
       todayReviewWordIds: {},
       todayClaimedRewardIds: {},
+      rewardTasks: [],
+      pendingRewardTaskIds: {},
+      isRewardLoading: false,
       notifications: [],
     );
   }

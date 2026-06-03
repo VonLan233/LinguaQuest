@@ -1960,7 +1960,7 @@ void main() {
     final controller = container.read(appControllerProvider.notifier);
 
     expect(
-      await controller.claimReward(
+      await controller.claimLocalReward(
         id: 'daily-checkin',
         points: 5,
         isAvailable: true,
@@ -1974,7 +1974,7 @@ void main() {
     );
 
     expect(
-      await controller.claimReward(
+      await controller.claimLocalReward(
         id: 'daily-checkin',
         points: 5,
         isAvailable: true,
