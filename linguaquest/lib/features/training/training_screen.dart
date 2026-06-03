@@ -6,6 +6,7 @@ import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
+import '../../data/models/lesson.dart';
 
 class TrainingScreen extends ConsumerWidget {
   const TrainingScreen({super.key});
@@ -14,6 +15,7 @@ class TrainingScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appControllerProvider);
     final user = state.user;
+    final timedPackRoute = _firstTimedPackRoute(state.lessons);
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
       children: [
@@ -33,12 +35,12 @@ class TrainingScreen extends ConsumerWidget {
           runSpacing: 8,
           children: [
             PillLabel(
-              label: '本周 ${user?.xp ?? 0} XP',
+              label: '总计 ${user?.xp ?? 0} XP',
               icon: Icons.bolt,
               color: AppTheme.mango,
             ),
-            const PillLabel(
-              label: '今日可得 60 XP',
+            PillLabel(
+              label: '今日训练 ${state.todayTrainingXp} XP',
               icon: Icons.add_circle_outline,
             ),
           ],
@@ -62,15 +64,18 @@ class TrainingScreen extends ConsumerWidget {
               title: '校园速测',
               body: '从校园生活词包抽题，适合课后快速检测，不影响正式复习节奏。',
               source: '校园生活 · 限时测试',
-              actionLabel: '开始测试',
-              onTap: () => context.push('/timed-test/lesson-campus-1'),
+              actionLabel: timedPackRoute == null ? '暂无词包' : '开始测试',
+              onTap: timedPackRoute == null
+                  ? null
+                  : () => context.push(timedPackRoute),
             ),
-            const _TrainingGameData(
+            _TrainingGameData(
               icon: Icons.timer_outlined,
               title: '抢词',
               body: '60 秒内尽可能答对英文选义题，按正确数、连击和准确率给积分。',
               source: '已学词 + 到期词',
-              actionLabel: '即将开放',
+              actionLabel: '开始抢词',
+              onTap: () => context.push('/training/word-rush'),
             ),
           ],
         ),
@@ -79,20 +84,21 @@ class TrainingScreen extends ConsumerWidget {
         const SizedBox(height: 12),
         _TrainingGameList(
           games: [
-            const _TrainingGameData(
+            _TrainingGameData(
               icon: Icons.stairs_outlined,
               title: '一站到底',
               body: '从简单到困难连续答题，错词会进入弱项词和错词本。',
               source: '当前词书 + 弱项词',
-              actionLabel: '即将开放',
+              actionLabel: '开始闯关',
+              onTap: () => context.push('/training/survival'),
             ),
             _TrainingGameData(
               icon: Icons.edit_note_outlined,
               title: '单词拼写',
               body: '看中文、听发音或看例句空格后输入英文，强化可产出能力。',
               source: '拼写弱项词',
-              actionLabel: '进入生词本',
-              onTap: () => context.push('/custom-words'),
+              actionLabel: '开始拼写',
+              onTap: () => context.push('/training/spelling'),
             ),
             const _TrainingGameData(
               icon: Icons.article_outlined,
@@ -113,6 +119,13 @@ class TrainingScreen extends ConsumerWidget {
       ],
     );
   }
+}
+
+String? _firstTimedPackRoute(Iterable<Lesson> lessons) {
+  for (final lesson in lessons) {
+    if (lesson.isTrainingPack == true) return '/timed-test/${lesson.id}';
+  }
+  return null;
 }
 
 class _TrainingReadinessLine extends StatelessWidget {

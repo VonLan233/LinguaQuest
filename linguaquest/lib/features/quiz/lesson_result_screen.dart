@@ -10,7 +10,7 @@ import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
 
-enum LessonResultSource { lesson, timed }
+enum LessonResultSource { lesson, timed, training }
 
 class LessonResultViewArgs {
   const LessonResultViewArgs({
@@ -43,23 +43,27 @@ class LessonResultScreen extends ConsumerWidget {
     final accuracy = (resolved.accuracy * 100).round();
     final currentXp = state.user?.xp;
     final isTimed = source == LessonResultSource.timed;
+    final isTraining = source == LessonResultSource.training;
     return Scaffold(
       appBar: AppBar(
         leading: FallbackBackButton(
-          fallbackLocation: isTimed ? '/training' : '/learn',
+          fallbackLocation: isTimed || isTraining ? '/training' : '/learn',
         ),
-        title: Text(isTimed ? '限时测试结果' : '课程结果'),
+        title: Text(isTimed || isTraining ? '训练结果' : '课程结果'),
       ),
-      bottomNavigationBar: _ResultActions(isTimed: isTimed),
+      bottomNavigationBar: _ResultActions(
+        source: source,
+        hasMistakes: resolved.mistakes.isNotEmpty,
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 150),
           children: [
             SectionHeader(
-              title: isTimed
+              title: isTimed || isTraining
                   ? (accuracy >= 80 ? '挑战成功！' : '挑战完成')
                   : (accuracy >= 80 ? '表现很棒！' : '课程完成'),
-              subtitle: isTimed
+              subtitle: isTimed || isTraining
                   ? '答对 ${resolved.correctAnswers}/${resolved.totalQuestions} 题 · 已入账 +${resolved.xpEarned} XP · 错题可去复习中心整理。'
                   : '答对 ${resolved.correctAnswers}/${resolved.totalQuestions} 题 · 已入账 +${resolved.xpEarned} XP · 错题已进入复习。',
             ),
@@ -68,8 +72,10 @@ class LessonResultScreen extends ConsumerWidget {
               label: resolved.lessonTitle,
               icon: isTimed
                   ? Icons.timer_outlined
+                  : isTraining
+                  ? Icons.sports_esports_outlined
                   : Icons.workspace_premium_outlined,
-              color: isTimed ? AppTheme.coral : AppTheme.cyan,
+              color: isTimed || isTraining ? AppTheme.coral : AppTheme.cyan,
             ),
             const SizedBox(height: 12),
             _ResultScoreSummary(
@@ -81,7 +87,7 @@ class LessonResultScreen extends ConsumerWidget {
             _XpImpactNotice(
               xpEarned: resolved.xpEarned,
               currentXp: currentXp,
-              isTimed: isTimed,
+              isTimed: isTimed || isTraining,
             ),
             const SizedBox(height: 20),
             Text(
@@ -104,13 +110,15 @@ class LessonResultScreen extends ConsumerWidget {
 }
 
 class _ResultActions extends StatelessWidget {
-  const _ResultActions({required this.isTimed});
+  const _ResultActions({required this.source, required this.hasMistakes});
 
-  final bool isTimed;
+  final LessonResultSource source;
+  final bool hasMistakes;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isTraining = source != LessonResultSource.lesson;
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
@@ -124,6 +132,15 @@ class _ResultActions extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            if (isTraining && hasMistakes) ...[
+              FilledButton.icon(
+                onPressed: () =>
+                    context.go('/training/spelling?source=mistakes'),
+                icon: const Icon(Icons.replay_circle_filled_outlined),
+                label: const Text('错词再练'),
+              ),
+              const SizedBox(height: 8),
+            ],
             FilledButton.icon(
               onPressed: () => context.go('/review'),
               icon: const Icon(Icons.replay),
@@ -131,11 +148,13 @@ class _ResultActions extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             OutlinedButton.icon(
-              onPressed: () => context.go(isTimed ? '/training' : '/learn'),
+              onPressed: () => context.go(isTraining ? '/training' : '/learn'),
               icon: Icon(
-                isTimed ? Icons.sports_esports_outlined : Icons.route_outlined,
+                isTraining
+                    ? Icons.sports_esports_outlined
+                    : Icons.route_outlined,
               ),
-              label: Text(isTimed ? '返回训练场' : '返回学习路径'),
+              label: Text(isTraining ? '返回训练场' : '返回学习路径'),
             ),
           ],
         ),

@@ -281,7 +281,7 @@ void main() {
       expect(discover, contains("context.push('/study/new')"));
       expect(discover, isNot(contains("context.push('/learn')")));
       expect(home, isNot(contains('/timed-test/lesson-campus-1')));
-      expect(training, contains("context.push('/timed-test/lesson-campus-1')"));
+      expect(training, contains('_firstTimedPackRoute(state.lessons)'));
       expect(training, isNot(contains("context.push('/study/review')")));
       expect(wordbook, contains('state.formalLessons'));
       expect(search, contains('state.formalLessons'));
@@ -296,7 +296,7 @@ void main() {
       expect(quizSession, contains('_fallbackExitRoute'));
       expect(quizSession, contains("? '/training' : '/learn'"));
       expect(training, contains('限时测试'));
-      expect(training, contains('今日可得 60 XP'));
+      expect(training, contains(r'今日训练 ${state.todayTrainingXp} XP'));
       expect(training, isNot(contains("label: '今日可得 60'")));
       expect(newStudy, contains('不做限时测试'));
       expect(router, contains("path: '/study/new'"));
