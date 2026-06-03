@@ -219,22 +219,41 @@ Router buildRouter(AppConfig config, AppDatabase database) {
           'error': 'valid localDate and timezoneOffsetMinutes are required',
         }, status: 400);
       }
+      final user = await database.userById(uid);
+      if (user == null) {
+        return jsonResponse({'error': 'user not found'}, status: 404);
+      }
       final hadCheckedInToday = await database.hasCheckIn(
         uid,
         dayWindow.dateKey,
       );
       await database.upsertCheckIn(uid, dayWindow.dateKey);
-      final user = await database.userById(uid);
       var updatedUser = user;
-      if (user != null && !hadCheckedInToday) {
+      if (!hadCheckedInToday) {
         final now = DateTime.now().toUtc();
         final currentStreak = user['streak'] is int ? user['streak'] as int : 0;
-        final hasPreviousDayCheckIn = await database.hasCheckIn(
+        final hasStudyToday = await database.hasStudySessionInRange(
           uid,
-          _previousDateKey(dayWindow.dateKey),
+          dayWindow.startUtc,
+          dayWindow.endUtc,
         );
+        var newStreak = currentStreak;
+        if (!hasStudyToday) {
+          final hasPreviousDayCheckIn = await database.hasCheckIn(
+            uid,
+            _previousDateKey(dayWindow.dateKey),
+          );
+          final hasPreviousDayStudy = await database.hasStudySessionInRange(
+            uid,
+            dayWindow.startUtc.subtract(const Duration(days: 1)),
+            dayWindow.endUtc.subtract(const Duration(days: 1)),
+          );
+          newStreak = hasPreviousDayCheckIn || hasPreviousDayStudy
+              ? currentStreak + 1
+              : 1;
+        }
         updatedUser = await database.updateUser(uid, {
-          'streak': hasPreviousDayCheckIn ? currentStreak + 1 : 1,
+          'streak': newStreak,
           'lastStudyDate': now,
         });
       }
@@ -243,7 +262,7 @@ Router buildRouter(AppConfig config, AppDatabase database) {
         'checkedIn': true,
         'dateKey': dayWindow.dateKey,
         'tasks': tasks,
-        'user': userDto(updatedUser!),
+        'user': userDto(updatedUser),
       });
     });
   });
@@ -290,6 +309,10 @@ Router buildRouter(AppConfig config, AppDatabase database) {
           'error': 'valid localDate and timezoneOffsetMinutes are required',
         }, status: 400);
       }
+      final user = await database.userById(uid);
+      if (user == null) {
+        return jsonResponse({'error': 'user not found'}, status: 404);
+      }
       final claimed = await database.rewardClaimsForDate(
         uid,
         dayWindow.dateKey,
@@ -301,7 +324,7 @@ Router buildRouter(AppConfig config, AppDatabase database) {
           'alreadyClaimed': true,
           'dateKey': dayWindow.dateKey,
           'tasks': tasks,
-          'user': userDto((await database.userById(uid))!),
+          'user': userDto(user),
         });
       }
       final behavior = await _dailyRewardBehavior(database, uid, dayWindow);
@@ -326,7 +349,7 @@ Router buildRouter(AppConfig config, AppDatabase database) {
         'claimed': claim.inserted,
         'dateKey': dayWindow.dateKey,
         'tasks': tasks,
-        'user': userDto(claim.user!),
+        'user': userDto(claim.user ?? user),
       });
     });
   });
