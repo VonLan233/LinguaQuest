@@ -321,15 +321,16 @@ class AppController extends Notifier<AppState> {
       final lesson = _lessonById(result.lessonId);
       final isTraining = lesson?.isTrainingPack ?? false;
       final shouldAdvanceLesson = !isTraining;
+      final todayState = await _normalizeTodayState(now);
       final todayCompletedLessonIds = {
-        ...state.todayCompletedLessonIds,
+        ...todayState.completedLessonIds,
         if (shouldAdvanceLesson) result.lessonId,
       };
       final todayTrainingSessionIds = {
-        ...state.todayTrainingSessionIds,
+        ...todayState.trainingSessionIds,
         if (isTraining) result.lessonId,
       };
-      final pointGrant = await _grantPoints(
+      final pointGrant = await _grantPointsBestEffort(
         user: user,
         sourceType: isTraining ? 'training_session' : 'study_lesson',
         sourceId: isTraining
@@ -364,10 +365,14 @@ class AppController extends Notifier<AppState> {
         ),
       );
       if (shouldAdvanceLesson) {
-        await _saveLessonProgress(completedLessonIds, todayCompletedLessonIds);
+        await _saveLessonProgress(
+          completedLessonIds,
+          todayCompletedLessonIds,
+          now,
+        );
       }
       if (isTraining) {
-        await _saveTodayTrainingSessions(todayTrainingSessionIds);
+        await _saveTodayTrainingSessions(todayTrainingSessionIds, now);
       }
       state = state.copyWith(
         user: updatedUser,
@@ -420,9 +425,10 @@ class AppController extends Notifier<AppState> {
           nextReviewAt: reviewed.nextReviewAt,
         ),
       );
-      final todayReviewWordIds = {...state.todayReviewWordIds, id};
+      final todayState = await _normalizeTodayState(now);
+      final todayReviewWordIds = {...todayState.reviewWordIds, id};
       final rewardedUser = isCorrect
-          ? await _grantPoints(
+          ? await _grantPointsBestEffort(
               user: user,
               sourceType: 'review_word',
               sourceId: '$id:${_dateKey(now)}',
@@ -435,7 +441,7 @@ class AppController extends Notifier<AppState> {
               alreadyGranted: false,
               pointsAwarded: 0,
             );
-      await _saveTodayReviewWords(todayReviewWordIds);
+      await _saveTodayReviewWords(todayReviewWordIds, now);
       state = state.copyWith(
         user: rewardedUser.user,
         customWords: [
@@ -455,10 +461,15 @@ class AppController extends Notifier<AppState> {
   }) async {
     final user = state.user;
     if (user == null || points <= 0 || !isAvailable) return false;
-    if (state.todayClaimedRewardIds.contains(id)) return false;
-    return _run(() async {
+    state = state.copyWith(isLoading: true, clearError: true);
+    try {
       final now = DateTime.now();
-      final claimedRewardIds = {...state.todayClaimedRewardIds, id};
+      final todayState = await _normalizeTodayState(now);
+      if (todayState.claimedRewardIds.contains(id)) {
+        state = state.copyWith(isLoading: false);
+        return false;
+      }
+      final claimedRewardIds = {...todayState.claimedRewardIds, id};
       final pointGrant = await _grantPoints(
         user: user,
         sourceType: 'reward_task',
@@ -469,13 +480,21 @@ class AppController extends Notifier<AppState> {
       if (pointGrant.alreadyGranted) {
         throw StateError('这个积分来源已经领取过了。');
       }
-      await _saveTodayClaimedRewards(claimedRewardIds);
+      await _saveTodayClaimedRewards(claimedRewardIds, now);
       state = state.copyWith(
+        isLoading: false,
         user: pointGrant.user.copyWith(updatedAt: now),
         todayClaimedRewardIds: claimedRewardIds,
       );
       await refreshNotifications();
-    });
+      return true;
+    } catch (error) {
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: _friendlyError(error),
+      );
+      return false;
+    }
   }
 
   Future<void> refreshNotifications() async {
@@ -696,6 +715,32 @@ class AppController extends Notifier<AppState> {
     );
   }
 
+  Future<_PointGrantOutcome> _grantPointsBestEffort({
+    required UserProfile user,
+    required String sourceType,
+    required String sourceId,
+    required int points,
+    required String description,
+  }) async {
+    try {
+      return await _grantPoints(
+        user: user,
+        sourceType: sourceType,
+        sourceId: sourceId,
+        points: points,
+        description: description,
+      );
+    } catch (error) {
+      debugPrint('Point grant skipped: $error');
+      return _PointGrantOutcome(
+        user: user,
+        awarded: false,
+        alreadyGranted: false,
+        pointsAwarded: 0,
+      );
+    }
+  }
+
   Future<UserProfile> _rewardedUser(
     UserProfile user,
     PointGrantResult result,
@@ -899,30 +944,35 @@ class AppController extends Notifier<AppState> {
   Future<void> _saveLessonProgress(
     Set<String> completedLessonIds,
     Set<String> todayCompletedLessonIds,
+    DateTime now,
   ) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setStringList(
       _completedLessonIdsKey,
       completedLessonIds.toList(),
     );
-    await prefs.setString(_todayDateKey, _dateKey(DateTime.now()));
+    await prefs.setString(_todayDateKey, _dateKey(now));
     await prefs.setStringList(
       _todayLessonIdsKey,
       todayCompletedLessonIds.toList(),
     );
   }
 
-  Future<void> _saveTodayReviewWords(Set<String> todayReviewWordIds) async {
+  Future<void> _saveTodayReviewWords(
+    Set<String> todayReviewWordIds,
+    DateTime now,
+  ) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_todayDateKey, _dateKey(DateTime.now()));
+    await prefs.setString(_todayDateKey, _dateKey(now));
     await prefs.setStringList(_todayReviewIdsKey, todayReviewWordIds.toList());
   }
 
   Future<void> _saveTodayTrainingSessions(
     Set<String> todayTrainingSessionIds,
+    DateTime now,
   ) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_todayDateKey, _dateKey(DateTime.now()));
+    await prefs.setString(_todayDateKey, _dateKey(now));
     await prefs.setStringList(
       _todayTrainingIdsKey,
       todayTrainingSessionIds.toList(),
@@ -931,12 +981,44 @@ class AppController extends Notifier<AppState> {
 
   Future<void> _saveTodayClaimedRewards(
     Set<String> todayClaimedRewardIds,
+    DateTime now,
   ) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_todayDateKey, _dateKey(DateTime.now()));
+    await prefs.setString(_todayDateKey, _dateKey(now));
     await prefs.setStringList(
       _todayRewardIdsKey,
       todayClaimedRewardIds.toList(),
+    );
+  }
+
+  Future<_TodayStateSnapshot> _normalizeTodayState(DateTime now) async {
+    final prefs = await SharedPreferences.getInstance();
+    final todayKey = _dateKey(now);
+    if (prefs.getString(_todayDateKey) == todayKey) {
+      return _TodayStateSnapshot(
+        completedLessonIds: {...state.todayCompletedLessonIds},
+        reviewWordIds: {...state.todayReviewWordIds},
+        trainingSessionIds: {...state.todayTrainingSessionIds},
+        claimedRewardIds: {...state.todayClaimedRewardIds},
+      );
+    }
+
+    await prefs.remove(_todayLessonIdsKey);
+    await prefs.remove(_todayReviewIdsKey);
+    await prefs.remove(_todayTrainingIdsKey);
+    await prefs.remove(_todayRewardIdsKey);
+    await prefs.setString(_todayDateKey, todayKey);
+    state = state.copyWith(
+      todayCompletedLessonIds: {},
+      todayReviewWordIds: {},
+      todayTrainingSessionIds: {},
+      todayClaimedRewardIds: {},
+    );
+    return const _TodayStateSnapshot(
+      completedLessonIds: {},
+      reviewWordIds: {},
+      trainingSessionIds: {},
+      claimedRewardIds: {},
     );
   }
 
@@ -1017,4 +1099,18 @@ class _PointGrantOutcome {
   final bool awarded;
   final bool alreadyGranted;
   final int pointsAwarded;
+}
+
+class _TodayStateSnapshot {
+  const _TodayStateSnapshot({
+    required this.completedLessonIds,
+    required this.reviewWordIds,
+    required this.trainingSessionIds,
+    required this.claimedRewardIds,
+  });
+
+  final Set<String> completedLessonIds;
+  final Set<String> reviewWordIds;
+  final Set<String> trainingSessionIds;
+  final Set<String> claimedRewardIds;
 }

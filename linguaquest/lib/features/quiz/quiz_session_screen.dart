@@ -288,10 +288,14 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
         setState(() => _isSubmitting = false);
         return;
       }
+      final lastResult = ref.read(appControllerProvider).lastResult;
+      final resolvedResult = lastResult?.lessonId == result.lessonId
+          ? lastResult!
+          : result;
       context.go(
         '/lesson/${lesson.id}/result',
         extra: LessonResultViewArgs(
-          result: ref.read(appControllerProvider).lastResult ?? result,
+          result: resolvedResult,
           source: widget.mode == QuizSessionMode.timed
               ? LessonResultSource.timed
               : LessonResultSource.lesson,

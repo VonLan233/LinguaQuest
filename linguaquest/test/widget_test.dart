@@ -12,11 +12,13 @@ import 'package:linguaquest/core/widgets/pronunciation_controls.dart';
 import 'package:linguaquest/data/models/custom_word.dart';
 import 'package:linguaquest/data/models/lesson.dart';
 import 'package:linguaquest/data/models/lesson_result.dart';
+import 'package:linguaquest/data/models/point_grant_result.dart';
 import 'package:linguaquest/data/models/study_session.dart';
 import 'package:linguaquest/data/models/user_profile.dart';
 import 'package:linguaquest/data/repositories/auth_repository.dart';
 import 'package:linguaquest/data/repositories/custom_word_repository.dart';
 import 'package:linguaquest/data/repositories/learning_repository.dart';
+import 'package:linguaquest/data/repositories/reward_repository.dart';
 import 'package:linguaquest/data/seed/seed_lessons.dart';
 import 'package:linguaquest/features/auth/goal_setup_screen.dart';
 import 'package:linguaquest/features/learning/lesson_preview_screen.dart';
@@ -2074,6 +2076,212 @@ void main() {
     expect(find.text('contras'), findsOneWidget);
   });
 
+  testWidgets('lesson result ignores stale results from another lesson', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'stale-result-user',
+      name: 'Stale',
+      email: 'stale@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      createdAt: now,
+      updatedAt: now,
+      xp: 0,
+      streak: 0,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    final lesson = seedLessons().first;
+    expect(
+      await container
+          .read(appControllerProvider.notifier)
+          .completeLesson(
+            LessonResult(
+              lessonId: lesson.id,
+              lessonTitle: lesson.title,
+              totalQuestions: lesson.questions.length,
+              correctAnswers: lesson.questions.length,
+              xpEarned: lesson.xpReward,
+              mistakes: const [],
+              completedAt: now,
+            ),
+          ),
+      true,
+    );
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const MaterialApp(
+          home: LessonResultScreen(expectedLessonId: 'different-lesson'),
+        ),
+      ),
+    );
+
+    expect(find.text('还没有课程结果'), findsOneWidget);
+    expect(find.text(lesson.title), findsNothing);
+  });
+
+  test('lesson completion survives reward grant failure', () async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'lesson-reward-fail-user',
+      name: 'Lex',
+      email: 'lex@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      createdAt: now,
+      updatedAt: now,
+      xp: 0,
+      streak: 0,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer(
+      overrides: [
+        rewardRepositoryProvider.overrideWithValue(_ThrowingReward()),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    final lesson = seedLessons().first;
+    final completed = await container
+        .read(appControllerProvider.notifier)
+        .completeLesson(
+          LessonResult(
+            lessonId: lesson.id,
+            lessonTitle: lesson.title,
+            totalQuestions: lesson.questions.length,
+            correctAnswers: lesson.questions.length,
+            xpEarned: lesson.xpReward,
+            mistakes: const [],
+            completedAt: now,
+          ),
+        );
+    final state = container.read(appControllerProvider);
+
+    expect(completed, true);
+    expect(state.completedLessonIds, contains(lesson.id));
+    expect(state.lastResult?.lessonId, lesson.id);
+    expect(state.lastResult?.xpEarned, 0);
+    expect(state.user?.xp, 0);
+  });
+
+  test('review progress survives reward grant failure', () async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'review-reward-fail-user',
+      name: 'Rev',
+      email: 'rev@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      createdAt: now,
+      updatedAt: now,
+      xp: 0,
+      streak: 0,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer(
+      overrides: [
+        rewardRepositoryProvider.overrideWithValue(_ThrowingReward()),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    final dueWord = container.read(appControllerProvider).dueWords.first;
+    final reviewed = await container
+        .read(appControllerProvider.notifier)
+        .reviewWord(dueWord.id, true);
+    final state = container.read(appControllerProvider);
+    final reviewedWord = state.customWords.firstWhere(
+      (word) => word.id == dueWord.id,
+    );
+
+    expect(reviewed, true);
+    expect(reviewedWord.correctCount, dueWord.correctCount + 1);
+    expect(state.todayReviewWordIds, contains(dueWord.id));
+    expect(state.user?.xp, 0);
+  });
+
+  test(
+    'daily rollover clears stale persisted daily keys before saving',
+    () async {
+      final now = DateTime.now();
+      final profile = UserProfile(
+        uid: 'rollover-user',
+        name: 'Rollover',
+        email: 'rollover@lingua.quest',
+        targetExam: 'Daily English',
+        level: 'Elementary',
+        dailyGoal: 10,
+        createdAt: now,
+        updatedAt: now,
+        xp: 0,
+        streak: 0,
+      );
+      SharedPreferences.setMockInitialValues({
+        'linguaquest.profile': jsonEncode(profile.toJson()),
+        'linguaquest.today.date': '2000-01-01',
+        'linguaquest.today.lessons': ['yesterday-lesson'],
+        'linguaquest.today.reviews': ['yesterday-review'],
+        'linguaquest.today.training': ['yesterday-training'],
+        'linguaquest.today.rewards': ['yesterday-reward'],
+      });
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      await container.read(appControllerProvider.notifier).bootstrap();
+      final training = seedLessons().firstWhere(
+        (lesson) => lesson.isTrainingPack,
+      );
+      expect(
+        await container
+            .read(appControllerProvider.notifier)
+            .completeLesson(
+              LessonResult(
+                lessonId: training.id,
+                lessonTitle: training.title,
+                totalQuestions: training.questions.length,
+                correctAnswers: training.questions.length,
+                xpEarned: training.xpReward,
+                mistakes: const [],
+                completedAt: now,
+              ),
+            ),
+        true,
+      );
+      final prefs = await SharedPreferences.getInstance();
+
+      expect(prefs.getString('linguaquest.today.date'), _todayDateKey(now));
+      expect(prefs.getStringList('linguaquest.today.lessons'), isNull);
+      expect(prefs.getStringList('linguaquest.today.reviews'), isNull);
+      expect(prefs.getStringList('linguaquest.today.rewards'), isNull);
+      expect(
+        prefs.getStringList('linguaquest.today.training'),
+        contains(training.id),
+      );
+      expect(
+        prefs.getStringList('linguaquest.today.training'),
+        isNot(contains('yesterday-training')),
+      );
+    },
+  );
+
   test(
     'mistake words can be converted into custom cards in one action',
     () async {
@@ -2470,6 +2678,19 @@ class _ConcurrentCustomWordRepository implements CustomWordRepository {
       words[index] = word;
     }
     return word;
+  }
+}
+
+class _ThrowingReward implements RewardRepository {
+  @override
+  Future<PointGrantResult> grantPoints({
+    required String uid,
+    required String sourceType,
+    required String sourceId,
+    required int points,
+    required String description,
+  }) {
+    throw Exception('reward service unavailable');
   }
 }
 
