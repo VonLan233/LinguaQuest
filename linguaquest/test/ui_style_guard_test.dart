@@ -293,6 +293,8 @@ void main() {
       );
       expect(quizSession, contains('isTimed ? state.lessons'));
       expect(quizSession, contains(': state.formalLessons'));
+      expect(quizSession, contains('readOnly: checked'));
+      expect(quizSession, isNot(contains('enabled: !checked')));
       expect(quizSession, contains('_fallbackExitRoute'));
       expect(quizSession, contains("? '/training' : '/learn'"));
       expect(training, contains('限时测试'));

@@ -399,7 +399,7 @@ class _QuestionInput extends StatelessWidget {
     if (question.type == QuizQuestionType.spelling) {
       return TextField(
         controller: controller,
-        enabled: !checked,
+        readOnly: checked,
         decoration: const InputDecoration(
           labelText: '输入单词',
           prefixIcon: Icon(Icons.edit_outlined),
