@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/app_notification.dart';
 import '../models/custom_word.dart';
+import '../models/daily_reward_task.dart';
 import '../models/lesson.dart';
 import '../models/review_event.dart';
 import '../models/study_session.dart';
@@ -13,6 +14,7 @@ import 'auth_repository.dart';
 import 'custom_word_repository.dart';
 import 'learning_repository.dart';
 import 'notification_repository.dart';
+import 'reward_repository.dart';
 import 'review_repository.dart';
 
 class MockAuthRepository implements AuthRepository {
@@ -299,5 +301,233 @@ class MockNotificationRepository implements NotificationRepository {
       '$_keyPrefix.$uid',
       jsonEncode([for (final notification in sorted) notification.toJson()]),
     );
+  }
+}
+
+class MockRewardRepository implements RewardRepository {
+  static const _keyPrefix = 'linguaquest.rewards';
+
+  @override
+  Future<RewardTaskSnapshot> listTasks(String uid) async {
+    return _snapshot(uid);
+  }
+
+  @override
+  Future<RewardTaskSnapshot> checkIn(String uid) async {
+    final state = await _load(uid);
+    state.checkedIn = true;
+    await _save(uid, state);
+    return _snapshot(uid);
+  }
+
+  @override
+  Future<RewardTaskSnapshot> claimTask(String uid, String taskId) async {
+    final state = await _load(uid);
+    final tasks = _tasksFor(state);
+    DailyRewardTask? task;
+    for (final item in tasks) {
+      if (item.id == taskId) {
+        task = item;
+        break;
+      }
+    }
+    if (task == null || task.isClaimed) {
+      final snapshot = await _snapshot(uid);
+      return RewardTaskSnapshot(
+        dateKey: snapshot.dateKey,
+        tasks: snapshot.tasks,
+        alreadyClaimed: task?.isClaimed == true,
+        claimed: false,
+      );
+    }
+    if (!task.isClaimable) return _snapshot(uid);
+    state.claimedTaskIds.add(taskId);
+    await _save(uid, state);
+    final snapshot = await _snapshot(uid);
+    return RewardTaskSnapshot(
+      dateKey: snapshot.dateKey,
+      tasks: snapshot.tasks,
+      claimed: true,
+    );
+  }
+
+  @override
+  Future<RewardTaskSnapshot> recordEvent(
+    String uid,
+    RewardEventType type,
+  ) async {
+    final state = await _load(uid);
+    switch (type) {
+      case RewardEventType.newLearning:
+        state.newLearningDone = true;
+      case RewardEventType.reviewDone:
+        state.reviewDone = true;
+      case RewardEventType.trainingChallenge:
+        state.trainingChallengeDone = true;
+      case RewardEventType.wrongCleanup:
+        state.wrongCleanupDone = true;
+      case RewardEventType.forumInteraction:
+        state.forumInteractionDone = true;
+    }
+    await _save(uid, state);
+    return _snapshot(uid);
+  }
+
+  Future<RewardTaskSnapshot> _snapshot(String uid) async {
+    final state = await _load(uid);
+    return RewardTaskSnapshot(dateKey: state.dateKey, tasks: _tasksFor(state));
+  }
+
+  List<DailyRewardTask> _tasksFor(_MockRewardState state) {
+    return [
+      _task(
+        id: 'dailyCheckIn',
+        title: '每日签到',
+        condition: '当天打开并点击签到',
+        points: 5,
+        targetRoute: '/discover',
+        done: state.checkedIn,
+        claimed: state.claimedTaskIds.contains('dailyCheckIn'),
+      ),
+      _task(
+        id: 'newLearning',
+        title: '完成新学',
+        condition: '完成今日新学任务',
+        points: 20,
+        targetRoute: '/study/new',
+        done: state.newLearningDone,
+        claimed: state.claimedTaskIds.contains('newLearning'),
+      ),
+      _task(
+        id: 'reviewDone',
+        title: '完成复习',
+        condition: '完成今日到期复习',
+        points: 15,
+        targetRoute: '/study/review',
+        done: state.reviewDone,
+        claimed: state.claimedTaskIds.contains('reviewDone'),
+      ),
+      _task(
+        id: 'trainingChallenge',
+        title: '训练场挑战',
+        condition: '完成任意训练场游戏',
+        points: 20,
+        targetRoute: '/training',
+        done: state.trainingChallengeDone,
+        claimed: state.claimedTaskIds.contains('trainingChallenge'),
+      ),
+      _task(
+        id: 'wrongCleanup',
+        title: '错词清理',
+        condition: '今日错词再次答对',
+        points: 10,
+        targetRoute: '/review',
+        done: state.wrongCleanupDone,
+        claimed: state.claimedTaskIds.contains('wrongCleanup'),
+      ),
+      _task(
+        id: 'forumInteraction',
+        title: '论坛互动',
+        condition: '发帖或评论通过审核',
+        points: 5,
+        targetRoute: '/discover',
+        done: state.forumInteractionDone,
+        claimed: state.claimedTaskIds.contains('forumInteraction'),
+      ),
+    ];
+  }
+
+  DailyRewardTask _task({
+    required String id,
+    required String title,
+    required String condition,
+    required int points,
+    required String targetRoute,
+    required bool done,
+    required bool claimed,
+  }) {
+    return DailyRewardTask(
+      id: id,
+      title: title,
+      condition: condition,
+      points: points,
+      targetRoute: targetRoute,
+      status: claimed
+          ? DailyRewardTaskStatus.claimed
+          : done
+          ? DailyRewardTaskStatus.claimable
+          : DailyRewardTaskStatus.incomplete,
+    );
+  }
+
+  Future<_MockRewardState> _load(String uid) async {
+    final todayKey = _dateKey(DateTime.now());
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString('$_keyPrefix.$uid');
+    if (raw == null) return _MockRewardState(dateKey: todayKey);
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! Map) return _MockRewardState(dateKey: todayKey);
+      final state = _MockRewardState.fromJson(
+        Map<String, dynamic>.from(decoded),
+      );
+      return state.dateKey == todayKey
+          ? state
+          : _MockRewardState(dateKey: todayKey);
+    } catch (_) {
+      await prefs.remove('$_keyPrefix.$uid');
+      return _MockRewardState(dateKey: todayKey);
+    }
+  }
+
+  Future<void> _save(String uid, _MockRewardState state) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('$_keyPrefix.$uid', jsonEncode(state.toJson()));
+  }
+
+  String _dateKey(DateTime date) {
+    final month = date.month.toString().padLeft(2, '0');
+    final day = date.day.toString().padLeft(2, '0');
+    return '${date.year}-$month-$day';
+  }
+}
+
+class _MockRewardState {
+  _MockRewardState({required this.dateKey});
+
+  final String dateKey;
+  bool checkedIn = false;
+  bool newLearningDone = false;
+  bool reviewDone = false;
+  bool trainingChallengeDone = false;
+  bool wrongCleanupDone = false;
+  bool forumInteractionDone = false;
+  final Set<String> claimedTaskIds = <String>{};
+
+  factory _MockRewardState.fromJson(Map<String, dynamic> json) {
+    return _MockRewardState(dateKey: json['dateKey'] as String? ?? '')
+      ..checkedIn = json['checkedIn'] == true
+      ..newLearningDone = json['newLearningDone'] == true
+      ..reviewDone = json['reviewDone'] == true
+      ..trainingChallengeDone = json['trainingChallengeDone'] == true
+      ..wrongCleanupDone = json['wrongCleanupDone'] == true
+      ..forumInteractionDone = json['forumInteractionDone'] == true
+      ..claimedTaskIds.addAll(
+        (json['claimedTaskIds'] as List<dynamic>? ?? const <dynamic>[])
+            .whereType<String>(),
+      );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'dateKey': dateKey,
+      'checkedIn': checkedIn,
+      'newLearningDone': newLearningDone,
+      'reviewDone': reviewDone,
+      'trainingChallengeDone': trainingChallengeDone,
+      'wrongCleanupDone': wrongCleanupDone,
+      'forumInteractionDone': forumInteractionDone,
+      'claimedTaskIds': claimedTaskIds.toList(),
+    };
   }
 }
