@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:linguaquest/app.dart';
+import 'package:linguaquest/core/routing/app_router.dart';
 import 'package:linguaquest/core/state/app_controller.dart';
 import 'package:linguaquest/core/state/app_state.dart';
 import 'package:linguaquest/core/theme/app_theme.dart';
@@ -258,9 +259,9 @@ void main() {
     await tester.tap(find.widgetWithText(FilledButton, '新学 12'));
     await tester.pumpAndSettle();
 
-    expect(find.text('今日新词包'), findsOneWidget);
-    expect(find.text('进入词卡学习'), findsOneWidget);
-    expect(find.text('检查'), findsNothing);
+    expect(find.text('今日混排学习包'), findsOneWidget);
+    expect(find.text('今日新词包'), findsNothing);
+    expect(find.text('进入词卡学习'), findsNothing);
   });
 
   testWidgets('home review entry opens standalone review flow', (tester) async {
@@ -293,28 +294,31 @@ void main() {
     await tester.tap(find.widgetWithText(FilledButton, '复习 2'));
     await tester.pumpAndSettle();
 
-    expect(find.text('今日复习'), findsOneWidget);
-    expect(find.text('记住了'), findsOneWidget);
-    expect(find.text('没记住'), findsOneWidget);
+    expect(find.text('快速复习'), findsOneWidget);
+    expect(find.textContaining('ambiguous'), findsWidgets);
+    expect(find.text('检查'), findsOneWidget);
+    expect(find.text('管理复习队列'), findsOneWidget);
+    expect(find.text('记住了'), findsNothing);
+    expect(find.text('没记住'), findsNothing);
     expect(find.text('显示释义'), findsNothing);
     expect(find.text('加入错词卡'), findsNothing);
 
-    await tester.tap(find.widgetWithText(OutlinedButton, '没记住'));
+    await tester.tap(find.widgetWithText(OutlinedButton, '分配'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
 
-    expect(find.text('加入巩固队列'), findsOneWidget);
+    expect(find.textContaining('答错了'), findsOneWidget);
 
-    await tester.tap(find.widgetWithText(FilledButton, '加入巩固队列'));
+    await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
-    expect(find.text('2/3'), findsOneWidget);
-    expect(find.text('ambiguous'), findsOneWidget);
+    expect(find.text('加入稍后复现'), findsOneWidget);
 
-    await tester.tap(find.widgetWithText(FilledButton, '记住了'));
+    await tester.tap(find.text('加入稍后复现'));
     await tester.pumpAndSettle();
 
-    expect(find.text('3/3'), findsOneWidget);
-    expect(find.text('resilient'), findsOneWidget);
+    expect(find.textContaining('resilient'), findsWidgets);
   });
 
   testWidgets('review flow confirms before leaving after progress', (
@@ -348,23 +352,25 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(FilledButton, '复习 2'));
     await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(OutlinedButton, '没记住'));
+    await tester.tap(find.widgetWithText(OutlinedButton, '分配'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
 
-    expect(find.text('离开复习？'), findsOneWidget);
-    expect(find.text('已完成的词卡已经保存；未完成的词仍会保留在复习队列。'), findsOneWidget);
+    expect(find.text('保存本次进度？'), findsOneWidget);
+    expect(find.textContaining('未完成词下次仍会进入学习包'), findsOneWidget);
 
-    await tester.tap(find.text('继续复习'));
+    await tester.tap(find.text('继续学习'));
     await tester.pumpAndSettle();
 
-    expect(find.text('今日复习'), findsOneWidget);
+    expect(find.text('快速复习'), findsOneWidget);
 
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(FilledButton, '离开'));
+    await tester.tap(find.text('不保存离开'));
     await tester.pumpAndSettle();
 
     expect(find.text('今日任务控制台'), findsOneWidget);
@@ -1252,16 +1258,7 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    await tester.scrollUntilVisible(
-      find.text('新学 10'),
-      300,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(FilledButton, '新学 10'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('进入词卡学习'));
-    await tester.pumpAndSettle();
+    await _openCurrentLessonCards(tester);
     await _completeNewWordCards(tester);
 
     await tester.tap(find.text('评估'));
@@ -1348,16 +1345,7 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    await tester.scrollUntilVisible(
-      find.text('新学 10'),
-      300,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(FilledButton, '新学 10'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('进入词卡学习'));
-    await tester.pumpAndSettle();
+    await _openCurrentLessonCards(tester);
     await _completeNewWordCards(tester);
 
     expect(find.text('英文选义'), findsOneWidget);
@@ -1403,16 +1391,7 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    await tester.scrollUntilVisible(
-      find.text('新学 10'),
-      300,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(FilledButton, '新学 10'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('进入词卡学习'));
-    await tester.pumpAndSettle();
+    await _openCurrentLessonCards(tester);
 
     expect(find.text('新学词卡'), findsOneWidget);
     expect(find.text('先判断熟悉度'), findsOneWidget);
@@ -1421,24 +1400,14 @@ void main() {
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
 
-    expect(find.text('今日新词包'), findsOneWidget);
-    expect(find.text('进入词卡学习'), findsOneWidget);
+    expect(find.text('词书路径'), findsOneWidget);
 
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
 
     expect(find.text('今日任务控制台'), findsOneWidget);
 
-    await tester.scrollUntilVisible(
-      find.text('新学 10'),
-      300,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(FilledButton, '新学 10'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('进入词卡学习'));
-    await tester.pumpAndSettle();
+    await _openCurrentLessonCards(tester);
     await _completeNewWordCards(tester);
 
     expect(find.text('检查'), findsOneWidget);
@@ -1494,16 +1463,7 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    await tester.scrollUntilVisible(
-      find.text('新学 10'),
-      300,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(FilledButton, '新学 10'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('进入词卡学习'));
-    await tester.pumpAndSettle();
+    await _openCurrentLessonCards(tester);
 
     await tester.tap(find.widgetWithText(OutlinedButton, '认识'));
     await tester.pumpAndSettle();
@@ -1522,7 +1482,7 @@ void main() {
     await tester.tap(find.text('离开'));
     await tester.pumpAndSettle();
 
-    expect(find.text('今日新词包'), findsOneWidget);
+    expect(find.text('词书路径'), findsOneWidget);
   });
 
   test('theme and reminder settings persist locally', () async {
@@ -2358,6 +2318,27 @@ void main() {
       expect(customWords.any((word) => word.word == 'review-word-7'), false);
     },
   );
+}
+
+Future<void> _openCurrentLessonCards(WidgetTester tester) async {
+  final container = ProviderScope.containerOf(
+    tester.element(find.byType(LinguaQuestApp)),
+  );
+  container.read(routerProvider).go('/learn');
+  await tester.pumpAndSettle();
+  final lessonTitle = _visibleLessonTitle();
+  await tester.tap(find.text(lessonTitle));
+  await tester.pumpAndSettle();
+  await tester.tap(find.widgetWithText(FilledButton, '开始学习'));
+  await tester.pumpAndSettle();
+}
+
+String _visibleLessonTitle() {
+  const titles = ['考试信号词', '旅行基础', '职场表达', '饮食场景', '健康表达'];
+  for (final title in titles) {
+    if (find.text(title).evaluate().isNotEmpty) return title;
+  }
+  return titles.first;
 }
 
 Future<void> _completeNewWordCards(WidgetTester tester) async {
