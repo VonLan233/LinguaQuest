@@ -17,6 +17,7 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appControllerProvider);
     final user = state.user;
+    final currentBook = state.currentWordBook;
     final dueCount = state.dueWords.length;
     final dailyGoal = state.learningPlan?.dailyWords ?? user?.dailyGoal ?? 10;
     final reviewTarget = state.learningPlan == null
@@ -72,7 +73,7 @@ class HomeScreen extends ConsumerWidget {
         const SizedBox(height: 18),
         _DailyFocusHeader(
           streak: user?.streak ?? 0,
-          target: displayTarget(user?.targetExam),
+          target: currentBook?.title ?? displayTarget(user?.targetExam),
           level: displayLevel(user?.level),
           todayWork: todayWork,
           totalWork: totalWork,
@@ -90,6 +91,7 @@ class HomeScreen extends ConsumerWidget {
         _DailyTaskPanel(
           currentSection:
               currentLesson?.section ??
+              currentBook?.title ??
               displayTarget(state.learningPlan?.target ?? '雅思核心词汇'),
           dailyGoal: dailyGoal,
           dueCount: dueCount,
@@ -103,13 +105,16 @@ class HomeScreen extends ConsumerWidget {
             _HomeShortcutData(
               icon: Icons.flag_outlined,
               title: '学习模式',
-              subtitle: displayTarget(user?.targetExam),
+              subtitle:
+                  currentBook?.examType ?? displayTarget(user?.targetExam),
               onTap: () => context.push('/goal-setup'),
             ),
             _HomeShortcutData(
               icon: Icons.menu_book_outlined,
               title: '单词本',
-              subtitle: '${state.totalLearningWords} 词',
+              subtitle: currentBook == null
+                  ? '${state.totalLearningWords} 词'
+                  : '${currentBook.totalWords} 词',
               onTap: () => context.push('/wordbook'),
             ),
             _HomeShortcutData(
@@ -121,7 +126,7 @@ class HomeScreen extends ConsumerWidget {
             _HomeShortcutData(
               icon: Icons.route_outlined,
               title: '学习路径',
-              subtitle: '正式词书',
+              subtitle: currentBook?.title ?? '正式词书',
               onTap: () => context.push('/learn'),
             ),
           ],
