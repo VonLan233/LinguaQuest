@@ -690,6 +690,24 @@ void main() {
     expect(find.byIcon(Icons.route_outlined), findsWidgets);
   });
 
+  testWidgets('session load failure falls back to onboarding', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authRepositoryProvider.overrideWithValue(_ThrowingSessionAuth()),
+        ],
+        child: const LinguaQuestApp(),
+      ),
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    expect(find.textContaining('LinguaQuest 启动失败'), findsNothing);
+    expect(find.text('LinguaQuest'), findsWidgets);
+    expect(find.byIcon(Icons.route_outlined), findsWidgets);
+  });
+
   testWidgets('main shell supports deliberate horizontal tab swiping', (
     tester,
   ) async {
@@ -2405,6 +2423,13 @@ class _FailingAuth implements AuthRepository {
 
   @override
   Future<void> logout() async {}
+}
+
+class _ThrowingSessionAuth extends _FailingAuth {
+  @override
+  Future<UserProfile?> loadSession() {
+    throw Exception('session expired');
+  }
 }
 
 class _StaticLearningRepository implements LearningRepository {

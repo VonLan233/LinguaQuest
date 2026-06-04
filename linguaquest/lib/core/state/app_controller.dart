@@ -12,6 +12,7 @@ import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
 import '../../data/models/review_event.dart';
 import '../../data/models/study_session.dart';
+import '../../data/models/user_profile.dart';
 import '../../data/remote/api_client.dart';
 import '../../data/repositories/api_repositories.dart';
 import '../../data/repositories/auth_repository.dart';
@@ -113,7 +114,12 @@ class AppController extends Notifier<AppState> {
           ? _stringSet(prefs, _todayRewardIdsKey)
           : <String>{};
       final rawLessons = await _learningRepository.listLessons();
-      final user = await _authRepository.loadSession();
+      UserProfile? user;
+      try {
+        user = await _authRepository.loadSession();
+      } catch (error) {
+        debugPrint('Failed to load session: $error');
+      }
       LearningProgress? progress;
       if (user != null) {
         try {
