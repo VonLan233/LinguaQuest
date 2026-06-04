@@ -102,6 +102,8 @@ class AppState {
   const AppState({
     required this.isBootstrapped,
     required this.isLoading,
+    required this.wordBooks,
+    required this.currentWordBookId,
     required this.lessons,
     required this.customWords,
     required this.themeMode,
@@ -120,6 +122,8 @@ class AppState {
   final bool isBootstrapped;
   final bool isLoading;
   final UserProfile? user;
+  final List<WordBook> wordBooks;
+  final String currentWordBookId;
   final List<Lesson> lessons;
   final List<CustomWord> customWords;
   final ThemeMode themeMode;
@@ -139,6 +143,13 @@ class AppState {
       notifications.where((notification) => !notification.isRead).length;
 
   String? get learningTarget => learningPlan?.target ?? user?.targetExam;
+
+  WordBook? get currentWordBook {
+    for (final book in wordBooks) {
+      if (book.id == currentWordBookId) return book;
+    }
+    return wordBooks.isEmpty ? null : wordBooks.first;
+  }
 
   List<Lesson> get formalLessons => applyLearningTargetProgression(
     learningLessonsForTarget(lessons, learningTarget),
@@ -194,6 +205,8 @@ class AppState {
     bool? isLoading,
     UserProfile? user,
     bool clearUser = false,
+    List<WordBook>? wordBooks,
+    String? currentWordBookId,
     List<Lesson>? lessons,
     List<CustomWord>? customWords,
     ThemeMode? themeMode,
@@ -213,6 +226,8 @@ class AppState {
       isBootstrapped: isBootstrapped ?? this.isBootstrapped,
       isLoading: isLoading ?? this.isLoading,
       user: clearUser ? null : user ?? this.user,
+      wordBooks: wordBooks ?? this.wordBooks,
+      currentWordBookId: currentWordBookId ?? this.currentWordBookId,
       lessons: lessons ?? this.lessons,
       customWords: customWords ?? this.customWords,
       themeMode: themeMode ?? this.themeMode,
@@ -236,6 +251,8 @@ class AppState {
     return const AppState(
       isBootstrapped: false,
       isLoading: false,
+      wordBooks: [],
+      currentWordBookId: 'beginner',
       lessons: [],
       customWords: [],
       themeMode: ThemeMode.system,
