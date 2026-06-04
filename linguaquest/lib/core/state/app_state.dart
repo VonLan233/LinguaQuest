@@ -4,6 +4,7 @@ import '../../data/models/app_notification.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
+import '../../data/models/study_plan.dart';
 import '../../data/models/user_profile.dart';
 
 class DailyReminderSettings {
@@ -50,54 +51,6 @@ class DailyReminderSettings {
   );
 }
 
-class LearningPlan {
-  const LearningPlan({
-    required this.target,
-    required this.deadline,
-    required this.dailyWords,
-    required this.remainingWords,
-    required this.createdAt,
-  });
-
-  final String target;
-  final DateTime deadline;
-  final int dailyWords;
-  final int remainingWords;
-  final DateTime createdAt;
-
-  int daysLeft(DateTime now) {
-    final today = DateTime.utc(now.year, now.month, now.day);
-    final targetDay = DateTime.utc(deadline.year, deadline.month, deadline.day);
-    return targetDay.difference(today).inDays.clamp(0, 9999).toInt() + 1;
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'target': target,
-      'deadline': deadline.toIso8601String(),
-      'dailyWords': dailyWords,
-      'remainingWords': remainingWords,
-      'createdAt': createdAt.toIso8601String(),
-    };
-  }
-
-  factory LearningPlan.fromJson(Map<String, dynamic> json) {
-    return LearningPlan(
-      target: json['target'] as String? ?? 'Daily English',
-      deadline: _date(json['deadline']) ?? DateTime.now(),
-      dailyWords: json['dailyWords'] as int? ?? 10,
-      remainingWords: json['remainingWords'] as int? ?? 0,
-      createdAt: _date(json['createdAt']) ?? DateTime.now(),
-    );
-  }
-
-  static DateTime? _date(Object? value) {
-    if (value == null) return null;
-    if (value is DateTime) return value;
-    return DateTime.tryParse(value.toString());
-  }
-}
-
 class AppState {
   const AppState({
     required this.isBootstrapped,
@@ -113,7 +66,7 @@ class AppState {
     required this.notifications,
     this.user,
     this.lastResult,
-    this.learningPlan,
+    this.studyPlan,
     this.errorMessage,
   });
 
@@ -124,7 +77,7 @@ class AppState {
   final List<CustomWord> customWords;
   final ThemeMode themeMode;
   final DailyReminderSettings reminderSettings;
-  final LearningPlan? learningPlan;
+  final StudyPlan? studyPlan;
   final Set<String> completedLessonIds;
   final Set<String> todayCompletedLessonIds;
   final Set<String> todayReviewWordIds;
@@ -138,7 +91,17 @@ class AppState {
   int get unreadNotificationCount =>
       notifications.where((notification) => !notification.isRead).length;
 
-  String? get learningTarget => learningPlan?.target ?? user?.targetExam;
+  String? get learningTarget => studyPlan?.wordBookId ?? user?.targetExam;
+
+  StudyBookInfo get currentStudyBook => studyBookInfoForId(
+    studyPlan?.wordBookId ?? studyBookIdForTarget(user?.targetExam),
+  );
+
+  bool get isStudyPlanPaused => studyPlan?.isPaused ?? false;
+
+  int get dailyNewTarget => studyPlan?.dailyNewTarget ?? user?.dailyGoal ?? 10;
+
+  int get dailyReviewLimit => studyPlan?.dailyReviewLimit ?? dueWords.length;
 
   List<Lesson> get formalLessons => applyLearningTargetProgression(
     learningLessonsForTarget(lessons, learningTarget),
@@ -183,6 +146,8 @@ class AppState {
     return customWords.where((word) => word.isDue(now)).toList();
   }
 
+  List<CustomWord> get reviewQueue => dueWords.take(dailyReviewLimit).toList();
+
   List<CustomWord> get weakWords {
     final weak = customWords.where((word) => word.isWeak).toList()
       ..sort((a, b) => b.wrongCount.compareTo(a.wrongCount));
@@ -198,8 +163,8 @@ class AppState {
     List<CustomWord>? customWords,
     ThemeMode? themeMode,
     DailyReminderSettings? reminderSettings,
-    LearningPlan? learningPlan,
-    bool clearLearningPlan = false,
+    StudyPlan? studyPlan,
+    bool clearStudyPlan = false,
     Set<String>? completedLessonIds,
     Set<String>? todayCompletedLessonIds,
     Set<String>? todayReviewWordIds,
@@ -217,9 +182,7 @@ class AppState {
       customWords: customWords ?? this.customWords,
       themeMode: themeMode ?? this.themeMode,
       reminderSettings: reminderSettings ?? this.reminderSettings,
-      learningPlan: clearLearningPlan
-          ? null
-          : learningPlan ?? this.learningPlan,
+      studyPlan: clearStudyPlan ? null : studyPlan ?? this.studyPlan,
       completedLessonIds: completedLessonIds ?? this.completedLessonIds,
       todayCompletedLessonIds:
           todayCompletedLessonIds ?? this.todayCompletedLessonIds,
@@ -283,6 +246,21 @@ List<Lesson> applyLearningTargetProgression(
 bool lessonMatchesLearningTarget(Lesson lesson, String? target) {
   final normalized = target?.trim().toLowerCase() ?? '';
   if (normalized.isEmpty) return true;
+
+  if (normalized == 'business-english') {
+    return lesson.section == '商务英语' || _lessonHasTag(lesson, 'business');
+  }
+  if (normalized == 'daily-english') {
+    return lesson.section == '日常英语' || _lessonHasTag(lesson, 'daily');
+  }
+  if (normalized == 'travel-english') {
+    return lesson.section == '旅行英语' || _lessonHasTag(lesson, 'travel');
+  }
+  if (normalized == 'exam-core') {
+    return lesson.section == '考试高频' ||
+        _lessonHasTag(lesson, 'exam') ||
+        _lessonHasTag(lesson, 'academic');
+  }
 
   if (normalized.contains('business') || normalized.contains('商务')) {
     return lesson.section == '商务英语' || _lessonHasTag(lesson, 'business');

@@ -12,6 +12,8 @@ import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
 import '../../data/models/review_event.dart';
 import '../../data/models/study_session.dart';
+import '../../data/models/study_plan.dart';
+import '../../data/models/user_profile.dart';
 import '../../data/remote/api_client.dart';
 import '../../data/repositories/api_repositories.dart';
 import '../../data/repositories/auth_repository.dart';
@@ -20,6 +22,7 @@ import '../../data/repositories/learning_repository.dart';
 import '../../data/repositories/mock_repositories.dart';
 import '../../data/repositories/notification_repository.dart';
 import '../../data/repositories/review_repository.dart';
+import '../../data/repositories/study_plan_repository.dart';
 import '../../services/local_notification_service.dart';
 import '../constants/app_constants.dart';
 import '../utils/ui_labels.dart';
@@ -55,6 +58,13 @@ final reviewRepositoryProvider = Provider<ReviewRepository>((ref) {
   return MockReviewRepository();
 });
 
+final studyPlanRepositoryProvider = Provider<StudyPlanRepository>((ref) {
+  if (AppConstants.apiBaseUrl.isNotEmpty) {
+    return ApiStudyPlanRepository(ref.watch(apiClientProvider));
+  }
+  return MockStudyPlanRepository();
+});
+
 final notificationRepositoryProvider = Provider<NotificationRepository>((ref) {
   if (AppConstants.apiBaseUrl.isNotEmpty) {
     return ApiNotificationRepository(ref.watch(apiClientProvider));
@@ -69,7 +79,6 @@ final appControllerProvider = NotifierProvider<AppController, AppState>(
 class AppController extends Notifier<AppState> {
   static const _themeModeKey = 'linguaquest.themeMode';
   static const _reminderKey = 'linguaquest.reminderSettings';
-  static const _learningPlanKey = 'linguaquest.learningPlan';
   static const _completedLessonIdsKey = 'linguaquest.completedLessons';
   static const _todayDateKey = 'linguaquest.today.date';
   static const _todayLessonIdsKey = 'linguaquest.today.lessons';
@@ -80,6 +89,7 @@ class AppController extends Notifier<AppState> {
   late final CustomWordRepository _customWordRepository;
   late final LearningRepository _learningRepository;
   late final ReviewRepository _reviewRepository;
+  late final StudyPlanRepository _studyPlanRepository;
   late final NotificationRepository _notificationRepository;
   late final LocalNotificationService _localNotificationService;
   var _localNotificationsInitialized = false;
@@ -90,6 +100,7 @@ class AppController extends Notifier<AppState> {
     _customWordRepository = ref.watch(customWordRepositoryProvider);
     _learningRepository = ref.watch(learningRepositoryProvider);
     _reviewRepository = ref.watch(reviewRepositoryProvider);
+    _studyPlanRepository = ref.watch(studyPlanRepositoryProvider);
     _notificationRepository = ref.watch(notificationRepositoryProvider);
     _localNotificationService = ref.watch(localNotificationServiceProvider);
     return AppState.initial();
@@ -120,6 +131,9 @@ class AppController extends Notifier<AppState> {
       final words = user == null
           ? <CustomWord>[]
           : await _customWordRepository.list(user.uid);
+      final studyPlan = user == null
+          ? null
+          : await _loadOrCreateStudyPlan(user);
       state = state.copyWith(
         isBootstrapped: true,
         isLoading: false,
@@ -128,7 +142,7 @@ class AppController extends Notifier<AppState> {
         customWords: words,
         themeMode: _themeModeFromName(prefs.getString(_themeModeKey)),
         reminderSettings: _loadReminderSettings(prefs),
-        learningPlan: _loadLearningPlan(prefs),
+        studyPlan: studyPlan,
         completedLessonIds: completedLessonIds,
         todayCompletedLessonIds: todayCompletedLessonIds,
         todayReviewWordIds: todayReviewWordIds,
@@ -169,6 +183,7 @@ class AppController extends Notifier<AppState> {
         user: user,
         customWords: await _customWordRepository.list(user.uid),
       );
+      await _ensureStudyPlan(user);
       await refreshNotifications();
       unawaited(_scheduleLocalNotifications());
     });
@@ -184,6 +199,7 @@ class AppController extends Notifier<AppState> {
         user: user,
         customWords: await _customWordRepository.list(user.uid),
       );
+      await _ensureStudyPlan(user);
       await refreshNotifications();
       unawaited(_scheduleLocalNotifications());
     });
@@ -198,26 +214,98 @@ class AppController extends Notifier<AppState> {
     final user = state.user;
     if (user == null) return false;
     return _run(() async {
-      final plan = deadline == null
-          ? null
-          : _buildLearningPlan(target: targetExam, deadline: deadline);
+      final plan = _buildStudyPlan(
+        uid: user.uid,
+        target: targetExam,
+        dailyGoal: dailyGoal,
+        targetFinishDate: deadline,
+      );
       final updated = await _authRepository.updateProfile(
         user.copyWith(
           targetExam: targetExam,
           level: level,
-          dailyGoal: plan?.dailyWords ?? dailyGoal,
+          dailyGoal: plan.dailyNewTarget,
           updatedAt: DateTime.now(),
         ),
       );
-      if (plan == null) {
-        await _clearLearningPlan();
-      } else {
-        await _saveLearningPlan(plan);
-      }
+      final savedPlan = await _studyPlanRepository.save(plan);
+      final reminderSettings = _reminderSettingsForPlan(savedPlan);
+      await _persistReminderSettings(reminderSettings);
       state = state.copyWith(
         user: updated,
-        learningPlan: plan,
-        clearLearningPlan: plan == null,
+        studyPlan: savedPlan,
+        reminderSettings: reminderSettings,
+      );
+      await refreshNotifications();
+      unawaited(_scheduleLocalNotifications());
+    });
+  }
+
+  Future<bool> updateStudyPlan(StudyPlan plan) async {
+    final user = state.user;
+    if (user == null) return false;
+    return _run(() async {
+      final targetExam = targetForStudyBookId(plan.wordBookId);
+      final saved = await _studyPlanRepository.save(
+        plan.copyWith(uid: user.uid, updatedAt: DateTime.now()),
+      );
+      final reminderSettings = _reminderSettingsForPlan(saved);
+      await _persistReminderSettings(reminderSettings);
+      final updatedUser = await _authRepository.updateProfile(
+        user.copyWith(
+          targetExam: targetExam,
+          dailyGoal: saved.dailyNewTarget,
+          updatedAt: DateTime.now(),
+        ),
+      );
+      state = state.copyWith(
+        user: updatedUser,
+        studyPlan: saved,
+        reminderSettings: reminderSettings,
+      );
+      await refreshNotifications();
+      unawaited(_scheduleLocalNotifications());
+    });
+  }
+
+  Future<bool> toggleStudyPlanPaused() async {
+    final plan = state.studyPlan;
+    if (plan == null) return false;
+    return updateStudyPlan(
+      plan.copyWith(status: plan.isPaused ? 'active' : 'paused'),
+    );
+  }
+
+  Future<bool> resetStudyPlan() async {
+    final user = state.user;
+    final plan = state.studyPlan;
+    if (user == null || plan == null) return false;
+    return _run(() async {
+      final resetPlan = await _studyPlanRepository.reset(plan);
+      final reminderSettings = _reminderSettingsForPlan(resetPlan);
+      await _persistReminderSettings(reminderSettings);
+      final resetWords = <CustomWord>[];
+      final now = DateTime.now();
+      for (final word in state.customWords) {
+        final resetWord = word.copyWith(
+          masteryLevel: 0,
+          correctCount: 0,
+          wrongCount: 0,
+          nextReviewAt: now,
+          updatedAt: now,
+        );
+        resetWords.add(await _customWordRepository.update(resetWord));
+      }
+      await _saveLessonProgress(<String>{}, <String>{});
+      await _saveTodayReviewWords(<String>{});
+      state = state.copyWith(
+        studyPlan: resetPlan,
+        reminderSettings: reminderSettings,
+        customWords: resetWords,
+        completedLessonIds: {},
+        todayCompletedLessonIds: {},
+        todayReviewWordIds: {},
+        lessons: _applyLessonProgression(state.lessons, <String>{}),
       );
       await refreshNotifications();
       unawaited(_scheduleLocalNotifications());
@@ -296,6 +384,10 @@ class AppController extends Notifier<AppState> {
   Future<bool> completeLesson(LessonResult result) async {
     final user = state.user;
     if (user == null) return false;
+    if (state.isStudyPlanPaused) {
+      state = state.copyWith(errorMessage: '学习计划已暂停，恢复后才能完成新学。');
+      return false;
+    }
     return _run(() async {
       final now = DateTime.now();
       final lastStudy = user.lastStudyDate;
@@ -348,6 +440,10 @@ class AppController extends Notifier<AppState> {
   }) async {
     final user = state.user;
     if (user == null) return false;
+    if (state.isStudyPlanPaused) {
+      state = state.copyWith(errorMessage: '学习计划已暂停，恢复后才能复习。');
+      return false;
+    }
     final word = _customWordById(id);
     if (word == null) return false;
     final now = DateTime.now();
@@ -592,36 +688,25 @@ class AppController extends Notifier<AppState> {
     return null;
   }
 
-  LearningPlan _buildLearningPlan({
+  StudyPlan _buildStudyPlan({
+    required String uid,
     required String target,
-    required DateTime deadline,
+    required int dailyGoal,
+    DateTime? targetFinishDate,
   }) {
-    final completed = state.completedLessonIds;
-    final remainingWords = learningLessonsForTarget(state.lessons, target)
-        .where((lesson) => !completed.contains(lesson.id))
-        .fold(0, (total, lesson) => total + lesson.words.length);
-    final now = DateTime.now();
-    final today = DateTime.utc(now.year, now.month, now.day);
-    final targetDay = DateTime.utc(deadline.year, deadline.month, deadline.day);
-    final days = targetDay.difference(today).inDays.clamp(0, 9999).toInt() + 1;
-    final dailyWords = remainingWords == 0
-        ? 1
-        : ((remainingWords + days - 1) ~/ days).clamp(1, 999).toInt();
-    return LearningPlan(
-      target: target,
-      deadline: targetDay,
-      dailyWords: dailyWords,
-      remainingWords: remainingWords,
-      createdAt: now,
+    return StudyPlan.defaultsFor(
+      uid: uid,
+      targetExam: target,
+      dailyGoal: dailyGoal,
+      targetFinishDate: targetFinishDate,
     );
   }
 
   List<AppNotification> _buildGeneratedNotifications(String uid, DateTime now) {
     final dateKey = _dateKey(now);
     final notifications = <AppNotification>[];
-    final dueCount = state.dueWords.length;
-    final dailyGoal =
-        state.learningPlan?.dailyWords ?? state.user?.dailyGoal ?? 10;
+    final dueCount = state.reviewQueue.length;
+    final dailyGoal = state.dailyNewTarget;
     final todayWork =
         state.todayLearningWords + state.todayReviewWordIds.length;
     final hasStudyToday =
@@ -630,7 +715,7 @@ class AppController extends Notifier<AppState> {
     final hasCheckedIn =
         _isSameDay(state.user?.lastStudyDate, now) || todayWork > 0;
 
-    if (!hasStudyToday) {
+    if (!state.isStudyPlanPaused && !hasStudyToday) {
       notifications.add(
         _generatedNotification(
           uid: uid,
@@ -710,9 +795,14 @@ class AppController extends Notifier<AppState> {
     final snapshot = state;
     final user = snapshot.user;
     final reminderSettings = snapshot.reminderSettings;
-    final dueCount = user == null ? 0 : snapshot.dueWords.length;
+    final dueCount = user == null || snapshot.isStudyPlanPaused
+        ? 0
+        : snapshot.reviewQueue.length;
     await _localNotificationService.scheduleDailyStudyReminder(
-      enabled: user != null && reminderSettings.enabled,
+      enabled:
+          user != null &&
+          reminderSettings.enabled &&
+          !snapshot.isStudyPlanPaused,
       hour: reminderSettings.hour,
       minute: reminderSettings.minute,
     );
@@ -766,16 +856,6 @@ class AppController extends Notifier<AppState> {
               : 'locked',
         ),
     ];
-  }
-
-  Future<void> _saveLearningPlan(LearningPlan plan) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_learningPlanKey, jsonEncode(plan.toJson()));
-  }
-
-  Future<void> _clearLearningPlan() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_learningPlanKey);
   }
 
   Future<void> _saveLessonProgress(
@@ -845,15 +925,46 @@ class AppController extends Notifier<AppState> {
     }
   }
 
-  LearningPlan? _loadLearningPlan(SharedPreferences prefs) {
-    final raw = prefs.getString(_learningPlanKey);
-    if (raw == null) return null;
-    try {
-      final decoded = jsonDecode(raw);
-      if (decoded is! Map) return null;
-      return LearningPlan.fromJson(Map<String, dynamic>.from(decoded));
-    } catch (_) {
-      return null;
+  Future<void> _persistReminderSettings(DailyReminderSettings settings) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_reminderKey, jsonEncode(settings.toJson()));
+  }
+
+  DailyReminderSettings _reminderSettingsForPlan(StudyPlan plan) {
+    final parts = plan.reminderTime.split(':');
+    final hour =
+        int.tryParse(parts.first) ?? DailyReminderSettings.defaults.hour;
+    final minute = parts.length > 1
+        ? int.tryParse(parts[1]) ?? DailyReminderSettings.defaults.minute
+        : DailyReminderSettings.defaults.minute;
+    return DailyReminderSettings(
+      enabled: plan.status == 'active',
+      hour: hour.clamp(0, 23).toInt(),
+      minute: minute.clamp(0, 59).toInt(),
+    );
+  }
+
+  Future<StudyPlan> _loadOrCreateStudyPlan(UserProfile user) async {
+    final existing = await _studyPlanRepository.load(user.uid);
+    if (existing != null) return existing;
+    return _studyPlanRepository.save(
+      _buildStudyPlan(
+        uid: user.uid,
+        target: user.targetExam,
+        dailyGoal: user.dailyGoal,
+      ),
+    );
+  }
+
+  Future<void> _ensureStudyPlan(UserProfile user) async {
+    final plan = await _loadOrCreateStudyPlan(user);
+    if (ref.mounted && state.user?.uid == user.uid) {
+      final reminderSettings = _reminderSettingsForPlan(plan);
+      await _persistReminderSettings(reminderSettings);
+      state = state.copyWith(
+        studyPlan: plan,
+        reminderSettings: reminderSettings,
+      );
     }
   }
 
