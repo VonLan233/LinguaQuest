@@ -5,6 +5,7 @@ import '../models/custom_word.dart';
 import '../models/lesson.dart';
 import '../models/review_event.dart';
 import '../models/study_session.dart';
+import '../models/user_word.dart';
 import '../models/user_profile.dart';
 import '../remote/api_client.dart';
 import '../seed/seed_lessons.dart';
@@ -13,6 +14,7 @@ import 'custom_word_repository.dart';
 import 'learning_repository.dart';
 import 'notification_repository.dart';
 import 'review_repository.dart';
+import 'user_word_repository.dart';
 
 class ApiAuthRepository implements AuthRepository {
   ApiAuthRepository(this._client);
@@ -146,6 +148,45 @@ class ApiLearningRepository implements LearningRepository {
   @override
   Future<void> recordStudySession(StudySession session) async {
     await _client.dio.post<void>('/study-sessions', data: session.toJson());
+  }
+}
+
+class ApiUserWordRepository implements UserWordRepository {
+  ApiUserWordRepository(this._client);
+
+  final ApiClient _client;
+
+  @override
+  Future<List<UserWord>> list(String uid) async {
+    final response = await _client.dio.get<List<dynamic>>('/user-words');
+    return response.data!
+        .cast<Map<String, dynamic>>()
+        .map(UserWord.fromJson)
+        .toList();
+  }
+
+  @override
+  Future<UserWord> upsert(UserWord word) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/user-words',
+      data: word.toJson(),
+    );
+    return UserWord.fromJson(response.data!['word'] as Map<String, dynamic>);
+  }
+
+  @override
+  Future<List<UserWord>> upsertAll(List<UserWord> words) async {
+    if (words.isEmpty) return [];
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/user-words/batch',
+      data: {
+        'words': [for (final word in words) word.toJson()],
+      },
+    );
+    return (response.data!['words'] as List<dynamic>)
+        .cast<Map<String, dynamic>>()
+        .map(UserWord.fromJson)
+        .toList();
   }
 }
 

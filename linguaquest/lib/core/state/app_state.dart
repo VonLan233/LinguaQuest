@@ -4,6 +4,7 @@ import '../../data/models/app_notification.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
+import '../../data/models/user_word.dart';
 import '../../data/models/user_profile.dart';
 
 class DailyReminderSettings {
@@ -104,6 +105,7 @@ class AppState {
     required this.isLoading,
     required this.lessons,
     required this.customWords,
+    required this.userWords,
     required this.themeMode,
     required this.reminderSettings,
     required this.completedLessonIds,
@@ -122,6 +124,7 @@ class AppState {
   final UserProfile? user;
   final List<Lesson> lessons;
   final List<CustomWord> customWords;
+  final List<UserWord> userWords;
   final ThemeMode themeMode;
   final DailyReminderSettings reminderSettings;
   final LearningPlan? learningPlan;
@@ -164,6 +167,14 @@ class AppState {
       .where((lesson) => completedLessonIds.contains(lesson.id))
       .fold(0, (total, lesson) => total + lesson.words.length);
 
+  int get trackedLearningWords => userWords
+      .where((word) => word.status != 'Ignored' && !word.isIgnored)
+      .length;
+
+  int get masteredReviewWords => reviewWords
+      .where((word) => word.masteryLevel >= 4 || word.status == 'Mastered')
+      .length;
+
   Set<String> get todayCompletedFormalLessonIds => {
     for (final lesson in formalLessons)
       if (todayCompletedLessonIds.contains(lesson.id)) lesson.id,
@@ -178,13 +189,20 @@ class AppState {
     return (completedLearningWords / totalLearningWords).clamp(0.0, 1.0);
   }
 
+  List<CustomWord> get reviewWords => [
+    ...customWords,
+    for (final word in userWords) word.toReviewCard(),
+  ];
+
   List<CustomWord> get dueWords {
     final now = DateTime.now();
-    return customWords.where((word) => word.isDue(now)).toList();
+    final due = reviewWords.where((word) => word.isDue(now)).toList()
+      ..sort((a, b) => a.nextReviewAt.compareTo(b.nextReviewAt));
+    return due;
   }
 
   List<CustomWord> get weakWords {
-    final weak = customWords.where((word) => word.isWeak).toList()
+    final weak = reviewWords.where((word) => word.isWeak).toList()
       ..sort((a, b) => b.wrongCount.compareTo(a.wrongCount));
     return weak;
   }
@@ -196,6 +214,7 @@ class AppState {
     bool clearUser = false,
     List<Lesson>? lessons,
     List<CustomWord>? customWords,
+    List<UserWord>? userWords,
     ThemeMode? themeMode,
     DailyReminderSettings? reminderSettings,
     LearningPlan? learningPlan,
@@ -215,6 +234,7 @@ class AppState {
       user: clearUser ? null : user ?? this.user,
       lessons: lessons ?? this.lessons,
       customWords: customWords ?? this.customWords,
+      userWords: userWords ?? this.userWords,
       themeMode: themeMode ?? this.themeMode,
       reminderSettings: reminderSettings ?? this.reminderSettings,
       learningPlan: clearLearningPlan
@@ -238,6 +258,7 @@ class AppState {
       isLoading: false,
       lessons: [],
       customWords: [],
+      userWords: [],
       themeMode: ThemeMode.system,
       reminderSettings: DailyReminderSettings.defaults,
       completedLessonIds: {},
