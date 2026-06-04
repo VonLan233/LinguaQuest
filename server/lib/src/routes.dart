@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
@@ -6,6 +8,7 @@ import 'config.dart';
 import 'database.dart';
 import 'json_response.dart';
 import 'notification_policy.dart';
+import 'study_plan_policy.dart';
 
 Router buildRouter(AppConfig config, AppDatabase database) {
   final router = Router();
@@ -127,6 +130,61 @@ Router buildRouter(AppConfig config, AppDatabase database) {
     });
   });
 
+  router.get('/study-plan', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final plan = await database.studyPlanByUid(uid);
+      return jsonResponse({
+        'studyPlan': plan == null ? null : studyPlanDto(plan),
+      });
+    });
+  });
+
+  router.put('/study-plan', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      final validation = validateStudyPlanPayload(body);
+      if (!validation.isValid) {
+        return jsonResponse({'error': validation.error}, status: 400);
+      }
+      final plan = await database.upsertStudyPlan(uid, {
+        ...validation.data!,
+        'id': body['id'] as String? ?? newId(),
+      });
+      await database.updateUser(uid, {
+        'targetExam': _targetExamForWordBook(plan['word_book_id'] as String),
+        'dailyGoal': plan['daily_new_target'],
+      });
+      return jsonResponse({'studyPlan': studyPlanDto(plan)});
+    });
+  });
+
+  router.post('/study-plan/reset', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      final now = DateTime.now().toUtc();
+      final today = DateTime.utc(now.year, now.month, now.day);
+      final requestedFinishDate = parseStudyPlanDate(body['targetFinishDate']);
+      final resetFinishDate = requestedFinishDate == null ||
+              requestedFinishDate.isBefore(today)
+          ? today.add(const Duration(days: 30))
+          : requestedFinishDate;
+      final validation = validateStudyPlanPayload({
+        ...body,
+        'status': 'active',
+        'startDate': _dateKey(today),
+        'targetFinishDate': _dateKey(resetFinishDate),
+      });
+      if (!validation.isValid) {
+        return jsonResponse({'error': validation.error}, status: 400);
+      }
+      final plan = await database.upsertStudyPlan(uid, {
+        ...validation.data!,
+        'id': body['id'] as String? ?? newId(),
+      });
+      return jsonResponse({'studyPlan': studyPlanDto(plan)});
+    });
+  });
+
   router.get('/review/due', (Request request) async {
     return _protected(config, request, (uid) async {
       final words = await database.customWords(uid, dueOnly: true);
@@ -202,7 +260,7 @@ Router buildRouter(AppConfig config, AppDatabase database) {
 Middleware corsMiddleware() {
   const headers = {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, PATCH, DELETE, OPTIONS',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
     'Access-Control-Allow-Headers': 'Origin, Content-Type, Authorization',
   };
   return (innerHandler) {
@@ -281,6 +339,25 @@ Map<String, dynamic> notificationDto(Map<String, dynamic> row) {
   };
 }
 
+Map<String, dynamic> studyPlanDto(Map<String, dynamic> row) {
+  return {
+    'id': row['id'],
+    'uid': row['uid'],
+    'userId': row['uid'],
+    'wordBookId': row['word_book_id'] ?? row['wordBookId'],
+    'dailyNewTarget': row['daily_new_target'] ?? row['dailyNewTarget'],
+    'dailyReviewLimit': row['daily_review_limit'] ?? row['dailyReviewLimit'],
+    'startDate': _dateValue(row['start_date'] ?? row['startDate']),
+    'targetFinishDate': _dateValue(
+      row['target_finish_date'] ?? row['targetFinishDate'],
+    ),
+    'reminderTime': row['reminder_time'] ?? row['reminderTime'],
+    'status': row['status'],
+    'createdAt': _dateValue(row['created_at'] ?? row['createdAt']),
+    'updatedAt': _dateValue(row['updated_at'] ?? row['updatedAt']),
+  };
+}
+
 Future<void> _ensureNotificationsForToday(
   AppDatabase database,
   String uid,
@@ -294,19 +371,24 @@ Future<void> _ensureNotificationsForToday(
     dayWindow.startUtc,
     dayWindow.endUtc,
   );
-  final dueReviewCount = await database.dueReviewCount(uid);
+  final studyPlan = await database.studyPlanByUid(uid);
+  final planPaused = studyPlan?['status'] == 'paused';
+  final reviewLimit = _intValue(studyPlan?['daily_review_limit']) ?? 9999;
+  final dueReviewCount = planPaused
+      ? 0
+      : math.min(await database.dueReviewCount(uid), reviewLimit);
   final lastStudyDate = user['last_study_date'];
   final hasCheckedIn =
       lastStudyDate is DateTime &&
       !lastStudyDate.toUtc().isBefore(dayWindow.startUtc) &&
       lastStudyDate.toUtc().isBefore(dayWindow.endUtc);
-  final dailyGoal = user['daily_goal'] ?? 10;
+  final dailyGoal = studyPlan?['daily_new_target'] ?? user['daily_goal'] ?? 10;
   final generated = generatedNotificationsForToday(
     dateKey: dayWindow.dateKey,
     dailyGoal: dailyGoal is int ? dailyGoal : int.tryParse('$dailyGoal') ?? 10,
-    hasStudyToday: hasStudyToday,
+    hasStudyToday: planPaused || hasStudyToday,
     dueReviewCount: dueReviewCount,
-    hasCheckedIn: hasCheckedIn,
+    hasCheckedIn: planPaused || hasCheckedIn,
   );
   await database.upsertNotifications(uid, [
     for (final notification in generated)
@@ -326,4 +408,29 @@ Future<void> _ensureNotificationsForToday(
 String _dateValue(Object? value) {
   if (value is DateTime) return value.toIso8601String();
   return value?.toString() ?? DateTime.now().toUtc().toIso8601String();
+}
+
+String _targetExamForWordBook(String wordBookId) {
+  switch (wordBookId) {
+    case 'business-english':
+      return 'Business English';
+    case 'travel-english':
+      return 'Travel English';
+    case 'exam-core':
+      return 'IELTS';
+    case 'daily-english':
+      return 'Daily English';
+  }
+  return 'Daily English';
+}
+
+String _dateKey(DateTime date) {
+  final month = date.month.toString().padLeft(2, '0');
+  final day = date.day.toString().padLeft(2, '0');
+  return '${date.year}-$month-$day';
+}
+
+int? _intValue(Object? value) {
+  if (value is int) return value;
+  return int.tryParse(value?.toString() ?? '');
 }
