@@ -21,9 +21,13 @@ class TargetWordDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appControllerProvider);
     final word = _find(state);
+    final lesson = _findLesson(state);
     if (word == null) {
       return const Scaffold(body: Center(child: Text('没有找到这个词')));
     }
+    final progress = state.userWords
+        .where((item) => item.wordId == word.id)
+        .firstOrNull;
     final isSaved = state.customWords.any(
       (item) => item.word.trim().toLowerCase() == word.word.toLowerCase(),
     );
@@ -40,23 +44,41 @@ class TargetWordDetailScreen extends ConsumerWidget {
             children: [
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: null,
-                  icon: const Icon(Icons.playlist_add_check_rounded),
-                  label: const Text('当前计划中'),
+                  onPressed: () => _toggleFavorite(
+                    context,
+                    ref,
+                    word,
+                    lesson?.section ?? '目标词书',
+                    progress?.isFavorite ?? false,
+                  ),
+                  icon: Icon(
+                    progress?.isFavorite == true
+                        ? Icons.star_rounded
+                        : Icons.star_outline_rounded,
+                  ),
+                  label: Text(progress?.isFavorite == true ? '已收藏' : '收藏'),
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: FilledButton.icon(
-                  onPressed: isSaved
-                      ? null
-                      : () => _addToCustomWords(context, ref, word),
+                  onPressed: () => _toggleNewWordbook(
+                    context,
+                    ref,
+                    word,
+                    lesson?.section ?? '目标词书',
+                    progress?.isInNewWordbook ?? isSaved,
+                  ),
                   icon: Icon(
-                    isSaved
+                    progress?.isInNewWordbook == true || isSaved
                         ? Icons.check_circle_outline
                         : Icons.add_circle_outline,
                   ),
-                  label: Text(isSaved ? '已加入生词本' : '加入生词本'),
+                  label: Text(
+                    progress?.isInNewWordbook == true || isSaved
+                        ? '已加入生词本'
+                        : '加入生词本',
+                  ),
                 ),
               ),
             ],
@@ -135,6 +157,14 @@ class TargetWordDetailScreen extends ConsumerWidget {
               spacing: 8,
               runSpacing: 8,
               children: [
+                if (progress != null) ...[
+                  PillLabel(
+                    label: displayWordStatus(progress.status),
+                    icon: Icons.psychology_outlined,
+                    color: AppTheme.mango,
+                  ),
+                  PillLabel(label: '掌握 ${progress.masteryLevel}/5'),
+                ],
                 PillLabel(label: word.partOfSpeech),
                 PillLabel(
                   label: displayDifficulty(word.difficulty),
@@ -145,6 +175,22 @@ class TargetWordDetailScreen extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 22),
+            OutlinedButton.icon(
+              onPressed: () => _toggleIgnored(
+                context,
+                ref,
+                word,
+                lesson?.section ?? '目标词书',
+                progress?.isIgnored ?? false,
+              ),
+              icon: Icon(
+                progress?.isIgnored == true
+                    ? Icons.undo_rounded
+                    : Icons.block_outlined,
+              ),
+              label: Text(progress?.isIgnored == true ? '恢复学习' : '忽略太简单'),
+            ),
+            const SizedBox(height: 12),
             AiWordSupportLink(word: word.word),
           ],
         ),
@@ -152,25 +198,100 @@ class TargetWordDetailScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _addToCustomWords(
+  Future<void> _toggleFavorite(
     BuildContext context,
     WidgetRef ref,
     Word word,
+    String wordBookId,
+    bool current,
   ) async {
+    await _updateFlags(
+      context,
+      ref,
+      word,
+      wordBookId,
+      isFavorite: !current,
+      successMessage: current ? '已取消收藏' : '已收藏',
+    );
+  }
+
+  Future<void> _toggleNewWordbook(
+    BuildContext context,
+    WidgetRef ref,
+    Word word,
+    String wordBookId,
+    bool current,
+  ) async {
+    await _updateFlags(
+      context,
+      ref,
+      word,
+      wordBookId,
+      isInNewWordbook: !current,
+      successMessage: current ? '已移出生词本' : '已加入生词本',
+    );
+  }
+
+  Future<void> _toggleIgnored(
+    BuildContext context,
+    WidgetRef ref,
+    Word word,
+    String wordBookId,
+    bool current,
+  ) async {
+    await _updateFlags(
+      context,
+      ref,
+      word,
+      wordBookId,
+      isIgnored: !current,
+      successMessage: current ? '已恢复学习' : '已忽略，后续不进入复习队列',
+    );
+  }
+
+  Future<void> _updateFlags(
+    BuildContext context,
+    WidgetRef ref,
+    Word word,
+    String wordBookId, {
+    bool? isFavorite,
+    bool? isInNewWordbook,
+    bool? isIgnored,
+    required String successMessage,
+  }) async {
     final succeeded = await ref
         .read(appControllerProvider.notifier)
-        .addCustomWord(
-          word: word.word,
-          meaning: word.meaning,
-          exampleSentence: word.exampleSentence,
-          note: '${word.definition}\n${word.exampleTranslation}',
-          tag: word.tags.isEmpty ? '目标词' : displayWordTag(word.tags.first),
-          difficulty: word.difficulty,
+        .updateTargetWordFlags(
+          word,
+          wordBookId: wordBookId,
+          isFavorite: isFavorite,
+          isInNewWordbook: isInNewWordbook,
+          isIgnored: isIgnored,
         );
+    if (succeeded && isInNewWordbook == true) {
+      final alreadySaved = ref
+          .read(appControllerProvider)
+          .customWords
+          .any(
+            (item) => item.word.trim().toLowerCase() == word.word.toLowerCase(),
+          );
+      if (!alreadySaved) {
+        await ref
+            .read(appControllerProvider.notifier)
+            .addCustomWord(
+              word: word.word,
+              meaning: word.meaning,
+              exampleSentence: word.exampleSentence,
+              note: '${word.definition}\n${word.exampleTranslation}',
+              tag: word.tags.isEmpty ? '目标词' : displayWordTag(word.tags.first),
+              difficulty: word.difficulty,
+            );
+      }
+    }
     if (!context.mounted) return;
     final message = succeeded
-        ? '已加入生词本'
-        : ref.read(appControllerProvider).errorMessage ?? '暂时无法加入生词本';
+        ? successMessage
+        : ref.read(appControllerProvider).errorMessage ?? '暂时无法更新目标词';
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
@@ -183,5 +304,22 @@ class TargetWordDetailScreen extends ConsumerWidget {
       }
     }
     return null;
+  }
+
+  Lesson? _findLesson(AppState state) {
+    for (final lesson in state.formalLessons) {
+      for (final word in lesson.words) {
+        if (word.id == wordId) return lesson;
+      }
+    }
+    return null;
+  }
+}
+
+extension _FirstOrNull<T> on Iterable<T> {
+  T? get firstOrNull {
+    final iterator = this.iterator;
+    if (!iterator.moveNext()) return null;
+    return iterator.current;
   }
 }
