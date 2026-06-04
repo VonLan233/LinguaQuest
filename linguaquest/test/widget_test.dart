@@ -2007,7 +2007,7 @@ void main() {
     expect(word.reviewed(isCorrect: false, now: now).status, 'Relearning');
   });
 
-  testWidgets('spelling retry keeps the previous input for editing', (
+  testWidgets('mixed study keeps wrong new words in the same learning round', (
     tester,
   ) async {
     final now = DateTime(2026, 5, 25);
@@ -2027,7 +2027,16 @@ void main() {
       'linguaquest.profile': jsonEncode(profile.toJson()),
     });
 
-    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          customWordRepositoryProvider.overrideWithValue(
+            _EmptyCustomWordRepository(),
+          ),
+        ],
+        child: const LinguaQuestApp(),
+      ),
+    );
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     await tester.scrollUntilVisible(
@@ -2038,39 +2047,33 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(FilledButton, '新学 10'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('进入词卡学习'));
-    await tester.pumpAndSettle();
-    await _completeNewWordCards(tester);
 
-    await tester.tap(find.text('分配'));
+    expect(find.text('今日混排学习包'), findsOneWidget);
+    expect(find.text('allocate'), findsOneWidget);
+
+    await tester.tap(find.text('不认识'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('进入识别题'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.widgetWithText(OutlinedButton, '还不确定 3'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('检查'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('allocate'), findsWidgets);
+
+    if (find.text('再试一次').evaluate().isNotEmpty) {
+      await tester.tap(find.text('再试一次'));
+      await tester.pumpAndSettle();
+    }
+    await tester.tap(find.widgetWithText(OutlinedButton, '分配'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('evaluate'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('检查'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('继续'));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.text('对比'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('检查'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('继续'));
-    await tester.pumpAndSettle();
-
-    await tester.enterText(find.byType(TextField), 'contras');
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('检查'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('再试一次'));
-    await tester.pumpAndSettle();
-
-    expect(find.text('contras'), findsOneWidget);
+    expect(find.text('加入稍后复现'), findsOneWidget);
   });
 
   test(
@@ -2470,6 +2473,20 @@ class _ConcurrentCustomWordRepository implements CustomWordRepository {
     }
     return word;
   }
+}
+
+class _EmptyCustomWordRepository implements CustomWordRepository {
+  @override
+  Future<List<CustomWord>> list(String uid) async => const [];
+
+  @override
+  Future<CustomWord> create(CustomWord word) async => word;
+
+  @override
+  Future<void> delete(String uid, String id) async {}
+
+  @override
+  Future<CustomWord> update(CustomWord word) async => word;
 }
 
 QuizQuestion _mistakeQuestion(int index) {

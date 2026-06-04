@@ -29,8 +29,8 @@ import '../../features/review/mistake_book_screen.dart';
 import '../../features/review/review_center_screen.dart';
 import '../../features/search/search_screen.dart';
 import '../../features/shell/app_shell.dart';
-import '../../features/study/new_study_screen.dart';
-import '../../features/study/review_study_screen.dart';
+import '../../features/study/mixed_study_session_screen.dart';
+import '../../features/study/session/session_queue_builder.dart';
 import '../../features/training/training_screen.dart';
 import '../../features/wordbook/add_edit_custom_word_screen.dart';
 import '../../features/wordbook/custom_word_list_screen.dart';
@@ -95,11 +95,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/study/new',
-        builder: (context, state) => const NewStudyScreen(),
+        builder: (context, state) =>
+            const MixedStudySessionScreen(mode: StudySessionEntryMode.mixed),
       ),
       GoRoute(
         path: '/study/review',
-        builder: (context, state) => const ReviewStudyScreen(),
+        builder: (context, state) => const MixedStudySessionScreen(
+          mode: StudySessionEntryMode.reviewOnly,
+        ),
       ),
       GoRoute(
         path: '/review',
