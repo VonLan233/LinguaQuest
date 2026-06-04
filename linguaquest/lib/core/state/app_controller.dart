@@ -345,6 +345,9 @@ class AppController extends Notifier<AppState> {
     String id,
     bool isCorrect, {
     ReviewDimension dimension = ReviewDimension.confidence,
+    int answerTimeMs = 0,
+    int confidence = 3,
+    String? wrongOption,
   }) async {
     final user = state.user;
     if (user == null) return false;
@@ -368,7 +371,9 @@ class AppController extends Notifier<AppState> {
           uid: user.uid,
           wordId: id,
           isCorrect: isCorrect,
-          answerTimeMs: 2400,
+          answerTimeMs: answerTimeMs,
+          confidence: confidence,
+          wrongOption: isCorrect ? null : wrongOption,
           reviewedAt: now,
           masteryBefore: word.masteryLevel,
           masteryAfter: reviewed.masteryLevel,
@@ -382,6 +387,64 @@ class AppController extends Notifier<AppState> {
           for (final item in state.customWords) item.id == id ? reviewed : item,
         ],
         todayReviewWordIds: todayReviewWordIds,
+      );
+      await refreshNotifications();
+      unawaited(_scheduleLocalNotifications());
+    });
+  }
+
+  Future<bool> completeMixedStudySession({
+    required String lessonId,
+    required int totalQuestions,
+    required int correctAnswers,
+    required List<String> mistakeWordIds,
+    required List<Map<String, dynamic>> answerEvents,
+    required DateTime startedAt,
+    required DateTime endedAt,
+    bool completeCurrentLesson = false,
+    int xpEarned = 0,
+  }) async {
+    final user = state.user;
+    if (user == null) return false;
+    return _run(() async {
+      final now = endedAt;
+      final lastStudy = user.lastStudyDate;
+      final streak = _nextStreak(lastStudy, now, user.streak);
+      final currentLesson = completeCurrentLesson ? state.currentLesson : null;
+      final completedLessonIds = currentLesson == null
+          ? state.completedLessonIds
+          : {...state.completedLessonIds, currentLesson.id};
+      final todayCompletedLessonIds = currentLesson == null
+          ? state.todayCompletedLessonIds
+          : {...state.todayCompletedLessonIds, currentLesson.id};
+      final updatedUser = await _authRepository.updateProfile(
+        user.copyWith(
+          xp: user.xp + xpEarned,
+          streak: streak,
+          lastStudyDate: now,
+          updatedAt: now,
+        ),
+      );
+      await _learningRepository.recordStudySession(
+        StudySession(
+          id: 'session-${now.microsecondsSinceEpoch}',
+          uid: user.uid,
+          lessonId: lessonId,
+          startedAt: startedAt,
+          endedAt: endedAt,
+          totalQuestions: totalQuestions,
+          correctAnswers: correctAnswers,
+          xpEarned: xpEarned,
+          mistakeWordIds: mistakeWordIds,
+          answerEvents: answerEvents,
+        ),
+      );
+      await _saveLessonProgress(completedLessonIds, todayCompletedLessonIds);
+      state = state.copyWith(
+        user: updatedUser,
+        lessons: _applyLessonProgression(state.lessons, completedLessonIds),
+        completedLessonIds: completedLessonIds,
+        todayCompletedLessonIds: todayCompletedLessonIds,
       );
       await refreshNotifications();
       unawaited(_scheduleLocalNotifications());

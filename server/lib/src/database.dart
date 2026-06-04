@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:postgres/postgres.dart';
 
 import 'config.dart';
@@ -60,9 +62,13 @@ CREATE TABLE IF NOT EXISTS study_sessions (
   total_questions INTEGER NOT NULL,
   correct_answers INTEGER NOT NULL,
   xp_earned INTEGER NOT NULL,
-  mistake_word_ids TEXT NOT NULL DEFAULT ''
+  mistake_word_ids TEXT NOT NULL DEFAULT '',
+  answer_events TEXT NOT NULL DEFAULT ''
 );
 ''');
+    await connection.execute(
+      "ALTER TABLE study_sessions ADD COLUMN IF NOT EXISTS answer_events TEXT NOT NULL DEFAULT ''",
+    );
 
     await connection.execute('''
 CREATE TABLE IF NOT EXISTS review_events (
@@ -266,9 +272,9 @@ ON CONFLICT (id) DO UPDATE SET
     await connection.execute(
       Sql.named('''
 INSERT INTO study_sessions (
-  id, uid, lesson_id, started_at, ended_at, total_questions, correct_answers, xp_earned, mistake_word_ids
+  id, uid, lesson_id, started_at, ended_at, total_questions, correct_answers, xp_earned, mistake_word_ids, answer_events
 ) VALUES (
-  @id, @uid, @lessonId, @startedAt, @endedAt, @totalQuestions, @correctAnswers, @xpEarned, @mistakeWordIds
+  @id, @uid, @lessonId, @startedAt, @endedAt, @totalQuestions, @correctAnswers, @xpEarned, @mistakeWordIds, @answerEvents
 )
 '''),
       parameters: {
@@ -283,6 +289,7 @@ INSERT INTO study_sessions (
         'mistakeWordIds': ((data['mistakeWordIds'] as List?) ?? const []).join(
           ',',
         ),
+        'answerEvents': jsonEncode((data['answerEvents'] as List?) ?? const []),
       },
     );
   }
