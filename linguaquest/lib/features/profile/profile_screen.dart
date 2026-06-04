@@ -101,10 +101,12 @@ class ProfileScreen extends ConsumerWidget {
               : '最常错词：${weakestWord.word} · ${weakestWord.wrongCount} 次错误 · ${displayWordStatus(weakestWord.status)}',
         ),
         const SizedBox(height: 22),
-        if (state.learningPlan != null) ...[
+        if (state.studyPlan != null) ...[
           _LearningPlanLine(
-            dailyWords: state.learningPlan!.dailyWords,
-            remainingWords: state.learningPlan!.remainingWords,
+            wordBookName: state.currentStudyBook.name,
+            dailyNewTarget: state.studyPlan!.dailyNewTarget,
+            dailyReviewLimit: state.studyPlan!.dailyReviewLimit,
+            status: state.studyPlan!.status,
           ),
           const SizedBox(height: 22),
         ],
@@ -112,9 +114,9 @@ class ProfileScreen extends ConsumerWidget {
         const SizedBox(height: 10),
         _ProfileAction(
           icon: Icons.flag_outlined,
-          title: '学习目标',
-          subtitle: displayTarget(user?.targetExam),
-          route: '/goal-setup',
+          title: '学习计划',
+          subtitle: state.currentStudyBook.name,
+          route: '/settings/study-plan',
         ),
         const _ProfileAction(
           icon: Icons.menu_book_outlined,
@@ -397,12 +399,16 @@ class _WeaknessStatusLine extends StatelessWidget {
 
 class _LearningPlanLine extends StatelessWidget {
   const _LearningPlanLine({
-    required this.dailyWords,
-    required this.remainingWords,
+    required this.wordBookName,
+    required this.dailyNewTarget,
+    required this.dailyReviewLimit,
+    required this.status,
   });
 
-  final int dailyWords;
-  final int remainingWords;
+  final String wordBookName;
+  final int dailyNewTarget;
+  final int dailyReviewLimit;
+  final String status;
 
   @override
   Widget build(BuildContext context) {
@@ -419,7 +425,7 @@ class _LearningPlanLine extends StatelessWidget {
               Text('学习计划', style: theme.textTheme.titleMedium),
               const SizedBox(height: 2),
               Text(
-                '每日 $dailyWords 词 · 计划剩余 $remainingWords 词',
+                '$wordBookName · 新学 $dailyNewTarget · 复习上限 $dailyReviewLimit · ${status == 'paused' ? '已暂停' : '进行中'}',
                 style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
               ),
             ],

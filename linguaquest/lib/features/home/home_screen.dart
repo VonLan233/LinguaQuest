@@ -17,14 +17,13 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appControllerProvider);
     final user = state.user;
-    final dueCount = state.dueWords.length;
-    final dailyGoal = state.learningPlan?.dailyWords ?? user?.dailyGoal ?? 10;
-    final reviewTarget = state.learningPlan == null
-        ? dueCount
-        : dueCount.clamp(0, state.learningPlan!.dailyWords * 2).toInt();
+    final currentBook = state.currentStudyBook;
+    final dueCount = state.reviewQueue.length;
+    final dailyGoal = state.dailyNewTarget;
+    final reviewTarget = state.isStudyPlanPaused ? 0 : dueCount;
     final todayLessonWords = state.todayLearningWords;
     final todayWork = todayLessonWords + state.todayReviewWordIds.length;
-    final totalWork = dailyGoal + reviewTarget;
+    final totalWork = state.isStudyPlanPaused ? 0 : dailyGoal + reviewTarget;
     final dailyProgress = totalWork <= 0
         ? 0.0
         : (todayWork / totalWork).clamp(0.0, 1.0);
@@ -72,11 +71,12 @@ class HomeScreen extends ConsumerWidget {
         const SizedBox(height: 18),
         _DailyFocusHeader(
           streak: user?.streak ?? 0,
-          target: displayTarget(user?.targetExam),
-          level: displayLevel(user?.level),
+          target: currentBook.name,
+          level: state.isStudyPlanPaused ? '已暂停' : displayLevel(user?.level),
           todayWork: todayWork,
           totalWork: totalWork,
           progress: dailyProgress,
+          isPaused: state.isStudyPlanPaused,
         ),
         const SizedBox(height: 18),
         _HomeLearningSignals(
@@ -88,12 +88,15 @@ class HomeScreen extends ConsumerWidget {
         ),
         const SizedBox(height: 18),
         _DailyTaskPanel(
-          currentSection:
-              currentLesson?.section ??
-              displayTarget(state.learningPlan?.target ?? '雅思核心词汇'),
+          currentSection: currentLesson?.section ?? currentBook.name,
           dailyGoal: dailyGoal,
           dueCount: dueCount,
-          canStartNew: currentLesson != null && !pathComplete,
+          isPaused: state.isStudyPlanPaused,
+          canStartNew:
+              currentLesson != null &&
+              !pathComplete &&
+              !state.isStudyPlanPaused,
+          onOpenPlan: () => context.push('/settings/study-plan'),
           onNewStudy: () => context.push('/study/new'),
           onReview: () => context.push('/study/review'),
         ),
@@ -372,7 +375,9 @@ class _DailyTaskPanel extends StatelessWidget {
     required this.currentSection,
     required this.dailyGoal,
     required this.dueCount,
+    required this.isPaused,
     required this.canStartNew,
+    required this.onOpenPlan,
     required this.onNewStudy,
     required this.onReview,
   });
@@ -380,7 +385,9 @@ class _DailyTaskPanel extends StatelessWidget {
   final String currentSection;
   final int dailyGoal;
   final int dueCount;
+  final bool isPaused;
   final bool canStartNew;
+  final VoidCallback onOpenPlan;
   final VoidCallback onNewStudy;
   final VoidCallback onReview;
 
@@ -399,9 +406,19 @@ class _DailyTaskPanel extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 6),
-          Text(
-            '当前词书 $currentSection · 新学和复习分开完成',
-            style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(
+                  isPaused
+                      ? '当前词书 $currentSection · 计划已暂停'
+                      : '当前词书 $currentSection · 新学和复习分开完成',
+                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                ),
+              ),
+              TextButton(onPressed: onOpenPlan, child: const Text('调整计划')),
+            ],
           ),
           const SizedBox(height: 14),
           Row(
@@ -416,7 +433,7 @@ class _DailyTaskPanel extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: FilledButton.tonalIcon(
-                  onPressed: onReview,
+                  onPressed: isPaused ? null : onReview,
                   icon: const Icon(Icons.replay_rounded),
                   label: Text('复习 $dueCount'),
                 ),
@@ -437,6 +454,7 @@ class _DailyFocusHeader extends StatelessWidget {
     required this.todayWork,
     required this.totalWork,
     required this.progress,
+    required this.isPaused,
   });
 
   final int streak;
@@ -445,6 +463,7 @@ class _DailyFocusHeader extends StatelessWidget {
   final int todayWork;
   final int totalWork;
   final double progress;
+  final bool isPaused;
 
   @override
   Widget build(BuildContext context) {
@@ -474,7 +493,7 @@ class _DailyFocusHeader extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                '今天完成 $todayWork/$totalWork 词',
+                isPaused ? '学习计划已暂停' : '今天完成 $todayWork/$totalWork 词',
                 style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w900,
                   height: 1.08,
