@@ -5,6 +5,7 @@ import '../models/custom_word.dart';
 import '../models/lesson.dart';
 import '../models/review_event.dart';
 import '../models/study_session.dart';
+import '../models/study_plan.dart';
 import '../models/user_profile.dart';
 import '../remote/api_client.dart';
 import '../seed/seed_lessons.dart';
@@ -13,6 +14,7 @@ import 'custom_word_repository.dart';
 import 'learning_repository.dart';
 import 'notification_repository.dart';
 import 'review_repository.dart';
+import 'study_plan_repository.dart';
 
 class ApiAuthRepository implements AuthRepository {
   ApiAuthRepository(this._client);
@@ -146,6 +148,42 @@ class ApiLearningRepository implements LearningRepository {
   @override
   Future<void> recordStudySession(StudySession session) async {
     await _client.dio.post<void>('/study-sessions', data: session.toJson());
+  }
+}
+
+class ApiStudyPlanRepository implements StudyPlanRepository {
+  ApiStudyPlanRepository(this._client);
+
+  final ApiClient _client;
+
+  @override
+  Future<StudyPlan?> load(String uid) async {
+    final response = await _client.dio.get<Map<String, dynamic>>('/study-plan');
+    final plan = response.data?['studyPlan'];
+    if (plan is! Map<String, dynamic>) return null;
+    return StudyPlan.fromJson(plan);
+  }
+
+  @override
+  Future<StudyPlan> save(StudyPlan plan) async {
+    final response = await _client.dio.put<Map<String, dynamic>>(
+      '/study-plan',
+      data: plan.toJson(),
+    );
+    return StudyPlan.fromJson(
+      response.data!['studyPlan'] as Map<String, dynamic>,
+    );
+  }
+
+  @override
+  Future<StudyPlan> reset(StudyPlan plan) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/study-plan/reset',
+      data: plan.toJson(),
+    );
+    return StudyPlan.fromJson(
+      response.data!['studyPlan'] as Map<String, dynamic>,
+    );
   }
 }
 
