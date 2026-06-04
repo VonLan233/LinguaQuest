@@ -17,6 +17,7 @@ import '../../features/profile/profile_screen.dart';
 import '../../features/profile/about_screen.dart';
 import '../../features/profile/help_support_screen.dart';
 import '../../features/profile/settings_screen.dart';
+import '../../features/profile/study_plan_settings_screen.dart';
 import '../../features/quests/ai_tutor_screen.dart';
 import '../../features/quests/class_mode_screen.dart';
 import '../../features/quests/class_progress_screen.dart';
@@ -136,6 +137,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/settings',
         builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: '/settings/study-plan',
+        builder: (context, state) => const StudyPlanSettingsScreen(),
       ),
       GoRoute(
         path: '/settings/theme',
