@@ -316,7 +316,7 @@ class AppController extends Notifier<AppState> {
     if (user == null) return false;
     return _run(() async {
       final now = DateTime.now();
-      final lastStudy = user.lastStudyDate;
+      final lastStudy = user.lastStudyDate?.toLocal();
       final streak = _nextStreak(lastStudy, now, user.streak);
       final completedLessonIds = {...state.completedLessonIds, result.lessonId};
       final todayCompletedLessonIds = {
@@ -455,7 +455,7 @@ class AppController extends Notifier<AppState> {
         final now = DateTime.now();
         final updated = await _authRepository.updateProfile(
           user.copyWith(
-            streak: _nextStreak(user.lastStudyDate, now, user.streak),
+            streak: _nextStreak(user.lastStudyDate?.toLocal(), now, user.streak),
             lastStudyDate: now,
             updatedAt: now,
           ),
@@ -770,6 +770,9 @@ class AppController extends Notifier<AppState> {
       final message = data is Map ? data['error']?.toString() : null;
       if (message == 'email already registered') {
         return '该邮箱已经注册，请直接登录。';
+      }
+      if (message == 'task_not_complete') {
+        return '该任务尚未完成，无法领取奖励。';
       }
       if (message != null && message.isNotEmpty) return message;
       return '网络请求失败，请稍后重试。';

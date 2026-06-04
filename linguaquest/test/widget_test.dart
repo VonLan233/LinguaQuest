@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -401,6 +402,56 @@ void main() {
     expect(find.text('XP 用途'), findsOneWidget);
     expect(find.text('去完成 +5 XP'), findsOneWidget);
     expect(find.textContaining('已入账'), findsNothing);
+  });
+
+  test('lesson completion compares server UTC last study date locally', () async {
+    final now = DateTime.now();
+    final yesterdayEarlyLocal = DateTime(
+      now.year,
+      now.month,
+      now.day,
+    ).subtract(const Duration(days: 1)).add(const Duration(minutes: 30));
+    final serverLastStudyDate = yesterdayEarlyLocal.toUtc();
+    final profile = UserProfile(
+      uid: 'utc-streak-user',
+      name: 'Uma',
+      email: 'uma@lingua.quest',
+      targetExam: 'IELTS',
+      level: 'Intermediate',
+      dailyGoal: 12,
+      xp: 120,
+      streak: 4,
+      lastStudyDate: serverLastStudyDate,
+      createdAt: serverLastStudyDate,
+      updatedAt: serverLastStudyDate,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    final lesson = container
+        .read(appControllerProvider)
+        .lessons
+        .firstWhere((lesson) => !lesson.isTrainingPack);
+
+    expect(
+      await container.read(appControllerProvider.notifier).completeLesson(
+            LessonResult(
+              lessonId: lesson.id,
+              lessonTitle: lesson.title,
+              totalQuestions: lesson.questions.length,
+              correctAnswers: lesson.questions.length,
+              xpEarned: 10,
+              mistakes: const [],
+              completedAt: DateTime.now(),
+            ),
+          ),
+      true,
+    );
+    expect(container.read(appControllerProvider).user?.streak, 5);
   });
 
   testWidgets(
@@ -2183,6 +2234,45 @@ void main() {
     expect(container.read(appControllerProvider).user?.xp, 30);
   });
 
+  test('incomplete reward claim shows localized error message', () async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'incomplete-claim-user',
+      name: 'Ivy',
+      email: 'ivy@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      createdAt: now,
+      updatedAt: now,
+      xp: 30,
+      streak: 1,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer(
+      overrides: [
+        rewardRepositoryProvider.overrideWithValue(
+          _IncompleteClaimRewardRepository(),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+
+    expect(
+      await container
+          .read(appControllerProvider.notifier)
+          .claimReward('dailyCheckIn'),
+      false,
+    );
+    final state = container.read(appControllerProvider);
+    expect(state.errorMessage, '该任务尚未完成，无法领取奖励。');
+    expect(state.pendingRewardTaskIds, isNot(contains('dailyCheckIn')));
+  });
+
   test('server reward user snapshot does not patch profile again', () async {
     final now = DateTime(2026, 5, 25);
     final profile = UserProfile(
@@ -2845,6 +2935,48 @@ class _NullClaimRewardRepository implements RewardRepository {
   Future<RewardTaskSnapshot> claimTask(String uid, String taskId) async {
     return Future.value(
       const RewardTaskSnapshot(dateKey: '2026-05-25', tasks: [_task]),
+    );
+  }
+
+  @override
+  Future<RewardTaskSnapshot> listTasks(String uid) async => _snapshot();
+
+  @override
+  Future<RewardTaskSnapshot> recordEvent(
+    String uid,
+    RewardEventType type,
+  ) async => _snapshot();
+
+  Future<RewardTaskSnapshot> _snapshot() async {
+    return const RewardTaskSnapshot(dateKey: '2026-05-25', tasks: [_task]);
+  }
+}
+
+class _IncompleteClaimRewardRepository implements RewardRepository {
+  static const _task = DailyRewardTask(
+    id: 'dailyCheckIn',
+    title: '每日签到',
+    condition: '当天打开并点击签到',
+    points: 5,
+    targetRoute: '/discover',
+    status: DailyRewardTaskStatus.claimable,
+  );
+
+  @override
+  Future<RewardTaskSnapshot> checkIn(String uid) async => _snapshot();
+
+  @override
+  Future<RewardTaskSnapshot> claimTask(String uid, String taskId) async {
+    final requestOptions = RequestOptions(
+      path: '/rewards/tasks/$taskId/claim',
+    );
+    throw DioException(
+      requestOptions: requestOptions,
+      response: Response<Map<String, dynamic>>(
+        requestOptions: requestOptions,
+        statusCode: 409,
+        data: const {'error': 'task_not_complete'},
+      ),
     );
   }
 
