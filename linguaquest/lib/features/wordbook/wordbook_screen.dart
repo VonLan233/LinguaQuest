@@ -17,6 +17,7 @@ class WordbookScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appControllerProvider);
     final words = state.formalLessons.expand((lesson) => lesson.words).toList();
+    final book = state.currentStudyBook;
 
     return Scaffold(
       appBar: AppBar(
@@ -28,14 +29,22 @@ class WordbookScreen extends ConsumerWidget {
           padding: const EdgeInsets.all(20),
           children: [
             SectionHeader(
-              title: '图片单词本',
-              subtitle: '用图片词卡串联发音、释义、例句、标签和复习信号。',
+              title: book.name,
+              subtitle: book.description,
               trailing: QuestIconButton(
                 tooltip: '生词本',
                 onPressed: () => context.push('/custom-words'),
                 icon: Icons.add_card_outlined,
                 color: AppTheme.cyan,
               ),
+            ),
+            const SizedBox(height: 14),
+            _StudyBookCoverLine(
+              cover: book.cover,
+              totalWords: words.length,
+              completedWords: state.completedLearningWords,
+              progress: state.learningPathProgress,
+              onOpenPlan: () => context.push('/settings/study-plan'),
             ),
             const SizedBox(height: 14),
             Wrap(
@@ -64,6 +73,67 @@ class WordbookScreen extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _StudyBookCoverLine extends StatelessWidget {
+  const _StudyBookCoverLine({
+    required this.cover,
+    required this.totalWords,
+    required this.completedWords,
+    required this.progress,
+    required this.onOpenPlan,
+  });
+
+  final String cover;
+  final int totalWords;
+  final int completedWords;
+  final double progress;
+  final VoidCallback onOpenPlan;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CircleAvatar(
+          radius: 30,
+          backgroundColor: AppTheme.teal.withValues(alpha: 0.14),
+          child: Text(cover, style: const TextStyle(fontSize: 28)),
+        ),
+        const SizedBox(width: 14),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('已学 $completedWords/$totalWords 词'),
+              const SizedBox(height: 8),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(999),
+                child: LinearProgressIndicator(
+                  value: progress,
+                  minHeight: 9,
+                  backgroundColor: AppTheme.progressTrack(context),
+                  valueColor: const AlwaysStoppedAnimation<Color>(
+                    AppTheme.teal,
+                  ),
+                ),
+              ),
+              TextButton.icon(
+                onPressed: onOpenPlan,
+                icon: const Icon(Icons.tune_outlined),
+                label: const Text('切换词书或调整计划'),
+                style: TextButton.styleFrom(
+                  foregroundColor: theme.colorScheme.primary,
+                  padding: EdgeInsets.zero,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
