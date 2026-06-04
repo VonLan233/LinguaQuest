@@ -12,14 +12,13 @@ class ProgressAnalyticsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appControllerProvider);
-    final mastered = state.customWords
-        .where((word) => word.masteryLevel >= 4)
-        .length;
-    final attempts = state.customWords.fold<int>(
+    final reviewWords = state.reviewWords;
+    final mastered = reviewWords.where((word) => word.masteryLevel >= 4).length;
+    final attempts = reviewWords.fold<int>(
       0,
       (sum, word) => sum + word.correctCount + word.wrongCount,
     );
-    final correct = state.customWords.fold<int>(
+    final correct = reviewWords.fold<int>(
       0,
       (sum, word) => sum + word.correctCount,
     );
@@ -40,7 +39,7 @@ class ProgressAnalyticsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             _ProgressSignals(
-              cardCount: state.customWords.length,
+              cardCount: reviewWords.length,
               masteredCount: mastered,
               accuracy: accuracy,
             ),
@@ -53,17 +52,15 @@ class ProgressAnalyticsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 10),
             LinearProgressIndicator(
-              value: state.customWords.isEmpty
+              value: reviewWords.isEmpty
                   ? 0
-                  : (state.dueWords.length / state.customWords.length).clamp(
+                  : (state.dueWords.length / reviewWords.length).clamp(
                       0.0,
                       1.0,
                     ),
             ),
             const SizedBox(height: 8),
-            Text(
-              '${state.customWords.length} 张生词卡中有 ${state.dueWords.length} 张到期',
-            ),
+            Text('${reviewWords.length} 个学习资产中有 ${state.dueWords.length} 个到期'),
           ],
         ),
       ),

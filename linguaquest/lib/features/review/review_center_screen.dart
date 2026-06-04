@@ -255,6 +255,14 @@ class _ReviewTile extends ConsumerWidget {
                 icon: Icons.psychology_outlined,
                 color: AppTheme.mango,
               ),
+              const SizedBox(width: 6),
+              PillLabel(
+                label: word.source == 'target' ? '目标词' : '生词卡',
+                icon: word.source == 'target'
+                    ? Icons.route_outlined
+                    : Icons.style_outlined,
+                color: word.source == 'target' ? AppTheme.cyan : AppTheme.teal,
+              ),
             ],
           ),
           Row(
@@ -368,7 +376,9 @@ class _WeakWordRow extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
-          onTap: () => context.push('/custom-words/${word.id}'),
+          onTap: () => word.source == 'target'
+              ? context.push('/wordbook/${word.sourceWordId ?? word.id}')
+              : context.push('/custom-words/${word.id}'),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 6),
             child: Row(

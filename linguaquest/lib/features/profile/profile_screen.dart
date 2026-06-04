@@ -17,14 +17,15 @@ class ProfileScreen extends ConsumerWidget {
     final state = ref.watch(appControllerProvider);
     final user = state.user;
     final completedPlans = state.learningPathProgress >= 1 ? 1 : 0;
-    final masteredWords = state.customWords
+    final reviewWords = state.reviewWords;
+    final masteredWords = reviewWords
         .where((word) => word.masteryLevel >= 4 || word.status == 'Mastered')
         .length;
-    final totalAttempts = state.customWords.fold<int>(
+    final totalAttempts = reviewWords.fold<int>(
       0,
       (total, word) => total + word.correctCount + word.wrongCount,
     );
-    final correctAttempts = state.customWords.fold<int>(
+    final correctAttempts = reviewWords.fold<int>(
       0,
       (total, word) => total + word.correctCount,
     );
@@ -62,7 +63,8 @@ class ProfileScreen extends ConsumerWidget {
             ),
             _ProfileStatData(
               label: '生词本',
-              value: '${state.customWords.length}',
+              value:
+                  '${state.customWords.length + state.userWords.where((word) => word.isInNewWordbook).length}',
               icon: Icons.style_outlined,
               color: AppTheme.cyan,
             ),
