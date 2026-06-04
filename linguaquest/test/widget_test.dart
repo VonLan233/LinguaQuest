@@ -13,6 +13,7 @@ import 'package:linguaquest/data/models/custom_word.dart';
 import 'package:linguaquest/data/models/lesson.dart';
 import 'package:linguaquest/data/models/lesson_result.dart';
 import 'package:linguaquest/data/models/study_session.dart';
+import 'package:linguaquest/data/models/study_plan.dart';
 import 'package:linguaquest/data/models/user_profile.dart';
 import 'package:linguaquest/data/repositories/auth_repository.dart';
 import 'package:linguaquest/data/repositories/custom_word_repository.dart';
@@ -68,7 +69,7 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     expect(find.text('已连续打卡 6 天'), findsOneWidget);
-    expect(find.text('雅思核心词汇 · 中级'), findsOneWidget);
+    expect(find.text('考试高频词书 · 中级'), findsOneWidget);
     expect(find.text('首页'), findsWidgets);
     expect(find.text('训练场'), findsWidgets);
 
@@ -835,21 +836,23 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     await tester.scrollUntilVisible(
-      find.text('学习模式'),
+      find.text('调整计划'),
       300,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.text('学习模式'));
+    await tester.tap(find.text('调整计划'));
     await tester.pumpAndSettle();
 
-    expect(find.text('目标设置'), findsOneWidget);
-    expect(find.text('雅思核心词汇'), findsWidgets);
-    expect(find.text('15/天'), findsOneWidget);
-    expect(find.text('当前词书'), findsOneWidget);
-    expect(find.text('雅思核心词汇 · 已学 0/3 词'), findsOneWidget);
-    expect(find.text('新学 15 词'), findsOneWidget);
-    expect(find.text('复习上限 30 词'), findsOneWidget);
+    expect(find.text('学习计划设置'), findsOneWidget);
+    expect(find.text('考试高频词书'), findsWidgets);
+    expect(find.text('切换词书'), findsOneWidget);
+    expect(find.text('每日新学词数'), findsOneWidget);
+    await tester.drag(find.byType(Scrollable).last, const Offset(0, -320));
+    await tester.pumpAndSettle();
+    expect(find.text('每日复习上限'), findsOneWidget);
+    await tester.drag(find.byType(Scrollable).last, const Offset(0, -520));
+    await tester.pumpAndSettle();
     expect(find.text('查看完整词汇表'), findsOneWidget);
   });
 
@@ -878,12 +881,18 @@ void main() {
   });
 
   test('learning plan day count uses calendar days', () {
-    final plan = LearningPlan(
-      target: 'Daily English',
-      deadline: DateTime(2026, 5, 27, 23, 59),
-      dailyWords: 10,
-      remainingWords: 30,
+    final plan = StudyPlan(
+      id: 'study-plan-calendar-user',
+      uid: 'calendar-user',
+      wordBookId: 'daily-english',
+      dailyNewTarget: 10,
+      dailyReviewLimit: 20,
+      startDate: DateTime(2026, 5, 25),
+      targetFinishDate: DateTime(2026, 5, 27, 23, 59),
+      reminderTime: '20:00',
+      status: 'active',
       createdAt: DateTime(2026, 5, 25, 12),
+      updatedAt: DateTime(2026, 5, 25, 12),
     );
 
     expect(plan.daysLeft(DateTime(2026, 5, 25, 23, 30)), 3);
@@ -1599,7 +1608,7 @@ void main() {
     expect(state.errorMessage, isNull);
     expect(state.user, isNull);
     expect(state.reminderSettings, DailyReminderSettings.defaults);
-    expect(state.learningPlan, isNull);
+    expect(state.studyPlan, isNull);
   });
 
   test('logout keeps lesson status and completed ids in sync', () async {
@@ -1835,7 +1844,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
-    expect(find.text('图片单词本'), findsOneWidget);
+    expect(find.text('日常英语词书'), findsOneWidget);
     expect(find.text('context'), findsOneWidget);
     expect(find.text('简单'), findsOneWidget);
   });
@@ -1873,12 +1882,13 @@ void main() {
 
     final state = container.read(appControllerProvider);
     expect(succeeded, true);
-    expect(state.learningPlan, isNotNull);
-    expect(state.user?.dailyGoal, state.learningPlan?.dailyWords);
-    expect(state.learningPlan?.dailyWords, greaterThan(0));
-    expect(state.learningPlan?.remainingWords, state.totalLearningWords);
+    expect(state.studyPlan, isNotNull);
+    expect(state.studyPlan?.wordBookId, 'exam-core');
+    expect(state.user?.dailyGoal, state.studyPlan?.dailyNewTarget);
+    expect(state.studyPlan?.dailyNewTarget, greaterThan(0));
+    expect(state.studyPlan?.targetFinishDate.year, deadline.year);
     expect(
-      state.learningPlan?.remainingWords,
+      state.totalLearningWords,
       lessThan(
         state.lessons.fold<int>(
           0,

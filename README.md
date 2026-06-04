@@ -186,6 +186,9 @@ linguaquest/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
 | `PATCH` | `/custom-words/:id` | Update a custom word |
 | `DELETE` | `/custom-words/:id` | Delete a custom word |
 | `POST` | `/study-sessions` | Record lesson completion |
+| `GET` | `/study-plan` | Fetch the current learner study plan |
+| `PUT` | `/study-plan` | Create or update the learner study plan |
+| `POST` | `/study-plan/reset` | Reset the learner study plan |
 | `GET` | `/review/due` | Fetch due review words |
 | `POST` | `/review-events` | Record review outcome |
 
