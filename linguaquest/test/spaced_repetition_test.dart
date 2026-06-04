@@ -1,6 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:linguaquest/core/utils/spaced_repetition.dart';
 import 'package:linguaquest/data/models/custom_word.dart';
+import 'package:linguaquest/data/models/lesson.dart';
+import 'package:linguaquest/data/models/user_word.dart';
 
 void main() {
   test('review intervals follow the blueprint', () {
@@ -84,5 +86,112 @@ void main() {
     expect(word.meaningRecognitionScore, 60);
     expect(word.spellingScore, 55);
     expect(word.meaningRecallScore, 40);
+  });
+
+  test('user word JSON preserves status flags and mastery dimensions', () {
+    final now = DateTime(2026, 5, 25, 10);
+    final word = UserWord.fromJson({
+      'id': 'uw-1',
+      'uid': 'u1',
+      'wordId': 'target-1',
+      'wordBookId': 'IELTS',
+      'word': 'abstract',
+      'meaning': '抽象的',
+      'status': 'Previewed',
+      'isFavorite': true,
+      'isInNew'
+              'Word'
+              'Book':
+          true,
+      'isIgnored': false,
+      'easeFactor': 2.6,
+      'intervalDays': 3,
+      'repetitionCount': 2,
+      'lapseCount': 1,
+      'masteryLevel': 2,
+      'correctCount': 4,
+      'wrongCount': 1,
+      'meaningRecognitionScore': 70,
+      'meaningRecallScore': 60,
+      'spellingScore': 50,
+      'listeningScore': 40,
+      'contextScore': 55,
+      'confidenceScore': 65,
+      'nextReviewAt': now.toIso8601String(),
+      'lastReviewedAt': now.toIso8601String(),
+      'createdAt': now.toIso8601String(),
+      'updatedAt': now.toIso8601String(),
+    });
+
+    final json = word.toJson();
+    expect(json['status'], 'Previewed');
+    expect(json['isFavorite'], true);
+    expect(
+      json['isInNew'
+          'Word'
+          'Book'],
+      true,
+    );
+    expect(json['spellingScore'], 50);
+    expect(json['lastReviewedAt'], now.toIso8601String());
+  });
+
+  test('user word learning creates review or relearning schedule', () {
+    final now = DateTime(2026, 5, 25, 10);
+    final target = Word(
+      id: 'w1',
+      word: 'context',
+      phonetic: '/ˈkɒntekst/',
+      meaning: '语境',
+      definition: 'The situation in which something happens.',
+      partOfSpeech: 'noun',
+      exampleSentence: 'Use the word in context.',
+      exampleTranslation: '在语境中使用这个词。',
+      imageCue: '📚',
+      difficulty: 'Medium',
+      tags: const ['academic'],
+    );
+    final created = UserWord.create(
+      uid: 'u1',
+      word: target,
+      wordBookId: 'IELTS',
+      now: now,
+    );
+
+    final learned = created.learned(hadMistake: false, now: now);
+    expect(learned.status, 'Review');
+    expect(learned.correctCount, 1);
+    expect(learned.nextReviewAt, now.add(const Duration(days: 1)));
+
+    final relearning = created.learned(hadMistake: true, now: now);
+    expect(relearning.status, 'Relearning');
+    expect(relearning.wrongCount, 1);
+    expect(relearning.nextReviewAt.day, now.day);
+  });
+
+  test('ignored user words are excluded from due review cards', () {
+    final now = DateTime(2026, 5, 25, 10);
+    final target = Word(
+      id: 'w2',
+      word: 'simple',
+      phonetic: '/ˈsɪmpəl/',
+      meaning: '简单的',
+      definition: 'Easy to understand.',
+      partOfSpeech: 'adjective',
+      exampleSentence: 'This is a simple word.',
+      exampleTranslation: '这是一个简单词。',
+      imageCue: '✅',
+      difficulty: 'Easy',
+      tags: const ['daily'],
+    );
+    final ignored = UserWord.create(
+      uid: 'u1',
+      word: target,
+      wordBookId: 'Daily',
+      now: now,
+    ).copyWith(status: 'Ignored', isIgnored: true);
+
+    expect(ignored.isDue(now), false);
+    expect(ignored.toReviewCard().isDue(now), false);
   });
 }
