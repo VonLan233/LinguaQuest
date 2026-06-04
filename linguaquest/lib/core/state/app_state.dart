@@ -219,6 +219,7 @@ class AppState {
     Set<String>? todayClaimedRewardIds,
     List<AppNotification>? notifications,
     LessonResult? lastResult,
+    bool clearLastResult = false,
     String? errorMessage,
     bool clearError = false,
   }) {
@@ -242,7 +243,7 @@ class AppState {
       todayClaimedRewardIds:
           todayClaimedRewardIds ?? this.todayClaimedRewardIds,
       notifications: notifications ?? this.notifications,
-      lastResult: lastResult ?? this.lastResult,
+      lastResult: clearLastResult ? null : lastResult ?? this.lastResult,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
     );
   }

@@ -208,10 +208,17 @@ class AppController extends Notifier<AppState> {
     final user = state.user;
     if (user == null) return false;
     return _run(() async {
+      final wordBookId = _wordBookIdForTarget(targetExam, state.wordBooks);
+      final targetLessons = await _learningRepository.listLessonsForWordBook(
+        wordBookId,
+      );
       final plan = deadline == null
           ? null
-          : _buildLearningPlan(target: targetExam, deadline: deadline);
-      final wordBookId = _wordBookIdForTarget(targetExam, state.wordBooks);
+          : _buildLearningPlan(
+              target: targetExam,
+              deadline: deadline,
+              lessons: targetLessons,
+            );
       final updated = await _authRepository.updateProfile(
         user.copyWith(
           targetExam: targetExam,
@@ -227,7 +234,7 @@ class AppController extends Notifier<AppState> {
       }
       await _saveCurrentWordBookId(wordBookId);
       final lessons = _applyLessonProgression(
-        await _learningRepository.listLessonsForWordBook(wordBookId),
+        targetLessons,
         state.completedLessonIds,
       );
       state = state.copyWith(
@@ -289,6 +296,7 @@ class AppController extends Notifier<AppState> {
       themeMode: themeMode,
       reminderSettings: reminderSettings,
       notifications: [],
+      clearLastResult: true,
     );
     unawaited(_scheduleLocalNotifications());
   }
@@ -380,16 +388,10 @@ class AppController extends Notifier<AppState> {
               .toList(),
         ),
       );
-      final reviewWords = await _createReviewCardsForMistakes(
-        user.uid,
-        result.mistakes,
-        now,
-      );
       await _saveLessonProgress(completedLessonIds, todayCompletedLessonIds);
       state = state.copyWith(
         user: updatedUser,
         lessons: _applyLessonProgression(state.lessons, completedLessonIds),
-        customWords: [...reviewWords, ...state.customWords],
         completedLessonIds: completedLessonIds,
         todayCompletedLessonIds: todayCompletedLessonIds,
         lastResult: result,
@@ -444,36 +446,6 @@ class AppController extends Notifier<AppState> {
       await refreshNotifications();
       unawaited(_scheduleLocalNotifications());
     });
-  }
-
-  Future<List<CustomWord>> _createReviewCardsForMistakes(
-    String uid,
-    List<QuizQuestion> mistakes,
-    DateTime now,
-  ) async {
-    if (mistakes.isEmpty) return const [];
-    final existingWords = state.customWords
-        .map((word) => word.word.trim().toLowerCase())
-        .toSet();
-    final created = <CustomWord>[];
-    for (var index = 0; index < mistakes.length; index++) {
-      final word = mistakes[index].word;
-      final normalized = word.word.trim().toLowerCase();
-      if (!existingWords.add(normalized)) continue;
-      final reviewWord = CustomWord.create(
-        id: 'target-${word.id}-${now.microsecondsSinceEpoch + index}',
-        uid: uid,
-        word: word.word,
-        meaning: word.meaning,
-        exampleSentence: word.exampleSentence,
-        note: '${word.definition}\n${mistakes[index].explanation}',
-        tag: word.tags.isEmpty ? '错题' : displayWordTag(word.tags.first),
-        difficulty: word.difficulty,
-        now: now,
-      ).copyWith(wrongCount: 1, status: 'Relearning');
-      created.add(await _customWordRepository.create(reviewWord));
-    }
-    return created;
   }
 
   Future<bool> claimReward({
@@ -683,9 +655,11 @@ class AppController extends Notifier<AppState> {
   LearningPlan _buildLearningPlan({
     required String target,
     required DateTime deadline,
+    List<Lesson>? lessons,
   }) {
     final completed = state.completedLessonIds;
-    final remainingWords = learningLessonsForTarget(state.lessons, target)
+    final sourceLessons = lessons ?? state.lessons;
+    final remainingWords = learningLessonsForTarget(sourceLessons, target)
         .where((lesson) => !completed.contains(lesson.id))
         .fold(0, (total, lesson) => total + lesson.words.length);
     final now = DateTime.now();

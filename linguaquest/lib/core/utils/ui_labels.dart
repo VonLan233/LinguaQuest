@@ -13,10 +13,6 @@ String displayTarget(String? value) {
       return '托福高频词汇';
     case 'GRE':
       return 'GRE 高频词汇';
-    case 'CET-4':
-      return '四级核心词汇';
-    case 'CET-6':
-      return '六级核心词汇';
     case '考研':
       return '考研英语核心词汇';
     case 'Beginner':

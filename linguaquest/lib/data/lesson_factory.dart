@@ -1,6 +1,6 @@
 import 'models/lesson.dart';
 
-List<Lesson> lessonsFromWordBook(WordBook book, {int wordsPerLesson = 8}) {
+List<Lesson> lessonsFromWordBook(WordBook book, {int wordsPerLesson = 3}) {
   if (book.words.isEmpty) return const [];
   final lessons = <Lesson>[];
   for (var start = 0; start < book.words.length; start += wordsPerLesson) {

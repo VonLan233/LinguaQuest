@@ -15,7 +15,10 @@ class WordBookAssetLoader {
   Future<List<WordBook>> loadWordBooks() async {
     final cached = _cache;
     if (cached != null) return cached;
-    final raw = await _bundle.loadString(assetPath);
+    final data = await _bundle.load(assetPath);
+    final raw = utf8.decode(
+      data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes),
+    );
     final decoded = jsonDecode(raw);
     if (decoded is! List) {
       throw const FormatException('wordbooks_p0.json must be a list');

@@ -170,7 +170,7 @@ void main() {
       expect(training, contains('_TrainingGameRow'));
       expect(training, isNot(contains('MetricTile')));
       expect(training, isNot(contains('_TrainingGameCard')));
-      expect(training, contains('校园生活 · 限时测试'));
+      expect(training, contains("\${currentBook.title} · 限时测试"));
     });
 
     test('review center keeps queue status lightweight', () {
@@ -281,7 +281,11 @@ void main() {
       expect(discover, contains("context.push('/study/new')"));
       expect(discover, isNot(contains("context.push('/learn')")));
       expect(home, isNot(contains('/timed-test/lesson-campus-1')));
-      expect(training, contains("context.push('/timed-test/lesson-campus-1')"));
+      expect(
+        training,
+        contains("context.push('/timed-test/\${speedLesson.id}')"),
+      );
+      expect(training, contains("\${currentBook.title} · 限时测试"));
       expect(training, isNot(contains("context.push('/study/review')")));
       expect(wordbook, contains('state.formalLessons'));
       expect(search, contains('state.formalLessons'));
@@ -361,7 +365,6 @@ void main() {
       const legacyLabels = [
         'Campus Starter',
         'Goal Setup',
-        'WordBook',
         'Remembered',
         'Forgot',
         "name: 'Learner'",
