@@ -427,6 +427,14 @@ class AppController extends Notifier<AppState> {
           todayReviewWordIds: remoteClaim.progress.todayReviewWordIds,
           todayClaimedRewardIds: remoteClaim.progress.todayClaimedRewardIds,
         );
+        await _saveLessonProgress(
+          remoteClaim.progress.completedLessonIds,
+          remoteClaim.progress.todayCompletedLessonIds,
+        );
+        await _saveTodayReviewWords(remoteClaim.progress.todayReviewWordIds);
+        await _saveTodayClaimedRewards(
+          remoteClaim.progress.todayClaimedRewardIds,
+        );
         await refreshNotifications();
         if (!remoteClaim.claimed) {
           throw StateError('奖励已领取或领取失败');
