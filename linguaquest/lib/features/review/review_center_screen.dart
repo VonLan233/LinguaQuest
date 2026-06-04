@@ -18,9 +18,13 @@ class ReviewCenterScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appControllerProvider);
-    final due = state.dueWords;
+    final due = state.isStudyPlanPaused
+        ? const <CustomWord>[]
+        : state.reviewQueue;
+    final totalDue = state.isStudyPlanPaused ? 0 : state.dueWords.length;
     final weak = state.weakWords;
     final lessonMistakes = state.lastResult?.mistakes ?? const [];
+    final hiddenDueCount = (totalDue - due.length).clamp(0, 9999).toInt();
 
     return Scaffold(
       appBar: AppBar(
@@ -32,8 +36,16 @@ class ReviewCenterScreen extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
           children: [
             SectionHeader(
-              title: due.isEmpty ? '今日复习已清空' : '${due.length} 张卡片待复习',
-              subtitle: '答对快速进入下一张；答错才展开词卡，并回收到本轮稍后再练。',
+              title: state.isStudyPlanPaused
+                  ? '学习计划已暂停'
+                  : due.isEmpty
+                  ? '今日复习已清空'
+                  : '${due.length} 张卡片待复习',
+              subtitle: state.isStudyPlanPaused
+                  ? '恢复学习计划后，复习队列会按每日上限继续开放。'
+                  : hiddenDueCount > 0
+                  ? '今日复习上限 ${state.dailyReviewLimit} 词，另有 $hiddenDueCount 词会排到后续。'
+                  : '答对快速进入下一张；答错才展开词卡，并回收到本轮稍后再练。',
               trailing: due.isEmpty
                   ? TextButton.icon(
                       onPressed: () => context.push('/custom-words/new'),
@@ -48,6 +60,13 @@ class ReviewCenterScreen extends ConsumerWidget {
               weakCount: weak.length,
               cardCount: state.customWords.length,
             ),
+            if (hiddenDueCount > 0) ...[
+              const SizedBox(height: 12),
+              _ReviewLimitNotice(
+                hiddenDueCount: hiddenDueCount,
+                dailyReviewLimit: state.dailyReviewLimit,
+              ),
+            ],
             const SizedBox(height: 22),
             Text(
               '今日到期',
@@ -141,6 +160,34 @@ class _ReviewQueueSignals extends StatelessWidget {
             value: '$cardCount',
             icon: Icons.style_outlined,
             color: AppTheme.cyan,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ReviewLimitNotice extends StatelessWidget {
+  const _ReviewLimitNotice({
+    required this.hiddenDueCount,
+    required this.dailyReviewLimit,
+  });
+
+  final int hiddenDueCount;
+  final int dailyReviewLimit;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(Icons.tune_outlined, color: AppTheme.mango),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Text(
+            '已按学习计划限制今日复习 $dailyReviewLimit 词；剩余 $hiddenDueCount 词不会丢失，会继续留在复习队列。',
+            style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
           ),
         ),
       ],
