@@ -1733,6 +1733,58 @@ void main() {
     },
   );
 
+  test('reminder settings update syncs into the saved study plan', () async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'reminder-sync-user',
+      name: 'Mia',
+      email: 'mia@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    final studyPlanRepository = _MemoryStudyPlanRepository(
+      StudyPlan.defaultsFor(
+        uid: profile.uid,
+        targetExam: profile.targetExam,
+        dailyGoal: profile.dailyGoal,
+      ).copyWith(status: 'active', reminderTime: '20:00', updatedAt: now),
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer(
+      overrides: [
+        studyPlanRepositoryProvider.overrideWithValue(studyPlanRepository),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    await container
+        .read(appControllerProvider.notifier)
+        .updateReminderSettings(
+          const DailyReminderSettings(enabled: false, hour: 7, minute: 30),
+        );
+
+    final prefs = await SharedPreferences.getInstance();
+    expect(
+      prefs.getString('linguaquest.reminderSettings'),
+      contains('"hour":7'),
+    );
+    expect(studyPlanRepository.savedPlan?.reminderTime, '07:30');
+    expect(studyPlanRepository.savedPlan?.status, 'paused');
+    expect(
+      container.read(appControllerProvider).studyPlan?.reminderTime,
+      '07:30',
+    );
+    expect(container.read(appControllerProvider).studyPlan?.status, 'paused');
+  });
+
   test(
     'resetting a study plan updates custom words without per-word writes',
     () async {

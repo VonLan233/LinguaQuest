@@ -171,7 +171,20 @@ class AppController extends Notifier<AppState> {
   Future<void> updateReminderSettings(DailyReminderSettings settings) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_reminderKey, jsonEncode(settings.toJson()));
-    state = state.copyWith(reminderSettings: settings);
+    final plan = state.studyPlan;
+    if (plan == null) {
+      state = state.copyWith(reminderSettings: settings);
+      unawaited(_scheduleLocalNotifications());
+      return;
+    }
+    final savedPlan = await _studyPlanRepository.save(
+      plan.copyWith(
+        reminderTime: settings.formattedTime,
+        status: settings.enabled ? 'active' : 'paused',
+        updatedAt: DateTime.now(),
+      ),
+    );
+    state = state.copyWith(reminderSettings: settings, studyPlan: savedPlan);
     unawaited(_scheduleLocalNotifications());
   }
 
