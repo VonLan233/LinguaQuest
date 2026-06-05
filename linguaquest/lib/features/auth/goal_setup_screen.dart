@@ -11,6 +11,7 @@ import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson.dart';
+import '../../data/models/study_plan.dart';
 
 class GoalSetupScreen extends ConsumerStatefulWidget {
   const GoalSetupScreen({super.key});
@@ -199,9 +200,12 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
     final user = state.user;
     if (user == null) return;
     void updateFields() {
-      _target = state.learningPlan?.target ?? user.targetExam;
+      _target = state.studyPlan == null
+          ? user.targetExam
+          : targetForStudyBookId(state.studyPlan!.wordBookId);
       _level = user.level;
-      _dailyGoal = state.learningPlan?.dailyWords ?? user.dailyGoal;
+      _dailyGoal = state.studyPlan?.dailyNewTarget ?? user.dailyGoal;
+      _deadline = state.studyPlan?.targetFinishDate;
       _initializedFromState = true;
     }
 

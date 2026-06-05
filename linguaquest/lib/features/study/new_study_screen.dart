@@ -15,10 +15,10 @@ class NewStudyScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appControllerProvider);
     final lesson = state.currentLesson;
-    final dailyGoal =
-        state.learningPlan?.dailyWords ?? state.user?.dailyGoal ?? 10;
+    final dailyGoal = state.dailyNewTarget;
     final words = lesson?.words.take(dailyGoal).toList() ?? const <Word>[];
-    final canStart = lesson != null && words.isNotEmpty;
+    final canStart =
+        lesson != null && words.isNotEmpty && !state.isStudyPlanPaused;
 
     return Scaffold(
       appBar: AppBar(
@@ -53,6 +53,7 @@ class NewStudyScreen extends ConsumerWidget {
               count: words.length,
               lesson: lesson,
               dailyGoal: dailyGoal,
+              isPaused: state.isStudyPlanPaused,
             ),
             const SizedBox(height: 20),
             Text(
@@ -82,7 +83,11 @@ class NewStudyScreen extends ConsumerWidget {
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(height: 8),
-                    const Text('当前词书已经学完，或学习计划还没有生成。可以去词书路径检查下一组内容。'),
+                    Text(
+                      state.isStudyPlanPaused
+                          ? '学习计划已暂停。恢复计划后，系统会继续安排今日新词。'
+                          : '当前词书已经学完，或学习计划还没有生成。可以去词书路径检查下一组内容。',
+                    ),
                     const SizedBox(height: 14),
                     OutlinedButton.icon(
                       onPressed: () => context.push('/learn'),
@@ -107,11 +112,13 @@ class _StudyHeader extends StatelessWidget {
     required this.count,
     required this.lesson,
     required this.dailyGoal,
+    required this.isPaused,
   });
 
   final int count;
   final Lesson? lesson;
   final int dailyGoal;
+  final bool isPaused;
 
   @override
   Widget build(BuildContext context) {
@@ -131,6 +138,8 @@ class _StudyHeader extends StatelessWidget {
         Text(
           lesson == null
               ? '完成复习后再补新词，保持节奏比堆任务更重要。'
+              : isPaused
+              ? '学习计划已暂停，恢复后继续从 $section 开始。'
               : '$section · 目标 $dailyGoal 词 · 不做限时测试',
           style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
         ),

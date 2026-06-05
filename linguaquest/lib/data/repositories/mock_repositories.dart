@@ -7,6 +7,7 @@ import '../models/custom_word.dart';
 import '../models/lesson.dart';
 import '../models/review_event.dart';
 import '../models/study_session.dart';
+import '../models/study_plan.dart';
 import '../models/user_word.dart';
 import '../models/user_profile.dart';
 import '../lesson_factory.dart';
@@ -16,6 +17,7 @@ import 'custom_word_repository.dart';
 import 'learning_repository.dart';
 import 'notification_repository.dart';
 import 'review_repository.dart';
+import 'study_plan_repository.dart';
 import 'user_word_repository.dart';
 
 class MockAuthRepository implements AuthRepository {
@@ -280,6 +282,54 @@ class MockUserWordRepository implements UserWordRepository {
 
   List<UserWord> _sorted(List<UserWord> words) {
     return [...words]..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+  }
+}
+
+class MockStudyPlanRepository implements StudyPlanRepository {
+  static const _keyPrefix = 'linguaquest.studyPlan';
+
+  @override
+  Future<StudyPlan?> load(String uid) async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString('$_keyPrefix.$uid');
+    if (raw == null) return null;
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! Map) return null;
+      return StudyPlan.fromJson(Map<String, dynamic>.from(decoded));
+    } catch (_) {
+      await prefs.remove('$_keyPrefix.$uid');
+      return null;
+    }
+  }
+
+  @override
+  Future<StudyPlan> save(StudyPlan plan) async {
+    final normalized = plan.copyWith(updatedAt: DateTime.now());
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+      '$_keyPrefix.${normalized.uid}',
+      jsonEncode(normalized.toJson()),
+    );
+    return normalized;
+  }
+
+  @override
+  Future<StudyPlan> reset(StudyPlan plan) async {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final targetFinishDate = plan.targetFinishDate.isBefore(today)
+        ? today.add(const Duration(days: 30))
+        : plan.targetFinishDate;
+    return save(
+      plan.copyWith(
+        startDate: today,
+        targetFinishDate: targetFinishDate,
+        status: 'active',
+        createdAt: now,
+        updatedAt: now,
+      ),
+    );
   }
 }
 

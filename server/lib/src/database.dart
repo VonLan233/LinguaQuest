@@ -2,6 +2,16 @@ import 'package:postgres/postgres.dart';
 
 import 'config.dart';
 
+const resetCustomWordProgressSql = '''
+UPDATE custom_words
+SET mastery_level=0,
+    correct_count=0,
+    wrong_count=0,
+    next_review_at=@resetAt,
+    updated_at=@resetAt
+WHERE uid=@uid
+''';
+
 class AppDatabase {
   AppDatabase(this.connection);
 
@@ -170,6 +180,22 @@ CREATE TABLE IF NOT EXISTS notifications (
   read_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL,
   UNIQUE (uid, source_key)
+);
+''');
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS study_plans (
+  id TEXT PRIMARY KEY,
+  uid TEXT UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  word_book_id TEXT NOT NULL,
+  daily_new_target INTEGER NOT NULL,
+  daily_review_limit INTEGER NOT NULL,
+  start_date DATE NOT NULL,
+  target_finish_date DATE NOT NULL,
+  reminder_time TEXT NOT NULL,
+  status TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL,
+  updated_at TIMESTAMPTZ NOT NULL
 );
 ''');
 
@@ -539,6 +565,67 @@ INSERT INTO study_sessions (
           ',',
         ),
       },
+    );
+  }
+
+  Future<Map<String, dynamic>?> studyPlanByUid(String uid) async {
+    final rows = await connection.execute(
+      Sql.named('SELECT * FROM study_plans WHERE uid=@uid LIMIT 1'),
+      parameters: {'uid': uid},
+    );
+    if (rows.isEmpty) return null;
+    return rows.first.toColumnMap();
+  }
+
+  Future<Map<String, dynamic>> upsertStudyPlan(
+    String uid,
+    Map<String, dynamic> data,
+  ) async {
+    final existing = await studyPlanByUid(uid);
+    final now = DateTime.now().toUtc();
+    final id = existing?['id']?.toString() ?? data['id']?.toString();
+    final updatedAt = _date(data['now']) ?? now;
+    await connection.execute(
+      Sql.named('''
+INSERT INTO study_plans (
+  id, uid, word_book_id, daily_new_target, daily_review_limit, start_date,
+  target_finish_date, reminder_time, status, created_at, updated_at
+) VALUES (
+  @id, @uid, @wordBookId, @dailyNewTarget, @dailyReviewLimit, @startDate,
+  @targetFinishDate, @reminderTime, @status, @createdAt, @updatedAt
+)
+ON CONFLICT (uid) DO UPDATE SET
+  word_book_id=EXCLUDED.word_book_id,
+  daily_new_target=EXCLUDED.daily_new_target,
+  daily_review_limit=EXCLUDED.daily_review_limit,
+  start_date=EXCLUDED.start_date,
+  target_finish_date=EXCLUDED.target_finish_date,
+  reminder_time=EXCLUDED.reminder_time,
+  status=EXCLUDED.status,
+  updated_at=EXCLUDED.updated_at
+'''),
+      parameters: {
+        'id': id ?? data['id'],
+        'uid': uid,
+        'wordBookId': data['wordBookId'],
+        'dailyNewTarget': data['dailyNewTarget'],
+        'dailyReviewLimit': data['dailyReviewLimit'],
+        'startDate': data['startDate'],
+        'targetFinishDate': data['targetFinishDate'],
+        'reminderTime': data['reminderTime'],
+        'status': data['status'],
+        'createdAt': existing?['created_at'] ?? _date(data['createdAt']) ?? now,
+        'updatedAt': updatedAt,
+      },
+    );
+    return (await studyPlanByUid(uid))!;
+  }
+
+  Future<void> resetCustomWordProgress(String uid, {DateTime? now}) async {
+    final resetAt = now ?? DateTime.now().toUtc();
+    await connection.execute(
+      Sql.named(resetCustomWordProgressSql),
+      parameters: {'uid': uid, 'resetAt': resetAt},
     );
   }
 
