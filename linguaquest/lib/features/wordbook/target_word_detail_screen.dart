@@ -9,6 +9,7 @@ import '../../core/widgets/ai_word_support_link.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/pronunciation_controls.dart';
+import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 import 'word_knowledge_sections.dart';
 
@@ -28,9 +29,9 @@ class TargetWordDetailScreen extends ConsumerWidget {
     final progress = state.userWords
         .where((item) => item.wordId == word.id)
         .firstOrNull;
-    final isSaved = state.customWords.any(
-      (item) => item.word.trim().toLowerCase() == word.word.toLowerCase(),
-    );
+    final savedWord = _savedCustomWord(state, word);
+    final isSaved = savedWord != null;
+    final isInNewWordbook = progress?.isInNewWordbook == true || isSaved;
 
     return Scaffold(
       appBar: AppBar(
@@ -67,18 +68,14 @@ class TargetWordDetailScreen extends ConsumerWidget {
                     ref,
                     word,
                     lesson?.section ?? '目标词书',
-                    progress?.isInNewWordbook ?? isSaved,
+                    isInNewWordbook,
                   ),
                   icon: Icon(
-                    progress?.isInNewWordbook == true || isSaved
+                    isInNewWordbook
                         ? Icons.check_circle_outline
                         : Icons.add_circle_outline,
                   ),
-                  label: Text(
-                    progress?.isInNewWordbook == true || isSaved
-                        ? '已加入生词本'
-                        : '加入生词本',
-                  ),
+                  label: Text(isInNewWordbook ? '移出生词本' : '加入生词本'),
                 ),
               ),
             ],
@@ -310,6 +307,14 @@ class TargetWordDetailScreen extends ConsumerWidget {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  CustomWord? _savedCustomWord(AppState state, Word word) {
+    final target = word.word.trim().toLowerCase();
+    for (final item in state.customWords) {
+      if (item.word.trim().toLowerCase() == target) return item;
+    }
+    return null;
   }
 
   Word? _find(AppState state) {

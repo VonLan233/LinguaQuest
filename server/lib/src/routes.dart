@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
@@ -12,6 +15,45 @@ Router buildRouter(AppConfig config, AppDatabase database) {
 
   router.get('/health', (Request request) {
     return jsonResponse({'status': 'ok'});
+  });
+
+  router.get('/wordbooks', (Request request) async {
+    final books = await _loadWordBooks();
+    return jsonResponse(books);
+  });
+
+  router.get('/wordbooks/<id>', (Request request, String id) async {
+    final books = await _loadWordBooks();
+    final book = _wordBookById(books, id);
+    if (book == null) {
+      return jsonResponse({'error': 'wordbook not found'}, status: 404);
+    }
+    return jsonResponse({'wordbook': book});
+  });
+
+  router.get('/words', (Request request) async {
+    final books = await _loadWordBooks();
+    final wordBookId = request.url.queryParameters['wordBookId'];
+    final query = request.url.queryParameters['q']?.trim().toLowerCase();
+    final scopedBooks = wordBookId == null
+        ? books
+        : books.where((book) => book['id'] == wordBookId).toList();
+    if (wordBookId != null && scopedBooks.isEmpty) {
+      return jsonResponse({'error': 'wordbook not found'}, status: 404);
+    }
+    final words = _wordsFromBooks(scopedBooks).where((word) {
+      if (query == null || query.isEmpty) return true;
+      return _wordMatchesQuery(word, query);
+    }).toList();
+    return jsonResponse(words);
+  });
+
+  router.get('/words/<id>', (Request request, String id) async {
+    final word = _wordById(await _loadWordBooks(), id);
+    if (word == null) {
+      return jsonResponse({'error': 'word not found'}, status: 404);
+    }
+    return jsonResponse({'word': word});
   });
 
   router.post('/auth/register', (Request request) async {
@@ -64,8 +106,9 @@ Router buildRouter(AppConfig config, AppDatabase database) {
   router.get('/me', (Request request) async {
     return _protected(config, request, (uid) async {
       final user = await database.userById(uid);
-      if (user == null)
+      if (user == null) {
         return jsonResponse({'error': 'user not found'}, status: 404);
+      }
       return jsonResponse({'user': userDto(user)});
     });
   });
@@ -104,8 +147,9 @@ Router buildRouter(AppConfig config, AppDatabase database) {
     return _protected(config, request, (uid) async {
       final body = await readJsonMap(request);
       final existing = await database.customWordById(uid, id);
-      if (existing == null)
+      if (existing == null) {
         return jsonResponse({'error': 'word not found'}, status: 404);
+      }
       final merged = {...wordDto(existing), ...body, 'id': id};
       final word = await database.upsertCustomWord(uid, merged, id: id);
       return jsonResponse({'word': wordDto(word)});
@@ -270,6 +314,115 @@ List<Map<String, dynamic>> userWordBatchItems(List rawWords) {
       })
       .where((item) => item['id'].isNotEmpty && item['wordId'].isNotEmpty)
       .toList();
+}
+
+Future<List<Map<String, dynamic>>> _loadWordBooks() async {
+  final cached = _cachedWordBooks;
+  if (cached != null) return cached;
+  final loading = _loadingWordBooks;
+  if (loading != null) return loading;
+
+  final future = _readWordBooks();
+  _loadingWordBooks = future;
+  try {
+    final books = await future;
+    _cachedWordBooks = books;
+    return books;
+  } catch (_) {
+    _loadingWordBooks = null;
+    rethrow;
+  }
+}
+
+List<Map<String, dynamic>>? _cachedWordBooks;
+Future<List<Map<String, dynamic>>>? _loadingWordBooks;
+
+Future<List<Map<String, dynamic>>> _readWordBooks() async {
+  final file = _wordBookDataFile();
+  final decoded = jsonDecode(await file.readAsString());
+  if (decoded is! List) {
+    throw const FormatException('wordbooks_p0.json must be a list');
+  }
+  return decoded.whereType<Map>().map((item) {
+    return Map<String, dynamic>.from(item);
+  }).toList();
+}
+
+File _wordBookDataFile() {
+  final serverRelative = File('data/wordbooks_p0.json');
+  if (serverRelative.existsSync()) return serverRelative;
+  final repoRelative = File('server/data/wordbooks_p0.json');
+  if (repoRelative.existsSync()) return repoRelative;
+  return serverRelative;
+}
+
+Map<String, dynamic>? _wordBookById(
+  List<Map<String, dynamic>> books,
+  String id,
+) {
+  for (final book in books) {
+    if (book['id'] == id) return book;
+  }
+  return null;
+}
+
+List<Map<String, dynamic>> _wordsFromBooks(List<Map<String, dynamic>> books) {
+  final words = <Map<String, dynamic>>[];
+  for (final book in books) {
+    final bookId = book['id']?.toString() ?? '';
+    final items = book['words'];
+    if (items is! List) continue;
+    for (final item in items.whereType<Map>()) {
+      words.add({...Map<String, dynamic>.from(item), 'wordBookId': bookId});
+    }
+  }
+  return words;
+}
+
+Map<String, dynamic>? _wordById(List<Map<String, dynamic>> books, String id) {
+  for (final word in _wordsFromBooks(books)) {
+    if (word['id'] == id) return word;
+  }
+  return null;
+}
+
+bool _wordMatchesQuery(Map<String, dynamic> word, String query) {
+  return _containsQuery(word['word'], query) ||
+      _containsQuery(word['partOfSpeech'], query) ||
+      _containsQuery(word['rootAffix'], query) ||
+      _listContainsQuery(word['definitions'], query) ||
+      _listContainsQuery(word['englishDefinitions'], query) ||
+      _listContainsQuery(word['synonyms'], query) ||
+      _listContainsQuery(word['antonyms'], query) ||
+      _listContainsQuery(word['derivatives'], query) ||
+      _listContainsQuery(word['examTags'], query) ||
+      _examplesContainQuery(word['exampleSentences'], query) ||
+      _phrasesContainQuery(word['collocations'], query);
+}
+
+bool _containsQuery(Object? value, String query) {
+  return value?.toString().toLowerCase().contains(query) ?? false;
+}
+
+bool _listContainsQuery(Object? value, String query) {
+  if (value is! List) return false;
+  return value.any((item) => _containsQuery(item, query));
+}
+
+bool _examplesContainQuery(Object? value, String query) {
+  if (value is! List) return false;
+  return value.whereType<Map>().any((item) {
+    return _containsQuery(item['en'], query) ||
+        _containsQuery(item['cn'], query);
+  });
+}
+
+bool _phrasesContainQuery(Object? value, String query) {
+  if (value is! List) return false;
+  return value.whereType<Map>().any((item) {
+    return _containsQuery(item['phrase'] ?? item['en'], query) ||
+        _containsQuery(item['cn'], query);
+  });
 }
 
 Future<Response> _protected(

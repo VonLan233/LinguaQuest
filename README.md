@@ -177,6 +177,10 @@ linguaquest/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
 | Method | Path | Description |
 | --- | --- | --- |
 | `GET` | `/health` | Health check |
+| `GET` | `/wordbooks` | List available wordbooks |
+| `GET` | `/wordbooks/:id` | Get one wordbook with words |
+| `GET` | `/words` | Search/list words by wordbook and query |
+| `GET` | `/words/:id` | Get one word entry |
 | `POST` | `/auth/register` | Register a learner |
 | `POST` | `/auth/login` | Login and receive JWT |
 | `GET` | `/me` | Get current profile |

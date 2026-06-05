@@ -103,6 +103,8 @@ class AppState {
   AppState({
     required this.isBootstrapped,
     required this.isLoading,
+    required this.wordBooks,
+    required this.currentWordBookId,
     required this.lessons,
     required this.customWords,
     required this.userWords,
@@ -125,6 +127,8 @@ class AppState {
   final bool isBootstrapped;
   final bool isLoading;
   final UserProfile? user;
+  final List<WordBook> wordBooks;
+  final String currentWordBookId;
   final List<Lesson> lessons;
   final List<CustomWord> customWords;
   final List<UserWord> userWords;
@@ -146,6 +150,13 @@ class AppState {
       notifications.where((notification) => !notification.isRead).length;
 
   String? get learningTarget => learningPlan?.target ?? user?.targetExam;
+
+  WordBook? get currentWordBook {
+    for (final book in wordBooks) {
+      if (book.id == currentWordBookId) return book;
+    }
+    return wordBooks.isEmpty ? null : wordBooks.first;
+  }
 
   List<Lesson> get formalLessons => applyLearningTargetProgression(
     learningLessonsForTarget(lessons, learningTarget),
@@ -213,6 +224,8 @@ class AppState {
     bool? isLoading,
     UserProfile? user,
     bool clearUser = false,
+    List<WordBook>? wordBooks,
+    String? currentWordBookId,
     List<Lesson>? lessons,
     List<CustomWord>? customWords,
     List<UserWord>? userWords,
@@ -226,6 +239,7 @@ class AppState {
     Set<String>? todayClaimedRewardIds,
     List<AppNotification>? notifications,
     LessonResult? lastResult,
+    bool clearLastResult = false,
     String? errorMessage,
     bool clearError = false,
   }) {
@@ -235,6 +249,8 @@ class AppState {
       isBootstrapped: isBootstrapped ?? this.isBootstrapped,
       isLoading: isLoading ?? this.isLoading,
       user: clearUser ? null : user ?? this.user,
+      wordBooks: wordBooks ?? this.wordBooks,
+      currentWordBookId: currentWordBookId ?? this.currentWordBookId,
       lessons: lessons ?? this.lessons,
       customWords: nextCustomWords,
       userWords: nextUserWords,
@@ -250,7 +266,7 @@ class AppState {
       todayClaimedRewardIds:
           todayClaimedRewardIds ?? this.todayClaimedRewardIds,
       notifications: notifications ?? this.notifications,
-      lastResult: lastResult ?? this.lastResult,
+      lastResult: clearLastResult ? null : lastResult ?? this.lastResult,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
       reviewWords: customWords == null && userWords == null
           ? _reviewWords
@@ -262,6 +278,8 @@ class AppState {
     return AppState(
       isBootstrapped: false,
       isLoading: false,
+      wordBooks: [],
+      currentWordBookId: 'beginner',
       lessons: [],
       customWords: [],
       userWords: [],

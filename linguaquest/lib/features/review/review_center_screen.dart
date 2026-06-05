@@ -21,6 +21,7 @@ class ReviewCenterScreen extends ConsumerWidget {
     final due = state.dueWords;
     final weak = state.weakWords;
     final lessonMistakes = state.lastResult?.mistakes ?? const [];
+    final currentBook = state.currentWordBook;
 
     return Scaffold(
       appBar: AppBar(
@@ -33,7 +34,7 @@ class ReviewCenterScreen extends ConsumerWidget {
           children: [
             SectionHeader(
               title: due.isEmpty ? '今日复习已清空' : '${due.length} 张卡片待复习',
-              subtitle: '答对快速进入下一张；答错才展开词卡，并回收到本轮稍后再练。',
+              subtitle: '${currentBook?.title ?? '当前词书'} · 答错词会自动进入复习队列。',
               trailing: due.isEmpty
                   ? TextButton.icon(
                       onPressed: () => context.push('/custom-words/new'),

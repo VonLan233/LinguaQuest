@@ -9,7 +9,8 @@ import '../models/review_event.dart';
 import '../models/study_session.dart';
 import '../models/user_word.dart';
 import '../models/user_profile.dart';
-import '../seed/seed_lessons.dart';
+import '../lesson_factory.dart';
+import '../wordbook_asset_loader.dart';
 import 'auth_repository.dart';
 import 'custom_word_repository.dart';
 import 'learning_repository.dart';
@@ -180,14 +181,39 @@ class MockCustomWordRepository implements CustomWordRepository {
 }
 
 class MockLearningRepository implements LearningRepository {
+  MockLearningRepository({WordBookAssetLoader? loader})
+    : _loader = loader ?? WordBookAssetLoader();
+
+  final WordBookAssetLoader _loader;
   final List<StudySession> _sessions = [];
 
   @override
-  Future<List<Lesson>> listLessons() async => seedLessons();
+  Future<List<WordBook>> listWordBooks() => _loader.loadWordBooks();
+
+  @override
+  Future<List<Lesson>> listLessons() async {
+    final books = await listWordBooks();
+    if (books.isEmpty) return const [];
+    return listLessonsForWordBook(books.first.id);
+  }
+
+  @override
+  Future<List<Lesson>> listLessonsForWordBook(String wordBookId) async {
+    final books = await listWordBooks();
+    final book = _bookById(books, wordBookId) ?? books.first;
+    return lessonsFromWordBook(book);
+  }
 
   @override
   Future<void> recordStudySession(StudySession session) async {
     _sessions.add(session);
+  }
+
+  WordBook? _bookById(List<WordBook> books, String id) {
+    for (final book in books) {
+      if (book.id == id) return book;
+    }
+    return null;
   }
 }
 
