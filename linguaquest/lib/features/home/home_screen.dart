@@ -82,9 +82,7 @@ class HomeScreen extends ConsumerWidget {
         const SizedBox(height: 18),
         _HomeLearningSignals(
           completedWords: state.completedLearningWords,
-          masteredWords: state.customWords
-              .where((word) => word.masteryLevel >= 4)
-              .length,
+          masteredWords: state.masteredReviewWords,
           dueWords: state.dueWords.length,
         ),
         const SizedBox(height: 18),

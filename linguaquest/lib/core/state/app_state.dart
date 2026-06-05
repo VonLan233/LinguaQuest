@@ -4,6 +4,7 @@ import '../../data/models/app_notification.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
+import '../../data/models/user_word.dart';
 import '../../data/models/user_profile.dart';
 
 class DailyReminderSettings {
@@ -99,13 +100,14 @@ class LearningPlan {
 }
 
 class AppState {
-  const AppState({
+  AppState({
     required this.isBootstrapped,
     required this.isLoading,
     required this.wordBooks,
     required this.currentWordBookId,
     required this.lessons,
     required this.customWords,
+    required this.userWords,
     required this.themeMode,
     required this.reminderSettings,
     required this.completedLessonIds,
@@ -117,7 +119,10 @@ class AppState {
     this.lastResult,
     this.learningPlan,
     this.errorMessage,
-  });
+    List<CustomWord>? reviewWords,
+  }) : _reviewWords = List.unmodifiable(
+         reviewWords ?? _buildReviewWords(userWords, customWords),
+       );
 
   final bool isBootstrapped;
   final bool isLoading;
@@ -126,6 +131,7 @@ class AppState {
   final String currentWordBookId;
   final List<Lesson> lessons;
   final List<CustomWord> customWords;
+  final List<UserWord> userWords;
   final ThemeMode themeMode;
   final DailyReminderSettings reminderSettings;
   final LearningPlan? learningPlan;
@@ -136,6 +142,7 @@ class AppState {
   final List<AppNotification> notifications;
   final LessonResult? lastResult;
   final String? errorMessage;
+  final List<CustomWord> _reviewWords;
 
   bool get isAuthenticated => user != null;
 
@@ -175,6 +182,14 @@ class AppState {
       .where((lesson) => completedLessonIds.contains(lesson.id))
       .fold(0, (total, lesson) => total + lesson.words.length);
 
+  int get trackedLearningWords => userWords
+      .where((word) => word.status != 'Ignored' && !word.isIgnored)
+      .length;
+
+  int get masteredReviewWords => reviewWords
+      .where((word) => word.masteryLevel >= 4 || word.status == 'Mastered')
+      .length;
+
   Set<String> get todayCompletedFormalLessonIds => {
     for (final lesson in formalLessons)
       if (todayCompletedLessonIds.contains(lesson.id)) lesson.id,
@@ -189,17 +204,18 @@ class AppState {
     return (completedLearningWords / totalLearningWords).clamp(0.0, 1.0);
   }
 
+  List<CustomWord> get reviewWords => _reviewWords;
+
   List<CustomWord> get dueWords {
     final now = DateTime.now();
-    return _dedupeCustomWordsByText(
-      customWords.where((word) => word.isDue(now)),
-    );
+    final due = reviewWords.where((word) => word.isDue(now)).toList()
+      ..sort((a, b) => a.nextReviewAt.compareTo(b.nextReviewAt));
+    return due;
   }
 
   List<CustomWord> get weakWords {
-    final weak = _dedupeCustomWordsByText(
-      customWords.where((word) => word.isWeak),
-    )..sort((a, b) => b.wrongCount.compareTo(a.wrongCount));
+    final weak = reviewWords.where((word) => word.isWeak).toList()
+      ..sort((a, b) => b.wrongCount.compareTo(a.wrongCount));
     return weak;
   }
 
@@ -212,6 +228,7 @@ class AppState {
     String? currentWordBookId,
     List<Lesson>? lessons,
     List<CustomWord>? customWords,
+    List<UserWord>? userWords,
     ThemeMode? themeMode,
     DailyReminderSettings? reminderSettings,
     LearningPlan? learningPlan,
@@ -226,6 +243,8 @@ class AppState {
     String? errorMessage,
     bool clearError = false,
   }) {
+    final nextCustomWords = customWords ?? this.customWords;
+    final nextUserWords = userWords ?? this.userWords;
     return AppState(
       isBootstrapped: isBootstrapped ?? this.isBootstrapped,
       isLoading: isLoading ?? this.isLoading,
@@ -233,7 +252,8 @@ class AppState {
       wordBooks: wordBooks ?? this.wordBooks,
       currentWordBookId: currentWordBookId ?? this.currentWordBookId,
       lessons: lessons ?? this.lessons,
-      customWords: customWords ?? this.customWords,
+      customWords: nextCustomWords,
+      userWords: nextUserWords,
       themeMode: themeMode ?? this.themeMode,
       reminderSettings: reminderSettings ?? this.reminderSettings,
       learningPlan: clearLearningPlan
@@ -248,17 +268,21 @@ class AppState {
       notifications: notifications ?? this.notifications,
       lastResult: clearLastResult ? null : lastResult ?? this.lastResult,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
+      reviewWords: customWords == null && userWords == null
+          ? _reviewWords
+          : _buildReviewWords(nextUserWords, nextCustomWords),
     );
   }
 
   factory AppState.initial() {
-    return const AppState(
+    return AppState(
       isBootstrapped: false,
       isLoading: false,
       wordBooks: [],
       currentWordBookId: 'beginner',
       lessons: [],
       customWords: [],
+      userWords: [],
       themeMode: ThemeMode.system,
       reminderSettings: DailyReminderSettings.defaults,
       completedLessonIds: {},
@@ -270,12 +294,32 @@ class AppState {
   }
 }
 
-List<CustomWord> _dedupeCustomWordsByText(Iterable<CustomWord> words) {
+List<CustomWord> _buildReviewWords(
+  List<UserWord> userWords,
+  List<CustomWord> customWords,
+) {
   final seen = <String>{};
-  return [
-    for (final word in words)
-      if (seen.add(word.word.trim().toLowerCase())) word,
-  ];
+  final words = <CustomWord>[];
+  for (final word in userWords) {
+    if (!_isReviewEligibleStatus(word.status) || word.isIgnored) continue;
+    final card = word.toReviewCard();
+    if (seen.add(_reviewWordKey(card.word))) {
+      words.add(card);
+    }
+  }
+  for (final word in customWords) {
+    if (!_isReviewEligibleStatus(word.status) || word.isIgnored) continue;
+    if (seen.add(_reviewWordKey(word.word))) {
+      words.add(word);
+    }
+  }
+  return words;
+}
+
+String _reviewWordKey(String word) => word.trim().toLowerCase();
+
+bool _isReviewEligibleStatus(String status) {
+  return status != 'New' && status != 'Previewed' && status != 'Ignored';
 }
 
 List<Lesson> learningLessonsForTarget(List<Lesson> lessons, String? target) {

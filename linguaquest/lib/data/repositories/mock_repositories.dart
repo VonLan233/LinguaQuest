@@ -7,6 +7,7 @@ import '../models/custom_word.dart';
 import '../models/lesson.dart';
 import '../models/review_event.dart';
 import '../models/study_session.dart';
+import '../models/user_word.dart';
 import '../models/user_profile.dart';
 import '../lesson_factory.dart';
 import '../wordbook_asset_loader.dart';
@@ -15,6 +16,7 @@ import 'custom_word_repository.dart';
 import 'learning_repository.dart';
 import 'notification_repository.dart';
 import 'review_repository.dart';
+import 'user_word_repository.dart';
 
 class MockAuthRepository implements AuthRepository {
   static const _profileKey = 'linguaquest.profile';
@@ -212,6 +214,72 @@ class MockLearningRepository implements LearningRepository {
       if (book.id == id) return book;
     }
     return null;
+  }
+}
+
+class MockUserWordRepository implements UserWordRepository {
+  static const _keyPrefix = 'linguaquest.user_words';
+  final Map<String, List<UserWord>> _cache = {};
+
+  @override
+  Future<List<UserWord>> list(String uid) async {
+    if (_cache[uid] != null) return _sorted(_cache[uid]!);
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString('$_keyPrefix.$uid');
+    if (raw == null) {
+      _cache[uid] = [];
+      return [];
+    }
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! List) {
+        _cache[uid] = [];
+        return [];
+      }
+      final words = decoded
+          .whereType<Map>()
+          .map((item) => UserWord.fromJson(Map<String, dynamic>.from(item)))
+          .toList();
+      _cache[uid] = words;
+      return _sorted(words);
+    } catch (_) {
+      await prefs.remove('$_keyPrefix.$uid');
+      _cache[uid] = [];
+      return [];
+    }
+  }
+
+  @override
+  Future<UserWord> upsert(UserWord word) async {
+    final updated = (await upsertAll([word])).first;
+    return updated;
+  }
+
+  @override
+  Future<List<UserWord>> upsertAll(List<UserWord> words) async {
+    if (words.isEmpty) return [];
+    final uid = words.first.uid;
+    final existing = await list(uid);
+    final byId = {for (final word in existing) word.id: word};
+    for (final word in words) {
+      byId[word.id] = word;
+    }
+    final merged = _sorted(byId.values.toList());
+    _cache[uid] = merged;
+    await _save(uid, merged);
+    return words;
+  }
+
+  Future<void> _save(String uid, List<UserWord> words) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+      '$_keyPrefix.$uid',
+      jsonEncode([for (final word in words) word.toJson()]),
+    );
+  }
+
+  List<UserWord> _sorted(List<UserWord> words) {
+    return [...words]..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
   }
 }
 

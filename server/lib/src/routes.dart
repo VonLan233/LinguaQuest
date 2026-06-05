@@ -163,6 +163,39 @@ Router buildRouter(AppConfig config, AppDatabase database) {
     });
   });
 
+  router.get('/user-words', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final words = await database.userWords(uid);
+      return jsonResponse(words.map(userWordDto).toList());
+    });
+  });
+
+  router.post('/user-words', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      if (bodyString(body, 'wordId').isEmpty) {
+        return jsonResponse({'error': 'wordId is required'}, status: 400);
+      }
+      final word = await database.upsertUserWord(uid, body);
+      return jsonResponse({'word': userWordDto(word)}, status: 201);
+    });
+  });
+
+  router.post('/user-words/batch', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      final rawWords = body['words'];
+      if (rawWords is! List) {
+        return jsonResponse({'error': 'words list is required'}, status: 400);
+      }
+      final words = userWordBatchItems(rawWords);
+      final saved = await database.upsertUserWords(uid, words);
+      return jsonResponse({
+        'words': saved.map(userWordDto).toList(),
+      }, status: 201);
+    });
+  });
+
   router.post('/study-sessions', (Request request) async {
     return _protected(config, request, (uid) async {
       final body = await readJsonMap(request);
@@ -173,8 +206,12 @@ Router buildRouter(AppConfig config, AppDatabase database) {
 
   router.get('/review/due', (Request request) async {
     return _protected(config, request, (uid) async {
-      final words = await database.customWords(uid, dueOnly: true);
-      return jsonResponse(words.map(wordDto).toList());
+      final customWords = await database.customWords(uid, dueOnly: true);
+      final userWords = await database.userWords(uid, dueOnly: true);
+      return jsonResponse([
+        ...customWords.map(wordDto),
+        ...userWords.map((word) => {...userWordDto(word), 'source': 'target'}),
+      ]);
     });
   });
 
@@ -258,6 +295,25 @@ Middleware corsMiddleware() {
       return response.change(headers: {...response.headers, ...headers});
     };
   };
+}
+
+String bodyString(Map<String, dynamic> body, String key) {
+  return body[key]?.toString().trim() ?? '';
+}
+
+List<Map<String, dynamic>> userWordBatchItems(List rawWords) {
+  return rawWords
+      .whereType<Map>()
+      .map((item) {
+        final body = Map<String, dynamic>.from(item);
+        return {
+          ...body,
+          'id': bodyString(body, 'id'),
+          'wordId': bodyString(body, 'wordId'),
+        };
+      })
+      .where((item) => item['id'].isNotEmpty && item['wordId'].isNotEmpty)
+      .toList();
 }
 
 Future<List<Map<String, dynamic>>> _loadWordBooks() async {
@@ -410,12 +466,69 @@ Map<String, dynamic> wordDto(Map<String, dynamic> row) {
     'note': row['note'] ?? '',
     'tag': row['tag'] ?? 'custom',
     'difficulty': row['difficulty'] ?? 'Medium',
+    'status': row['status'] ?? 'Learning',
+    'easeFactor': row['ease_factor'] ?? row['easeFactor'] ?? 2.5,
+    'intervalDays': row['interval_days'] ?? row['intervalDays'] ?? 0,
+    'repetitionCount': row['repetition_count'] ?? row['repetitionCount'] ?? 0,
+    'lapseCount': row['lapse_count'] ?? row['lapseCount'] ?? 0,
     'masteryLevel': row['mastery_level'] ?? row['masteryLevel'] ?? 0,
     'correctCount': row['correct_count'] ?? row['correctCount'] ?? 0,
     'wrongCount': row['wrong_count'] ?? row['wrongCount'] ?? 0,
+    'meaningRecognitionScore':
+        row['meaning_recognition_score'] ?? row['meaningRecognitionScore'] ?? 0,
+    'meaningRecallScore':
+        row['meaning_recall_score'] ?? row['meaningRecallScore'] ?? 0,
+    'spellingScore': row['spelling_score'] ?? row['spellingScore'] ?? 0,
+    'listeningScore': row['listening_score'] ?? row['listeningScore'] ?? 0,
+    'contextScore': row['context_score'] ?? row['contextScore'] ?? 0,
+    'confidenceScore': row['confidence_score'] ?? row['confidenceScore'] ?? 0,
     'nextReviewAt': _dateValue(row['next_review_at'] ?? row['nextReviewAt']),
+    'lastReviewedAt': nullableDateValue(
+      row['last_reviewed_at'] ?? row['lastReviewedAt'],
+    ),
     'createdAt': _dateValue(row['created_at'] ?? row['createdAt']),
     'updatedAt': _dateValue(row['updated_at'] ?? row['updatedAt']),
+    'source': row['source'] ?? 'custom',
+  };
+}
+
+Map<String, dynamic> userWordDto(Map<String, dynamic> row) {
+  return {
+    'id': row['id'],
+    'uid': row['uid'],
+    'wordId': row['word_id'] ?? row['wordId'],
+    'wordBookId': row['word_book_id'] ?? row['wordBookId'] ?? '',
+    'word': row['word'] ?? row['wordId'],
+    'meaning': row['meaning'] ?? '',
+    'exampleSentence': row['example_sentence'] ?? row['exampleSentence'] ?? '',
+    'difficulty': row['difficulty'] ?? 'Medium',
+    'status': row['status'] ?? 'New',
+    'isFavorite': row['is_favorite'] ?? row['isFavorite'] ?? false,
+    'isInNewWordBook':
+        row['is_in_new_word_book'] ?? row['isInNewWordBook'] ?? false,
+    'isIgnored': row['is_ignored'] ?? row['isIgnored'] ?? false,
+    'easeFactor': row['ease_factor'] ?? row['easeFactor'] ?? 2.5,
+    'intervalDays': row['interval_days'] ?? row['intervalDays'] ?? 0,
+    'repetitionCount': row['repetition_count'] ?? row['repetitionCount'] ?? 0,
+    'lapseCount': row['lapse_count'] ?? row['lapseCount'] ?? 0,
+    'masteryLevel': row['mastery_level'] ?? row['masteryLevel'] ?? 0,
+    'correctCount': row['correct_count'] ?? row['correctCount'] ?? 0,
+    'wrongCount': row['wrong_count'] ?? row['wrongCount'] ?? 0,
+    'meaningRecognitionScore':
+        row['meaning_recognition_score'] ?? row['meaningRecognitionScore'] ?? 0,
+    'meaningRecallScore':
+        row['meaning_recall_score'] ?? row['meaningRecallScore'] ?? 0,
+    'spellingScore': row['spelling_score'] ?? row['spellingScore'] ?? 0,
+    'listeningScore': row['listening_score'] ?? row['listeningScore'] ?? 0,
+    'contextScore': row['context_score'] ?? row['contextScore'] ?? 0,
+    'confidenceScore': row['confidence_score'] ?? row['confidenceScore'] ?? 0,
+    'nextReviewAt': _dateValue(row['next_review_at'] ?? row['nextReviewAt']),
+    'lastReviewedAt': nullableDateValue(
+      row['last_reviewed_at'] ?? row['lastReviewedAt'],
+    ),
+    'createdAt': _dateValue(row['created_at'] ?? row['createdAt']),
+    'updatedAt': _dateValue(row['updated_at'] ?? row['updatedAt']),
+    'source': 'target',
   };
 }
 
@@ -479,4 +592,10 @@ Future<void> _ensureNotificationsForToday(
 String _dateValue(Object? value) {
   if (value is DateTime) return value.toIso8601String();
   return value?.toString() ?? DateTime.now().toUtc().toIso8601String();
+}
+
+String? nullableDateValue(Object? value) {
+  if (value == null) return null;
+  if (value is DateTime) return value.toIso8601String();
+  return value.toString();
 }

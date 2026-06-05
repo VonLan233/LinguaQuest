@@ -92,6 +92,10 @@ String displayDifficultyFilter(String value) {
 
 String displayWordStatus(String value) {
   switch (value) {
+    case 'New':
+      return '未学习';
+    case 'Previewed':
+      return '已预览';
     case 'Learning':
       return '学习中';
     case 'Review':
@@ -100,6 +104,8 @@ String displayWordStatus(String value) {
       return '需巩固';
     case 'Mastered':
       return '已掌握';
+    case 'Ignored':
+      return '已忽略';
     default:
       return value;
   }
