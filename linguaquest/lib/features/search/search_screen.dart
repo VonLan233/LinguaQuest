@@ -30,10 +30,15 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       currentWordBookId: state.currentWordBookId,
       scope: _scope,
       query: query,
+      currentWords: state.formalLessons
+          .expand((lesson) => lesson.words)
+          .toList(),
+      tagLabeler: displayWordTag,
     );
     final customWords = searchCustomWords(
       customWords: state.customWords,
       query: query,
+      tagLabeler: displayCustomTag,
     );
     final hasQuery = query.isNotEmpty;
     final hasResults = targetWords.isNotEmpty || customWords.isNotEmpty;

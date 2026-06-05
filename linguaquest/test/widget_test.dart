@@ -1230,10 +1230,16 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      await tester.enterText(find.byType(TextField), '抽象');
+      final currentWord = container
+          .read(appControllerProvider)
+          .formalLessons
+          .expand((lesson) => lesson.words)
+          .first;
+
+      await tester.enterText(find.byType(TextField), currentWord.meaning);
       await tester.pumpAndSettle();
 
-      expect(find.text('abstract'), findsWidgets);
+      expect(find.text(currentWord.word), findsWidgets);
       expect(find.textContaining('中文释义'), findsWidgets);
 
       await tester.tap(find.text('全词库'));

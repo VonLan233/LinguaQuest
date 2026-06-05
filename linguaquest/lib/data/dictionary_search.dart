@@ -36,6 +36,8 @@ List<DictionaryWordSearchResult> searchDictionaryWords({
   required String currentWordBookId,
   required DictionarySearchScope scope,
   required String query,
+  List<Word>? currentWords,
+  String Function(String tag) tagLabeler = _identity,
 }) {
   final normalized = normalizeDictionaryQuery(query);
   if (normalized.isEmpty) return const [];
@@ -43,33 +45,44 @@ List<DictionaryWordSearchResult> searchDictionaryWords({
   final currentBook = wordBooks.firstWhereOrNull(
     (book) => book.id == currentWordBookId,
   );
-  final sourceBooks = scope == DictionarySearchScope.currentWordBook
+  final currentScopeWords =
+      currentWords ?? currentBook?.words ?? const <Word>[];
+  final currentWordIds = {for (final word in currentScopeWords) word.id};
+  final sources = scope == DictionarySearchScope.currentWordBook
       ? currentBook == null
-            ? const <WordBook>[]
-            : [currentBook]
-      : wordBooks;
-  final seenWords = <String>{};
-  final results = <DictionaryWordSearchResult>[];
+            ? const <_DictionarySearchSource>[]
+            : [
+                _DictionarySearchSource(
+                  book: currentBook,
+                  words: currentScopeWords,
+                ),
+              ]
+      : [
+          for (final book in wordBooks)
+            _DictionarySearchSource(book: book, words: book.words),
+        ];
+  final resultsByWord = <String, DictionaryWordSearchResult>{};
 
-  for (final book in sourceBooks) {
-    for (final word in book.words) {
+  for (final source in sources) {
+    for (final word in source.words) {
       final key = _wordKey(word);
-      if (!seenWords.add(key)) continue;
-      final match = _targetWordMatch(word, normalized);
+      final match = _targetWordMatch(word, normalized, tagLabeler);
       if (match == null) continue;
-      results.add(
-        DictionaryWordSearchResult(
-          word: word,
-          book: book,
-          matchedBy: match.label,
-          preview: match.preview,
-          inCurrentWordBook:
-              currentBook?.words.any((item) => item.id == word.id) ?? false,
-        ),
+      final candidate = DictionaryWordSearchResult(
+        word: word,
+        book: source.book,
+        matchedBy: match.label,
+        preview: match.preview,
+        inCurrentWordBook: currentWordIds.contains(word.id),
       );
+      final existing = resultsByWord[key];
+      if (existing == null || _isBetterMatch(candidate, existing, normalized)) {
+        resultsByWord[key] = candidate;
+      }
     }
   }
 
+  final results = resultsByWord.values.toList();
   results.sort((a, b) {
     final rank = _matchRank(a, normalized).compareTo(_matchRank(b, normalized));
     if (rank != 0) return rank;
@@ -84,12 +97,13 @@ List<DictionaryWordSearchResult> searchDictionaryWords({
 List<CustomWordSearchResult> searchCustomWords({
   required List<CustomWord> customWords,
   required String query,
+  String Function(String tag) tagLabeler = _identity,
 }) {
   final normalized = normalizeDictionaryQuery(query);
   if (normalized.isEmpty) return const [];
   final results = <CustomWordSearchResult>[];
   for (final word in customWords) {
-    final match = _customWordMatch(word, normalized);
+    final match = _customWordMatch(word, normalized, tagLabeler);
     if (match == null) continue;
     results.add(
       CustomWordSearchResult(
@@ -115,7 +129,11 @@ String dictionaryScopeLabel(DictionarySearchScope scope) {
   }
 }
 
-_SearchMatch? _targetWordMatch(Word word, String query) {
+_SearchMatch? _targetWordMatch(
+  Word word,
+  String query,
+  String Function(String tag) tagLabeler,
+) {
   return _matchText('英文单词/词组', word.word, query) ??
       _matchText('中文释义', word.meaning, query) ??
       _matchList('中文释义', word.definitions, query) ??
@@ -129,15 +147,20 @@ _SearchMatch? _targetWordMatch(Word word, String query) {
       _matchList('反义词', word.antonyms, query) ??
       _matchList('派生词族', word.derivatives, query) ??
       _matchText('词根词缀', word.rootAffix, query) ??
-      _matchList('考试标签', word.tags, query);
+      _matchLabeledList('考试标签', word.tags, query, tagLabeler);
 }
 
-_SearchMatch? _customWordMatch(CustomWord word, String query) {
+_SearchMatch? _customWordMatch(
+  CustomWord word,
+  String query,
+  String Function(String tag) tagLabeler,
+) {
   return _matchText('英文单词/词组', word.word, query) ??
       _matchText('中文释义', word.meaning, query) ??
       _matchText('例句片段', word.exampleSentence, query) ??
       _matchText('笔记', word.note, query) ??
-      _matchText('标签', word.tag, query);
+      _matchText('标签', word.tag, query) ??
+      _matchText('标签', tagLabeler(word.tag), query);
 }
 
 _SearchMatch? _matchExamples(List<WordExample> examples, String query) {
@@ -168,6 +191,21 @@ _SearchMatch? _matchList(String label, List<String> values, String query) {
   return null;
 }
 
+_SearchMatch? _matchLabeledList(
+  String label,
+  List<String> values,
+  String query,
+  String Function(String tag) tagLabeler,
+) {
+  for (final value in values) {
+    final match =
+        _matchText(label, value, query) ??
+        _matchText(label, tagLabeler(value), query);
+    if (match != null) return match;
+  }
+  return null;
+}
+
 _SearchMatch? _matchText(String label, String value, String query) {
   final trimmed = value.trim();
   if (trimmed.isEmpty) return null;
@@ -185,6 +223,20 @@ int _matchRank(DictionaryWordSearchResult result, String query) {
   return 5;
 }
 
+bool _isBetterMatch(
+  DictionaryWordSearchResult candidate,
+  DictionaryWordSearchResult existing,
+  String query,
+) {
+  final candidateRank = _matchRank(candidate, query);
+  final existingRank = _matchRank(existing, query);
+  if (candidateRank != existingRank) return candidateRank < existingRank;
+  if (candidate.inCurrentWordBook != existing.inCurrentWordBook) {
+    return candidate.inCurrentWordBook;
+  }
+  return candidate.preview.length < existing.preview.length;
+}
+
 String _wordKey(Word word) {
   final normalizedWord = normalizeDictionaryQuery(word.word);
   return normalizedWord.isEmpty ? word.id : normalizedWord;
@@ -196,6 +248,15 @@ class _SearchMatch {
   final String label;
   final String preview;
 }
+
+class _DictionarySearchSource {
+  const _DictionarySearchSource({required this.book, required this.words});
+
+  final WordBook book;
+  final List<Word> words;
+}
+
+String _identity(String value) => value;
 
 extension _FirstWhereOrNull<T> on Iterable<T> {
   T? firstWhereOrNull(bool Function(T item) test) {
