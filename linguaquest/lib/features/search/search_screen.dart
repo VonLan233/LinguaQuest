@@ -40,11 +40,17 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   String? _lastCurrentWordBookId;
   List<WordBook>? _lastWordBooks;
+  List<Lesson>? _lastFormalLessons;
   List<CustomWord>? _lastCustomWords;
 
   @override
   void initState() {
     super.initState();
+    final initialState = ref.read(appControllerProvider);
+    _lastCurrentWordBookId = initialState.currentWordBookId;
+    _lastWordBooks = initialState.wordBooks;
+    _lastFormalLessons = initialState.formalLessons;
+    _lastCustomWords = initialState.customWords;
     _stateSubscription = ref.listenManual<AppState>(appControllerProvider, (
       AppState? _,
       AppState state,
@@ -53,14 +59,15 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       final shouldSearch = _lastCurrentWordBookId != state.currentWordBookId ||
           !_listEquals(_lastWordBooks, state.wordBooks) ||
           !_listEquals(_lastCustomWords, state.customWords) ||
-          !identical(_cachedFormalLessons, state.formalLessons);
+          !identical(_lastFormalLessons, state.formalLessons);
       _lastCurrentWordBookId = state.currentWordBookId;
       _lastWordBooks = state.wordBooks;
+      _lastFormalLessons = state.formalLessons;
       _lastCustomWords = state.customWords;
       if (shouldSearch) {
         _scheduleSearch();
       }
-    }, fireImmediately: true);
+    });
   }
 
   @override
@@ -181,6 +188,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 
   void _runSearch(String query) {
+    if (!mounted) return;
     final requestVersion = ++_searchVersion;
     final state = ref.read(appControllerProvider);
     final currentWords = _collectCurrentWords(state);

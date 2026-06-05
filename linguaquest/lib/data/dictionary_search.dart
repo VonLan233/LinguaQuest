@@ -127,6 +127,17 @@ List<CustomWordSearchResult> searchCustomWords({
       ),
     );
   }
+  results.sort((a, b) {
+    final rank = _customMatchRank(a, normalized).compareTo(
+      _customMatchRank(b, normalized),
+    );
+    if (rank != 0) return rank;
+    final word = normalizeDictionaryQuery(a.word.word).compareTo(
+      normalizeDictionaryQuery(b.word.word),
+    );
+    if (word != 0) return word;
+    return a.word.id.compareTo(b.word.id);
+  });
   return List.unmodifiable(results);
 }
 
@@ -229,6 +240,16 @@ _SearchMatch? _matchText(String label, String value, String query) {
 
 int _matchRank(DictionaryWordSearchResult result, String query) {
   final word = result.word.word.toLowerCase();
+  if (word == query) return 0;
+  if (word.startsWith(query)) return 1;
+  if (result.matchedBy == '英文单词/词组') return 2;
+  if (result.matchedBy == '中文释义') return 3;
+  if (result.matchedBy == '例句片段') return 4;
+  return 5;
+}
+
+int _customMatchRank(CustomWordSearchResult result, String query) {
+  final word = normalizeDictionaryQuery(result.word.word);
   if (word == query) return 0;
   if (word.startsWith(query)) return 1;
   if (result.matchedBy == '英文单词/词组') return 2;

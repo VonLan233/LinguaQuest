@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:linguaquest/data/dictionary_search.dart';
+import 'package:linguaquest/data/models/custom_word.dart';
 import 'package:linguaquest/data/models/lesson.dart';
 
 void main() {
@@ -57,7 +58,41 @@ void main() {
       expect(results.single.word.id, 'w2');
       expect(results.single.book.id, 'b');
     });
+
+    test('custom word search ranks exact and prefix matches first', () {
+      final now = DateTime(2026, 1, 1);
+      final results = searchCustomWords(
+        query: 'app',
+        customWords: [
+          _customWord(id: 'note', text: 'banana', meaning: 'app note', now: now),
+          _customWord(id: 'prefix', text: 'application', meaning: '应用', now: now),
+          _customWord(id: 'exact', text: 'app', meaning: '应用程序', now: now),
+          _customWord(id: 'middle', text: 'snapple', meaning: '饮料', now: now),
+        ],
+      );
+
+      expect(
+        results.map((result) => result.word.id),
+        ['exact', 'prefix', 'middle', 'note'],
+      );
+    });
   });
+}
+
+CustomWord _customWord({
+  required String id,
+  required String text,
+  required String meaning,
+  required DateTime now,
+}) {
+  return CustomWord.create(
+    id: id,
+    uid: 'u1',
+    word: text,
+    meaning: meaning,
+    exampleSentence: '',
+    now: now,
+  );
 }
 
 Word _word({
