@@ -33,7 +33,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       currentWords: state.formalLessons
           .expand((lesson) => lesson.words)
           .toList(),
-      tagLabeler: displayWordTag,
+      tagLabeler: _displayTargetTag,
     );
     final customWords = searchCustomWords(
       customWords: state.customWords,
@@ -107,6 +107,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     );
   }
 }
+
+String _displayTargetTag(String tag) => displayWordTag(tag);
 
 class _SearchScopeSelector extends StatelessWidget {
   const _SearchScopeSelector({

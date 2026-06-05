@@ -86,11 +86,7 @@ class TargetWordDetailScreen extends ConsumerWidget {
             const SizedBox(height: 22),
             _WordTags(word: word),
             const SizedBox(height: 22),
-            AiWordSupportLink(
-              word: word.word,
-              exampleSentence: word.exampleSentence,
-              exampleTranslation: word.exampleTranslation,
-            ),
+            _aiWordSupportLink(word),
           ],
         ),
       ),
@@ -227,6 +223,13 @@ class TargetWordDetailScreen extends ConsumerWidget {
   }
 }
 
+Widget _aiWordSupportLink(Word word) {
+  final w = word.word;
+  final e = word.exampleSentence;
+  final t = word.exampleTranslation;
+  return AiWordSupportLink(word: w, exampleSentence: e, exampleTranslation: t);
+}
+
 class _WordHero extends StatelessWidget {
   const _WordHero({required this.word, required this.bookTitle});
 
@@ -249,11 +252,7 @@ class _WordHero extends StatelessWidget {
           const SizedBox(height: 8),
           _PhoneticLine(word: word),
           const SizedBox(height: 12),
-          PronunciationControls(
-            word: word.word,
-            audioUKUrl: word.audioUKUrl,
-            audioUSUrl: word.audioUSUrl,
-          ),
+          _pronunciationControls(word),
           const SizedBox(height: 12),
           Wrap(
             alignment: WrapAlignment.center,
@@ -271,6 +270,20 @@ class _WordHero extends StatelessWidget {
     );
   }
 }
+
+Widget _pronunciationControls(Word word) {
+  final w = word.word;
+  final ukAudio = word.audioUKUrl;
+  final usAudio = word.audioUSUrl;
+  if (ukAudio.isEmpty && usAudio.isEmpty) return _basePronunciationControls(w);
+  return PronunciationControls(
+    word: w,
+    audioUKUrl: ukAudio,
+    audioUSUrl: usAudio,
+  );
+}
+
+Widget _basePronunciationControls(String w) => PronunciationControls(word: w);
 
 class _PhoneticLine extends StatelessWidget {
   const _PhoneticLine({required this.word});

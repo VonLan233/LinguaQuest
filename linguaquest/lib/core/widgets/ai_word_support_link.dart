@@ -24,7 +24,7 @@ class AiWordSupportLink extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () => context.push(_aiLearningLocation()),
+        onTap: () => _openAiLearning(context),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
           child: Row(
@@ -57,6 +57,15 @@ class AiWordSupportLink extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _openAiLearning(BuildContext context) {
+    final location = _aiLearningLocation();
+    if (location == '/ai-learning') {
+      context.push('/ai-learning');
+      return;
+    }
+    context.push(location);
   }
 
   String get _description {

@@ -1905,6 +1905,14 @@ void main() {
       expect(find.text('考试高频释义'), findsOneWidget);
       expect(find.text('中文释义'), findsOneWidget);
       expect(find.text('英文释义'), findsOneWidget);
+
+      await tester.scrollUntilVisible(
+        find.text('语境例句'),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
+
       expect(find.text('语境例句'), findsOneWidget);
 
       await tester.scrollUntilVisible(
