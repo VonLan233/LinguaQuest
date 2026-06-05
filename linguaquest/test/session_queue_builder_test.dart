@@ -49,6 +49,25 @@ void main() {
     );
   });
 
+  test(
+    'mixed sessions use the full new-word target when no reviews are due',
+    () {
+      final plan = builder.build(
+        newWords: [
+          for (var index = 0; index < 10; index++) _word('new-$index'),
+        ],
+        dueWords: const [],
+        weakWords: const [],
+        dailyGoal: 10,
+      );
+
+      expect(plan.reviewTargetRatio, 0.0);
+      expect(plan.newTargetRatio, 1.0);
+      expect(plan.dueReviewCount, 0);
+      expect(plan.newWordCount, 10);
+    },
+  );
+
   test('wrong answers reappear after a short gap and at session end', () {
     final now = DateTime(2026, 6, 4, 9);
     final first = StudySessionQueueItem(

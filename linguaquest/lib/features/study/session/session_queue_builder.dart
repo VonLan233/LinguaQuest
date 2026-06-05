@@ -241,7 +241,7 @@ class StudySessionQueueBuilder {
   ) {
     if (mode == StudySessionEntryMode.newOnly) return (0.0, 1.0);
     if (mode == StudySessionEntryMode.reviewOnly) return (1.0, 0.0);
-    if (dueCount == 0) return (0.2, 0.8);
+    if (dueCount == 0) return (0.0, 1.0);
     if (dueCount >= newCount * 2 && dueCount >= 6) return (0.7, 0.3);
     if (dueCount >= 3) return (0.5, 0.5);
     return (0.3, 0.7);
