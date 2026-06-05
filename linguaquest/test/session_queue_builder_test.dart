@@ -102,6 +102,40 @@ void main() {
     );
   });
 
+  test('mixed sessions do not overfill when review target rounds to zero', () {
+    final now = DateTime(2026, 6, 4, 9);
+    final plan = builder.build(
+      newWords: [_word('fresh')],
+      dueWords: [_customWord('due-1', now), _customWord('due-2', now)],
+      weakWords: const [],
+      dailyGoal: 1,
+    );
+
+    expect(plan.dueReviewCount, 0);
+    expect(plan.newWordCount, 1);
+    expect(plan.items.every((item) => item.isNewWord), isTrue);
+  });
+
+  test('mixed sessions do not overfill when new target rounds to zero', () {
+    final now = DateTime(2026, 6, 4, 9);
+    final plan = builder.build(
+      newWords: [
+        for (var index = 0; index < 10; index++) _word('fresh-$index'),
+      ],
+      dueWords: [
+        for (var index = 0; index < 8; index++)
+          _customWord('due-$index', now, wrongCount: index),
+      ],
+      weakWords: const [],
+      dailyGoal: 1,
+    );
+
+    expect(plan.dueReviewCount, 1);
+    expect(plan.newWordCount, 0);
+    expect(plan.items, hasLength(1));
+    expect(plan.items.single.source, StudySessionItemSource.dueReview);
+  });
+
   test('wrong answers reappear after a short gap and at session end', () {
     final now = DateTime(2026, 6, 4, 9);
     final first = StudySessionQueueItem(

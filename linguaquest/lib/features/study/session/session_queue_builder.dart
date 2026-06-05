@@ -149,10 +149,10 @@ class StudySessionQueueBuilder {
     final newTarget = (goal - reviewTarget).clamp(0, goal).toInt();
     final selectedDue = mode == StudySessionEntryMode.newOnly
         ? <CustomWord>[]
-        : due.take(reviewTarget == 0 ? due.length.clamp(0, 4) : reviewTarget);
+        : due.take(reviewTarget);
     final selectedNew = mode == StudySessionEntryMode.reviewOnly
         ? <Word>[]
-        : fresh.take(newTarget == 0 ? fresh.length : newTarget);
+        : fresh.take(newTarget);
 
     final items = <StudySessionQueueItem>[];
     final dueQueue = selectedDue.toList();
