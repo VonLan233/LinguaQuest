@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:linguaquest/app.dart';
 import 'package:linguaquest/core/state/app_controller.dart';
@@ -1732,71 +1733,80 @@ void main() {
     },
   );
 
-  test('resetting a study plan updates custom words concurrently', () async {
-    final now = DateTime(2026, 5, 25);
-    final profile = UserProfile(
-      uid: 'reset-parallel-user',
-      name: 'Rex',
-      email: 'rex@lingua.quest',
-      targetExam: 'Daily English',
-      level: 'Elementary',
-      dailyGoal: 10,
-      xp: 0,
-      streak: 0,
-      createdAt: now,
-      updatedAt: now,
-    );
-    final plan = StudyPlan.defaultsFor(
-      uid: profile.uid,
-      targetExam: profile.targetExam,
-      dailyGoal: profile.dailyGoal,
-    );
-    final customWordRepository = _ConcurrentCustomWordRepository()
-      ..words.addAll(
-        List.generate(
-          4,
-          (index) =>
-              CustomWord.create(
-                id: 'reset-word-$index',
-                uid: profile.uid,
-                word: 'reset-$index',
-                meaning: 'reset meaning $index',
-                exampleSentence: 'Reset word $index.',
-                now: now,
-              ).copyWith(
-                masteryLevel: 4,
-                correctCount: 6,
-                wrongCount: 2,
-                nextReviewAt: now.add(const Duration(days: 7)),
-              ),
-        ),
+  test(
+    'resetting a study plan updates custom words without per-word writes',
+    () async {
+      final now = DateTime(2026, 5, 25);
+      final profile = UserProfile(
+        uid: 'reset-parallel-user',
+        name: 'Rex',
+        email: 'rex@lingua.quest',
+        targetExam: 'Daily English',
+        level: 'Elementary',
+        dailyGoal: 10,
+        xp: 0,
+        streak: 0,
+        createdAt: now,
+        updatedAt: now,
       );
-    SharedPreferences.setMockInitialValues({
-      'linguaquest.profile': jsonEncode(profile.toJson()),
-    });
-    final container = ProviderContainer(
-      overrides: [
-        customWordRepositoryProvider.overrideWithValue(customWordRepository),
-        studyPlanRepositoryProvider.overrideWithValue(
-          _MemoryStudyPlanRepository(plan),
-        ),
-      ],
-    );
-    addTearDown(container.dispose);
+      final plan = StudyPlan.defaultsFor(
+        uid: profile.uid,
+        targetExam: profile.targetExam,
+        dailyGoal: profile.dailyGoal,
+      );
+      final customWordRepository = _ConcurrentCustomWordRepository()
+        ..words.addAll(
+          List.generate(
+            4,
+            (index) =>
+                CustomWord.create(
+                  id: 'reset-word-$index',
+                  uid: profile.uid,
+                  word: 'reset-$index',
+                  meaning: 'reset meaning $index',
+                  exampleSentence: 'Reset word $index.',
+                  now: now,
+                ).copyWith(
+                  masteryLevel: 4,
+                  correctCount: 6,
+                  wrongCount: 2,
+                  nextReviewAt: now.add(const Duration(days: 7)),
+                ),
+          ),
+        );
+      SharedPreferences.setMockInitialValues({
+        'linguaquest.profile': jsonEncode(profile.toJson()),
+      });
+      final container = ProviderContainer(
+        overrides: [
+          customWordRepositoryProvider.overrideWithValue(customWordRepository),
+          studyPlanRepositoryProvider.overrideWithValue(
+            _MemoryStudyPlanRepository(plan),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
 
-    await container.read(appControllerProvider.notifier).bootstrap();
-    expect(
-      await container.read(appControllerProvider.notifier).resetStudyPlan(),
-      true,
-    );
+      await container.read(appControllerProvider.notifier).bootstrap();
+      expect(
+        await container.read(appControllerProvider.notifier).resetStudyPlan(),
+        true,
+      );
 
-    expect(customWordRepository.maxConcurrentUpdates, greaterThan(1));
-    for (final word in container.read(appControllerProvider).customWords) {
-      expect(word.masteryLevel, 0);
-      expect(word.correctCount, 0);
-      expect(word.wrongCount, 0);
-    }
-  });
+      expect(customWordRepository.maxConcurrentUpdates, 0);
+      final resetAt = container
+          .read(appControllerProvider)
+          .studyPlan!
+          .updatedAt;
+      for (final word in container.read(appControllerProvider).customWords) {
+        expect(word.masteryLevel, 0);
+        expect(word.correctCount, 0);
+        expect(word.wrongCount, 0);
+        expect(word.nextReviewAt, resetAt);
+        expect(word.updatedAt, resetAt);
+      }
+    },
+  );
 
   testWidgets('study plan save allows an unchanged expired target date', (
     tester,
@@ -1968,6 +1978,55 @@ void main() {
     expect(
       container.read(appControllerProvider).studyPlan?.dailyReviewLimit,
       44,
+    );
+  });
+
+  testWidgets('study plan numeric fields accept digits only', (tester) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'settings-digits-user',
+      name: 'Dina',
+      email: 'digits@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+
+    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.scrollUntilVisible(
+      find.text('调整计划'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('调整计划'));
+    await tester.pumpAndSettle();
+
+    Iterable<EditableText> digitOnlyFields() => tester
+        .widgetList<EditableText>(find.byType(EditableText))
+        .where(
+          (field) =>
+              field.inputFormatters?.contains(
+                FilteringTextInputFormatter.digitsOnly,
+              ) ??
+              false,
+        );
+
+    expect(digitOnlyFields(), hasLength(1));
+    await tester.drag(find.byType(Scrollable).last, const Offset(0, -180));
+    await tester.pumpAndSettle();
+    expect(
+      digitOnlyFields().where((field) => field.controller.text == '20'),
+      hasLength(1),
     );
   });
 

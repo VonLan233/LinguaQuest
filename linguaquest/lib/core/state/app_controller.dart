@@ -287,19 +287,18 @@ class AppController extends Notifier<AppState> {
       final resetPlan = await _studyPlanRepository.reset(plan);
       final reminderSettings = _reminderSettingsForPlan(resetPlan);
       await _persistReminderSettings(reminderSettings);
-      final now = DateTime.now();
-      final resetWords = await Future.wait(
-        state.customWords.map((word) {
-          final resetWord = word.copyWith(
-            masteryLevel: 0,
-            correctCount: 0,
-            wrongCount: 0,
-            nextReviewAt: now,
-            updatedAt: now,
-          );
-          return _customWordRepository.update(resetWord);
-        }),
-      );
+      final resetAt = resetPlan.updatedAt;
+      final resetWords = state.customWords
+          .map(
+            (word) => word.copyWith(
+              masteryLevel: 0,
+              correctCount: 0,
+              wrongCount: 0,
+              nextReviewAt: resetAt,
+              updatedAt: resetAt,
+            ),
+          )
+          .toList();
       await _saveLessonProgress(<String>{}, <String>{});
       await _saveTodayReviewWords(<String>{});
       state = state.copyWith(
