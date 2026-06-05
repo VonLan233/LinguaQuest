@@ -62,6 +62,11 @@ CREATE TABLE IF NOT EXISTS custom_words (
 );
 ''');
 
+    await connection.execute('''
+CREATE INDEX IF NOT EXISTS idx_custom_words_uid_next_review
+ON custom_words (uid, next_review_at);
+''');
+
     for (final statement in [
       "ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'Learning'",
       'ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS ease_factor DOUBLE PRECISION NOT NULL DEFAULT 2.5',
@@ -109,9 +114,19 @@ CREATE TABLE IF NOT EXISTS user_words (
   next_review_at TIMESTAMPTZ NOT NULL,
   last_reviewed_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL,
-  updated_at TIMESTAMPTZ NOT NULL,
-  UNIQUE (uid, word_id, word_book_id)
+  updated_at TIMESTAMPTZ NOT NULL
 );
+''');
+
+    await connection.execute('''
+ALTER TABLE user_words
+DROP CONSTRAINT IF EXISTS user_words_uid_word_id_word_book_id_key;
+''');
+
+    await connection.execute('''
+CREATE INDEX IF NOT EXISTS idx_user_words_uid_next_review
+ON user_words (uid, next_review_at)
+WHERE is_ignored = FALSE AND status IN ('Review', 'Relearning', 'Mastered');
 ''');
 
     await connection.execute('''
