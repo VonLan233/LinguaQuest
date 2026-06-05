@@ -13,6 +13,7 @@ import 'package:linguaquest/data/models/custom_word.dart';
 import 'package:linguaquest/data/models/lesson.dart';
 import 'package:linguaquest/data/models/lesson_result.dart';
 import 'package:linguaquest/data/models/study_session.dart';
+import 'package:linguaquest/data/models/user_word.dart';
 import 'package:linguaquest/data/models/user_profile.dart';
 import 'package:linguaquest/data/repositories/auth_repository.dart';
 import 'package:linguaquest/data/repositories/custom_word_repository.dart';
@@ -22,6 +23,7 @@ import 'package:linguaquest/features/auth/goal_setup_screen.dart';
 import 'package:linguaquest/features/learning/lesson_preview_screen.dart';
 import 'package:linguaquest/features/quiz/lesson_result_screen.dart';
 import 'package:linguaquest/features/quiz/quiz_session_screen.dart';
+import 'package:linguaquest/features/profile/profile_screen.dart';
 import 'package:linguaquest/features/search/search_screen.dart';
 import 'package:linguaquest/features/wordbook/target_word_detail_screen.dart';
 import 'package:linguaquest/features/wordbook/word_detail_screen.dart';
@@ -199,6 +201,31 @@ void main() {
     expect(wordInitialCue(''), '?');
     expect(wordInitialCue('  '), '?');
     expect(wordInitialCue('apple'), 'A');
+  });
+
+  test('profile new wordbook count uses custom copies only', () {
+    final now = DateTime(2026, 5, 25);
+    final target = seedLessons().first.words.first;
+    final customCopy = CustomWord.create(
+      id: 'custom-${target.id}',
+      uid: 'u1',
+      word: target.word,
+      meaning: target.meaning,
+      exampleSentence: target.exampleSentence,
+      now: now,
+    );
+    final targetProgress = UserWord.create(
+      uid: 'u1',
+      word: target,
+      wordBookId: 'IELTS',
+      now: now,
+    ).copyWith(isInNewWordbook: true);
+    final state = AppState.initial().copyWith(
+      customWords: [customCopy],
+      userWords: [targetProgress],
+    );
+
+    expect(newWordbookCount(state), 1);
   });
 
   testWidgets('pronunciation controls expose loading and retry states', (

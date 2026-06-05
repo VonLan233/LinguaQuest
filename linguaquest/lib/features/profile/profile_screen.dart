@@ -3,11 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/state/app_state.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/brand_mark.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
+
+int newWordbookCount(AppState state) => state.customWords.length;
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -63,8 +66,7 @@ class ProfileScreen extends ConsumerWidget {
             ),
             _ProfileStatData(
               label: '生词本',
-              value:
-                  '${state.customWords.length + state.userWords.where((word) => word.isInNewWordbook).length}',
+              value: '${newWordbookCount(state)}',
               icon: Icons.style_outlined,
               color: AppTheme.cyan,
             ),
