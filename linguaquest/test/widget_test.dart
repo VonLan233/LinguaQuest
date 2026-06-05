@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -15,10 +16,13 @@ import 'package:linguaquest/data/models/lesson_result.dart';
 import 'package:linguaquest/data/models/study_session.dart';
 import 'package:linguaquest/data/models/user_profile.dart';
 import 'package:linguaquest/data/lesson_factory.dart';
+import 'package:linguaquest/data/remote/api_client.dart';
+import 'package:linguaquest/data/repositories/api_repositories.dart';
 import 'package:linguaquest/data/repositories/auth_repository.dart';
 import 'package:linguaquest/data/repositories/custom_word_repository.dart';
 import 'package:linguaquest/data/repositories/learning_repository.dart';
 import 'package:linguaquest/data/seed/seed_lessons.dart';
+import 'package:linguaquest/data/wordbook_asset_loader.dart';
 import 'package:linguaquest/features/auth/goal_setup_screen.dart';
 import 'package:linguaquest/features/learning/lesson_preview_screen.dart';
 import 'package:linguaquest/features/quiz/lesson_result_screen.dart';
@@ -1989,6 +1993,48 @@ void main() {
     expect(state.learningPlan?.remainingWords, state.totalLearningWords);
   });
 
+  test('API wordbook fallback does not poison the remote cache', () async {
+    final apiClient = ApiClient();
+    var attempts = 0;
+    final fallbackBook = _book('fallback-book', 'Fallback Book');
+    final serverBook = _book('server-book', 'Server Book');
+    apiClient.dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          attempts++;
+          if (attempts == 1) {
+            handler.reject(
+              DioException(
+                requestOptions: options,
+                type: DioExceptionType.connectionError,
+                error: 'offline',
+              ),
+            );
+            return;
+          }
+          handler.resolve(
+            Response<List<dynamic>>(
+              requestOptions: options,
+              data: [serverBook.toJson()],
+              statusCode: 200,
+            ),
+          );
+        },
+      ),
+    );
+    final repository = ApiLearningRepository(
+      apiClient,
+      fallbackLoader: _FakeWordBookAssetLoader([fallbackBook]),
+    );
+
+    final offlineBooks = await repository.listWordBooks();
+    final onlineBooks = await repository.listWordBooks();
+
+    expect(offlineBooks.single.id, fallbackBook.id);
+    expect(onlineBooks.single.id, serverBook.id);
+    expect(attempts, 2);
+  });
+
   test('remembered words cannot be counted twice on the same day', () async {
     final now = DateTime(2026, 5, 25);
     final profile = UserProfile(
@@ -2546,6 +2592,15 @@ class _FlakyLearningRepository implements LearningRepository {
   Future<void> recordStudySession(StudySession session) async {}
 }
 
+class _FakeWordBookAssetLoader extends WordBookAssetLoader {
+  _FakeWordBookAssetLoader(this.books);
+
+  final List<WordBook> books;
+
+  @override
+  Future<List<WordBook>> loadWordBooks() async => books;
+}
+
 class _ConcurrentCustomWordRepository implements CustomWordRepository {
   final List<CustomWord> words = [];
   int _activeCreates = 0;
@@ -2621,6 +2676,22 @@ Word _word(int index) {
     imageCue: '🏭',
     difficulty: 'Medium',
     tags: const ['test'],
+  );
+}
+
+WordBook _book(String id, String title) {
+  return WordBook(
+    id: id,
+    title: title,
+    category: 'exam',
+    examType: title,
+    coverUrl: '',
+    totalWords: 1,
+    includedWords: 1,
+    description: '$title description',
+    wordIds: const ['api-word-1'],
+    createdAt: DateTime(2026, 6, 5),
+    words: [_word(1)],
   );
 }
 

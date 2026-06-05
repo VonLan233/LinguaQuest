@@ -158,9 +158,7 @@ class ApiLearningRepository implements LearningRepository {
       _cache = List.unmodifiable(books);
       return _cache!;
     } catch (_) {
-      final books = await _fallbackLoader.loadWordBooks();
-      _cache = books;
-      return books;
+      return _fallbackLoader.loadWordBooks();
     }
   }
 
