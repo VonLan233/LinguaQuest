@@ -196,8 +196,7 @@ class UserWord {
 
   bool isDue(DateTime now) {
     if (isIgnored || status == 'Ignored') return false;
-    return !nextReviewAt.isAfter(now) &&
-        (status == 'Review' || status == 'Relearning' || status == 'Mastered');
+    return !nextReviewAt.isAfter(now);
   }
 
   CustomWord toReviewCard() {

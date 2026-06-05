@@ -290,6 +290,32 @@ void main() {
     ]);
   });
 
+  test('learning user word due state matches its review card', () {
+    final now = DateTime(2026, 5, 25, 10);
+    final target = Word(
+      id: 'w-learning-due',
+      word: 'consistent',
+      phonetic: '/kənˈsɪstənt/',
+      meaning: '一致的',
+      definition: 'Always behaving in the same way.',
+      partOfSpeech: 'adjective',
+      exampleSentence: 'Keep review behavior consistent.',
+      exampleTranslation: '保持复习行为一致。',
+      imageCue: '🔁',
+      difficulty: 'Medium',
+      tags: const ['review'],
+    );
+    final word = UserWord.create(
+      uid: 'u1',
+      word: target,
+      wordBookId: 'IELTS',
+      now: now.subtract(const Duration(days: 1)),
+    ).copyWith(status: 'Learning', nextReviewAt: now);
+
+    expect(word.isDue(now), true);
+    expect(word.toReviewCard().isDue(now), true);
+  });
+
   test('ignored user words are excluded from due review cards', () {
     final now = DateTime(2026, 5, 25, 10);
     final target = Word(
