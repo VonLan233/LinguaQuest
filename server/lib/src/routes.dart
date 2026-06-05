@@ -144,9 +144,7 @@ Router buildRouter(AppConfig config, AppDatabase database) {
       if (rawWords is! List) {
         return jsonResponse({'error': 'words list is required'}, status: 400);
       }
-      final words = rawWords.whereType<Map>().map((item) {
-        return Map<String, dynamic>.from(item);
-      }).toList();
+      final words = userWordBatchItems(rawWords);
       final saved = await database.upsertUserWords(uid, words);
       return jsonResponse({
         'words': saved.map(userWordDto).toList(),
@@ -257,6 +255,21 @@ Middleware corsMiddleware() {
 
 String bodyString(Map<String, dynamic> body, String key) {
   return body[key]?.toString().trim() ?? '';
+}
+
+List<Map<String, dynamic>> userWordBatchItems(List rawWords) {
+  return rawWords
+      .whereType<Map>()
+      .map((item) {
+        final body = Map<String, dynamic>.from(item);
+        return {
+          ...body,
+          'id': bodyString(body, 'id'),
+          'wordId': bodyString(body, 'wordId'),
+        };
+      })
+      .where((item) => item['id'].isNotEmpty && item['wordId'].isNotEmpty)
+      .toList();
 }
 
 Future<Response> _protected(
