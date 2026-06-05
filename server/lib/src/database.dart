@@ -415,12 +415,8 @@ ORDER BY ${dueOnly ? 'next_review_at ASC, wrong_count DESC' : 'updated_at DESC'}
     for (final data in words) {
       final now = DateTime.now().toUtc();
       final wordId = data['id'] as String;
-      final existing = await userWordById(uid, wordId);
-      final createdAt =
-          existing?['created_at'] as DateTime? ??
-          _date(data['createdAt']) ??
-          now;
-      await connection.execute(
+      final createdAt = _date(data['createdAt']) ?? now;
+      final rows = await connection.execute(
         Sql.named('''
 INSERT INTO user_words (
   id, uid, word_id, word_book_id, word, meaning, example_sentence, difficulty,
@@ -465,6 +461,7 @@ ON CONFLICT (id) DO UPDATE SET
   next_review_at=EXCLUDED.next_review_at,
   last_reviewed_at=EXCLUDED.last_reviewed_at,
   updated_at=EXCLUDED.updated_at
+RETURNING *
 '''),
         parameters: {
           'id': wordId,
@@ -498,7 +495,7 @@ ON CONFLICT (id) DO UPDATE SET
           'updatedAt': _date(data['updatedAt']) ?? now,
         },
       );
-      saved.add((await userWordById(uid, wordId))!);
+      saved.add(rows.first.toColumnMap());
     }
     return saved;
   }
