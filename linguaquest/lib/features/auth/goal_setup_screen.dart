@@ -247,8 +247,8 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
   int _dailyWordsForDeadline(int remainingWords) {
     final now = DateTime.now();
     final deadline = _deadline ?? now;
-    final today = DateTime.utc(now.year, now.month, now.day);
-    final targetDay = DateTime.utc(deadline.year, deadline.month, deadline.day);
+    final today = DateTime(now.year, now.month, now.day);
+    final targetDay = DateTime(deadline.year, deadline.month, deadline.day);
     final days = targetDay.difference(today).inDays.clamp(0, 9999).toInt() + 1;
     if (remainingWords == 0) return 1;
     return ((remainingWords + days - 1) ~/ days).clamp(1, 999).toInt();

@@ -663,8 +663,8 @@ class AppController extends Notifier<AppState> {
         .where((lesson) => !completed.contains(lesson.id))
         .fold(0, (total, lesson) => total + lesson.words.length);
     final now = DateTime.now();
-    final today = DateTime.utc(now.year, now.month, now.day);
-    final targetDay = DateTime.utc(deadline.year, deadline.month, deadline.day);
+    final today = DateTime(now.year, now.month, now.day);
+    final targetDay = DateTime(deadline.year, deadline.month, deadline.day);
     final days = targetDay.difference(today).inDays.clamp(0, 9999).toInt() + 1;
     final dailyWords = remainingWords == 0
         ? 1

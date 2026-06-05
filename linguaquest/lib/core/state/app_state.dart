@@ -66,8 +66,8 @@ class LearningPlan {
   final DateTime createdAt;
 
   int daysLeft(DateTime now) {
-    final today = DateTime.utc(now.year, now.month, now.day);
-    final targetDay = DateTime.utc(deadline.year, deadline.month, deadline.day);
+    final today = DateTime(now.year, now.month, now.day);
+    final targetDay = DateTime(deadline.year, deadline.month, deadline.day);
     return targetDay.difference(today).inDays.clamp(0, 9999).toInt() + 1;
   }
 
