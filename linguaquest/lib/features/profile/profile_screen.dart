@@ -3,11 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/state/app_state.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/brand_mark.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
+
+int newWordbookCount(AppState state) => state.customWords.length;
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -17,14 +20,15 @@ class ProfileScreen extends ConsumerWidget {
     final state = ref.watch(appControllerProvider);
     final user = state.user;
     final completedPlans = state.learningPathProgress >= 1 ? 1 : 0;
-    final masteredWords = state.customWords
+    final reviewWords = state.reviewWords;
+    final masteredWords = reviewWords
         .where((word) => word.masteryLevel >= 4 || word.status == 'Mastered')
         .length;
-    final totalAttempts = state.customWords.fold<int>(
+    final totalAttempts = reviewWords.fold<int>(
       0,
       (total, word) => total + word.correctCount + word.wrongCount,
     );
-    final correctAttempts = state.customWords.fold<int>(
+    final correctAttempts = reviewWords.fold<int>(
       0,
       (total, word) => total + word.correctCount,
     );
@@ -62,7 +66,7 @@ class ProfileScreen extends ConsumerWidget {
             ),
             _ProfileStatData(
               label: '生词本',
-              value: '${state.customWords.length}',
+              value: '${newWordbookCount(state)}',
               icon: Icons.style_outlined,
               color: AppTheme.cyan,
             ),
@@ -101,10 +105,12 @@ class ProfileScreen extends ConsumerWidget {
               : '最常错词：${weakestWord.word} · ${weakestWord.wrongCount} 次错误 · ${displayWordStatus(weakestWord.status)}',
         ),
         const SizedBox(height: 22),
-        if (state.learningPlan != null) ...[
+        if (state.studyPlan != null) ...[
           _LearningPlanLine(
-            dailyWords: state.learningPlan!.dailyWords,
-            remainingWords: state.learningPlan!.remainingWords,
+            wordBookName: state.currentStudyBook.name,
+            dailyNewTarget: state.studyPlan!.dailyNewTarget,
+            dailyReviewLimit: state.studyPlan!.dailyReviewLimit,
+            status: state.studyPlan!.status,
           ),
           const SizedBox(height: 22),
         ],
@@ -112,9 +118,9 @@ class ProfileScreen extends ConsumerWidget {
         const SizedBox(height: 10),
         _ProfileAction(
           icon: Icons.flag_outlined,
-          title: '学习目标',
-          subtitle: displayTarget(user?.targetExam),
-          route: '/goal-setup',
+          title: '学习计划',
+          subtitle: state.currentStudyBook.name,
+          route: '/settings/study-plan',
         ),
         const _ProfileAction(
           icon: Icons.menu_book_outlined,
@@ -397,12 +403,16 @@ class _WeaknessStatusLine extends StatelessWidget {
 
 class _LearningPlanLine extends StatelessWidget {
   const _LearningPlanLine({
-    required this.dailyWords,
-    required this.remainingWords,
+    required this.wordBookName,
+    required this.dailyNewTarget,
+    required this.dailyReviewLimit,
+    required this.status,
   });
 
-  final int dailyWords;
-  final int remainingWords;
+  final String wordBookName;
+  final int dailyNewTarget;
+  final int dailyReviewLimit;
+  final String status;
 
   @override
   Widget build(BuildContext context) {
@@ -419,7 +429,7 @@ class _LearningPlanLine extends StatelessWidget {
               Text('学习计划', style: theme.textTheme.titleMedium),
               const SizedBox(height: 2),
               Text(
-                '每日 $dailyWords 词 · 计划剩余 $remainingWords 词',
+                '$wordBookName · 新学 $dailyNewTarget · 复习上限 $dailyReviewLimit · ${status == 'paused' ? '已暂停' : '进行中'}',
                 style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
               ),
             ],

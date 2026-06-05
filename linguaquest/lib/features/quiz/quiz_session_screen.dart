@@ -371,6 +371,9 @@ class _QuestionPromptPanel extends StatelessWidget {
         return Icons.format_quote_outlined;
       case QuizQuestionType.imageChoice:
         return Icons.image_search_outlined;
+      case QuizQuestionType.listeningWordChoice:
+      case QuizQuestionType.listeningMeaningChoice:
+        return Icons.hearing_outlined;
       case QuizQuestionType.spelling:
         return Icons.edit_outlined;
     }

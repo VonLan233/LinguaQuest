@@ -3,7 +3,42 @@ enum QuizQuestionType {
   chineseChoice,
   contextChoice,
   imageChoice,
+  listeningWordChoice,
+  listeningMeaningChoice,
   spelling,
+}
+
+class WordExample {
+  const WordExample({required this.en, required this.cn});
+
+  final String en;
+  final String cn;
+
+  factory WordExample.fromJson(Map<String, dynamic> json) {
+    return WordExample(en: _string(json['en']), cn: _string(json['cn']));
+  }
+
+  Map<String, dynamic> toJson() => {'en': en, 'cn': cn};
+}
+
+class WordPhrase {
+  const WordPhrase({required this.phrase, this.cn = ''});
+
+  final String phrase;
+  final String cn;
+
+  factory WordPhrase.fromJson(Object? value) {
+    if (value is Map) {
+      final json = Map<String, dynamic>.from(value);
+      return WordPhrase(
+        phrase: _string(json['phrase'], fallback: _string(json['en'])),
+        cn: _string(json['cn']),
+      );
+    }
+    return WordPhrase(phrase: _string(value));
+  }
+
+  Map<String, dynamic> toJson() => {'phrase': phrase, 'cn': cn};
 }
 
 class Word {
@@ -19,6 +54,19 @@ class Word {
     required this.imageCue,
     required this.difficulty,
     required this.tags,
+    this.phoneticUK = '',
+    this.phoneticUS = '',
+    this.audioUKUrl = '',
+    this.audioUSUrl = '',
+    this.definitions = const [],
+    this.englishDefinitions = const [],
+    this.examples = const [],
+    this.collocations = const [],
+    this.synonyms = const [],
+    this.antonyms = const [],
+    this.derivatives = const [],
+    this.rootAffix = '',
+    this.imageUrl = '',
   });
 
   final String id;
@@ -32,20 +80,81 @@ class Word {
   final String imageCue;
   final String difficulty;
   final List<String> tags;
+  final String phoneticUK;
+  final String phoneticUS;
+  final String audioUKUrl;
+  final String audioUSUrl;
+  final List<String> definitions;
+  final List<String> englishDefinitions;
+  final List<WordExample> examples;
+  final List<WordPhrase> collocations;
+  final List<String> synonyms;
+  final List<String> antonyms;
+  final List<String> derivatives;
+  final String rootAffix;
+  final String imageUrl;
+
+  String get audioUrl => audioUSUrl.isNotEmpty ? audioUSUrl : audioUKUrl;
 
   factory Word.fromJson(Map<String, dynamic> json) {
+    final wordText = _string(json['word']);
+    final definitions = _stringList(json['definitions']);
+    final englishDefinitions = _stringList(json['englishDefinitions']);
+    final examples = _examples(json['exampleSentences']);
+    final phoneticUK = _string(json['phoneticUK']);
+    final phoneticUS = _string(json['phoneticUS']);
+    final legacyMeaning = _string(json['meaning']);
+    final meaning = definitions.isEmpty ? legacyMeaning : definitions.first;
+    final derivedDefinition = englishDefinitions.isNotEmpty
+        ? englishDefinitions.first
+        : definitions.skip(1).join('；');
+    final legacyDefinition = _string(json['definition']);
+    final definition = derivedDefinition.isNotEmpty
+        ? derivedDefinition
+        : legacyDefinition.isNotEmpty
+        ? legacyDefinition
+        : meaning;
+    final firstExample = examples.isEmpty
+        ? const WordExample(en: '', cn: '')
+        : examples.first;
+    final legacyExampleSentence = _string(json['exampleSentence']);
+    final legacyExampleTranslation = _string(json['exampleTranslation']);
+    final examTags = _stringList(json['examTags']);
+    final legacyTags = _stringList(json['tags']);
+    final imageCue = _string(json['imageCue']);
     return Word(
-      id: _string(json['id']),
-      word: _string(json['word']),
-      phonetic: _string(json['phonetic']),
-      meaning: _string(json['meaning']),
-      definition: _string(json['definition']),
-      partOfSpeech: _string(json['partOfSpeech']),
-      exampleSentence: _string(json['exampleSentence']),
-      exampleTranslation: _string(json['exampleTranslation']),
-      imageCue: _string(json['imageCue']),
-      difficulty: _string(json['difficulty'], fallback: 'Medium'),
-      tags: _stringList(json['tags']),
+      id: _string(json['id'], fallback: wordText.toLowerCase()),
+      word: wordText,
+      phonetic: phoneticUK.isNotEmpty
+          ? phoneticUK
+          : phoneticUS.isNotEmpty
+          ? phoneticUS
+          : _string(json['phonetic']),
+      meaning: meaning,
+      definition: definition,
+      partOfSpeech: _string(json['partOfSpeech'], fallback: 'word'),
+      exampleSentence: firstExample.en.isNotEmpty
+          ? firstExample.en
+          : legacyExampleSentence,
+      exampleTranslation: firstExample.cn.isNotEmpty
+          ? firstExample.cn
+          : legacyExampleTranslation,
+      imageCue: imageCue.isNotEmpty ? imageCue : _imageCue(wordText),
+      difficulty: _normalizeDifficulty(json['difficulty']),
+      tags: examTags.isNotEmpty ? examTags : legacyTags,
+      phoneticUK: phoneticUK,
+      phoneticUS: phoneticUS,
+      audioUKUrl: _string(json['audioUKUrl']),
+      audioUSUrl: _string(json['audioUSUrl']),
+      definitions: definitions,
+      englishDefinitions: englishDefinitions,
+      examples: examples,
+      collocations: _phrases(json['collocations']),
+      synonyms: _stringList(json['synonyms']),
+      antonyms: _stringList(json['antonyms']),
+      derivatives: _stringList(json['derivatives']),
+      rootAffix: _string(json['rootAffix']),
+      imageUrl: _string(json['imageUrl']),
     );
   }
 
@@ -53,15 +162,95 @@ class Word {
     return {
       'id': id,
       'word': word,
-      'phonetic': phonetic,
-      'meaning': meaning,
-      'definition': definition,
+      'phoneticUK': phoneticUK.isEmpty ? phonetic : phoneticUK,
+      'phoneticUS': phoneticUS.isEmpty ? phonetic : phoneticUS,
+      'audioUKUrl': audioUKUrl,
+      'audioUSUrl': audioUSUrl,
       'partOfSpeech': partOfSpeech,
-      'exampleSentence': exampleSentence,
-      'exampleTranslation': exampleTranslation,
-      'imageCue': imageCue,
+      'definitions': definitions.isEmpty ? [meaning] : definitions,
+      'englishDefinitions': englishDefinitions.isEmpty
+          ? [definition]
+          : englishDefinitions,
+      'exampleSentences': examples.isEmpty
+          ? [WordExample(en: exampleSentence, cn: exampleTranslation).toJson()]
+          : [for (final example in examples) example.toJson()],
+      'collocations': [for (final phrase in collocations) phrase.toJson()],
+      'synonyms': synonyms,
+      'antonyms': antonyms,
+      'derivatives': derivatives,
+      'rootAffix': rootAffix,
+      'examTags': tags,
       'difficulty': difficulty,
-      'tags': tags,
+      'imageUrl': imageUrl,
+    };
+  }
+}
+
+class WordBook {
+  const WordBook({
+    required this.id,
+    required this.title,
+    required this.category,
+    required this.examType,
+    required this.coverUrl,
+    required this.totalWords,
+    required this.includedWords,
+    required this.description,
+    required this.wordIds,
+    required this.createdAt,
+    required this.words,
+  });
+
+  final String id;
+  final String title;
+  final String category;
+  final String examType;
+  final String coverUrl;
+  final int totalWords;
+  final int includedWords;
+  final String description;
+  final List<String> wordIds;
+  final DateTime createdAt;
+  final List<Word> words;
+
+  factory WordBook.fromJson(Map<String, dynamic> json) {
+    final words = (json['words'] as List? ?? const [])
+        .whereType<Map>()
+        .map((item) => Word.fromJson(Map<String, dynamic>.from(item)))
+        .toList();
+    final wordIds = _stringList(json['wordIds']);
+    return WordBook(
+      id: _string(json['id']),
+      title: _string(json['title']),
+      category: _string(json['category'], fallback: 'exam'),
+      examType: _string(json['examType']),
+      coverUrl: _string(json['coverUrl']),
+      totalWords: _intValue(json['totalWords'], words.length),
+      includedWords: _intValue(json['includedWords'], words.length),
+      description: _string(json['description']),
+      wordIds: wordIds.isEmpty
+          ? List.unmodifiable(words.map((word) => word.id))
+          : wordIds,
+      createdAt:
+          DateTime.tryParse(_string(json['createdAt'])) ??
+          DateTime.now().toUtc(),
+      words: List.unmodifiable(words),
+    );
+  }
+
+  Map<String, dynamic> toJson({bool includeWords = true}) {
+    return {
+      'id': id,
+      'title': title,
+      'category': category,
+      'examType': examType,
+      'coverUrl': coverUrl,
+      'totalWords': totalWords,
+      'includedWords': includedWords,
+      'description': description,
+      'wordIds': wordIds,
+      'createdAt': createdAt.toIso8601String(),
+      if (includeWords) 'words': [for (final word in words) word.toJson()],
     };
   }
 }
@@ -199,9 +388,30 @@ QuizQuestionType _questionType(Object? value) {
   );
 }
 
+String _imageCue(String value) {
+  final trimmed = value.trim();
+  if (trimmed.isEmpty) return '?';
+  return trimmed.substring(0, 1).toUpperCase();
+}
+
+String _normalizeDifficulty(Object? value) {
+  switch (value?.toString().trim().toLowerCase()) {
+    case 'easy':
+      return 'Easy';
+    case 'hard':
+      return 'Hard';
+    default:
+      return 'Medium';
+  }
+}
+
 List<String> _stringList(Object? value) {
   if (value is! Iterable) return const [];
-  return value.map((item) => item.toString()).toList();
+  return List.unmodifiable(
+    value
+        .map((item) => item?.toString().trim() ?? '')
+        .where((item) => item.isNotEmpty),
+  );
 }
 
 String _string(Object? value, {String fallback = ''}) {
@@ -216,22 +426,45 @@ List<Map<String, dynamic>> _mapList(Object? value) {
       .toList();
 }
 
+List<WordExample> _examples(Object? value) {
+  if (value is! Iterable) return const [];
+  return List.unmodifiable(
+    value
+        .whereType<Map>()
+        .map((item) {
+          return WordExample.fromJson(Map<String, dynamic>.from(item));
+        })
+        .where(
+          (item) => item.en.trim().isNotEmpty && item.cn.trim().isNotEmpty,
+        ),
+  );
+}
+
+List<WordPhrase> _phrases(Object? value) {
+  if (value is! Iterable) return const [];
+  return List.unmodifiable(
+    value.map(WordPhrase.fromJson).where((item) {
+      return item.phrase.trim().isNotEmpty;
+    }),
+  );
+}
+
 Map<String, dynamic> _questionWordJson(
   Map<String, dynamic> json,
   Object? wordData,
 ) {
   if (wordData is Map) return Map<String, dynamic>.from(wordData);
 
-  final fallbackWord = json['answer']?.toString() ?? '';
+  final fallbackWord = _string(json['answer']);
   final fallbackId = fallbackWord.isNotEmpty
       ? fallbackWord
-      : json['id']?.toString() ?? 'question-word';
+      : _string(json['id'], fallback: 'question-word');
   return {
     'id': fallbackId,
     'word': fallbackWord,
     'phonetic': '',
     'meaning': '',
-    'definition': json['prompt']?.toString() ?? '',
+    'definition': _string(json['prompt']),
     'partOfSpeech': '',
     'exampleSentence': '',
     'exampleTranslation': '',
@@ -246,4 +479,10 @@ int? _int(Object? value) {
   if (value is int) return value;
   if (value is double) return value.toInt();
   return int.tryParse(value.toString());
+}
+
+int _intValue(Object? value, int fallback) {
+  if (value is int) return value;
+  if (value is num) return value.toInt();
+  return int.tryParse(value?.toString() ?? '') ?? fallback;
 }

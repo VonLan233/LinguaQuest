@@ -16,11 +16,15 @@ enum _PronunciationAccent {
 class PronunciationControls extends StatefulWidget {
   const PronunciationControls({
     required this.word,
+    this.audioUKUrl = '',
+    this.audioUSUrl = '',
     this.compact = false,
     super.key,
   });
 
   final String word;
+  final String audioUKUrl;
+  final String audioUSUrl;
   final bool compact;
 
   @override
@@ -84,6 +88,10 @@ class _PronunciationControlsState extends State<PronunciationControls> {
     if (!mounted) return;
 
     final word = widget.word.trim();
+    final audioUrl = switch (accent) {
+      _PronunciationAccent.uk => widget.audioUKUrl.trim(),
+      _PronunciationAccent.us => widget.audioUSUrl.trim(),
+    };
     final hasWord = word.isNotEmpty;
     if (hasWord) {
       await HapticFeedback.selectionClick();
@@ -100,14 +108,22 @@ class _PronunciationControlsState extends State<PronunciationControls> {
       _failedAccent = hasWord ? null : accent;
     });
 
+    final label = accent.label;
+    final String message;
+    if (!hasWord) {
+      message = '$label发音失败，请重试';
+    } else if (audioUrl.isEmpty) {
+      message = '$label发音：$word';
+    } else {
+      message = '$label发音已加载';
+    }
+
     final messenger = ScaffoldMessenger.maybeOf(context);
     messenger?.clearSnackBars();
     messenger?.showSnackBar(
       SnackBar(
         duration: const Duration(milliseconds: 900),
-        content: Text(
-          hasWord ? '${accent.label}发音：$word' : '${accent.label}发音失败，请重试',
-        ),
+        content: Text(message),
       ),
     );
   }

@@ -50,9 +50,15 @@ class RewardClaimResult {
 }
 
 abstract class LearningRepository {
+  Future<List<WordBook>> listWordBooks() async => const [];
+
   Future<List<Lesson>> listLessons();
 
   Future<LearningProgress?> loadLearningProgress(DateTime now);
+
+  Future<List<Lesson>> listLessonsForWordBook(String wordBookId) async {
+    return listLessons();
+  }
 
   Future<void> recordStudySession(StudySession session);
 

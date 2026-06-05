@@ -11,6 +11,12 @@ String displayTarget(String? value) {
       return '雅思核心词汇';
     case 'TOEFL':
       return '托福高频词汇';
+    case 'GRE':
+      return 'GRE 高频词汇';
+    case '考研':
+      return '考研英语核心词汇';
+    case 'Beginner':
+      return '入门基础词汇';
     case 'MUET':
       return 'MUET 高频词汇';
     case 'Daily English':
@@ -34,6 +40,10 @@ String displayQuestionType(QuizQuestionType type) {
       return '语境选义';
     case QuizQuestionType.imageChoice:
       return '图片选词';
+    case QuizQuestionType.listeningWordChoice:
+      return '听音选词';
+    case QuizQuestionType.listeningMeaningChoice:
+      return '听音选义';
     case QuizQuestionType.spelling:
       return '拼写';
   }
@@ -82,6 +92,10 @@ String displayDifficultyFilter(String value) {
 
 String displayWordStatus(String value) {
   switch (value) {
+    case 'New':
+      return '未学习';
+    case 'Previewed':
+      return '已预览';
     case 'Learning':
       return '学习中';
     case 'Review':
@@ -90,6 +104,8 @@ String displayWordStatus(String value) {
       return '需巩固';
     case 'Mastered':
       return '已掌握';
+    case 'Ignored':
+      return '已忽略';
     default:
       return value;
   }
@@ -115,6 +131,8 @@ String displayWordTag(String value) {
   switch (value.trim().toLowerCase()) {
     case 'academic':
       return '学术';
+    case 'beginner':
+      return '入门';
     case 'business':
       return '商务';
     case 'campus':
@@ -123,6 +141,21 @@ String displayWordTag(String value) {
       return '日常';
     case 'exam':
       return '考试';
+    case 'cet4':
+    case 'cet-4':
+      return '四级';
+    case 'cet6':
+    case 'cet-6':
+      return '六级';
+    case 'ielts':
+      return '雅思';
+    case 'toefl':
+      return '托福';
+    case 'gre':
+      return 'GRE';
+    case 'kaoyan':
+    case '考研':
+      return '考研';
     case 'food':
       return '饮食';
     case 'health':
