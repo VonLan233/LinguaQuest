@@ -359,16 +359,10 @@ class _PronunciationControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final w = word.word;
-    final ukAudio = word.audioUKUrl;
-    final usAudio = word.audioUSUrl;
-    if (ukAudio.isEmpty && usAudio.isEmpty) {
-      return PronunciationControls(word: w);
-    }
     return PronunciationControls(
-      word: w,
-      audioUKUrl: ukAudio,
-      audioUSUrl: usAudio,
+      word: word.word,
+      audioUKUrl: word.audioUKUrl,
+      audioUSUrl: word.audioUSUrl,
     );
   }
 }

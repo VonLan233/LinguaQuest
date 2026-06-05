@@ -1378,21 +1378,7 @@ void main() {
             .toList(),
       );
 
-      final directMatchDetails = directResults
-          .map((item) => '${item.word.word}:${item.matchedBy}:${item.preview}')
-          .toList();
-
-      // Debug: track runtime word + meaning used by this test case.
-      // ignore: avoid_print
-      print('dictionary test first word=${currentWord.word} meaning=${currentWord.meaning}');
-      // ignore: avoid_print
-      print('query code units=${currentWord.meaning.codeUnits}');
-      // ignore: avoid_print
-      print('meaning has contains match=${currentWord.meaning.toLowerCase().contains(currentWord.meaning)}');
-      // ignore: avoid_print
-      print('direct match against cancel meaning=$directMatchDetails');
-      // ignore: avoid_print
-      print('direct results=${directResults.map((item) => item.word.word).toList()}');
+      expect(directResults.map((item) => item.word.id), contains(currentWord.id));
 
       await tester.enterText(find.byType(TextField), currentWord.meaning);
       await tester.pump(const Duration(milliseconds: 500));

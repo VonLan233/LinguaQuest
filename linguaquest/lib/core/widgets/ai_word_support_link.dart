@@ -60,7 +60,12 @@ class AiWordSupportLink extends StatelessWidget {
   }
 
   void _openAiLearning(BuildContext context) {
-    context.push(_aiLearningLocation());
+    final location = _aiLearningLocation();
+    if (location == '/ai-learning') {
+      context.push('/ai-learning');
+      return;
+    }
+    context.push(location);
   }
 
   String get _description {

@@ -1,6 +1,8 @@
 import 'models/custom_word.dart';
 import 'models/lesson.dart';
 
+final _whitespaceRegExp = RegExp(r'\s+');
+
 enum DictionarySearchScope { currentWordBook, allWordBooks }
 
 class DictionaryWordSearchResult {
@@ -76,17 +78,16 @@ List<DictionaryWordSearchResult> searchDictionaryWords({
 
   for (final source in sources) {
     for (final word in source.words) {
-      final key = _wordKey(word);
       final match = _targetWordMatch(word, normalized, tagLabeler);
       if (match == null) continue;
+      final normalizedWord = normalizeDictionaryQuery(word.word);
+      final key = normalizedWord.isEmpty ? word.id : normalizedWord;
       final candidate = DictionaryWordSearchResult(
         word: word,
         book: source.book,
         matchedBy: match.label,
         preview: match.preview,
-        inCurrentWordBook: currentWordNames.contains(
-          normalizeDictionaryQuery(word.word),
-        ),
+        inCurrentWordBook: currentWordNames.contains(normalizedWord),
       );
       final existing = resultsByWord[key];
       if (existing == null || _isBetterMatch(candidate, existing, normalized)) {
@@ -130,7 +131,7 @@ List<CustomWordSearchResult> searchCustomWords({
 }
 
 String normalizeDictionaryQuery(String query) {
-  return query.trim().toLowerCase().replaceAll(RegExp(r'\s+'), ' ');
+  return query.trim().toLowerCase().replaceAll(_whitespaceRegExp, ' ');
 }
 
 String dictionaryScopeLabel(DictionarySearchScope scope) {
@@ -248,11 +249,6 @@ bool _isBetterMatch(
     return candidate.inCurrentWordBook;
   }
   return candidate.preview.length < existing.preview.length;
-}
-
-String _wordKey(Word word) {
-  final normalizedWord = normalizeDictionaryQuery(word.word);
-  return normalizedWord.isEmpty ? word.id : normalizedWord;
 }
 
 class _SearchMatch {
