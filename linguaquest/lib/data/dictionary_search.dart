@@ -55,7 +55,10 @@ List<DictionaryWordSearchResult> searchDictionaryWords({
             )
           : null);
 
-  final currentWordIds = {for (final word in currentScopeWords) word.id};
+  final currentWordNames = {
+    for (final word in currentScopeWords)
+      normalizeDictionaryQuery(word.word)
+  };
   final sources = scope == DictionarySearchScope.currentWordBook
       ? activeBook == null
           ? const <_DictionarySearchSource>[]
@@ -81,7 +84,9 @@ List<DictionaryWordSearchResult> searchDictionaryWords({
         book: source.book,
         matchedBy: match.label,
         preview: match.preview,
-        inCurrentWordBook: currentWordIds.contains(word.id),
+        inCurrentWordBook: currentWordNames.contains(
+          normalizeDictionaryQuery(word.word),
+        ),
       );
       final existing = resultsByWord[key];
       if (existing == null || _isBetterMatch(candidate, existing, normalized)) {
