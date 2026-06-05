@@ -8,8 +8,7 @@ import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
-import '../../data/models/custom_word.dart';
-import '../../data/models/lesson.dart';
+import '../../data/dictionary_search.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -20,18 +19,22 @@ class SearchScreen extends ConsumerStatefulWidget {
 
 class _SearchScreenState extends ConsumerState<SearchScreen> {
   String _query = '';
+  DictionarySearchScope _scope = DictionarySearchScope.currentWordBook;
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(appControllerProvider);
-    final query = _query.trim().toLowerCase();
-    final targetWords = state.formalLessons
-        .expand((lesson) => lesson.words)
-        .where((word) => _matchesTargetWord(word, query))
-        .toList();
-    final customWords = state.customWords
-        .where((word) => _matchesCustomWord(word, query))
-        .toList();
+    final query = normalizeDictionaryQuery(_query);
+    final targetWords = searchDictionaryWords(
+      wordBooks: state.wordBooks,
+      currentWordBookId: state.currentWordBookId,
+      scope: _scope,
+      query: query,
+    );
+    final customWords = searchCustomWords(
+      customWords: state.customWords,
+      query: query,
+    );
     final hasQuery = query.isNotEmpty;
     final hasResults = targetWords.isNotEmpty || customWords.isNotEmpty;
 
@@ -47,24 +50,30 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             TextField(
               autofocus: true,
               decoration: const InputDecoration(
-                labelText: '搜索当前词书、生词本、释义、例句或标签',
+                labelText: '搜索单词、短语、中文释义或例句片段',
                 prefixIcon: Icon(Icons.search),
               ),
               textInputAction: TextInputAction.search,
               onChanged: (value) => setState(() => _query = value),
+            ),
+            const SizedBox(height: 12),
+            _SearchScopeSelector(
+              selected: _scope,
+              currentBookTitle: state.currentWordBook?.title ?? '当前词书',
+              onSelected: (scope) => setState(() => _scope = scope),
             ),
             const SizedBox(height: 16),
             if (!hasQuery)
               const EmptyState(
                 icon: Icons.search,
                 title: '输入关键词开始搜索',
-                message: '可以搜索目标词、生词本、中文释义、例句或标签。',
+                message: '可以搜索英文单词、词组、中文释义、例句片段和生词本。',
               )
             else if (!hasResults)
               EmptyState(
                 icon: Icons.manage_search_outlined,
                 title: '没有找到结果',
-                message: '换一个关键词，或添加一张个人词卡。',
+                message: '切到全词库再试，或添加一张个人词卡。',
                 action: OutlinedButton.icon(
                   onPressed: () => context.push('/custom-words/new'),
                   icon: const Icon(Icons.add),
@@ -73,15 +82,18 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               )
             else ...[
               if (targetWords.isNotEmpty) ...[
-                _SearchSectionTitle(title: '目标词', count: targetWords.length),
-                for (final word in targetWords.take(20))
-                  _TargetWordTile(word: word),
+                _SearchSectionTitle(
+                  title: dictionaryScopeLabel(_scope),
+                  count: targetWords.length,
+                ),
+                for (final result in targetWords.take(20))
+                  _TargetWordTile(result: result),
               ],
               if (customWords.isNotEmpty) ...[
                 const SizedBox(height: 12),
                 _SearchSectionTitle(title: '生词本', count: customWords.length),
-                for (final word in customWords.take(20))
-                  _CustomWordTile(word: word),
+                for (final result in customWords.take(20))
+                  _CustomWordTile(result: result),
               ],
             ],
           ],
@@ -89,38 +101,49 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       ),
     );
   }
+}
 
-  bool _matchesTargetWord(Word word, String query) {
-    if (query.isEmpty) return false;
-    return word.word.toLowerCase().contains(query) ||
-        word.meaning.toLowerCase().contains(query) ||
-        word.definition.toLowerCase().contains(query) ||
-        word.exampleSentence.toLowerCase().contains(query) ||
-        word.exampleTranslation.toLowerCase().contains(query) ||
-        word.collocations.any(
-          (item) =>
-              item.phrase.toLowerCase().contains(query) ||
-              item.cn.toLowerCase().contains(query),
-        ) ||
-        word.synonyms.any((item) => item.toLowerCase().contains(query)) ||
-        word.antonyms.any((item) => item.toLowerCase().contains(query)) ||
-        word.derivatives.any((item) => item.toLowerCase().contains(query)) ||
-        word.rootAffix.toLowerCase().contains(query) ||
-        word.tags.any(
-          (tag) =>
-              tag.toLowerCase().contains(query) ||
-              displayWordTag(tag).toLowerCase().contains(query),
-        );
-  }
+class _SearchScopeSelector extends StatelessWidget {
+  const _SearchScopeSelector({
+    required this.selected,
+    required this.currentBookTitle,
+    required this.onSelected,
+  });
 
-  bool _matchesCustomWord(CustomWord word, String query) {
-    if (query.isEmpty) return false;
-    return word.word.toLowerCase().contains(query) ||
-        word.meaning.toLowerCase().contains(query) ||
-        word.exampleSentence.toLowerCase().contains(query) ||
-        word.note.toLowerCase().contains(query) ||
-        word.tag.toLowerCase().contains(query) ||
-        displayCustomTag(word.tag).toLowerCase().contains(query);
+  final DictionarySearchScope selected;
+  final String currentBookTitle;
+  final ValueChanged<DictionarySearchScope> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '搜索范围：$currentBookTitle / 全词库',
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            FilterPillButton(
+              label: '当前词书',
+              selected: selected == DictionarySearchScope.currentWordBook,
+              onSelected: () =>
+                  onSelected(DictionarySearchScope.currentWordBook),
+            ),
+            FilterPillButton(
+              label: '全词库',
+              selected: selected == DictionarySearchScope.allWordBooks,
+              onSelected: () => onSelected(DictionarySearchScope.allWordBooks),
+              color: AppTheme.cyan,
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }
 
@@ -146,13 +169,14 @@ class _SearchSectionTitle extends StatelessWidget {
 }
 
 class _TargetWordTile extends StatelessWidget {
-  const _TargetWordTile({required this.word});
+  const _TargetWordTile({required this.result});
 
-  final Word word;
+  final DictionaryWordSearchResult result;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final word = result.word;
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Material(
@@ -177,20 +201,36 @@ class _TargetWordTile extends StatelessWidget {
                       Text(word.meaning),
                       const SizedBox(height: 4),
                       Text(
-                        word.exampleSentence,
+                        '${result.matchedBy} · ${result.preview}',
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
                       ),
+                      const SizedBox(height: 4),
+                      Text(
+                        result.book.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodySmall,
+                      ),
                     ],
                   ),
                 ),
                 const SizedBox(width: 8),
-                PillLabel(
-                  label: displayDifficulty(word.difficulty),
-                  color: AppTheme.coral,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    PillLabel(
+                      label: displayDifficulty(word.difficulty),
+                      color: AppTheme.coral,
+                    ),
+                    if (result.inCurrentWordBook) ...[
+                      const SizedBox(height: 6),
+                      const PillLabel(label: '当前计划', color: AppTheme.cyan),
+                    ],
+                  ],
                 ),
               ],
             ),
@@ -202,13 +242,14 @@ class _TargetWordTile extends StatelessWidget {
 }
 
 class _CustomWordTile extends StatelessWidget {
-  const _CustomWordTile({required this.word});
+  const _CustomWordTile({required this.result});
 
-  final CustomWord word;
+  final CustomWordSearchResult result;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final word = result.word;
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Material(
@@ -233,12 +274,19 @@ class _CustomWordTile extends StatelessWidget {
                       Text(word.meaning),
                       const SizedBox(height: 4),
                       Text(
-                        '${displayDifficulty(word.difficulty)} · ${displayCustomTag(word.tag)}',
-                        maxLines: 1,
+                        '${result.matchedBy} · ${result.preview}',
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '${displayDifficulty(word.difficulty)} · ${displayCustomTag(word.tag)}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodySmall,
                       ),
                     ],
                   ),
