@@ -129,7 +129,7 @@ Router buildRouter(AppConfig config, AppDatabase database) {
   router.post('/user-words', (Request request) async {
     return _protected(config, request, (uid) async {
       final body = await readJsonMap(request);
-      if ((body['wordId'] as String? ?? '').trim().isEmpty) {
+      if (bodyString(body, 'wordId').isEmpty) {
         return jsonResponse({'error': 'wordId is required'}, status: 400);
       }
       final word = await database.upsertUserWord(uid, body);
@@ -253,6 +253,10 @@ Middleware corsMiddleware() {
       return response.change(headers: {...response.headers, ...headers});
     };
   };
+}
+
+String bodyString(Map<String, dynamic> body, String key) {
+  return body[key]?.toString().trim() ?? '';
 }
 
 Future<Response> _protected(
