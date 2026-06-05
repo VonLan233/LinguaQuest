@@ -12,6 +12,8 @@ import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
 import '../../data/models/review_event.dart';
 import '../../data/models/study_session.dart';
+import '../../data/models/word_book.dart';
+import '../../data/models/word_entry.dart';
 import '../../data/remote/api_client.dart';
 import '../../data/repositories/api_repositories.dart';
 import '../../data/repositories/auth_repository.dart';
@@ -20,6 +22,7 @@ import '../../data/repositories/learning_repository.dart';
 import '../../data/repositories/mock_repositories.dart';
 import '../../data/repositories/notification_repository.dart';
 import '../../data/repositories/review_repository.dart';
+import '../../data/repositories/wordbook_repository.dart';
 import '../../services/local_notification_service.dart';
 import '../constants/app_constants.dart';
 import '../utils/ui_labels.dart';
@@ -43,7 +46,10 @@ final customWordRepositoryProvider = Provider<CustomWordRepository>((ref) {
 
 final learningRepositoryProvider = Provider<LearningRepository>((ref) {
   if (AppConstants.apiBaseUrl.isNotEmpty) {
-    return ApiLearningRepository(ref.watch(apiClientProvider));
+    return ApiLearningRepository(
+      ref.watch(apiClientProvider),
+      wordBookRepository: ref.watch(wordBookRepositoryProvider),
+    );
   }
   return MockLearningRepository();
 });
@@ -60,6 +66,13 @@ final notificationRepositoryProvider = Provider<NotificationRepository>((ref) {
     return ApiNotificationRepository(ref.watch(apiClientProvider));
   }
   return MockNotificationRepository();
+});
+
+final wordBookRepositoryProvider = Provider<WordBookRepository>((ref) {
+  if (AppConstants.apiBaseUrl.isNotEmpty) {
+    return ApiWordBookRepository(ref.watch(apiClientProvider));
+  }
+  return MockWordBookRepository();
 });
 
 final appControllerProvider = NotifierProvider<AppController, AppState>(
@@ -81,6 +94,7 @@ class AppController extends Notifier<AppState> {
   late final LearningRepository _learningRepository;
   late final ReviewRepository _reviewRepository;
   late final NotificationRepository _notificationRepository;
+  late final WordBookRepository _wordBookRepository;
   late final LocalNotificationService _localNotificationService;
   var _localNotificationsInitialized = false;
 
@@ -91,6 +105,7 @@ class AppController extends Notifier<AppState> {
     _learningRepository = ref.watch(learningRepositoryProvider);
     _reviewRepository = ref.watch(reviewRepositoryProvider);
     _notificationRepository = ref.watch(notificationRepositoryProvider);
+    _wordBookRepository = ref.watch(wordBookRepositoryProvider);
     _localNotificationService = ref.watch(localNotificationServiceProvider);
     return AppState.initial();
   }
@@ -112,11 +127,15 @@ class AppController extends Notifier<AppState> {
       final todayClaimedRewardIds = hasTodayState
           ? _stringSet(prefs, _todayRewardIdsKey)
           : <String>{};
+      final user = await _authRepository.loadSession();
+      await loadWordBooks();
+      final currentWordBookId = user != null && user.targetExam.isNotEmpty
+          ? _mapTargetToWordBookId(user.targetExam, state.wordBooks)
+          : null;
       final lessons = _applyLessonProgression(
-        await _learningRepository.listLessons(),
+        await _learningRepository.listLessons(wordBookId: currentWordBookId),
         completedLessonIds,
       );
-      final user = await _authRepository.loadSession();
       final words = user == null
           ? <CustomWord>[]
           : await _customWordRepository.list(user.uid);
@@ -142,6 +161,50 @@ class AppController extends Notifier<AppState> {
         isLoading: false,
         errorMessage: 'LinguaQuest 启动失败：${_friendlyError(error)}',
       );
+    }
+  }
+
+  Future<void> loadWordBooks() async {
+    try {
+      final wordBooks = await _wordBookRepository.listWordBooks();
+      state = state.copyWith(wordBooks: wordBooks);
+    } catch (error) {
+      // Silently fail; wordbooks are not critical for app launch
+    }
+  }
+
+  Future<List<WordBook>> refreshWordBooks() async {
+    try {
+      final wordBooks = await _wordBookRepository.listWordBooks();
+      state = state.copyWith(wordBooks: wordBooks);
+      return wordBooks;
+    } catch (error) {
+      state = state.copyWith(
+        errorMessage: '加载词书失败：${_friendlyError(error)}',
+      );
+      return state.wordBooks;
+    }
+  }
+
+  Future<List<WordEntry>> searchWords(String query, {int limit = 20}) async {
+    if (query.trim().isEmpty) return [];
+    try {
+      final results = await _wordBookRepository.searchWords(query, limit: limit);
+      return results;
+    } catch (error) {
+      state = state.copyWith(
+        errorMessage: '搜索失败：${_friendlyError(error)}',
+      );
+      return [];
+    }
+  }
+
+  Future<WordEntry?> getWord(String wordId) async {
+    if (wordId.trim().isEmpty) return null;
+    try {
+      return await _wordBookRepository.getWord(wordId);
+    } catch (error) {
+      return null;
     }
   }
 
@@ -201,6 +264,7 @@ class AppController extends Notifier<AppState> {
       final plan = deadline == null
           ? null
           : _buildLearningPlan(target: targetExam, deadline: deadline);
+      final currentWordBookId = _mapTargetToWordBookId(targetExam, state.wordBooks);
       final updated = await _authRepository.updateProfile(
         user.copyWith(
           targetExam: targetExam,
@@ -214,10 +278,17 @@ class AppController extends Notifier<AppState> {
       } else {
         await _saveLearningPlan(plan);
       }
+      // Reload lessons for the new target wordbook
+      final lessons = _applyLessonProgression(
+        await _learningRepository.listLessons(wordBookId: currentWordBookId),
+        state.completedLessonIds,
+      );
       state = state.copyWith(
         user: updated,
         learningPlan: plan,
         clearLearningPlan: plan == null,
+        lessons: lessons,
+        currentWordBookId: currentWordBookId,
       );
       await refreshNotifications();
       unawaited(_scheduleLocalNotifications());
@@ -859,6 +930,26 @@ class AppController extends Notifier<AppState> {
 
   Set<String> _stringSet(SharedPreferences prefs, String key) {
     return (prefs.getStringList(key) ?? const <String>[]).toSet();
+  }
+
+  String? _mapTargetToWordBookId(String target, List<WordBook> wordBooks) {
+    final normalized = target.trim().toLowerCase();
+    for (final book in wordBooks) {
+      if (book.id.toLowerCase() == normalized) return book.id;
+      if (book.examType.toLowerCase() == normalized) return book.id;
+      if (book.title.toLowerCase().contains(normalized)) return book.id;
+    }
+    // Fallback mappings for legacy target names
+    final map = {
+      'ielts': 'ielts',
+      'toefl': 'toefl',
+      'gre': 'gre',
+      'sat': 'sat',
+      'gmat': 'gmat',
+      'daily english': 'beginner',
+      'beginner': 'beginner',
+    };
+    return map[normalized];
   }
 
   String _dateKey(DateTime date) {

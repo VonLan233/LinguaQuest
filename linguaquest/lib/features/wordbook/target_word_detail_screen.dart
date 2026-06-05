@@ -10,20 +10,45 @@ import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/pronunciation_controls.dart';
 import '../../data/models/lesson.dart';
+import '../../data/models/word_entry.dart';
 import 'word_knowledge_sections.dart';
 
-class TargetWordDetailScreen extends ConsumerWidget {
+class TargetWordDetailScreen extends ConsumerStatefulWidget {
   const TargetWordDetailScreen({required this.wordId, super.key});
 
   final String wordId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<TargetWordDetailScreen> createState() => _TargetWordDetailScreenState();
+}
+
+class _TargetWordDetailScreenState extends ConsumerState<TargetWordDetailScreen> {
+  WordEntry? _entry;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadEntry();
+  }
+
+  Future<void> _loadEntry() async {
+    final controller = ref.read(appControllerProvider.notifier);
+    final result = await controller.getWord(widget.wordId);
+    if (mounted) {
+      setState(() {
+        _entry = result;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final state = ref.watch(appControllerProvider);
-    final word = _find(state);
-    if (word == null) {
+    final foundWord = _find(state);
+    if (foundWord == null && _entry == null) {
       return const Scaffold(body: Center(child: Text('没有找到这个词')));
     }
+    final word = foundWord ?? _wordFromEntry(_entry!);
     final isSaved = state.customWords.any(
       (item) => item.word.trim().toLowerCase() == word.word.toLowerCase(),
     );
@@ -145,9 +170,111 @@ class TargetWordDetailScreen extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 22),
+            if (_entry != null) ...[
+              _buildRichEntry(context, _entry!),
+              const SizedBox(height: 22),
+            ],
             AiWordSupportLink(word: word.word),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildRichEntry(BuildContext context, WordEntry entry) {
+    final sections = <Widget>[];
+
+    if (entry.phoneticUK.isNotEmpty || entry.phoneticUS.isNotEmpty) {
+      sections.add(_buildSectionTitle('音标'));
+      if (entry.phoneticUK.isNotEmpty) {
+        sections.add(Text('英 ${entry.phoneticUK}', style: Theme.of(context).textTheme.bodyLarge));
+      }
+      if (entry.phoneticUS.isNotEmpty) {
+        sections.add(Text('美 ${entry.phoneticUS}', style: Theme.of(context).textTheme.bodyLarge));
+      }
+      sections.add(const SizedBox(height: 16));
+    }
+
+    if (entry.definitions.length > 1) {
+      sections.add(_buildSectionTitle('更多释义'));
+      for (var i = 1; i < entry.definitions.length; i++) {
+        sections.add(Text('${i + 1}. ${entry.definitions[i]}'));
+      }
+      sections.add(const SizedBox(height: 16));
+    }
+
+    if (entry.exampleSentences.length > 1) {
+      sections.add(_buildSectionTitle('更多例句'));
+      for (var i = 1; i < entry.exampleSentences.length && i < 3; i++) {
+        sections.add(Text(entry.exampleSentences[i].en, style: Theme.of(context).textTheme.bodyMedium));
+        sections.add(Text(entry.exampleSentences[i].cn, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)));
+        sections.add(const SizedBox(height: 8));
+      }
+      sections.add(const SizedBox(height: 8));
+    }
+
+    if (entry.collocations.isNotEmpty) {
+      sections.add(_buildSectionTitle('常见搭配'));
+      for (final col in entry.collocations.take(5)) {
+        sections.add(Text('${col.phrase} — ${col.cn}'));
+      }
+      sections.add(const SizedBox(height: 16));
+    }
+
+    if (entry.synonyms.isNotEmpty) {
+      sections.add(_buildSectionTitle('近义词'));
+      sections.add(Wrap(
+        spacing: 8,
+        children: entry.synonyms.take(8).map((s) => PillLabel(label: s)).toList(),
+      ));
+      sections.add(const SizedBox(height: 16));
+    }
+
+    if (entry.antonyms.isNotEmpty) {
+      sections.add(_buildSectionTitle('反义词'));
+      sections.add(Wrap(
+        spacing: 8,
+        children: entry.antonyms.take(8).map((s) => PillLabel(label: s)).toList(),
+      ));
+      sections.add(const SizedBox(height: 16));
+    }
+
+    if (entry.derivatives.isNotEmpty) {
+      sections.add(_buildSectionTitle('派生词'));
+      sections.add(Wrap(
+        spacing: 8,
+        children: entry.derivatives.take(8).map((s) => PillLabel(label: s)).toList(),
+      ));
+      sections.add(const SizedBox(height: 16));
+    }
+
+    if (entry.rootAffix.isNotEmpty) {
+      sections.add(_buildSectionTitle('词根词缀'));
+      sections.add(Text(entry.rootAffix));
+      sections.add(const SizedBox(height: 16));
+    }
+
+    if (sections.isEmpty) return const SizedBox.shrink();
+
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: sections,
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Text(
+        title,
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -179,9 +306,27 @@ class TargetWordDetailScreen extends ConsumerWidget {
   Word? _find(AppState state) {
     for (final lesson in state.formalLessons) {
       for (final word in lesson.words) {
-        if (word.id == wordId) return word;
+        if (word.id == widget.wordId) return word;
       }
     }
     return null;
+  }
+
+  Word _wordFromEntry(WordEntry entry) {
+    return Word(
+      id: entry.id,
+      word: entry.word,
+      phonetic: entry.phoneticUK.isNotEmpty ? entry.phoneticUK : entry.phoneticUS,
+      meaning: entry.definitions.isNotEmpty ? entry.definitions.first : '',
+      definition: entry.englishDefinitions.isNotEmpty ? entry.englishDefinitions.first : '',
+      partOfSpeech: entry.partOfSpeech,
+      exampleSentence: entry.exampleSentences.isNotEmpty ? entry.exampleSentences.first.en : '',
+      exampleTranslation: entry.exampleSentences.isNotEmpty ? entry.exampleSentences.first.cn : '',
+      imageCue: '',
+      difficulty: entry.difficulty.isNotEmpty
+          ? entry.difficulty[0].toUpperCase() + entry.difficulty.substring(1)
+          : 'Medium',
+      tags: [...entry.examTags, entry.partOfSpeech].where((t) => t.isNotEmpty).toList(),
+    );
   }
 }

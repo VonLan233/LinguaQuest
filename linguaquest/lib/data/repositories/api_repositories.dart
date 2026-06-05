@@ -6,13 +6,17 @@ import '../models/lesson.dart';
 import '../models/review_event.dart';
 import '../models/study_session.dart';
 import '../models/user_profile.dart';
+import '../models/word_book.dart';
+import '../models/word_entry.dart';
 import '../remote/api_client.dart';
+import '../lesson_factory.dart';
 import '../seed/seed_lessons.dart';
 import 'auth_repository.dart';
 import 'custom_word_repository.dart';
 import 'learning_repository.dart';
 import 'notification_repository.dart';
 import 'review_repository.dart';
+import 'wordbook_repository.dart';
 
 class ApiAuthRepository implements AuthRepository {
   ApiAuthRepository(this._client);
@@ -136,12 +140,35 @@ class ApiCustomWordRepository implements CustomWordRepository {
 }
 
 class ApiLearningRepository implements LearningRepository {
-  ApiLearningRepository(this._client);
+  ApiLearningRepository(this._client, {WordBookRepository? wordBookRepository})
+      : _wordBookRepository = wordBookRepository;
 
   final ApiClient _client;
+  final WordBookRepository? _wordBookRepository;
 
   @override
-  Future<List<Lesson>> listLessons() async => seedLessons();
+  Future<List<Lesson>> listLessons({String? wordBookId}) async {
+    if (wordBookId == null || _wordBookRepository == null) {
+      return seedLessons();
+    }
+    try {
+      final book = await _wordBookRepository.getWordBook(wordBookId);
+      if (book == null) return seedLessons();
+      final entries = await _wordBookRepository.getWords(
+        wordBookId,
+        limit: 60,
+        offset: 0,
+      );
+      if (entries.isEmpty) return seedLessons();
+      return LessonFactory().buildLessons(
+        wordBookId: wordBookId,
+        wordBookTitle: book.title,
+        entries: entries,
+      );
+    } catch (_) {
+      return seedLessons();
+    }
+  }
 
   @override
   Future<void> recordStudySession(StudySession session) async {
@@ -211,6 +238,76 @@ class ApiNotificationRepository implements NotificationRepository {
     return AppNotification.fromJson(
       response.data!['notification'] as Map<String, dynamic>,
     );
+  }
+}
+
+class ApiWordBookRepository implements WordBookRepository {
+  ApiWordBookRepository(this._client);
+
+  final ApiClient _client;
+
+  @override
+  Future<List<WordBook>> listWordBooks() async {
+    final response = await _client.dio.get<List<dynamic>>('/word-books');
+    return (response.data ?? const <dynamic>[])
+        .cast<Map<String, dynamic>>()
+        .map(WordBook.fromJson)
+        .toList();
+  }
+
+  @override
+  Future<WordBook?> getWordBook(String id) async {
+    try {
+      final response = await _client.dio.get<Map<String, dynamic>>(
+        '/word-books/$id',
+      );
+      return WordBook.fromJson(response.data!['wordbook'] as Map<String, dynamic>);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  @override
+  Future<List<WordEntry>> getWords(String bookId, {int? limit, int? offset}) async {
+    final response = await _client.dio.get<Map<String, dynamic>>(
+      '/word-books/$bookId',
+      queryParameters: {
+        'limit': limit,
+        'offset': offset,
+      },
+    );
+    return (response.data!['words'] as List<dynamic>)
+        .cast<Map<String, dynamic>>()
+        .map(WordEntry.fromJson)
+        .toList();
+  }
+
+  @override
+  Future<WordEntry?> getWord(String wordId) async {
+    try {
+      final response = await _client.dio.get<Map<String, dynamic>>(
+        '/words/$wordId',
+      );
+      return WordEntry.fromJson(response.data!['word'] as Map<String, dynamic>);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  @override
+  Future<List<WordEntry>> searchWords(String query, {int limit = 20}) async {
+    try {
+      final response = await _client.dio.get<Map<String, dynamic>>(
+        '/words/search',
+        queryParameters: {'q': query, 'limit': limit},
+      );
+      return (response.data!['results'] as List<dynamic>)
+          .cast<Map<String, dynamic>>()
+          .map(WordEntry.fromJson)
+          .toList();
+    } catch (_) {
+      return [];
+    }
   }
 }
 

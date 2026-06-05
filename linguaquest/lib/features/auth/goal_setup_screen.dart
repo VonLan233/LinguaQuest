@@ -11,6 +11,7 @@ import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson.dart';
+import '../../data/models/word_book.dart';
 
 class GoalSetupScreen extends ConsumerStatefulWidget {
   const GoalSetupScreen({super.key});
@@ -20,22 +21,13 @@ class GoalSetupScreen extends ConsumerStatefulWidget {
 }
 
 class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
-  String _target = 'Daily English';
+  String _target = '';
   String _level = 'Elementary';
   int _dailyGoal = 10;
   DateTime? _deadline;
   var _initializedFromState = false;
   late final ProviderSubscription<AppState> _stateSubscription;
 
-  static const targets = [
-    'CET-4',
-    'CET-6',
-    'IELTS',
-    'TOEFL',
-    'MUET',
-    'Daily English',
-    'Business English',
-  ];
   static const levels = ['Beginner', 'Elementary', 'Intermediate', 'Advanced'];
   static const goals = [5, 10, 15, 20];
 
@@ -59,6 +51,18 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(appControllerProvider);
+    final wordBooks = state.wordBooks;
+    final targets = wordBooks.isEmpty
+        ? const ['IELTS', 'TOEFL', 'GRE', 'SAT', 'GMAT', 'Daily English']
+        : wordBooks.map((b) => b.id).toList();
+    // Ensure _target is valid within current targets (case-insensitive)
+    final targetLower = _target.toLowerCase();
+    final hasMatch = targets.any((t) => t.toLowerCase() == targetLower);
+    if (_target.isEmpty && targets.isNotEmpty) {
+      _target = targets.first;
+    } else if (!hasMatch && targets.isNotEmpty) {
+      _target = targets.first;
+    }
     final selectedLessons = learningLessonsForTarget(state.lessons, _target);
     final totalWords = selectedLessons.fold<int>(
       0,
@@ -92,7 +96,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
                   color: AppTheme.cyan,
                 ),
                 PillLabel(
-                  label: displayTarget(_target),
+                  label: _displayTarget(_target, wordBooks),
                   icon: Icons.flag_outlined,
                 ),
                 PillLabel(
@@ -104,7 +108,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
             ),
             const SizedBox(height: 16),
             _PlanSnapshotLine(
-              target: displayTarget(_target),
+              target: _displayTarget(_target, wordBooks),
               totalWords: totalWords,
               completedWords: completedWords,
               dailyWords: dailyWords,
@@ -113,10 +117,10 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
             ),
             const SizedBox(height: 20),
             _ChoiceSection<String>(
-              title: '目标',
+              title: '目标词书',
               values: targets,
-              selected: _target,
-              labelFor: displayTarget,
+              selected: _target.isNotEmpty ? _target : (targets.isNotEmpty ? targets.first : ''),
+              labelFor: (id) => _displayTarget(id, wordBooks),
               onSelected: (value) => setState(() => _target = value),
             ),
             const SizedBox(height: 24),
@@ -185,6 +189,13 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
         ),
       ),
     );
+  }
+
+  String _displayTarget(String id, List<WordBook> wordBooks) {
+    for (final book in wordBooks) {
+      if (book.id == id) return book.title;
+    }
+    return displayTarget(id);
   }
 
   void _initializeFromState(AppState state, {required bool notify}) {
