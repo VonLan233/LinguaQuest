@@ -306,10 +306,7 @@ class UserWord {
   }
 
   UserWord learned({required bool hadMistake, DateTime? now}) {
-    final baseline = status == 'New' || status == 'Previewed'
-        ? copyWith(status: 'Learning')
-        : this;
-    return baseline.reviewed(
+    return reviewed(
       isCorrect: !hadMistake,
       now: now,
       dimension: hadMistake
