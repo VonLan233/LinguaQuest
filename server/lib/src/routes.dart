@@ -148,7 +148,7 @@ Router buildRouter(AppConfig config, AppDatabase database) {
       }
       final plan = await database.upsertStudyPlan(uid, {
         ...validation.data!,
-        'id': body['id'] as String? ?? newId(),
+        'id': body['id']?.toString() ?? newId(),
       });
       await database.updateUser(uid, {
         'targetExam': _targetExamForWordBook(plan['word_book_id'] as String),
@@ -164,8 +164,8 @@ Router buildRouter(AppConfig config, AppDatabase database) {
       final now = DateTime.now().toUtc();
       final today = DateTime.utc(now.year, now.month, now.day);
       final requestedFinishDate = parseStudyPlanDate(body['targetFinishDate']);
-      final resetFinishDate = requestedFinishDate == null ||
-              requestedFinishDate.isBefore(today)
+      final resetFinishDate =
+          requestedFinishDate == null || requestedFinishDate.isBefore(today)
           ? today.add(const Duration(days: 30))
           : requestedFinishDate;
       final validation = validateStudyPlanPayload({
@@ -173,14 +173,18 @@ Router buildRouter(AppConfig config, AppDatabase database) {
         'status': 'active',
         'startDate': _dateKey(today),
         'targetFinishDate': _dateKey(resetFinishDate),
-      });
+      }, now: now);
       if (!validation.isValid) {
         return jsonResponse({'error': validation.error}, status: 400);
       }
       final plan = await database.upsertStudyPlan(uid, {
         ...validation.data!,
-        'id': body['id'] as String? ?? newId(),
+        'id': body['id']?.toString() ?? newId(),
       });
+      await database.resetCustomWordProgress(
+        uid,
+        now: _dateTimeValue(plan['updated_at'] ?? plan['updatedAt']) ?? now,
+      );
       return jsonResponse({'studyPlan': studyPlanDto(plan)});
     });
   });
@@ -408,6 +412,12 @@ Future<void> _ensureNotificationsForToday(
 String _dateValue(Object? value) {
   if (value is DateTime) return value.toIso8601String();
   return value?.toString() ?? DateTime.now().toUtc().toIso8601String();
+}
+
+DateTime? _dateTimeValue(Object? value) {
+  if (value is DateTime) return value.toUtc();
+  if (value == null) return null;
+  return DateTime.tryParse(value.toString())?.toUtc();
 }
 
 String _targetExamForWordBook(String wordBookId) {

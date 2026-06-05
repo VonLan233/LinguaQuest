@@ -2,6 +2,16 @@ import 'package:postgres/postgres.dart';
 
 import 'config.dart';
 
+const resetCustomWordProgressSql = '''
+UPDATE custom_words
+SET mastery_level=0,
+    correct_count=0,
+    wrong_count=0,
+    next_review_at=@resetAt,
+    updated_at=@resetAt
+WHERE uid=@uid
+''';
+
 class AppDatabase {
   AppDatabase(this.connection);
 
@@ -318,7 +328,8 @@ INSERT INTO study_sessions (
   ) async {
     final existing = await studyPlanByUid(uid);
     final now = DateTime.now().toUtc();
-    final id = existing?['id'] as String? ?? data['id'] as String?;
+    final id = existing?['id']?.toString() ?? data['id']?.toString();
+    final updatedAt = _date(data['now']) ?? now;
     await connection.execute(
       Sql.named('''
 INSERT INTO study_plans (
@@ -349,10 +360,18 @@ ON CONFLICT (uid) DO UPDATE SET
         'reminderTime': data['reminderTime'],
         'status': data['status'],
         'createdAt': existing?['created_at'] ?? _date(data['createdAt']) ?? now,
-        'updatedAt': now,
+        'updatedAt': updatedAt,
       },
     );
     return (await studyPlanByUid(uid))!;
+  }
+
+  Future<void> resetCustomWordProgress(String uid, {DateTime? now}) async {
+    final resetAt = now ?? DateTime.now().toUtc();
+    await connection.execute(
+      Sql.named(resetCustomWordProgressSql),
+      parameters: {'uid': uid, 'resetAt': resetAt},
+    );
   }
 
   Future<void> insertReviewEvent(String uid, Map<String, dynamic> data) async {
