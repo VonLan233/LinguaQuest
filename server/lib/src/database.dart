@@ -126,7 +126,7 @@ DROP CONSTRAINT IF EXISTS user_words_uid_word_id_word_book_id_key;
     await connection.execute('''
 CREATE INDEX IF NOT EXISTS idx_user_words_uid_next_review
 ON user_words (uid, next_review_at)
-WHERE is_ignored = FALSE AND status IN ('Review', 'Relearning', 'Mastered');
+WHERE is_ignored = FALSE AND status NOT IN ('New', 'Previewed', 'Ignored');
 ''');
 
     await connection.execute('''
