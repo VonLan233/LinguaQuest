@@ -283,12 +283,14 @@ List<CustomWord> _buildReviewWords(
   final seen = <String>{};
   final words = <CustomWord>[];
   for (final word in userWords) {
+    if (!_isReviewEligibleStatus(word.status) || word.isIgnored) continue;
     final card = word.toReviewCard();
     if (seen.add(_reviewWordKey(card.word))) {
       words.add(card);
     }
   }
   for (final word in customWords) {
+    if (!_isReviewEligibleStatus(word.status) || word.isIgnored) continue;
     if (seen.add(_reviewWordKey(word.word))) {
       words.add(word);
     }
@@ -297,6 +299,10 @@ List<CustomWord> _buildReviewWords(
 }
 
 String _reviewWordKey(String word) => word.trim().toLowerCase();
+
+bool _isReviewEligibleStatus(String status) {
+  return status != 'New' && status != 'Previewed' && status != 'Ignored';
+}
 
 List<Lesson> learningLessonsForTarget(List<Lesson> lessons, String? target) {
   final formal = lessons.where((lesson) => !lesson.isTrainingPack).toList();

@@ -211,6 +211,85 @@ void main() {
     expect(identical(state.reviewWords, state.reviewWords), true);
   });
 
+  test('review words exclude new previewed and ignored cards', () {
+    final now = DateTime(2026, 5, 25, 10);
+    final target = Word(
+      id: 'w-filter',
+      word: 'Filter',
+      phonetic: '/ˈfɪltər/',
+      meaning: '过滤',
+      definition: 'To remove unwanted items.',
+      partOfSpeech: 'verb',
+      exampleSentence: 'Filter words before review.',
+      exampleTranslation: '复习前过滤单词。',
+      imageCue: '🧹',
+      difficulty: 'Medium',
+      tags: const ['review'],
+    );
+    final baseUserWord = UserWord.create(
+      uid: 'u1',
+      word: target,
+      wordBookId: 'IELTS',
+      now: now,
+    );
+    final eligibleUserWord = baseUserWord.copyWith(
+      wordId: 'w-review',
+      word: 'reviewable',
+      status: 'Review',
+    );
+    final ignoredUserWord = baseUserWord.copyWith(
+      wordId: 'w-ignored',
+      word: 'ignored-target',
+      status: 'Review',
+      isIgnored: true,
+    );
+    final previewedUserWord = baseUserWord.copyWith(
+      wordId: 'w-previewed',
+      word: 'previewed-target',
+      status: 'Previewed',
+    );
+    final newUserWord = baseUserWord.copyWith(
+      wordId: 'w-new',
+      word: 'new-target',
+    );
+    final eligibleCustomWord = CustomWord.create(
+      id: 'custom-review',
+      uid: 'u1',
+      word: 'custom-review',
+      meaning: '复习',
+      exampleSentence: 'Review this word.',
+      now: now,
+    );
+    final ignoredCustomWord = CustomWord.create(
+      id: 'custom-ignored',
+      uid: 'u1',
+      word: 'custom-ignored',
+      meaning: '忽略',
+      exampleSentence: 'Ignore this word.',
+      now: now,
+    ).copyWith(isIgnored: true);
+    final newCustomWord = eligibleCustomWord.copyWith(
+      id: 'custom-new',
+      word: 'custom-new',
+      status: 'New',
+    );
+
+    final state = AppState.initial().copyWith(
+      customWords: [eligibleCustomWord, ignoredCustomWord, newCustomWord],
+      userWords: [
+        eligibleUserWord,
+        ignoredUserWord,
+        previewedUserWord,
+        newUserWord,
+      ],
+    );
+
+    expect(state.reviewWords.map((word) => word.word), [
+      'reviewable',
+      'custom-review',
+    ]);
+  });
+
   test('ignored user words are excluded from due review cards', () {
     final now = DateTime(2026, 5, 25, 10);
     final target = Word(
