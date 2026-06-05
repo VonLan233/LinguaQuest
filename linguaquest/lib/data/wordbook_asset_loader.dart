@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
@@ -30,15 +29,8 @@ class WordBookAssetLoader {
     return _cache!;
   }
 
-  Future<String> _loadAssetString() {
-    return _bundle
-        .loadString(assetPath)
-        .timeout(
-          const Duration(milliseconds: 200),
-          onTimeout: () async {
-            final data = await _bundle.load(assetPath);
-            return utf8.decode(Uint8List.sublistView(data));
-          },
-        );
+  Future<String> _loadAssetString() async {
+    final data = await _bundle.load(assetPath);
+    return utf8.decode(Uint8List.sublistView(data));
   }
 }
