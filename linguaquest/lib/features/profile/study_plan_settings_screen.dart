@@ -95,6 +95,11 @@ class _StudyPlanSettingsScreenState
           child: ListView(
             padding: const EdgeInsets.fromLTRB(20, 14, 20, 104),
             children: [
+              if (state.isLoading)
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 16),
+                  child: LinearProgressIndicator(),
+                ),
               SectionHeader(
                 title: '学习计划设置',
                 subtitle: '管理当前词书、每日任务、复习节奏和提醒时间。',

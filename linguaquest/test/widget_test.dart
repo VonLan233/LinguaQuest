@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -1786,6 +1787,132 @@ void main() {
   });
 
   test(
+    'reminder settings save failure keeps local settings unchanged',
+    () async {
+      final now = DateTime(2026, 5, 25);
+      final profile = UserProfile(
+        uid: 'reminder-failure-user',
+        name: 'Fia',
+        email: 'fia@lingua.quest',
+        targetExam: 'Daily English',
+        level: 'Elementary',
+        dailyGoal: 10,
+        xp: 0,
+        streak: 0,
+        createdAt: now,
+        updatedAt: now,
+      );
+      final plan = StudyPlan.defaultsFor(
+        uid: profile.uid,
+        targetExam: profile.targetExam,
+        dailyGoal: profile.dailyGoal,
+      ).copyWith(status: 'active', reminderTime: '20:00', updatedAt: now);
+      SharedPreferences.setMockInitialValues({
+        'linguaquest.profile': jsonEncode(profile.toJson()),
+        'linguaquest.reminderSettings': jsonEncode(
+          const DailyReminderSettings(
+            enabled: true,
+            hour: 20,
+            minute: 0,
+          ).toJson(),
+        ),
+      });
+      final container = ProviderContainer(
+        overrides: [
+          studyPlanRepositoryProvider.overrideWithValue(
+            _FailingStudyPlanRepository(plan),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await container.read(appControllerProvider.notifier).bootstrap();
+      await container
+          .read(appControllerProvider.notifier)
+          .updateReminderSettings(
+            const DailyReminderSettings(enabled: false, hour: 7, minute: 30),
+          );
+
+      final prefs = await SharedPreferences.getInstance();
+      expect(
+        prefs.getString('linguaquest.reminderSettings'),
+        contains('"hour":20'),
+      );
+      expect(container.read(appControllerProvider).reminderSettings.hour, 20);
+      expect(
+        container.read(appControllerProvider).reminderSettings.enabled,
+        true,
+      );
+      expect(
+        container.read(appControllerProvider).studyPlan?.reminderTime,
+        '20:00',
+      );
+      expect(
+        container.read(appControllerProvider).errorMessage,
+        'remote reminder failure',
+      );
+      expect(container.read(appControllerProvider).isLoading, false);
+    },
+  );
+
+  testWidgets('study plan settings shows a loading bar while saving', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'settings-loading-user',
+      name: 'Lina',
+      email: 'loading@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    final repository = _BlockingStudyPlanRepository(
+      StudyPlan.defaultsFor(
+        uid: profile.uid,
+        targetExam: profile.targetExam,
+        dailyGoal: profile.dailyGoal,
+      ).copyWith(status: 'active', reminderTime: '20:00', updatedAt: now),
+    );
+    addTearDown(() {
+      if (!repository.saveCompleter.isCompleted) {
+        repository.saveCompleter.complete(repository.savedPlan);
+      }
+    });
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [studyPlanRepositoryProvider.overrideWithValue(repository)],
+        child: const LinguaQuestApp(),
+      ),
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.scrollUntilVisible(
+      find.text('调整计划'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('调整计划'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(LinearProgressIndicator), findsOneWidget);
+    await tester.tap(find.text('保存学习计划'));
+    await tester.pump();
+
+    expect(find.byType(LinearProgressIndicator), findsNWidgets(2));
+    repository.saveCompleter.complete(repository.savedPlan);
+    await tester.pumpAndSettle();
+  });
+
+  test(
     'resetting a study plan updates custom words without per-word writes',
     () async {
       final now = DateTime(2026, 5, 25);
@@ -3004,6 +3131,42 @@ class _MemoryStudyPlanRepository implements StudyPlanRepository {
   Future<StudyPlan> save(StudyPlan plan) async {
     savedPlan = plan;
     return plan;
+  }
+}
+
+class _FailingStudyPlanRepository implements StudyPlanRepository {
+  _FailingStudyPlanRepository(this.savedPlan);
+
+  final StudyPlan savedPlan;
+
+  @override
+  Future<StudyPlan?> load(String uid) async => savedPlan;
+
+  @override
+  Future<StudyPlan> reset(StudyPlan plan) async => savedPlan;
+
+  @override
+  Future<StudyPlan> save(StudyPlan plan) async {
+    throw StateError('remote reminder failure');
+  }
+}
+
+class _BlockingStudyPlanRepository implements StudyPlanRepository {
+  _BlockingStudyPlanRepository(this.savedPlan);
+
+  StudyPlan savedPlan;
+  final saveCompleter = Completer<StudyPlan>();
+
+  @override
+  Future<StudyPlan?> load(String uid) async => savedPlan;
+
+  @override
+  Future<StudyPlan> reset(StudyPlan plan) async => savedPlan;
+
+  @override
+  Future<StudyPlan> save(StudyPlan plan) async {
+    savedPlan = plan;
+    return saveCompleter.future;
   }
 }
 
