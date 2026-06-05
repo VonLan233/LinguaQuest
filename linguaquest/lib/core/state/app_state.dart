@@ -100,7 +100,7 @@ class LearningPlan {
 }
 
 class AppState {
-  const AppState({
+  AppState({
     required this.isBootstrapped,
     required this.isLoading,
     required this.lessons,
@@ -117,7 +117,10 @@ class AppState {
     this.lastResult,
     this.learningPlan,
     this.errorMessage,
-  });
+    List<CustomWord>? reviewWords,
+  }) : _reviewWords = List.unmodifiable(
+         reviewWords ?? _buildReviewWords(userWords, customWords),
+       );
 
   final bool isBootstrapped;
   final bool isLoading;
@@ -135,6 +138,7 @@ class AppState {
   final List<AppNotification> notifications;
   final LessonResult? lastResult;
   final String? errorMessage;
+  final List<CustomWord> _reviewWords;
 
   bool get isAuthenticated => user != null;
 
@@ -189,22 +193,7 @@ class AppState {
     return (completedLearningWords / totalLearningWords).clamp(0.0, 1.0);
   }
 
-  List<CustomWord> get reviewWords {
-    final seen = <String>{};
-    final words = <CustomWord>[];
-    for (final word in userWords) {
-      final card = word.toReviewCard();
-      if (seen.add(_reviewWordKey(card.word))) {
-        words.add(card);
-      }
-    }
-    for (final word in customWords) {
-      if (seen.add(_reviewWordKey(word.word))) {
-        words.add(word);
-      }
-    }
-    return words;
-  }
+  List<CustomWord> get reviewWords => _reviewWords;
 
   List<CustomWord> get dueWords {
     final now = DateTime.now();
@@ -240,13 +229,15 @@ class AppState {
     String? errorMessage,
     bool clearError = false,
   }) {
+    final nextCustomWords = customWords ?? this.customWords;
+    final nextUserWords = userWords ?? this.userWords;
     return AppState(
       isBootstrapped: isBootstrapped ?? this.isBootstrapped,
       isLoading: isLoading ?? this.isLoading,
       user: clearUser ? null : user ?? this.user,
       lessons: lessons ?? this.lessons,
-      customWords: customWords ?? this.customWords,
-      userWords: userWords ?? this.userWords,
+      customWords: nextCustomWords,
+      userWords: nextUserWords,
       themeMode: themeMode ?? this.themeMode,
       reminderSettings: reminderSettings ?? this.reminderSettings,
       learningPlan: clearLearningPlan
@@ -261,11 +252,14 @@ class AppState {
       notifications: notifications ?? this.notifications,
       lastResult: lastResult ?? this.lastResult,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
+      reviewWords: customWords == null && userWords == null
+          ? _reviewWords
+          : _buildReviewWords(nextUserWords, nextCustomWords),
     );
   }
 
   factory AppState.initial() {
-    return const AppState(
+    return AppState(
       isBootstrapped: false,
       isLoading: false,
       lessons: [],
@@ -280,6 +274,26 @@ class AppState {
       notifications: [],
     );
   }
+}
+
+List<CustomWord> _buildReviewWords(
+  List<UserWord> userWords,
+  List<CustomWord> customWords,
+) {
+  final seen = <String>{};
+  final words = <CustomWord>[];
+  for (final word in userWords) {
+    final card = word.toReviewCard();
+    if (seen.add(_reviewWordKey(card.word))) {
+      words.add(card);
+    }
+  }
+  for (final word in customWords) {
+    if (seen.add(_reviewWordKey(word.word))) {
+      words.add(word);
+    }
+  }
+  return words;
 }
 
 String _reviewWordKey(String word) => word.trim().toLowerCase();

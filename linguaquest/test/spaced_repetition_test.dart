@@ -208,6 +208,7 @@ void main() {
     expect(state.reviewWords, hasLength(1));
     expect(state.reviewWords.single.source, 'target');
     expect(state.reviewWords.single.masteryLevel, userWord.masteryLevel);
+    expect(identical(state.reviewWords, state.reviewWords), true);
   });
 
   test('ignored user words are excluded from due review cards', () {
