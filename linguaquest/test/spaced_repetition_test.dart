@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:linguaquest/core/state/app_state.dart';
 import 'package:linguaquest/core/utils/spaced_repetition.dart';
 import 'package:linguaquest/data/models/custom_word.dart';
 import 'package:linguaquest/data/models/lesson.dart';
@@ -167,6 +168,46 @@ void main() {
     expect(relearning.status, 'Relearning');
     expect(relearning.wrongCount, 1);
     expect(relearning.nextReviewAt.day, now.day);
+  });
+
+  test('review words deduplicate custom copies and prefer target progress', () {
+    final now = DateTime(2026, 5, 25, 10);
+    final target = Word(
+      id: 'w-dedupe',
+      word: 'Allocate',
+      phonetic: '/ˈæləkeɪt/',
+      meaning: '分配',
+      definition: 'To distribute resources for a purpose.',
+      partOfSpeech: 'verb',
+      exampleSentence: 'Allocate time for review.',
+      exampleTranslation: '分配时间复习。',
+      imageCue: '🧭',
+      difficulty: 'Medium',
+      tags: const ['academic'],
+    );
+    final userWord = UserWord.create(
+      uid: 'u1',
+      word: target,
+      wordBookId: 'IELTS',
+      now: now,
+    ).reviewed(isCorrect: true, now: now);
+    final customCopy = CustomWord.create(
+      id: 'custom-allocate',
+      uid: 'u1',
+      word: ' allocate ',
+      meaning: '分配',
+      exampleSentence: 'Allocate time for review.',
+      now: now,
+    );
+
+    final state = AppState.initial().copyWith(
+      customWords: [customCopy],
+      userWords: [userWord],
+    );
+
+    expect(state.reviewWords, hasLength(1));
+    expect(state.reviewWords.single.source, 'target');
+    expect(state.reviewWords.single.masteryLevel, userWord.masteryLevel);
   });
 
   test('ignored user words are excluded from due review cards', () {

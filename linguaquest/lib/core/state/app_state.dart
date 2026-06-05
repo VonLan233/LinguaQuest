@@ -189,10 +189,22 @@ class AppState {
     return (completedLearningWords / totalLearningWords).clamp(0.0, 1.0);
   }
 
-  List<CustomWord> get reviewWords => [
-    ...customWords,
-    for (final word in userWords) word.toReviewCard(),
-  ];
+  List<CustomWord> get reviewWords {
+    final seen = <String>{};
+    final words = <CustomWord>[];
+    for (final word in userWords) {
+      final card = word.toReviewCard();
+      if (seen.add(_reviewWordKey(card.word))) {
+        words.add(card);
+      }
+    }
+    for (final word in customWords) {
+      if (seen.add(_reviewWordKey(word.word))) {
+        words.add(word);
+      }
+    }
+    return words;
+  }
 
   List<CustomWord> get dueWords {
     final now = DateTime.now();
@@ -269,6 +281,8 @@ class AppState {
     );
   }
 }
+
+String _reviewWordKey(String word) => word.trim().toLowerCase();
 
 List<Lesson> learningLessonsForTarget(List<Lesson> lessons, String? target) {
   final formal = lessons.where((lesson) => !lesson.isTrainingPack).toList();
