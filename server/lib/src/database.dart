@@ -77,12 +77,20 @@ CREATE TABLE IF NOT EXISTS review_events (
   word_id TEXT NOT NULL,
   is_correct BOOLEAN NOT NULL,
   answer_time_ms INTEGER NOT NULL,
+  confidence INTEGER NOT NULL DEFAULT 3,
+  wrong_option TEXT,
   reviewed_at TIMESTAMPTZ NOT NULL,
   mastery_before INTEGER NOT NULL,
   mastery_after INTEGER NOT NULL,
   next_review_at TIMESTAMPTZ NOT NULL
 );
 ''');
+    await connection.execute(
+      'ALTER TABLE review_events ADD COLUMN IF NOT EXISTS confidence INTEGER NOT NULL DEFAULT 3',
+    );
+    await connection.execute(
+      'ALTER TABLE review_events ADD COLUMN IF NOT EXISTS wrong_option TEXT',
+    );
 
     await connection.execute('''
 CREATE TABLE IF NOT EXISTS notifications (
@@ -298,9 +306,9 @@ INSERT INTO study_sessions (
     await connection.execute(
       Sql.named('''
 INSERT INTO review_events (
-  id, uid, word_id, is_correct, answer_time_ms, reviewed_at, mastery_before, mastery_after, next_review_at
+  id, uid, word_id, is_correct, answer_time_ms, confidence, wrong_option, reviewed_at, mastery_before, mastery_after, next_review_at
 ) VALUES (
-  @id, @uid, @wordId, @isCorrect, @answerTimeMs, @reviewedAt, @masteryBefore, @masteryAfter, @nextReviewAt
+  @id, @uid, @wordId, @isCorrect, @answerTimeMs, @confidence, @wrongOption, @reviewedAt, @masteryBefore, @masteryAfter, @nextReviewAt
 )
 '''),
       parameters: {
@@ -309,6 +317,8 @@ INSERT INTO review_events (
         'wordId': data['wordId'],
         'isCorrect': data['isCorrect'],
         'answerTimeMs': data['answerTimeMs'] ?? 0,
+        'confidence': data['confidence'] ?? 3,
+        'wrongOption': data['wrongOption'] ?? data['wrong_option'],
         'reviewedAt': _date(data['reviewedAt']) ?? DateTime.now().toUtc(),
         'masteryBefore': data['masteryBefore'] ?? 0,
         'masteryAfter': data['masteryAfter'] ?? 0,
