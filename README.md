@@ -128,6 +128,13 @@ flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8080
 
 > `10.0.2.2` is the Android emulator address for the host machine. Use your machine IP when testing on a physical Android device.
 
+To run the Flutter app against the deployed API on `intro-server`:
+
+```bash
+cd linguaquest
+flutter run --dart-define=API_BASE_URL=http://64.90.1.138:8080
+```
+
 ## Testing
 
 Run Flutter checks:
@@ -185,6 +192,9 @@ linguaquest/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
 | `POST` | `/auth/login` | Login and receive JWT |
 | `GET` | `/me` | Get current profile |
 | `PATCH` | `/me` | Update profile and learning goals |
+| `GET` | `/lessons` | Fetch backend-owned lesson catalog |
+| `GET` | `/learning-progress` | Fetch completed lessons, today's review, and claimed rewards |
+| `POST` | `/reward-claims` | Claim a daily XP reward once per local day |
 | `GET` | `/custom-words` | List custom words |
 | `POST` | `/custom-words` | Create a custom word |
 | `PATCH` | `/custom-words/:id` | Update a custom word |

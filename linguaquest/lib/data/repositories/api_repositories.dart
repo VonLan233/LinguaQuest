@@ -182,8 +182,42 @@ class ApiLearningRepository implements LearningRepository {
   }
 
   @override
+  Future<LearningProgress?> loadLearningProgress(DateTime now) async {
+    final response = await _client.dio.get<Map<String, dynamic>>(
+      '/learning-progress',
+      queryParameters: {
+        'localDate': _localDateKey(now),
+        'timezoneOffsetMinutes': now.timeZoneOffset.inMinutes,
+      },
+    );
+    final data = response.data;
+    if (data == null) return null;
+    return LearningProgress.fromJson(data);
+  }
+
+  @override
   Future<void> recordStudySession(StudySession session) async {
     await _client.dio.post<void>('/study-sessions', data: session.toJson());
+  }
+
+  @override
+  Future<RewardClaimResult?> claimReward({
+    required String id,
+    required int points,
+    required DateTime now,
+  }) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/reward-claims',
+      data: {
+        'id': id,
+        'points': points,
+        'localDate': _localDateKey(now),
+        'timezoneOffsetMinutes': now.timeZoneOffset.inMinutes,
+      },
+    );
+    final data = response.data;
+    if (data == null) return null;
+    return RewardClaimResult.fromJson(data);
   }
 
   WordBook? _bookById(List<WordBook> books, String id) {

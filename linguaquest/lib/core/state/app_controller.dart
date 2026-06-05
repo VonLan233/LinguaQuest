@@ -123,19 +123,24 @@ class AppController extends Notifier<AppState> {
     state = state.copyWith(isLoading: true, clearError: true);
     try {
       final prefs = await SharedPreferences.getInstance();
-      final completedLessonIds = _stringSet(prefs, _completedLessonIdsKey);
+      final localCompletedLessonIds = _stringSet(prefs, _completedLessonIdsKey);
       final todayKey = _dateKey(DateTime.now());
       final hasTodayState = prefs.getString(_todayDateKey) == todayKey;
-      final todayCompletedLessonIds = hasTodayState
+      final localTodayCompletedLessonIds = hasTodayState
           ? _stringSet(prefs, _todayLessonIdsKey)
           : <String>{};
-      final todayReviewWordIds = hasTodayState
+      final localTodayReviewWordIds = hasTodayState
           ? _stringSet(prefs, _todayReviewIdsKey)
           : <String>{};
-      final todayClaimedRewardIds = hasTodayState
+      final localTodayClaimedRewardIds = hasTodayState
           ? _stringSet(prefs, _todayRewardIdsKey)
           : <String>{};
-      final user = await _authRepository.loadSession();
+      UserProfile? user;
+      try {
+        user = await _authRepository.loadSession();
+      } catch (error) {
+        debugPrint('Failed to load session: $error');
+      }
       final wordBooks = await _learningRepository.listWordBooks();
       final studyPlan = user == null
           ? null
@@ -146,6 +151,24 @@ class AppController extends Notifier<AppState> {
             studyPlan?.wordBookId ?? prefs.getString(_currentWordBookIdKey),
         target: user?.targetExam,
       );
+      LearningProgress? progress;
+      if (user != null) {
+        try {
+          progress = await _learningRepository.loadLearningProgress(
+            DateTime.now(),
+          );
+        } catch (error) {
+          debugPrint('Failed to load remote learning progress: $error');
+        }
+      }
+      final completedLessonIds =
+          progress?.completedLessonIds ?? localCompletedLessonIds;
+      final todayCompletedLessonIds =
+          progress?.todayCompletedLessonIds ?? localTodayCompletedLessonIds;
+      final todayReviewWordIds =
+          progress?.todayReviewWordIds ?? localTodayReviewWordIds;
+      final todayClaimedRewardIds =
+          progress?.todayClaimedRewardIds ?? localTodayClaimedRewardIds;
       final lessons = _applyLessonProgression(
         await _learningRepository.listLessonsForWordBook(currentWordBookId),
         completedLessonIds,
@@ -819,6 +842,33 @@ class AppController extends Notifier<AppState> {
     if (state.todayClaimedRewardIds.contains(id)) return false;
     return _run(() async {
       final now = DateTime.now();
+      final remoteClaim = await _learningRepository.claimReward(
+        id: id,
+        points: points,
+        now: now,
+      );
+      if (remoteClaim != null) {
+        state = state.copyWith(
+          user: remoteClaim.user,
+          completedLessonIds: remoteClaim.progress.completedLessonIds,
+          todayCompletedLessonIds: remoteClaim.progress.todayCompletedLessonIds,
+          todayReviewWordIds: remoteClaim.progress.todayReviewWordIds,
+          todayClaimedRewardIds: remoteClaim.progress.todayClaimedRewardIds,
+        );
+        await _saveLessonProgress(
+          remoteClaim.progress.completedLessonIds,
+          remoteClaim.progress.todayCompletedLessonIds,
+        );
+        await _saveTodayReviewWords(remoteClaim.progress.todayReviewWordIds);
+        await _saveTodayClaimedRewards(
+          remoteClaim.progress.todayClaimedRewardIds,
+        );
+        await refreshNotifications();
+        if (!remoteClaim.claimed) {
+          throw StateError('奖励已领取或领取失败');
+        }
+        return;
+      }
       final claimedRewardIds = {...state.todayClaimedRewardIds, id};
       final updatedUser = await _authRepository.updateProfile(
         user.copyWith(xp: user.xp + points, updatedAt: now),

@@ -207,8 +207,20 @@ class MockLearningRepository implements LearningRepository {
   }
 
   @override
+  Future<LearningProgress?> loadLearningProgress(DateTime now) async => null;
+
+  @override
   Future<void> recordStudySession(StudySession session) async {
     _sessions.add(session);
+  }
+
+  @override
+  Future<RewardClaimResult?> claimReward({
+    required String id,
+    required int points,
+    required DateTime now,
+  }) async {
+    return null;
   }
 
   WordBook? _bookById(List<WordBook> books, String id) {
