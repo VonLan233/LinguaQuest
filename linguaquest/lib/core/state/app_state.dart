@@ -191,12 +191,15 @@ class AppState {
 
   List<CustomWord> get dueWords {
     final now = DateTime.now();
-    return customWords.where((word) => word.isDue(now)).toList();
+    return _dedupeCustomWordsByText(
+      customWords.where((word) => word.isDue(now)),
+    );
   }
 
   List<CustomWord> get weakWords {
-    final weak = customWords.where((word) => word.isWeak).toList()
-      ..sort((a, b) => b.wrongCount.compareTo(a.wrongCount));
+    final weak = _dedupeCustomWordsByText(
+      customWords.where((word) => word.isWeak),
+    )..sort((a, b) => b.wrongCount.compareTo(a.wrongCount));
     return weak;
   }
 
@@ -265,6 +268,14 @@ class AppState {
       notifications: [],
     );
   }
+}
+
+List<CustomWord> _dedupeCustomWordsByText(Iterable<CustomWord> words) {
+  final seen = <String>{};
+  return [
+    for (final word in words)
+      if (seen.add(word.word.trim().toLowerCase())) word,
+  ];
 }
 
 List<Lesson> learningLessonsForTarget(List<Lesson> lessons, String? target) {

@@ -9,6 +9,7 @@ import '../../core/widgets/ai_word_support_link.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/pronunciation_controls.dart';
+import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 import 'word_knowledge_sections.dart';
 
@@ -24,9 +25,8 @@ class TargetWordDetailScreen extends ConsumerWidget {
     if (word == null) {
       return const Scaffold(body: Center(child: Text('没有找到这个词')));
     }
-    final isSaved = state.customWords.any(
-      (item) => item.word.trim().toLowerCase() == word.word.toLowerCase(),
-    );
+    final savedWord = _savedCustomWord(state, word);
+    final isSaved = savedWord != null;
 
     return Scaffold(
       appBar: AppBar(
@@ -48,15 +48,15 @@ class TargetWordDetailScreen extends ConsumerWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: FilledButton.icon(
-                  onPressed: isSaved
-                      ? null
-                      : () => _addToCustomWords(context, ref, word),
+                  onPressed: () => isSaved
+                      ? _removeFromCustomWords(context, ref, savedWord)
+                      : _addToCustomWords(context, ref, word),
                   icon: Icon(
                     isSaved
                         ? Icons.check_circle_outline
                         : Icons.add_circle_outline,
                   ),
-                  label: Text(isSaved ? '已加入生词本' : '加入生词本'),
+                  label: Text(isSaved ? '移出生词本' : '加入生词本'),
                 ),
               ),
             ],
@@ -174,6 +174,31 @@ class TargetWordDetailScreen extends ConsumerWidget {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future<void> _removeFromCustomWords(
+    BuildContext context,
+    WidgetRef ref,
+    CustomWord word,
+  ) async {
+    final succeeded = await ref
+        .read(appControllerProvider.notifier)
+        .deleteCustomWord(word.id);
+    if (!context.mounted) return;
+    final message = succeeded
+        ? '已移出生词本'
+        : ref.read(appControllerProvider).errorMessage ?? '暂时无法移出生词本';
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  CustomWord? _savedCustomWord(AppState state, Word word) {
+    final target = word.word.trim().toLowerCase();
+    for (final item in state.customWords) {
+      if (item.word.trim().toLowerCase() == target) return item;
+    }
+    return null;
   }
 
   Word? _find(AppState state) {

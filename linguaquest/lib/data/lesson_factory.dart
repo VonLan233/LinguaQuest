@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'models/lesson.dart';
 
 List<Lesson> lessonsFromWordBook(WordBook book, {int wordsPerLesson = 3}) {
@@ -76,14 +78,14 @@ List<QuizQuestion> buildQuestionsForWords({
         lessonId: lessonId,
         word: words[index],
         index: index,
-        type: _typeForIndex(index),
+        type: _typeForWord(words[index]),
         distractorWords: distractorWords,
       ),
   ];
 }
 
-QuizQuestionType _typeForIndex(int index) {
-  switch (index % 4) {
+QuizQuestionType _typeForWord(Word word) {
+  switch (_stableHash(word.id) % 4) {
     case 0:
       return QuizQuestionType.meaningChoice;
     case 1:
@@ -110,6 +112,7 @@ QuizQuestion _questionForWord({
         prompt: '根据中文释义选择英文单词：${word.meaning}',
         answer: word.word,
         options: _choiceOptions(
+          seed: _optionSeed(lessonId, word.id, word.word),
           answer: word.word,
           fallbackDistractors: distractorWords.map((item) => item.word),
         ),
@@ -124,6 +127,7 @@ QuizQuestion _questionForWord({
         prompt: '根据语境选择“${word.word}”的中文释义：${word.exampleSentence}',
         answer: word.meaning,
         options: _choiceOptions(
+          seed: _optionSeed(lessonId, word.id, word.meaning),
           answer: word.meaning,
           fallbackDistractors: distractorWords.map((item) => item.meaning),
         ),
@@ -148,6 +152,7 @@ QuizQuestion _questionForWord({
         prompt: '播放发音，选择听到的英文单词。',
         answer: word.word,
         options: _choiceOptions(
+          seed: _optionSeed(lessonId, word.id, word.word),
           answer: word.word,
           fallbackDistractors: distractorWords.map((item) => item.word),
         ),
@@ -161,6 +166,7 @@ QuizQuestion _questionForWord({
         prompt: '播放发音，选择对应的中文释义。',
         answer: word.meaning,
         options: _choiceOptions(
+          seed: _optionSeed(lessonId, word.id, word.meaning),
           answer: word.meaning,
           fallbackDistractors: distractorWords.map((item) => item.meaning),
         ),
@@ -175,6 +181,7 @@ QuizQuestion _questionForWord({
         prompt: '选择“${word.word}”的中文释义。',
         answer: word.meaning,
         options: _choiceOptions(
+          seed: _optionSeed(lessonId, word.id, word.meaning),
           answer: word.meaning,
           fallbackDistractors: distractorWords.map((item) => item.meaning),
         ),
@@ -186,6 +193,7 @@ QuizQuestion _questionForWord({
 }
 
 List<String> _choiceOptions({
+  required int seed,
   required String answer,
   required Iterable<String> fallbackDistractors,
 }) {
@@ -205,7 +213,20 @@ List<String> _choiceOptions({
     addOption(option);
     if (options.length == 4) break;
   }
-  return List.unmodifiable(options);
+  return List.unmodifiable(options..shuffle(Random(seed)));
+}
+
+int _optionSeed(String lessonId, String wordId, String answer) {
+  return _stableHash('$lessonId:$wordId:$answer');
+}
+
+int _stableHash(String value) {
+  var hash = 0x811c9dc5;
+  for (final unit in value.codeUnits) {
+    hash ^= unit;
+    hash = (hash * 0x01000193) & 0x7fffffff;
+  }
+  return hash;
 }
 
 List<Word> _takeTrainingWords(List<Word> words, int start, int count) {

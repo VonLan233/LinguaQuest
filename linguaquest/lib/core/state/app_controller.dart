@@ -256,7 +256,6 @@ class AppController extends Notifier<AppState> {
         await _learningRepository.listLessonsForWordBook(wordBookId),
         state.completedLessonIds,
       );
-      await _saveCurrentWordBookId(wordBookId);
       final book = _wordBookById(state.wordBooks, wordBookId);
       var updatedUser = state.user;
       if (updatedUser != null && book != null) {
@@ -267,6 +266,7 @@ class AppController extends Notifier<AppState> {
           ),
         );
       }
+      await _saveCurrentWordBookId(wordBookId);
       state = state.copyWith(
         user: updatedUser,
         currentWordBookId: wordBookId,

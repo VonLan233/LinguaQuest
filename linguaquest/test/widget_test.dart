@@ -14,6 +14,7 @@ import 'package:linguaquest/data/models/lesson.dart';
 import 'package:linguaquest/data/models/lesson_result.dart';
 import 'package:linguaquest/data/models/study_session.dart';
 import 'package:linguaquest/data/models/user_profile.dart';
+import 'package:linguaquest/data/lesson_factory.dart';
 import 'package:linguaquest/data/repositories/auth_repository.dart';
 import 'package:linguaquest/data/repositories/custom_word_repository.dart';
 import 'package:linguaquest/data/repositories/learning_repository.dart';
@@ -968,6 +969,98 @@ void main() {
     }
   });
 
+  test('review queues dedupe duplicate custom cards by word text', () {
+    final now = DateTime.now();
+    final first =
+        CustomWord.create(
+          id: 'duplicate-first',
+          uid: 'dedupe-user',
+          word: 'Focus',
+          meaning: '专注',
+          exampleSentence: 'Focus on one thing.',
+          now: now,
+        ).copyWith(
+          wrongCount: 4,
+          nextReviewAt: now.subtract(const Duration(days: 1)),
+        );
+    final duplicate =
+        CustomWord.create(
+          id: 'duplicate-second',
+          uid: 'dedupe-user',
+          word: ' focus ',
+          meaning: '焦点',
+          exampleSentence: 'The focus is clear.',
+          now: now,
+        ).copyWith(
+          wrongCount: 9,
+          nextReviewAt: now.subtract(const Duration(days: 1)),
+        );
+    final unique =
+        CustomWord.create(
+          id: 'unique-word',
+          uid: 'dedupe-user',
+          word: 'Review',
+          meaning: '复习',
+          exampleSentence: 'Review every day.',
+          now: now,
+        ).copyWith(
+          wrongCount: 2,
+          nextReviewAt: now.subtract(const Duration(days: 1)),
+        );
+
+    final state = AppState.initial().copyWith(
+      customWords: [first, duplicate, unique],
+    );
+
+    expect(state.dueWords.map((word) => word.id), [first.id, unique.id]);
+    expect(state.weakWords.map((word) => word.id), [first.id, unique.id]);
+  });
+
+  test(
+    'real wordbook quiz generation shuffles choices and includes spelling',
+    () {
+      final words = [for (var index = 0; index < 24; index++) _word(index)];
+      final lessons = lessonsFromWordBook(
+        WordBook(
+          id: 'test-book',
+          title: '测试词书',
+          category: 'exam',
+          examType: 'Test',
+          coverUrl: '',
+          totalWords: words.length,
+          includedWords: words.length,
+          description: 'Test book',
+          wordIds: [for (final word in words) word.id],
+          createdAt: DateTime(2026, 6, 5),
+          words: words,
+        ),
+      );
+      final formalQuestions = lessons
+          .where((lesson) => !lesson.isTrainingPack)
+          .expand((lesson) => lesson.questions)
+          .toList();
+      final choiceQuestions = formalQuestions.where(
+        (question) => question.type != QuizQuestionType.spelling,
+      );
+
+      expect(
+        formalQuestions.map((question) => question.type),
+        contains(QuizQuestionType.spelling),
+      );
+      expect(
+        choiceQuestions.any(
+          (question) => question.options.first != question.answer,
+        ),
+        true,
+      );
+      for (final question in choiceQuestions) {
+        expect(question.options, hasLength(4));
+        expect(question.options.toSet(), hasLength(4));
+        expect(question.options, contains(question.answer));
+      }
+    },
+  );
+
   test('formal wordbook follows the selected learning target', () {
     final lessons = seedLessons();
     final now = DateTime(2026, 5, 25);
@@ -1272,13 +1365,13 @@ void main() {
     await tester.pumpAndSettle();
     await _completeNewWordCards(tester);
 
-    await tester.tap(find.text('爆炸的， 爆发的'));
+    await tester.enterText(find.byType(TextField), 'wrong');
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('再试一次'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('取消， 废除'));
+    await tester.enterText(find.byType(TextField), 'cancel');
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
@@ -1292,6 +1385,12 @@ void main() {
     await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
+    await tester.scrollUntilVisible(
+      find.text('准备， 预备'),
+      120,
+      scrollable: find.byType(Scrollable).last,
+    );
+    await tester.pumpAndSettle();
     await tester.tap(find.text('准备， 预备'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));
@@ -1361,8 +1460,8 @@ void main() {
     await tester.pumpAndSettle();
     await _completeNewWordCards(tester);
 
-    expect(find.text('英文选义'), findsOneWidget);
-    await tester.tap(find.text('取消， 废除'));
+    expect(find.text('输入单词'), findsOneWidget);
+    await tester.enterText(find.byType(TextField), 'cancel');
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));
     await tester.pump();
@@ -1445,7 +1544,7 @@ void main() {
     expect(find.text('检查'), findsOneWidget);
     expect(find.byType(BackButtonIcon), findsOneWidget);
 
-    await tester.tap(find.text('取消， 废除'));
+    await tester.enterText(find.byType(TextField), 'cancel');
     await tester.pumpAndSettle();
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
@@ -1459,13 +1558,7 @@ void main() {
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
 
-    final selectedOptionButton = tester.widget<OutlinedButton>(
-      find.ancestor(
-        of: find.text('取消， 废除'),
-        matching: find.byType(OutlinedButton),
-      ),
-    );
-    expect(selectedOptionButton.onPressed, isNotNull);
+    expect(find.widgetWithText(FilledButton, '继续'), findsOneWidget);
 
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
@@ -1691,7 +1784,19 @@ void main() {
 
     final savedWords = container.read(appControllerProvider).customWords;
     expect(savedWords.any((word) => word.word == targetWord.word), true);
-    expect(find.widgetWithText(FilledButton, '已加入生词本'), findsOneWidget);
+    expect(find.widgetWithText(FilledButton, '移出生词本'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(FilledButton, '移出生词本'));
+    await tester.pumpAndSettle();
+
+    expect(
+      container
+          .read(appControllerProvider)
+          .customWords
+          .any((word) => word.word == targetWord.word),
+      false,
+    );
+    expect(find.widgetWithText(FilledButton, '加入生词本'), findsOneWidget);
   });
 
   testWidgets('custom word detail shows the full knowledge blocks', (
@@ -2500,6 +2605,22 @@ QuizQuestion _mistakeQuestion(int index) {
     options: [word.meaning, 'wrong'],
     explanation: 'Explanation $index',
     word: word,
+  );
+}
+
+Word _word(int index) {
+  return Word(
+    id: 'factory-word-$index',
+    word: 'factory$index',
+    phonetic: '/factory/',
+    meaning: '工厂词 $index',
+    definition: 'A generated test word $index',
+    partOfSpeech: 'noun',
+    exampleSentence: 'Factory word $index appears in a lesson.',
+    exampleTranslation: '工厂词 $index 出现在课程中。',
+    imageCue: '🏭',
+    difficulty: 'Medium',
+    tags: const ['test'],
   );
 }
 
