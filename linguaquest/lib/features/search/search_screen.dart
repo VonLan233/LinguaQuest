@@ -10,7 +10,6 @@ import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
-import '../../data/models/word_entry.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -21,8 +20,6 @@ class SearchScreen extends ConsumerStatefulWidget {
 
 class _SearchScreenState extends ConsumerState<SearchScreen> {
   String _query = '';
-  List<WordEntry> _apiResults = [];
-  var _isSearching = false;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +33,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         .where((word) => _matchesCustomWord(word, query))
         .toList();
     final hasQuery = query.isNotEmpty;
-    final hasResults = targetWords.isNotEmpty || customWords.isNotEmpty || _apiResults.isNotEmpty;
+    final hasResults = targetWords.isNotEmpty || customWords.isNotEmpty;
 
     return Scaffold(
       appBar: AppBar(
@@ -54,12 +51,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 prefixIcon: Icon(Icons.search),
               ),
               textInputAction: TextInputAction.search,
-              onChanged: (value) {
-                setState(() {
-                  _query = value;
-                  _apiResults = [];
-                });
-              },
+              onChanged: (value) => setState(() => _query = value),
             ),
             const SizedBox(height: 16),
             if (!hasQuery)
@@ -68,15 +60,15 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 title: '输入关键词开始搜索',
                 message: '可以搜索目标词、生词本、中文释义、例句或标签。',
               )
-            else if (!hasResults && !_isSearching)
+            else if (!hasResults)
               EmptyState(
                 icon: Icons.manage_search_outlined,
                 title: '没有找到结果',
-                message: '本地未找到匹配，可搜索完整词库。',
-                action: FilledButton.icon(
-                  onPressed: () => _searchApi(query),
-                  icon: const Icon(Icons.language),
-                  label: const Text('搜索完整词库'),
+                message: '换一个关键词，或添加一张个人词卡。',
+                action: OutlinedButton.icon(
+                  onPressed: () => context.push('/custom-words/new'),
+                  icon: const Icon(Icons.add),
+                  label: const Text('添加生词'),
                 ),
               )
             else ...[
@@ -91,35 +83,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 for (final word in customWords.take(20))
                   _CustomWordTile(word: word),
               ],
-              if (_apiResults.isNotEmpty) ...[
-                const SizedBox(height: 12),
-                _SearchSectionTitle(title: '词库', count: _apiResults.length),
-                for (final entry in _apiResults.take(20))
-                  _WordEntryTile(entry: entry),
-              ],
-              if (_isSearching)
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20),
-                  child: Center(child: CircularProgressIndicator()),
-                ),
             ],
           ],
         ),
       ),
     );
-  }
-
-  Future<void> _searchApi(String query) async {
-    if (query.isEmpty) return;
-    setState(() => _isSearching = true);
-    final controller = ref.read(appControllerProvider.notifier);
-    final results = await controller.searchWords(query);
-    if (mounted) {
-      setState(() {
-        _apiResults = results;
-        _isSearching = false;
-      });
-    }
   }
 
   bool _matchesTargetWord(Word word, String query) {
@@ -267,64 +235,6 @@ class _CustomWordTile extends StatelessWidget {
                   ),
                 ),
                 const Icon(Icons.chevron_right_rounded),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _WordEntryTile extends StatelessWidget {
-  const _WordEntryTile({required this.entry});
-
-  final WordEntry entry;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: () => context.push('/wordbook/${entry.id}'),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ImageCueBadge(cue: entry.word.isNotEmpty ? entry.word[0] : '', size: 54),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(entry.word, style: theme.textTheme.titleMedium),
-                      const SizedBox(height: 2),
-                      Text(
-                        entry.definitions.isNotEmpty ? entry.definitions.first : '',
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        entry.exampleSentences.isNotEmpty ? entry.exampleSentences.first.en : '',
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 8),
-                PillLabel(
-                  label: displayDifficulty(entry.difficulty),
-                  color: AppTheme.coral,
-                ),
               ],
             ),
           ),

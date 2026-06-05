@@ -6,9 +6,8 @@ import 'config.dart';
 import 'database.dart';
 import 'json_response.dart';
 import 'notification_policy.dart';
-import 'wordbook_service.dart';
 
-Router buildRouter(AppConfig config, AppDatabase database, WordBookService wordbookService) {
+Router buildRouter(AppConfig config, AppDatabase database) {
   final router = Router();
 
   router.get('/health', (Request request) {
@@ -194,50 +193,6 @@ Router buildRouter(AppConfig config, AppDatabase database, WordBookService wordb
         return jsonResponse({'error': 'notification not found'}, status: 404);
       }
       return jsonResponse({'notification': notificationDto(notification)});
-    });
-  });
-
-  // WordBook routes
-  router.get('/word-books', (Request request) async {
-    return jsonResponse(wordbookService.wordbooks.map((b) => b.toJson()).toList());
-  });
-
-  router.get('/word-books/<id>', (Request request, String id) async {
-    final book = wordbookService.getWordBook(id);
-    if (book == null) {
-      return jsonResponse({'error': 'wordbook not found'}, status: 404);
-    }
-    final limit = int.tryParse(request.url.queryParameters['limit'] ?? '50') ?? 50;
-    final offset = int.tryParse(request.url.queryParameters['offset'] ?? '0') ?? 0;
-    final words = wordbookService.getWords(id, limit: limit.clamp(1, 200), offset: offset);
-    return jsonResponse({
-      'wordbook': book.toJson(),
-      'words': words.map((w) => w.toJson()).toList(),
-      'limit': limit,
-      'offset': offset,
-      'total': wordbookService.getWordCount(id),
-    });
-  });
-
-  router.get('/words/<id>', (Request request, String id) async {
-    final word = wordbookService.getWord(id);
-    if (word == null) {
-      return jsonResponse({'error': 'word not found'}, status: 404);
-    }
-    return jsonResponse({'word': word.toJson()});
-  });
-
-  router.get('/words/search', (Request request) async {
-    final query = (request.url.queryParameters['q'] ?? '').trim();
-    if (query.isEmpty) {
-      return jsonResponse({'error': 'query parameter q is required'}, status: 400);
-    }
-    final limit = int.tryParse(request.url.queryParameters['limit'] ?? '20')?.clamp(1, 100) ?? 20;
-    final results = wordbookService.search(query, limit: limit);
-    return jsonResponse({
-      'query': query,
-      'results': results.map((w) => w.toJson()).toList(),
-      'count': results.length,
     });
   });
 

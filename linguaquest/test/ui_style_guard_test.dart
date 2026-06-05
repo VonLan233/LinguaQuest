@@ -361,6 +361,7 @@ void main() {
       const legacyLabels = [
         'Campus Starter',
         'Goal Setup',
+        'WordBook',
         'Remembered',
         'Forgot',
         "name: 'Learner'",
