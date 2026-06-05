@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import '../models/lesson.dart';
 
 List<Lesson> seedLessons() {
@@ -418,12 +420,25 @@ List<String> _choiceOptions({
   addOption(answer);
   for (final option in localDistractors) {
     addOption(option);
-    if (options.length == 4) return List.unmodifiable(options);
+    if (options.length == 4) break;
   }
-  for (final option in fallbackDistractors) {
-    addOption(option);
-    if (options.length == 4) return List.unmodifiable(options);
+  if (options.length < 4) {
+    for (final option in fallbackDistractors) {
+      addOption(option);
+      if (options.length == 4) break;
+    }
   }
 
+  if (options.length > 1) {
+    options.shuffle(_stableAnswerRandom(answer));
+  }
   return List.unmodifiable(options);
+}
+
+Random _stableAnswerRandom(String answer) {
+  var seed = 17;
+  for (final codeUnit in answer.codeUnits) {
+    seed = (seed * 31 + codeUnit) & 0x7fffffff;
+  }
+  return Random(seed);
 }

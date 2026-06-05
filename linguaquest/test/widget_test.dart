@@ -972,6 +972,12 @@ void main() {
       expect(question.options.toSet(), hasLength(4));
       expect(question.options, contains(question.answer));
     }
+    expect(
+      choiceQuestions.every(
+        (question) => question.options.first == question.answer,
+      ),
+      isFalse,
+    );
   });
 
   test('formal wordbook follows the selected learning target', () {
