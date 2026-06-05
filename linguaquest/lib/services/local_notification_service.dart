@@ -202,6 +202,7 @@ class FlutterLocalNotificationService implements LocalNotificationService {
     } on MissingPluginException {
       return;
     } catch (error, stackTrace) {
+      if (error.toString().contains('LateInitializationError')) return;
       assert(() {
         debugPrint('LocalNotificationService error: $error');
         debugPrintStack(stackTrace: stackTrace);

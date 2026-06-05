@@ -47,16 +47,24 @@ List<DictionaryWordSearchResult> searchDictionaryWords({
   );
   final currentScopeWords =
       currentWords ?? currentBook?.words ?? const <Word>[];
+  final activeBook = currentBook ??
+      (currentScopeWords.isNotEmpty
+          ? _fallbackWordBook(
+              currentWordBookId: currentWordBookId,
+              words: currentScopeWords,
+            )
+          : null);
+
   final currentWordIds = {for (final word in currentScopeWords) word.id};
   final sources = scope == DictionarySearchScope.currentWordBook
-      ? currentBook == null
-            ? const <_DictionarySearchSource>[]
-            : [
-                _DictionarySearchSource(
-                  book: currentBook,
-                  words: currentScopeWords,
-                ),
-              ]
+      ? activeBook == null
+          ? const <_DictionarySearchSource>[]
+          : [
+              _DictionarySearchSource(
+                book: activeBook,
+                words: currentScopeWords,
+              ),
+            ]
       : [
           for (final book in wordBooks)
             _DictionarySearchSource(book: book, words: book.words),
@@ -254,6 +262,25 @@ class _DictionarySearchSource {
 
   final WordBook book;
   final List<Word> words;
+}
+
+WordBook _fallbackWordBook({
+  required String currentWordBookId,
+  required List<Word> words,
+}) {
+  return WordBook(
+    id: currentWordBookId,
+    title: '当前词书',
+    category: 'exam',
+    examType: '',
+    coverUrl: '',
+    totalWords: words.length,
+    includedWords: words.length,
+    description: '',
+    wordIds: [for (final word in words) word.id],
+    createdAt: DateTime.fromMillisecondsSinceEpoch(0),
+    words: words,
+  );
 }
 
 String _identity(String value) => value;

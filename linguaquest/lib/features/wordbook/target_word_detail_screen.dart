@@ -115,7 +115,7 @@ class TargetWordDetailScreen extends ConsumerWidget {
               label: Text(progress?.isIgnored == true ? '恢复学习' : '忽略太简单'),
             ),
             const SizedBox(height: 12),
-            _aiWordSupportLink(word),
+            _AiWordSupportLink(word: word),
           ],
         ),
       ),
@@ -291,11 +291,19 @@ class TargetWordDetailScreen extends ConsumerWidget {
   }
 }
 
-Widget _aiWordSupportLink(Word word) {
-  final w = word.word;
-  final e = word.exampleSentence;
-  final t = word.exampleTranslation;
-  return AiWordSupportLink(word: w, exampleSentence: e, exampleTranslation: t);
+class _AiWordSupportLink extends StatelessWidget {
+  const _AiWordSupportLink({required this.word});
+
+  final Word word;
+
+  @override
+  Widget build(BuildContext context) {
+    return AiWordSupportLink(
+      word: word.word,
+      exampleSentence: word.exampleSentence,
+      exampleTranslation: word.exampleTranslation,
+    );
+  }
 }
 
 class _WordHero extends StatelessWidget {
@@ -320,7 +328,7 @@ class _WordHero extends StatelessWidget {
           const SizedBox(height: 8),
           _PhoneticLine(word: word),
           const SizedBox(height: 12),
-          _pronunciationControls(word),
+          _PronunciationControls(word: word),
           const SizedBox(height: 12),
           Wrap(
             alignment: WrapAlignment.center,
@@ -344,19 +352,26 @@ class _WordHero extends StatelessWidget {
   }
 }
 
-Widget _pronunciationControls(Word word) {
-  final w = word.word;
-  final ukAudio = word.audioUKUrl;
-  final usAudio = word.audioUSUrl;
-  if (ukAudio.isEmpty && usAudio.isEmpty) return _basePronunciationControls(w);
-  return PronunciationControls(
-    word: w,
-    audioUKUrl: ukAudio,
-    audioUSUrl: usAudio,
-  );
-}
+class _PronunciationControls extends StatelessWidget {
+  const _PronunciationControls({required this.word});
 
-Widget _basePronunciationControls(String w) => PronunciationControls(word: w);
+  final Word word;
+
+  @override
+  Widget build(BuildContext context) {
+    final w = word.word;
+    final ukAudio = word.audioUKUrl;
+    final usAudio = word.audioUSUrl;
+    if (ukAudio.isEmpty && usAudio.isEmpty) {
+      return PronunciationControls(word: w);
+    }
+    return PronunciationControls(
+      word: w,
+      audioUKUrl: ukAudio,
+      audioUSUrl: usAudio,
+    );
+  }
+}
 
 class _PhoneticLine extends StatelessWidget {
   const _PhoneticLine({required this.word});

@@ -20,6 +20,7 @@ import 'package:linguaquest/data/models/study_session.dart';
 import 'package:linguaquest/data/models/study_plan.dart';
 import 'package:linguaquest/data/models/user_word.dart';
 import 'package:linguaquest/data/models/user_profile.dart';
+import 'package:linguaquest/data/dictionary_search.dart';
 import 'package:linguaquest/data/lesson_factory.dart';
 import 'package:linguaquest/data/remote/api_client.dart';
 import 'package:linguaquest/data/repositories/api_repositories.dart';
@@ -1365,7 +1366,36 @@ void main() {
           .expand((lesson) => lesson.words)
           .first;
 
+      final directResults = searchDictionaryWords(
+        wordBooks: container.read(appControllerProvider).wordBooks,
+        currentWordBookId: container.read(appControllerProvider).currentWordBookId,
+        scope: DictionarySearchScope.currentWordBook,
+        query: currentWord.meaning,
+        currentWords: container
+            .read(appControllerProvider)
+            .formalLessons
+            .expand((lesson) => lesson.words)
+            .toList(),
+      );
+
+      final directMatchDetails = directResults
+          .map((item) => '${item.word.word}:${item.matchedBy}:${item.preview}')
+          .toList();
+
+      // Debug: track runtime word + meaning used by this test case.
+      // ignore: avoid_print
+      print('dictionary test first word=${currentWord.word} meaning=${currentWord.meaning}');
+      // ignore: avoid_print
+      print('query code units=${currentWord.meaning.codeUnits}');
+      // ignore: avoid_print
+      print('meaning has contains match=${currentWord.meaning.toLowerCase().contains(currentWord.meaning)}');
+      // ignore: avoid_print
+      print('direct match against cancel meaning=$directMatchDetails');
+      // ignore: avoid_print
+      print('direct results=${directResults.map((item) => item.word.word).toList()}');
+
       await tester.enterText(find.byType(TextField), currentWord.meaning);
+      await tester.pump(const Duration(milliseconds: 500));
       await tester.pumpAndSettle();
 
       expect(find.text(currentWord.word), findsWidgets);
@@ -1374,6 +1404,7 @@ void main() {
       await tester.tap(find.text('全词库'));
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextField), 'academic research');
+      await tester.pump(const Duration(milliseconds: 500));
       await tester.pumpAndSettle();
 
       expect(find.text('academic'), findsWidgets);

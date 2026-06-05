@@ -1,14 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/state/app_state.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../data/dictionary_search.dart';
+import '../../data/models/lesson.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -21,27 +25,43 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   String _query = '';
   DictionarySearchScope _scope = DictionarySearchScope.currentWordBook;
 
+  late final ProviderSubscription<AppState> _stateSubscription;
+
+  Timer? _searchDebounce;
+  int _searchVersion = 0;
+  bool _isSearching = false;
+
+  List<DictionaryWordSearchResult> _targetWords = const [];
+  List<CustomWordSearchResult> _customWords = const [];
+
+  List<Lesson>? _cachedFormalLessons;
+  List<Word> _cachedCurrentWords = const [];
+
+  @override
+  void initState() {
+    super.initState();
+    _stateSubscription = ref.listenManual<AppState>(appControllerProvider, (
+      AppState? _,
+      AppState _,
+    ) {
+      if (!mounted) return;
+      _scheduleSearch();
+    }, fireImmediately: true);
+  }
+
+  @override
+  void dispose() {
+    _stateSubscription.close();
+    _searchDebounce?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(appControllerProvider);
     final query = normalizeDictionaryQuery(_query);
-    final targetWords = searchDictionaryWords(
-      wordBooks: state.wordBooks,
-      currentWordBookId: state.currentWordBookId,
-      scope: _scope,
-      query: query,
-      currentWords: state.formalLessons
-          .expand((lesson) => lesson.words)
-          .toList(),
-      tagLabeler: _displayTargetTag,
-    );
-    final customWords = searchCustomWords(
-      customWords: state.customWords,
-      query: query,
-      tagLabeler: displayCustomTag,
-    );
     final hasQuery = query.isNotEmpty;
-    final hasResults = targetWords.isNotEmpty || customWords.isNotEmpty;
+    final hasResults = _targetWords.isNotEmpty || _customWords.isNotEmpty;
 
     return Scaffold(
       appBar: AppBar(
@@ -59,16 +79,30 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 prefixIcon: Icon(Icons.search),
               ),
               textInputAction: TextInputAction.search,
-              onChanged: (value) => setState(() => _query = value),
+              onChanged: (value) {
+                setState(() => _query = value);
+                _scheduleSearch();
+              },
             ),
             const SizedBox(height: 12),
             _SearchScopeSelector(
               selected: _scope,
               currentBookTitle: state.currentWordBook?.title ?? '当前词书',
-              onSelected: (scope) => setState(() => _scope = scope),
+              onSelected: (scope) {
+                if (scope == _scope) return;
+                setState(() => _scope = scope);
+                _scheduleSearch();
+              },
             ),
             const SizedBox(height: 16),
-            if (!hasQuery)
+            if (_isSearching)
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 12),
+                  child: CircularProgressIndicator(),
+                ),
+              )
+            else if (!hasQuery)
               const EmptyState(
                 icon: Icons.search,
                 title: '输入关键词开始搜索',
@@ -86,18 +120,18 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 ),
               )
             else ...[
-              if (targetWords.isNotEmpty) ...[
+              if (_targetWords.isNotEmpty) ...[
                 _SearchSectionTitle(
                   title: dictionaryScopeLabel(_scope),
-                  count: targetWords.length,
+                  count: _targetWords.length,
                 ),
-                for (final result in targetWords.take(20))
+                for (final result in _targetWords.take(20))
                   _TargetWordTile(result: result),
               ],
-              if (customWords.isNotEmpty) ...[
+              if (_customWords.isNotEmpty) ...[
                 const SizedBox(height: 12),
-                _SearchSectionTitle(title: '生词本', count: customWords.length),
-                for (final result in customWords.take(20))
+                _SearchSectionTitle(title: '生词本', count: _customWords.length),
+                for (final result in _customWords.take(20))
                   _CustomWordTile(result: result),
               ],
             ],
@@ -106,6 +140,84 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       ),
     );
   }
+
+  void _scheduleSearch() {
+    _searchDebounce?.cancel();
+
+    final query = normalizeDictionaryQuery(_query);
+    if (query.isEmpty) {
+      setState(() {
+        _targetWords = const [];
+        _customWords = const [];
+        _isSearching = false;
+      });
+      return;
+    }
+
+    setState(() {
+      _targetWords = const [];
+      _customWords = const [];
+      _isSearching = true;
+    });
+
+    _searchDebounce = Timer(
+      const Duration(milliseconds: 300),
+      () => _runSearch(query),
+    );
+  }
+
+  void _runSearch(String query) {
+    final requestVersion = ++_searchVersion;
+    final state = ref.read(appControllerProvider);
+    final currentWords = _collectCurrentWords(state);
+
+    Future<_SearchResults>(() {
+      final targetWords = searchDictionaryWords(
+        wordBooks: state.wordBooks,
+        currentWordBookId: state.currentWordBookId,
+        scope: _scope,
+        query: query,
+        currentWords: currentWords,
+        tagLabeler: _displayTargetTag,
+      );
+      final customWords = searchCustomWords(
+        customWords: state.customWords,
+        query: query,
+        tagLabeler: displayCustomTag,
+      );
+
+      return _SearchResults(targetWords: targetWords, customWords: customWords);
+    }).then((results) {
+      if (!mounted || requestVersion != _searchVersion) return;
+      setState(() {
+        _targetWords = results.targetWords;
+        _customWords = results.customWords;
+        _isSearching = false;
+      });
+    });
+  }
+
+  List<Word> _collectCurrentWords(AppState state) {
+    if (identical(_cachedFormalLessons, state.formalLessons)) {
+      return _cachedCurrentWords;
+    }
+
+    final words = <Word>[];
+    for (final lesson in state.formalLessons) {
+      words.addAll(lesson.words);
+    }
+
+    _cachedFormalLessons = state.formalLessons;
+    _cachedCurrentWords = words;
+    return words;
+  }
+}
+
+class _SearchResults {
+  const _SearchResults({required this.targetWords, required this.customWords});
+
+  final List<DictionaryWordSearchResult> targetWords;
+  final List<CustomWordSearchResult> customWords;
 }
 
 String _displayTargetTag(String tag) => displayWordTag(tag);
