@@ -257,6 +257,27 @@ Middleware corsMiddleware() {
 }
 
 Future<List<Map<String, dynamic>>> _loadWordBooks() async {
+  final cached = _cachedWordBooks;
+  if (cached != null) return cached;
+  final loading = _loadingWordBooks;
+  if (loading != null) return loading;
+
+  final future = _readWordBooks();
+  _loadingWordBooks = future;
+  try {
+    final books = await future;
+    _cachedWordBooks = books;
+    return books;
+  } catch (_) {
+    _loadingWordBooks = null;
+    rethrow;
+  }
+}
+
+List<Map<String, dynamic>>? _cachedWordBooks;
+Future<List<Map<String, dynamic>>>? _loadingWordBooks;
+
+Future<List<Map<String, dynamic>>> _readWordBooks() async {
   final file = _wordBookDataFile();
   final decoded = jsonDecode(await file.readAsString());
   if (decoded is! List) {
