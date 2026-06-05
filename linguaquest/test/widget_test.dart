@@ -952,6 +952,23 @@ void main() {
     expect(plan.daysLeft(DateTime(2026, 5, 28)), 0);
   });
 
+  test('study plan JSON fallback target date is date-only', () {
+    final plan = StudyPlan.fromJson(const {
+      'uid': 'fallback-target-date-user',
+      'wordBookId': 'daily-english',
+      'dailyNewTarget': 10,
+      'dailyReviewLimit': 20,
+    });
+
+    expect(plan.startDate.hour, 0);
+    expect(plan.startDate.minute, 0);
+    expect(plan.startDate.second, 0);
+    expect(plan.targetFinishDate.hour, 0);
+    expect(plan.targetFinishDate.minute, 0);
+    expect(plan.targetFinishDate.second, 0);
+    expect(plan.targetFinishDate.difference(plan.startDate).inDays, 30);
+  });
+
   testWidgets('dark semantic surfaces keep readable contrast', (tester) async {
     late Color warmSurface;
     late Color accentSurface;

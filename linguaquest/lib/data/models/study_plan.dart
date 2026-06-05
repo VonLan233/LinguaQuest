@@ -84,6 +84,7 @@ class StudyPlan {
 
   factory StudyPlan.fromJson(Map<String, dynamic> json) {
     final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
     final uid = json['uid'] as String? ?? json['userId'] as String? ?? '';
     return StudyPlan(
       id: json['id'] as String? ?? 'study-plan-$uid',
@@ -91,10 +92,10 @@ class StudyPlan {
       wordBookId: normalizedStudyBookId(json['wordBookId'] as String?),
       dailyNewTarget: _intInRange(json['dailyNewTarget'], 1, 200, 10),
       dailyReviewLimit: _intInRange(json['dailyReviewLimit'], 0, 500, 20),
-      startDate:
-          _date(json['startDate']) ?? DateTime(now.year, now.month, now.day),
+      startDate: _date(json['startDate']) ?? today,
       targetFinishDate:
-          _date(json['targetFinishDate']) ?? now.add(const Duration(days: 30)),
+          _date(json['targetFinishDate']) ??
+          today.add(const Duration(days: 30)),
       reminderTime: normalizedReminderTime(json['reminderTime'] as String?),
       status: normalizedPlanStatus(json['status'] as String?),
       createdAt: _dateTime(json['createdAt']) ?? now,

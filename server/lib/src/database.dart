@@ -348,7 +348,7 @@ ON CONFLICT (uid) DO UPDATE SET
         'targetFinishDate': data['targetFinishDate'],
         'reminderTime': data['reminderTime'],
         'status': data['status'],
-        'createdAt': existing?['created_at'] ?? data['createdAt'] ?? now,
+        'createdAt': existing?['created_at'] ?? _date(data['createdAt']) ?? now,
         'updatedAt': now,
       },
     );
