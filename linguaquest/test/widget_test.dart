@@ -1687,6 +1687,13 @@ void main() {
     final savedWords = container.read(appControllerProvider).customWords;
     expect(savedWords.any((word) => word.word == targetWord.word), true);
     expect(find.widgetWithText(FilledButton, '已加入生词本'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(FilledButton, '已加入生词本'));
+    await tester.pumpAndSettle();
+
+    final afterRemoval = container.read(appControllerProvider).customWords;
+    expect(afterRemoval.any((word) => word.word == targetWord.word), false);
+    expect(find.widgetWithText(FilledButton, '加入生词本'), findsOneWidget);
   });
 
   testWidgets('custom word detail shows the full knowledge blocks', (

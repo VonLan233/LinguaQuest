@@ -278,9 +278,7 @@ class TargetWordDetailScreen extends ConsumerWidget {
       final alreadySaved = ref
           .read(appControllerProvider)
           .customWords
-          .any(
-            (item) => item.word.trim().toLowerCase() == word.word.toLowerCase(),
-          );
+          .any((item) => _sameWord(item.word, word.word));
       if (!alreadySaved) {
         await ref
             .read(appControllerProvider.notifier)
@@ -292,6 +290,17 @@ class TargetWordDetailScreen extends ConsumerWidget {
               tag: word.tags.isEmpty ? '目标词' : displayWordTag(word.tags.first),
               difficulty: word.difficulty,
             );
+      }
+    } else if (succeeded && isInNewWordbook == false) {
+      final existing = ref.read(appControllerProvider).customWords.where((
+        item,
+      ) {
+        return _sameWord(item.word, word.word);
+      }).firstOrNull;
+      if (existing != null) {
+        await ref
+            .read(appControllerProvider.notifier)
+            .deleteCustomWord(existing.id);
       }
     }
     if (!context.mounted) return;
@@ -320,6 +329,10 @@ class TargetWordDetailScreen extends ConsumerWidget {
     }
     return null;
   }
+}
+
+bool _sameWord(String left, String right) {
+  return left.trim().toLowerCase() == right.trim().toLowerCase();
 }
 
 extension _FirstOrNull<T> on Iterable<T> {
