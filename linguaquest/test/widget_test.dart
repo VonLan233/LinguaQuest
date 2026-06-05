@@ -732,6 +732,24 @@ void main() {
     expect(find.byIcon(Icons.route_outlined), findsWidgets);
   });
 
+  testWidgets('session load failure falls back to onboarding', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authRepositoryProvider.overrideWithValue(_ThrowingSessionAuth()),
+        ],
+        child: const LinguaQuestApp(),
+      ),
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    expect(find.textContaining('LinguaQuest 启动失败'), findsNothing);
+    expect(find.text('LinguaQuest'), findsWidgets);
+    expect(find.byIcon(Icons.route_outlined), findsWidgets);
+  });
+
   testWidgets('main shell supports deliberate horizontal tab swiping', (
     tester,
   ) async {
@@ -1368,7 +1386,9 @@ void main() {
 
       final directResults = searchDictionaryWords(
         wordBooks: container.read(appControllerProvider).wordBooks,
-        currentWordBookId: container.read(appControllerProvider).currentWordBookId,
+        currentWordBookId: container
+            .read(appControllerProvider)
+            .currentWordBookId,
         scope: DictionarySearchScope.currentWordBook,
         query: currentWord.meaning,
         currentWords: container
@@ -1378,7 +1398,10 @@ void main() {
             .toList(),
       );
 
-      expect(directResults.map((item) => item.word.id), contains(currentWord.id));
+      expect(
+        directResults.map((item) => item.word.id),
+        contains(currentWord.id),
+      );
 
       await tester.enterText(find.byType(TextField), currentWord.meaning);
       await tester.pump(const Duration(milliseconds: 500));
@@ -3546,6 +3569,13 @@ class _FailingAuth implements AuthRepository {
   Future<void> logout() async {}
 }
 
+class _ThrowingSessionAuth extends _FailingAuth {
+  @override
+  Future<UserProfile?> loadSession() {
+    throw Exception('session expired');
+  }
+}
+
 class _StaticLearningRepository implements LearningRepository {
   const _StaticLearningRepository(this.lessons);
 
@@ -3558,11 +3588,23 @@ class _StaticLearningRepository implements LearningRepository {
   Future<List<Lesson>> listLessons() async => lessons;
 
   @override
+  Future<LearningProgress?> loadLearningProgress(DateTime now) async => null;
+
+  @override
   Future<List<Lesson>> listLessonsForWordBook(String wordBookId) async =>
       lessons;
 
   @override
   Future<void> recordStudySession(StudySession session) async {}
+
+  @override
+  Future<RewardClaimResult?> claimReward({
+    required String id,
+    required int points,
+    required DateTime now,
+  }) async {
+    return null;
+  }
 }
 
 class _FlakyLearningRepository implements LearningRepository {
@@ -3581,11 +3623,23 @@ class _FlakyLearningRepository implements LearningRepository {
   }
 
   @override
+  Future<LearningProgress?> loadLearningProgress(DateTime now) async => null;
+
+  @override
   Future<List<Lesson>> listLessonsForWordBook(String wordBookId) =>
       listLessons();
 
   @override
   Future<void> recordStudySession(StudySession session) async {}
+
+  @override
+  Future<RewardClaimResult?> claimReward({
+    required String id,
+    required int points,
+    required DateTime now,
+  }) async {
+    return null;
+  }
 }
 
 class _MemoryStudyPlanRepository implements StudyPlanRepository {
