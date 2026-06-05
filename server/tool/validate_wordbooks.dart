@@ -22,14 +22,8 @@ const requiredWordFields = {
   'definitions',
   'englishDefinitions',
   'exampleSentences',
-  'collocations',
-  'synonyms',
-  'antonyms',
-  'derivatives',
-  'rootAffix',
   'examTags',
   'difficulty',
-  'imageUrl',
 };
 
 void main(List<String> args) {
