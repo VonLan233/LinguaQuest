@@ -8,15 +8,12 @@ import '../models/lesson.dart';
 import '../models/review_event.dart';
 import '../models/study_session.dart';
 import '../models/user_profile.dart';
-import '../models/word_book.dart';
-import '../models/word_entry.dart';
 import '../seed/seed_lessons.dart';
 import 'auth_repository.dart';
 import 'custom_word_repository.dart';
 import 'learning_repository.dart';
 import 'notification_repository.dart';
 import 'review_repository.dart';
-import 'wordbook_repository.dart';
 
 class MockAuthRepository implements AuthRepository {
   static const _profileKey = 'linguaquest.profile';
@@ -184,7 +181,7 @@ class MockLearningRepository implements LearningRepository {
   final List<StudySession> _sessions = [];
 
   @override
-  Future<List<Lesson>> listLessons({String? wordBookId}) async => seedLessons();
+  Future<List<Lesson>> listLessons() async => seedLessons();
 
   @override
   Future<void> recordStudySession(StudySession session) async {
@@ -302,95 +299,5 @@ class MockNotificationRepository implements NotificationRepository {
       '$_keyPrefix.$uid',
       jsonEncode([for (final notification in sorted) notification.toJson()]),
     );
-  }
-}
-
-class MockWordBookRepository implements WordBookRepository {
-  static const _wordBooks = [
-    WordBook(
-      id: 'beginner',
-      title: '初级英语词汇',
-      category: '基础英语',
-      examType: 'Beginner',
-      coverUrl: '',
-      totalWords: 2971,
-      description: '面向英语初学者的基础词汇，覆盖日常交流和简单阅读场景',
-      wordIds: [],
-    ),
-    WordBook(
-      id: 'ielts',
-      title: '雅思核心词汇',
-      category: '出国考试',
-      examType: 'IELTS',
-      coverUrl: '',
-      totalWords: 3575,
-      description: '雅思考试高频核心词汇，覆盖听说读写全场景',
-      wordIds: [],
-    ),
-    WordBook(
-      id: 'toefl',
-      title: '托福核心词汇',
-      category: '出国考试',
-      examType: 'TOEFL',
-      coverUrl: '',
-      totalWords: 4264,
-      description: '托福考试高频核心词汇，覆盖听说读写全场景',
-      wordIds: [],
-    ),
-    WordBook(
-      id: 'gre',
-      title: 'GRE核心词汇',
-      category: '出国考试',
-      examType: 'GRE',
-      coverUrl: '',
-      totalWords: 3056,
-      description: 'GRE考试高频核心词汇，覆盖填空、阅读、写作全场景',
-      wordIds: [],
-    ),
-    WordBook(
-      id: 'sat',
-      title: 'SAT核心词汇',
-      category: '出国考试',
-      examType: 'SAT',
-      coverUrl: '',
-      totalWords: 5014,
-      description: 'SAT考试高频核心词汇，覆盖阅读、文法、写作全场景',
-      wordIds: [],
-    ),
-    WordBook(
-      id: 'gmat',
-      title: 'GMAT核心词汇',
-      category: '出国考试',
-      examType: 'GMAT',
-      coverUrl: '',
-      totalWords: 3254,
-      description: 'GMAT考试高频核心词汇，覆盖逻辑、数学、阅读全场景',
-      wordIds: [],
-    ),
-  ];
-
-  @override
-  Future<List<WordBook>> listWordBooks() async => _wordBooks;
-
-  @override
-  Future<WordBook?> getWordBook(String id) async {
-    try {
-      return _wordBooks.firstWhere((book) => book.id == id);
-    } catch (_) {
-      return null;
-    }
-  }
-
-  @override
-  Future<List<WordEntry>> getWords(String bookId, {int? limit, int? offset}) async {
-    return [];
-  }
-
-  @override
-  Future<WordEntry?> getWord(String wordId) async => null;
-
-  @override
-  Future<List<WordEntry>> searchWords(String query, {int limit = 20}) async {
-    return [];
   }
 }

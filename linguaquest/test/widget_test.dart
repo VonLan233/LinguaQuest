@@ -776,24 +776,25 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    // Targets fall back to hardcoded defaults when wordBooks is empty.
-    final firstTarget = find.byKey(const ValueKey('choice-IELTS'));
-    final secondTarget = find.byKey(const ValueKey('choice-TOEFL'));
+    final dailyEnglish = find.byKey(const ValueKey('choice-Daily English'));
+    final businessEnglish = find.byKey(
+      const ValueKey('choice-Business English'),
+    );
 
-    final firstTargetSize = tester.getSize(firstTarget);
-    final secondTargetSize = tester.getSize(secondTarget);
+    final dailyEnglishSize = tester.getSize(dailyEnglish);
+    final businessEnglishSize = tester.getSize(businessEnglish);
 
     await tester.scrollUntilVisible(
-      secondTarget,
+      businessEnglish,
       120,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(secondTarget);
+    await tester.tap(businessEnglish);
     await tester.pumpAndSettle();
 
-    expect(tester.getSize(firstTarget), firstTargetSize);
-    expect(tester.getSize(secondTarget), secondTargetSize);
+    expect(tester.getSize(dailyEnglish), dailyEnglishSize);
+    expect(tester.getSize(businessEnglish), businessEnglishSize);
 
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -520));
     await tester.pumpAndSettle();
@@ -1096,7 +1097,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('没有找到结果'), findsOneWidget);
-    expect(find.text('搜索完整词库'), findsOneWidget);
+    expect(find.text('添加生词'), findsOneWidget);
   });
 
   testWidgets('lesson preview does not open training-only timed packs', (
@@ -2412,7 +2413,7 @@ class _StaticLearningRepository implements LearningRepository {
   final List<Lesson> lessons;
 
   @override
-  Future<List<Lesson>> listLessons({String? wordBookId}) async => lessons;
+  Future<List<Lesson>> listLessons() async => lessons;
 
   @override
   Future<void> recordStudySession(StudySession session) async {}
@@ -2422,7 +2423,7 @@ class _FlakyLearningRepository implements LearningRepository {
   int listAttempts = 0;
 
   @override
-  Future<List<Lesson>> listLessons({String? wordBookId}) async {
+  Future<List<Lesson>> listLessons() async {
     listAttempts++;
     if (listAttempts == 1) {
       throw Exception('temporary catalog failure');
