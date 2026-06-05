@@ -25,8 +25,9 @@ Router buildRouter(AppConfig config, AppDatabase database) {
   router.get('/wordbooks/<id>', (Request request, String id) async {
     final books = await _loadWordBooks();
     final book = _wordBookById(books, id);
-    if (book == null)
+    if (book == null) {
       return jsonResponse({'error': 'wordbook not found'}, status: 404);
+    }
     return jsonResponse({'wordbook': book});
   });
 
@@ -49,8 +50,9 @@ Router buildRouter(AppConfig config, AppDatabase database) {
 
   router.get('/words/<id>', (Request request, String id) async {
     final word = _wordById(await _loadWordBooks(), id);
-    if (word == null)
+    if (word == null) {
       return jsonResponse({'error': 'word not found'}, status: 404);
+    }
     return jsonResponse({'word': word});
   });
 
@@ -104,8 +106,9 @@ Router buildRouter(AppConfig config, AppDatabase database) {
   router.get('/me', (Request request) async {
     return _protected(config, request, (uid) async {
       final user = await database.userById(uid);
-      if (user == null)
+      if (user == null) {
         return jsonResponse({'error': 'user not found'}, status: 404);
+      }
       return jsonResponse({'user': userDto(user)});
     });
   });
@@ -144,8 +147,9 @@ Router buildRouter(AppConfig config, AppDatabase database) {
     return _protected(config, request, (uid) async {
       final body = await readJsonMap(request);
       final existing = await database.customWordById(uid, id);
-      if (existing == null)
+      if (existing == null) {
         return jsonResponse({'error': 'word not found'}, status: 404);
+      }
       final merged = {...wordDto(existing), ...body, 'id': id};
       final word = await database.upsertCustomWord(uid, merged, id: id);
       return jsonResponse({'word': wordDto(word)});
