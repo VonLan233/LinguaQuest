@@ -1912,6 +1912,60 @@ void main() {
     await tester.pumpAndSettle();
   });
 
+  testWidgets('study plan settings shows the latest save error', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'settings-error-user',
+      name: 'Serena',
+      email: 'settings-error@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    final plan = StudyPlan.defaultsFor(
+      uid: profile.uid,
+      targetExam: profile.targetExam,
+      dailyGoal: profile.dailyGoal,
+    ).copyWith(status: 'active', reminderTime: '20:00', updatedAt: now);
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          studyPlanRepositoryProvider.overrideWithValue(
+            _FailingStudyPlanRepository(
+              plan,
+              message: 'study plan save failure',
+            ),
+          ),
+        ],
+        child: const LinguaQuestApp(),
+      ),
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.scrollUntilVisible(
+      find.text('调整计划'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('调整计划'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('保存学习计划'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('study plan save failure'), findsOneWidget);
+    expect(find.text('暂时无法保存计划。'), findsNothing);
+  });
+
   test(
     'resetting a study plan updates custom words without per-word writes',
     () async {
@@ -3135,9 +3189,13 @@ class _MemoryStudyPlanRepository implements StudyPlanRepository {
 }
 
 class _FailingStudyPlanRepository implements StudyPlanRepository {
-  _FailingStudyPlanRepository(this.savedPlan);
+  _FailingStudyPlanRepository(
+    this.savedPlan, {
+    this.message = 'remote reminder failure',
+  });
 
   final StudyPlan savedPlan;
+  final String message;
 
   @override
   Future<StudyPlan?> load(String uid) async => savedPlan;
@@ -3147,7 +3205,7 @@ class _FailingStudyPlanRepository implements StudyPlanRepository {
 
   @override
   Future<StudyPlan> save(StudyPlan plan) async {
-    throw StateError('remote reminder failure');
+    throw StateError(message);
   }
 }
 

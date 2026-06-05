@@ -234,7 +234,10 @@ class _StudyPlanSettingsScreenState
         .read(appControllerProvider.notifier)
         .updateStudyPlan(plan);
     if (!mounted) return;
-    _showMessage(succeeded ? '学习计划已保存。' : state.errorMessage ?? '暂时无法保存计划。');
+    final latestState = ref.read(appControllerProvider);
+    _showMessage(
+      succeeded ? '学习计划已保存。' : latestState.errorMessage ?? '暂时无法保存计划。',
+    );
   }
 
   Future<void> _togglePause() async {
