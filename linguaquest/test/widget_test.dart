@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:linguaquest/app.dart';
 import 'package:linguaquest/core/routing/app_router.dart';
@@ -14,15 +17,24 @@ import 'package:linguaquest/data/models/custom_word.dart';
 import 'package:linguaquest/data/models/lesson.dart';
 import 'package:linguaquest/data/models/lesson_result.dart';
 import 'package:linguaquest/data/models/study_session.dart';
+import 'package:linguaquest/data/models/study_plan.dart';
+import 'package:linguaquest/data/models/user_word.dart';
 import 'package:linguaquest/data/models/user_profile.dart';
+import 'package:linguaquest/data/lesson_factory.dart';
+import 'package:linguaquest/data/remote/api_client.dart';
+import 'package:linguaquest/data/repositories/api_repositories.dart';
 import 'package:linguaquest/data/repositories/auth_repository.dart';
 import 'package:linguaquest/data/repositories/custom_word_repository.dart';
 import 'package:linguaquest/data/repositories/learning_repository.dart';
+import 'package:linguaquest/data/repositories/study_plan_repository.dart';
 import 'package:linguaquest/data/seed/seed_lessons.dart';
+import 'package:linguaquest/data/wordbook_asset_loader.dart';
 import 'package:linguaquest/features/auth/goal_setup_screen.dart';
 import 'package:linguaquest/features/learning/lesson_preview_screen.dart';
 import 'package:linguaquest/features/quiz/lesson_result_screen.dart';
 import 'package:linguaquest/features/quiz/quiz_session_screen.dart';
+import 'package:linguaquest/features/profile/profile_screen.dart';
+import 'package:linguaquest/features/profile/study_plan_settings_screen.dart';
 import 'package:linguaquest/features/search/search_screen.dart';
 import 'package:linguaquest/features/wordbook/target_word_detail_screen.dart';
 import 'package:linguaquest/features/wordbook/word_detail_screen.dart';
@@ -102,7 +114,7 @@ void main() {
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
       'linguaquest.today.date': _todayDateKey(DateTime.now()),
-      'linguaquest.today.lessons': ['lesson-exam-1'],
+      'linguaquest.today.lessons': ['ielts-lesson-1'],
       'linguaquest.today.reviews': ['seed-1'],
     });
 
@@ -145,7 +157,7 @@ void main() {
     await tester.tap(find.text('搜索单词、短语或例句'));
     await tester.pumpAndSettle();
 
-    expect(find.text('搜索'), findsOneWidget);
+    expect(find.text('雅思核心词汇'), findsOneWidget);
     expect(find.text('输入关键词开始搜索'), findsOneWidget);
     expect(find.text('单词库'), findsNothing);
   });
@@ -180,7 +192,7 @@ void main() {
     await tester.tap(find.text('今日词条'));
     await tester.pumpAndSettle();
 
-    expect(find.text('allocate'), findsWidgets);
+    expect(find.text('cancel'), findsWidgets);
     expect(find.text('加入生词本'), findsOneWidget);
     expect(find.text('当前计划中'), findsOneWidget);
 
@@ -200,6 +212,31 @@ void main() {
     expect(wordInitialCue(''), '?');
     expect(wordInitialCue('  '), '?');
     expect(wordInitialCue('apple'), 'A');
+  });
+
+  test('profile new wordbook count uses custom copies only', () {
+    final now = DateTime(2026, 5, 25);
+    final target = seedLessons().first.words.first;
+    final customCopy = CustomWord.create(
+      id: 'custom-${target.id}',
+      uid: 'u1',
+      word: target.word,
+      meaning: target.meaning,
+      exampleSentence: target.exampleSentence,
+      now: now,
+    );
+    final targetProgress = UserWord.create(
+      uid: 'u1',
+      word: target,
+      wordBookId: 'IELTS',
+      now: now,
+    ).copyWith(isInNewWordbook: true);
+    final state = AppState.initial().copyWith(
+      customWords: [customCopy],
+      userWords: [targetProgress],
+    );
+
+    expect(newWordbookCount(state), 1);
   });
 
   testWidgets('pronunciation controls expose loading and retry states', (
@@ -428,18 +465,18 @@ void main() {
       addTearDown(container.dispose);
 
       await container.read(appControllerProvider.notifier).bootstrap();
-      final campusLesson = container
+      final trainingLesson = container
           .read(appControllerProvider)
           .lessons
-          .singleWhere((lesson) => lesson.id == 'lesson-campus-1');
+          .firstWhere((lesson) => lesson.isTrainingPack);
       await container
           .read(appControllerProvider.notifier)
           .completeLesson(
             LessonResult(
-              lessonId: campusLesson.id,
-              lessonTitle: campusLesson.title,
-              totalQuestions: campusLesson.questions.length,
-              correctAnswers: campusLesson.questions.length,
+              lessonId: trainingLesson.id,
+              lessonTitle: trainingLesson.title,
+              totalQuestions: trainingLesson.questions.length,
+              correctAnswers: trainingLesson.questions.length,
               xpEarned: 8,
               mistakes: const [],
               completedAt: DateTime.now(),
@@ -447,7 +484,7 @@ void main() {
           );
 
       final state = container.read(appControllerProvider);
-      expect(state.todayCompletedLessonIds, contains(campusLesson.id));
+      expect(state.todayCompletedLessonIds, contains(trainingLesson.id));
       expect(state.todayCompletedFormalLessonIds, isEmpty);
       expect(state.todayLearningWords, 0);
 
@@ -839,21 +876,23 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     await tester.scrollUntilVisible(
-      find.text('学习模式'),
+      find.text('调整计划'),
       300,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.text('学习模式'));
+    await tester.tap(find.text('调整计划'));
     await tester.pumpAndSettle();
 
-    expect(find.text('目标设置'), findsOneWidget);
+    expect(find.text('学习计划设置'), findsOneWidget);
     expect(find.text('雅思核心词汇'), findsWidgets);
-    expect(find.text('15/天'), findsOneWidget);
-    expect(find.text('当前词书'), findsOneWidget);
-    expect(find.text('雅思核心词汇 · 已学 0/3 词'), findsOneWidget);
-    expect(find.text('新学 15 词'), findsOneWidget);
-    expect(find.text('复习上限 30 词'), findsOneWidget);
+    expect(find.text('切换词书'), findsOneWidget);
+    expect(find.text('每日新学词数'), findsOneWidget);
+    await tester.drag(find.byType(Scrollable).last, const Offset(0, -320));
+    await tester.pumpAndSettle();
+    expect(find.text('每日复习上限'), findsOneWidget);
+    await tester.drag(find.byType(Scrollable).last, const Offset(0, -520));
+    await tester.pumpAndSettle();
     expect(find.text('查看完整词汇表'), findsOneWidget);
   });
 
@@ -881,16 +920,91 @@ void main() {
     expect(clampDeadlinePickerInitialDate(now: now), fallback);
   });
 
+  test('study plan picker initial date stays inside selectable bounds', () {
+    final today = DateTime(2026, 5, 25, 15, 45);
+    final firstDate = DateTime(2026, 5, 25);
+    final lastDate = DateTime(2028, 5, 24);
+
+    expect(
+      clampStudyPlanPickerInitialDate(
+        selected: DateTime(2026, 5, 1),
+        today: today,
+        lastDate: lastDate,
+      ),
+      firstDate,
+    );
+    expect(
+      clampStudyPlanPickerInitialDate(
+        selected: DateTime(2026, 5, 25, 23, 59),
+        today: today,
+        lastDate: lastDate,
+      ),
+      firstDate,
+    );
+    expect(
+      clampStudyPlanPickerInitialDate(
+        selected: DateTime(2030, 1, 1),
+        today: today,
+        lastDate: lastDate,
+      ),
+      lastDate,
+    );
+  });
+
+  test('study plan reminder time parsing clamps invalid values', () {
+    expect(
+      parseStudyPlanReminderTime('08:15'),
+      const TimeOfDay(hour: 8, minute: 15),
+    );
+    expect(
+      parseStudyPlanReminderTime('99:99'),
+      const TimeOfDay(hour: 23, minute: 59),
+    );
+    expect(
+      parseStudyPlanReminderTime('-1:-5'),
+      const TimeOfDay(hour: 0, minute: 0),
+    );
+    expect(
+      parseStudyPlanReminderTime('bad'),
+      const TimeOfDay(hour: 20, minute: 0),
+    );
+  });
+
   test('learning plan day count uses calendar days', () {
-    final plan = LearningPlan(
-      target: 'Daily English',
-      deadline: DateTime(2026, 5, 27, 23, 59),
-      dailyWords: 10,
-      remainingWords: 30,
+    final plan = StudyPlan(
+      id: 'study-plan-calendar-user',
+      uid: 'calendar-user',
+      wordBookId: 'beginner',
+      dailyNewTarget: 10,
+      dailyReviewLimit: 20,
+      startDate: DateTime(2026, 5, 25),
+      targetFinishDate: DateTime(2026, 5, 27, 23, 59),
+      reminderTime: '20:00',
+      status: 'active',
       createdAt: DateTime(2026, 5, 25, 12),
+      updatedAt: DateTime(2026, 5, 25, 12),
     );
 
     expect(plan.daysLeft(DateTime(2026, 5, 25, 23, 30)), 3);
+    expect(plan.daysLeft(DateTime(2026, 5, 27, 23, 30)), 1);
+    expect(plan.daysLeft(DateTime(2026, 5, 28)), 0);
+  });
+
+  test('study plan JSON fallback target date is date-only', () {
+    final plan = StudyPlan.fromJson(const {
+      'uid': 'fallback-target-date-user',
+      'wordBookId': 'beginner',
+      'dailyNewTarget': 10,
+      'dailyReviewLimit': 20,
+    });
+
+    expect(plan.startDate.hour, 0);
+    expect(plan.startDate.minute, 0);
+    expect(plan.startDate.second, 0);
+    expect(plan.targetFinishDate.hour, 0);
+    expect(plan.targetFinishDate.minute, 0);
+    expect(plan.targetFinishDate.second, 0);
+    expect(plan.targetFinishDate.difference(plan.startDate).inDays, 30);
   });
 
   testWidgets('dark semantic surfaces keep readable contrast', (tester) async {
@@ -977,6 +1091,98 @@ void main() {
       isFalse,
     );
   });
+
+  test('review queues dedupe duplicate custom cards by word text', () {
+    final now = DateTime.now();
+    final first =
+        CustomWord.create(
+          id: 'duplicate-first',
+          uid: 'dedupe-user',
+          word: 'Focus',
+          meaning: '专注',
+          exampleSentence: 'Focus on one thing.',
+          now: now,
+        ).copyWith(
+          wrongCount: 4,
+          nextReviewAt: now.subtract(const Duration(days: 1)),
+        );
+    final duplicate =
+        CustomWord.create(
+          id: 'duplicate-second',
+          uid: 'dedupe-user',
+          word: ' focus ',
+          meaning: '焦点',
+          exampleSentence: 'The focus is clear.',
+          now: now,
+        ).copyWith(
+          wrongCount: 9,
+          nextReviewAt: now.subtract(const Duration(days: 1)),
+        );
+    final unique =
+        CustomWord.create(
+          id: 'unique-word',
+          uid: 'dedupe-user',
+          word: 'Review',
+          meaning: '复习',
+          exampleSentence: 'Review every day.',
+          now: now,
+        ).copyWith(
+          wrongCount: 2,
+          nextReviewAt: now.subtract(const Duration(days: 1)),
+        );
+
+    final state = AppState.initial().copyWith(
+      customWords: [first, duplicate, unique],
+    );
+
+    expect(state.dueWords.map((word) => word.id), [first.id, unique.id]);
+    expect(state.weakWords.map((word) => word.id), [first.id, unique.id]);
+  });
+
+  test(
+    'real wordbook quiz generation shuffles choices and includes spelling',
+    () {
+      final words = [for (var index = 0; index < 24; index++) _word(index)];
+      final lessons = lessonsFromWordBook(
+        WordBook(
+          id: 'test-book',
+          title: '测试词书',
+          category: 'exam',
+          examType: 'Test',
+          coverUrl: '',
+          totalWords: words.length,
+          includedWords: words.length,
+          description: 'Test book',
+          wordIds: [for (final word in words) word.id],
+          createdAt: DateTime(2026, 6, 5),
+          words: words,
+        ),
+      );
+      final formalQuestions = lessons
+          .where((lesson) => !lesson.isTrainingPack)
+          .expand((lesson) => lesson.questions)
+          .toList();
+      final choiceQuestions = formalQuestions.where(
+        (question) => question.type != QuizQuestionType.spelling,
+      );
+
+      expect(
+        formalQuestions.map((question) => question.type),
+        contains(QuizQuestionType.spelling),
+      );
+      expect(
+        choiceQuestions.any(
+          (question) => question.options.first != question.answer,
+        ),
+        true,
+      );
+      for (final question in choiceQuestions) {
+        expect(question.options, hasLength(4));
+        expect(question.options.toSet(), hasLength(4));
+        expect(question.options, contains(question.answer));
+      }
+    },
+  );
 
   test('formal wordbook follows the selected learning target', () {
     final lessons = seedLessons();
@@ -1077,6 +1283,10 @@ void main() {
       0,
       (total, lesson) => total + lesson.words.length,
     );
+    final firstFormalWord = state.formalLessons
+        .expand((lesson) => lesson.words)
+        .firstWhere((word) => word.word.length > 1)
+        .word;
     expect(fullTargetCount, greaterThan(state.totalLearningWords));
 
     await tester.pumpWidget(
@@ -1092,9 +1302,13 @@ void main() {
 
     expect(find.text('${state.totalLearningWords} 个目标词'), findsOneWidget);
     expect(find.text('$fullTargetCount 个目标词'), findsNothing);
-    expect(find.text('appetite'), findsWidgets);
-    expect(find.text('allocate'), findsNothing);
-    expect(find.text('commute'), findsNothing);
+    await tester.scrollUntilVisible(
+      find.text(firstFormalWord),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    expect(find.text(firstFormalWord), findsWidgets);
 
     await tester.pumpWidget(
       UncontrolledProviderScope(
@@ -1134,12 +1348,17 @@ void main() {
 
     await container.read(appControllerProvider.notifier).bootstrap();
 
+    final trainingLesson = container
+        .read(appControllerProvider)
+        .lessons
+        .firstWhere((lesson) => lesson.isTrainingPack);
+
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
         child: MaterialApp(
           theme: AppTheme.light(),
-          home: const LessonPreviewScreen(lessonId: 'lesson-campus-1'),
+          home: LessonPreviewScreen(lessonId: trainingLesson.id),
         ),
       ),
     );
@@ -1173,12 +1392,17 @@ void main() {
 
     await container.read(appControllerProvider.notifier).bootstrap();
 
+    final trainingLesson = container
+        .read(appControllerProvider)
+        .lessons
+        .firstWhere((lesson) => lesson.isTrainingPack);
+
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
         child: MaterialApp(
           theme: AppTheme.light(),
-          home: const QuizSessionScreen(lessonId: 'lesson-campus-1'),
+          home: QuizSessionScreen(lessonId: trainingLesson.id),
         ),
       ),
     );
@@ -1192,8 +1416,8 @@ void main() {
         container: container,
         child: MaterialApp(
           theme: AppTheme.light(),
-          home: const QuizSessionScreen(
-            lessonId: 'lesson-campus-1',
+          home: QuizSessionScreen(
+            lessonId: trainingLesson.id,
             mode: QuizSessionMode.timed,
           ),
         ),
@@ -1263,43 +1487,37 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     await _openCurrentLessonCards(tester);
+    final lesson = _currentLesson(tester);
     await _completeNewWordCards(tester);
 
-    await _tapOption(tester, '评估');
+    await _answerQuizQuestion(tester, lesson.questions[0], correct: false);
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('再试一次'));
     await tester.pumpAndSettle();
-    await _tapOption(tester, '分配');
+    await _answerQuizQuestion(tester, lesson.questions[0]);
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
-    await _tapOption(tester, 'evaluate');
+    await _answerQuizQuestion(tester, lesson.questions[1]);
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
-    await _tapOption(tester, '对比');
+    await _answerQuizQuestion(tester, lesson.questions[2]);
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
-    await tester.enterText(find.byType(TextField), 'contrast');
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('检查'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('继续'));
-    await tester.pumpAndSettle();
-
-    expect(find.text('答对 3/4 题 · 已入账 +23 XP · 错题已进入复习。'), findsOneWidget);
-    expect(find.text('已入账 +23 XP'), findsOneWidget);
-    expect(find.text('刚刚到账 +23 XP'), findsOneWidget);
-    expect(find.text('总积分 23 XP'), findsOneWidget);
-    expect(find.text('当前总积分 23 XP。XP 会同步到个人主页、排行榜和发现页抽奖余额。'), findsOneWidget);
+    expect(find.text('答对 2/3 题 · 已入账 +15 XP · 错题已进入复习。'), findsOneWidget);
+    expect(find.text('已入账 +15 XP'), findsOneWidget);
+    expect(find.text('刚刚到账 +15 XP'), findsOneWidget);
+    expect(find.text('总积分 15 XP'), findsOneWidget);
+    expect(find.text('当前总积分 15 XP。XP 会同步到个人主页、排行榜和发现页抽奖余额。'), findsOneWidget);
     expect(find.text('查看 XP 用途'), findsOneWidget);
 
     await tester.scrollUntilVisible(
@@ -1313,7 +1531,7 @@ void main() {
 
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -900));
     await tester.pumpAndSettle();
-    expect(find.text('allocate'), findsWidgets);
+    expect(find.text(lesson.questions[0].word.word), findsWidgets);
     expect(find.text('课程'), findsWidgets);
     expect(find.byType(BackButtonIcon), findsOneWidget);
 
@@ -1346,17 +1564,22 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     await _openCurrentLessonCards(tester);
+    final lesson = _currentLesson(tester);
     await _completeNewWordCards(tester);
 
-    expect(find.text('英文选义'), findsOneWidget);
-    await _tapOption(tester, '分配');
+    await _answerQuizQuestion(tester, lesson.questions.first);
     await tester.tap(find.text('检查'));
     await tester.pump();
 
     Finder continueButton() => find.widgetWithText(FilledButton, '继续');
 
     expect(find.textContaining('答对了'), findsOneWidget);
-    expect(find.textContaining('强化记忆：allocate · 分配'), findsOneWidget);
+    expect(
+      find.textContaining(
+        '强化记忆：${lesson.questions.first.word.word} · ${lesson.questions.first.word.meaning}',
+      ),
+      findsOneWidget,
+    );
     expect(continueButton(), findsOneWidget);
     expect(tester.widget<FilledButton>(continueButton()).onPressed, isNull);
 
@@ -1399,7 +1622,7 @@ void main() {
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
 
-    expect(find.text('词书路径'), findsOneWidget);
+    expect(find.text('学习路径'), findsOneWidget);
 
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
@@ -1412,7 +1635,7 @@ void main() {
     expect(find.text('检查'), findsOneWidget);
     expect(find.byType(BackButtonIcon), findsOneWidget);
 
-    await _tapOption(tester, '评估');
+    await _answerQuizQuestion(tester, _currentLesson(tester).questions.first);
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
 
@@ -1425,17 +1648,15 @@ void main() {
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
 
-    final selectedOptionButton = tester.widget<OutlinedButton>(
-      find.ancestor(of: find.text('评估'), matching: find.byType(OutlinedButton)),
-    );
-    expect(selectedOptionButton.onPressed, isNotNull);
+    expect(find.widgetWithText(FilledButton, '继续'), findsOneWidget);
 
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
     await tester.tap(find.text('离开'));
     await tester.pumpAndSettle();
 
-    expect(find.text('进入语境练习'), findsWidgets);
+    expect(find.text('离开测验？'), findsNothing);
+    expect(find.text('检查'), findsNothing);
   });
 
   testWidgets('new word cards confirm before leaving after progress', (
@@ -1480,7 +1701,7 @@ void main() {
     await tester.tap(find.text('离开'));
     await tester.pumpAndSettle();
 
-    expect(find.text('词书路径'), findsOneWidget);
+    expect(find.text('学习路径'), findsOneWidget);
   });
 
   test('theme and reminder settings persist locally', () async {
@@ -1557,7 +1778,650 @@ void main() {
     expect(state.errorMessage, isNull);
     expect(state.user, isNull);
     expect(state.reminderSettings, DailyReminderSettings.defaults);
-    expect(state.learningPlan, isNull);
+    expect(state.studyPlan, isNull);
+  });
+
+  test(
+    'bootstrap derives reminder settings from the loaded study plan',
+    () async {
+      final now = DateTime(2026, 5, 25);
+      final profile = UserProfile(
+        uid: 'remote-plan-user',
+        name: 'Ria',
+        email: 'ria@lingua.quest',
+        targetExam: 'Daily English',
+        level: 'Elementary',
+        dailyGoal: 10,
+        xp: 0,
+        streak: 0,
+        createdAt: now,
+        updatedAt: now,
+      );
+      final loadedPlan = StudyPlan.defaultsFor(
+        uid: profile.uid,
+        targetExam: profile.targetExam,
+        dailyGoal: profile.dailyGoal,
+      ).copyWith(status: 'paused', reminderTime: '08:15');
+      SharedPreferences.setMockInitialValues({
+        'linguaquest.profile': jsonEncode(profile.toJson()),
+        'linguaquest.reminderSettings': jsonEncode(
+          const DailyReminderSettings(
+            enabled: true,
+            hour: 22,
+            minute: 45,
+          ).toJson(),
+        ),
+      });
+      final container = ProviderContainer(
+        overrides: [
+          studyPlanRepositoryProvider.overrideWithValue(
+            _MemoryStudyPlanRepository(loadedPlan),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await container.read(appControllerProvider.notifier).bootstrap();
+      final state = container.read(appControllerProvider);
+
+      expect(state.studyPlan?.isPaused, true);
+      expect(state.reminderSettings.enabled, false);
+      expect(state.reminderSettings.hour, 8);
+      expect(state.reminderSettings.minute, 15);
+    },
+  );
+
+  test('reminder settings update syncs into the saved study plan', () async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'reminder-sync-user',
+      name: 'Mia',
+      email: 'mia@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    final studyPlanRepository = _MemoryStudyPlanRepository(
+      StudyPlan.defaultsFor(
+        uid: profile.uid,
+        targetExam: profile.targetExam,
+        dailyGoal: profile.dailyGoal,
+      ).copyWith(status: 'active', reminderTime: '20:00', updatedAt: now),
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer(
+      overrides: [
+        studyPlanRepositoryProvider.overrideWithValue(studyPlanRepository),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    await container
+        .read(appControllerProvider.notifier)
+        .updateReminderSettings(
+          const DailyReminderSettings(enabled: false, hour: 7, minute: 30),
+        );
+
+    final prefs = await SharedPreferences.getInstance();
+    expect(
+      prefs.getString('linguaquest.reminderSettings'),
+      contains('"hour":7'),
+    );
+    expect(studyPlanRepository.savedPlan?.reminderTime, '07:30');
+    expect(studyPlanRepository.savedPlan?.status, 'paused');
+    expect(
+      container.read(appControllerProvider).studyPlan?.reminderTime,
+      '07:30',
+    );
+    expect(container.read(appControllerProvider).studyPlan?.status, 'paused');
+  });
+
+  test(
+    'reminder settings save failure keeps local settings unchanged',
+    () async {
+      final now = DateTime(2026, 5, 25);
+      final profile = UserProfile(
+        uid: 'reminder-failure-user',
+        name: 'Fia',
+        email: 'fia@lingua.quest',
+        targetExam: 'Daily English',
+        level: 'Elementary',
+        dailyGoal: 10,
+        xp: 0,
+        streak: 0,
+        createdAt: now,
+        updatedAt: now,
+      );
+      final plan = StudyPlan.defaultsFor(
+        uid: profile.uid,
+        targetExam: profile.targetExam,
+        dailyGoal: profile.dailyGoal,
+      ).copyWith(status: 'active', reminderTime: '20:00', updatedAt: now);
+      SharedPreferences.setMockInitialValues({
+        'linguaquest.profile': jsonEncode(profile.toJson()),
+        'linguaquest.reminderSettings': jsonEncode(
+          const DailyReminderSettings(
+            enabled: true,
+            hour: 20,
+            minute: 0,
+          ).toJson(),
+        ),
+      });
+      final container = ProviderContainer(
+        overrides: [
+          studyPlanRepositoryProvider.overrideWithValue(
+            _FailingStudyPlanRepository(plan),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await container.read(appControllerProvider.notifier).bootstrap();
+      await container
+          .read(appControllerProvider.notifier)
+          .updateReminderSettings(
+            const DailyReminderSettings(enabled: false, hour: 7, minute: 30),
+          );
+
+      final prefs = await SharedPreferences.getInstance();
+      expect(
+        prefs.getString('linguaquest.reminderSettings'),
+        contains('"hour":20'),
+      );
+      expect(container.read(appControllerProvider).reminderSettings.hour, 20);
+      expect(
+        container.read(appControllerProvider).reminderSettings.enabled,
+        true,
+      );
+      expect(
+        container.read(appControllerProvider).studyPlan?.reminderTime,
+        '20:00',
+      );
+      expect(
+        container.read(appControllerProvider).errorMessage,
+        'remote reminder failure',
+      );
+      expect(container.read(appControllerProvider).isLoading, false);
+    },
+  );
+
+  testWidgets('study plan settings shows a loading bar while saving', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'settings-loading-user',
+      name: 'Lina',
+      email: 'loading@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    final repository = _BlockingStudyPlanRepository(
+      StudyPlan.defaultsFor(
+        uid: profile.uid,
+        targetExam: profile.targetExam,
+        dailyGoal: profile.dailyGoal,
+      ).copyWith(status: 'active', reminderTime: '20:00', updatedAt: now),
+    );
+    addTearDown(() {
+      if (!repository.saveCompleter.isCompleted) {
+        repository.saveCompleter.complete(repository.savedPlan);
+      }
+    });
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [studyPlanRepositoryProvider.overrideWithValue(repository)],
+        child: const LinguaQuestApp(),
+      ),
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.scrollUntilVisible(
+      find.text('调整计划'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('调整计划'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(LinearProgressIndicator), findsOneWidget);
+    await tester.tap(find.text('保存学习计划'));
+    await tester.pump();
+
+    expect(find.byType(LinearProgressIndicator), findsNWidgets(2));
+    repository.saveCompleter.complete(repository.savedPlan);
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets('study plan settings shows the latest save error', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'settings-error-user',
+      name: 'Serena',
+      email: 'settings-error@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    final plan = StudyPlan.defaultsFor(
+      uid: profile.uid,
+      targetExam: profile.targetExam,
+      dailyGoal: profile.dailyGoal,
+    ).copyWith(status: 'active', reminderTime: '20:00', updatedAt: now);
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          studyPlanRepositoryProvider.overrideWithValue(
+            _FailingStudyPlanRepository(
+              plan,
+              message: 'study plan save failure',
+            ),
+          ),
+        ],
+        child: const LinguaQuestApp(),
+      ),
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.scrollUntilVisible(
+      find.text('调整计划'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('调整计划'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('保存学习计划'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('study plan save failure'), findsOneWidget);
+    expect(find.text('暂时无法保存计划。'), findsNothing);
+  });
+
+  test(
+    'resetting a study plan updates custom words without per-word writes',
+    () async {
+      final now = DateTime(2026, 5, 25);
+      final profile = UserProfile(
+        uid: 'reset-parallel-user',
+        name: 'Rex',
+        email: 'rex@lingua.quest',
+        targetExam: 'Daily English',
+        level: 'Elementary',
+        dailyGoal: 10,
+        xp: 0,
+        streak: 0,
+        createdAt: now,
+        updatedAt: now,
+      );
+      final plan = StudyPlan.defaultsFor(
+        uid: profile.uid,
+        targetExam: profile.targetExam,
+        dailyGoal: profile.dailyGoal,
+      );
+      final customWordRepository = _ConcurrentCustomWordRepository()
+        ..words.addAll(
+          List.generate(
+            4,
+            (index) =>
+                CustomWord.create(
+                  id: 'reset-word-$index',
+                  uid: profile.uid,
+                  word: 'reset-$index',
+                  meaning: 'reset meaning $index',
+                  exampleSentence: 'Reset word $index.',
+                  now: now,
+                ).copyWith(
+                  masteryLevel: 4,
+                  correctCount: 6,
+                  wrongCount: 2,
+                  nextReviewAt: now.add(const Duration(days: 7)),
+                ),
+          ),
+        );
+      SharedPreferences.setMockInitialValues({
+        'linguaquest.profile': jsonEncode(profile.toJson()),
+      });
+      final container = ProviderContainer(
+        overrides: [
+          customWordRepositoryProvider.overrideWithValue(customWordRepository),
+          studyPlanRepositoryProvider.overrideWithValue(
+            _MemoryStudyPlanRepository(plan),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await container.read(appControllerProvider.notifier).bootstrap();
+      expect(
+        await container.read(appControllerProvider.notifier).resetStudyPlan(),
+        true,
+      );
+
+      expect(customWordRepository.maxConcurrentUpdates, 0);
+      final resetAt = container
+          .read(appControllerProvider)
+          .studyPlan!
+          .updatedAt;
+      for (final word in container.read(appControllerProvider).customWords) {
+        expect(word.masteryLevel, 0);
+        expect(word.correctCount, 0);
+        expect(word.wrongCount, 0);
+        expect(word.nextReviewAt, resetAt);
+        expect(word.updatedAt, resetAt);
+      }
+    },
+  );
+
+  testWidgets('study plan save allows an unchanged expired target date', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'expired-date-user',
+      name: 'Eda',
+      email: 'eda@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    final studyPlanRepository = _MemoryStudyPlanRepository(
+      StudyPlan.defaultsFor(
+        uid: profile.uid,
+        targetExam: profile.targetExam,
+        dailyGoal: profile.dailyGoal,
+      ).copyWith(targetFinishDate: DateTime(2026, 1, 15)),
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          studyPlanRepositoryProvider.overrideWithValue(studyPlanRepository),
+        ],
+        child: const LinguaQuestApp(),
+      ),
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.scrollUntilVisible(
+      find.text('调整计划'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('调整计划'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('保存学习计划'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('目标完成日期不能早于今天。'), findsNothing);
+    expect(find.text('学习计划已保存。'), findsOneWidget);
+    expect(
+      studyPlanRepository.savedPlan?.targetFinishDate,
+      DateTime(2026, 1, 15),
+    );
+  });
+
+  test('study plan save rejects a changed expired target date', () {
+    final today = DateTime(2026, 5, 25, 12);
+
+    expect(
+      rejectChangedExpiredTargetFinishDate(
+        finishDate: DateTime(2026, 1, 15, 8),
+        originalFinishDate: DateTime(2026, 1, 15, 20),
+        today: today,
+      ),
+      false,
+    );
+    expect(
+      rejectChangedExpiredTargetFinishDate(
+        finishDate: DateTime(2026, 2, 1),
+        originalFinishDate: DateTime(2026, 1, 15),
+        today: today,
+      ),
+      true,
+    );
+    expect(
+      rejectChangedExpiredTargetFinishDate(
+        finishDate: DateTime(2026, 5, 25),
+        originalFinishDate: DateTime(2026, 1, 15),
+        today: today,
+      ),
+      false,
+    );
+  });
+
+  testWidgets('study plan settings resyncs when the saved plan changes', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'settings-resync-user',
+      name: 'Ria',
+      email: 'settings-resync@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    final initialPlan =
+        StudyPlan.defaultsFor(
+          uid: profile.uid,
+          targetExam: profile.targetExam,
+          dailyGoal: profile.dailyGoal,
+        ).copyWith(
+          dailyNewTarget: 10,
+          dailyReviewLimit: 20,
+          reminderTime: '20:00',
+          updatedAt: now,
+        );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer(
+      overrides: [
+        studyPlanRepositoryProvider.overrideWithValue(
+          _MemoryStudyPlanRepository(initialPlan),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const LinguaQuestApp(),
+      ),
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.scrollUntilVisible(
+      find.text('调整计划'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('调整计划'));
+    await tester.pumpAndSettle();
+
+    List<String> visibleNumberFieldValues() => tester
+        .widgetList<TextFormField>(find.byType(TextFormField))
+        .map((field) => field.controller?.text)
+        .whereType<String>()
+        .toList();
+
+    expect(visibleNumberFieldValues(), contains('10'));
+    final updatedPlan = initialPlan.copyWith(
+      dailyNewTarget: 33,
+      dailyReviewLimit: 44,
+      reminderTime: '99:99',
+      updatedAt: now.add(const Duration(minutes: 1)),
+    );
+    expect(
+      await container
+          .read(appControllerProvider.notifier)
+          .updateStudyPlan(updatedPlan),
+      true,
+    );
+    await tester.pumpAndSettle();
+
+    expect(visibleNumberFieldValues(), contains('33'));
+    await tester.drag(find.byType(Scrollable).last, const Offset(0, -360));
+    await tester.pumpAndSettle();
+    expect(visibleNumberFieldValues(), contains('44'));
+    expect(
+      container.read(appControllerProvider).studyPlan?.dailyReviewLimit,
+      44,
+    );
+  });
+
+  testWidgets('study plan numeric fields accept digits only', (tester) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'settings-digits-user',
+      name: 'Dina',
+      email: 'digits@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+
+    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.scrollUntilVisible(
+      find.text('调整计划'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('调整计划'));
+    await tester.pumpAndSettle();
+
+    Iterable<EditableText> digitOnlyFields() => tester
+        .widgetList<EditableText>(find.byType(EditableText))
+        .where(
+          (field) =>
+              field.inputFormatters?.contains(
+                FilteringTextInputFormatter.digitsOnly,
+              ) ??
+              false,
+        );
+
+    expect(digitOnlyFields(), hasLength(1));
+    await tester.drag(find.byType(Scrollable).last, const Offset(0, -180));
+    await tester.pumpAndSettle();
+    expect(
+      digitOnlyFields().where((field) => field.controller.text == '20'),
+      hasLength(1),
+    );
+  });
+
+  testWidgets('study plan fallback initialization preserves unsaved edits', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'settings-fallback-user',
+      name: 'Fay',
+      email: 'settings-fallback@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer(
+      overrides: [
+        studyPlanRepositoryProvider.overrideWithValue(
+          _MemoryStudyPlanRepository(null),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    container.read(appControllerProvider.notifier).state = container
+        .read(appControllerProvider)
+        .copyWith(studyPlan: null);
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const LinguaQuestApp(),
+      ),
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.scrollUntilVisible(
+      find.text('调整计划'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('调整计划'));
+    await tester.pumpAndSettle();
+
+    final field = tester.widget<TextFormField>(
+      find.byType(TextFormField).first,
+    );
+    field.controller?.text = '77';
+    await container
+        .read(appControllerProvider.notifier)
+        .updateThemeMode(ThemeMode.dark);
+    await tester.pumpAndSettle();
+
+    final updatedField = tester.widget<TextFormField>(
+      find.byType(TextFormField).first,
+    );
+    expect(updatedField.controller?.text, '77');
   });
 
   test('logout keeps lesson status and completed ids in sync', () async {
@@ -1574,7 +2438,7 @@ void main() {
       createdAt: now,
       updatedAt: now,
     );
-    final completedLessonId = seedLessons().first.id;
+    const completedLessonId = 'beginner-lesson-1';
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
       'linguaquest.completedLessons': [completedLessonId],
@@ -1644,7 +2508,19 @@ void main() {
 
     final savedWords = container.read(appControllerProvider).customWords;
     expect(savedWords.any((word) => word.word == targetWord.word), true);
-    expect(find.widgetWithText(FilledButton, '已加入生词本'), findsOneWidget);
+    expect(find.widgetWithText(FilledButton, '移出生词本'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(FilledButton, '移出生词本'));
+    await tester.pumpAndSettle();
+
+    expect(
+      container
+          .read(appControllerProvider)
+          .customWords
+          .any((word) => word.word == targetWord.word),
+      false,
+    );
+    expect(find.widgetWithText(FilledButton, '加入生词本'), findsOneWidget);
   });
 
   testWidgets('custom word detail shows the full knowledge blocks', (
@@ -1793,7 +2669,6 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
-    expect(find.text('图片单词本'), findsOneWidget);
     expect(find.text('context'), findsOneWidget);
     expect(find.text('简单'), findsOneWidget);
   });
@@ -1831,19 +2706,56 @@ void main() {
 
     final state = container.read(appControllerProvider);
     expect(succeeded, true);
-    expect(state.learningPlan, isNotNull);
-    expect(state.user?.dailyGoal, state.learningPlan?.dailyWords);
-    expect(state.learningPlan?.dailyWords, greaterThan(0));
-    expect(state.learningPlan?.remainingWords, state.totalLearningWords);
-    expect(
-      state.learningPlan?.remainingWords,
-      lessThan(
-        state.lessons.fold<int>(
-          0,
-          (total, lesson) => total + lesson.words.length,
-        ),
+    expect(state.studyPlan, isNotNull);
+    expect(state.studyPlan?.wordBookId, 'ielts');
+    expect(state.currentWordBookId, 'ielts');
+    expect(state.user?.dailyGoal, state.studyPlan?.dailyNewTarget);
+    expect(state.studyPlan?.dailyNewTarget, greaterThan(0));
+    expect(state.studyPlan?.targetFinishDate.year, deadline.year);
+    expect(state.currentWordBook?.id, 'ielts');
+    expect(state.lessons, isNotEmpty);
+  });
+
+  test('API wordbook fallback does not poison the remote cache', () async {
+    final apiClient = ApiClient();
+    var attempts = 0;
+    final fallbackBook = _book('fallback-book', 'Fallback Book');
+    final serverBook = _book('server-book', 'Server Book');
+    apiClient.dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          attempts++;
+          if (attempts == 1) {
+            handler.reject(
+              DioException(
+                requestOptions: options,
+                type: DioExceptionType.connectionError,
+                error: 'offline',
+              ),
+            );
+            return;
+          }
+          handler.resolve(
+            Response<List<dynamic>>(
+              requestOptions: options,
+              data: [serverBook.toJson()],
+              statusCode: 200,
+            ),
+          );
+        },
       ),
     );
+    final repository = ApiLearningRepository(
+      apiClient,
+      fallbackLoader: _FakeWordBookAssetLoader([fallbackBook]),
+    );
+
+    final offlineBooks = await repository.listWordBooks();
+    final onlineBooks = await repository.listWordBooks();
+
+    expect(offlineBooks.single.id, fallbackBook.id);
+    expect(onlineBooks.single.id, serverBook.id);
+    expect(attempts, 2);
   });
 
   test('remembered words cannot be counted twice on the same day', () async {
@@ -1996,35 +2908,35 @@ void main() {
       ),
     );
     await tester.pumpAndSettle(const Duration(seconds: 1));
-
-    await tester.scrollUntilVisible(
-      find.text('新学 10'),
-      300,
-      scrollable: find.byType(Scrollable).first,
+    final container = ProviderScope.containerOf(
+      tester.element(find.byType(LinguaQuestApp)),
     );
-    await tester.pumpAndSettle();
+    final firstWord = container
+        .read(appControllerProvider)
+        .currentLesson!
+        .words
+        .first;
     await tester.tap(find.widgetWithText(FilledButton, '新学 10'));
     await tester.pumpAndSettle();
 
     expect(find.text('今日混排学习包'), findsOneWidget);
-    expect(find.text('allocate'), findsOneWidget);
+    expect(find.text(firstWord.word), findsOneWidget);
 
     await tester.tap(find.text('不认识'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('进入识别题'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.widgetWithText(OutlinedButton, '还不确定 3'));
-    await tester.pumpAndSettle();
+    await _tapAnyOptionExcept(tester, firstWord.meaning);
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('allocate'), findsWidgets);
+    expect(find.textContaining(firstWord.word), findsWidgets);
 
     if (find.text('再试一次').evaluate().isNotEmpty) {
       await tester.tap(find.text('再试一次'));
       await tester.pumpAndSettle();
     }
-    await tester.tap(find.widgetWithText(OutlinedButton, '分配'));
+    await tester.tap(find.widgetWithText(OutlinedButton, firstWord.meaning));
     await tester.pumpAndSettle();
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
@@ -2032,6 +2944,50 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('加入稍后复现'), findsOneWidget);
+  });
+
+  test('mixed study completion records learned target words', () async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'mixed-target-user',
+      name: 'Tara',
+      email: 'tara@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    final controller = container.read(appControllerProvider.notifier);
+    await controller.bootstrap();
+    final lesson = container.read(appControllerProvider).currentLesson!;
+
+    final succeeded = await controller.completeMixedStudySession(
+      lessonId: 'daily-mixed-session',
+      totalQuestions: lesson.questions.length,
+      correctAnswers: lesson.questions.length,
+      mistakeWordIds: const [],
+      answerEvents: const [],
+      startedAt: now,
+      endedAt: now.add(const Duration(minutes: 5)),
+      completeCurrentLesson: true,
+      xpEarned: 20,
+    );
+
+    expect(succeeded, isTrue);
+    final learnedWordIds = {
+      for (final word in container.read(appControllerProvider).userWords)
+        word.wordId,
+    };
+    expect(learnedWordIds, containsAll(lesson.words.map((word) => word.id)));
   });
 
   test(
@@ -2163,7 +3119,7 @@ void main() {
     addTearDown(container.dispose);
 
     await container.read(appControllerProvider.notifier).bootstrap();
-    final lesson = seedLessons().first;
+    final lesson = container.read(appControllerProvider).formalLessons.first;
     final mistakes = lesson.questions.take(2).toList();
     await container
         .read(appControllerProvider.notifier)
@@ -2205,9 +3161,13 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('加入已选 (2)'), findsOneWidget);
 
-    await tester.tap(find.byKey(const ValueKey('mistake-select-w-allocate')));
+    await tester.tap(
+      find.byKey(ValueKey('mistake-select-${mistakes[0].word.id}')),
+    );
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey('mistake-select-w-evaluate')));
+    await tester.tap(
+      find.byKey(ValueKey('mistake-select-${mistakes[1].word.id}')),
+    );
     await tester.pumpAndSettle();
     expect(find.text('加入已选 (0)'), findsOneWidget);
 
@@ -2324,8 +3284,7 @@ Future<void> _openCurrentLessonCards(WidgetTester tester) async {
   );
   container.read(routerProvider).go('/learn');
   await tester.pumpAndSettle();
-  final lessonTitle = _visibleLessonTitle();
-  await tester.tap(find.text(lessonTitle));
+  await tester.tap(find.byIcon(Icons.play_arrow_rounded).first);
   await tester.pumpAndSettle();
   await tester.tap(find.widgetWithText(FilledButton, '开始学习'));
   await tester.pumpAndSettle();
@@ -2361,25 +3320,53 @@ Future<void> _tapAnyOptionExcept(WidgetTester tester, String label) async {
   fail('No option found except $label');
 }
 
-String _visibleLessonTitle() {
-  const titles = ['考试信号词', '旅行基础', '职场表达', '饮食场景', '健康表达'];
-  for (final title in titles) {
-    if (find.text(title).evaluate().isNotEmpty) return title;
+Lesson _currentLesson(WidgetTester tester) {
+  final container = ProviderScope.containerOf(
+    tester.element(find.byType(LinguaQuestApp)),
+  );
+  return container.read(appControllerProvider).currentLesson!;
+}
+
+Future<void> _answerQuizQuestion(
+  WidgetTester tester,
+  QuizQuestion question, {
+  bool correct = true,
+}) async {
+  switch (question.type) {
+    case QuizQuestionType.spelling:
+      await tester.enterText(
+        find.byType(TextField),
+        correct ? question.answer : '${question.answer}x',
+      );
+      await tester.pumpAndSettle();
+    case QuizQuestionType.meaningChoice:
+    case QuizQuestionType.chineseChoice:
+    case QuizQuestionType.contextChoice:
+    case QuizQuestionType.imageChoice:
+    case QuizQuestionType.listeningWordChoice:
+    case QuizQuestionType.listeningMeaningChoice:
+      if (correct) {
+        await _tapOption(tester, question.answer);
+      } else {
+        await _tapAnyOptionExcept(tester, question.answer);
+      }
   }
-  return titles.first;
 }
 
 Future<void> _completeNewWordCards(WidgetTester tester) async {
-  for (var index = 0; index < 2; index++) {
+  for (var index = 0; index < 10; index++) {
     await tester.tap(find.widgetWithText(OutlinedButton, '认识'));
     await tester.pumpAndSettle();
+    final quizEntry = find.text('进入语境练习');
+    if (quizEntry.evaluate().isNotEmpty) {
+      await tester.tap(quizEntry);
+      await tester.pumpAndSettle();
+      return;
+    }
     await tester.tap(find.text('下一张词卡'));
     await tester.pumpAndSettle();
   }
-  await tester.tap(find.widgetWithText(OutlinedButton, '认识'));
-  await tester.pumpAndSettle();
-  await tester.tap(find.text('进入语境练习'));
-  await tester.pumpAndSettle();
+  fail('Could not reach the quiz entry after completing word cards.');
 }
 
 double _contrastRatio(Color foreground, Color background) {
@@ -2425,7 +3412,14 @@ class _StaticLearningRepository implements LearningRepository {
   final List<Lesson> lessons;
 
   @override
+  Future<List<WordBook>> listWordBooks() async => const [];
+
+  @override
   Future<List<Lesson>> listLessons() async => lessons;
+
+  @override
+  Future<List<Lesson>> listLessonsForWordBook(String wordBookId) async =>
+      lessons;
 
   @override
   Future<void> recordStudySession(StudySession session) async {}
@@ -2433,6 +3427,9 @@ class _StaticLearningRepository implements LearningRepository {
 
 class _FlakyLearningRepository implements LearningRepository {
   int listAttempts = 0;
+
+  @override
+  Future<List<WordBook>> listWordBooks() async => const [];
 
   @override
   Future<List<Lesson>> listLessons() async {
@@ -2444,13 +3441,95 @@ class _FlakyLearningRepository implements LearningRepository {
   }
 
   @override
+  Future<List<Lesson>> listLessonsForWordBook(String wordBookId) =>
+      listLessons();
+
+  @override
   Future<void> recordStudySession(StudySession session) async {}
+}
+
+class _MemoryStudyPlanRepository implements StudyPlanRepository {
+  _MemoryStudyPlanRepository(this.savedPlan);
+
+  StudyPlan? savedPlan;
+
+  @override
+  Future<StudyPlan?> load(String uid) async => savedPlan;
+
+  @override
+  Future<StudyPlan> reset(StudyPlan plan) async {
+    final now = DateTime.now();
+    final resetPlan = plan.copyWith(
+      startDate: DateTime(now.year, now.month, now.day),
+      status: 'active',
+      updatedAt: now,
+    );
+    savedPlan = resetPlan;
+    return resetPlan;
+  }
+
+  @override
+  Future<StudyPlan> save(StudyPlan plan) async {
+    savedPlan = plan;
+    return plan;
+  }
+}
+
+class _FailingStudyPlanRepository implements StudyPlanRepository {
+  _FailingStudyPlanRepository(
+    this.savedPlan, {
+    this.message = 'remote reminder failure',
+  });
+
+  final StudyPlan savedPlan;
+  final String message;
+
+  @override
+  Future<StudyPlan?> load(String uid) async => savedPlan;
+
+  @override
+  Future<StudyPlan> reset(StudyPlan plan) async => savedPlan;
+
+  @override
+  Future<StudyPlan> save(StudyPlan plan) async {
+    throw StateError(message);
+  }
+}
+
+class _BlockingStudyPlanRepository implements StudyPlanRepository {
+  _BlockingStudyPlanRepository(this.savedPlan);
+
+  StudyPlan savedPlan;
+  final saveCompleter = Completer<StudyPlan>();
+
+  @override
+  Future<StudyPlan?> load(String uid) async => savedPlan;
+
+  @override
+  Future<StudyPlan> reset(StudyPlan plan) async => savedPlan;
+
+  @override
+  Future<StudyPlan> save(StudyPlan plan) async {
+    savedPlan = plan;
+    return saveCompleter.future;
+  }
+}
+
+class _FakeWordBookAssetLoader extends WordBookAssetLoader {
+  _FakeWordBookAssetLoader(this.books);
+
+  final List<WordBook> books;
+
+  @override
+  Future<List<WordBook>> loadWordBooks() async => books;
 }
 
 class _ConcurrentCustomWordRepository implements CustomWordRepository {
   final List<CustomWord> words = [];
   int _activeCreates = 0;
+  int _activeUpdates = 0;
   int maxConcurrentCreates = 0;
+  int maxConcurrentUpdates = 0;
 
   @override
   Future<List<CustomWord>> list(String uid) async => words;
@@ -2474,12 +3553,18 @@ class _ConcurrentCustomWordRepository implements CustomWordRepository {
 
   @override
   Future<CustomWord> update(CustomWord word) async {
+    _activeUpdates++;
+    if (_activeUpdates > maxConcurrentUpdates) {
+      maxConcurrentUpdates = _activeUpdates;
+    }
+    await Future<void>.delayed(const Duration(milliseconds: 10));
     final index = words.indexWhere((item) => item.id == word.id);
     if (index == -1) {
       words.add(word);
     } else {
       words[index] = word;
     }
+    _activeUpdates--;
     return word;
   }
 }
@@ -2520,6 +3605,38 @@ QuizQuestion _mistakeQuestion(int index) {
     options: [word.meaning, 'wrong'],
     explanation: 'Explanation $index',
     word: word,
+  );
+}
+
+Word _word(int index) {
+  return Word(
+    id: 'factory-word-$index',
+    word: 'factory$index',
+    phonetic: '/factory/',
+    meaning: '工厂词 $index',
+    definition: 'A generated test word $index',
+    partOfSpeech: 'noun',
+    exampleSentence: 'Factory word $index appears in a lesson.',
+    exampleTranslation: '工厂词 $index 出现在课程中。',
+    imageCue: '🏭',
+    difficulty: 'Medium',
+    tags: const ['test'],
+  );
+}
+
+WordBook _book(String id, String title) {
+  return WordBook(
+    id: id,
+    title: title,
+    category: 'exam',
+    examType: title,
+    coverUrl: '',
+    totalWords: 1,
+    includedWords: 1,
+    description: '$title description',
+    wordIds: const ['api-word-1'],
+    createdAt: DateTime(2026, 6, 5),
+    words: [_word(1)],
   );
 }
 

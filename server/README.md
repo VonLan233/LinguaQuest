@@ -31,6 +31,10 @@ flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8080
 ## Endpoints
 
 - `GET /health`
+- `GET /wordbooks`
+- `GET /wordbooks/:id`
+- `GET /words?wordBookId=<id>&q=<query>`
+- `GET /words/:id`
 - `POST /auth/register`
 - `POST /auth/login`
 - `GET /me`
@@ -40,6 +44,9 @@ flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8080
 - `PATCH /custom-words/:id`
 - `DELETE /custom-words/:id`
 - `POST /study-sessions`
+- `GET /study-plan`
+- `PUT /study-plan`
+- `POST /study-plan/reset`
 - `GET /review/due`
 - `POST /review-events`
 

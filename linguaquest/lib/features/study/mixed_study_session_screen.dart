@@ -148,8 +148,7 @@ class _MixedStudySessionScreenState
 
   void _initializeQueue() {
     final state = ref.read(appControllerProvider);
-    final dailyGoal =
-        state.learningPlan?.dailyWords ?? state.user?.dailyGoal ?? 10;
+    final dailyGoal = state.dailyNewTarget;
     final newWords = state.currentLesson?.words ?? const <Word>[];
     final plan = _builder.build(
       newWords: newWords,

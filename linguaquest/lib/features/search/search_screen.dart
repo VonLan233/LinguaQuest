@@ -38,7 +38,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/home'),
-        title: const Text('搜索'),
+        title: Text(state.currentWordBook?.title ?? '搜索'),
       ),
       body: SafeArea(
         child: ListView(
@@ -47,7 +47,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             TextField(
               autofocus: true,
               decoration: const InputDecoration(
-                labelText: '搜索单词、释义、例句或标签',
+                labelText: '搜索当前词书、生词本、释义、例句或标签',
                 prefixIcon: Icon(Icons.search),
               ),
               textInputAction: TextInputAction.search,
@@ -97,6 +97,15 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         word.definition.toLowerCase().contains(query) ||
         word.exampleSentence.toLowerCase().contains(query) ||
         word.exampleTranslation.toLowerCase().contains(query) ||
+        word.collocations.any(
+          (item) =>
+              item.phrase.toLowerCase().contains(query) ||
+              item.cn.toLowerCase().contains(query),
+        ) ||
+        word.synonyms.any((item) => item.toLowerCase().contains(query)) ||
+        word.antonyms.any((item) => item.toLowerCase().contains(query)) ||
+        word.derivatives.any((item) => item.toLowerCase().contains(query)) ||
+        word.rootAffix.toLowerCase().contains(query) ||
         word.tags.any(
           (tag) =>
               tag.toLowerCase().contains(query) ||
