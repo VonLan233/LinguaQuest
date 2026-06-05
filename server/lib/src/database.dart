@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:postgres/postgres.dart';
 
 import 'config.dart';
@@ -149,9 +151,13 @@ CREATE TABLE IF NOT EXISTS study_sessions (
   total_questions INTEGER NOT NULL,
   correct_answers INTEGER NOT NULL,
   xp_earned INTEGER NOT NULL,
-  mistake_word_ids TEXT NOT NULL DEFAULT ''
+  mistake_word_ids TEXT NOT NULL DEFAULT '',
+  answer_events TEXT NOT NULL DEFAULT ''
 );
 ''');
+    await connection.execute(
+      "ALTER TABLE study_sessions ADD COLUMN IF NOT EXISTS answer_events TEXT NOT NULL DEFAULT ''",
+    );
 
     await connection.execute('''
 CREATE TABLE IF NOT EXISTS review_events (
@@ -160,12 +166,20 @@ CREATE TABLE IF NOT EXISTS review_events (
   word_id TEXT NOT NULL,
   is_correct BOOLEAN NOT NULL,
   answer_time_ms INTEGER NOT NULL,
+  confidence INTEGER NOT NULL DEFAULT 3,
+  wrong_option TEXT,
   reviewed_at TIMESTAMPTZ NOT NULL,
   mastery_before INTEGER NOT NULL,
   mastery_after INTEGER NOT NULL,
   next_review_at TIMESTAMPTZ NOT NULL
 );
 ''');
+    await connection.execute(
+      'ALTER TABLE review_events ADD COLUMN IF NOT EXISTS confidence INTEGER NOT NULL DEFAULT 3',
+    );
+    await connection.execute(
+      'ALTER TABLE review_events ADD COLUMN IF NOT EXISTS wrong_option TEXT',
+    );
 
     await connection.execute('''
 CREATE TABLE IF NOT EXISTS notifications (
@@ -547,9 +561,9 @@ RETURNING *
     await connection.execute(
       Sql.named('''
 INSERT INTO study_sessions (
-  id, uid, lesson_id, started_at, ended_at, total_questions, correct_answers, xp_earned, mistake_word_ids
+  id, uid, lesson_id, started_at, ended_at, total_questions, correct_answers, xp_earned, mistake_word_ids, answer_events
 ) VALUES (
-  @id, @uid, @lessonId, @startedAt, @endedAt, @totalQuestions, @correctAnswers, @xpEarned, @mistakeWordIds
+  @id, @uid, @lessonId, @startedAt, @endedAt, @totalQuestions, @correctAnswers, @xpEarned, @mistakeWordIds, @answerEvents
 )
 '''),
       parameters: {
@@ -564,6 +578,7 @@ INSERT INTO study_sessions (
         'mistakeWordIds': ((data['mistakeWordIds'] as List?) ?? const []).join(
           ',',
         ),
+        'answerEvents': jsonEncode((data['answerEvents'] as List?) ?? const []),
       },
     );
   }
@@ -633,9 +648,9 @@ ON CONFLICT (uid) DO UPDATE SET
     await connection.execute(
       Sql.named('''
 INSERT INTO review_events (
-  id, uid, word_id, is_correct, answer_time_ms, reviewed_at, mastery_before, mastery_after, next_review_at
+  id, uid, word_id, is_correct, answer_time_ms, confidence, wrong_option, reviewed_at, mastery_before, mastery_after, next_review_at
 ) VALUES (
-  @id, @uid, @wordId, @isCorrect, @answerTimeMs, @reviewedAt, @masteryBefore, @masteryAfter, @nextReviewAt
+  @id, @uid, @wordId, @isCorrect, @answerTimeMs, @confidence, @wrongOption, @reviewedAt, @masteryBefore, @masteryAfter, @nextReviewAt
 )
 '''),
       parameters: {
@@ -644,6 +659,8 @@ INSERT INTO review_events (
         'wordId': data['wordId'],
         'isCorrect': data['isCorrect'],
         'answerTimeMs': data['answerTimeMs'] ?? 0,
+        'confidence': data['confidence'] ?? 3,
+        'wrongOption': data['wrongOption'] ?? data['wrong_option'],
         'reviewedAt': _date(data['reviewedAt']) ?? DateTime.now().toUtc(),
         'masteryBefore': data['masteryBefore'] ?? 0,
         'masteryAfter': data['masteryAfter'] ?? 0,
