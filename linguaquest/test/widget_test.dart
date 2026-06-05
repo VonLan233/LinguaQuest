@@ -18,11 +18,13 @@ import 'package:linguaquest/data/models/user_profile.dart';
 import 'package:linguaquest/data/repositories/auth_repository.dart';
 import 'package:linguaquest/data/repositories/custom_word_repository.dart';
 import 'package:linguaquest/data/repositories/learning_repository.dart';
+import 'package:linguaquest/data/repositories/study_plan_repository.dart';
 import 'package:linguaquest/data/seed/seed_lessons.dart';
 import 'package:linguaquest/features/auth/goal_setup_screen.dart';
 import 'package:linguaquest/features/learning/lesson_preview_screen.dart';
 import 'package:linguaquest/features/quiz/lesson_result_screen.dart';
 import 'package:linguaquest/features/quiz/quiz_session_screen.dart';
+import 'package:linguaquest/features/profile/study_plan_settings_screen.dart';
 import 'package:linguaquest/features/search/search_screen.dart';
 import 'package:linguaquest/features/wordbook/target_word_detail_screen.dart';
 import 'package:linguaquest/features/wordbook/word_detail_screen.dart';
@@ -1611,6 +1613,207 @@ void main() {
     expect(state.studyPlan, isNull);
   });
 
+  test(
+    'bootstrap derives reminder settings from the loaded study plan',
+    () async {
+      final now = DateTime(2026, 5, 25);
+      final profile = UserProfile(
+        uid: 'remote-plan-user',
+        name: 'Ria',
+        email: 'ria@lingua.quest',
+        targetExam: 'Daily English',
+        level: 'Elementary',
+        dailyGoal: 10,
+        xp: 0,
+        streak: 0,
+        createdAt: now,
+        updatedAt: now,
+      );
+      final loadedPlan = StudyPlan.defaultsFor(
+        uid: profile.uid,
+        targetExam: profile.targetExam,
+        dailyGoal: profile.dailyGoal,
+      ).copyWith(status: 'paused', reminderTime: '08:15');
+      SharedPreferences.setMockInitialValues({
+        'linguaquest.profile': jsonEncode(profile.toJson()),
+        'linguaquest.reminderSettings': jsonEncode(
+          const DailyReminderSettings(
+            enabled: true,
+            hour: 22,
+            minute: 45,
+          ).toJson(),
+        ),
+      });
+      final container = ProviderContainer(
+        overrides: [
+          studyPlanRepositoryProvider.overrideWithValue(
+            _MemoryStudyPlanRepository(loadedPlan),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await container.read(appControllerProvider.notifier).bootstrap();
+      final state = container.read(appControllerProvider);
+
+      expect(state.studyPlan?.isPaused, true);
+      expect(state.reminderSettings.enabled, false);
+      expect(state.reminderSettings.hour, 8);
+      expect(state.reminderSettings.minute, 15);
+    },
+  );
+
+  test('resetting a study plan updates custom words concurrently', () async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'reset-parallel-user',
+      name: 'Rex',
+      email: 'rex@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    final plan = StudyPlan.defaultsFor(
+      uid: profile.uid,
+      targetExam: profile.targetExam,
+      dailyGoal: profile.dailyGoal,
+    );
+    final customWordRepository = _ConcurrentCustomWordRepository()
+      ..words.addAll(
+        List.generate(
+          4,
+          (index) =>
+              CustomWord.create(
+                id: 'reset-word-$index',
+                uid: profile.uid,
+                word: 'reset-$index',
+                meaning: 'reset meaning $index',
+                exampleSentence: 'Reset word $index.',
+                now: now,
+              ).copyWith(
+                masteryLevel: 4,
+                correctCount: 6,
+                wrongCount: 2,
+                nextReviewAt: now.add(const Duration(days: 7)),
+              ),
+        ),
+      );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer(
+      overrides: [
+        customWordRepositoryProvider.overrideWithValue(customWordRepository),
+        studyPlanRepositoryProvider.overrideWithValue(
+          _MemoryStudyPlanRepository(plan),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    expect(
+      await container.read(appControllerProvider.notifier).resetStudyPlan(),
+      true,
+    );
+
+    expect(customWordRepository.maxConcurrentUpdates, greaterThan(1));
+    for (final word in container.read(appControllerProvider).customWords) {
+      expect(word.masteryLevel, 0);
+      expect(word.correctCount, 0);
+      expect(word.wrongCount, 0);
+    }
+  });
+
+  testWidgets('study plan save allows an unchanged expired target date', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'expired-date-user',
+      name: 'Eda',
+      email: 'eda@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    final studyPlanRepository = _MemoryStudyPlanRepository(
+      StudyPlan.defaultsFor(
+        uid: profile.uid,
+        targetExam: profile.targetExam,
+        dailyGoal: profile.dailyGoal,
+      ).copyWith(targetFinishDate: DateTime(2026, 1, 15)),
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          studyPlanRepositoryProvider.overrideWithValue(studyPlanRepository),
+        ],
+        child: const LinguaQuestApp(),
+      ),
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.scrollUntilVisible(
+      find.text('调整计划'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('调整计划'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('保存学习计划'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('目标完成日期不能早于今天。'), findsNothing);
+    expect(find.text('学习计划已保存。'), findsOneWidget);
+    expect(
+      studyPlanRepository.savedPlan?.targetFinishDate,
+      DateTime(2026, 1, 15),
+    );
+  });
+
+  test('study plan save rejects a changed expired target date', () {
+    final today = DateTime(2026, 5, 25, 12);
+
+    expect(
+      rejectChangedExpiredTargetFinishDate(
+        finishDate: DateTime(2026, 1, 15, 8),
+        originalFinishDate: DateTime(2026, 1, 15, 20),
+        today: today,
+      ),
+      false,
+    );
+    expect(
+      rejectChangedExpiredTargetFinishDate(
+        finishDate: DateTime(2026, 2, 1),
+        originalFinishDate: DateTime(2026, 1, 15),
+        today: today,
+      ),
+      true,
+    );
+    expect(
+      rejectChangedExpiredTargetFinishDate(
+        finishDate: DateTime(2026, 5, 25),
+        originalFinishDate: DateTime(2026, 1, 15),
+        today: today,
+      ),
+      false,
+    );
+  });
+
   test('logout keeps lesson status and completed ids in sync', () async {
     final now = DateTime(2026, 5, 25);
     final profile = UserProfile(
@@ -2445,10 +2648,39 @@ class _FlakyLearningRepository implements LearningRepository {
   Future<void> recordStudySession(StudySession session) async {}
 }
 
+class _MemoryStudyPlanRepository implements StudyPlanRepository {
+  _MemoryStudyPlanRepository(this.savedPlan);
+
+  StudyPlan? savedPlan;
+
+  @override
+  Future<StudyPlan?> load(String uid) async => savedPlan;
+
+  @override
+  Future<StudyPlan> reset(StudyPlan plan) async {
+    final now = DateTime.now();
+    final resetPlan = plan.copyWith(
+      startDate: DateTime(now.year, now.month, now.day),
+      status: 'active',
+      updatedAt: now,
+    );
+    savedPlan = resetPlan;
+    return resetPlan;
+  }
+
+  @override
+  Future<StudyPlan> save(StudyPlan plan) async {
+    savedPlan = plan;
+    return plan;
+  }
+}
+
 class _ConcurrentCustomWordRepository implements CustomWordRepository {
   final List<CustomWord> words = [];
   int _activeCreates = 0;
+  int _activeUpdates = 0;
   int maxConcurrentCreates = 0;
+  int maxConcurrentUpdates = 0;
 
   @override
   Future<List<CustomWord>> list(String uid) async => words;
@@ -2472,12 +2704,18 @@ class _ConcurrentCustomWordRepository implements CustomWordRepository {
 
   @override
   Future<CustomWord> update(CustomWord word) async {
+    _activeUpdates++;
+    if (_activeUpdates > maxConcurrentUpdates) {
+      maxConcurrentUpdates = _activeUpdates;
+    }
+    await Future<void>.delayed(const Duration(milliseconds: 10));
     final index = words.indexWhere((item) => item.id == word.id);
     if (index == -1) {
       words.add(word);
     } else {
       words[index] = word;
     }
+    _activeUpdates--;
     return word;
   }
 }

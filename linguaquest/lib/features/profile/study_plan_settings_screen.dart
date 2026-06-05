@@ -201,12 +201,16 @@ class _StudyPlanSettingsScreenState
     if (user == null) return;
     final today = _dateOnly(DateTime.now());
     final finishDate = _dateOnly(_targetFinishDate);
-    if (finishDate.isBefore(today)) {
+    final basePlan = state.studyPlan ?? _fallbackPlan(user.uid);
+    if (rejectChangedExpiredTargetFinishDate(
+      finishDate: finishDate,
+      originalFinishDate: basePlan.targetFinishDate,
+      today: today,
+    )) {
       _showMessage('目标完成日期不能早于今天。');
       return;
     }
 
-    final basePlan = state.studyPlan ?? _fallbackPlan(user.uid);
     final plan = basePlan.copyWith(
       uid: user.uid,
       wordBookId: _wordBookId,
@@ -304,8 +308,22 @@ class _StudyPlanSettingsScreenState
   }
 
   DateTime _dateOnly(DateTime value) {
-    return DateTime(value.year, value.month, value.day);
+    return _studyPlanDateOnly(value);
   }
+}
+
+bool rejectChangedExpiredTargetFinishDate({
+  required DateTime finishDate,
+  required DateTime originalFinishDate,
+  required DateTime today,
+}) {
+  final normalizedFinishDate = _studyPlanDateOnly(finishDate);
+  return normalizedFinishDate.isBefore(_studyPlanDateOnly(today)) &&
+      normalizedFinishDate != _studyPlanDateOnly(originalFinishDate);
+}
+
+DateTime _studyPlanDateOnly(DateTime value) {
+  return DateTime(value.year, value.month, value.day);
 }
 
 class _StudyPlanAppBar extends StatelessWidget implements PreferredSizeWidget {

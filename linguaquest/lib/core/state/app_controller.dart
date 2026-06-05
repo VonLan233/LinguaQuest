@@ -134,6 +134,9 @@ class AppController extends Notifier<AppState> {
       final studyPlan = user == null
           ? null
           : await _loadOrCreateStudyPlan(user);
+      final reminderSettings = studyPlan == null
+          ? _loadReminderSettings(prefs)
+          : _reminderSettingsForPlan(studyPlan);
       state = state.copyWith(
         isBootstrapped: true,
         isLoading: false,
@@ -141,7 +144,7 @@ class AppController extends Notifier<AppState> {
         lessons: lessons,
         customWords: words,
         themeMode: _themeModeFromName(prefs.getString(_themeModeKey)),
-        reminderSettings: _loadReminderSettings(prefs),
+        reminderSettings: reminderSettings,
         studyPlan: studyPlan,
         completedLessonIds: completedLessonIds,
         todayCompletedLessonIds: todayCompletedLessonIds,
@@ -284,18 +287,19 @@ class AppController extends Notifier<AppState> {
       final resetPlan = await _studyPlanRepository.reset(plan);
       final reminderSettings = _reminderSettingsForPlan(resetPlan);
       await _persistReminderSettings(reminderSettings);
-      final resetWords = <CustomWord>[];
       final now = DateTime.now();
-      for (final word in state.customWords) {
-        final resetWord = word.copyWith(
-          masteryLevel: 0,
-          correctCount: 0,
-          wrongCount: 0,
-          nextReviewAt: now,
-          updatedAt: now,
-        );
-        resetWords.add(await _customWordRepository.update(resetWord));
-      }
+      final resetWords = await Future.wait(
+        state.customWords.map((word) {
+          final resetWord = word.copyWith(
+            masteryLevel: 0,
+            correctCount: 0,
+            wrongCount: 0,
+            nextReviewAt: now,
+            updatedAt: now,
+          );
+          return _customWordRepository.update(resetWord);
+        }),
+      );
       await _saveLessonProgress(<String>{}, <String>{});
       await _saveTodayReviewWords(<String>{});
       state = state.copyWith(
