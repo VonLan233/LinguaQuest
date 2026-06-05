@@ -381,7 +381,7 @@ ON CONFLICT (id) DO UPDATE SET
       Sql.named('''
 SELECT * FROM user_words
 WHERE uid=@uid
-  ${dueOnly ? "AND next_review_at <= NOW() AND is_ignored = FALSE AND status IN ('Review', 'Relearning', 'Mastered')" : ''}
+  ${dueOnly ? "AND next_review_at <= NOW() AND is_ignored = FALSE AND status NOT IN ('New', 'Previewed', 'Ignored')" : ''}
 ORDER BY ${dueOnly ? 'next_review_at ASC, wrong_count DESC' : 'updated_at DESC'}
 '''),
       parameters: {'uid': uid},
