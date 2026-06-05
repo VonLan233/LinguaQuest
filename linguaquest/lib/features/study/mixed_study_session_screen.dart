@@ -355,8 +355,15 @@ class _MixedStudySessionScreenState
       if (word.id != item.wordId) addDistractor(word.meaning);
     }
 
-    distractorPool.shuffle(_random);
-    final options = <String>[item.meaning, ...distractorPool.take(3)];
+    final options = <String>[item.meaning];
+    final randomIndices = <int>{};
+    final targetCount = min(3, distractorPool.length);
+    while (randomIndices.length < targetCount) {
+      randomIndices.add(_random.nextInt(distractorPool.length));
+    }
+    for (final index in randomIndices) {
+      options.add(distractorPool[index]);
+    }
     while (options.length < 4) {
       options.add('还不确定 ${options.length}');
     }
