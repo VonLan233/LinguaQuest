@@ -12,6 +12,7 @@ import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../data/dictionary_search.dart';
+import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
@@ -37,15 +38,28 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   List<Lesson>? _cachedFormalLessons;
   List<Word> _cachedCurrentWords = const [];
 
+  String? _lastCurrentWordBookId;
+  List<WordBook>? _lastWordBooks;
+  List<CustomWord>? _lastCustomWords;
+
   @override
   void initState() {
     super.initState();
     _stateSubscription = ref.listenManual<AppState>(appControllerProvider, (
       AppState? _,
-      AppState _,
+      AppState state,
     ) {
       if (!mounted) return;
-      _scheduleSearch();
+      final shouldSearch = _lastCurrentWordBookId != state.currentWordBookId ||
+          !_listEquals(_lastWordBooks, state.wordBooks) ||
+          !_listEquals(_lastCustomWords, state.customWords) ||
+          !identical(_cachedFormalLessons, state.formalLessons);
+      _lastCurrentWordBookId = state.currentWordBookId;
+      _lastWordBooks = state.wordBooks;
+      _lastCustomWords = state.customWords;
+      if (shouldSearch) {
+        _scheduleSearch();
+      }
     }, fireImmediately: true);
   }
 
@@ -210,6 +224,16 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     _cachedFormalLessons = state.formalLessons;
     _cachedCurrentWords = words;
     return words;
+  }
+
+  static bool _listEquals<T>(List<T>? a, List<T>? b) {
+    if (identical(a, b)) return true;
+    if (a == null || b == null) return false;
+    if (a.length != b.length) return false;
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
   }
 }
 

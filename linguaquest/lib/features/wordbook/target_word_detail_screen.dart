@@ -472,7 +472,8 @@ class _ExampleSections extends StatelessWidget {
     final examples = word.examples.isEmpty
         ? [WordExample(en: word.exampleSentence, cn: word.exampleTranslation)]
         : word.examples;
-    final cleanExamples = examples.where((item) => item.en.trim().isNotEmpty);
+    final cleanExamples = examples.where((item) => item.en.trim().isNotEmpty).toList();
+    if (cleanExamples.isEmpty) return const SizedBox();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

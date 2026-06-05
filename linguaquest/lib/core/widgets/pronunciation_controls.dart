@@ -108,18 +108,22 @@ class _PronunciationControlsState extends State<PronunciationControls> {
       _failedAccent = hasWord ? null : accent;
     });
 
+    final label = accent.label;
+    final String message;
+    if (!hasWord) {
+      message = '$label发音失败，请重试';
+    } else if (audioUrl.isEmpty) {
+      message = '$label发音：$word';
+    } else {
+      message = '$label发音已加载';
+    }
+
     final messenger = ScaffoldMessenger.maybeOf(context);
     messenger?.clearSnackBars();
     messenger?.showSnackBar(
       SnackBar(
         duration: const Duration(milliseconds: 900),
-        content: Text(
-          hasWord
-              ? audioUrl.isEmpty
-                    ? '${accent.label}发音：$word'
-                    : '${accent.label}发音已加载'
-              : '${accent.label}发音失败，请重试',
-        ),
+        content: Text(message),
       ),
     );
   }
