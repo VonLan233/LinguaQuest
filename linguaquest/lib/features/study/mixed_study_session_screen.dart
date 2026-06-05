@@ -262,25 +262,26 @@ class _MixedStudySessionScreenState
     String answer,
   ) async {
     setState(() => _isSubmitting = true);
-    final succeeded = await ref
-        .read(appControllerProvider.notifier)
-        .reviewWord(
-          item.wordId,
-          isCorrect,
-          dimension: ReviewDimension.confidence,
-          answerTimeMs: responseTime,
-          confidence: _confidence,
-          wrongOption: isCorrect ? null : answer,
-        );
-    if (!mounted) return;
-    if (!succeeded) {
-      final message =
-          ref.read(appControllerProvider).errorMessage ?? '暂时无法保存复习记录';
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
+    try {
+      final succeeded = await ref
+          .read(appControllerProvider.notifier)
+          .reviewWord(
+            item.wordId,
+            isCorrect,
+            dimension: ReviewDimension.confidence,
+            answerTimeMs: responseTime,
+            confidence: _confidence,
+            wrongOption: isCorrect ? null : answer,
+          );
+      if (!mounted) return;
+      if (!succeeded) {
+        _showSubmitError('暂时无法保存复习记录');
+      }
+    } catch (_) {
+      if (mounted) _showSubmitError('暂时无法保存复习记录');
+    } finally {
+      if (mounted) setState(() => _isSubmitting = false);
     }
-    setState(() => _isSubmitting = false);
   }
 
   void _applySelfAssessment(StudySessionQueueItem item) {
@@ -398,8 +399,8 @@ class _MixedStudySessionScreenState
       return;
     }
     if (action == _ExitAction.save) {
-      await _saveSessionProgress(completeCurrentLesson: false);
-      if (!activeContext.mounted) return;
+      final saved = await _saveSessionProgress(completeCurrentLesson: false);
+      if (!activeContext.mounted || !saved) return;
     }
     _leave(activeContext);
   }
@@ -409,32 +410,49 @@ class _MixedStudySessionScreenState
       context.go('/home');
       return;
     }
-    await _saveSessionProgress(completeCurrentLesson: true);
+    final saved = await _saveSessionProgress(completeCurrentLesson: true);
     if (!mounted) return;
-    context.go('/home');
+    if (saved) context.go('/home');
   }
 
-  Future<void> _saveSessionProgress({
+  Future<bool> _saveSessionProgress({
     required bool completeCurrentLesson,
   }) async {
-    if (_isSubmitting) return;
+    if (_isSubmitting) return false;
     setState(() => _isSubmitting = true);
-    final now = DateTime.now();
-    final xp = (_correctAnswers * 4).clamp(0, 80).toInt();
-    await ref
-        .read(appControllerProvider.notifier)
-        .completeMixedStudySession(
-          lessonId: 'daily-mixed-session',
-          totalQuestions: _answerLogs.length,
-          correctAnswers: _correctAnswers,
-          mistakeWordIds: _wrongItemIds.toList(),
-          answerEvents: [for (final log in _answerLogs) log.toJson()],
-          startedAt: _sessionStartedAt,
-          endedAt: now,
-          completeCurrentLesson: completeCurrentLesson,
-          xpEarned: xp,
-        );
-    if (mounted) setState(() => _isSubmitting = false);
+    try {
+      final now = DateTime.now();
+      final xp = (_correctAnswers * 4).clamp(0, 80).toInt();
+      final succeeded = await ref
+          .read(appControllerProvider.notifier)
+          .completeMixedStudySession(
+            lessonId: 'daily-mixed-session',
+            totalQuestions: _answerLogs.length,
+            correctAnswers: _correctAnswers,
+            mistakeWordIds: _wrongItemIds.toList(),
+            answerEvents: [for (final log in _answerLogs) log.toJson()],
+            startedAt: _sessionStartedAt,
+            endedAt: now,
+            completeCurrentLesson: completeCurrentLesson,
+            xpEarned: xp,
+          );
+      if (mounted && !succeeded) {
+        _showSubmitError('暂时无法保存学习进度');
+      }
+      return succeeded;
+    } catch (_) {
+      if (mounted) _showSubmitError('暂时无法保存学习进度');
+      return false;
+    } finally {
+      if (mounted) setState(() => _isSubmitting = false);
+    }
+  }
+
+  void _showSubmitError(String fallback) {
+    final message = ref.read(appControllerProvider).errorMessage ?? fallback;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _leave(BuildContext activeContext) {
