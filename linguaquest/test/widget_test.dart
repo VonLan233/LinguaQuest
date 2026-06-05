@@ -303,8 +303,7 @@ void main() {
     expect(find.text('显示释义'), findsNothing);
     expect(find.text('加入错词卡'), findsNothing);
 
-    await tester.tap(find.widgetWithText(OutlinedButton, '分配'));
-    await tester.pumpAndSettle();
+    await _tapAnyOptionExcept(tester, '含糊的');
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
 
@@ -352,8 +351,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(FilledButton, '复习 2'));
     await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(OutlinedButton, '分配'));
-    await tester.pumpAndSettle();
+    await _tapAnyOptionExcept(tester, '含糊的');
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
 
@@ -1267,28 +1265,24 @@ void main() {
     await _openCurrentLessonCards(tester);
     await _completeNewWordCards(tester);
 
-    await tester.tap(find.text('评估'));
-    await tester.pumpAndSettle();
+    await _tapOption(tester, '评估');
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('再试一次'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('分配'));
-    await tester.pumpAndSettle();
+    await _tapOption(tester, '分配');
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('evaluate'));
-    await tester.pumpAndSettle();
+    await _tapOption(tester, 'evaluate');
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('对比'));
-    await tester.pumpAndSettle();
+    await _tapOption(tester, '对比');
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('继续'));
@@ -1355,8 +1349,7 @@ void main() {
     await _completeNewWordCards(tester);
 
     expect(find.text('英文选义'), findsOneWidget);
-    await tester.tap(find.text('分配'));
-    await tester.pumpAndSettle();
+    await _tapOption(tester, '分配');
     await tester.tap(find.text('检查'));
     await tester.pump();
 
@@ -1419,8 +1412,7 @@ void main() {
     expect(find.text('检查'), findsOneWidget);
     expect(find.byType(BackButtonIcon), findsOneWidget);
 
-    await tester.tap(find.text('评估'));
-    await tester.pumpAndSettle();
+    await _tapOption(tester, '评估');
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
 
@@ -2337,6 +2329,36 @@ Future<void> _openCurrentLessonCards(WidgetTester tester) async {
   await tester.pumpAndSettle();
   await tester.tap(find.widgetWithText(FilledButton, '开始学习'));
   await tester.pumpAndSettle();
+}
+
+Future<void> _tapOption(WidgetTester tester, String label) async {
+  final option = find.widgetWithText(OutlinedButton, label).first;
+  expect(option, findsOneWidget);
+  await tester.ensureVisible(option);
+  await tester.pumpAndSettle();
+  final rect = tester.getRect(option);
+  await tester.tapAt(Offset(rect.left + 24, rect.top + 24));
+  await tester.pumpAndSettle();
+}
+
+Future<void> _tapAnyOptionExcept(WidgetTester tester, String label) async {
+  for (final element in find.byType(OutlinedButton).evaluate()) {
+    final option = find.byElementPredicate((candidate) {
+      return identical(candidate, element);
+    });
+    final hasExcludedLabel = find
+        .descendant(of: option, matching: find.text(label))
+        .evaluate()
+        .isNotEmpty;
+    if (hasExcludedLabel) continue;
+    await tester.ensureVisible(option);
+    await tester.pumpAndSettle();
+    final rect = tester.getRect(option);
+    await tester.tapAt(Offset(rect.left + 24, rect.top + 24));
+    await tester.pumpAndSettle();
+    return;
+  }
+  fail('No option found except $label');
 }
 
 String _visibleLessonTitle() {

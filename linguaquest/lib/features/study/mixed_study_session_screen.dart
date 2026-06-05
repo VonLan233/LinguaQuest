@@ -26,6 +26,7 @@ class _MixedStudySessionScreenState
     extends ConsumerState<MixedStudySessionScreen> {
   static const _builder = StudySessionQueueBuilder();
 
+  final Random _random = Random();
   final List<StudySessionQueueItem> _queue = [];
   final List<StudyAnswerLog> _answerLogs = [];
   final Set<String> _wrongItemIds = {};
@@ -40,6 +41,8 @@ class _MixedStudySessionScreenState
   int _completedItems = 0;
   int _correctAnswers = 0;
   int _confidence = 3;
+  List<String>? _cachedOptions;
+  String? _cachedOptionsItemId;
 
   @override
   void initState() {
@@ -159,6 +162,9 @@ class _MixedStudySessionScreenState
       _queue
         ..clear()
         ..addAll(plan.items);
+      _cachedOptions = null;
+      _cachedOptionsItemId = null;
+      _confidence = 3;
       _itemStartedAt = DateTime.now();
     });
   }
@@ -314,27 +320,48 @@ class _MixedStudySessionScreenState
       _selected = null;
       _checked = false;
       _lastCorrect = false;
+      _confidence = 3;
+      _cachedOptions = null;
+      _cachedOptionsItemId = null;
       _itemStartedAt = DateTime.now();
     });
   }
 
   List<String> _optionsFor(StudySessionQueueItem item) {
+    if (_cachedOptionsItemId == item.id && _cachedOptions != null) {
+      return _cachedOptions!;
+    }
+
     final state = ref.read(appControllerProvider);
-    final options = <String>{item.meaning};
+    final answerKey = item.meaning.trim().toLowerCase();
+    final seen = <String>{answerKey};
+    final distractorPool = <String>[];
+
+    void addDistractor(String value) {
+      final cleaned = value.trim();
+      if (cleaned.isEmpty) return;
+      final key = cleaned.toLowerCase();
+      if (seen.add(key)) distractorPool.add(cleaned);
+    }
+
     for (final lesson in state.formalLessons) {
       for (final word in lesson.words) {
-        if (word.id != item.wordId) options.add(word.meaning);
-        if (options.length == 4) return options.toList();
+        if (word.id != item.wordId) addDistractor(word.meaning);
       }
     }
     for (final word in state.customWords) {
-      if (word.id != item.wordId) options.add(word.meaning);
-      if (options.length == 4) return options.toList();
+      if (word.id != item.wordId) addDistractor(word.meaning);
     }
+
+    distractorPool.shuffle(_random);
+    final options = <String>[item.meaning, ...distractorPool.take(3)];
     while (options.length < 4) {
       options.add('还不确定 ${options.length}');
     }
-    return options.toList();
+    options.shuffle(_random);
+    _cachedOptions = List.unmodifiable(options);
+    _cachedOptionsItemId = item.id;
+    return _cachedOptions!;
   }
 
   Future<void> _handleExit(BuildContext activeContext) async {
