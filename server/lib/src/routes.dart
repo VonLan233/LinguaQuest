@@ -330,9 +330,9 @@ Map<String, dynamic> wordDto(Map<String, dynamic> row) {
     'contextScore': row['context_score'] ?? row['contextScore'] ?? 0,
     'confidenceScore': row['confidence_score'] ?? row['confidenceScore'] ?? 0,
     'nextReviewAt': _dateValue(row['next_review_at'] ?? row['nextReviewAt']),
-    'lastReviewedAt': row['last_reviewed_at'] == null
-        ? row['lastReviewedAt']?.toString()
-        : _dateValue(row['last_reviewed_at']),
+    'lastReviewedAt': nullableDateValue(
+      row['last_reviewed_at'] ?? row['lastReviewedAt'],
+    ),
     'createdAt': _dateValue(row['created_at'] ?? row['createdAt']),
     'updatedAt': _dateValue(row['updated_at'] ?? row['updatedAt']),
     'source': row['source'] ?? 'custom',
@@ -370,9 +370,9 @@ Map<String, dynamic> userWordDto(Map<String, dynamic> row) {
     'contextScore': row['context_score'] ?? row['contextScore'] ?? 0,
     'confidenceScore': row['confidence_score'] ?? row['confidenceScore'] ?? 0,
     'nextReviewAt': _dateValue(row['next_review_at'] ?? row['nextReviewAt']),
-    'lastReviewedAt': row['last_reviewed_at'] == null
-        ? row['lastReviewedAt']?.toString()
-        : _dateValue(row['last_reviewed_at']),
+    'lastReviewedAt': nullableDateValue(
+      row['last_reviewed_at'] ?? row['lastReviewedAt'],
+    ),
     'createdAt': _dateValue(row['created_at'] ?? row['createdAt']),
     'updatedAt': _dateValue(row['updated_at'] ?? row['updatedAt']),
     'source': 'target',
@@ -439,4 +439,10 @@ Future<void> _ensureNotificationsForToday(
 String _dateValue(Object? value) {
   if (value is DateTime) return value.toIso8601String();
   return value?.toString() ?? DateTime.now().toUtc().toIso8601String();
+}
+
+String? nullableDateValue(Object? value) {
+  if (value == null) return null;
+  if (value is DateTime) return value.toIso8601String();
+  return value.toString();
 }
