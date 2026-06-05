@@ -26,6 +26,7 @@ class _StudyPlanSettingsScreenState
   final _dailyReviewController = TextEditingController();
 
   late final ProviderSubscription<AppState> _stateSubscription;
+  _PlanInitializationKey? _lastInitializedPlanKey;
   var _initialized = false;
   var _wordBookId = 'daily-english';
   var _targetFinishDate = DateTime.now().add(const Duration(days: 30));
@@ -160,22 +161,25 @@ class _StudyPlanSettingsScreenState
   }
 
   void _initializeFromState(AppState state, {required bool notify}) {
-    if (_initialized) return;
     final user = state.user;
     if (user == null) return;
-    final plan = state.studyPlan ?? _fallbackPlan(user.uid);
+    final statePlan = state.studyPlan;
+    final plan = statePlan ?? _fallbackPlan(user.uid);
+    final planKey = statePlan == null
+        ? _PlanInitializationKey.fallback(user.uid)
+        : _PlanInitializationKey.fromPlan(statePlan);
+    if (_initialized && _lastInitializedPlanKey == planKey) {
+      return;
+    }
 
     void updateFields() {
       _wordBookId = plan.wordBookId;
       _dailyNewController.text = plan.dailyNewTarget.toString();
       _dailyReviewController.text = plan.dailyReviewLimit.toString();
       _targetFinishDate = plan.targetFinishDate;
-      final parts = plan.reminderTime.split(':');
-      _reminderTime = TimeOfDay(
-        hour: int.tryParse(parts.first) ?? 20,
-        minute: parts.length > 1 ? int.tryParse(parts[1]) ?? 0 : 0,
-      );
+      _reminderTime = parseStudyPlanReminderTime(plan.reminderTime);
       _initialized = true;
+      _lastInitializedPlanKey = planKey;
     }
 
     if (notify && mounted) {
@@ -273,13 +277,16 @@ class _StudyPlanSettingsScreenState
 
   Future<void> _pickTargetFinishDate() async {
     final today = _dateOnly(DateTime.now());
+    final lastDate = today.add(const Duration(days: 730));
     final picked = await showDatePicker(
       context: context,
-      initialDate: _targetFinishDate.isBefore(today)
-          ? today
-          : _targetFinishDate,
+      initialDate: clampStudyPlanPickerInitialDate(
+        selected: _targetFinishDate,
+        today: today,
+        lastDate: lastDate,
+      ),
       firstDate: today,
-      lastDate: today.add(const Duration(days: 730)),
+      lastDate: lastDate,
     );
     if (picked == null || !mounted) return;
     setState(() => _targetFinishDate = picked);
@@ -324,6 +331,51 @@ bool rejectChangedExpiredTargetFinishDate({
 
 DateTime _studyPlanDateOnly(DateTime value) {
   return DateTime(value.year, value.month, value.day);
+}
+
+class _PlanInitializationKey {
+  const _PlanInitializationKey({required this.id, required this.updatedAt});
+
+  factory _PlanInitializationKey.fromPlan(StudyPlan plan) {
+    return _PlanInitializationKey(id: plan.id, updatedAt: plan.updatedAt);
+  }
+
+  factory _PlanInitializationKey.fallback(String uid) {
+    return _PlanInitializationKey(id: 'fallback:$uid', updatedAt: null);
+  }
+
+  final String id;
+  final DateTime? updatedAt;
+
+  @override
+  bool operator ==(Object other) {
+    return other is _PlanInitializationKey &&
+        other.id == id &&
+        other.updatedAt == updatedAt;
+  }
+
+  @override
+  int get hashCode => Object.hash(id, updatedAt);
+}
+
+DateTime clampStudyPlanPickerInitialDate({
+  required DateTime selected,
+  required DateTime today,
+  required DateTime lastDate,
+}) {
+  final selectedDay = _studyPlanDateOnly(selected);
+  final firstDay = _studyPlanDateOnly(today);
+  final lastDay = _studyPlanDateOnly(lastDate);
+  if (selectedDay.isBefore(firstDay)) return firstDay;
+  if (selectedDay.isAfter(lastDay)) return lastDay;
+  return selectedDay;
+}
+
+TimeOfDay parseStudyPlanReminderTime(String value) {
+  final parts = value.split(':');
+  final hour = int.tryParse(parts.first) ?? 20;
+  final minute = parts.length > 1 ? int.tryParse(parts[1]) ?? 0 : 0;
+  return TimeOfDay(hour: hour.clamp(0, 23), minute: minute.clamp(0, 59));
 }
 
 class _StudyPlanAppBar extends StatelessWidget implements PreferredSizeWidget {

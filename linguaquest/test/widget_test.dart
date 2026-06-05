@@ -882,6 +882,56 @@ void main() {
     expect(clampDeadlinePickerInitialDate(now: now), fallback);
   });
 
+  test('study plan picker initial date stays inside selectable bounds', () {
+    final today = DateTime(2026, 5, 25, 15, 45);
+    final firstDate = DateTime(2026, 5, 25);
+    final lastDate = DateTime(2028, 5, 24);
+
+    expect(
+      clampStudyPlanPickerInitialDate(
+        selected: DateTime(2026, 5, 1),
+        today: today,
+        lastDate: lastDate,
+      ),
+      firstDate,
+    );
+    expect(
+      clampStudyPlanPickerInitialDate(
+        selected: DateTime(2026, 5, 25, 23, 59),
+        today: today,
+        lastDate: lastDate,
+      ),
+      firstDate,
+    );
+    expect(
+      clampStudyPlanPickerInitialDate(
+        selected: DateTime(2030, 1, 1),
+        today: today,
+        lastDate: lastDate,
+      ),
+      lastDate,
+    );
+  });
+
+  test('study plan reminder time parsing clamps invalid values', () {
+    expect(
+      parseStudyPlanReminderTime('08:15'),
+      const TimeOfDay(hour: 8, minute: 15),
+    );
+    expect(
+      parseStudyPlanReminderTime('99:99'),
+      const TimeOfDay(hour: 23, minute: 59),
+    );
+    expect(
+      parseStudyPlanReminderTime('-1:-5'),
+      const TimeOfDay(hour: 0, minute: 0),
+    );
+    expect(
+      parseStudyPlanReminderTime('bad'),
+      const TimeOfDay(hour: 20, minute: 0),
+    );
+  });
+
   test('learning plan day count uses calendar days', () {
     final plan = StudyPlan(
       id: 'study-plan-calendar-user',
@@ -898,6 +948,8 @@ void main() {
     );
 
     expect(plan.daysLeft(DateTime(2026, 5, 25, 23, 30)), 3);
+    expect(plan.daysLeft(DateTime(2026, 5, 27, 23, 30)), 1);
+    expect(plan.daysLeft(DateTime(2026, 5, 28)), 0);
   });
 
   testWidgets('dark semantic surfaces keep readable contrast', (tester) async {
@@ -1812,6 +1864,158 @@ void main() {
       ),
       false,
     );
+  });
+
+  testWidgets('study plan settings resyncs when the saved plan changes', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'settings-resync-user',
+      name: 'Ria',
+      email: 'settings-resync@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    final initialPlan =
+        StudyPlan.defaultsFor(
+          uid: profile.uid,
+          targetExam: profile.targetExam,
+          dailyGoal: profile.dailyGoal,
+        ).copyWith(
+          dailyNewTarget: 10,
+          dailyReviewLimit: 20,
+          reminderTime: '20:00',
+          updatedAt: now,
+        );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer(
+      overrides: [
+        studyPlanRepositoryProvider.overrideWithValue(
+          _MemoryStudyPlanRepository(initialPlan),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const LinguaQuestApp(),
+      ),
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.scrollUntilVisible(
+      find.text('调整计划'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('调整计划'));
+    await tester.pumpAndSettle();
+
+    List<String> visibleNumberFieldValues() => tester
+        .widgetList<TextFormField>(find.byType(TextFormField))
+        .map((field) => field.controller?.text)
+        .whereType<String>()
+        .toList();
+
+    expect(visibleNumberFieldValues(), contains('10'));
+    final updatedPlan = initialPlan.copyWith(
+      dailyNewTarget: 33,
+      dailyReviewLimit: 44,
+      reminderTime: '99:99',
+      updatedAt: now.add(const Duration(minutes: 1)),
+    );
+    expect(
+      await container
+          .read(appControllerProvider.notifier)
+          .updateStudyPlan(updatedPlan),
+      true,
+    );
+    await tester.pumpAndSettle();
+
+    expect(visibleNumberFieldValues(), contains('33'));
+    await tester.drag(find.byType(Scrollable).last, const Offset(0, -360));
+    await tester.pumpAndSettle();
+    expect(visibleNumberFieldValues(), contains('44'));
+    expect(
+      container.read(appControllerProvider).studyPlan?.dailyReviewLimit,
+      44,
+    );
+  });
+
+  testWidgets('study plan fallback initialization preserves unsaved edits', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'settings-fallback-user',
+      name: 'Fay',
+      email: 'settings-fallback@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer(
+      overrides: [
+        studyPlanRepositoryProvider.overrideWithValue(
+          _MemoryStudyPlanRepository(null),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    container.read(appControllerProvider.notifier).state = container
+        .read(appControllerProvider)
+        .copyWith(studyPlan: null);
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const LinguaQuestApp(),
+      ),
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.scrollUntilVisible(
+      find.text('调整计划'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('调整计划'));
+    await tester.pumpAndSettle();
+
+    final field = tester.widget<TextFormField>(
+      find.byType(TextFormField).first,
+    );
+    field.controller?.text = '77';
+    await container
+        .read(appControllerProvider.notifier)
+        .updateThemeMode(ThemeMode.dark);
+    await tester.pumpAndSettle();
+
+    final updatedField = tester.widget<TextFormField>(
+      find.byType(TextFormField).first,
+    );
+    expect(updatedField.controller?.text, '77');
   });
 
   test('logout keeps lesson status and completed ids in sync', () async {

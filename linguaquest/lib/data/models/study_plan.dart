@@ -34,7 +34,8 @@ class StudyPlan {
       targetFinishDate.month,
       targetFinishDate.day,
     );
-    return targetDay.difference(today).inDays.clamp(0, 9999).toInt() + 1;
+    final diff = targetDay.difference(today).inDays;
+    return diff < 0 ? 0 : diff + 1;
   }
 
   StudyPlan copyWith({
