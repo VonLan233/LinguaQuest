@@ -337,6 +337,7 @@ Lesson _lesson({
   required List<Word> words,
   required List<Word> distractorWords,
 }) {
+  assert(words.length >= 3, 'Lesson $id needs at least 3 words, got ${words.length}');
   return Lesson(
     id: id,
     title: title,

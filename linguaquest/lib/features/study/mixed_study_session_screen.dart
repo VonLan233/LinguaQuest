@@ -42,8 +42,7 @@ class _MixedStudySessionScreenState
   int _completedItems = 0;
   int _correctAnswers = 0;
   int _confidence = 3;
-  List<String>? _cachedOptions;
-  String? _cachedOptionsItemId;
+  List<String> _currentOptions = const [];
 
   @override
   void initState() {
@@ -54,7 +53,6 @@ class _MixedStudySessionScreenState
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(appControllerProvider);
     final current = _queue.isEmpty ? null : _queue.first;
     final total = _completedItems + _queue.length;
     final progress = total == 0
@@ -124,7 +122,32 @@ class _MixedStudySessionScreenState
                         ],
                       ),
                       const SizedBox(height: 14),
-                      Expanded(child: _buildCurrentItem(current, state)),
+                      Expanded(
+                        child: current.step == StudySessionStep.understanding ||
+                                current.isKnowledgeCard
+                            ? _KnowledgeCardStep(
+                                item: current,
+                                showAssessment: current.step ==
+                                    StudySessionStep.understanding,
+                                selectedConfidence: _confidence,
+                                isSubmitting: _isSubmitting,
+                                onConfidenceChanged: (value) =>
+                                    setState(() => _confidence = value),
+                                onContinue: () => _continueFromCard(current),
+                              )
+                            : _QuestionStep(
+                                item: current,
+                                options: _currentOptions,
+                                selected: _selected,
+                                checked: _checked,
+                                lastCorrect: _lastCorrect,
+                                isSubmitting: _isSubmitting,
+                                onSelected: (value) =>
+                                    setState(() => _selected = value),
+                                onPrimary: () =>
+                                    _handleQuestionPrimary(current),
+                              ),
+                      ),
                     ],
                   ),
                 ),
@@ -158,39 +181,19 @@ class _MixedStudySessionScreenState
       mode: widget.mode,
     );
     if (!mounted) return;
+    final firstItem = plan.items.isEmpty ? null : plan.items.first;
+    final options = firstItem != null
+        ? _buildOptionsFor(firstItem, state)
+        : const <String>[];
     setState(() {
       _plan = plan;
       _queue
         ..clear()
         ..addAll(plan.items);
-      _cachedOptions = null;
-      _cachedOptionsItemId = null;
+      _currentOptions = options;
       _confidence = 3;
       _itemStartedAt = DateTime.now();
     });
-  }
-
-  Widget _buildCurrentItem(StudySessionQueueItem item, AppState state) {
-    if (item.step == StudySessionStep.understanding || item.isKnowledgeCard) {
-      return _KnowledgeCardStep(
-        item: item,
-        showAssessment: item.step == StudySessionStep.understanding,
-        selectedConfidence: _confidence,
-        isSubmitting: _isSubmitting,
-        onConfidenceChanged: (value) => setState(() => _confidence = value),
-        onContinue: () => _continueFromCard(item),
-      );
-    }
-    return _QuestionStep(
-      item: item,
-      options: _optionsFor(item, state),
-      selected: _selected,
-      checked: _checked,
-      lastCorrect: _lastCorrect,
-      isSubmitting: _isSubmitting,
-      onSelected: (value) => setState(() => _selected = value),
-      onPrimary: () => _handleQuestionPrimary(item),
-    );
   }
 
   Future<void> _continueFromCard(StudySessionQueueItem item) async {
@@ -316,24 +319,24 @@ class _MixedStudySessionScreenState
   }
 
   void _advanceCurrent() {
+    final state = ref.read(appControllerProvider);
+    if (_queue.isNotEmpty) _queue.removeAt(0);
+    final nextItem = _queue.isEmpty ? null : _queue.first;
+    final options = nextItem != null
+        ? _buildOptionsFor(nextItem, state)
+        : const <String>[];
     setState(() {
-      if (_queue.isNotEmpty) _queue.removeAt(0);
       _completedItems += 1;
       _selected = null;
       _checked = false;
       _lastCorrect = false;
       _confidence = 3;
-      _cachedOptions = null;
-      _cachedOptionsItemId = null;
+      _currentOptions = options;
       _itemStartedAt = DateTime.now();
     });
   }
 
-  List<String> _optionsFor(StudySessionQueueItem item, AppState state) {
-    if (_cachedOptionsItemId == item.id && _cachedOptions != null) {
-      return _cachedOptions!;
-    }
-
+  List<String> _buildOptionsFor(StudySessionQueueItem item, AppState state) {
     final answerKey = item.meaning.trim().toLowerCase();
     final seen = <String>{answerKey};
     final distractorPool = <String>[];
@@ -367,9 +370,7 @@ class _MixedStudySessionScreenState
       options.add('还不确定 ${options.length}');
     }
     options.shuffle(_random);
-    _cachedOptions = List.unmodifiable(options);
-    _cachedOptionsItemId = item.id;
-    return _cachedOptions!;
+    return List.unmodifiable(options);
   }
 
   Future<void> _handleExit(BuildContext activeContext) async {

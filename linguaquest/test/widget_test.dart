@@ -20,6 +20,7 @@ import 'package:linguaquest/data/models/study_session.dart';
 import 'package:linguaquest/data/models/study_plan.dart';
 import 'package:linguaquest/data/models/user_word.dart';
 import 'package:linguaquest/data/models/user_profile.dart';
+import 'package:linguaquest/data/dictionary_search.dart';
 import 'package:linguaquest/data/lesson_factory.dart';
 import 'package:linguaquest/data/remote/api_client.dart';
 import 'package:linguaquest/data/repositories/api_repositories.dart';
@@ -1320,9 +1321,82 @@ void main() {
     await tester.enterText(find.byType(TextField), 'commute');
     await tester.pumpAndSettle();
 
-    expect(find.text('没有找到结果'), findsOneWidget);
-    expect(find.text('添加生词'), findsOneWidget);
+    expect(find.text('commute'), findsWidgets);
+    expect(find.textContaining('例句片段'), findsWidgets);
   });
+
+  testWidgets(
+    'dictionary search matches Chinese definitions and whole corpus',
+    (tester) async {
+      final now = DateTime(2026, 5, 25);
+      final profile = UserProfile(
+        uid: 'dictionary-search-user',
+        name: 'Dora',
+        email: 'dora@lingua.quest',
+        targetExam: 'IELTS',
+        level: 'Intermediate',
+        dailyGoal: 12,
+        xp: 0,
+        streak: 0,
+        createdAt: now,
+        updatedAt: now,
+      );
+      SharedPreferences.setMockInitialValues({
+        'linguaquest.profile': jsonEncode(profile.toJson()),
+      });
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      await container.read(appControllerProvider.notifier).bootstrap();
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            home: const SearchScreen(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final currentWord = container
+          .read(appControllerProvider)
+          .formalLessons
+          .expand((lesson) => lesson.words)
+          .first;
+
+      final directResults = searchDictionaryWords(
+        wordBooks: container.read(appControllerProvider).wordBooks,
+        currentWordBookId: container.read(appControllerProvider).currentWordBookId,
+        scope: DictionarySearchScope.currentWordBook,
+        query: currentWord.meaning,
+        currentWords: container
+            .read(appControllerProvider)
+            .formalLessons
+            .expand((lesson) => lesson.words)
+            .toList(),
+      );
+
+      expect(directResults.map((item) => item.word.id), contains(currentWord.id));
+
+      await tester.enterText(find.byType(TextField), currentWord.meaning);
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pumpAndSettle();
+
+      expect(find.text(currentWord.word), findsWidgets);
+      expect(find.textContaining('中文释义'), findsWidgets);
+
+      await tester.tap(find.text('全词库'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'academic research');
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pumpAndSettle();
+
+      expect(find.text('academic'), findsWidgets);
+      expect(find.textContaining('词组搭配'), findsWidgets);
+    },
+  );
 
   testWidgets('lesson preview does not open training-only timed packs', (
     tester,
@@ -2522,6 +2596,72 @@ void main() {
     );
     expect(find.widgetWithText(FilledButton, '加入生词本'), findsOneWidget);
   });
+
+  testWidgets(
+    'target word detail shows rich dictionary content and AI context',
+    (tester) async {
+      final now = DateTime(2026, 5, 25);
+      final profile = UserProfile(
+        uid: 'target-detail-rich-user',
+        name: 'Riley',
+        email: 'riley@lingua.quest',
+        targetExam: 'IELTS',
+        level: 'Intermediate',
+        dailyGoal: 12,
+        xp: 0,
+        streak: 0,
+        createdAt: now,
+        updatedAt: now,
+      );
+      SharedPreferences.setMockInitialValues({
+        'linguaquest.profile': jsonEncode(profile.toJson()),
+      });
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      await container.read(appControllerProvider.notifier).bootstrap();
+      final word = container
+          .read(appControllerProvider)
+          .wordBooks
+          .expand((book) => book.words)
+          .firstWhere((item) => item.word == 'abstract');
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            home: TargetWordDetailScreen(wordId: word.id),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('英 /${word.phoneticUK}/'), findsOneWidget);
+      expect(find.text('美 /${word.phoneticUS}/'), findsOneWidget);
+      expect(find.text('考试高频释义'), findsOneWidget);
+      expect(find.text('中文释义'), findsOneWidget);
+      expect(find.text('英文释义'), findsOneWidget);
+
+      await tester.scrollUntilVisible(
+        find.text('语境例句'),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('语境例句'), findsOneWidget);
+
+      await tester.scrollUntilVisible(
+        find.text('AI 学习'),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('携带 abstract 和当前例句'), findsOneWidget);
+    },
+  );
 
   testWidgets('custom word detail shows the full knowledge blocks', (
     tester,

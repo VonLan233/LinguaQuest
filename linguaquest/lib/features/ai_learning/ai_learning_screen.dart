@@ -10,6 +10,10 @@ class AiLearningScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final query = GoRouterState.of(context).uri.queryParameters;
+    final word = query['word']?.trim() ?? '';
+    final example = query['example']?.trim() ?? '';
+    final translation = query['translation']?.trim() ?? '';
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
       children: [
@@ -37,6 +41,14 @@ class AiLearningScreen extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 22),
+        if (word.isNotEmpty) ...[
+          _AiWordContextCard(
+            word: word,
+            example: example,
+            translation: translation,
+          ),
+          const SizedBox(height: 22),
+        ],
         const SectionHeader(
           title: '工具列表',
           subtitle: '首版优先落地长难句分析和知识问答，作文批改后置。',
@@ -85,6 +97,57 @@ class AiLearningScreen extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+}
+
+class _AiWordContextCard extends StatelessWidget {
+  const _AiWordContextCard({
+    required this.word,
+    required this.example,
+    required this.translation,
+  });
+
+  final String word;
+  final String example;
+  final String translation;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppTheme.selectedSurface(context),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: theme.colorScheme.outlineVariant),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const IconCueBadge(icon: Icons.travel_explore, color: AppTheme.cyan),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('当前词：$word', style: theme.textTheme.titleMedium),
+                if (example.isNotEmpty) ...[
+                  const SizedBox(height: 6),
+                  Text(example),
+                ],
+                if (translation.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    translation,
+                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
