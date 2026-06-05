@@ -5,6 +5,8 @@ import '../models/custom_word.dart';
 import '../models/lesson.dart';
 import '../models/review_event.dart';
 import '../models/study_session.dart';
+import '../models/study_plan.dart';
+import '../models/user_word.dart';
 import '../models/user_profile.dart';
 import '../lesson_factory.dart';
 import '../remote/api_client.dart';
@@ -14,6 +16,8 @@ import 'custom_word_repository.dart';
 import 'learning_repository.dart';
 import 'notification_repository.dart';
 import 'review_repository.dart';
+import 'study_plan_repository.dart';
+import 'user_word_repository.dart';
 
 class ApiAuthRepository implements AuthRepository {
   ApiAuthRepository(this._client);
@@ -187,6 +191,80 @@ class ApiLearningRepository implements LearningRepository {
       if (book.id == id) return book;
     }
     return null;
+  }
+}
+
+class ApiUserWordRepository implements UserWordRepository {
+  ApiUserWordRepository(this._client);
+
+  final ApiClient _client;
+
+  @override
+  Future<List<UserWord>> list(String uid) async {
+    final response = await _client.dio.get<List<dynamic>>('/user-words');
+    return response.data!
+        .cast<Map<String, dynamic>>()
+        .map(UserWord.fromJson)
+        .toList();
+  }
+
+  @override
+  Future<UserWord> upsert(UserWord word) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/user-words',
+      data: word.toJson(),
+    );
+    return UserWord.fromJson(response.data!['word'] as Map<String, dynamic>);
+  }
+
+  @override
+  Future<List<UserWord>> upsertAll(List<UserWord> words) async {
+    if (words.isEmpty) return [];
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/user-words/batch',
+      data: {
+        'words': [for (final word in words) word.toJson()],
+      },
+    );
+    return (response.data!['words'] as List<dynamic>)
+        .cast<Map<String, dynamic>>()
+        .map(UserWord.fromJson)
+        .toList();
+  }
+}
+
+class ApiStudyPlanRepository implements StudyPlanRepository {
+  ApiStudyPlanRepository(this._client);
+
+  final ApiClient _client;
+
+  @override
+  Future<StudyPlan?> load(String uid) async {
+    final response = await _client.dio.get<Map<String, dynamic>>('/study-plan');
+    final plan = response.data?['studyPlan'];
+    if (plan is! Map<String, dynamic>) return null;
+    return StudyPlan.fromJson(plan);
+  }
+
+  @override
+  Future<StudyPlan> save(StudyPlan plan) async {
+    final response = await _client.dio.put<Map<String, dynamic>>(
+      '/study-plan',
+      data: plan.toJson(),
+    );
+    return StudyPlan.fromJson(
+      response.data!['studyPlan'] as Map<String, dynamic>,
+    );
+  }
+
+  @override
+  Future<StudyPlan> reset(StudyPlan plan) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/study-plan/reset',
+    );
+    return StudyPlan.fromJson(
+      response.data!['studyPlan'] as Map<String, dynamic>,
+    );
   }
 }
 

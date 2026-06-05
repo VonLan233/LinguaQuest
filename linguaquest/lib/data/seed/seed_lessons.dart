@@ -424,18 +424,19 @@ List<String> _choiceOptions({
   addOption(answer);
   for (final option in localDistractors) {
     addOption(option);
-    if (options.length == 4) {
-      return List.unmodifiable(options..shuffle(Random(seed)));
-    }
+    if (options.length == 4) break;
   }
-  for (final option in fallbackDistractors) {
-    addOption(option);
-    if (options.length == 4) {
-      return List.unmodifiable(options..shuffle(Random(seed)));
+  if (options.length < 4) {
+    for (final option in fallbackDistractors) {
+      addOption(option);
+      if (options.length == 4) break;
     }
   }
 
-  return List.unmodifiable(options..shuffle(Random(seed)));
+  if (options.length > 1) {
+    options.shuffle(Random(seed));
+  }
+  return List.unmodifiable(options);
 }
 
 int _optionSeed(String lessonId, String wordId, String answer) {

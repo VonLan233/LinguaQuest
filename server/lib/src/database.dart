@@ -1,6 +1,18 @@
+import 'dart:convert';
+
 import 'package:postgres/postgres.dart';
 
 import 'config.dart';
+
+const resetCustomWordProgressSql = '''
+UPDATE custom_words
+SET mastery_level=0,
+    correct_count=0,
+    wrong_count=0,
+    next_review_at=@resetAt,
+    updated_at=@resetAt
+WHERE uid=@uid
+''';
 
 class AppDatabase {
   AppDatabase(this.connection);
@@ -41,13 +53,92 @@ CREATE TABLE IF NOT EXISTS custom_words (
   note TEXT NOT NULL DEFAULT '',
   tag TEXT NOT NULL DEFAULT 'custom',
   difficulty TEXT NOT NULL DEFAULT 'Medium',
+  status TEXT NOT NULL DEFAULT 'Learning',
+  ease_factor DOUBLE PRECISION NOT NULL DEFAULT 2.5,
+  interval_days INTEGER NOT NULL DEFAULT 0,
+  repetition_count INTEGER NOT NULL DEFAULT 0,
+  lapse_count INTEGER NOT NULL DEFAULT 0,
   mastery_level INTEGER NOT NULL DEFAULT 0,
   correct_count INTEGER NOT NULL DEFAULT 0,
   wrong_count INTEGER NOT NULL DEFAULT 0,
+  meaning_recognition_score INTEGER NOT NULL DEFAULT 20,
+  meaning_recall_score INTEGER NOT NULL DEFAULT 10,
+  spelling_score INTEGER NOT NULL DEFAULT 10,
+  listening_score INTEGER NOT NULL DEFAULT 10,
+  context_score INTEGER NOT NULL DEFAULT 10,
+  confidence_score INTEGER NOT NULL DEFAULT 10,
   next_review_at TIMESTAMPTZ NOT NULL,
+  last_reviewed_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL,
   updated_at TIMESTAMPTZ NOT NULL
 );
+''');
+
+    await connection.execute('''
+CREATE INDEX IF NOT EXISTS idx_custom_words_uid_next_review
+ON custom_words (uid, next_review_at);
+''');
+
+    for (final statement in [
+      "ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'Learning'",
+      'ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS ease_factor DOUBLE PRECISION NOT NULL DEFAULT 2.5',
+      'ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS interval_days INTEGER NOT NULL DEFAULT 0',
+      'ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS repetition_count INTEGER NOT NULL DEFAULT 0',
+      'ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS lapse_count INTEGER NOT NULL DEFAULT 0',
+      'ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS meaning_recognition_score INTEGER NOT NULL DEFAULT 20',
+      'ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS meaning_recall_score INTEGER NOT NULL DEFAULT 10',
+      'ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS spelling_score INTEGER NOT NULL DEFAULT 10',
+      'ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS listening_score INTEGER NOT NULL DEFAULT 10',
+      'ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS context_score INTEGER NOT NULL DEFAULT 10',
+      'ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS confidence_score INTEGER NOT NULL DEFAULT 10',
+      'ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS last_reviewed_at TIMESTAMPTZ',
+    ]) {
+      await connection.execute(statement);
+    }
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS user_words (
+  id TEXT PRIMARY KEY,
+  uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  word_id TEXT NOT NULL,
+  word_book_id TEXT NOT NULL,
+  word TEXT NOT NULL,
+  meaning TEXT NOT NULL,
+  example_sentence TEXT NOT NULL DEFAULT '',
+  difficulty TEXT NOT NULL DEFAULT 'Medium',
+  status TEXT NOT NULL DEFAULT 'New',
+  is_favorite BOOLEAN NOT NULL DEFAULT FALSE,
+  is_in_new_word_book BOOLEAN NOT NULL DEFAULT FALSE,
+  is_ignored BOOLEAN NOT NULL DEFAULT FALSE,
+  ease_factor DOUBLE PRECISION NOT NULL DEFAULT 2.5,
+  interval_days INTEGER NOT NULL DEFAULT 0,
+  repetition_count INTEGER NOT NULL DEFAULT 0,
+  lapse_count INTEGER NOT NULL DEFAULT 0,
+  mastery_level INTEGER NOT NULL DEFAULT 0,
+  correct_count INTEGER NOT NULL DEFAULT 0,
+  wrong_count INTEGER NOT NULL DEFAULT 0,
+  meaning_recognition_score INTEGER NOT NULL DEFAULT 20,
+  meaning_recall_score INTEGER NOT NULL DEFAULT 10,
+  spelling_score INTEGER NOT NULL DEFAULT 10,
+  listening_score INTEGER NOT NULL DEFAULT 10,
+  context_score INTEGER NOT NULL DEFAULT 10,
+  confidence_score INTEGER NOT NULL DEFAULT 10,
+  next_review_at TIMESTAMPTZ NOT NULL,
+  last_reviewed_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL,
+  updated_at TIMESTAMPTZ NOT NULL
+);
+''');
+
+    await connection.execute('''
+ALTER TABLE user_words
+DROP CONSTRAINT IF EXISTS user_words_uid_word_id_word_book_id_key;
+''');
+
+    await connection.execute('''
+CREATE INDEX IF NOT EXISTS idx_user_words_uid_next_review
+ON user_words (uid, next_review_at)
+WHERE is_ignored = FALSE AND status NOT IN ('New', 'Previewed', 'Ignored');
 ''');
 
     await connection.execute('''
@@ -60,9 +151,13 @@ CREATE TABLE IF NOT EXISTS study_sessions (
   total_questions INTEGER NOT NULL,
   correct_answers INTEGER NOT NULL,
   xp_earned INTEGER NOT NULL,
-  mistake_word_ids TEXT NOT NULL DEFAULT ''
+  mistake_word_ids TEXT NOT NULL DEFAULT '',
+  answer_events TEXT NOT NULL DEFAULT ''
 );
 ''');
+    await connection.execute(
+      "ALTER TABLE study_sessions ADD COLUMN IF NOT EXISTS answer_events TEXT NOT NULL DEFAULT ''",
+    );
 
     await connection.execute('''
 CREATE TABLE IF NOT EXISTS review_events (
@@ -71,12 +166,20 @@ CREATE TABLE IF NOT EXISTS review_events (
   word_id TEXT NOT NULL,
   is_correct BOOLEAN NOT NULL,
   answer_time_ms INTEGER NOT NULL,
+  confidence INTEGER NOT NULL DEFAULT 3,
+  wrong_option TEXT,
   reviewed_at TIMESTAMPTZ NOT NULL,
   mastery_before INTEGER NOT NULL,
   mastery_after INTEGER NOT NULL,
   next_review_at TIMESTAMPTZ NOT NULL
 );
 ''');
+    await connection.execute(
+      'ALTER TABLE review_events ADD COLUMN IF NOT EXISTS confidence INTEGER NOT NULL DEFAULT 3',
+    );
+    await connection.execute(
+      'ALTER TABLE review_events ADD COLUMN IF NOT EXISTS wrong_option TEXT',
+    );
 
     await connection.execute('''
 CREATE TABLE IF NOT EXISTS notifications (
@@ -91,6 +194,22 @@ CREATE TABLE IF NOT EXISTS notifications (
   read_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL,
   UNIQUE (uid, source_key)
+);
+''');
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS study_plans (
+  id TEXT PRIMARY KEY,
+  uid TEXT UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  word_book_id TEXT NOT NULL,
+  daily_new_target INTEGER NOT NULL,
+  daily_review_limit INTEGER NOT NULL,
+  start_date DATE NOT NULL,
+  target_finish_date DATE NOT NULL,
+  reminder_time TEXT NOT NULL,
+  status TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL,
+  updated_at TIMESTAMPTZ NOT NULL
 );
 ''');
 
@@ -233,10 +352,18 @@ ORDER BY ${dueOnly ? 'next_review_at ASC, updated_at DESC' : 'updated_at DESC'}
       Sql.named('''
 INSERT INTO custom_words (
   id, uid, word, meaning, example_sentence, note, tag, difficulty,
-  mastery_level, correct_count, wrong_count, next_review_at, created_at, updated_at
+  status, ease_factor, interval_days, repetition_count, lapse_count,
+  mastery_level, correct_count, wrong_count,
+  meaning_recognition_score, meaning_recall_score, spelling_score,
+  listening_score, context_score, confidence_score,
+  next_review_at, last_reviewed_at, created_at, updated_at
 ) VALUES (
   @id, @uid, @word, @meaning, @exampleSentence, @note, @tag, @difficulty,
-  @masteryLevel, @correctCount, @wrongCount, @nextReviewAt, @createdAt, @updatedAt
+  @status, @easeFactor, @intervalDays, @repetitionCount, @lapseCount,
+  @masteryLevel, @correctCount, @wrongCount,
+  @meaningRecognitionScore, @meaningRecallScore, @spellingScore,
+  @listeningScore, @contextScore, @confidenceScore,
+  @nextReviewAt, @lastReviewedAt, @createdAt, @updatedAt
 )
 ON CONFLICT (id) DO UPDATE SET
   word=EXCLUDED.word,
@@ -245,10 +372,22 @@ ON CONFLICT (id) DO UPDATE SET
   note=EXCLUDED.note,
   tag=EXCLUDED.tag,
   difficulty=EXCLUDED.difficulty,
+  status=EXCLUDED.status,
+  ease_factor=EXCLUDED.ease_factor,
+  interval_days=EXCLUDED.interval_days,
+  repetition_count=EXCLUDED.repetition_count,
+  lapse_count=EXCLUDED.lapse_count,
   mastery_level=EXCLUDED.mastery_level,
   correct_count=EXCLUDED.correct_count,
   wrong_count=EXCLUDED.wrong_count,
+  meaning_recognition_score=EXCLUDED.meaning_recognition_score,
+  meaning_recall_score=EXCLUDED.meaning_recall_score,
+  spelling_score=EXCLUDED.spelling_score,
+  listening_score=EXCLUDED.listening_score,
+  context_score=EXCLUDED.context_score,
+  confidence_score=EXCLUDED.confidence_score,
   next_review_at=EXCLUDED.next_review_at,
+  last_reviewed_at=EXCLUDED.last_reviewed_at,
   updated_at=EXCLUDED.updated_at
 '''),
       parameters: {
@@ -260,10 +399,22 @@ ON CONFLICT (id) DO UPDATE SET
         'note': data['note'] ?? '',
         'tag': data['tag'] ?? 'custom',
         'difficulty': data['difficulty'] ?? 'Medium',
+        'status': data['status'] ?? 'Learning',
+        'easeFactor': data['easeFactor'] ?? 2.5,
+        'intervalDays': data['intervalDays'] ?? 0,
+        'repetitionCount': data['repetitionCount'] ?? 0,
+        'lapseCount': data['lapseCount'] ?? 0,
         'masteryLevel': data['masteryLevel'] ?? 0,
         'correctCount': data['correctCount'] ?? 0,
         'wrongCount': data['wrongCount'] ?? 0,
+        'meaningRecognitionScore': data['meaningRecognitionScore'] ?? 20,
+        'meaningRecallScore': data['meaningRecallScore'] ?? 10,
+        'spellingScore': data['spellingScore'] ?? 10,
+        'listeningScore': data['listeningScore'] ?? 10,
+        'contextScore': data['contextScore'] ?? 10,
+        'confidenceScore': data['confidenceScore'] ?? 10,
         'nextReviewAt': nextReviewAt,
+        'lastReviewedAt': _date(data['lastReviewedAt']),
         'createdAt': createdAt,
         'updatedAt': now,
       },
@@ -279,13 +430,140 @@ ON CONFLICT (id) DO UPDATE SET
     );
   }
 
+  Future<List<Map<String, dynamic>>> userWords(
+    String uid, {
+    bool dueOnly = false,
+  }) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT * FROM user_words
+WHERE uid=@uid
+  ${dueOnly ? "AND next_review_at <= NOW() AND is_ignored = FALSE AND status NOT IN ('New', 'Previewed', 'Ignored')" : ''}
+ORDER BY ${dueOnly ? 'next_review_at ASC, wrong_count DESC' : 'updated_at DESC'}
+'''),
+      parameters: {'uid': uid},
+    );
+    return rows.map((row) => row.toColumnMap()).toList();
+  }
+
+  Future<Map<String, dynamic>?> userWordById(String uid, String id) async {
+    final rows = await connection.execute(
+      Sql.named('SELECT * FROM user_words WHERE uid=@uid AND id=@id LIMIT 1'),
+      parameters: {'uid': uid, 'id': id},
+    );
+    if (rows.isEmpty) return null;
+    return rows.first.toColumnMap();
+  }
+
+  Future<Map<String, dynamic>> upsertUserWord(
+    String uid,
+    Map<String, dynamic> data,
+  ) async {
+    final rows = await upsertUserWords(uid, [data]);
+    return rows.first;
+  }
+
+  Future<List<Map<String, dynamic>>> upsertUserWords(
+    String uid,
+    List<Map<String, dynamic>> words,
+  ) async {
+    if (words.isEmpty) return [];
+    final saved = <Map<String, dynamic>>[];
+    for (final data in words) {
+      final now = DateTime.now().toUtc();
+      final wordId = data['id'] as String;
+      final createdAt = _date(data['createdAt']) ?? now;
+      final rows = await connection.execute(
+        Sql.named('''
+INSERT INTO user_words (
+  id, uid, word_id, word_book_id, word, meaning, example_sentence, difficulty,
+  status, is_favorite, is_in_new_word_book, is_ignored,
+  ease_factor, interval_days, repetition_count, lapse_count, mastery_level,
+  correct_count, wrong_count,
+  meaning_recognition_score, meaning_recall_score, spelling_score,
+  listening_score, context_score, confidence_score,
+  next_review_at, last_reviewed_at, created_at, updated_at
+) VALUES (
+  @id, @uid, @wordId, @wordBookId, @word, @meaning, @exampleSentence, @difficulty,
+  @status, @isFavorite, @isInNewWordBook, @isIgnored,
+  @easeFactor, @intervalDays, @repetitionCount, @lapseCount, @masteryLevel,
+  @correctCount, @wrongCount,
+  @meaningRecognitionScore, @meaningRecallScore, @spellingScore,
+  @listeningScore, @contextScore, @confidenceScore,
+  @nextReviewAt, @lastReviewedAt, @createdAt, @updatedAt
+)
+ON CONFLICT (id) DO UPDATE SET
+  word_book_id=EXCLUDED.word_book_id,
+  word=EXCLUDED.word,
+  meaning=EXCLUDED.meaning,
+  example_sentence=EXCLUDED.example_sentence,
+  difficulty=EXCLUDED.difficulty,
+  status=EXCLUDED.status,
+  is_favorite=EXCLUDED.is_favorite,
+  is_in_new_word_book=EXCLUDED.is_in_new_word_book,
+  is_ignored=EXCLUDED.is_ignored,
+  ease_factor=EXCLUDED.ease_factor,
+  interval_days=EXCLUDED.interval_days,
+  repetition_count=EXCLUDED.repetition_count,
+  lapse_count=EXCLUDED.lapse_count,
+  mastery_level=EXCLUDED.mastery_level,
+  correct_count=EXCLUDED.correct_count,
+  wrong_count=EXCLUDED.wrong_count,
+  meaning_recognition_score=EXCLUDED.meaning_recognition_score,
+  meaning_recall_score=EXCLUDED.meaning_recall_score,
+  spelling_score=EXCLUDED.spelling_score,
+  listening_score=EXCLUDED.listening_score,
+  context_score=EXCLUDED.context_score,
+  confidence_score=EXCLUDED.confidence_score,
+  next_review_at=EXCLUDED.next_review_at,
+  last_reviewed_at=EXCLUDED.last_reviewed_at,
+  updated_at=EXCLUDED.updated_at
+RETURNING *
+'''),
+        parameters: {
+          'id': wordId,
+          'uid': uid,
+          'wordId': data['wordId'],
+          'wordBookId': data['wordBookId'] ?? '',
+          'word': data['word'] ?? data['wordId'],
+          'meaning': data['meaning'] ?? '',
+          'exampleSentence': data['exampleSentence'] ?? '',
+          'difficulty': data['difficulty'] ?? 'Medium',
+          'status': data['status'] ?? 'New',
+          'isFavorite': data['isFavorite'] ?? false,
+          'isInNewWordBook': data['isInNewWordBook'] ?? false,
+          'isIgnored': data['isIgnored'] ?? data['status'] == 'Ignored',
+          'easeFactor': data['easeFactor'] ?? 2.5,
+          'intervalDays': data['intervalDays'] ?? 0,
+          'repetitionCount': data['repetitionCount'] ?? 0,
+          'lapseCount': data['lapseCount'] ?? 0,
+          'masteryLevel': data['masteryLevel'] ?? 0,
+          'correctCount': data['correctCount'] ?? 0,
+          'wrongCount': data['wrongCount'] ?? 0,
+          'meaningRecognitionScore': data['meaningRecognitionScore'] ?? 20,
+          'meaningRecallScore': data['meaningRecallScore'] ?? 10,
+          'spellingScore': data['spellingScore'] ?? 10,
+          'listeningScore': data['listeningScore'] ?? 10,
+          'contextScore': data['contextScore'] ?? 10,
+          'confidenceScore': data['confidenceScore'] ?? 10,
+          'nextReviewAt': _date(data['nextReviewAt']) ?? now,
+          'lastReviewedAt': _date(data['lastReviewedAt']),
+          'createdAt': createdAt,
+          'updatedAt': _date(data['updatedAt']) ?? now,
+        },
+      );
+      saved.add(rows.first.toColumnMap());
+    }
+    return saved;
+  }
+
   Future<void> insertStudySession(String uid, Map<String, dynamic> data) async {
     await connection.execute(
       Sql.named('''
 INSERT INTO study_sessions (
-  id, uid, lesson_id, started_at, ended_at, total_questions, correct_answers, xp_earned, mistake_word_ids
+  id, uid, lesson_id, started_at, ended_at, total_questions, correct_answers, xp_earned, mistake_word_ids, answer_events
 ) VALUES (
-  @id, @uid, @lessonId, @startedAt, @endedAt, @totalQuestions, @correctAnswers, @xpEarned, @mistakeWordIds
+  @id, @uid, @lessonId, @startedAt, @endedAt, @totalQuestions, @correctAnswers, @xpEarned, @mistakeWordIds, @answerEvents
 )
 '''),
       parameters: {
@@ -300,7 +578,69 @@ INSERT INTO study_sessions (
         'mistakeWordIds': ((data['mistakeWordIds'] as List?) ?? const []).join(
           ',',
         ),
+        'answerEvents': jsonEncode((data['answerEvents'] as List?) ?? const []),
       },
+    );
+  }
+
+  Future<Map<String, dynamic>?> studyPlanByUid(String uid) async {
+    final rows = await connection.execute(
+      Sql.named('SELECT * FROM study_plans WHERE uid=@uid LIMIT 1'),
+      parameters: {'uid': uid},
+    );
+    if (rows.isEmpty) return null;
+    return rows.first.toColumnMap();
+  }
+
+  Future<Map<String, dynamic>> upsertStudyPlan(
+    String uid,
+    Map<String, dynamic> data,
+  ) async {
+    final existing = await studyPlanByUid(uid);
+    final now = DateTime.now().toUtc();
+    final id = existing?['id']?.toString() ?? data['id']?.toString();
+    final updatedAt = _date(data['now']) ?? now;
+    await connection.execute(
+      Sql.named('''
+INSERT INTO study_plans (
+  id, uid, word_book_id, daily_new_target, daily_review_limit, start_date,
+  target_finish_date, reminder_time, status, created_at, updated_at
+) VALUES (
+  @id, @uid, @wordBookId, @dailyNewTarget, @dailyReviewLimit, @startDate,
+  @targetFinishDate, @reminderTime, @status, @createdAt, @updatedAt
+)
+ON CONFLICT (uid) DO UPDATE SET
+  word_book_id=EXCLUDED.word_book_id,
+  daily_new_target=EXCLUDED.daily_new_target,
+  daily_review_limit=EXCLUDED.daily_review_limit,
+  start_date=EXCLUDED.start_date,
+  target_finish_date=EXCLUDED.target_finish_date,
+  reminder_time=EXCLUDED.reminder_time,
+  status=EXCLUDED.status,
+  updated_at=EXCLUDED.updated_at
+'''),
+      parameters: {
+        'id': id ?? data['id'],
+        'uid': uid,
+        'wordBookId': data['wordBookId'],
+        'dailyNewTarget': data['dailyNewTarget'],
+        'dailyReviewLimit': data['dailyReviewLimit'],
+        'startDate': data['startDate'],
+        'targetFinishDate': data['targetFinishDate'],
+        'reminderTime': data['reminderTime'],
+        'status': data['status'],
+        'createdAt': existing?['created_at'] ?? _date(data['createdAt']) ?? now,
+        'updatedAt': updatedAt,
+      },
+    );
+    return (await studyPlanByUid(uid))!;
+  }
+
+  Future<void> resetCustomWordProgress(String uid, {DateTime? now}) async {
+    final resetAt = now ?? DateTime.now().toUtc();
+    await connection.execute(
+      Sql.named(resetCustomWordProgressSql),
+      parameters: {'uid': uid, 'resetAt': resetAt},
     );
   }
 
@@ -308,9 +648,9 @@ INSERT INTO study_sessions (
     await connection.execute(
       Sql.named('''
 INSERT INTO review_events (
-  id, uid, word_id, is_correct, answer_time_ms, reviewed_at, mastery_before, mastery_after, next_review_at
+  id, uid, word_id, is_correct, answer_time_ms, confidence, wrong_option, reviewed_at, mastery_before, mastery_after, next_review_at
 ) VALUES (
-  @id, @uid, @wordId, @isCorrect, @answerTimeMs, @reviewedAt, @masteryBefore, @masteryAfter, @nextReviewAt
+  @id, @uid, @wordId, @isCorrect, @answerTimeMs, @confidence, @wrongOption, @reviewedAt, @masteryBefore, @masteryAfter, @nextReviewAt
 )
 '''),
       parameters: {
@@ -319,6 +659,8 @@ INSERT INTO review_events (
         'wordId': data['wordId'],
         'isCorrect': data['isCorrect'],
         'answerTimeMs': data['answerTimeMs'] ?? 0,
+        'confidence': data['confidence'] ?? 3,
+        'wrongOption': data['wrongOption'] ?? data['wrong_option'],
         'reviewedAt': _date(data['reviewedAt']) ?? DateTime.now().toUtc(),
         'masteryBefore': data['masteryBefore'] ?? 0,
         'masteryAfter': data['masteryAfter'] ?? 0,
@@ -456,8 +798,13 @@ LIMIT 1
   Future<int> dueReviewCount(String uid) async {
     final rows = await connection.execute(
       Sql.named('''
-SELECT COUNT(*) AS count FROM custom_words
-WHERE uid=@uid AND next_review_at <= NOW()
+SELECT
+  (SELECT COUNT(*) FROM custom_words WHERE uid=@uid AND next_review_at <= NOW()) +
+  (SELECT COUNT(*) FROM user_words
+   WHERE uid=@uid
+     AND next_review_at <= NOW()
+     AND is_ignored = FALSE
+     AND status IN ('Review', 'Relearning', 'Mastered')) AS count
 '''),
       parameters: {'uid': uid},
     );

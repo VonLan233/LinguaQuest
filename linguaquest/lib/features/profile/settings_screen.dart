@@ -22,6 +22,13 @@ class SettingsScreen extends ConsumerWidget {
           padding: const EdgeInsets.all(20),
           children: [
             _SettingsAction(
+              icon: Icons.flag_outlined,
+              title: '学习计划',
+              subtitle:
+                  '${state.currentStudyBook.name} · 新学 ${state.dailyNewTarget} · 复习 ${state.dailyReviewLimit}',
+              route: '/settings/study-plan',
+            ),
+            _SettingsAction(
               icon: Icons.notifications_outlined,
               title: '每日提醒',
               subtitle: state.reminderSettings.enabled
