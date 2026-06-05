@@ -140,12 +140,13 @@ class StudySessionQueueBuilder {
     required int dailyGoal,
     StudySessionEntryMode mode = StudySessionEntryMode.mixed,
   }) {
+    final goal = dailyGoal.clamp(1, 999).toInt();
     final due = [...dueWords]..sort(_priorityCustomWordSort);
     final weak = _uniqueWeakWords(weakWords, due);
-    final fresh = newWords.take(dailyGoal.clamp(1, 999)).toList();
+    final fresh = newWords.take(goal).toList();
     final ratio = _ratioFor(due.length, fresh.length, mode);
-    final reviewTarget = (dailyGoal * ratio.$1).round().clamp(0, dailyGoal);
-    final newTarget = (dailyGoal - reviewTarget).clamp(0, dailyGoal);
+    final reviewTarget = (goal * ratio.$1).round().clamp(0, goal).toInt();
+    final newTarget = (goal - reviewTarget).clamp(0, goal).toInt();
     final selectedDue = mode == StudySessionEntryMode.newOnly
         ? <CustomWord>[]
         : due.take(reviewTarget == 0 ? due.length.clamp(0, 4) : reviewTarget);
@@ -324,10 +325,10 @@ class StudySessionQueueBuilder {
   ) {
     final dueIds = dueWords.map((word) => word.id).toSet();
     final result = <CustomWord>[];
+    final addedIds = <String>{};
     for (final word in weakWords) {
       if (dueIds.contains(word.id)) continue;
-      if (result.any((item) => item.id == word.id)) continue;
-      result.add(word);
+      if (addedIds.add(word.id)) result.add(word);
     }
     return result..sort(_priorityCustomWordSort);
   }

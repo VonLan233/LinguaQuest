@@ -68,6 +68,40 @@ void main() {
     },
   );
 
+  test('sanitizes negative daily goals before target allocation', () {
+    final plan = builder.build(
+      newWords: [_word('fresh-1'), _word('fresh-2')],
+      dueWords: const [],
+      weakWords: const [],
+      dailyGoal: -5,
+    );
+
+    expect(plan.reviewTargetRatio, 0.0);
+    expect(plan.newTargetRatio, 1.0);
+    expect(plan.newWordCount, 1);
+    expect(plan.items.map((item) => item.wordId).toSet(), {'fresh-1'});
+  });
+
+  test('deduplicates weak words without duplicating due reviews', () {
+    final now = DateTime(2026, 6, 4, 9);
+    final duplicateWeak = _customWord('weak-1', now, wrongCount: 4);
+    final dueWeak = _customWord('due-1', now, wrongCount: 6);
+    final plan = builder.build(
+      newWords: const [],
+      dueWords: [dueWeak],
+      weakWords: [duplicateWeak, duplicateWeak, dueWeak],
+      dailyGoal: 4,
+    );
+
+    expect(plan.weakWordCount, 1);
+    expect(
+      plan.items.where(
+        (item) => item.source == StudySessionItemSource.weakReview,
+      ),
+      hasLength(1),
+    );
+  });
+
   test('wrong answers reappear after a short gap and at session end', () {
     final now = DateTime(2026, 6, 4, 9);
     final first = StudySessionQueueItem(
