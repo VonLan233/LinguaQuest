@@ -13,6 +13,19 @@ void main() {
     const uid = 'route-reset-user';
     final originalReviewAt = DateTime.utc(2026, 6, 1, 8);
     final database = _RouteTestDatabase()
+      ..existingStudyPlan = {
+        'id': 'plan-1',
+        'uid': uid,
+        'word_book_id': 'exam-core',
+        'daily_new_target': 20,
+        'daily_review_limit': 40,
+        'start_date': DateTime.utc(2026, 5, 1),
+        'target_finish_date': DateTime.utc(2026, 8, 4),
+        'reminder_time': '7:05',
+        'status': 'paused',
+        'created_at': originalReviewAt,
+        'updated_at': originalReviewAt,
+      }
       ..customWordRows.addAll([
         {
           'id': 'word-1',
@@ -56,14 +69,7 @@ void main() {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
       },
-      body: jsonEncode({
-        'id': 'plan-1',
-        'wordBookId': 'exam-core',
-        'dailyNewTarget': 20,
-        'dailyReviewLimit': 40,
-        'targetFinishDate': '2026-08-04',
-        'reminderTime': '7:05',
-      }),
+      body: '',
     );
 
     final response = await router(request);
@@ -74,6 +80,9 @@ void main() {
     expect(response.statusCode, 200);
     expect(studyPlan['status'], 'active');
     expect(studyPlan['id'], 'plan-1');
+    expect(studyPlan['wordBookId'], 'exam-core');
+    expect(database.upsertedPayload?['id'], 'plan-1');
+    expect(database.upsertedPayload?['reminderTime'], '07:05');
     expect(database.resetCalledWithUid, uid);
     expect(database.resetCalledWithTimestamp, resetAt);
     for (final row in database.customWordRows.where(
@@ -91,20 +100,53 @@ void main() {
     expect(otherUserWord['mastery_level'], 5);
     expect(otherUserWord['next_review_at'], originalReviewAt);
   });
+
+  test('study plan reset route returns 404 when no plan exists', () async {
+    const uid = 'missing-plan-user';
+    const config = AppConfig(
+      port: 0,
+      databaseUrl: 'postgresql://unused',
+      jwtSecret: 'test-secret',
+    );
+    final token = issueToken(config, uid: uid, email: 'missing@lingua.quest');
+    final router = buildRouter(config, _RouteTestDatabase());
+    final request = Request(
+      'POST',
+      Uri.parse('http://localhost/study-plan/reset'),
+      headers: {'Authorization': 'Bearer $token'},
+      body: '',
+    );
+
+    final response = await router(request);
+    final body = jsonDecode(await response.readAsString());
+
+    expect(response.statusCode, 404);
+    expect(body['error'], 'study plan not found');
+  });
 }
 
 class _RouteTestDatabase extends AppDatabase {
   _RouteTestDatabase() : super(_UnusedConnection());
 
   final List<Map<String, dynamic>> customWordRows = [];
+  Map<String, dynamic>? existingStudyPlan;
+  Map<String, dynamic>? upsertedPayload;
   String? resetCalledWithUid;
   DateTime? resetCalledWithTimestamp;
+
+  @override
+  Future<Map<String, dynamic>?> studyPlanByUid(String uid) async {
+    final plan = existingStudyPlan;
+    if (plan == null || plan['uid'] != uid) return null;
+    return plan;
+  }
 
   @override
   Future<Map<String, dynamic>> upsertStudyPlan(
     String uid,
     Map<String, dynamic> data,
   ) async {
+    upsertedPayload = Map<String, dynamic>.from(data);
     final rawNow = data['now'];
     final updatedAt = rawNow is DateTime
         ? rawNow.toUtc()

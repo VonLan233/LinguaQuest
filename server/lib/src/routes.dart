@@ -160,16 +160,26 @@ Router buildRouter(AppConfig config, AppDatabase database) {
 
   router.post('/study-plan/reset', (Request request) async {
     return _protected(config, request, (uid) async {
-      final body = await readJsonMap(request);
+      final existing = await database.studyPlanByUid(uid);
+      if (existing == null) {
+        return jsonResponse({'error': 'study plan not found'}, status: 404);
+      }
       final now = DateTime.now().toUtc();
       final today = DateTime.utc(now.year, now.month, now.day);
-      final requestedFinishDate = parseStudyPlanDate(body['targetFinishDate']);
+      final existingFinishDate = parseStudyPlanDate(
+        existing['target_finish_date'] ?? existing['targetFinishDate'],
+      );
       final resetFinishDate =
-          requestedFinishDate == null || requestedFinishDate.isBefore(today)
+          existingFinishDate == null || existingFinishDate.isBefore(today)
           ? today.add(const Duration(days: 30))
-          : requestedFinishDate;
+          : existingFinishDate;
       final validation = validateStudyPlanPayload({
-        ...body,
+        'wordBookId': existing['word_book_id'] ?? existing['wordBookId'],
+        'dailyNewTarget':
+            existing['daily_new_target'] ?? existing['dailyNewTarget'],
+        'dailyReviewLimit':
+            existing['daily_review_limit'] ?? existing['dailyReviewLimit'],
+        'reminderTime': existing['reminder_time'] ?? existing['reminderTime'],
         'status': 'active',
         'startDate': _dateKey(today),
         'targetFinishDate': _dateKey(resetFinishDate),
@@ -179,7 +189,7 @@ Router buildRouter(AppConfig config, AppDatabase database) {
       }
       final plan = await database.upsertStudyPlan(uid, {
         ...validation.data!,
-        'id': body['id']?.toString() ?? newId(),
+        'id': existing['id']?.toString() ?? newId(),
       });
       await database.resetCustomWordProgress(
         uid,

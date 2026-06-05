@@ -179,7 +179,6 @@ class ApiStudyPlanRepository implements StudyPlanRepository {
   Future<StudyPlan> reset(StudyPlan plan) async {
     final response = await _client.dio.post<Map<String, dynamic>>(
       '/study-plan/reset',
-      data: plan.toJson(),
     );
     return StudyPlan.fromJson(
       response.data!['studyPlan'] as Map<String, dynamic>,
