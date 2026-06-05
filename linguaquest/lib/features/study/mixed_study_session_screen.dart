@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/state/app_state.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/learning_badges.dart';
@@ -53,6 +54,7 @@ class _MixedStudySessionScreenState
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(appControllerProvider);
     final current = _queue.isEmpty ? null : _queue.first;
     final total = _completedItems + _queue.length;
     final progress = total == 0
@@ -122,7 +124,7 @@ class _MixedStudySessionScreenState
                         ],
                       ),
                       const SizedBox(height: 14),
-                      Expanded(child: _buildCurrentItem(current)),
+                      Expanded(child: _buildCurrentItem(current, state)),
                     ],
                   ),
                 ),
@@ -169,7 +171,7 @@ class _MixedStudySessionScreenState
     });
   }
 
-  Widget _buildCurrentItem(StudySessionQueueItem item) {
+  Widget _buildCurrentItem(StudySessionQueueItem item, AppState state) {
     if (item.step == StudySessionStep.understanding || item.isKnowledgeCard) {
       return _KnowledgeCardStep(
         item: item,
@@ -182,7 +184,7 @@ class _MixedStudySessionScreenState
     }
     return _QuestionStep(
       item: item,
-      options: _optionsFor(item),
+      options: _optionsFor(item, state),
       selected: _selected,
       checked: _checked,
       lastCorrect: _lastCorrect,
@@ -238,7 +240,7 @@ class _MixedStudySessionScreenState
       return;
     }
 
-    if (!_lastCorrect && !(_queue.first.isReview)) {
+    if (!_lastCorrect && !item.isReview) {
       setState(() {
         _checked = false;
         _selected = null;
@@ -327,12 +329,11 @@ class _MixedStudySessionScreenState
     });
   }
 
-  List<String> _optionsFor(StudySessionQueueItem item) {
+  List<String> _optionsFor(StudySessionQueueItem item, AppState state) {
     if (_cachedOptionsItemId == item.id && _cachedOptions != null) {
       return _cachedOptions!;
     }
 
-    final state = ref.read(appControllerProvider);
     final answerKey = item.meaning.trim().toLowerCase();
     final seen = <String>{answerKey};
     final distractorPool = <String>[];
