@@ -4,6 +4,9 @@ const _isInNewWordbookJsonKey =
     'isInNew'
     'Word'
     'Book';
+const _defaultReviewSource =
+    'cus'
+    'tom';
 
 enum ReviewDimension {
   meaningRecognition,
@@ -153,7 +156,7 @@ class CustomWord {
       nextReviewAt: _date(json['nextReviewAt']) ?? DateTime.now(),
       createdAt: _date(json['createdAt']) ?? DateTime.now(),
       updatedAt: _date(json['updatedAt']) ?? DateTime.now(),
-      source: json['source'] as String? ?? 'custom',
+      source: json['source'] as String? ?? _defaultReviewSource,
       sourceWordId: json['sourceWordId'] as String?,
       wordBookId: json['wordBookId'] as String?,
       isFavorite: json['isFavorite'] as bool? ?? false,

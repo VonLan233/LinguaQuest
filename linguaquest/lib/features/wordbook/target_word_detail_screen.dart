@@ -119,6 +119,12 @@ class TargetWordDetailScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 12),
                   Text(word.definition, textAlign: TextAlign.center),
+                  const SizedBox(height: 12),
+                  const PillLabel(
+                    label: '当前计划中',
+                    icon: Icons.playlist_add_check_rounded,
+                    color: AppTheme.cyan,
+                  ),
                 ],
               ),
             ),
