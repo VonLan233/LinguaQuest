@@ -102,6 +102,8 @@ class AppState {
   const AppState({
     required this.isBootstrapped,
     required this.isLoading,
+    required this.wordBooks,
+    required this.currentWordBookId,
     required this.lessons,
     required this.customWords,
     required this.themeMode,
@@ -120,6 +122,8 @@ class AppState {
   final bool isBootstrapped;
   final bool isLoading;
   final UserProfile? user;
+  final List<WordBook> wordBooks;
+  final String currentWordBookId;
   final List<Lesson> lessons;
   final List<CustomWord> customWords;
   final ThemeMode themeMode;
@@ -139,6 +143,13 @@ class AppState {
       notifications.where((notification) => !notification.isRead).length;
 
   String? get learningTarget => learningPlan?.target ?? user?.targetExam;
+
+  WordBook? get currentWordBook {
+    for (final book in wordBooks) {
+      if (book.id == currentWordBookId) return book;
+    }
+    return wordBooks.isEmpty ? null : wordBooks.first;
+  }
 
   List<Lesson> get formalLessons => applyLearningTargetProgression(
     learningLessonsForTarget(lessons, learningTarget),
@@ -180,12 +191,15 @@ class AppState {
 
   List<CustomWord> get dueWords {
     final now = DateTime.now();
-    return customWords.where((word) => word.isDue(now)).toList();
+    return _dedupeCustomWordsByText(
+      customWords.where((word) => word.isDue(now)),
+    );
   }
 
   List<CustomWord> get weakWords {
-    final weak = customWords.where((word) => word.isWeak).toList()
-      ..sort((a, b) => b.wrongCount.compareTo(a.wrongCount));
+    final weak = _dedupeCustomWordsByText(
+      customWords.where((word) => word.isWeak),
+    )..sort((a, b) => b.wrongCount.compareTo(a.wrongCount));
     return weak;
   }
 
@@ -194,6 +208,8 @@ class AppState {
     bool? isLoading,
     UserProfile? user,
     bool clearUser = false,
+    List<WordBook>? wordBooks,
+    String? currentWordBookId,
     List<Lesson>? lessons,
     List<CustomWord>? customWords,
     ThemeMode? themeMode,
@@ -206,6 +222,7 @@ class AppState {
     Set<String>? todayClaimedRewardIds,
     List<AppNotification>? notifications,
     LessonResult? lastResult,
+    bool clearLastResult = false,
     String? errorMessage,
     bool clearError = false,
   }) {
@@ -213,6 +230,8 @@ class AppState {
       isBootstrapped: isBootstrapped ?? this.isBootstrapped,
       isLoading: isLoading ?? this.isLoading,
       user: clearUser ? null : user ?? this.user,
+      wordBooks: wordBooks ?? this.wordBooks,
+      currentWordBookId: currentWordBookId ?? this.currentWordBookId,
       lessons: lessons ?? this.lessons,
       customWords: customWords ?? this.customWords,
       themeMode: themeMode ?? this.themeMode,
@@ -227,7 +246,7 @@ class AppState {
       todayClaimedRewardIds:
           todayClaimedRewardIds ?? this.todayClaimedRewardIds,
       notifications: notifications ?? this.notifications,
-      lastResult: lastResult ?? this.lastResult,
+      lastResult: clearLastResult ? null : lastResult ?? this.lastResult,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
     );
   }
@@ -236,6 +255,8 @@ class AppState {
     return const AppState(
       isBootstrapped: false,
       isLoading: false,
+      wordBooks: [],
+      currentWordBookId: 'beginner',
       lessons: [],
       customWords: [],
       themeMode: ThemeMode.system,
@@ -247,6 +268,14 @@ class AppState {
       notifications: [],
     );
   }
+}
+
+List<CustomWord> _dedupeCustomWordsByText(Iterable<CustomWord> words) {
+  final seen = <String>{};
+  return [
+    for (final word in words)
+      if (seen.add(word.word.trim().toLowerCase())) word,
+  ];
 }
 
 List<Lesson> learningLessonsForTarget(List<Lesson> lessons, String? target) {

@@ -93,6 +93,23 @@ CREATE TABLE IF NOT EXISTS notifications (
   UNIQUE (uid, source_key)
 );
 ''');
+
+    await connection.execute('''
+CREATE INDEX IF NOT EXISTS idx_custom_words_uid_next_review
+ON custom_words (uid, next_review_at);
+''');
+
+    await connection.execute('''
+DO \$\$
+BEGIN
+  IF to_regclass('public.user_words') IS NOT NULL THEN
+    ALTER TABLE user_words
+      DROP CONSTRAINT IF EXISTS user_words_uid_word_id_word_book_id_key;
+    EXECUTE 'CREATE INDEX IF NOT EXISTS idx_user_words_uid_next_review ON user_words (uid, next_review_at) WHERE is_ignored = FALSE AND status IN (''Review'', ''Relearning'', ''Mastered'')';
+  END IF;
+END
+\$\$;
+''');
   }
 
   Future<Map<String, dynamic>?> userByEmail(String email) async {
@@ -184,7 +201,7 @@ VALUES (@id, @email, @passwordHash, @passwordSalt, @name, @createdAt, @updatedAt
       Sql.named('''
 SELECT * FROM custom_words
 WHERE uid=@uid ${dueOnly ? 'AND next_review_at <= NOW()' : ''}
-ORDER BY updated_at DESC
+ORDER BY ${dueOnly ? 'next_review_at ASC, updated_at DESC' : 'updated_at DESC'}
 '''),
       parameters: {'uid': uid},
     );

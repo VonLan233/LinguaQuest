@@ -14,12 +14,17 @@ class TrainingScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appControllerProvider);
     final user = state.user;
+    final currentBook = state.currentWordBook;
+    final trainingLessons = state.lessons
+        .where((lesson) => lesson.isTrainingPack)
+        .toList();
+    final speedLesson = trainingLessons.isEmpty ? null : trainingLessons.first;
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
       children: [
         SectionHeader(
           title: '训练场',
-          subtitle: '限时测试、专项训练和排行榜放在这里；正式新学与复习保持独立。',
+          subtitle: '${currentBook?.title ?? '当前词书'} · 限时测试、专项训练和排行榜放在这里。',
           trailing: QuestIconButton(
             tooltip: '排行榜',
             onPressed: () => context.push('/leaderboard'),
@@ -60,10 +65,14 @@ class TrainingScreen extends ConsumerWidget {
             _TrainingGameData(
               icon: Icons.school_outlined,
               title: '校园速测',
-              body: '从校园生活词包抽题，适合课后快速检测，不影响正式复习节奏。',
-              source: '校园生活 · 限时测试',
-              actionLabel: '开始测试',
-              onTap: () => context.push('/timed-test/lesson-campus-1'),
+              body: '从当前词书抽题，适合课后快速检测，不影响正式复习节奏。',
+              source: currentBook == null
+                  ? '当前词书 · 限时测试'
+                  : '${currentBook.title} · 限时测试',
+              actionLabel: speedLesson == null ? '暂无词书' : '开始测试',
+              onTap: speedLesson == null
+                  ? null
+                  : () => context.push('/timed-test/${speedLesson.id}'),
             ),
             const _TrainingGameData(
               icon: Icons.timer_outlined,

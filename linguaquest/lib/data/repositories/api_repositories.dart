@@ -6,8 +6,9 @@ import '../models/lesson.dart';
 import '../models/review_event.dart';
 import '../models/study_session.dart';
 import '../models/user_profile.dart';
+import '../lesson_factory.dart';
 import '../remote/api_client.dart';
-import '../seed/seed_lessons.dart';
+import '../wordbook_asset_loader.dart';
 import 'auth_repository.dart';
 import 'custom_word_repository.dart';
 import 'learning_repository.dart';
@@ -136,16 +137,56 @@ class ApiCustomWordRepository implements CustomWordRepository {
 }
 
 class ApiLearningRepository implements LearningRepository {
-  ApiLearningRepository(this._client);
+  ApiLearningRepository(this._client, {WordBookAssetLoader? fallbackLoader})
+    : _fallbackLoader = fallbackLoader ?? WordBookAssetLoader();
 
   final ApiClient _client;
+  final WordBookAssetLoader _fallbackLoader;
+  List<WordBook>? _cache;
 
   @override
-  Future<List<Lesson>> listLessons() async => seedLessons();
+  Future<List<WordBook>> listWordBooks() async {
+    final cached = _cache;
+    if (cached != null) return cached;
+    try {
+      final response = await _client.dio.get<List<dynamic>>('/wordbooks');
+      final books = (response.data ?? const <dynamic>[]).whereType<Map>().map((
+        item,
+      ) {
+        return WordBook.fromJson(Map<String, dynamic>.from(item));
+      }).toList();
+      _cache = List.unmodifiable(books);
+      return _cache!;
+    } catch (_) {
+      return _fallbackLoader.loadWordBooks();
+    }
+  }
+
+  @override
+  Future<List<Lesson>> listLessons() async {
+    final books = await listWordBooks();
+    if (books.isEmpty) return const [];
+    return listLessonsForWordBook(books.first.id);
+  }
+
+  @override
+  Future<List<Lesson>> listLessonsForWordBook(String wordBookId) async {
+    final books = await listWordBooks();
+    if (books.isEmpty) return const [];
+    final book = _bookById(books, wordBookId) ?? books.first;
+    return lessonsFromWordBook(book);
+  }
 
   @override
   Future<void> recordStudySession(StudySession session) async {
     await _client.dio.post<void>('/study-sessions', data: session.toJson());
+  }
+
+  WordBook? _bookById(List<WordBook> books, String id) {
+    for (final book in books) {
+      if (book.id == id) return book;
+    }
+    return null;
   }
 }
 

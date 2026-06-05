@@ -9,16 +9,31 @@ class WordKnowledgeSections extends StatefulWidget {
   WordKnowledgeSections({required Word word, super.key})
     : wordText = word.word,
       meaning = word.meaning,
-      exampleSentence = word.exampleSentence;
+      exampleSentence = word.exampleSentence,
+      collocations = word.collocations,
+      synonyms = word.synonyms,
+      antonyms = word.antonyms,
+      derivatives = word.derivatives,
+      rootAffix = word.rootAffix;
 
   WordKnowledgeSections.custom({required CustomWord word, super.key})
     : wordText = word.word,
       meaning = word.meaning,
-      exampleSentence = word.exampleSentence;
+      exampleSentence = word.exampleSentence,
+      collocations = const [],
+      synonyms = const [],
+      antonyms = const [],
+      derivatives = const [],
+      rootAffix = '';
 
   final String wordText;
   final String meaning;
   final String exampleSentence;
+  final List<WordPhrase> collocations;
+  final List<String> synonyms;
+  final List<String> antonyms;
+  final List<String> derivatives;
+  final String rootAffix;
 
   @override
   State<WordKnowledgeSections> createState() => _WordKnowledgeSectionsState();
@@ -33,6 +48,11 @@ class _WordKnowledgeSectionsState extends State<WordKnowledgeSections> {
       widget.wordText,
       widget.meaning,
       widget.exampleSentence,
+      collocations: widget.collocations,
+      synonyms: widget.synonyms,
+      antonyms: widget.antonyms,
+      derivatives: widget.derivatives,
+      rootAffix: widget.rootAffix,
     );
     final items = [
       _KnowledgePanelData(
@@ -202,8 +222,34 @@ class _KnowledgeDivider extends StatelessWidget {
 _KnowledgeData _knowledgeFor(
   String wordText,
   String meaning,
-  String exampleSentence,
-) {
+  String exampleSentence, {
+  required List<WordPhrase> collocations,
+  required List<String> synonyms,
+  required List<String> antonyms,
+  required List<String> derivatives,
+  required String rootAffix,
+}) {
+  if (collocations.isNotEmpty ||
+      synonyms.isNotEmpty ||
+      antonyms.isNotEmpty ||
+      derivatives.isNotEmpty ||
+      rootAffix.trim().isNotEmpty) {
+    final fallback = _fallbackKnowledge(wordText, meaning, exampleSentence);
+    return _KnowledgeData(
+      collocations: collocations.isEmpty
+          ? fallback.collocations
+          : [
+              for (final item in collocations)
+                item.cn.trim().isEmpty
+                    ? item.phrase
+                    : '${item.phrase}（${item.cn}）',
+            ],
+      synonyms: synonyms.isEmpty ? fallback.synonyms : synonyms,
+      antonyms: antonyms.isEmpty ? fallback.antonyms : antonyms,
+      family: derivatives.isEmpty ? fallback.family : derivatives,
+      rootNote: rootAffix.trim().isEmpty ? fallback.rootNote : rootAffix,
+    );
+  }
   switch (wordText.toLowerCase()) {
     case 'allocate':
       return const _KnowledgeData(
