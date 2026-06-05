@@ -22,6 +22,7 @@ class LearningPathScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appControllerProvider);
     final lessons = state.formalLessons;
+    final currentBook = state.currentWordBook;
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/home'),
@@ -40,10 +41,10 @@ class LearningPathScreen extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
           children: [
             SectionHeader(
-              title: state.currentStudyBook.name,
+              title: currentBook == null ? '词书路径' : '${currentBook.title} 路径',
               subtitle: state.isStudyPlanPaused
                   ? '学习计划已暂停，路径进度会保留。'
-                  : '这里只展示当前词书进度；正式新学和复习回到首页的两个独立入口。',
+                  : currentBook?.description ?? '这里只展示词书进度；正式新学和复习回到首页的两个独立入口。',
               trailing: QuestIconButton(
                 tooltip: '学习计划',
                 onPressed: () => context.push('/settings/study-plan'),

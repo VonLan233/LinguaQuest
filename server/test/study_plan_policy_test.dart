@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 void main() {
   test('accepts a complete study plan payload', () {
     final result = validateStudyPlanPayload({
-      'wordBookId': 'exam-core',
+      'wordBookId': 'ielts',
       'dailyNewTarget': 20,
       'dailyReviewLimit': 40,
       'startDate': '2026-06-04',
@@ -29,7 +29,7 @@ void main() {
     expect(invalidBook.error, 'invalid wordBookId');
 
     final invalidRange = validateStudyPlanPayload({
-      'wordBookId': 'exam-core',
+      'wordBookId': 'ielts',
       'dailyNewTarget': 0,
       'dailyReviewLimit': 40,
       'startDate': '2026-06-04',
@@ -41,7 +41,7 @@ void main() {
 
   test('rejects impossible dates and reminder times', () {
     final invalidDate = validateStudyPlanPayload({
-      'wordBookId': 'daily-english',
+      'wordBookId': 'beginner',
       'dailyNewTarget': 10,
       'dailyReviewLimit': 20,
       'startDate': '2026-08-04',
@@ -51,7 +51,7 @@ void main() {
     expect(invalidDate.error, 'targetFinishDate must be on or after startDate');
 
     final invalidTime = validateStudyPlanPayload({
-      'wordBookId': 'daily-english',
+      'wordBookId': 'beginner',
       'dailyNewTarget': 10,
       'dailyReviewLimit': 20,
       'startDate': '2026-06-04',
@@ -63,7 +63,7 @@ void main() {
 
   test('coerces string-like fields without throwing type errors', () {
     final result = validateStudyPlanPayload({
-      'wordBookId': const _StringLike('exam-core'),
+      'wordBookId': const _StringLike('ielts'),
       'dailyNewTarget': '20',
       'dailyReviewLimit': '40',
       'startDate': '2026-06-04',
@@ -73,14 +73,14 @@ void main() {
     });
 
     expect(result.isValid, isTrue);
-    expect(result.data!['wordBookId'], 'exam-core');
+    expect(result.data!['wordBookId'], 'ielts');
     expect(result.data!['status'], 'paused');
   });
 
   test('preserves caller-provided reset timestamp', () {
     final resetAt = DateTime.utc(2026, 6, 4, 9, 30);
     final result = validateStudyPlanPayload({
-      'wordBookId': 'exam-core',
+      'wordBookId': 'ielts',
       'dailyNewTarget': 20,
       'dailyReviewLimit': 40,
       'startDate': '2026-06-04',

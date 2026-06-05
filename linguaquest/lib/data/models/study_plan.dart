@@ -143,28 +143,46 @@ class StudyBookInfo {
 
 const studyBooks = [
   StudyBookInfo(
-    id: 'daily-english',
-    name: '日常英语词书',
-    cover: '🌤️',
-    description: '校园、健康和日常表达，适合稳定打基础。',
+    id: 'beginner',
+    name: '入门基础词汇',
+    cover: '🌱',
+    description: '适合初级英语和日常表达入门的基础高频词。',
   ),
   StudyBookInfo(
-    id: 'exam-core',
-    name: '考试高频词书',
+    id: 'ielts',
+    name: '雅思核心词汇',
     cover: '🎓',
-    description: 'CET、IELTS、TOEFL、MUET 高频学术词。',
+    description: '覆盖雅思阅读、听力和写作中的高频学术词。',
   ),
   StudyBookInfo(
-    id: 'travel-english',
-    name: '旅行英语词书',
-    cover: '✈️',
-    description: '出行、交通、酒店和旅行场景词汇。',
+    id: 'toefl',
+    name: '托福高频词汇',
+    cover: '🌎',
+    description: '面向托福场景的学术词汇和校园表达。',
   ),
   StudyBookInfo(
-    id: 'business-english',
-    name: '商务英语词书',
-    cover: '💼',
-    description: '职场沟通、会议、客户支持和商务表达。',
+    id: 'gre',
+    name: 'GRE 高频词汇',
+    cover: '🧠',
+    description: '强化 GRE 阅读和填空常见高阶词。',
+  ),
+  StudyBookInfo(
+    id: 'cet4',
+    name: '四级核心词汇',
+    cover: '4️⃣',
+    description: '大学英语四级核心词和常见搭配。',
+  ),
+  StudyBookInfo(
+    id: 'cet6',
+    name: '六级核心词汇',
+    cover: '6️⃣',
+    description: '大学英语六级阅读和听力高频词。',
+  ),
+  StudyBookInfo(
+    id: 'kaoyan',
+    name: '考研英语核心词汇',
+    cover: '📚',
+    description: '覆盖考研英语阅读、翻译和写作常见词。',
   ),
 ];
 
@@ -178,40 +196,54 @@ StudyBookInfo studyBookInfoForId(String id) {
 String normalizedStudyBookId(String? value) {
   final normalized = value?.trim().toLowerCase() ?? '';
   if (studyBooks.any((book) => book.id == normalized)) return normalized;
+  if (normalized == 'daily-english') return 'beginner';
+  if (normalized == 'exam-core') return 'ielts';
+  if (normalized == 'business-english' || normalized == 'travel-english') {
+    return 'beginner';
+  }
   return studyBookIdForTarget(normalized);
 }
 
 String studyBookIdForTarget(String? target) {
   final normalized = target?.trim().toLowerCase() ?? '';
-  if (normalized.contains('business') || normalized.contains('商务')) {
-    return 'business-english';
+  if (normalized.contains('toefl') || normalized.contains('托福')) return 'toefl';
+  if (normalized.contains('gre')) return 'gre';
+  if (normalized.contains('cet-6') ||
+      normalized.contains('cet6') ||
+      normalized.contains('六级')) {
+    return 'cet6';
   }
-  if (normalized.contains('travel') || normalized.contains('旅行')) {
-    return 'travel-english';
+  if (normalized.contains('cet-4') ||
+      normalized.contains('cet4') ||
+      normalized.contains('四级')) {
+    return 'cet4';
   }
+  if (normalized.contains('考研')) return 'kaoyan';
   if (normalized.contains('ielts') ||
-      normalized.contains('toefl') ||
-      normalized.contains('muet') ||
-      normalized.contains('cet') ||
-      normalized.contains('exam') ||
       normalized.contains('雅思') ||
-      normalized.contains('托福') ||
+      normalized.contains('exam') ||
       normalized.contains('考试') ||
       normalized.contains('大学英语')) {
-    return 'exam-core';
+    return 'ielts';
   }
-  return 'daily-english';
+  return 'beginner';
 }
 
 String targetForStudyBookId(String wordBookId) {
   switch (normalizedStudyBookId(wordBookId)) {
-    case 'business-english':
-      return 'Business English';
-    case 'travel-english':
-      return 'Travel English';
-    case 'exam-core':
+    case 'toefl':
+      return 'TOEFL';
+    case 'gre':
+      return 'GRE';
+    case 'cet4':
+      return 'CET-4';
+    case 'cet6':
+      return 'CET-6';
+    case 'kaoyan':
+      return '考研';
+    case 'ielts':
       return 'IELTS';
-    case 'daily-english':
+    case 'beginner':
       return 'Daily English';
   }
   return 'Daily English';

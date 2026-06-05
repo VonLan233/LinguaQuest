@@ -33,7 +33,9 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
     'CET-6',
     'IELTS',
     'TOEFL',
-    'MUET',
+    'GRE',
+    '考研',
+    'Beginner',
     'Daily English',
     'Business English',
   ];
@@ -60,17 +62,22 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(appControllerProvider);
+    final selectedBook = _bookForTarget(state.wordBooks, _target);
     final selectedLessons = learningLessonsForTarget(state.lessons, _target);
-    final totalWords = selectedLessons.fold<int>(
-      0,
-      (total, lesson) => total + lesson.words.length,
-    );
-    final completedWords = selectedLessons
-        .where((lesson) => state.completedLessonIds.contains(lesson.id))
-        .fold<int>(0, (total, lesson) => total + lesson.words.length);
+    final totalWords =
+        selectedBook?.totalWords ??
+        selectedLessons.fold<int>(
+          0,
+          (total, lesson) => total + lesson.words.length,
+        );
+    final completedWords = selectedBook?.id == state.currentWordBookId
+        ? selectedLessons
+              .where((lesson) => state.completedLessonIds.contains(lesson.id))
+              .fold<int>(0, (total, lesson) => total + lesson.words.length)
+        : 0;
     final plannedDailyWords = _deadline == null
         ? null
-        : _dailyWordsForDeadline(selectedLessons, state.completedLessonIds);
+        : _dailyWordsForDeadline(totalWords - completedWords);
     final dailyWords = plannedDailyWords ?? _dailyGoal;
     return Scaffold(
       appBar: AppBar(
@@ -241,13 +248,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
     setState(() => _deadline = picked);
   }
 
-  int _dailyWordsForDeadline(
-    List<Lesson> lessons,
-    Set<String> completedLessonIds,
-  ) {
-    final remainingWords = lessons
-        .where((lesson) => !completedLessonIds.contains(lesson.id))
-        .fold(0, (total, lesson) => total + lesson.words.length);
+  int _dailyWordsForDeadline(int remainingWords) {
     final now = DateTime.now();
     final deadline = _deadline ?? now;
     final today = DateTime.utc(now.year, now.month, now.day);
@@ -255,6 +256,21 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
     final days = targetDay.difference(today).inDays.clamp(0, 9999).toInt() + 1;
     if (remainingWords == 0) return 1;
     return ((remainingWords + days - 1) ~/ days).clamp(1, 999).toInt();
+  }
+
+  WordBook? _bookForTarget(List<WordBook> books, String target) {
+    final normalized = target.toLowerCase();
+    for (final book in books) {
+      final examType = book.examType.toLowerCase();
+      final title = book.title.toLowerCase();
+      if (examType == normalized || title.contains(normalized)) return book;
+      if (normalized == '考研' && book.id == 'kaoyan') return book;
+      if (normalized == 'daily english' && book.id == 'beginner') return book;
+      if (normalized == 'business english' && book.id == 'beginner') {
+        return book;
+      }
+    }
+    return null;
   }
 }
 

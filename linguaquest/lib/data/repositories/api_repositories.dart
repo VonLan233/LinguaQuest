@@ -6,15 +6,18 @@ import '../models/lesson.dart';
 import '../models/review_event.dart';
 import '../models/study_session.dart';
 import '../models/study_plan.dart';
+import '../models/user_word.dart';
 import '../models/user_profile.dart';
+import '../lesson_factory.dart';
 import '../remote/api_client.dart';
-import '../seed/seed_lessons.dart';
+import '../wordbook_asset_loader.dart';
 import 'auth_repository.dart';
 import 'custom_word_repository.dart';
 import 'learning_repository.dart';
 import 'notification_repository.dart';
 import 'review_repository.dart';
 import 'study_plan_repository.dart';
+import 'user_word_repository.dart';
 
 class ApiAuthRepository implements AuthRepository {
   ApiAuthRepository(this._client);
@@ -138,16 +141,95 @@ class ApiCustomWordRepository implements CustomWordRepository {
 }
 
 class ApiLearningRepository implements LearningRepository {
-  ApiLearningRepository(this._client);
+  ApiLearningRepository(this._client, {WordBookAssetLoader? fallbackLoader})
+    : _fallbackLoader = fallbackLoader ?? WordBookAssetLoader();
 
   final ApiClient _client;
+  final WordBookAssetLoader _fallbackLoader;
+  List<WordBook>? _cache;
 
   @override
-  Future<List<Lesson>> listLessons() async => seedLessons();
+  Future<List<WordBook>> listWordBooks() async {
+    final cached = _cache;
+    if (cached != null) return cached;
+    try {
+      final response = await _client.dio.get<List<dynamic>>('/wordbooks');
+      final books = (response.data ?? const <dynamic>[]).whereType<Map>().map((
+        item,
+      ) {
+        return WordBook.fromJson(Map<String, dynamic>.from(item));
+      }).toList();
+      _cache = List.unmodifiable(books);
+      return _cache!;
+    } catch (_) {
+      return _fallbackLoader.loadWordBooks();
+    }
+  }
+
+  @override
+  Future<List<Lesson>> listLessons() async {
+    final books = await listWordBooks();
+    if (books.isEmpty) return const [];
+    return listLessonsForWordBook(books.first.id);
+  }
+
+  @override
+  Future<List<Lesson>> listLessonsForWordBook(String wordBookId) async {
+    final books = await listWordBooks();
+    if (books.isEmpty) return const [];
+    final book = _bookById(books, wordBookId) ?? books.first;
+    return lessonsFromWordBook(book);
+  }
 
   @override
   Future<void> recordStudySession(StudySession session) async {
     await _client.dio.post<void>('/study-sessions', data: session.toJson());
+  }
+
+  WordBook? _bookById(List<WordBook> books, String id) {
+    for (final book in books) {
+      if (book.id == id) return book;
+    }
+    return null;
+  }
+}
+
+class ApiUserWordRepository implements UserWordRepository {
+  ApiUserWordRepository(this._client);
+
+  final ApiClient _client;
+
+  @override
+  Future<List<UserWord>> list(String uid) async {
+    final response = await _client.dio.get<List<dynamic>>('/user-words');
+    return response.data!
+        .cast<Map<String, dynamic>>()
+        .map(UserWord.fromJson)
+        .toList();
+  }
+
+  @override
+  Future<UserWord> upsert(UserWord word) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/user-words',
+      data: word.toJson(),
+    );
+    return UserWord.fromJson(response.data!['word'] as Map<String, dynamic>);
+  }
+
+  @override
+  Future<List<UserWord>> upsertAll(List<UserWord> words) async {
+    if (words.isEmpty) return [];
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/user-words/batch',
+      data: {
+        'words': [for (final word in words) word.toJson()],
+      },
+    );
+    return (response.data!['words'] as List<dynamic>)
+        .cast<Map<String, dynamic>>()
+        .map(UserWord.fromJson)
+        .toList();
   }
 }
 

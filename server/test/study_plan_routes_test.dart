@@ -16,7 +16,7 @@ void main() {
       ..existingStudyPlan = {
         'id': 'plan-1',
         'uid': uid,
-        'word_book_id': 'exam-core',
+        'word_book_id': 'ielts',
         'daily_new_target': 20,
         'daily_review_limit': 40,
         'start_date': DateTime.utc(2026, 5, 1),
@@ -80,7 +80,7 @@ void main() {
     expect(response.statusCode, 200);
     expect(studyPlan['status'], 'active');
     expect(studyPlan['id'], 'plan-1');
-    expect(studyPlan['wordBookId'], 'exam-core');
+    expect(studyPlan['wordBookId'], 'ielts');
     expect(database.upsertedPayload?['id'], 'plan-1');
     expect(database.upsertedPayload?['reminderTime'], '07:05');
     expect(database.resetCalledWithUid, uid);

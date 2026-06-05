@@ -29,7 +29,7 @@ class _StudyPlanSettingsScreenState
   late final ProviderSubscription<AppState> _stateSubscription;
   _PlanInitializationKey? _lastInitializedPlanKey;
   var _initialized = false;
-  var _wordBookId = 'daily-english';
+  var _wordBookId = 'beginner';
   var _targetFinishDate = DateTime.now().add(const Duration(days: 30));
   var _reminderTime = const TimeOfDay(hour: 20, minute: 0);
 

@@ -17,7 +17,8 @@ class WordbookScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appControllerProvider);
     final words = state.formalLessons.expand((lesson) => lesson.words).toList();
-    final book = state.currentStudyBook;
+    final currentBook = state.currentWordBook;
+    final studyBook = state.currentStudyBook;
 
     return Scaffold(
       appBar: AppBar(
@@ -29,8 +30,8 @@ class WordbookScreen extends ConsumerWidget {
           padding: const EdgeInsets.all(20),
           children: [
             SectionHeader(
-              title: book.name,
-              subtitle: book.description,
+              title: currentBook?.title ?? '图片单词本',
+              subtitle: currentBook?.description ?? studyBook.description,
               trailing: QuestIconButton(
                 tooltip: '生词本',
                 onPressed: () => context.push('/custom-words'),
@@ -40,7 +41,7 @@ class WordbookScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 14),
             _StudyBookCoverLine(
-              cover: book.cover,
+              cover: studyBook.cover,
               totalWords: words.length,
               completedWords: state.completedLearningWords,
               progress: state.learningPathProgress,
@@ -52,9 +53,13 @@ class WordbookScreen extends ConsumerWidget {
               runSpacing: 8,
               children: [
                 PillLabel(
-                  label: '${words.length} 个目标词',
+                  label: '${currentBook?.totalWords ?? words.length} 个目标词',
                   icon: Icons.style_outlined,
                   color: AppTheme.cyan,
+                ),
+                PillLabel(
+                  label: '${state.wordBooks.length} 本词书',
+                  icon: Icons.library_books_outlined,
                 ),
                 PillLabel(
                   label: '完成 ${(state.learningPathProgress * 100).round()}%',
@@ -63,6 +68,27 @@ class WordbookScreen extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 22),
+            if (state.wordBooks.isNotEmpty) ...[
+              SectionHeader(
+                title: '切换词书',
+                subtitle: '当前词书会驱动首页、学习路径、搜索、训练场和复习入口。',
+              ),
+              const SizedBox(height: 12),
+              _WordBookSwitcher(
+                currentId: state.currentWordBookId,
+                books: state.wordBooks,
+                onSelect: (bookId) async {
+                  final succeeded = await ref
+                      .read(appControllerProvider.notifier)
+                      .switchWordBook(bookId);
+                  if (!context.mounted) return;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(succeeded ? '已切换当前词书' : '暂时无法切换词书')),
+                  );
+                },
+              ),
+              const SizedBox(height: 22),
+            ],
             SectionHeader(
               title: '目标词',
               subtitle:
@@ -134,6 +160,89 @@ class _StudyBookCoverLine extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _WordBookSwitcher extends StatelessWidget {
+  const _WordBookSwitcher({
+    required this.currentId,
+    required this.books,
+    required this.onSelect,
+  });
+
+  final String currentId;
+  final List<WordBook> books;
+  final Future<void> Function(String bookId) onSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return SizedBox(
+      height: 160,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          final book = books[index];
+          final selected = book.id == currentId;
+          return SizedBox(
+            width: 220,
+            child: OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                alignment: Alignment.centerLeft,
+                side: BorderSide(
+                  color: selected
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.outlineVariant,
+                  width: selected ? 2 : 1,
+                ),
+                backgroundColor: selected
+                    ? AppTheme.selectedSurface(context)
+                    : theme.colorScheme.surface,
+                padding: const EdgeInsets.all(14),
+              ),
+              onPressed: selected ? null : () => onSelect(book.id),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          book.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.titleMedium,
+                        ),
+                      ),
+                      if (selected)
+                        const Icon(Icons.check_circle_outline, size: 18),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    book.description,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                  ),
+                  const SizedBox(height: 10),
+                  Wrap(
+                    spacing: 6,
+                    children: [
+                      PillLabel(label: book.examType),
+                      PillLabel(label: '${book.totalWords} 词'),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+        separatorBuilder: (_, _) => const SizedBox(width: 10),
+        itemCount: books.length,
+      ),
     );
   }
 }

@@ -1,9 +1,12 @@
 const allowedStudyPlanStatuses = {'active', 'paused'};
 const allowedWordBookIds = {
-  'daily-english',
-  'exam-core',
-  'travel-english',
-  'business-english',
+  'beginner',
+  'ielts',
+  'toefl',
+  'gre',
+  'cet4',
+  'cet6',
+  'kaoyan',
 };
 
 class StudyPlanValidationResult {
@@ -27,7 +30,7 @@ StudyPlanValidationResult validateStudyPlanPayload(
   Map<String, dynamic> body, {
   DateTime? now,
 }) {
-  final wordBookId = (body['wordBookId']?.toString() ?? '').trim();
+  final wordBookId = normalizeStudyPlanWordBookId(body['wordBookId']);
   if (!allowedWordBookIds.contains(wordBookId)) {
     return StudyPlanValidationResult.invalid('invalid wordBookId');
   }
@@ -81,6 +84,17 @@ StudyPlanValidationResult validateStudyPlanPayload(
     'status': status,
     'now': now ?? DateTime.now().toUtc(),
   });
+}
+
+String normalizeStudyPlanWordBookId(Object? value) {
+  final normalized = (value?.toString() ?? '').trim().toLowerCase();
+  if (allowedWordBookIds.contains(normalized)) return normalized;
+  if (normalized == 'daily-english') return 'beginner';
+  if (normalized == 'exam-core') return 'ielts';
+  if (normalized == 'business-english' || normalized == 'travel-english') {
+    return 'beginner';
+  }
+  return normalized;
 }
 
 DateTime? parseStudyPlanDate(Object? value) {

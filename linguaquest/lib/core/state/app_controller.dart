@@ -14,6 +14,7 @@ import '../../data/models/review_event.dart';
 import '../../data/models/study_session.dart';
 import '../../data/models/study_plan.dart';
 import '../../data/models/user_profile.dart';
+import '../../data/models/user_word.dart';
 import '../../data/remote/api_client.dart';
 import '../../data/repositories/api_repositories.dart';
 import '../../data/repositories/auth_repository.dart';
@@ -23,6 +24,7 @@ import '../../data/repositories/mock_repositories.dart';
 import '../../data/repositories/notification_repository.dart';
 import '../../data/repositories/review_repository.dart';
 import '../../data/repositories/study_plan_repository.dart';
+import '../../data/repositories/user_word_repository.dart';
 import '../../services/local_notification_service.dart';
 import '../constants/app_constants.dart';
 import '../utils/ui_labels.dart';
@@ -49,6 +51,13 @@ final learningRepositoryProvider = Provider<LearningRepository>((ref) {
     return ApiLearningRepository(ref.watch(apiClientProvider));
   }
   return MockLearningRepository();
+});
+
+final userWordRepositoryProvider = Provider<UserWordRepository>((ref) {
+  if (AppConstants.apiBaseUrl.isNotEmpty) {
+    return ApiUserWordRepository(ref.watch(apiClientProvider));
+  }
+  return MockUserWordRepository();
 });
 
 final reviewRepositoryProvider = Provider<ReviewRepository>((ref) {
@@ -79,6 +88,7 @@ final appControllerProvider = NotifierProvider<AppController, AppState>(
 class AppController extends Notifier<AppState> {
   static const _themeModeKey = 'linguaquest.themeMode';
   static const _reminderKey = 'linguaquest.reminderSettings';
+  static const _currentWordBookIdKey = 'linguaquest.currentWordBookId';
   static const _completedLessonIdsKey = 'linguaquest.completedLessons';
   static const _todayDateKey = 'linguaquest.today.date';
   static const _todayLessonIdsKey = 'linguaquest.today.lessons';
@@ -88,6 +98,7 @@ class AppController extends Notifier<AppState> {
   late final AuthRepository _authRepository;
   late final CustomWordRepository _customWordRepository;
   late final LearningRepository _learningRepository;
+  late final UserWordRepository _userWordRepository;
   late final ReviewRepository _reviewRepository;
   late final StudyPlanRepository _studyPlanRepository;
   late final NotificationRepository _notificationRepository;
@@ -99,6 +110,7 @@ class AppController extends Notifier<AppState> {
     _authRepository = ref.watch(authRepositoryProvider);
     _customWordRepository = ref.watch(customWordRepositoryProvider);
     _learningRepository = ref.watch(learningRepositoryProvider);
+    _userWordRepository = ref.watch(userWordRepositoryProvider);
     _reviewRepository = ref.watch(reviewRepositoryProvider);
     _studyPlanRepository = ref.watch(studyPlanRepositoryProvider);
     _notificationRepository = ref.watch(notificationRepositoryProvider);
@@ -123,26 +135,39 @@ class AppController extends Notifier<AppState> {
       final todayClaimedRewardIds = hasTodayState
           ? _stringSet(prefs, _todayRewardIdsKey)
           : <String>{};
-      final lessons = _applyLessonProgression(
-        await _learningRepository.listLessons(),
-        completedLessonIds,
-      );
       final user = await _authRepository.loadSession();
-      final words = user == null
-          ? <CustomWord>[]
-          : await _customWordRepository.list(user.uid);
+      final wordBooks = await _learningRepository.listWordBooks();
       final studyPlan = user == null
           ? null
           : await _loadOrCreateStudyPlan(user);
+      final currentWordBookId = _resolveCurrentWordBookId(
+        books: wordBooks,
+        savedId:
+            studyPlan?.wordBookId ?? prefs.getString(_currentWordBookIdKey),
+        target: user?.targetExam,
+      );
+      final lessons = _applyLessonProgression(
+        await _learningRepository.listLessonsForWordBook(currentWordBookId),
+        completedLessonIds,
+      );
+      final words = user == null
+          ? <CustomWord>[]
+          : await _customWordRepository.list(user.uid);
       final reminderSettings = studyPlan == null
           ? _loadReminderSettings(prefs)
           : _reminderSettingsForPlan(studyPlan);
+      final userWords = user == null
+          ? <UserWord>[]
+          : await _userWordRepository.list(user.uid);
       state = state.copyWith(
         isBootstrapped: true,
         isLoading: false,
         user: user,
+        wordBooks: wordBooks,
+        currentWordBookId: currentWordBookId,
         lessons: lessons,
         customWords: words,
+        userWords: userWords,
         themeMode: _themeModeFromName(prefs.getString(_themeModeKey)),
         reminderSettings: reminderSettings,
         studyPlan: studyPlan,
@@ -208,6 +233,7 @@ class AppController extends Notifier<AppState> {
       state = state.copyWith(
         user: user,
         customWords: await _customWordRepository.list(user.uid),
+        userWords: await _userWordRepository.list(user.uid),
       );
       await _ensureStudyPlan(user);
       await refreshNotifications();
@@ -224,6 +250,7 @@ class AppController extends Notifier<AppState> {
       state = state.copyWith(
         user: user,
         customWords: await _customWordRepository.list(user.uid),
+        userWords: await _userWordRepository.list(user.uid),
       );
       await _ensureStudyPlan(user);
       await refreshNotifications();
@@ -240,11 +267,19 @@ class AppController extends Notifier<AppState> {
     final user = state.user;
     if (user == null) return false;
     return _run(() async {
+      final wordBookId = _wordBookIdForTarget(targetExam, state.wordBooks);
+      final targetLessons = await _learningRepository.listLessonsForWordBook(
+        wordBookId,
+      );
+      final plannedDailyGoal = deadline == null
+          ? dailyGoal
+          : _dailyWordsForDeadline(deadline: deadline, lessons: targetLessons);
       final plan = _buildStudyPlan(
         uid: user.uid,
         target: targetExam,
-        dailyGoal: dailyGoal,
+        dailyGoal: plannedDailyGoal,
         targetFinishDate: deadline,
+        wordBookId: wordBookId,
       );
       final updated = await _authRepository.updateProfile(
         user.copyWith(
@@ -257,10 +292,17 @@ class AppController extends Notifier<AppState> {
       final savedPlan = await _studyPlanRepository.save(plan);
       final reminderSettings = _reminderSettingsForPlan(savedPlan);
       await _persistReminderSettings(reminderSettings);
+      await _saveCurrentWordBookId(savedPlan.wordBookId);
+      final lessons = _applyLessonProgression(
+        targetLessons,
+        state.completedLessonIds,
+      );
       state = state.copyWith(
         user: updated,
         studyPlan: savedPlan,
         reminderSettings: reminderSettings,
+        currentWordBookId: savedPlan.wordBookId,
+        lessons: lessons,
       );
       await refreshNotifications();
       unawaited(_scheduleLocalNotifications());
@@ -271,12 +313,22 @@ class AppController extends Notifier<AppState> {
     final user = state.user;
     if (user == null) return false;
     return _run(() async {
-      final targetExam = targetForStudyBookId(plan.wordBookId);
+      final wordBookId = _wordBookIdForTarget(plan.wordBookId, state.wordBooks);
+      final targetExam = targetForStudyBookId(wordBookId);
       final saved = await _studyPlanRepository.save(
-        plan.copyWith(uid: user.uid, updatedAt: DateTime.now()),
+        plan.copyWith(
+          uid: user.uid,
+          wordBookId: wordBookId,
+          updatedAt: DateTime.now(),
+        ),
       );
       final reminderSettings = _reminderSettingsForPlan(saved);
       await _persistReminderSettings(reminderSettings);
+      await _saveCurrentWordBookId(saved.wordBookId);
+      final lessons = _applyLessonProgression(
+        await _learningRepository.listLessonsForWordBook(saved.wordBookId),
+        state.completedLessonIds,
+      );
       final updatedUser = await _authRepository.updateProfile(
         user.copyWith(
           targetExam: targetExam,
@@ -288,6 +340,8 @@ class AppController extends Notifier<AppState> {
         user: updatedUser,
         studyPlan: saved,
         reminderSettings: reminderSettings,
+        currentWordBookId: saved.wordBookId,
+        lessons: lessons,
       );
       await refreshNotifications();
       unawaited(_scheduleLocalNotifications());
@@ -338,19 +392,69 @@ class AppController extends Notifier<AppState> {
     });
   }
 
+  Future<bool> switchWordBook(String wordBookId) async {
+    if (!_hasWordBook(wordBookId)) return false;
+    return _run(() async {
+      final lessons = _applyLessonProgression(
+        await _learningRepository.listLessonsForWordBook(wordBookId),
+        state.completedLessonIds,
+      );
+      final book = _wordBookById(state.wordBooks, wordBookId);
+      var updatedUser = state.user;
+      var savedPlan = state.studyPlan;
+      var reminderSettings = state.reminderSettings;
+      if (updatedUser != null && book != null) {
+        updatedUser = await _authRepository.updateProfile(
+          updatedUser.copyWith(
+            targetExam: book.examType,
+            updatedAt: DateTime.now(),
+          ),
+        );
+        final plan =
+            savedPlan ??
+            _buildStudyPlan(
+              uid: updatedUser.uid,
+              target: book.examType,
+              dailyGoal: updatedUser.dailyGoal,
+              wordBookId: wordBookId,
+            );
+        savedPlan = await _studyPlanRepository.save(
+          plan.copyWith(wordBookId: wordBookId, updatedAt: DateTime.now()),
+        );
+        reminderSettings = _reminderSettingsForPlan(savedPlan);
+        await _persistReminderSettings(reminderSettings);
+      }
+      await _saveCurrentWordBookId(wordBookId);
+      state = state.copyWith(
+        user: updatedUser,
+        currentWordBookId: wordBookId,
+        lessons: lessons,
+        studyPlan: savedPlan,
+        reminderSettings: reminderSettings,
+      );
+      await refreshNotifications();
+      unawaited(_scheduleLocalNotifications());
+    });
+  }
+
   Future<void> logout() async {
     final themeMode = state.themeMode;
     final reminderSettings = state.reminderSettings;
+    final wordBooks = state.wordBooks;
+    final currentWordBookId = state.currentWordBookId;
     final lessons = state.lessons;
     final completedLessonIds = state.completedLessonIds;
     await _authRepository.logout();
     state = AppState.initial().copyWith(
       isBootstrapped: true,
+      wordBooks: wordBooks,
+      currentWordBookId: currentWordBookId,
       lessons: _applyLessonProgression(lessons, completedLessonIds),
       completedLessonIds: completedLessonIds,
       themeMode: themeMode,
       reminderSettings: reminderSettings,
       notifications: [],
+      clearLastResult: true,
     );
     unawaited(_scheduleLocalNotifications());
   }
@@ -407,6 +511,51 @@ class AppController extends Notifier<AppState> {
     });
   }
 
+  Future<bool> updateTargetWordFlags(
+    Word targetWord, {
+    required String wordBookId,
+    bool? isFavorite,
+    bool? isInNewWordbook,
+    bool? isIgnored,
+  }) async {
+    final user = state.user;
+    if (user == null) return false;
+    return _run(() async {
+      final now = DateTime.now();
+      final existing = state.userWords.firstWhere(
+        (word) => word.wordId == targetWord.id,
+        orElse: () => UserWord.create(
+          uid: user.uid,
+          word: targetWord,
+          wordBookId: wordBookId,
+          now: now,
+        ),
+      );
+      final ignored = isIgnored ?? existing.isIgnored;
+      final updated = existing.copyWith(
+        wordBookId: wordBookId,
+        word: targetWord.word,
+        meaning: targetWord.meaning,
+        exampleSentence: targetWord.exampleSentence,
+        difficulty: targetWord.difficulty,
+        isFavorite: isFavorite,
+        isInNewWordbook: isInNewWordbook,
+        isIgnored: ignored,
+        status: ignored
+            ? 'Ignored'
+            : existing.status == 'Ignored'
+            ? 'Previewed'
+            : existing.status,
+        updatedAt: now,
+      );
+      final saved = await _userWordRepository.upsert(updated);
+      state = state.copyWith(
+        userWords: _mergeUserWords(state.userWords, [saved]),
+      );
+      await refreshNotifications();
+    });
+  }
+
   Future<bool> completeLesson(LessonResult result) async {
     final user = state.user;
     if (user == null) return false;
@@ -446,12 +595,18 @@ class AppController extends Notifier<AppState> {
               .toList(),
         ),
       );
+      final learnedUserWords = await _recordLessonUserWords(
+        uid: user.uid,
+        result: result,
+        now: now,
+      );
       await _saveLessonProgress(completedLessonIds, todayCompletedLessonIds);
       state = state.copyWith(
         user: updatedUser,
         lessons: _applyLessonProgression(state.lessons, completedLessonIds),
         completedLessonIds: completedLessonIds,
         todayCompletedLessonIds: todayCompletedLessonIds,
+        userWords: _mergeUserWords(state.userWords, learnedUserWords),
         lastResult: result,
       );
       await refreshNotifications();
@@ -469,6 +624,15 @@ class AppController extends Notifier<AppState> {
     if (state.isStudyPlanPaused) {
       state = state.copyWith(errorMessage: '学习计划已暂停，恢复后才能复习。');
       return false;
+    }
+    final targetWord = _userWordByReviewId(id);
+    if (targetWord != null) {
+      return _reviewUserWord(
+        user.uid,
+        targetWord,
+        isCorrect,
+        dimension: dimension,
+      );
     }
     final word = _customWordById(id);
     if (word == null) return false;
@@ -503,6 +667,51 @@ class AppController extends Notifier<AppState> {
         customWords: [
           for (final item in state.customWords) item.id == id ? reviewed : item,
         ],
+        todayReviewWordIds: todayReviewWordIds,
+      );
+      await refreshNotifications();
+      unawaited(_scheduleLocalNotifications());
+    });
+  }
+
+  Future<bool> _reviewUserWord(
+    String uid,
+    UserWord word,
+    bool isCorrect, {
+    ReviewDimension dimension = ReviewDimension.confidence,
+  }) async {
+    final now = DateTime.now();
+    if (isCorrect && !word.isDue(now)) {
+      state = state.copyWith(errorMessage: '这个目标词今天已经完成复习。');
+      return false;
+    }
+    return _run(() async {
+      final reviewed = word.reviewed(
+        isCorrect: isCorrect,
+        now: now,
+        dimension: dimension,
+      );
+      final saved = await _userWordRepository.upsert(reviewed);
+      await _reviewRepository.recordReviewEvent(
+        ReviewEvent(
+          id: 'review-${now.microsecondsSinceEpoch}',
+          uid: uid,
+          wordId: word.wordId,
+          isCorrect: isCorrect,
+          answerTimeMs: 2400,
+          reviewedAt: now,
+          masteryBefore: word.masteryLevel,
+          masteryAfter: saved.masteryLevel,
+          nextReviewAt: saved.nextReviewAt,
+        ),
+      );
+      final todayReviewWordIds = {
+        ...state.todayReviewWordIds,
+        word.reviewCardId,
+      };
+      await _saveTodayReviewWords(todayReviewWordIds);
+      state = state.copyWith(
+        userWords: _mergeUserWords(state.userWords, [saved]),
         todayReviewWordIds: todayReviewWordIds,
       );
       await refreshNotifications();
@@ -719,13 +928,108 @@ class AppController extends Notifier<AppState> {
     required String target,
     required int dailyGoal,
     DateTime? targetFinishDate,
+    String? wordBookId,
   }) {
+    final normalizedWordBookId = _wordBookIdForTarget(
+      wordBookId ?? target,
+      state.wordBooks,
+    );
     return StudyPlan.defaultsFor(
       uid: uid,
       targetExam: target,
       dailyGoal: dailyGoal,
       targetFinishDate: targetFinishDate,
-    );
+    ).copyWith(wordBookId: normalizedWordBookId);
+  }
+
+  int _dailyWordsForDeadline({
+    required DateTime deadline,
+    required List<Lesson> lessons,
+  }) {
+    final completed = state.completedLessonIds;
+    final remainingWords = lessons
+        .where(
+          (lesson) => !lesson.isTrainingPack && !completed.contains(lesson.id),
+        )
+        .fold(0, (total, lesson) => total + lesson.words.length);
+    final now = DateTime.now();
+    final today = DateTime.utc(now.year, now.month, now.day);
+    final targetDay = DateTime.utc(deadline.year, deadline.month, deadline.day);
+    final days = targetDay.difference(today).inDays.clamp(0, 9999).toInt() + 1;
+    if (remainingWords == 0) return 1;
+    return ((remainingWords + days - 1) ~/ days).clamp(1, 999).toInt();
+  }
+
+  UserWord? _userWordByReviewId(String id) {
+    for (final word in state.userWords) {
+      if (word.reviewCardId == id || word.id == id || word.wordId == id) {
+        return word;
+      }
+    }
+    return null;
+  }
+
+  Future<List<UserWord>> _recordLessonUserWords({
+    required String uid,
+    required LessonResult result,
+    required DateTime now,
+  }) async {
+    final lesson = _lessonById(result.lessonId);
+    if (lesson == null || lesson.words.isEmpty) return [];
+    final mistakeWordIds = result.mistakes
+        .map((mistake) => mistake.word.id)
+        .toSet();
+    final existingByWordId = {
+      for (final word in state.userWords) word.wordId: word,
+    };
+    final updates = <UserWord>[];
+    for (final targetWord in lesson.words) {
+      final existing =
+          existingByWordId[targetWord.id] ??
+          UserWord.create(
+            uid: uid,
+            word: targetWord,
+            wordBookId: lesson.section,
+            now: now,
+          );
+      if (existing.isIgnored || existing.status == 'Ignored') continue;
+      updates.add(
+        existing
+            .copyWith(
+              wordBookId: lesson.section,
+              word: targetWord.word,
+              meaning: targetWord.meaning,
+              exampleSentence: targetWord.exampleSentence,
+              difficulty: targetWord.difficulty,
+            )
+            .learned(
+              hadMistake: mistakeWordIds.contains(targetWord.id),
+              now: now,
+            ),
+      );
+    }
+    if (updates.isEmpty) return [];
+    return _userWordRepository.upsertAll(updates);
+  }
+
+  Lesson? _lessonById(String lessonId) {
+    for (final lesson in state.lessons) {
+      if (lesson.id == lessonId) return lesson;
+    }
+    return null;
+  }
+
+  List<UserWord> _mergeUserWords(
+    List<UserWord> existing,
+    List<UserWord> updates,
+  ) {
+    if (updates.isEmpty) return existing;
+    final byId = {for (final word in existing) word.id: word};
+    for (final word in updates) {
+      byId[word.id] = word;
+    }
+    return byId.values.toList()
+      ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
   }
 
   List<AppNotification> _buildGeneratedNotifications(String uid, DateTime now) {
@@ -882,6 +1186,86 @@ class AppController extends Notifier<AppState> {
               : 'locked',
         ),
     ];
+  }
+
+  Future<void> _saveCurrentWordBookId(String wordBookId) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_currentWordBookIdKey, wordBookId);
+  }
+
+  String _resolveCurrentWordBookId({
+    required List<WordBook> books,
+    required String? savedId,
+    required String? target,
+  }) {
+    if (books.isEmpty) return savedId ?? 'beginner';
+    if (savedId != null && _wordBookById(books, savedId) != null) {
+      return savedId;
+    }
+    final targetId = _wordBookIdForTarget(target, books);
+    if (_wordBookById(books, targetId) != null) return targetId;
+    return books.first.id;
+  }
+
+  String _wordBookIdForTarget(String? target, List<WordBook> books) {
+    final normalized = target?.trim().toLowerCase() ?? '';
+    final mapped = _mappedWordBookId(normalized);
+    if (_wordBookById(books, mapped) != null) return mapped;
+    for (final book in books) {
+      final title = book.title.toLowerCase();
+      final examType = book.examType.toLowerCase();
+      if (normalized.isNotEmpty &&
+          (title.contains(normalized) || examType.contains(normalized))) {
+        return book.id;
+      }
+    }
+    return books.isEmpty ? mapped : books.first.id;
+  }
+
+  String _mappedWordBookId(String normalizedTarget) {
+    if (normalizedTarget == 'beginner' || normalizedTarget == 'daily-english') {
+      return 'beginner';
+    }
+    if (normalizedTarget == 'exam-core') return 'ielts';
+    if (normalizedTarget.contains('ielts') || normalizedTarget.contains('雅思')) {
+      return 'ielts';
+    }
+    if (normalizedTarget.contains('toefl') || normalizedTarget.contains('托福')) {
+      return 'toefl';
+    }
+    if (normalizedTarget.contains('gre')) return 'gre';
+    if (normalizedTarget.contains('cet-6') ||
+        normalizedTarget.contains('cet6') ||
+        normalizedTarget.contains('六级')) {
+      return 'cet6';
+    }
+    if (normalizedTarget.contains('cet-4') ||
+        normalizedTarget.contains('cet4') ||
+        normalizedTarget.contains('四级')) {
+      return 'cet4';
+    }
+    if (normalizedTarget.contains('kaoyan') ||
+        normalizedTarget.contains('考研')) {
+      return 'kaoyan';
+    }
+    if (normalizedTarget.contains('business') ||
+        normalizedTarget.contains('travel') ||
+        normalizedTarget.contains('商务') ||
+        normalizedTarget.contains('旅行')) {
+      return 'beginner';
+    }
+    return 'beginner';
+  }
+
+  bool _hasWordBook(String wordBookId) {
+    return _wordBookById(state.wordBooks, wordBookId) != null;
+  }
+
+  WordBook? _wordBookById(List<WordBook> books, String id) {
+    for (final book in books) {
+      if (book.id == id) return book;
+    }
+    return null;
   }
 
   Future<void> _saveLessonProgress(

@@ -220,7 +220,7 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
   }
 
   CustomWord _latestWordSnapshot(CustomWord fallback) {
-    final words = ref.read(appControllerProvider).customWords;
+    final words = ref.read(appControllerProvider).reviewWords;
     for (final word in words) {
       if (word.id == fallback.id) return word;
     }
@@ -288,6 +288,15 @@ class _ReviewWordCard extends StatelessWidget {
                           label: displayCustomTag(word.tag),
                           icon: Icons.label_outline,
                           color: AppTheme.teal,
+                        ),
+                        PillLabel(
+                          label: word.source == 'target' ? '目标词' : '生词卡',
+                          icon: word.source == 'target'
+                              ? Icons.route_outlined
+                              : Icons.style_outlined,
+                          color: word.source == 'target'
+                              ? AppTheme.cyan
+                              : AppTheme.teal,
                         ),
                         PillLabel(
                           label: '熟练度 ${word.masteryLevel}/5',

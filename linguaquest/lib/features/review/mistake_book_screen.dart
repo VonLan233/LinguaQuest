@@ -132,7 +132,9 @@ class _WeakCustomWordRow extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: () => context.push('/custom-words/${word.id}'),
+          onTap: () => word.source == 'target'
+              ? context.push('/wordbook/${word.sourceWordId ?? word.id}')
+              : context.push('/custom-words/${word.id}'),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 6),
             child: Row(
