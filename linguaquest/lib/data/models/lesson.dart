@@ -266,7 +266,7 @@ class WordBook {
           : wordIds,
       createdAt:
           DateTime.tryParse(json['createdAt']?.toString() ?? '') ??
-          DateTime.utc(2026, 6, 4),
+          DateTime.now().toUtc(),
       words: List.unmodifiable(words),
     );
   }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
@@ -8,17 +9,15 @@ class WordBookAssetLoader {
   WordBookAssetLoader({AssetBundle? bundle}) : _bundle = bundle ?? rootBundle;
 
   static const assetPath = 'lib/assets/data/wordbooks_p0.json';
+  static List<WordBook>? _sharedCache;
 
   final AssetBundle _bundle;
   List<WordBook>? _cache;
 
   Future<List<WordBook>> loadWordBooks() async {
-    final cached = _cache;
+    final cached = _cache ?? _sharedCache;
     if (cached != null) return cached;
-    final data = await _bundle.load(assetPath);
-    final raw = utf8.decode(
-      data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes),
-    );
+    final raw = await _loadAssetString();
     final decoded = jsonDecode(raw);
     if (decoded is! List) {
       throw const FormatException('wordbooks_p0.json must be a list');
@@ -26,7 +25,20 @@ class WordBookAssetLoader {
     final books = decoded.whereType<Map>().map((item) {
       return WordBook.fromJson(Map<String, dynamic>.from(item));
     }).toList();
-    _cache = List.unmodifiable(books);
+    _sharedCache = List.unmodifiable(books);
+    _cache = _sharedCache;
     return _cache!;
+  }
+
+  Future<String> _loadAssetString() {
+    return _bundle
+        .loadString(assetPath)
+        .timeout(
+          const Duration(milliseconds: 200),
+          onTimeout: () async {
+            final data = await _bundle.load(assetPath);
+            return utf8.decode(Uint8List.sublistView(data));
+          },
+        );
   }
 }
