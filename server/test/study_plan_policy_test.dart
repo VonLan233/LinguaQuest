@@ -60,4 +60,44 @@ void main() {
     });
     expect(invalidTime.error, 'reminderTime must be HH:mm');
   });
+
+  test('coerces string-like fields without throwing type errors', () {
+    final result = validateStudyPlanPayload({
+      'wordBookId': const _StringLike('exam-core'),
+      'dailyNewTarget': '20',
+      'dailyReviewLimit': '40',
+      'startDate': '2026-06-04',
+      'targetFinishDate': '2026-08-04',
+      'reminderTime': '7:05',
+      'status': const _StringLike('paused'),
+    });
+
+    expect(result.isValid, isTrue);
+    expect(result.data!['wordBookId'], 'exam-core');
+    expect(result.data!['status'], 'paused');
+  });
+
+  test('preserves caller-provided reset timestamp', () {
+    final resetAt = DateTime.utc(2026, 6, 4, 9, 30);
+    final result = validateStudyPlanPayload({
+      'wordBookId': 'exam-core',
+      'dailyNewTarget': 20,
+      'dailyReviewLimit': 40,
+      'startDate': '2026-06-04',
+      'targetFinishDate': '2026-08-04',
+      'reminderTime': '7:05',
+    }, now: resetAt);
+
+    expect(result.isValid, isTrue);
+    expect(result.data!['now'], resetAt);
+  });
+}
+
+class _StringLike {
+  const _StringLike(this.value);
+
+  final String value;
+
+  @override
+  String toString() => value;
 }

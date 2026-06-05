@@ -27,7 +27,7 @@ StudyPlanValidationResult validateStudyPlanPayload(
   Map<String, dynamic> body, {
   DateTime? now,
 }) {
-  final wordBookId = (body['wordBookId'] as String? ?? '').trim();
+  final wordBookId = (body['wordBookId']?.toString() ?? '').trim();
   if (!allowedWordBookIds.contains(wordBookId)) {
     return StudyPlanValidationResult.invalid('invalid wordBookId');
   }
@@ -66,7 +66,7 @@ StudyPlanValidationResult validateStudyPlanPayload(
     return StudyPlanValidationResult.invalid('reminderTime must be HH:mm');
   }
 
-  final status = (body['status'] as String? ?? 'active').trim();
+  final status = (body['status']?.toString() ?? 'active').trim();
   if (!allowedStudyPlanStatuses.contains(status)) {
     return StudyPlanValidationResult.invalid('invalid status');
   }
