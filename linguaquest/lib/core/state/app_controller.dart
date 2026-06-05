@@ -169,23 +169,33 @@ class AppController extends Notifier<AppState> {
   }
 
   Future<void> updateReminderSettings(DailyReminderSettings settings) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_reminderKey, jsonEncode(settings.toJson()));
     final plan = state.studyPlan;
-    if (plan == null) {
-      state = state.copyWith(reminderSettings: settings);
+    state = state.copyWith(isLoading: true, clearError: true);
+    try {
+      StudyPlan? savedPlan;
+      if (plan != null) {
+        savedPlan = await _studyPlanRepository.save(
+          plan.copyWith(
+            reminderTime: settings.formattedTime,
+            status: settings.enabled ? 'active' : 'paused',
+            updatedAt: DateTime.now(),
+          ),
+        );
+      }
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_reminderKey, jsonEncode(settings.toJson()));
+      state = state.copyWith(
+        isLoading: false,
+        reminderSettings: settings,
+        studyPlan: savedPlan ?? plan,
+      );
       unawaited(_scheduleLocalNotifications());
-      return;
+    } catch (error) {
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: _friendlyError(error),
+      );
     }
-    final savedPlan = await _studyPlanRepository.save(
-      plan.copyWith(
-        reminderTime: settings.formattedTime,
-        status: settings.enabled ? 'active' : 'paused',
-        updatedAt: DateTime.now(),
-      ),
-    );
-    state = state.copyWith(reminderSettings: settings, studyPlan: savedPlan);
-    unawaited(_scheduleLocalNotifications());
   }
 
   Future<bool> register(String name, String email, String password) async {
