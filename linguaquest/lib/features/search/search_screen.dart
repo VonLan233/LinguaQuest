@@ -185,7 +185,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     final state = ref.read(appControllerProvider);
     final currentWords = _collectCurrentWords(state);
 
-    Future<_SearchResults>(() {
+    try {
       final targetWords = searchDictionaryWords(
         wordBooks: state.wordBooks,
         currentWordBookId: state.currentWordBookId,
@@ -200,15 +200,21 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         tagLabeler: displayCustomTag,
       );
 
-      return _SearchResults(targetWords: targetWords, customWords: customWords);
-    }).then((results) {
       if (!mounted || requestVersion != _searchVersion) return;
       setState(() {
-        _targetWords = results.targetWords;
-        _customWords = results.customWords;
+        _targetWords = targetWords;
+        _customWords = customWords;
         _isSearching = false;
       });
-    });
+    } catch (error, stackTrace) {
+      assert(() {
+        debugPrint('SearchScreen search failed: $error');
+        debugPrintStack(stackTrace: stackTrace);
+        return true;
+      }());
+      if (!mounted || requestVersion != _searchVersion) return;
+      setState(() => _isSearching = false);
+    }
   }
 
   List<Word> _collectCurrentWords(AppState state) {
@@ -235,13 +241,6 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     }
     return true;
   }
-}
-
-class _SearchResults {
-  const _SearchResults({required this.targetWords, required this.customWords});
-
-  final List<DictionaryWordSearchResult> targetWords;
-  final List<CustomWordSearchResult> customWords;
 }
 
 String _displayTargetTag(String tag) => displayWordTag(tag);
