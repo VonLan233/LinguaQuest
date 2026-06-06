@@ -161,6 +161,13 @@ cd linguaquest
 flutter build apk --release
 ```
 
+Build a release APK that points at the deployed API on `intro-server`:
+
+```bash
+cd linguaquest
+flutter build apk --release --dart-define=API_BASE_URL=http://64.90.1.138:8080
+```
+
 Output path:
 
 ```text
