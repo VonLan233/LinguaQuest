@@ -1,31 +1,10 @@
 services:
-  db:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_DB: linguaquest
-      POSTGRES_USER: linguaquest
-      POSTGRES_PASSWORD: linguaquest
-    ports:
-      - "5432:5432"
-    volumes:
-      - linguaquest_pg:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U linguaquest -d linguaquest"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
   api:
     build: .
-    depends_on:
-      db:
-        condition: service_healthy
     environment:
       PORT: "8080"
-      DATABASE_URL: "postgresql://linguaquest:linguaquest@db:5432/linguaquest?sslmode=disable"
+      FIREBASE_PROJECT_ID: "${FIREBASE_PROJECT_ID}"
+      FIREBASE_SERVICE_ACCOUNT_JSON_BASE64: "${FIREBASE_SERVICE_ACCOUNT_JSON_BASE64}"
       JWT_SECRET: "replace-this-in-production"
     ports:
       - "8080:8080"
-
-volumes:
-  linguaquest_pg:
