@@ -21,6 +21,38 @@ void main() {
     expect(byEmail?['password_salt'], 'salt');
   });
 
+  test('email lookup is case-insensitive', () async {
+    final database = InMemoryAppDatabase();
+    await database.insertUser(
+      id: 'user-1',
+      email: 'learner@lingua.quest',
+      passwordHash: 'hash',
+      passwordSalt: 'salt',
+      name: 'Learner',
+    );
+
+    final byEmail = await database.userByEmail('Learner@Lingua.Quest');
+
+    expect(byEmail?['id'], 'user-1');
+  });
+
+  test('profile updates preserve target exam when it is omitted', () async {
+    final database = InMemoryAppDatabase();
+    await database.insertUser(
+      id: 'user-1',
+      email: 'learner@lingua.quest',
+      passwordHash: 'hash',
+      passwordSalt: 'salt',
+      name: 'Learner',
+    );
+    await database.updateUser('user-1', {'targetExam': 'IELTS'});
+
+    final updated = await database.updateUser('user-1', {'dailyGoal': 30});
+
+    expect(updated['target_exam'], 'IELTS');
+    expect(updated['daily_goal'], 30);
+  });
+
   test('duplicate emails are rejected', () async {
     final database = InMemoryAppDatabase();
     await database.insertUser(
@@ -173,5 +205,33 @@ void main() {
       ),
       ['w-1'],
     );
+  });
+
+  test('reward claims increment XP once per day', () async {
+    final database = InMemoryAppDatabase();
+    await database.insertUser(
+      id: 'user-1',
+      email: 'learner@lingua.quest',
+      passwordHash: 'hash',
+      passwordSalt: 'salt',
+      name: 'Learner',
+    );
+
+    final firstClaim = await database.claimReward(
+      uid: 'user-1',
+      rewardId: 'daily-check-in',
+      localDate: '2026-06-06',
+      points: 20,
+    );
+    final duplicateClaim = await database.claimReward(
+      uid: 'user-1',
+      rewardId: 'daily-check-in',
+      localDate: '2026-06-06',
+      points: 20,
+    );
+
+    expect(firstClaim, isTrue);
+    expect(duplicateClaim, isFalse);
+    expect((await database.userById('user-1'))?['xp'], 20);
   });
 }

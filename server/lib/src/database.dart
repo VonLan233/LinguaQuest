@@ -130,7 +130,8 @@ class FirestoreAppDatabase implements AppDatabase {
 
   @override
   Future<Map<String, dynamic>?> userByEmail(String email) async {
-    final index = await _get(['email_index', _encodedId(email)]);
+    final normalizedEmail = email.trim().toLowerCase();
+    final index = await _get(['email_index', _encodedId(normalizedEmail)]);
     final uid = index?['uid']?.toString();
     if (uid == null || uid.isEmpty) return null;
     return userById(uid);
@@ -150,7 +151,8 @@ class FirestoreAppDatabase implements AppDatabase {
     final row = {
       ...existing,
       'name': data['name'] ?? existing['name'],
-      'target_exam': data['targetExam'] ?? data['target_exam'],
+      'target_exam':
+          data['targetExam'] ?? data['target_exam'] ?? existing['target_exam'],
       'level': data['level'] ?? existing['level'],
       'daily_goal': data['dailyGoal'] ?? existing['daily_goal'],
       'xp': data['xp'] ?? existing['xp'],
@@ -390,6 +392,7 @@ class FirestoreAppDatabase implements AppDatabase {
     List<Map<String, dynamic>> words,
   ) async {
     final saved = <Map<String, dynamic>>[];
+    final writes = <fs.Write>[];
     for (final data in words) {
       final now = DateTime.now().toUtc();
       final id = data['id'] as String;
@@ -398,7 +401,7 @@ class FirestoreAppDatabase implements AppDatabase {
         'uid': uid,
         'word_id': data['wordId'] ?? data['word_id'],
         'word_book_id': _field(data, 'wordBookId', 'word_book_id', ''),
-        'word': data['word'] ?? data['wordId'],
+        'word': data['word'] ?? data['wordId'] ?? data['word_id'],
         'meaning': data['meaning'] ?? '',
         'example_sentence': _field(
           data,
@@ -467,9 +470,12 @@ class FirestoreAppDatabase implements AppDatabase {
         'created_at': _date(data['createdAt']) ?? now,
         'updated_at': _date(data['updatedAt']) ?? now,
       };
-      await _set(['users', uid, 'user_words', id], row);
+      writes.add(
+        fs.Write(update: _document(['users', uid, 'user_words', id], row)),
+      );
       saved.add(row);
     }
+    await _commitWrites(writes);
     return saved;
   }
 
@@ -529,19 +535,25 @@ class FirestoreAppDatabase implements AppDatabase {
   @override
   Future<void> resetCustomWordProgress(String uid, {DateTime? now}) async {
     final resetAt = now ?? DateTime.now().toUtc();
+    final writes = <fs.Write>[];
     for (final word in await customWords(uid)) {
-      await _set(
-        ['users', uid, 'custom_words', word['id'] as String],
-        {
-          ...word,
-          'mastery_level': 0,
-          'correct_count': 0,
-          'wrong_count': 0,
-          'next_review_at': resetAt,
-          'updated_at': resetAt,
-        },
+      writes.add(
+        fs.Write(
+          update: _document(
+            ['users', uid, 'custom_words', word['id'] as String],
+            {
+              ...word,
+              'mastery_level': 0,
+              'correct_count': 0,
+              'wrong_count': 0,
+              'next_review_at': resetAt,
+              'updated_at': resetAt,
+            },
+          ),
+        ),
       );
     }
+    await _commitWrites(writes);
   }
 
   @override
@@ -634,8 +646,7 @@ class FirestoreAppDatabase implements AppDatabase {
     required String localDate,
     required int points,
   }) async {
-    final user = await userById(uid);
-    if (user == null) throw StateError('user not found');
+    if (await userById(uid) == null) throw StateError('user not found');
     final rewardDocId = '${_encodedId(localDate)}_${_encodedId(rewardId)}';
     if (await _get(['users', uid, 'reward_claims', rewardDocId]) != null) {
       return false;
@@ -659,10 +670,17 @@ class FirestoreAppDatabase implements AppDatabase {
               currentDocument: fs.Precondition(exists: false),
             ),
             fs.Write(
-              update: _document(
-                ['users', uid],
-                {...user, 'xp': _int(user['xp']) + points, 'updated_at': now},
+              update: fs.Document(
+                name: _documentName(['users', uid]),
+                fields: {'updated_at': _value(now)},
               ),
+              updateMask: fs.DocumentMask(fieldPaths: ['updated_at']),
+              updateTransforms: [
+                fs.FieldTransform(
+                  fieldPath: 'xp',
+                  increment: fs.Value(integerValue: points.toString()),
+                ),
+              ],
             ),
           ],
         ),
@@ -712,11 +730,14 @@ class FirestoreAppDatabase implements AppDatabase {
     String uid,
     List<Map<String, dynamic>> notifications,
   ) async {
+    if (notifications.isEmpty) return;
+    final existingNotifications = await this.notifications(uid);
+    final writes = <fs.Write>[];
     for (final data in notifications) {
       final sourceKey = data['sourceKey']?.toString();
       final existing = sourceKey == null
           ? null
-          : (await this.notifications(uid)).where((row) {
+          : existingNotifications.where((row) {
               return row['source_key'] == sourceKey;
             }).firstOrNull;
       final id = existing?['id']?.toString() ?? data['id']?.toString();
@@ -737,8 +758,11 @@ class FirestoreAppDatabase implements AppDatabase {
             _date(data['createdAt']) ??
             DateTime.now().toUtc(),
       };
-      await _set(['users', uid, 'notifications', id], row);
+      writes.add(
+        fs.Write(update: _document(['users', uid, 'notifications', id], row)),
+      );
     }
+    await _commitWrites(writes);
   }
 
   @override
@@ -759,12 +783,26 @@ class FirestoreAppDatabase implements AppDatabase {
 
   @override
   Future<int> markAllNotificationsRead(String uid) async {
-    var updated = 0;
-    for (final notification in await notifications(uid, unreadOnly: true)) {
-      await markNotificationRead(uid, notification['id'] as String);
-      updated++;
+    final unread = await notifications(uid, unreadOnly: true);
+    if (unread.isEmpty) return 0;
+    final now = DateTime.now().toUtc();
+    final writes = <fs.Write>[];
+    for (final notification in unread) {
+      writes.add(
+        fs.Write(
+          update: _document(
+            ['users', uid, 'notifications', notification['id'] as String],
+            {
+              ...notification,
+              'is_read': true,
+              'read_at': notification['read_at'] ?? now,
+            },
+          ),
+        ),
+      );
     }
-    return updated;
+    await _commitWrites(writes);
+    return unread.length;
   }
 
   @override
@@ -796,10 +834,17 @@ class FirestoreAppDatabase implements AppDatabase {
   }
 
   Future<void> _set(List<String> path, Map<String, dynamic> data) async {
-    await _api.projects.databases.documents.commit(
-      fs.CommitRequest(writes: [fs.Write(update: _document(path, data))]),
-      _database,
-    );
+    await _commitWrites([fs.Write(update: _document(path, data))]);
+  }
+
+  Future<void> _commitWrites(List<fs.Write> writes) async {
+    for (var start = 0; start < writes.length; start += 500) {
+      final end = start + 500 > writes.length ? writes.length : start + 500;
+      await _api.projects.databases.documents.commit(
+        fs.CommitRequest(writes: writes.sublist(start, end)),
+        _database,
+      );
+    }
   }
 
   Future<void> _delete(List<String> path) async {
@@ -871,7 +916,8 @@ class InMemoryAppDatabase implements AppDatabase {
     final row = {
       ...existing,
       'name': data['name'] ?? existing['name'],
-      'target_exam': data['targetExam'] ?? existing['target_exam'],
+      'target_exam':
+          data['targetExam'] ?? data['target_exam'] ?? existing['target_exam'],
       'level': data['level'] ?? existing['level'],
       'daily_goal': data['dailyGoal'] ?? existing['daily_goal'],
       'xp': data['xp'] ?? existing['xp'],
