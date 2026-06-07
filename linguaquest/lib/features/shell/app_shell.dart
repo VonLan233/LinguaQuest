@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -245,67 +243,24 @@ class _QuestTabIcon extends StatelessWidget {
     final selectedSurface = isDark
         ? colorScheme.primaryContainer
         : AppTheme.selectedSurface(context);
-    return Stack(
-      clipBehavior: Clip.none,
-      alignment: Alignment.center,
-      children: [
-        if (selected) ...[
-          Positioned(
-            top: -2,
-            left: 11,
-            child: _QuestTabEar(color: selectedSurface),
-          ),
-          Positioned(
-            top: -2,
-            right: 11,
-            child: _QuestTabEar(color: selectedSurface),
-          ),
-        ],
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 180),
-          curve: Curves.easeOutCubic,
-          width: 38,
-          height: 34,
-          decoration: BoxDecoration(
-            color: selected ? selectedSurface : Colors.transparent,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: selected
-                  ? color.withValues(alpha: 0.24)
-                  : Colors.transparent,
-            ),
-          ),
-          child: Icon(
-            selected ? data.selectedIcon : data.icon,
-            color: color,
-            size: 22,
-          ),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 180),
+      curve: Curves.easeOutCubic,
+      width: 38,
+      height: 34,
+      decoration: BoxDecoration(
+        color: selected ? selectedSurface : Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: selected
+              ? color.withValues(alpha: 0.24)
+              : Colors.transparent,
         ),
-      ],
-    );
-  }
-}
-
-class _QuestTabEar extends StatelessWidget {
-  const _QuestTabEar({required this.color});
-
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Transform.rotate(
-      angle: math.pi / 4,
-      child: Container(
-        width: 8,
-        height: 8,
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(2),
-          border: Border.all(
-            color: Theme.of(context).colorScheme.outlineVariant,
-            width: 0.8,
-          ),
-        ),
+      ),
+      child: Icon(
+        selected ? data.selectedIcon : data.icon,
+        color: color,
+        size: 22,
       ),
     );
   }
