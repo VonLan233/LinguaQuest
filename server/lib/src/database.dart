@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS users (
   password_salt TEXT NOT NULL,
   name TEXT NOT NULL,
   target_exam TEXT NOT NULL DEFAULT 'Daily English',
-  level TEXT NOT NULL DEFAULT 'Elementary',
+  level TEXT NOT NULL DEFAULT 'Intermediate',
   daily_goal INTEGER NOT NULL DEFAULT 10,
   xp INTEGER NOT NULL DEFAULT 0,
   streak INTEGER NOT NULL DEFAULT 0,
