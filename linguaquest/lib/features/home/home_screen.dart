@@ -36,7 +36,7 @@ class HomeScreen extends ConsumerWidget {
         : null;
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 88),
       children: [
         Row(
           children: [
@@ -68,99 +68,135 @@ class HomeScreen extends ConsumerWidget {
             ),
           ],
         ),
-        const SizedBox(height: 18),
-        _DailyFocusHeader(
-          streak: user?.streak ?? 0,
-          target: currentBook?.title ?? displayTarget(user?.targetExam),
-          level: state.isStudyPlanPaused ? '已暂停' : displayLevel(user?.level),
-          todayWork: todayWork,
-          totalWork: totalWork,
-          progress: dailyProgress,
-          isPaused: state.isStudyPlanPaused,
-        ),
-        const SizedBox(height: 18),
-        _HomeLearningSignals(
-          completedWords: state.completedLearningWords,
-          masteredWords: state.masteredReviewWords,
-          dueWords: state.dueWords.length,
-        ),
-        const SizedBox(height: 18),
-        _DailyTaskPanel(
-          currentSection:
-              currentLesson?.section ??
-              currentBook?.title ??
-              displayTarget(user?.targetExam ?? '雅思核心词汇'),
-          dailyGoal: dailyGoal,
-          dueCount: dueCount,
-          isPaused: state.isStudyPlanPaused,
-          canStartNew:
-              currentLesson != null &&
-              !pathComplete &&
-              !state.isStudyPlanPaused,
-          onOpenPlan: () => context.push('/settings/study-plan'),
-          onNewStudy: () => context.push('/study/new'),
-          onReview: () => context.push('/study/review'),
-        ),
-        const SizedBox(height: 18),
-        _HomeShortcutList(
-          actions: [
-            _HomeShortcutData(
-              icon: Icons.flag_outlined,
-              title: '学习模式',
-              subtitle:
-                  currentBook?.examType ?? displayTarget(user?.targetExam),
-              onTap: () => context.push('/goal-setup'),
+        const SizedBox(height: 14),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: _DailyFocusHeader(
+              streak: user?.streak ?? 0,
+              target: currentBook?.title ?? displayTarget(user?.targetExam),
+              level: state.isStudyPlanPaused ? '已暂停' : displayLevel(user?.level),
+              todayWork: todayWork,
+              totalWork: totalWork,
+              progress: dailyProgress,
+              isPaused: state.isStudyPlanPaused,
             ),
-            _HomeShortcutData(
-              icon: Icons.menu_book_outlined,
-              title: '单词本',
-              subtitle: currentBook == null
-                  ? '${state.totalLearningWords} 词'
-                  : '${currentBook.totalWords} 词',
-              onTap: () => context.push('/wordbook'),
-            ),
-            _HomeShortcutData(
-              icon: Icons.article_outlined,
-              title: '每日短文',
-              subtitle: '情景填空',
-              onTap: () => context.go('/ai-learning'),
-            ),
-            _HomeShortcutData(
-              icon: Icons.route_outlined,
-              title: '学习路径',
-              subtitle: currentBook?.title ?? '正式词书',
-              onTap: () => context.push('/learn'),
-            ),
-          ],
-        ),
-        const SizedBox(height: 22),
-        _HomeInfoLink(
-          cue: wordOfDay?.imageCue ?? '🌟',
-          title: '今日词条',
-          body: wordOfDay == null
-              ? '打开单词卡片'
-              : '${wordOfDay.word} · ${wordOfDay.meaning}',
-          onTap: () => wordOfDay == null
-              ? context.push('/wordbook')
-              : context.push('/wordbook/${wordOfDay.id}'),
-        ),
-        const SizedBox(height: 22),
-        SectionHeader(
-          title: '弱项词',
-          subtitle: state.weakWords.isEmpty ? '当前还没有高频错词。' : '趁它们堆起来前先复习。',
-          trailing: TextButton(
-            onPressed: () => context.push('/study/review'),
-            child: const Text('复习'),
           ),
         ),
         const SizedBox(height: 12),
-        if (state.weakWords.isEmpty)
-          const _SoftPanel(
-            icon: Icons.check_circle_outline,
-            text: '添加生词或完成复习后，这里会展示需要重点处理的词。',
-          )
-        else
-          ...state.weakWords.take(3).map((word) => _WeakWordLink(word: word)),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            child: _HomeLearningSignals(
+              completedWords: state.completedLearningWords,
+              masteredWords: state.masteredReviewWords,
+              dueWords: state.dueWords.length,
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: _DailyTaskPanel(
+              currentSection:
+                  currentLesson?.section ??
+                  currentBook?.title ??
+                  displayTarget(user?.targetExam ?? '雅思核心词汇'),
+              dailyGoal: dailyGoal,
+              dueCount: dueCount,
+              isPaused: state.isStudyPlanPaused,
+              canStartNew:
+                  currentLesson != null &&
+                  !pathComplete &&
+                  !state.isStudyPlanPaused,
+              onOpenPlan: () => context.push('/settings/study-plan'),
+              onNewStudy: () => context.push('/study/new'),
+              onReview: () => context.push('/study/review'),
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: _HomeShortcutList(
+              actions: [
+                _HomeShortcutData(
+                  icon: Icons.flag_outlined,
+                  title: '学习模式',
+                  subtitle:
+                      currentBook?.examType ?? displayTarget(user?.targetExam),
+                  onTap: () => context.push('/goal-setup'),
+                ),
+                _HomeShortcutData(
+                  icon: Icons.menu_book_outlined,
+                  title: '单词本',
+                  subtitle: currentBook == null
+                      ? '${state.totalLearningWords} 词'
+                      : '${currentBook.totalWords} 词',
+                  onTap: () => context.push('/wordbook'),
+                ),
+                _HomeShortcutData(
+                  icon: Icons.article_outlined,
+                  title: '每日短文',
+                  subtitle: '情景填空',
+                  onTap: () => context.go('/ai-learning'),
+                ),
+                _HomeShortcutData(
+                  icon: Icons.route_outlined,
+                  title: '学习路径',
+                  subtitle: currentBook?.title ?? '正式词书',
+                  onTap: () => context.push('/learn'),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: _HomeInfoLink(
+              cue: wordOfDay?.imageCue ?? '🌟',
+              title: '今日词条',
+              body: wordOfDay == null
+                  ? '打开单词卡片'
+                  : '${wordOfDay.word} · ${wordOfDay.meaning}',
+              onTap: () => wordOfDay == null
+                  ? context.push('/wordbook')
+                  : context.push('/wordbook/${wordOfDay.id}'),
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SectionHeader(
+                  title: '弱项词',
+                  subtitle: state.weakWords.isEmpty ? '当前还没有高频错词。' : '趁它们堆起来前先复习。',
+                  trailing: TextButton(
+                    onPressed: () => context.push('/study/review'),
+                    child: const Text('复习'),
+                  ),
+                ),
+                if (state.weakWords.isEmpty)
+                  const _SoftPanel(
+                    icon: Icons.check_circle_outline,
+                    text: '添加生词或完成复习后，这里会展示需要重点处理的词。',
+                  )
+                else ...[
+                  const SizedBox(height: 8),
+                  ...state.weakWords.take(3).map((word) => _WeakWordLink(word: word)),
+                ],
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
