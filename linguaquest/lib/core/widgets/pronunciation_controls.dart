@@ -45,6 +45,7 @@ class _PronunciationControlsState extends State<PronunciationControls> {
         oldWidget.audioUSUrl != widget.audioUSUrl) {
       _loadingAccent = null;
       _failedAccent = null;
+      _player.stop();
     }
   }
 
