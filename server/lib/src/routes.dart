@@ -57,7 +57,6 @@ Router buildRouter(AppConfig config, AppDatabase database) {
           in response.timeout(const Duration(seconds: 5))) {
         totalBytes += chunk.length;
         if (totalBytes > maxBytes) {
-          req?.abort();
           return jsonResponse({'error': 'tts response too large'}, status: 502);
         }
         bytesBuilder.add(chunk);
@@ -68,7 +67,9 @@ Router buildRouter(AppConfig config, AppDatabase database) {
         'Cache-Control': 'public, max-age=86400',
       });
     } catch (_) {
-      req?.abort();
+      try {
+        req?.abort();
+      } catch (_) {}
       return jsonResponse({'error': 'tts unavailable'}, status: 502);
     }
   });
