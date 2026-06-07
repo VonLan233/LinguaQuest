@@ -212,7 +212,7 @@ void main() {
   test('word initial cue falls back for empty custom words', () {
     expect(wordInitialCue(''), '?');
     expect(wordInitialCue('  '), '?');
-    expect(wordInitialCue('apple'), '?');
+    expect(wordInitialCue('apple'), '📖');
   });
 
   test('profile new wordbook count uses custom copies only', () {

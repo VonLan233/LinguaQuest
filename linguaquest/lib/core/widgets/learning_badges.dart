@@ -203,5 +203,5 @@ class FilterPillButton extends StatelessWidget {
 }
 
 String wordInitialCue(String value) {
-  return '?';
+  return value.trim().isEmpty ? '?' : '📖';
 }
