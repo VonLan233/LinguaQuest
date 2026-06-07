@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import 'models/lesson.dart';
@@ -31,8 +32,8 @@ class WordBookAssetLoader {
         if (decoded is Map<String, dynamic>) {
           books.add(WordBook.fromJson(decoded));
         }
-      } catch (_) {
-        // Skip wordbooks that fail to load
+      } catch (e, stackTrace) {
+        debugPrint('Failed to load wordbook $bookId: $e\n$stackTrace');
       }
     }
 
