@@ -4,9 +4,6 @@ const allowedWordBookIds = {
   'ielts',
   'toefl',
   'gre',
-  'cet4',
-  'cet6',
-  'kaoyan',
 };
 
 class StudyPlanValidationResult {
@@ -91,9 +88,6 @@ String normalizeStudyPlanWordBookId(Object? value) {
   if (allowedWordBookIds.contains(normalized)) return normalized;
   if (normalized == 'daily-english') return 'beginner';
   if (normalized == 'exam-core') return 'ielts';
-  if (normalized == 'business-english' || normalized == 'travel-english') {
-    return 'beginner';
-  }
   return normalized;
 }
 
