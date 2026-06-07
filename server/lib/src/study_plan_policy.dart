@@ -88,6 +88,13 @@ String normalizeStudyPlanWordBookId(Object? value) {
   if (allowedWordBookIds.contains(normalized)) return normalized;
   if (normalized == 'daily-english') return 'beginner';
   if (normalized == 'exam-core') return 'ielts';
+  // Backward compatibility: silently map deprecated wordbooks to beginner
+  if (normalized == 'business-english' || normalized == 'travel-english') {
+    return 'beginner';
+  }
+  if (normalized == 'cet4' || normalized == 'cet6' || normalized == 'kaoyan') {
+    return 'beginner';
+  }
   return normalized;
 }
 

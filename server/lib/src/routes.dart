@@ -14,6 +14,8 @@ import 'lesson_catalog.dart';
 import 'notification_policy.dart';
 import 'study_plan_policy.dart';
 
+final _httpClient = http.Client();
+
 Router buildRouter(AppConfig config, AppDatabase database) {
   final router = Router();
 
@@ -39,7 +41,7 @@ Router buildRouter(AppConfig config, AppDatabase database) {
         'audio': word,
         'type': type,
       });
-      final response = await http.get(uri).timeout(
+      final response = await _httpClient.get(uri).timeout(
         const Duration(seconds: 5),
       );
       if (response.statusCode != 200) {
