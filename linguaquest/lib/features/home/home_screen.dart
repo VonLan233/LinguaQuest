@@ -137,13 +137,6 @@ class HomeScreen extends ConsumerWidget {
             child: _HomeShortcutList(
               actions: [
                 _HomeShortcutData(
-                  icon: Icons.flag_outlined,
-                  title: '学习模式',
-                  subtitle:
-                      currentBook?.examType ?? displayTarget(user?.targetExam),
-                  onTap: () => context.push('/settings/study-plan'),
-                ),
-                _HomeShortcutData(
                   icon: Icons.menu_book_outlined,
                   title: '单词本',
                   subtitle: currentBook == null
