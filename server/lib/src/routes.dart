@@ -20,6 +20,40 @@ Router buildRouter(AppConfig config, AppDatabase database) {
     return jsonResponse({'status': 'ok'});
   });
 
+  router.get('/tts', (Request request) async {
+    final word = request.url.queryParameters['word']?.trim() ?? '';
+    final type = request.url.queryParameters['type']?.trim() ?? '1';
+    if (word.isEmpty) {
+      return jsonResponse({'error': 'word is required'}, status: 400);
+    }
+    if (type != '1' && type != '2') {
+      return jsonResponse({
+        'error': 'type must be 1 (UK) or 2 (US)',
+      }, status: 400);
+    }
+    try {
+      final uri = Uri.parse(
+        'https://dict.youdao.com/dictvoice?audio=${Uri.encodeComponent(word)}&type=$type',
+      );
+      final client = HttpClient();
+      try {
+        final response = await client.getUrl(uri).then((req) => req.close());
+        final bytes = await response.fold<List<int>>(
+          <int>[],
+          (prev, chunk) => prev..addAll(chunk),
+        );
+        return Response.ok(bytes, headers: {
+          'Content-Type': 'audio/mpeg',
+          'Cache-Control': 'public, max-age=86400',
+        });
+      } finally {
+        client.close();
+      }
+    } catch (_) {
+      return jsonResponse({'error': 'tts unavailable'}, status: 502);
+    }
+  });
+
   router.get('/lessons', (Request request) {
     return jsonResponse(lessonCatalog());
   });
