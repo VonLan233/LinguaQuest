@@ -87,7 +87,8 @@ Router buildRouter(AppConfig config, AppDatabase database,
         'Content-Type': contentType,
         'Cache-Control': 'public, max-age=86400',
       });
-    } catch (_) {
+    } catch (e, stackTrace) {
+      stderr.writeln('TTS proxy error: $e\n$stackTrace');
       return jsonResponse({'error': 'tts unavailable'}, status: 502);
     }
   });
