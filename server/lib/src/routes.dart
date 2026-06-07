@@ -57,7 +57,7 @@ Router buildRouter(AppConfig config, AppDatabase database) {
           in response.timeout(const Duration(seconds: 5))) {
         totalBytes += chunk.length;
         if (totalBytes > maxBytes) {
-          await response.drain();
+          req?.abort();
           return jsonResponse({'error': 'tts response too large'}, status: 502);
         }
         bytesBuilder.add(chunk);
