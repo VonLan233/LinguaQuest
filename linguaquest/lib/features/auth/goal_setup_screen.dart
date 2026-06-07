@@ -22,7 +22,7 @@ class GoalSetupScreen extends ConsumerStatefulWidget {
 
 class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
   String _target = 'Daily English';
-  String _level = 'Elementary';
+  String _level = 'Intermediate';
   int _dailyGoal = 10;
   DateTime? _deadline;
   var _initializedFromState = false;
