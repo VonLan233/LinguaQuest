@@ -21,8 +21,6 @@ Router buildRouter(AppConfig config, AppDatabase database) {
     return jsonResponse({'status': 'ok'});
   });
 
-  final httpClient = http.Client();
-
   router.get('/tts', (Request request) async {
     final word = request.url.queryParameters['word']?.trim() ?? '';
     final type = request.url.queryParameters['type']?.trim() ?? '1';
@@ -41,14 +39,16 @@ Router buildRouter(AppConfig config, AppDatabase database) {
         'audio': word,
         'type': type,
       });
-      final response = await httpClient.get(uri).timeout(
+      final response = await http.get(uri).timeout(
         const Duration(seconds: 5),
       );
       if (response.statusCode != 200) {
         return jsonResponse({'error': 'tts unavailable'}, status: 502);
       }
-      final contentType =
-          (response.headers['content-type'] ?? 'audio/mpeg').toLowerCase();
+      final contentType = (response.headers['content-type'] ??
+              response.headers['Content-Type'] ??
+              'audio/mpeg')
+          .toLowerCase();
       if (!contentType.startsWith('audio/')) {
         return jsonResponse({'error': 'tts unavailable'}, status: 502);
       }
