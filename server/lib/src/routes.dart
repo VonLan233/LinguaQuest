@@ -21,7 +21,8 @@ Router buildRouter(AppConfig config, AppDatabase database) {
   });
 
   final httpClient = HttpClient()
-    ..connectionTimeout = const Duration(seconds: 5);
+    ..connectionTimeout = const Duration(seconds: 5)
+    ..maxConnectionsPerHost = 100;
 
   router.get('/tts', (Request request) async {
     final word = request.url.queryParameters['word']?.trim() ?? '';
@@ -36,15 +37,14 @@ Router buildRouter(AppConfig config, AppDatabase database) {
         'error': 'type must be 1 (UK) or 2 (US)',
       }, status: 400);
     }
+    HttpClientRequest? req;
     try {
       final uri = Uri.https('dict.youdao.com', '/dictvoice', {
         'audio': word,
         'type': type,
       });
-      final response = await httpClient
-          .getUrl(uri)
-          .then((req) => req.close())
-          .timeout(const Duration(seconds: 5));
+      req = await httpClient.getUrl(uri);
+      final response = await req.close().timeout(const Duration(seconds: 5));
       if (response.statusCode != HttpStatus.ok) {
         await response.drain();
         return jsonResponse({'error': 'tts unavailable'}, status: 502);
@@ -54,6 +54,7 @@ Router buildRouter(AppConfig config, AppDatabase database) {
         'Cache-Control': 'public, max-age=86400',
       });
     } catch (_) {
+      req?.abort();
       return jsonResponse({'error': 'tts unavailable'}, status: 502);
     }
   });
