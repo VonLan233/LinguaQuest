@@ -125,6 +125,7 @@ class _PronunciationControlsState extends State<PronunciationControls> {
     if (hasAudioUrl) {
       try {
         await _player.stop();
+        if (!mounted) return;
         await _player.play(UrlSource(audioUrl));
         if (!mounted) return;
         setState(() {
