@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
@@ -34,6 +35,13 @@ class PronunciationControls extends StatefulWidget {
 class _PronunciationControlsState extends State<PronunciationControls> {
   _PronunciationAccent? _loadingAccent;
   _PronunciationAccent? _failedAccent;
+  final AudioPlayer _player = AudioPlayer();
+
+  @override
+  void dispose() {
+    _player.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,15 +92,14 @@ class _PronunciationControlsState extends State<PronunciationControls> {
       _failedAccent = null;
     });
 
-    await Future<void>.delayed(const Duration(milliseconds: 420));
-    if (!mounted) return;
-
     final word = widget.word.trim();
     final audioUrl = switch (accent) {
       _PronunciationAccent.uk => widget.audioUKUrl.trim(),
       _PronunciationAccent.us => widget.audioUSUrl.trim(),
     };
     final hasWord = word.isNotEmpty;
+    final hasAudioUrl = audioUrl.isNotEmpty;
+
     if (hasWord) {
       await HapticFeedback.selectionClick();
       if (!mounted) return;
@@ -103,26 +110,42 @@ class _PronunciationControlsState extends State<PronunciationControls> {
       );
     }
 
-    setState(() {
-      _loadingAccent = null;
-      _failedAccent = hasWord ? null : accent;
-    });
-
-    final label = accent.label;
-    final String message;
-    if (!hasWord) {
-      message = '$label发音失败，请重试';
-    } else if (audioUrl.isEmpty) {
-      message = '$label发音：$word';
+    if (hasAudioUrl) {
+      try {
+        await _player.stop();
+        await _player.play(UrlSource(audioUrl));
+        if (!mounted) return;
+        setState(() {
+          _loadingAccent = null;
+          _failedAccent = null;
+        });
+        _showMessage('${accent.label}发音：$word');
+      } catch (_) {
+        if (!mounted) return;
+        setState(() {
+          _loadingAccent = null;
+          _failedAccent = accent;
+        });
+        _showMessage('${accent.label}发音失败，请重试');
+      }
     } else {
-      message = '$label发音已加载';
+      if (!mounted) return;
+      setState(() {
+        _loadingAccent = null;
+        _failedAccent = hasWord ? null : accent;
+      });
+      final label = accent.label;
+      final message = hasWord ? '$label发音：$word' : '$label发音暂不可用';
+      _showMessage(message);
     }
+  }
 
+  void _showMessage(String message) {
     final messenger = ScaffoldMessenger.maybeOf(context);
     messenger?.clearSnackBars();
     messenger?.showSnackBar(
       SnackBar(
-        duration: const Duration(milliseconds: 900),
+        duration: const Duration(milliseconds: 1200),
         content: Text(message),
       ),
     );
