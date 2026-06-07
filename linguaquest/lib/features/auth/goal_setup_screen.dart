@@ -29,17 +29,12 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
   late final ProviderSubscription<AppState> _stateSubscription;
 
   static const targets = [
-    'CET-4',
-    'CET-6',
     'IELTS',
     'TOEFL',
     'GRE',
-    '考研',
     'Beginner',
     'Daily English',
-    'Business English',
   ];
-  static const levels = ['Beginner', 'Elementary', 'Intermediate', 'Advanced'];
   static const goals = [5, 10, 15, 20];
 
   @override
@@ -126,14 +121,6 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
               selected: _target,
               labelFor: displayTarget,
               onSelected: (value) => setState(() => _target = value),
-            ),
-            const SizedBox(height: 24),
-            _ChoiceSection<String>(
-              title: '水平',
-              values: levels,
-              selected: _level,
-              labelFor: displayLevel,
-              onSelected: (value) => setState(() => _level = value),
             ),
             const SizedBox(height: 24),
             Column(
