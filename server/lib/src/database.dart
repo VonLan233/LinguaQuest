@@ -44,18 +44,7 @@ CREATE TABLE IF NOT EXISTS users (
 ''');
 
     await connection.execute('''
-DO \$\$
-BEGIN
-  IF EXISTS (
-    SELECT 1 FROM information_schema.columns
-    WHERE table_schema = current_schema()
-      AND table_name='users' AND column_name='level'
-      AND (column_default IS NULL OR column_default NOT LIKE '%Intermediate%')
-  ) THEN
-    ALTER TABLE users ALTER COLUMN level SET DEFAULT 'Intermediate';
-  END IF;
-END
-\$\$;
+ALTER TABLE users ALTER COLUMN level SET DEFAULT 'Intermediate';
 ''');
 
     await connection.execute('''
