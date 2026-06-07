@@ -38,6 +38,17 @@ class _PronunciationControlsState extends State<PronunciationControls> {
   final AudioPlayer _player = AudioPlayer();
 
   @override
+  void didUpdateWidget(covariant PronunciationControls oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.word != widget.word ||
+        oldWidget.audioUKUrl != widget.audioUKUrl ||
+        oldWidget.audioUSUrl != widget.audioUSUrl) {
+      _loadingAccent = null;
+      _failedAccent = null;
+    }
+  }
+
+  @override
   void dispose() {
     _player.dispose();
     super.dispose();
