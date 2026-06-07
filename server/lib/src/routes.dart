@@ -17,7 +17,9 @@ import 'study_plan_policy.dart';
 
 final _httpClient = http.Client();
 
-Router buildRouter(AppConfig config, AppDatabase database) {
+Router buildRouter(AppConfig config, AppDatabase database,
+    {http.Client? httpClient}) {
+  final client = httpClient ?? _httpClient;
   final router = Router();
 
   router.get('/health', (Request request) {
@@ -42,16 +44,16 @@ Router buildRouter(AppConfig config, AppDatabase database) {
         'audio': word,
         'type': type,
       });
-      final streamedResponse = await _httpClient
+      final streamedResponse = await client
           .send(http.Request('GET', uri))
           .timeout(const Duration(seconds: 5));
       if (streamedResponse.statusCode != 200) {
-        await streamedResponse.stream.listen(null).cancel();
+        await streamedResponse.stream.listen((_) {}).cancel();
         return jsonResponse({'error': 'tts unavailable'}, status: 502);
       }
       final contentLength = streamedResponse.contentLength;
       if (contentLength != null && contentLength > 5 * 1024 * 1024) {
-        await streamedResponse.stream.listen(null).cancel();
+        await streamedResponse.stream.listen((_) {}).cancel();
         return jsonResponse({'error': 'tts response too large'}, status: 502);
       }
       final contentType = (streamedResponse.headers['content-type'] ??
@@ -59,11 +61,24 @@ Router buildRouter(AppConfig config, AppDatabase database) {
               'audio/mpeg')
           .toLowerCase();
       if (!contentType.startsWith('audio/')) {
-        await streamedResponse.stream.listen(null).cancel();
+        await streamedResponse.stream.listen((_) {}).cancel();
         return jsonResponse({'error': 'tts unavailable'}, status: 502);
       }
-      final bytes = await streamedResponse.stream.toBytes();
-      if (bytes.isEmpty || bytes.length > 5 * 1024 * 1024) {
+      final bytesBuilder = BytesBuilder();
+      var totalBytes = 0;
+      const maxBytes = 5 * 1024 * 1024;
+      await for (final chunk
+          in streamedResponse.stream.timeout(const Duration(seconds: 5))) {
+        totalBytes += chunk.length;
+        if (totalBytes > maxBytes) {
+          return jsonResponse({
+            'error': 'tts response invalid or too large',
+          }, status: 502);
+        }
+        bytesBuilder.add(chunk);
+      }
+      final bytes = bytesBuilder.takeBytes();
+      if (bytes.isEmpty) {
         return jsonResponse({
           'error': 'tts response invalid or too large',
         }, status: 502);
