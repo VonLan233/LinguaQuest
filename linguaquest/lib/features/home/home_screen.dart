@@ -139,7 +139,7 @@ class HomeScreen extends ConsumerWidget {
                   title: '学习模式',
                   subtitle:
                       currentBook?.examType ?? displayTarget(user?.targetExam),
-                  onTap: () => context.push('/goal-setup'),
+                  onTap: () => context.push('/settings/study-plan'),
                 ),
                 _HomeShortcutData(
                   icon: Icons.menu_book_outlined,
