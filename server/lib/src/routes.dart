@@ -47,16 +47,19 @@ Router buildRouter(AppConfig config, AppDatabase database) {
       if (response.statusCode != 200) {
         return jsonResponse({'error': 'tts unavailable'}, status: 502);
       }
-      final contentType = response.headers['content-type'] ?? '';
+      final contentType =
+          (response.headers['content-type'] ?? 'audio/mpeg').toLowerCase();
       if (!contentType.startsWith('audio/')) {
         return jsonResponse({'error': 'tts unavailable'}, status: 502);
       }
       final bytes = response.bodyBytes;
-      if (bytes.length > 5 * 1024 * 1024) {
-        return jsonResponse({'error': 'tts response too large'}, status: 502);
+      if (bytes.isEmpty || bytes.length > 5 * 1024 * 1024) {
+        return jsonResponse({
+          'error': 'tts response invalid or too large',
+        }, status: 502);
       }
       return Response.ok(bytes, headers: {
-        'Content-Type': 'audio/mpeg',
+        'Content-Type': contentType,
         'Cache-Control': 'public, max-age=86400',
       });
     } catch (_) {
