@@ -83,7 +83,10 @@ class WordbookScreen extends ConsumerWidget {
                       .switchWordBook(bookId);
                   if (!context.mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(succeeded ? '已切换当前词书' : '暂时无法切换词书')),
+                    SnackBar(
+                      duration: const Duration(seconds: 2),
+                      content: Text(succeeded ? '已切换当前词书' : '暂时无法切换词书'),
+                    ),
                   );
                 },
               ),
