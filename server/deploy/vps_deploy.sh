@@ -14,7 +14,7 @@ else
 fi
 
 if [[ ! -f ".env" ]]; then
-  echo "Missing .env. Set FIREBASE_PROJECT_ID, FIREBASE_SERVICE_ACCOUNT_JSON_BASE64, and JWT_SECRET." >&2
+  echo "Missing .env. Copy .env.example to .env and set POSTGRES_PASSWORD, DATABASE_URL, and JWT_SECRET." >&2
   exit 1
 fi
 

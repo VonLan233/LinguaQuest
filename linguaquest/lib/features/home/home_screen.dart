@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/ui_labels.dart';
-import '../../core/widgets/brand_mark.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/custom_word.dart';
@@ -17,6 +16,8 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appControllerProvider);
     final user = state.user;
+    final name = user?.name.trim() ?? '';
+    final avatarLetter = name.isEmpty ? '?' : name.characters.first.toUpperCase();
     final currentBook = state.currentWordBook;
     final dueCount = state.reviewQueue.length;
     final dailyGoal = state.dailyNewTarget;
@@ -36,14 +37,27 @@ class HomeScreen extends ConsumerWidget {
         : null;
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 88),
       children: [
         Row(
           children: [
-            BrandMark(
-              size: 48,
-              tooltip: '个人空间',
-              onTap: () => context.go('/profile'),
+            Tooltip(
+              message: '个人空间',
+              child: GestureDetector(
+                onTap: () => context.go('/profile'),
+                child: CircleAvatar(
+                  radius: 24,
+                  backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                  child: Text(
+                    avatarLetter,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+              ),
             ),
             const SizedBox(width: 10),
             Expanded(
@@ -68,99 +82,128 @@ class HomeScreen extends ConsumerWidget {
             ),
           ],
         ),
-        const SizedBox(height: 18),
-        _DailyFocusHeader(
-          streak: user?.streak ?? 0,
-          target: currentBook?.title ?? displayTarget(user?.targetExam),
-          level: state.isStudyPlanPaused ? '已暂停' : displayLevel(user?.level),
-          todayWork: todayWork,
-          totalWork: totalWork,
-          progress: dailyProgress,
-          isPaused: state.isStudyPlanPaused,
-        ),
-        const SizedBox(height: 18),
-        _HomeLearningSignals(
-          completedWords: state.completedLearningWords,
-          masteredWords: state.masteredReviewWords,
-          dueWords: state.dueWords.length,
-        ),
-        const SizedBox(height: 18),
-        _DailyTaskPanel(
-          currentSection:
-              currentLesson?.section ??
-              currentBook?.title ??
-              displayTarget(user?.targetExam ?? '雅思核心词汇'),
-          dailyGoal: dailyGoal,
-          dueCount: dueCount,
-          isPaused: state.isStudyPlanPaused,
-          canStartNew:
-              currentLesson != null &&
-              !pathComplete &&
-              !state.isStudyPlanPaused,
-          onOpenPlan: () => context.push('/settings/study-plan'),
-          onNewStudy: () => context.push('/study/new'),
-          onReview: () => context.push('/study/review'),
-        ),
-        const SizedBox(height: 18),
-        _HomeShortcutList(
-          actions: [
-            _HomeShortcutData(
-              icon: Icons.flag_outlined,
-              title: '学习模式',
-              subtitle:
-                  currentBook?.examType ?? displayTarget(user?.targetExam),
-              onTap: () => context.push('/goal-setup'),
+        const SizedBox(height: 14),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: _DailyFocusHeader(
+              streak: user?.streak ?? 0,
+              target: currentBook?.title ?? displayTarget(user?.targetExam),
+              level: state.isStudyPlanPaused ? '已暂停' : displayLevel(user?.level),
+              todayWork: todayWork,
+              totalWork: totalWork,
+              progress: dailyProgress,
+              isPaused: state.isStudyPlanPaused,
             ),
-            _HomeShortcutData(
-              icon: Icons.menu_book_outlined,
-              title: '单词本',
-              subtitle: currentBook == null
-                  ? '${state.totalLearningWords} 词'
-                  : '${currentBook.totalWords} 词',
-              onTap: () => context.push('/wordbook'),
-            ),
-            _HomeShortcutData(
-              icon: Icons.article_outlined,
-              title: '每日短文',
-              subtitle: '情景填空',
-              onTap: () => context.go('/ai-learning'),
-            ),
-            _HomeShortcutData(
-              icon: Icons.route_outlined,
-              title: '学习路径',
-              subtitle: currentBook?.title ?? '正式词书',
-              onTap: () => context.push('/learn'),
-            ),
-          ],
-        ),
-        const SizedBox(height: 22),
-        _HomeInfoLink(
-          cue: wordOfDay?.imageCue ?? '🌟',
-          title: '今日词条',
-          body: wordOfDay == null
-              ? '打开单词卡片'
-              : '${wordOfDay.word} · ${wordOfDay.meaning}',
-          onTap: () => wordOfDay == null
-              ? context.push('/wordbook')
-              : context.push('/wordbook/${wordOfDay.id}'),
-        ),
-        const SizedBox(height: 22),
-        SectionHeader(
-          title: '弱项词',
-          subtitle: state.weakWords.isEmpty ? '当前还没有高频错词。' : '趁它们堆起来前先复习。',
-          trailing: TextButton(
-            onPressed: () => context.push('/study/review'),
-            child: const Text('复习'),
           ),
         ),
         const SizedBox(height: 12),
-        if (state.weakWords.isEmpty)
-          const _SoftPanel(
-            icon: Icons.check_circle_outline,
-            text: '添加生词或完成复习后，这里会展示需要重点处理的词。',
-          )
-        else
-          ...state.weakWords.take(3).map((word) => _WeakWordLink(word: word)),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            child: _HomeLearningSignals(
+              completedWords: state.completedLearningWords,
+              masteredWords: state.masteredReviewWords,
+              dueWords: state.dueWords.length,
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: _DailyTaskPanel(
+              currentSection:
+                  currentLesson?.section ??
+                  currentBook?.title ??
+                  displayTarget(user?.targetExam ?? '雅思核心词汇'),
+              dailyGoal: dailyGoal,
+              dueCount: dueCount,
+              isPaused: state.isStudyPlanPaused,
+              canStartNew:
+                  currentLesson != null &&
+                  !pathComplete &&
+                  !state.isStudyPlanPaused,
+              onOpenPlan: () => context.push('/settings/study-plan'),
+              onNewStudy: () => context.push('/study/new'),
+              onReview: () => context.push('/study/review'),
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: _HomeShortcutList(
+              actions: [
+                _HomeShortcutData(
+                  icon: Icons.menu_book_outlined,
+                  title: '单词本',
+                  subtitle: currentBook == null
+                      ? '${state.totalLearningWords} 词'
+                      : '${currentBook.totalWords} 词',
+                  onTap: () => context.push('/wordbook'),
+                ),
+                _HomeShortcutData(
+                  icon: Icons.article_outlined,
+                  title: '每日短文',
+                  subtitle: '情景填空',
+                  onTap: () => context.go('/ai-learning'),
+                ),
+                _HomeShortcutData(
+                  icon: Icons.route_outlined,
+                  title: '学习路径',
+                  subtitle: currentBook?.title ?? '正式词书',
+                  onTap: () => context.push('/learn'),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: _HomeInfoLink(
+              cue: wordOfDay?.imageCue ?? '🌟',
+              title: '今日词条',
+              body: wordOfDay == null
+                  ? '打开单词卡片'
+                  : '${wordOfDay.word} · ${wordOfDay.meaning}',
+              onTap: () => wordOfDay == null
+                  ? context.push('/wordbook')
+                  : context.push('/wordbook/${wordOfDay.id}'),
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SectionHeader(
+                  title: '弱项词',
+                  subtitle: state.weakWords.isEmpty ? '当前还没有高频错词。' : '趁它们堆起来前先复习。',
+                  trailing: TextButton(
+                    onPressed: () => context.push('/study/review'),
+                    child: const Text('复习'),
+                  ),
+                ),
+                if (state.weakWords.isEmpty)
+                  const _SoftPanel(
+                    icon: Icons.check_circle_outline,
+                    text: '添加生词或完成复习后，这里会展示需要重点处理的词。',
+                  )
+                else ...[
+                  const SizedBox(height: 8),
+                  ...state.weakWords.take(3).map((word) => _WeakWordLink(word: word)),
+                ],
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -398,6 +441,8 @@ class _DailyTaskPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final hasReview = dueCount > 0;
+    final totalTaskCount = canStartNew ? (dailyGoal + dueCount) : dueCount;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Column(
@@ -417,7 +462,7 @@ class _DailyTaskPanel extends StatelessWidget {
                 child: Text(
                   isPaused
                       ? '当前词书 $currentSection · 计划已暂停'
-                      : '当前词书 $currentSection · 新学和复习分开完成',
+                      : '当前词书 $currentSection · 新学 $dailyGoal 词${hasReview ? " + 复习 $dueCount 词" : ""}',
                   style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                 ),
               ),
@@ -425,25 +470,26 @@ class _DailyTaskPanel extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 14),
-          Row(
-            children: [
-              Expanded(
-                child: FilledButton.icon(
-                  onPressed: canStartNew ? onNewStudy : null,
-                  icon: const Icon(Icons.add_task_rounded),
-                  label: Text('新学 $dailyGoal'),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: FilledButton.tonalIcon(
-                  onPressed: isPaused ? null : onReview,
-                  icon: const Icon(Icons.replay_rounded),
-                  label: Text('复习 $dueCount'),
-                ),
-              ),
-            ],
-          ),
+          if (isPaused)
+            OutlinedButton.icon(
+              onPressed: onOpenPlan,
+              icon: const Icon(Icons.play_circle_outline),
+              label: const Text('恢复计划以继续学习'),
+            )
+          else
+            FilledButton.icon(
+              onPressed: canStartNew ? onNewStudy : (hasReview ? onReview : null),
+              icon: const Icon(Icons.play_arrow_rounded),
+              label: Text('开始今日学习 ($totalTaskCount 词)'),
+            ),
+          if (!isPaused && hasReview) ...[
+            const SizedBox(height: 8),
+            OutlinedButton.icon(
+              onPressed: onReview,
+              icon: const Icon(Icons.replay_rounded),
+              label: Text('仅复习 ($dueCount 词)'),
+            ),
+          ],
         ],
       ),
     );

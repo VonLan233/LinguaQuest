@@ -1374,26 +1374,6 @@ class AppController extends Notifier<AppState> {
       return 'toefl';
     }
     if (normalizedTarget.contains('gre')) return 'gre';
-    if (normalizedTarget.contains('cet-6') ||
-        normalizedTarget.contains('cet6') ||
-        normalizedTarget.contains('六级')) {
-      return 'cet6';
-    }
-    if (normalizedTarget.contains('cet-4') ||
-        normalizedTarget.contains('cet4') ||
-        normalizedTarget.contains('四级')) {
-      return 'cet4';
-    }
-    if (normalizedTarget.contains('kaoyan') ||
-        normalizedTarget.contains('考研')) {
-      return 'kaoyan';
-    }
-    if (normalizedTarget.contains('business') ||
-        normalizedTarget.contains('travel') ||
-        normalizedTarget.contains('商务') ||
-        normalizedTarget.contains('旅行')) {
-      return 'beginner';
-    }
     return 'beginner';
   }
 

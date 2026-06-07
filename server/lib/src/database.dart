@@ -1,171 +1,317 @@
 import 'dart:convert';
 
-import 'package:googleapis/firestore/v1.dart' as fs;
-import 'package:googleapis_auth/auth_io.dart';
+import 'package:postgres/postgres.dart';
 
 import 'config.dart';
 
-abstract class AppDatabase {
-  static Future<AppDatabase> connect(AppConfig config) =>
-      FirestoreAppDatabase.connect(config);
+const resetCustomWordProgressSql = '''
+UPDATE custom_words
+SET mastery_level=0,
+    correct_count=0,
+    wrong_count=0,
+    next_review_at=@resetAt,
+    updated_at=@resetAt
+WHERE uid=@uid
+''';
 
-  Future<void> migrate();
-  Future<Map<String, dynamic>?> userByEmail(String email);
-  Future<Map<String, dynamic>?> userById(String uid);
-  Future<Map<String, dynamic>> updateUser(
-    String uid,
-    Map<String, dynamic> data,
-  );
-  Future<void> insertUser({
-    required String id,
-    required String email,
-    required String passwordHash,
-    required String passwordSalt,
-    required String name,
-  });
-  Future<List<Map<String, dynamic>>> customWords(
-    String uid, {
-    bool dueOnly = false,
-  });
-  Future<Map<String, dynamic>?> customWordById(String uid, String id);
-  Future<Map<String, dynamic>> upsertCustomWord(
-    String uid,
-    Map<String, dynamic> data, {
-    String? id,
-  });
-  Future<void> deleteCustomWord(String uid, String id);
-  Future<List<Map<String, dynamic>>> userWords(
-    String uid, {
-    bool dueOnly = false,
-  });
-  Future<Map<String, dynamic>?> userWordById(String uid, String id);
-  Future<Map<String, dynamic>> upsertUserWord(
-    String uid,
-    Map<String, dynamic> data,
-  );
-  Future<List<Map<String, dynamic>>> upsertUserWords(
-    String uid,
-    List<Map<String, dynamic>> words,
-  );
-  Future<void> insertStudySession(String uid, Map<String, dynamic> data);
-  Future<Map<String, dynamic>?> studyPlanByUid(String uid);
-  Future<Map<String, dynamic>> upsertStudyPlan(
-    String uid,
-    Map<String, dynamic> data,
-  );
-  Future<void> resetCustomWordProgress(String uid, {DateTime? now});
-  Future<void> insertReviewEvent(String uid, Map<String, dynamic> data);
-  Future<List<String>> completedLessonIds(String uid);
-  Future<List<String>> lessonIdsInRange(
-    String uid,
-    DateTime startUtc,
-    DateTime endUtc,
-  );
-  Future<List<String>> reviewWordIdsInRange(
-    String uid,
-    DateTime startUtc,
-    DateTime endUtc,
-  );
-  Future<List<String>> rewardIdsForDate(String uid, String localDate);
-  Future<bool> claimReward({
-    required String uid,
-    required String rewardId,
-    required String localDate,
-    required int points,
-  });
-  Future<List<Map<String, dynamic>>> notifications(
-    String uid, {
-    bool unreadOnly = false,
-    String? type,
-  });
-  Future<Map<String, dynamic>?> notificationById(String uid, String id);
-  Future<void> upsertNotification(String uid, Map<String, dynamic> data);
-  Future<void> upsertNotifications(
-    String uid,
-    List<Map<String, dynamic>> notifications,
-  );
-  Future<Map<String, dynamic>?> markNotificationRead(String uid, String id);
-  Future<int> markAllNotificationsRead(String uid);
-  Future<bool> hasStudySessionInRange(
-    String uid,
-    DateTime startUtc,
-    DateTime endUtc,
-  );
-  Future<int> dueReviewCount(String uid);
-}
+class AppDatabase {
+  AppDatabase(this.connection);
 
-class FirestoreAppDatabase implements AppDatabase {
-  FirestoreAppDatabase._(this._api, this._projectId);
+  final Connection connection;
 
-  final fs.FirestoreApi _api;
-  final String _projectId;
-
-  String get _database => 'projects/$_projectId/databases/(default)';
-  String get _documents => '$_database/documents';
-
-  static Future<FirestoreAppDatabase> connect(AppConfig config) async {
-    if (config.firebaseProjectId.isEmpty) {
-      throw StateError('FIREBASE_PROJECT_ID is required');
-    }
-    if (config.firebaseServiceAccountJsonBase64.isEmpty) {
-      throw StateError('FIREBASE_SERVICE_ACCOUNT_JSON_BASE64 is required');
-    }
-    final credentialsJson = utf8.decode(
-      base64.decode(config.firebaseServiceAccountJsonBase64),
-    );
-    final credentials = ServiceAccountCredentials.fromJson(
-      jsonDecode(credentialsJson),
-    );
-    final client = await clientViaServiceAccount(credentials, [
-      'https://www.googleapis.com/auth/datastore',
-    ]);
-    return FirestoreAppDatabase._(
-      fs.FirestoreApi(client),
-      config.firebaseProjectId,
-    );
+  static Future<AppDatabase> connect(AppConfig config) async {
+    final connection = await Connection.openFromUrl(config.databaseUrl);
+    return AppDatabase(connection);
   }
 
-  @override
-  Future<void> migrate() async {}
+  Future<void> migrate() async {
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS users (
+  id TEXT PRIMARY KEY,
+  email TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
+  password_salt TEXT NOT NULL,
+  name TEXT NOT NULL,
+  target_exam TEXT NOT NULL DEFAULT 'Daily English',
+  level TEXT NOT NULL DEFAULT 'Intermediate',
+  daily_goal INTEGER NOT NULL DEFAULT 10,
+  xp INTEGER NOT NULL DEFAULT 0,
+  streak INTEGER NOT NULL DEFAULT 0,
+  last_study_date TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL,
+  updated_at TIMESTAMPTZ NOT NULL
+);
+''');
 
-  @override
+    await connection.execute(
+      "ALTER TABLE users ALTER COLUMN level SET DEFAULT 'Intermediate'",
+    );
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS custom_words (
+  id TEXT PRIMARY KEY,
+  uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  word TEXT NOT NULL,
+  meaning TEXT NOT NULL,
+  example_sentence TEXT NOT NULL,
+  note TEXT NOT NULL DEFAULT '',
+  tag TEXT NOT NULL DEFAULT 'custom',
+  difficulty TEXT NOT NULL DEFAULT 'Medium',
+  status TEXT NOT NULL DEFAULT 'Learning',
+  ease_factor DOUBLE PRECISION NOT NULL DEFAULT 2.5,
+  interval_days INTEGER NOT NULL DEFAULT 0,
+  repetition_count INTEGER NOT NULL DEFAULT 0,
+  lapse_count INTEGER NOT NULL DEFAULT 0,
+  mastery_level INTEGER NOT NULL DEFAULT 0,
+  correct_count INTEGER NOT NULL DEFAULT 0,
+  wrong_count INTEGER NOT NULL DEFAULT 0,
+  meaning_recognition_score INTEGER NOT NULL DEFAULT 20,
+  meaning_recall_score INTEGER NOT NULL DEFAULT 10,
+  spelling_score INTEGER NOT NULL DEFAULT 10,
+  listening_score INTEGER NOT NULL DEFAULT 10,
+  context_score INTEGER NOT NULL DEFAULT 10,
+  confidence_score INTEGER NOT NULL DEFAULT 10,
+  next_review_at TIMESTAMPTZ NOT NULL,
+  last_reviewed_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL,
+  updated_at TIMESTAMPTZ NOT NULL
+);
+''');
+
+    await connection.execute('''
+CREATE INDEX IF NOT EXISTS idx_custom_words_uid_next_review
+ON custom_words (uid, next_review_at);
+''');
+
+    for (final statement in [
+      "ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'Learning'",
+      'ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS ease_factor DOUBLE PRECISION NOT NULL DEFAULT 2.5',
+      'ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS interval_days INTEGER NOT NULL DEFAULT 0',
+      'ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS repetition_count INTEGER NOT NULL DEFAULT 0',
+      'ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS lapse_count INTEGER NOT NULL DEFAULT 0',
+      'ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS meaning_recognition_score INTEGER NOT NULL DEFAULT 20',
+      'ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS meaning_recall_score INTEGER NOT NULL DEFAULT 10',
+      'ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS spelling_score INTEGER NOT NULL DEFAULT 10',
+      'ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS listening_score INTEGER NOT NULL DEFAULT 10',
+      'ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS context_score INTEGER NOT NULL DEFAULT 10',
+      'ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS confidence_score INTEGER NOT NULL DEFAULT 10',
+      'ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS last_reviewed_at TIMESTAMPTZ',
+    ]) {
+      await connection.execute(statement);
+    }
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS user_words (
+  id TEXT PRIMARY KEY,
+  uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  word_id TEXT NOT NULL,
+  word_book_id TEXT NOT NULL,
+  word TEXT NOT NULL,
+  meaning TEXT NOT NULL,
+  example_sentence TEXT NOT NULL DEFAULT '',
+  difficulty TEXT NOT NULL DEFAULT 'Medium',
+  status TEXT NOT NULL DEFAULT 'New',
+  is_favorite BOOLEAN NOT NULL DEFAULT FALSE,
+  is_in_new_word_book BOOLEAN NOT NULL DEFAULT FALSE,
+  is_ignored BOOLEAN NOT NULL DEFAULT FALSE,
+  ease_factor DOUBLE PRECISION NOT NULL DEFAULT 2.5,
+  interval_days INTEGER NOT NULL DEFAULT 0,
+  repetition_count INTEGER NOT NULL DEFAULT 0,
+  lapse_count INTEGER NOT NULL DEFAULT 0,
+  mastery_level INTEGER NOT NULL DEFAULT 0,
+  correct_count INTEGER NOT NULL DEFAULT 0,
+  wrong_count INTEGER NOT NULL DEFAULT 0,
+  meaning_recognition_score INTEGER NOT NULL DEFAULT 20,
+  meaning_recall_score INTEGER NOT NULL DEFAULT 10,
+  spelling_score INTEGER NOT NULL DEFAULT 10,
+  listening_score INTEGER NOT NULL DEFAULT 10,
+  context_score INTEGER NOT NULL DEFAULT 10,
+  confidence_score INTEGER NOT NULL DEFAULT 10,
+  next_review_at TIMESTAMPTZ NOT NULL,
+  last_reviewed_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL,
+  updated_at TIMESTAMPTZ NOT NULL
+);
+''');
+
+    await connection.execute('''
+ALTER TABLE user_words
+DROP CONSTRAINT IF EXISTS user_words_uid_word_id_word_book_id_key;
+''');
+
+    await connection.execute('''
+CREATE INDEX IF NOT EXISTS idx_user_words_uid_next_review
+ON user_words (uid, next_review_at)
+WHERE is_ignored = FALSE AND status NOT IN ('New', 'Previewed', 'Ignored');
+''');
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS study_sessions (
+  id TEXT PRIMARY KEY,
+  uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  lesson_id TEXT NOT NULL,
+  started_at TIMESTAMPTZ NOT NULL,
+  ended_at TIMESTAMPTZ NOT NULL,
+  total_questions INTEGER NOT NULL,
+  correct_answers INTEGER NOT NULL,
+  xp_earned INTEGER NOT NULL,
+  mistake_word_ids TEXT NOT NULL DEFAULT '',
+  answer_events TEXT NOT NULL DEFAULT ''
+);
+''');
+    await connection.execute(
+      "ALTER TABLE study_sessions ADD COLUMN IF NOT EXISTS answer_events TEXT NOT NULL DEFAULT ''",
+    );
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS review_events (
+  id TEXT PRIMARY KEY,
+  uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  word_id TEXT NOT NULL,
+  is_correct BOOLEAN NOT NULL,
+  answer_time_ms INTEGER NOT NULL,
+  confidence INTEGER NOT NULL DEFAULT 3,
+  wrong_option TEXT,
+  reviewed_at TIMESTAMPTZ NOT NULL,
+  mastery_before INTEGER NOT NULL,
+  mastery_after INTEGER NOT NULL,
+  next_review_at TIMESTAMPTZ NOT NULL
+);
+''');
+    await connection.execute(
+      'ALTER TABLE review_events ADD COLUMN IF NOT EXISTS confidence INTEGER NOT NULL DEFAULT 3',
+    );
+    await connection.execute(
+      'ALTER TABLE review_events ADD COLUMN IF NOT EXISTS wrong_option TEXT',
+    );
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS reward_claims (
+  uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  reward_id TEXT NOT NULL,
+  local_date TEXT NOT NULL,
+  points INTEGER NOT NULL,
+  claimed_at TIMESTAMPTZ NOT NULL,
+  PRIMARY KEY (uid, reward_id, local_date)
+);
+''');
+
+    await connection.execute('''
+CREATE INDEX IF NOT EXISTS idx_study_sessions_uid_ended_at
+ON study_sessions (uid, ended_at);
+''');
+
+    await connection.execute('''
+CREATE INDEX IF NOT EXISTS idx_review_events_uid_reviewed_at
+ON review_events (uid, reviewed_at);
+''');
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS notifications (
+  id TEXT PRIMARY KEY,
+  uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  type TEXT NOT NULL,
+  title TEXT NOT NULL,
+  body TEXT NOT NULL,
+  target_route TEXT NOT NULL DEFAULT '/home',
+  is_read BOOLEAN NOT NULL DEFAULT FALSE,
+  source_key TEXT,
+  read_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL,
+  UNIQUE (uid, source_key)
+);
+''');
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS study_plans (
+  id TEXT PRIMARY KEY,
+  uid TEXT UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  word_book_id TEXT NOT NULL,
+  daily_new_target INTEGER NOT NULL,
+  daily_review_limit INTEGER NOT NULL,
+  start_date DATE NOT NULL,
+  target_finish_date DATE NOT NULL,
+  reminder_time TEXT NOT NULL,
+  status TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL,
+  updated_at TIMESTAMPTZ NOT NULL
+);
+''');
+
+    await connection.execute('''
+CREATE INDEX IF NOT EXISTS idx_custom_words_uid_next_review
+ON custom_words (uid, next_review_at);
+''');
+
+    await connection.execute('''
+DO \$\$
+BEGIN
+  IF to_regclass('public.user_words') IS NOT NULL THEN
+    ALTER TABLE user_words
+      DROP CONSTRAINT IF EXISTS user_words_uid_word_id_word_book_id_key;
+    EXECUTE 'CREATE INDEX IF NOT EXISTS idx_user_words_uid_next_review ON user_words (uid, next_review_at) WHERE is_ignored = FALSE AND status IN (''Review'', ''Relearning'', ''Mastered'')';
+  END IF;
+END
+\$\$;
+''');
+  }
+
   Future<Map<String, dynamic>?> userByEmail(String email) async {
-    final normalizedEmail = email.trim().toLowerCase();
-    final index = await _get(['email_index', _encodedId(normalizedEmail)]);
-    final uid = index?['uid']?.toString();
-    if (uid == null || uid.isEmpty) return null;
-    return userById(uid);
+    final rows = await connection.execute(
+      Sql.named('SELECT * FROM users WHERE email=@email LIMIT 1'),
+      parameters: {'email': email},
+    );
+    if (rows.isEmpty) return null;
+    return rows.first.toColumnMap();
   }
 
-  @override
-  Future<Map<String, dynamic>?> userById(String uid) => _get(['users', uid]);
+  Future<Map<String, dynamic>?> userById(String uid) async {
+    final rows = await connection.execute(
+      Sql.named('SELECT * FROM users WHERE id=@uid LIMIT 1'),
+      parameters: {'uid': uid},
+    );
+    if (rows.isEmpty) return null;
+    return rows.first.toColumnMap();
+  }
 
-  @override
   Future<Map<String, dynamic>> updateUser(
     String uid,
     Map<String, dynamic> data,
   ) async {
     final existing = await userById(uid);
-    if (existing == null) throw StateError('user not found');
+    if (existing == null) {
+      throw StateError('user not found');
+    }
     final now = DateTime.now().toUtc();
-    final row = {
-      ...existing,
-      'name': data['name'] ?? existing['name'],
-      'target_exam':
-          data['targetExam'] ?? data['target_exam'] ?? existing['target_exam'],
-      'level': data['level'] ?? existing['level'],
-      'daily_goal': data['dailyGoal'] ?? existing['daily_goal'],
-      'xp': data['xp'] ?? existing['xp'],
-      'streak': data['streak'] ?? existing['streak'],
-      'last_study_date':
-          _date(data['lastStudyDate']) ?? existing['last_study_date'],
-      'updated_at': now,
-    };
-    await _set(['users', uid], row);
-    return row;
+    await connection.execute(
+      Sql.named('''
+UPDATE users SET
+  name=@name,
+  target_exam=@targetExam,
+  level=@level,
+  daily_goal=@dailyGoal,
+  xp=@xp,
+  streak=@streak,
+  last_study_date=@lastStudyDate,
+  updated_at=@updatedAt
+WHERE id=@uid
+'''),
+      parameters: {
+        'uid': uid,
+        'name': data['name'] ?? existing['name'],
+        'targetExam': data['targetExam'] ?? existing['target_exam'],
+        'level': data['level'] ?? existing['level'],
+        'dailyGoal': data['dailyGoal'] ?? existing['daily_goal'],
+        'xp': data['xp'] ?? existing['xp'],
+        'streak': data['streak'] ?? existing['streak'],
+        'lastStudyDate':
+            _date(data['lastStudyDate']) ?? existing['last_study_date'],
+        'updatedAt': now,
+      },
+    );
+    return (await userById(uid))!;
   }
 
-  @override
   Future<void> insertUser({
     required String id,
     required String email,
@@ -174,89 +320,47 @@ class FirestoreAppDatabase implements AppDatabase {
     required String name,
   }) async {
     final now = DateTime.now().toUtc();
-    final normalizedEmail = email.trim().toLowerCase();
-    final user = {
-      'id': id,
-      'email': normalizedEmail,
-      'password_hash': passwordHash,
-      'password_salt': passwordSalt,
-      'name': name,
-      'target_exam': 'Daily English',
-      'level': 'Elementary',
-      'daily_goal': 10,
-      'xp': 0,
-      'streak': 0,
-      'last_study_date': null,
-      'created_at': now,
-      'updated_at': now,
-    };
-    final emailIndex = {'uid': id, 'email': normalizedEmail, 'created_at': now};
-    try {
-      await _api.projects.databases.documents.commit(
-        fs.CommitRequest(
-          writes: [
-            fs.Write(
-              update: _document(['users', id], user),
-              currentDocument: fs.Precondition(exists: false),
-            ),
-            fs.Write(
-              update: _document([
-                'email_index',
-                _encodedId(normalizedEmail),
-              ], emailIndex),
-              currentDocument: fs.Precondition(exists: false),
-            ),
-          ],
-        ),
-        _database,
-      );
-    } catch (error) {
-      if (_isWritePreconditionError(error)) {
-        throw StateError('email already registered');
-      }
-      rethrow;
-    }
+    await connection.execute(
+      Sql.named('''
+INSERT INTO users (id, email, password_hash, password_salt, name, created_at, updated_at)
+VALUES (@id, @email, @passwordHash, @passwordSalt, @name, @createdAt, @updatedAt)
+'''),
+      parameters: {
+        'id': id,
+        'email': email,
+        'passwordHash': passwordHash,
+        'passwordSalt': passwordSalt,
+        'name': name,
+        'createdAt': now,
+        'updatedAt': now,
+      },
+    );
   }
 
-  @override
   Future<List<Map<String, dynamic>>> customWords(
     String uid, {
     bool dueOnly = false,
   }) async {
-    final rows = await _list(['users', uid], 'custom_words');
-    final now = DateTime.now().toUtc();
-    final filtered = dueOnly
-        ? rows.where((row) {
-            final dueAt = _date(row['next_review_at']);
-            return dueAt != null && !dueAt.isAfter(now);
-          }).toList()
-        : rows;
-    filtered.sort((a, b) {
-      if (dueOnly) {
-        final dueA =
-            _date(a['next_review_at']) ??
-            DateTime.fromMillisecondsSinceEpoch(0);
-        final dueB =
-            _date(b['next_review_at']) ??
-            DateTime.fromMillisecondsSinceEpoch(0);
-        final dueCompare = dueA.compareTo(dueB);
-        if (dueCompare != 0) return dueCompare;
-      }
-      final updatedA =
-          _date(a['updated_at']) ?? DateTime.fromMillisecondsSinceEpoch(0);
-      final updatedB =
-          _date(b['updated_at']) ?? DateTime.fromMillisecondsSinceEpoch(0);
-      return updatedB.compareTo(updatedA);
-    });
-    return filtered;
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT * FROM custom_words
+WHERE uid=@uid ${dueOnly ? 'AND next_review_at <= NOW()' : ''}
+ORDER BY ${dueOnly ? 'next_review_at ASC, updated_at DESC' : 'updated_at DESC'}
+'''),
+      parameters: {'uid': uid},
+    );
+    return rows.map((row) => row.toColumnMap()).toList();
   }
 
-  @override
-  Future<Map<String, dynamic>?> customWordById(String uid, String id) {
-    return _get(['users', uid, 'custom_words', id]);
+  Future<Map<String, dynamic>?> customWordById(String uid, String id) async {
+    final rows = await connection.execute(
+      Sql.named('SELECT * FROM custom_words WHERE uid=@uid AND id=@id LIMIT 1'),
+      parameters: {'uid': uid, 'id': id},
+    );
+    if (rows.isEmpty) return null;
+    return rows.first.toColumnMap();
   }
 
-  @override
   Future<Map<String, dynamic>> upsertCustomWord(
     String uid,
     Map<String, dynamic> data, {
@@ -266,118 +370,116 @@ class FirestoreAppDatabase implements AppDatabase {
     final wordId = id ?? data['id'] as String;
     final existing = await customWordById(uid, wordId);
     final createdAt =
-        _date(existing?['created_at']) ?? _date(data['createdAt']) ?? now;
-    final row = {
-      'id': wordId,
-      'uid': uid,
-      'word': data['word'],
-      'meaning': data['meaning'],
-      'example_sentence': _field(
-        data,
-        'exampleSentence',
-        'example_sentence',
-        '',
-      ),
-      'note': data['note'] ?? '',
-      'tag': data['tag'] ?? 'custom',
-      'difficulty': data['difficulty'] ?? 'Medium',
-      'status': data['status'] ?? 'Learning',
-      'ease_factor': _field(data, 'easeFactor', 'ease_factor', 2.5),
-      'interval_days': _field(data, 'intervalDays', 'interval_days', 0),
-      'repetition_count': _field(
-        data,
-        'repetitionCount',
-        'repetition_count',
-        0,
-      ),
-      'lapse_count': _field(data, 'lapseCount', 'lapse_count', 0),
-      'mastery_level': _field(data, 'masteryLevel', 'mastery_level', 0),
-      'correct_count': _field(data, 'correctCount', 'correct_count', 0),
-      'wrong_count': _field(data, 'wrongCount', 'wrong_count', 0),
-      'meaning_recognition_score': _field(
-        data,
-        'meaningRecognitionScore',
-        'meaning_recognition_score',
-        20,
-      ),
-      'meaning_recall_score': _field(
-        data,
-        'meaningRecallScore',
-        'meaning_recall_score',
-        10,
-      ),
-      'spelling_score': _field(data, 'spellingScore', 'spelling_score', 10),
-      'listening_score': _field(data, 'listeningScore', 'listening_score', 10),
-      'context_score': _field(data, 'contextScore', 'context_score', 10),
-      'confidence_score': _field(
-        data,
-        'confidenceScore',
-        'confidence_score',
-        10,
-      ),
-      'next_review_at':
-          _date(data['nextReviewAt'] ?? data['next_review_at']) ?? now,
-      'last_reviewed_at': _date(
-        data['lastReviewedAt'] ?? data['last_reviewed_at'],
-      ),
-      'created_at': createdAt,
-      'updated_at': now,
-    };
-    await _set(['users', uid, 'custom_words', wordId], row);
-    return row;
+        existing?['created_at'] as DateTime? ?? _date(data['createdAt']) ?? now;
+    final nextReviewAt = _date(data['nextReviewAt']) ?? now;
+
+    await connection.execute(
+      Sql.named('''
+INSERT INTO custom_words (
+  id, uid, word, meaning, example_sentence, note, tag, difficulty,
+  status, ease_factor, interval_days, repetition_count, lapse_count,
+  mastery_level, correct_count, wrong_count,
+  meaning_recognition_score, meaning_recall_score, spelling_score,
+  listening_score, context_score, confidence_score,
+  next_review_at, last_reviewed_at, created_at, updated_at
+) VALUES (
+  @id, @uid, @word, @meaning, @exampleSentence, @note, @tag, @difficulty,
+  @status, @easeFactor, @intervalDays, @repetitionCount, @lapseCount,
+  @masteryLevel, @correctCount, @wrongCount,
+  @meaningRecognitionScore, @meaningRecallScore, @spellingScore,
+  @listeningScore, @contextScore, @confidenceScore,
+  @nextReviewAt, @lastReviewedAt, @createdAt, @updatedAt
+)
+ON CONFLICT (id) DO UPDATE SET
+  word=EXCLUDED.word,
+  meaning=EXCLUDED.meaning,
+  example_sentence=EXCLUDED.example_sentence,
+  note=EXCLUDED.note,
+  tag=EXCLUDED.tag,
+  difficulty=EXCLUDED.difficulty,
+  status=EXCLUDED.status,
+  ease_factor=EXCLUDED.ease_factor,
+  interval_days=EXCLUDED.interval_days,
+  repetition_count=EXCLUDED.repetition_count,
+  lapse_count=EXCLUDED.lapse_count,
+  mastery_level=EXCLUDED.mastery_level,
+  correct_count=EXCLUDED.correct_count,
+  wrong_count=EXCLUDED.wrong_count,
+  meaning_recognition_score=EXCLUDED.meaning_recognition_score,
+  meaning_recall_score=EXCLUDED.meaning_recall_score,
+  spelling_score=EXCLUDED.spelling_score,
+  listening_score=EXCLUDED.listening_score,
+  context_score=EXCLUDED.context_score,
+  confidence_score=EXCLUDED.confidence_score,
+  next_review_at=EXCLUDED.next_review_at,
+  last_reviewed_at=EXCLUDED.last_reviewed_at,
+  updated_at=EXCLUDED.updated_at
+'''),
+      parameters: {
+        'id': wordId,
+        'uid': uid,
+        'word': data['word'],
+        'meaning': data['meaning'],
+        'exampleSentence': data['exampleSentence'] ?? '',
+        'note': data['note'] ?? '',
+        'tag': data['tag'] ?? 'custom',
+        'difficulty': data['difficulty'] ?? 'Medium',
+        'status': data['status'] ?? 'Learning',
+        'easeFactor': data['easeFactor'] ?? 2.5,
+        'intervalDays': data['intervalDays'] ?? 0,
+        'repetitionCount': data['repetitionCount'] ?? 0,
+        'lapseCount': data['lapseCount'] ?? 0,
+        'masteryLevel': data['masteryLevel'] ?? 0,
+        'correctCount': data['correctCount'] ?? 0,
+        'wrongCount': data['wrongCount'] ?? 0,
+        'meaningRecognitionScore': data['meaningRecognitionScore'] ?? 20,
+        'meaningRecallScore': data['meaningRecallScore'] ?? 10,
+        'spellingScore': data['spellingScore'] ?? 10,
+        'listeningScore': data['listeningScore'] ?? 10,
+        'contextScore': data['contextScore'] ?? 10,
+        'confidenceScore': data['confidenceScore'] ?? 10,
+        'nextReviewAt': nextReviewAt,
+        'lastReviewedAt': _date(data['lastReviewedAt']),
+        'createdAt': createdAt,
+        'updatedAt': now,
+      },
+    );
+
+    return (await customWordById(uid, wordId))!;
   }
 
-  @override
-  Future<void> deleteCustomWord(String uid, String id) {
-    return _delete(['users', uid, 'custom_words', id]);
+  Future<void> deleteCustomWord(String uid, String id) async {
+    await connection.execute(
+      Sql.named('DELETE FROM custom_words WHERE uid=@uid AND id=@id'),
+      parameters: {'uid': uid, 'id': id},
+    );
   }
 
-  @override
   Future<List<Map<String, dynamic>>> userWords(
     String uid, {
     bool dueOnly = false,
   }) async {
-    final rows = await _list(['users', uid], 'user_words');
-    final now = DateTime.now().toUtc();
-    final filtered = dueOnly
-        ? rows.where((row) {
-            final dueAt = _date(row['next_review_at']);
-            final status = row['status']?.toString();
-            return dueAt != null &&
-                !dueAt.isAfter(now) &&
-                row['is_ignored'] != true &&
-                status != 'New' &&
-                status != 'Previewed' &&
-                status != 'Ignored';
-          }).toList()
-        : rows;
-    filtered.sort((a, b) {
-      if (dueOnly) {
-        final dueA =
-            _date(a['next_review_at']) ??
-            DateTime.fromMillisecondsSinceEpoch(0);
-        final dueB =
-            _date(b['next_review_at']) ??
-            DateTime.fromMillisecondsSinceEpoch(0);
-        final dueCompare = dueA.compareTo(dueB);
-        if (dueCompare != 0) return dueCompare;
-        return _int(b['wrong_count']).compareTo(_int(a['wrong_count']));
-      }
-      final updatedA =
-          _date(a['updated_at']) ?? DateTime.fromMillisecondsSinceEpoch(0);
-      final updatedB =
-          _date(b['updated_at']) ?? DateTime.fromMillisecondsSinceEpoch(0);
-      return updatedB.compareTo(updatedA);
-    });
-    return filtered;
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT * FROM user_words
+WHERE uid=@uid
+  ${dueOnly ? "AND next_review_at <= NOW() AND is_ignored = FALSE AND status NOT IN ('New', 'Previewed', 'Ignored')" : ''}
+ORDER BY ${dueOnly ? 'next_review_at ASC, wrong_count DESC' : 'updated_at DESC'}
+'''),
+      parameters: {'uid': uid},
+    );
+    return rows.map((row) => row.toColumnMap()).toList();
   }
 
-  @override
-  Future<Map<String, dynamic>?> userWordById(String uid, String id) {
-    return _get(['users', uid, 'user_words', id]);
+  Future<Map<String, dynamic>?> userWordById(String uid, String id) async {
+    final rows = await connection.execute(
+      Sql.named('SELECT * FROM user_words WHERE uid=@uid AND id=@id LIMIT 1'),
+      parameters: {'uid': uid, 'id': id},
+    );
+    if (rows.isEmpty) return null;
+    return rows.first.toColumnMap();
   }
 
-  @override
   Future<Map<String, dynamic>> upsertUserWord(
     String uid,
     Map<String, dynamic> data,
@@ -386,1184 +488,465 @@ class FirestoreAppDatabase implements AppDatabase {
     return rows.first;
   }
 
-  @override
   Future<List<Map<String, dynamic>>> upsertUserWords(
     String uid,
     List<Map<String, dynamic>> words,
   ) async {
+    if (words.isEmpty) return [];
     final saved = <Map<String, dynamic>>[];
-    final writes = <fs.Write>[];
     for (final data in words) {
       final now = DateTime.now().toUtc();
-      final id = data['id'] as String;
-      final row = {
-        'id': id,
-        'uid': uid,
-        'word_id': data['wordId'] ?? data['word_id'],
-        'word_book_id': _field(data, 'wordBookId', 'word_book_id', ''),
-        'word': data['word'] ?? data['wordId'] ?? data['word_id'],
-        'meaning': data['meaning'] ?? '',
-        'example_sentence': _field(
-          data,
-          'exampleSentence',
-          'example_sentence',
-          '',
-        ),
-        'difficulty': data['difficulty'] ?? 'Medium',
-        'status': data['status'] ?? 'New',
-        'is_favorite': _field(data, 'isFavorite', 'is_favorite', false),
-        'is_in_new_word_book': _field(
-          data,
-          'isInNewWordBook',
-          'is_in_new_word_book',
-          false,
-        ),
-        'is_ignored': _field(
-          data,
-          'isIgnored',
-          'is_ignored',
-          data['status'] == 'Ignored',
-        ),
-        'ease_factor': _field(data, 'easeFactor', 'ease_factor', 2.5),
-        'interval_days': _field(data, 'intervalDays', 'interval_days', 0),
-        'repetition_count': _field(
-          data,
-          'repetitionCount',
-          'repetition_count',
-          0,
-        ),
-        'lapse_count': _field(data, 'lapseCount', 'lapse_count', 0),
-        'mastery_level': _field(data, 'masteryLevel', 'mastery_level', 0),
-        'correct_count': _field(data, 'correctCount', 'correct_count', 0),
-        'wrong_count': _field(data, 'wrongCount', 'wrong_count', 0),
-        'meaning_recognition_score': _field(
-          data,
-          'meaningRecognitionScore',
-          'meaning_recognition_score',
-          20,
-        ),
-        'meaning_recall_score': _field(
-          data,
-          'meaningRecallScore',
-          'meaning_recall_score',
-          10,
-        ),
-        'spelling_score': _field(data, 'spellingScore', 'spelling_score', 10),
-        'listening_score': _field(
-          data,
-          'listeningScore',
-          'listening_score',
-          10,
-        ),
-        'context_score': _field(data, 'contextScore', 'context_score', 10),
-        'confidence_score': _field(
-          data,
-          'confidenceScore',
-          'confidence_score',
-          10,
-        ),
-        'next_review_at':
-            _date(data['nextReviewAt'] ?? data['next_review_at']) ?? now,
-        'last_reviewed_at': _date(
-          data['lastReviewedAt'] ?? data['last_reviewed_at'],
-        ),
-        'created_at': _date(data['createdAt']) ?? now,
-        'updated_at': _date(data['updatedAt']) ?? now,
-      };
-      writes.add(
-        fs.Write(update: _document(['users', uid, 'user_words', id], row)),
+      final wordId = data['id'] as String;
+      final createdAt = _date(data['createdAt']) ?? now;
+      final rows = await connection.execute(
+        Sql.named('''
+INSERT INTO user_words (
+  id, uid, word_id, word_book_id, word, meaning, example_sentence, difficulty,
+  status, is_favorite, is_in_new_word_book, is_ignored,
+  ease_factor, interval_days, repetition_count, lapse_count, mastery_level,
+  correct_count, wrong_count,
+  meaning_recognition_score, meaning_recall_score, spelling_score,
+  listening_score, context_score, confidence_score,
+  next_review_at, last_reviewed_at, created_at, updated_at
+) VALUES (
+  @id, @uid, @wordId, @wordBookId, @word, @meaning, @exampleSentence, @difficulty,
+  @status, @isFavorite, @isInNewWordBook, @isIgnored,
+  @easeFactor, @intervalDays, @repetitionCount, @lapseCount, @masteryLevel,
+  @correctCount, @wrongCount,
+  @meaningRecognitionScore, @meaningRecallScore, @spellingScore,
+  @listeningScore, @contextScore, @confidenceScore,
+  @nextReviewAt, @lastReviewedAt, @createdAt, @updatedAt
+)
+ON CONFLICT (id) DO UPDATE SET
+  word_book_id=EXCLUDED.word_book_id,
+  word=EXCLUDED.word,
+  meaning=EXCLUDED.meaning,
+  example_sentence=EXCLUDED.example_sentence,
+  difficulty=EXCLUDED.difficulty,
+  status=EXCLUDED.status,
+  is_favorite=EXCLUDED.is_favorite,
+  is_in_new_word_book=EXCLUDED.is_in_new_word_book,
+  is_ignored=EXCLUDED.is_ignored,
+  ease_factor=EXCLUDED.ease_factor,
+  interval_days=EXCLUDED.interval_days,
+  repetition_count=EXCLUDED.repetition_count,
+  lapse_count=EXCLUDED.lapse_count,
+  mastery_level=EXCLUDED.mastery_level,
+  correct_count=EXCLUDED.correct_count,
+  wrong_count=EXCLUDED.wrong_count,
+  meaning_recognition_score=EXCLUDED.meaning_recognition_score,
+  meaning_recall_score=EXCLUDED.meaning_recall_score,
+  spelling_score=EXCLUDED.spelling_score,
+  listening_score=EXCLUDED.listening_score,
+  context_score=EXCLUDED.context_score,
+  confidence_score=EXCLUDED.confidence_score,
+  next_review_at=EXCLUDED.next_review_at,
+  last_reviewed_at=EXCLUDED.last_reviewed_at,
+  updated_at=EXCLUDED.updated_at
+RETURNING *
+'''),
+        parameters: {
+          'id': wordId,
+          'uid': uid,
+          'wordId': data['wordId'],
+          'wordBookId': data['wordBookId'] ?? '',
+          'word': data['word'] ?? data['wordId'],
+          'meaning': data['meaning'] ?? '',
+          'exampleSentence': data['exampleSentence'] ?? '',
+          'difficulty': data['difficulty'] ?? 'Medium',
+          'status': data['status'] ?? 'New',
+          'isFavorite': data['isFavorite'] ?? false,
+          'isInNewWordBook': data['isInNewWordBook'] ?? false,
+          'isIgnored': data['isIgnored'] ?? data['status'] == 'Ignored',
+          'easeFactor': data['easeFactor'] ?? 2.5,
+          'intervalDays': data['intervalDays'] ?? 0,
+          'repetitionCount': data['repetitionCount'] ?? 0,
+          'lapseCount': data['lapseCount'] ?? 0,
+          'masteryLevel': data['masteryLevel'] ?? 0,
+          'correctCount': data['correctCount'] ?? 0,
+          'wrongCount': data['wrongCount'] ?? 0,
+          'meaningRecognitionScore': data['meaningRecognitionScore'] ?? 20,
+          'meaningRecallScore': data['meaningRecallScore'] ?? 10,
+          'spellingScore': data['spellingScore'] ?? 10,
+          'listeningScore': data['listeningScore'] ?? 10,
+          'contextScore': data['contextScore'] ?? 10,
+          'confidenceScore': data['confidenceScore'] ?? 10,
+          'nextReviewAt': _date(data['nextReviewAt']) ?? now,
+          'lastReviewedAt': _date(data['lastReviewedAt']),
+          'createdAt': createdAt,
+          'updatedAt': _date(data['updatedAt']) ?? now,
+        },
       );
-      saved.add(row);
+      saved.add(rows.first.toColumnMap());
     }
-    await _commitWrites(writes);
     return saved;
   }
 
-  @override
   Future<void> insertStudySession(String uid, Map<String, dynamic> data) async {
-    final id = data['id'] as String;
-    await _set(
-      ['users', uid, 'study_sessions', id],
-      {
-        'id': id,
+    await connection.execute(
+      Sql.named('''
+INSERT INTO study_sessions (
+  id, uid, lesson_id, started_at, ended_at, total_questions, correct_answers, xp_earned, mistake_word_ids, answer_events
+) VALUES (
+  @id, @uid, @lessonId, @startedAt, @endedAt, @totalQuestions, @correctAnswers, @xpEarned, @mistakeWordIds, @answerEvents
+)
+'''),
+      parameters: {
+        'id': data['id'],
         'uid': uid,
-        'lesson_id': data['lessonId'],
-        'started_at': _date(data['startedAt']) ?? DateTime.now().toUtc(),
-        'ended_at': _date(data['endedAt']) ?? DateTime.now().toUtc(),
-        'total_questions': data['totalQuestions'] ?? 0,
-        'correct_answers': data['correctAnswers'] ?? 0,
-        'xp_earned': data['xpEarned'] ?? 0,
-        'mistake_word_ids': ((data['mistakeWordIds'] as List?) ?? const [])
-            .join(','),
-        'answer_events': jsonEncode(
-          (data['answerEvents'] as List?) ?? const [],
+        'lessonId': data['lessonId'],
+        'startedAt': _date(data['startedAt']) ?? DateTime.now().toUtc(),
+        'endedAt': _date(data['endedAt']) ?? DateTime.now().toUtc(),
+        'totalQuestions': data['totalQuestions'] ?? 0,
+        'correctAnswers': data['correctAnswers'] ?? 0,
+        'xpEarned': data['xpEarned'] ?? 0,
+        'mistakeWordIds': ((data['mistakeWordIds'] as List?) ?? const []).join(
+          ',',
         ),
+        'answerEvents': jsonEncode((data['answerEvents'] as List?) ?? const []),
       },
     );
   }
 
-  @override
-  Future<Map<String, dynamic>?> studyPlanByUid(String uid) {
-    return _get(['users', uid, 'study_plans', 'current']);
+  Future<Map<String, dynamic>?> studyPlanByUid(String uid) async {
+    final rows = await connection.execute(
+      Sql.named('SELECT * FROM study_plans WHERE uid=@uid LIMIT 1'),
+      parameters: {'uid': uid},
+    );
+    if (rows.isEmpty) return null;
+    return rows.first.toColumnMap();
   }
 
-  @override
   Future<Map<String, dynamic>> upsertStudyPlan(
     String uid,
     Map<String, dynamic> data,
   ) async {
     final existing = await studyPlanByUid(uid);
     final now = DateTime.now().toUtc();
+    final id = existing?['id']?.toString() ?? data['id']?.toString();
     final updatedAt = _date(data['now']) ?? now;
-    final row = {
-      'id': existing?['id']?.toString() ?? data['id']?.toString(),
-      'uid': uid,
-      'word_book_id': data['wordBookId'],
-      'daily_new_target': data['dailyNewTarget'],
-      'daily_review_limit': data['dailyReviewLimit'],
-      'start_date': data['startDate'],
-      'target_finish_date': data['targetFinishDate'],
-      'reminder_time': data['reminderTime'],
-      'status': data['status'],
-      'created_at': existing?['created_at'] ?? _date(data['createdAt']) ?? now,
-      'updated_at': updatedAt,
-    };
-    await _set(['users', uid, 'study_plans', 'current'], row);
-    return row;
+    await connection.execute(
+      Sql.named('''
+INSERT INTO study_plans (
+  id, uid, word_book_id, daily_new_target, daily_review_limit, start_date,
+  target_finish_date, reminder_time, status, created_at, updated_at
+) VALUES (
+  @id, @uid, @wordBookId, @dailyNewTarget, @dailyReviewLimit, @startDate,
+  @targetFinishDate, @reminderTime, @status, @createdAt, @updatedAt
+)
+ON CONFLICT (uid) DO UPDATE SET
+  word_book_id=EXCLUDED.word_book_id,
+  daily_new_target=EXCLUDED.daily_new_target,
+  daily_review_limit=EXCLUDED.daily_review_limit,
+  start_date=EXCLUDED.start_date,
+  target_finish_date=EXCLUDED.target_finish_date,
+  reminder_time=EXCLUDED.reminder_time,
+  status=EXCLUDED.status,
+  updated_at=EXCLUDED.updated_at
+'''),
+      parameters: {
+        'id': id ?? data['id'],
+        'uid': uid,
+        'wordBookId': data['wordBookId'],
+        'dailyNewTarget': data['dailyNewTarget'],
+        'dailyReviewLimit': data['dailyReviewLimit'],
+        'startDate': data['startDate'],
+        'targetFinishDate': data['targetFinishDate'],
+        'reminderTime': data['reminderTime'],
+        'status': data['status'],
+        'createdAt': existing?['created_at'] ?? _date(data['createdAt']) ?? now,
+        'updatedAt': updatedAt,
+      },
+    );
+    return (await studyPlanByUid(uid))!;
   }
 
-  @override
   Future<void> resetCustomWordProgress(String uid, {DateTime? now}) async {
     final resetAt = now ?? DateTime.now().toUtc();
-    final writes = <fs.Write>[];
-    for (final word in await customWords(uid)) {
-      writes.add(
-        fs.Write(
-          update: _document(
-            ['users', uid, 'custom_words', word['id'] as String],
-            {
-              ...word,
-              'mastery_level': 0,
-              'correct_count': 0,
-              'wrong_count': 0,
-              'next_review_at': resetAt,
-              'updated_at': resetAt,
-            },
-          ),
-        ),
-      );
-    }
-    await _commitWrites(writes);
+    await connection.execute(
+      Sql.named(resetCustomWordProgressSql),
+      parameters: {'uid': uid, 'resetAt': resetAt},
+    );
   }
 
-  @override
   Future<void> insertReviewEvent(String uid, Map<String, dynamic> data) async {
-    final id = data['id'] as String;
-    await _set(
-      ['users', uid, 'review_events', id],
-      {
-        'id': id,
+    await connection.execute(
+      Sql.named('''
+INSERT INTO review_events (
+  id, uid, word_id, is_correct, answer_time_ms, confidence, wrong_option, reviewed_at, mastery_before, mastery_after, next_review_at
+) VALUES (
+  @id, @uid, @wordId, @isCorrect, @answerTimeMs, @confidence, @wrongOption, @reviewedAt, @masteryBefore, @masteryAfter, @nextReviewAt
+)
+'''),
+      parameters: {
+        'id': data['id'],
         'uid': uid,
-        'word_id': data['wordId'] ?? data['word_id'],
-        'is_correct': data['isCorrect'],
-        'answer_time_ms': data['answerTimeMs'] ?? 0,
+        'wordId': data['wordId'],
+        'isCorrect': data['isCorrect'],
+        'answerTimeMs': data['answerTimeMs'] ?? 0,
         'confidence': data['confidence'] ?? 3,
-        'wrong_option': data['wrongOption'] ?? data['wrong_option'],
-        'reviewed_at': _date(data['reviewedAt']) ?? DateTime.now().toUtc(),
-        'mastery_before': data['masteryBefore'] ?? 0,
-        'mastery_after': data['masteryAfter'] ?? 0,
-        'next_review_at':
-            _date(data['nextReviewAt'] ?? data['next_review_at']) ??
-            DateTime.now().toUtc(),
+        'wrongOption': data['wrongOption'] ?? data['wrong_option'],
+        'reviewedAt': _date(data['reviewedAt']) ?? DateTime.now().toUtc(),
+        'masteryBefore': data['masteryBefore'] ?? 0,
+        'masteryAfter': data['masteryAfter'] ?? 0,
+        'nextReviewAt': _date(data['nextReviewAt']) ?? DateTime.now().toUtc(),
       },
     );
   }
 
-  @override
   Future<List<String>> completedLessonIds(String uid) async {
-    final sessions = await _list(['users', uid], 'study_sessions');
-    return _distinctSorted(sessions.map((row) => row['lesson_id']));
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT DISTINCT lesson_id FROM study_sessions
+WHERE uid=@uid
+ORDER BY lesson_id
+'''),
+      parameters: {'uid': uid},
+    );
+    return [
+      for (final row in rows)
+        if (row[0] != null) row[0].toString(),
+    ];
   }
 
-  @override
   Future<List<String>> lessonIdsInRange(
     String uid,
     DateTime startUtc,
     DateTime endUtc,
   ) async {
-    final sessions = await _list(['users', uid], 'study_sessions');
-    return _distinctSorted(
-      sessions
-          .where((row) {
-            final endedAt = _date(row['ended_at']);
-            return endedAt != null &&
-                !endedAt.isBefore(startUtc) &&
-                endedAt.isBefore(endUtc);
-          })
-          .map((row) => row['lesson_id']),
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT DISTINCT lesson_id FROM study_sessions
+WHERE uid=@uid AND ended_at >= @startUtc AND ended_at < @endUtc
+ORDER BY lesson_id
+'''),
+      parameters: {'uid': uid, 'startUtc': startUtc, 'endUtc': endUtc},
     );
+    return [
+      for (final row in rows)
+        if (row[0] != null) row[0].toString(),
+    ];
   }
 
-  @override
   Future<List<String>> reviewWordIdsInRange(
     String uid,
     DateTime startUtc,
     DateTime endUtc,
   ) async {
-    final events = await _list(['users', uid], 'review_events');
-    return _distinctSorted(
-      events
-          .where((row) {
-            final reviewedAt = _date(row['reviewed_at']);
-            return reviewedAt != null &&
-                !reviewedAt.isBefore(startUtc) &&
-                reviewedAt.isBefore(endUtc);
-          })
-          .map((row) => row['word_id']),
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT DISTINCT word_id FROM review_events
+WHERE uid=@uid AND reviewed_at >= @startUtc AND reviewed_at < @endUtc
+ORDER BY word_id
+'''),
+      parameters: {'uid': uid, 'startUtc': startUtc, 'endUtc': endUtc},
     );
-  }
-
-  @override
-  Future<List<String>> rewardIdsForDate(String uid, String localDate) async {
-    final rewards = await _list(['users', uid], 'reward_claims');
-    rewards.sort((a, b) {
-      final aDate =
-          _date(a['claimed_at']) ?? DateTime.fromMillisecondsSinceEpoch(0);
-      final bDate =
-          _date(b['claimed_at']) ?? DateTime.fromMillisecondsSinceEpoch(0);
-      return aDate.compareTo(bDate);
-    });
     return [
-      for (final row in rewards)
-        if (row['local_date'] == localDate) row['reward_id'].toString(),
+      for (final row in rows)
+        if (row[0] != null) row[0].toString(),
     ];
   }
 
-  @override
+  Future<List<String>> rewardIdsForDate(String uid, String localDate) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT reward_id FROM reward_claims
+WHERE uid=@uid AND local_date=@localDate
+ORDER BY claimed_at
+'''),
+      parameters: {'uid': uid, 'localDate': localDate},
+    );
+    return [
+      for (final row in rows)
+        if (row[0] != null) row[0].toString(),
+    ];
+  }
+
   Future<bool> claimReward({
     required String uid,
     required String rewardId,
     required String localDate,
     required int points,
   }) async {
-    if (await userById(uid) == null) throw StateError('user not found');
-    final rewardDocId = '${_encodedId(localDate)}_${_encodedId(rewardId)}';
-    if (await _get(['users', uid, 'reward_claims', rewardDocId]) != null) {
-      return false;
-    }
     final now = DateTime.now().toUtc();
-    try {
-      await _api.projects.databases.documents.commit(
-        fs.CommitRequest(
-          writes: [
-            fs.Write(
-              update: _document(
-                ['users', uid, 'reward_claims', rewardDocId],
-                {
-                  'uid': uid,
-                  'reward_id': rewardId,
-                  'local_date': localDate,
-                  'points': points,
-                  'claimed_at': now,
-                },
-              ),
-              currentDocument: fs.Precondition(exists: false),
-            ),
-            fs.Write(
-              update: fs.Document(
-                name: _documentName(['users', uid]),
-                fields: {'updated_at': _value(now)},
-              ),
-              updateMask: fs.DocumentMask(fieldPaths: ['updated_at']),
-              updateTransforms: [
-                fs.FieldTransform(
-                  fieldPath: 'xp',
-                  increment: fs.Value(integerValue: points.toString()),
-                ),
-              ],
-            ),
-          ],
-        ),
-        _database,
+    return connection.runTx((tx) async {
+      final rows = await tx.execute(
+        Sql.named('''
+INSERT INTO reward_claims (uid, reward_id, local_date, points, claimed_at)
+VALUES (@uid, @rewardId, @localDate, @points, @claimedAt)
+ON CONFLICT (uid, reward_id, local_date) DO NOTHING
+RETURNING reward_id
+'''),
+        parameters: {
+          'uid': uid,
+          'rewardId': rewardId,
+          'localDate': localDate,
+          'points': points,
+          'claimedAt': now,
+        },
+      );
+      if (rows.isEmpty) return false;
+      await tx.execute(
+        Sql.named('''
+UPDATE users
+SET xp = xp + @points,
+    updated_at = @updatedAt
+WHERE id=@uid
+'''),
+        parameters: {'uid': uid, 'points': points, 'updatedAt': now},
       );
       return true;
-    } catch (error) {
-      if (_isWritePreconditionError(error)) return false;
-      rethrow;
-    }
+    });
   }
 
-  @override
   Future<List<Map<String, dynamic>>> notifications(
     String uid, {
     bool unreadOnly = false,
     String? type,
   }) async {
-    final rows = await _list(['users', uid], 'notifications');
-    final filtered = rows.where((row) {
-      if (unreadOnly && row['is_read'] == true) return false;
-      if (type != null && row['type'] != type) return false;
-      return true;
-    }).toList();
-    filtered.sort((a, b) {
-      final createdA =
-          _date(a['created_at']) ?? DateTime.fromMillisecondsSinceEpoch(0);
-      final createdB =
-          _date(b['created_at']) ?? DateTime.fromMillisecondsSinceEpoch(0);
-      return createdB.compareTo(createdA);
-    });
-    return filtered;
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT * FROM notifications
+WHERE uid=@uid
+  ${unreadOnly ? 'AND is_read = FALSE' : ''}
+  ${type == null ? '' : 'AND type = @type'}
+ORDER BY created_at DESC
+'''),
+      parameters: {'uid': uid, if (type != null) 'type': type},
+    );
+    return rows.map((row) => row.toColumnMap()).toList();
   }
 
-  @override
-  Future<Map<String, dynamic>?> notificationById(String uid, String id) {
-    return _get(['users', uid, 'notifications', id]);
+  Future<Map<String, dynamic>?> notificationById(String uid, String id) async {
+    final rows = await connection.execute(
+      Sql.named(
+        'SELECT * FROM notifications WHERE uid=@uid AND id=@id LIMIT 1',
+      ),
+      parameters: {'uid': uid, 'id': id},
+    );
+    if (rows.isEmpty) return null;
+    return rows.first.toColumnMap();
   }
 
-  @override
-  Future<void> upsertNotification(String uid, Map<String, dynamic> data) {
-    return upsertNotifications(uid, [data]);
+  Future<void> upsertNotification(String uid, Map<String, dynamic> data) async {
+    await upsertNotifications(uid, [data]);
   }
 
-  @override
   Future<void> upsertNotifications(
     String uid,
     List<Map<String, dynamic>> notifications,
   ) async {
     if (notifications.isEmpty) return;
-    final existingNotifications = await this.notifications(uid);
-    final writes = <fs.Write>[];
-    for (final data in notifications) {
-      final sourceKey = data['sourceKey']?.toString();
-      final existing = sourceKey == null
-          ? null
-          : existingNotifications.where((row) {
-              return row['source_key'] == sourceKey;
-            }).firstOrNull;
-      final id = existing?['id']?.toString() ?? data['id']?.toString();
-      if (id == null || id.isEmpty) continue;
-      final row = {
-        ...?existing,
-        'id': id,
-        'uid': uid,
-        'type': data['type'],
-        'title': data['title'],
-        'body': data['body'],
-        'target_route': data['targetRoute'] ?? '/home',
-        'is_read': existing?['is_read'] ?? data['isRead'] ?? false,
-        'source_key': sourceKey,
-        'read_at': existing?['read_at'] ?? _date(data['readAt']),
-        'created_at':
-            existing?['created_at'] ??
-            _date(data['createdAt']) ??
-            DateTime.now().toUtc(),
-      };
-      writes.add(
-        fs.Write(update: _document(['users', uid, 'notifications', id], row)),
-      );
+    final values = <String>[];
+    final parameters = <String, dynamic>{'uid': uid};
+    for (var index = 0; index < notifications.length; index++) {
+      final data = notifications[index];
+      values.add('''
+(@id$index, @uid, @type$index, @title$index, @body$index, @targetRoute$index,
+ @isRead$index, @sourceKey$index, @readAt$index, @createdAt$index)
+''');
+      parameters.addAll({
+        'id$index': data['id'],
+        'type$index': data['type'],
+        'title$index': data['title'],
+        'body$index': data['body'],
+        'targetRoute$index': data['targetRoute'] ?? '/home',
+        'isRead$index': data['isRead'] ?? false,
+        'sourceKey$index': data['sourceKey'],
+        'readAt$index': _date(data['readAt']),
+        'createdAt$index': _date(data['createdAt']) ?? DateTime.now().toUtc(),
+      });
     }
-    await _commitWrites(writes);
+    await connection.execute(
+      Sql.named('''
+INSERT INTO notifications (
+  id, uid, type, title, body, target_route, is_read, source_key, read_at, created_at
+) VALUES
+  ${values.join(',\n')}
+ON CONFLICT (uid, source_key) DO UPDATE SET
+  type=EXCLUDED.type,
+  title=EXCLUDED.title,
+  body=EXCLUDED.body,
+  target_route=EXCLUDED.target_route
+WHERE notifications.type IS DISTINCT FROM EXCLUDED.type
+   OR notifications.title IS DISTINCT FROM EXCLUDED.title
+   OR notifications.body IS DISTINCT FROM EXCLUDED.body
+   OR notifications.target_route IS DISTINCT FROM EXCLUDED.target_route
+'''),
+      parameters: parameters,
+    );
   }
 
-  @override
   Future<Map<String, dynamic>?> markNotificationRead(
     String uid,
     String id,
   ) async {
-    final existing = await notificationById(uid, id);
-    if (existing == null) return null;
-    final row = {
-      ...existing,
-      'is_read': true,
-      'read_at': existing['read_at'] ?? DateTime.now().toUtc(),
-    };
-    await _set(['users', uid, 'notifications', id], row);
-    return row;
+    final rows = await connection.execute(
+      Sql.named('''
+UPDATE notifications
+SET is_read = TRUE,
+    read_at = COALESCE(read_at, @readAt)
+WHERE uid=@uid AND id=@id
+RETURNING *
+'''),
+      parameters: {'uid': uid, 'id': id, 'readAt': DateTime.now().toUtc()},
+    );
+    if (rows.isEmpty) return null;
+    return rows.first.toColumnMap();
   }
 
-  @override
   Future<int> markAllNotificationsRead(String uid) async {
-    final unread = await notifications(uid, unreadOnly: true);
-    if (unread.isEmpty) return 0;
-    final now = DateTime.now().toUtc();
-    final writes = <fs.Write>[];
-    for (final notification in unread) {
-      writes.add(
-        fs.Write(
-          update: _document(
-            ['users', uid, 'notifications', notification['id'] as String],
-            {
-              ...notification,
-              'is_read': true,
-              'read_at': notification['read_at'] ?? now,
-            },
-          ),
-        ),
-      );
-    }
-    await _commitWrites(writes);
-    return unread.length;
+    final rows = await connection.execute(
+      Sql.named('''
+UPDATE notifications
+SET is_read = TRUE,
+    read_at = COALESCE(read_at, @readAt)
+WHERE uid=@uid AND is_read = FALSE
+RETURNING id
+'''),
+      parameters: {'uid': uid, 'readAt': DateTime.now().toUtc()},
+    );
+    return rows.length;
   }
 
-  @override
   Future<bool> hasStudySessionInRange(
     String uid,
     DateTime startUtc,
     DateTime endUtc,
   ) async {
-    final ids = await lessonIdsInRange(uid, startUtc, endUtc);
-    return ids.isNotEmpty;
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT id FROM study_sessions
+WHERE uid=@uid AND ended_at >= @startUtc AND ended_at < @endUtc
+LIMIT 1
+'''),
+      parameters: {'uid': uid, 'startUtc': startUtc, 'endUtc': endUtc},
+    );
+    return rows.isNotEmpty;
   }
 
-  @override
   Future<int> dueReviewCount(String uid) async {
-    return (await customWords(uid, dueOnly: true)).length +
-        (await userWords(uid, dueOnly: true)).length;
-  }
-
-  Future<Map<String, dynamic>?> _get(List<String> path) async {
-    try {
-      final document = await _api.projects.databases.documents.get(
-        _documentName(path),
-      );
-      return _rowFromDocument(document);
-    } catch (error) {
-      if (error.toString().contains('404')) return null;
-      rethrow;
-    }
-  }
-
-  Future<void> _set(List<String> path, Map<String, dynamic> data) async {
-    await _commitWrites([fs.Write(update: _document(path, data))]);
-  }
-
-  Future<void> _commitWrites(List<fs.Write> writes) async {
-    for (var start = 0; start < writes.length; start += 500) {
-      final end = start + 500 > writes.length ? writes.length : start + 500;
-      await _api.projects.databases.documents.commit(
-        fs.CommitRequest(writes: writes.sublist(start, end)),
-        _database,
-      );
-    }
-  }
-
-  Future<void> _delete(List<String> path) async {
-    try {
-      await _api.projects.databases.documents.delete(_documentName(path));
-    } catch (error) {
-      if (!error.toString().contains('404')) rethrow;
-    }
-  }
-
-  Future<List<Map<String, dynamic>>> _list(
-    List<String> parentPath,
-    String collectionId,
-  ) async {
-    final parent = parentPath.isEmpty ? _documents : _documentName(parentPath);
-    final rows = <Map<String, dynamic>>[];
-    String? pageToken;
-    do {
-      final response = await _api.projects.databases.documents.list(
-        parent,
-        collectionId,
-        pageSize: 1000,
-        pageToken: pageToken,
-      );
-      rows.addAll((response.documents ?? const []).map(_rowFromDocument));
-      pageToken = response.nextPageToken;
-    } while (pageToken != null && pageToken.isNotEmpty);
-    return rows;
-  }
-
-  fs.Document _document(List<String> path, Map<String, dynamic> data) {
-    return fs.Document(name: _documentName(path), fields: _fields(data));
-  }
-
-  String _documentName(List<String> path) => '$_documents/${path.join('/')}';
-}
-
-class InMemoryAppDatabase implements AppDatabase {
-  final _users = <String, Map<String, dynamic>>{};
-  final _emailIndex = <String, String>{};
-  final _customWords = <String, Map<String, Map<String, dynamic>>>{};
-  final _userWords = <String, Map<String, Map<String, dynamic>>>{};
-  final _studySessions = <String, Map<String, Map<String, dynamic>>>{};
-  final _reviewEvents = <String, Map<String, Map<String, dynamic>>>{};
-  final _studyPlans = <String, Map<String, dynamic>>{};
-  final _rewardClaims = <String, Map<String, Map<String, dynamic>>>{};
-  final _notifications = <String, Map<String, Map<String, dynamic>>>{};
-
-  @override
-  Future<void> migrate() async {}
-
-  @override
-  Future<Map<String, dynamic>?> userByEmail(String email) async {
-    final uid = _emailIndex[email.trim().toLowerCase()];
-    return uid == null ? null : userById(uid);
-  }
-
-  @override
-  Future<Map<String, dynamic>?> userById(String uid) async =>
-      _copy(_users[uid]);
-
-  @override
-  Future<Map<String, dynamic>> updateUser(
-    String uid,
-    Map<String, dynamic> data,
-  ) async {
-    final existing = _users[uid];
-    if (existing == null) throw StateError('user not found');
-    final row = {
-      ...existing,
-      'name': data['name'] ?? existing['name'],
-      'target_exam':
-          data['targetExam'] ?? data['target_exam'] ?? existing['target_exam'],
-      'level': data['level'] ?? existing['level'],
-      'daily_goal': data['dailyGoal'] ?? existing['daily_goal'],
-      'xp': data['xp'] ?? existing['xp'],
-      'streak': data['streak'] ?? existing['streak'],
-      'last_study_date':
-          _date(data['lastStudyDate']) ?? existing['last_study_date'],
-      'updated_at': DateTime.now().toUtc(),
-    };
-    _users[uid] = row;
-    return _copy(row)!;
-  }
-
-  @override
-  Future<void> insertUser({
-    required String id,
-    required String email,
-    required String passwordHash,
-    required String passwordSalt,
-    required String name,
-  }) async {
-    final normalizedEmail = email.trim().toLowerCase();
-    if (_emailIndex.containsKey(normalizedEmail)) {
-      throw StateError('email already registered');
-    }
-    final now = DateTime.now().toUtc();
-    _emailIndex[normalizedEmail] = id;
-    _users[id] = {
-      'id': id,
-      'email': normalizedEmail,
-      'password_hash': passwordHash,
-      'password_salt': passwordSalt,
-      'name': name,
-      'target_exam': 'Daily English',
-      'level': 'Elementary',
-      'daily_goal': 10,
-      'xp': 0,
-      'streak': 0,
-      'last_study_date': null,
-      'created_at': now,
-      'updated_at': now,
-    };
-  }
-
-  @override
-  Future<List<Map<String, dynamic>>> customWords(
-    String uid, {
-    bool dueOnly = false,
-  }) async {
-    final rows = _collection(_customWords, uid);
-    return _filterReviewRows(rows, dueOnly: dueOnly, includeNew: true);
-  }
-
-  @override
-  Future<Map<String, dynamic>?> customWordById(String uid, String id) async {
-    return _copy(_customWords[uid]?[id]);
-  }
-
-  @override
-  Future<Map<String, dynamic>> upsertCustomWord(
-    String uid,
-    Map<String, dynamic> data, {
-    String? id,
-  }) async {
-    final now = DateTime.now().toUtc();
-    final wordId = id ?? data['id'] as String;
-    final existing = _customWords[uid]?[wordId];
-    final row = {
-      'id': wordId,
-      'uid': uid,
-      'word': data['word'],
-      'meaning': data['meaning'],
-      'example_sentence': _field(
-        data,
-        'exampleSentence',
-        'example_sentence',
-        '',
-      ),
-      'note': data['note'] ?? '',
-      'tag': data['tag'] ?? 'custom',
-      'difficulty': data['difficulty'] ?? 'Medium',
-      'status': data['status'] ?? 'Learning',
-      'ease_factor': _field(data, 'easeFactor', 'ease_factor', 2.5),
-      'interval_days': _field(data, 'intervalDays', 'interval_days', 0),
-      'repetition_count': _field(
-        data,
-        'repetitionCount',
-        'repetition_count',
-        0,
-      ),
-      'lapse_count': _field(data, 'lapseCount', 'lapse_count', 0),
-      'mastery_level': _field(data, 'masteryLevel', 'mastery_level', 0),
-      'correct_count': _field(data, 'correctCount', 'correct_count', 0),
-      'wrong_count': _field(data, 'wrongCount', 'wrong_count', 0),
-      'meaning_recognition_score': _field(
-        data,
-        'meaningRecognitionScore',
-        'meaning_recognition_score',
-        20,
-      ),
-      'meaning_recall_score': _field(
-        data,
-        'meaningRecallScore',
-        'meaning_recall_score',
-        10,
-      ),
-      'spelling_score': _field(data, 'spellingScore', 'spelling_score', 10),
-      'listening_score': _field(data, 'listeningScore', 'listening_score', 10),
-      'context_score': _field(data, 'contextScore', 'context_score', 10),
-      'confidence_score': _field(
-        data,
-        'confidenceScore',
-        'confidence_score',
-        10,
-      ),
-      'next_review_at':
-          _date(data['nextReviewAt'] ?? data['next_review_at']) ?? now,
-      'last_reviewed_at': _date(
-        data['lastReviewedAt'] ?? data['last_reviewed_at'],
-      ),
-      'created_at': existing?['created_at'] ?? _date(data['createdAt']) ?? now,
-      'updated_at': now,
-    };
-    (_customWords[uid] ??= {})[wordId] = row;
-    return _copy(row)!;
-  }
-
-  @override
-  Future<void> deleteCustomWord(String uid, String id) async {
-    _customWords[uid]?.remove(id);
-  }
-
-  @override
-  Future<List<Map<String, dynamic>>> userWords(
-    String uid, {
-    bool dueOnly = false,
-  }) async {
-    final rows = _collection(_userWords, uid);
-    return _filterReviewRows(rows, dueOnly: dueOnly, includeNew: false);
-  }
-
-  @override
-  Future<Map<String, dynamic>?> userWordById(String uid, String id) async {
-    return _copy(_userWords[uid]?[id]);
-  }
-
-  @override
-  Future<Map<String, dynamic>> upsertUserWord(
-    String uid,
-    Map<String, dynamic> data,
-  ) async {
-    return (await upsertUserWords(uid, [data])).first;
-  }
-
-  @override
-  Future<List<Map<String, dynamic>>> upsertUserWords(
-    String uid,
-    List<Map<String, dynamic>> words,
-  ) async {
-    final now = DateTime.now().toUtc();
-    final saved = <Map<String, dynamic>>[];
-    for (final data in words) {
-      final id = data['id'] as String;
-      final row = {
-        'id': id,
-        'uid': uid,
-        'word_id': data['wordId'] ?? data['word_id'],
-        'word_book_id': _field(data, 'wordBookId', 'word_book_id', ''),
-        'word': data['word'] ?? data['wordId'] ?? data['word_id'],
-        'meaning': data['meaning'] ?? '',
-        'example_sentence': _field(
-          data,
-          'exampleSentence',
-          'example_sentence',
-          '',
-        ),
-        'difficulty': data['difficulty'] ?? 'Medium',
-        'status': data['status'] ?? 'New',
-        'is_favorite': _field(data, 'isFavorite', 'is_favorite', false),
-        'is_in_new_word_book': _field(
-          data,
-          'isInNewWordBook',
-          'is_in_new_word_book',
-          false,
-        ),
-        'is_ignored': _field(
-          data,
-          'isIgnored',
-          'is_ignored',
-          data['status'] == 'Ignored',
-        ),
-        'ease_factor': _field(data, 'easeFactor', 'ease_factor', 2.5),
-        'interval_days': _field(data, 'intervalDays', 'interval_days', 0),
-        'repetition_count': _field(
-          data,
-          'repetitionCount',
-          'repetition_count',
-          0,
-        ),
-        'lapse_count': _field(data, 'lapseCount', 'lapse_count', 0),
-        'mastery_level': _field(data, 'masteryLevel', 'mastery_level', 0),
-        'correct_count': _field(data, 'correctCount', 'correct_count', 0),
-        'wrong_count': _field(data, 'wrongCount', 'wrong_count', 0),
-        'meaning_recognition_score': _field(
-          data,
-          'meaningRecognitionScore',
-          'meaning_recognition_score',
-          20,
-        ),
-        'meaning_recall_score': _field(
-          data,
-          'meaningRecallScore',
-          'meaning_recall_score',
-          10,
-        ),
-        'spelling_score': _field(data, 'spellingScore', 'spelling_score', 10),
-        'listening_score': _field(
-          data,
-          'listeningScore',
-          'listening_score',
-          10,
-        ),
-        'context_score': _field(data, 'contextScore', 'context_score', 10),
-        'confidence_score': _field(
-          data,
-          'confidenceScore',
-          'confidence_score',
-          10,
-        ),
-        'next_review_at':
-            _date(data['nextReviewAt'] ?? data['next_review_at']) ?? now,
-        'last_reviewed_at': _date(
-          data['lastReviewedAt'] ?? data['last_reviewed_at'],
-        ),
-        'created_at': _date(data['createdAt']) ?? now,
-        'updated_at': _date(data['updatedAt']) ?? now,
-      };
-      (_userWords[uid] ??= {})[id] = row;
-      saved.add(_copy(row)!);
-    }
-    return saved;
-  }
-
-  @override
-  Future<void> insertStudySession(String uid, Map<String, dynamic> data) async {
-    final id = data['id'] as String;
-    (_studySessions[uid] ??= {})[id] = {
-      'id': id,
-      'uid': uid,
-      'lesson_id': data['lessonId'],
-      'started_at': _date(data['startedAt']) ?? DateTime.now().toUtc(),
-      'ended_at': _date(data['endedAt']) ?? DateTime.now().toUtc(),
-      'total_questions': data['totalQuestions'] ?? 0,
-      'correct_answers': data['correctAnswers'] ?? 0,
-      'xp_earned': data['xpEarned'] ?? 0,
-      'mistake_word_ids': ((data['mistakeWordIds'] as List?) ?? const []).join(
-        ',',
-      ),
-      'answer_events': jsonEncode((data['answerEvents'] as List?) ?? const []),
-    };
-  }
-
-  @override
-  Future<Map<String, dynamic>?> studyPlanByUid(String uid) async {
-    return _copy(_studyPlans[uid]);
-  }
-
-  @override
-  Future<Map<String, dynamic>> upsertStudyPlan(
-    String uid,
-    Map<String, dynamic> data,
-  ) async {
-    final existing = _studyPlans[uid];
-    final now = DateTime.now().toUtc();
-    final row = {
-      'id': existing?['id']?.toString() ?? data['id']?.toString(),
-      'uid': uid,
-      'word_book_id': data['wordBookId'],
-      'daily_new_target': data['dailyNewTarget'],
-      'daily_review_limit': data['dailyReviewLimit'],
-      'start_date': data['startDate'],
-      'target_finish_date': data['targetFinishDate'],
-      'reminder_time': data['reminderTime'],
-      'status': data['status'],
-      'created_at': existing?['created_at'] ?? _date(data['createdAt']) ?? now,
-      'updated_at': _date(data['now']) ?? now,
-    };
-    _studyPlans[uid] = row;
-    return _copy(row)!;
-  }
-
-  @override
-  Future<void> resetCustomWordProgress(String uid, {DateTime? now}) async {
-    final resetAt = now ?? DateTime.now().toUtc();
-    final words = _customWords[uid]?.values;
-    if (words == null) return;
-    for (final word in words) {
-      word
-        ..['mastery_level'] = 0
-        ..['correct_count'] = 0
-        ..['wrong_count'] = 0
-        ..['next_review_at'] = resetAt
-        ..['updated_at'] = resetAt;
-    }
-  }
-
-  @override
-  Future<void> insertReviewEvent(String uid, Map<String, dynamic> data) async {
-    final id = data['id'] as String;
-    (_reviewEvents[uid] ??= {})[id] = {
-      'id': id,
-      'uid': uid,
-      'word_id': data['wordId'] ?? data['word_id'],
-      'is_correct': data['isCorrect'],
-      'answer_time_ms': data['answerTimeMs'] ?? 0,
-      'confidence': data['confidence'] ?? 3,
-      'wrong_option': data['wrongOption'] ?? data['wrong_option'],
-      'reviewed_at': _date(data['reviewedAt']) ?? DateTime.now().toUtc(),
-      'mastery_before': data['masteryBefore'] ?? 0,
-      'mastery_after': data['masteryAfter'] ?? 0,
-      'next_review_at':
-          _date(data['nextReviewAt'] ?? data['next_review_at']) ??
-          DateTime.now().toUtc(),
-    };
-  }
-
-  @override
-  Future<List<String>> completedLessonIds(String uid) async {
-    return _distinctSorted(
-      _collection(_studySessions, uid).map((row) => row['lesson_id']),
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT
+  (SELECT COUNT(*) FROM custom_words WHERE uid=@uid AND next_review_at <= NOW()) +
+  (SELECT COUNT(*) FROM user_words
+   WHERE uid=@uid
+     AND next_review_at <= NOW()
+     AND is_ignored = FALSE
+     AND status IN ('Review', 'Relearning', 'Mastered')) AS count
+'''),
+      parameters: {'uid': uid},
     );
+    if (rows.isEmpty) return 0;
+    final value = rows.first.toColumnMap()['count'];
+    if (value is int) return value;
+    return int.tryParse(value.toString()) ?? 0;
   }
-
-  @override
-  Future<List<String>> lessonIdsInRange(
-    String uid,
-    DateTime startUtc,
-    DateTime endUtc,
-  ) async {
-    return _distinctSorted(
-      _collection(_studySessions, uid)
-          .where((row) {
-            final endedAt = _date(row['ended_at']);
-            return endedAt != null &&
-                !endedAt.isBefore(startUtc) &&
-                endedAt.isBefore(endUtc);
-          })
-          .map((row) => row['lesson_id']),
-    );
-  }
-
-  @override
-  Future<List<String>> reviewWordIdsInRange(
-    String uid,
-    DateTime startUtc,
-    DateTime endUtc,
-  ) async {
-    return _distinctSorted(
-      _collection(_reviewEvents, uid)
-          .where((row) {
-            final reviewedAt = _date(row['reviewed_at']);
-            return reviewedAt != null &&
-                !reviewedAt.isBefore(startUtc) &&
-                reviewedAt.isBefore(endUtc);
-          })
-          .map((row) => row['word_id']),
-    );
-  }
-
-  @override
-  Future<List<String>> rewardIdsForDate(String uid, String localDate) async {
-    return [
-      for (final row in _collection(_rewardClaims, uid))
-        if (row['local_date'] == localDate) row['reward_id'].toString(),
-    ];
-  }
-
-  @override
-  Future<bool> claimReward({
-    required String uid,
-    required String rewardId,
-    required String localDate,
-    required int points,
-  }) async {
-    final user = _users[uid];
-    if (user == null) throw StateError('user not found');
-    final id = '$localDate:$rewardId';
-    final claims = _rewardClaims[uid] ??= {};
-    if (claims.containsKey(id)) return false;
-    claims[id] = {
-      'uid': uid,
-      'reward_id': rewardId,
-      'local_date': localDate,
-      'points': points,
-      'claimed_at': DateTime.now().toUtc(),
-    };
-    user['xp'] = _int(user['xp']) + points;
-    user['updated_at'] = DateTime.now().toUtc();
-    return true;
-  }
-
-  @override
-  Future<List<Map<String, dynamic>>> notifications(
-    String uid, {
-    bool unreadOnly = false,
-    String? type,
-  }) async {
-    final rows = _collection(_notifications, uid).where((row) {
-      if (unreadOnly && row['is_read'] == true) return false;
-      if (type != null && row['type'] != type) return false;
-      return true;
-    }).toList();
-    rows.sort((a, b) {
-      final createdA =
-          _date(a['created_at']) ?? DateTime.fromMillisecondsSinceEpoch(0);
-      final createdB =
-          _date(b['created_at']) ?? DateTime.fromMillisecondsSinceEpoch(0);
-      return createdB.compareTo(createdA);
-    });
-    return rows;
-  }
-
-  @override
-  Future<Map<String, dynamic>?> notificationById(String uid, String id) async {
-    return _copy(_notifications[uid]?[id]);
-  }
-
-  @override
-  Future<void> upsertNotification(String uid, Map<String, dynamic> data) {
-    return upsertNotifications(uid, [data]);
-  }
-
-  @override
-  Future<void> upsertNotifications(
-    String uid,
-    List<Map<String, dynamic>> notifications,
-  ) async {
-    for (final data in notifications) {
-      final sourceKey = data['sourceKey']?.toString();
-      final existing = sourceKey == null
-          ? null
-          : _collection(_notifications, uid).where((row) {
-              return row['source_key'] == sourceKey;
-            }).firstOrNull;
-      final id = existing?['id']?.toString() ?? data['id']?.toString();
-      if (id == null || id.isEmpty) continue;
-      (_notifications[uid] ??= {})[id] = {
-        ...?existing,
-        'id': id,
-        'uid': uid,
-        'type': data['type'],
-        'title': data['title'],
-        'body': data['body'],
-        'target_route': data['targetRoute'] ?? '/home',
-        'is_read': existing?['is_read'] ?? data['isRead'] ?? false,
-        'source_key': sourceKey,
-        'read_at': existing?['read_at'] ?? _date(data['readAt']),
-        'created_at':
-            existing?['created_at'] ??
-            _date(data['createdAt']) ??
-            DateTime.now().toUtc(),
-      };
-    }
-  }
-
-  @override
-  Future<Map<String, dynamic>?> markNotificationRead(
-    String uid,
-    String id,
-  ) async {
-    final row = _notifications[uid]?[id];
-    if (row == null) return null;
-    row['is_read'] = true;
-    row['read_at'] ??= DateTime.now().toUtc();
-    return _copy(row);
-  }
-
-  @override
-  Future<int> markAllNotificationsRead(String uid) async {
-    var count = 0;
-    final rows = _notifications[uid]?.values;
-    if (rows == null) return 0;
-    for (final row in rows) {
-      if (row['is_read'] != true) {
-        row['is_read'] = true;
-        row['read_at'] ??= DateTime.now().toUtc();
-        count++;
-      }
-    }
-    return count;
-  }
-
-  @override
-  Future<bool> hasStudySessionInRange(
-    String uid,
-    DateTime startUtc,
-    DateTime endUtc,
-  ) async {
-    return (await lessonIdsInRange(uid, startUtc, endUtc)).isNotEmpty;
-  }
-
-  @override
-  Future<int> dueReviewCount(String uid) async {
-    return (await customWords(uid, dueOnly: true)).length +
-        (await userWords(uid, dueOnly: true)).length;
-  }
-
-  List<Map<String, dynamic>> _collection(
-    Map<String, Map<String, Map<String, dynamic>>> store,
-    String uid,
-  ) {
-    return [
-      for (final row in store[uid]?.values ?? const <Map<String, dynamic>>[])
-        _copy(row)!,
-    ];
-  }
-
-  List<Map<String, dynamic>> _filterReviewRows(
-    List<Map<String, dynamic>> rows, {
-    required bool dueOnly,
-    required bool includeNew,
-  }) {
-    final now = DateTime.now().toUtc();
-    final filtered = dueOnly
-        ? rows.where((row) {
-            final dueAt = _date(row['next_review_at']);
-            if (dueAt == null || dueAt.isAfter(now)) return false;
-            if (includeNew) return true;
-            final status = row['status']?.toString();
-            return row['is_ignored'] != true &&
-                status != 'New' &&
-                status != 'Previewed' &&
-                status != 'Ignored';
-          }).toList()
-        : rows;
-    filtered.sort((a, b) {
-      final updatedA =
-          _date(a['updated_at']) ?? DateTime.fromMillisecondsSinceEpoch(0);
-      final updatedB =
-          _date(b['updated_at']) ?? DateTime.fromMillisecondsSinceEpoch(0);
-      return updatedB.compareTo(updatedA);
-    });
-    return filtered;
-  }
-}
-
-Map<String, fs.Value> _fields(Map<String, dynamic> data) {
-  return data.map((key, value) => MapEntry(key, _value(value)));
-}
-
-fs.Value _value(Object? value) {
-  if (value == null) return fs.Value(nullValue: 'NULL_VALUE');
-  if (value is bool) return fs.Value(booleanValue: value);
-  if (value is int) return fs.Value(integerValue: value.toString());
-  if (value is double) return fs.Value(doubleValue: value);
-  if (value is DateTime) {
-    return fs.Value(timestampValue: value.toUtc().toIso8601String());
-  }
-  if (value is List) {
-    return fs.Value(
-      arrayValue: fs.ArrayValue(
-        values: [for (final item in value) _value(item)],
-      ),
-    );
-  }
-  if (value is Map) {
-    return fs.Value(
-      mapValue: fs.MapValue(fields: _fields(Map<String, dynamic>.from(value))),
-    );
-  }
-  return fs.Value(stringValue: value.toString());
-}
-
-Map<String, dynamic> _rowFromDocument(fs.Document document) {
-  final row = <String, dynamic>{};
-  for (final entry
-      in document.fields?.entries ?? const <MapEntry<String, fs.Value>>[]) {
-    row[entry.key] = _decodeValue(entry.value);
-  }
-  row.putIfAbsent('id', () => document.name?.split('/').last);
-  return row;
-}
-
-Object? _decodeValue(fs.Value value) {
-  if (value.nullValue != null) return null;
-  if (value.booleanValue != null) return value.booleanValue;
-  if (value.integerValue != null) return int.tryParse(value.integerValue!);
-  if (value.doubleValue != null) return value.doubleValue;
-  if (value.timestampValue != null) {
-    return DateTime.tryParse(value.timestampValue!)?.toUtc();
-  }
-  if (value.arrayValue != null) {
-    return [
-      for (final item in value.arrayValue?.values ?? const <fs.Value>[])
-        _decodeValue(item),
-    ];
-  }
-  if (value.mapValue != null) {
-    return value.mapValue?.fields?.map(
-      (key, nested) => MapEntry(key, _decodeValue(nested)),
-    );
-  }
-  return value.stringValue ?? value.referenceValue ?? value.bytesValue;
 }
 
 DateTime? _date(Object? value) {
   if (value == null) return null;
   if (value is DateTime) return value.toUtc();
   return DateTime.tryParse(value.toString())?.toUtc();
-}
-
-int _int(Object? value) {
-  if (value is int) return value;
-  if (value is double) return value.toInt();
-  return int.tryParse(value?.toString() ?? '') ?? 0;
-}
-
-Object? _field(
-  Map<String, dynamic> data,
-  String camelKey,
-  String snakeKey,
-  Object? fallback,
-) {
-  return data[camelKey] ?? data[snakeKey] ?? fallback;
-}
-
-bool _isWritePreconditionError(Object error) {
-  final message = error.toString().toLowerCase();
-  return message.contains('already') ||
-      message.contains('exists') ||
-      message.contains('precondition') ||
-      message.contains('409');
-}
-
-String _encodedId(String value) {
-  return base64Url.encode(utf8.encode(value)).replaceAll('=', '');
-}
-
-List<String> _distinctSorted(Iterable<Object?> values) {
-  return values
-      .where((value) => value != null && value.toString().isNotEmpty)
-      .map((value) => value.toString())
-      .toSet()
-      .toList()
-    ..sort();
-}
-
-Map<String, dynamic>? _copy(Map<String, dynamic>? row) {
-  return row == null ? null : Map<String, dynamic>.from(row);
 }

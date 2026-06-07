@@ -9,8 +9,8 @@ environment:
 dependencies:
   crypto: ^3.0.7
   dart_jsonwebtoken: ^3.4.1
-  googleapis: ^14.0.0
-  googleapis_auth: ^1.6.0
+  http: ^1.2.0
+  postgres: ^3.5.11
   shelf: ^1.4.2
   shelf_router: ^1.1.4
   uuid: ^4.5.2

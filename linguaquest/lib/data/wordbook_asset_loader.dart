@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import 'models/lesson.dart';
@@ -7,30 +8,38 @@ import 'models/lesson.dart';
 class WordBookAssetLoader {
   WordBookAssetLoader({AssetBundle? bundle}) : _bundle = bundle ?? rootBundle;
 
-  static const assetPath = 'lib/assets/data/wordbooks_p0.json';
-  static List<WordBook>? _sharedCache;
+  static const _bookIds = [
+    'beginner',
+    'ielts',
+    'toefl',
+    'gre',
+  ];
 
   final AssetBundle _bundle;
-  List<WordBook>? _cache;
+  Future<List<WordBook>>? _loadFuture;
 
   Future<List<WordBook>> loadWordBooks() async {
-    final cached = _cache ?? _sharedCache;
-    if (cached != null) return cached;
-    final raw = await _loadAssetString();
-    final decoded = jsonDecode(raw);
-    if (decoded is! List) {
-      throw const FormatException('wordbooks_p0.json must be a list');
-    }
-    final books = decoded.whereType<Map>().map((item) {
-      return WordBook.fromJson(Map<String, dynamic>.from(item));
-    }).toList();
-    _sharedCache = List.unmodifiable(books);
-    _cache = _sharedCache;
-    return _cache!;
+    _loadFuture ??= () async {
+      final books = <WordBook>[];
+      for (final bookId in _bookIds) {
+        try {
+          final raw = await _loadAssetString(bookId);
+          final decoded = jsonDecode(raw);
+          if (decoded is Map<String, dynamic>) {
+            books.add(WordBook.fromJson(decoded));
+          }
+        } catch (e, stackTrace) {
+          debugPrint('Failed to load wordbook $bookId: $e\n$stackTrace');
+        }
+      }
+      return List<WordBook>.unmodifiable(books);
+    }();
+
+    return _loadFuture!;
   }
 
-  Future<String> _loadAssetString() async {
-    final data = await _bundle.load(assetPath);
+  Future<String> _loadAssetString(String bookId) async {
+    final data = await _bundle.load('lib/assets/data/wordbook_$bookId.json');
     return utf8.decode(Uint8List.sublistView(data));
   }
 }

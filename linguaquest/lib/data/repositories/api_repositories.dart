@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/app_notification.dart';
@@ -33,19 +32,11 @@ class ApiAuthRepository implements AuthRepository {
     final token = prefs.getString(_tokenKey);
     if (token == null) return null;
     _client.setToken(token);
-    try {
-      final response = await _client.dio.get<Map<String, dynamic>>('/me');
-      final user = response.data?['user'];
-      if (user is! Map) return null;
-      _profile = UserProfile.fromJson(Map<String, dynamic>.from(user));
-      return _profile;
-    } on DioException catch (error) {
-      if (error.response?.statusCode == 401) {
-        await logout();
-        return null;
-      }
-      rethrow;
-    }
+    final response = await _client.dio.get<Map<String, dynamic>>('/me');
+    _profile = UserProfile.fromJson(
+      response.data!['user'] as Map<String, dynamic>,
+    );
+    return _profile;
   }
 
   @override

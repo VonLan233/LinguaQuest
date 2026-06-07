@@ -189,6 +189,7 @@ class DiscoverScreen extends ConsumerWidget {
         : ref.read(appControllerProvider).errorMessage ?? '暂时无法领取这个任务';
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
+        duration: const Duration(seconds: 2),
         content: Text(message),
         action: succeeded
             ? SnackBarAction(
