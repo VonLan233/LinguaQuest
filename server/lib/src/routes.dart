@@ -20,6 +20,8 @@ Router buildRouter(AppConfig config, AppDatabase database) {
     return jsonResponse({'status': 'ok'});
   });
 
+  final httpClient = HttpClient();
+
   router.get('/tts', (Request request) async {
     final word = request.url.queryParameters['word']?.trim() ?? '';
     final type = request.url.queryParameters['type']?.trim() ?? '1';
@@ -35,20 +37,18 @@ Router buildRouter(AppConfig config, AppDatabase database) {
       final uri = Uri.parse(
         'https://dict.youdao.com/dictvoice?audio=${Uri.encodeComponent(word)}&type=$type',
       );
-      final client = HttpClient();
-      try {
-        final response = await client.getUrl(uri).then((req) => req.close());
-        final bytes = await response.fold<List<int>>(
-          <int>[],
-          (prev, chunk) => prev..addAll(chunk),
-        );
-        return Response.ok(bytes, headers: {
-          'Content-Type': 'audio/mpeg',
-          'Cache-Control': 'public, max-age=86400',
-        });
-      } finally {
-        client.close();
+      final response = await httpClient.getUrl(uri).then((req) => req.close());
+      if (response.statusCode != HttpStatus.ok) {
+        return jsonResponse({'error': 'tts unavailable'}, status: 502);
       }
+      final bytes = await response.fold<List<int>>(
+        <int>[],
+        (prev, chunk) => prev..addAll(chunk),
+      );
+      return Response.ok(bytes, headers: {
+        'Content-Type': 'audio/mpeg',
+        'Cache-Control': 'public, max-age=86400',
+      });
     } catch (_) {
       return jsonResponse({'error': 'tts unavailable'}, status: 502);
     }
