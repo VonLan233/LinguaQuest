@@ -446,6 +446,8 @@ class _DailyTaskPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final hasReview = dueCount > 0;
+    final totalTaskCount = dailyGoal + dueCount;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Column(
@@ -465,7 +467,7 @@ class _DailyTaskPanel extends StatelessWidget {
                 child: Text(
                   isPaused
                       ? '当前词书 $currentSection · 计划已暂停'
-                      : '当前词书 $currentSection · 新学和复习分开完成',
+                      : '当前词书 $currentSection · 新学 $dailyGoal 词${hasReview ? " + 复习 $dueCount 词" : ""}',
                   style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                 ),
               ),
@@ -473,25 +475,26 @@ class _DailyTaskPanel extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 14),
-          Row(
-            children: [
-              Expanded(
-                child: FilledButton.icon(
-                  onPressed: canStartNew ? onNewStudy : null,
-                  icon: const Icon(Icons.add_task_rounded),
-                  label: Text('新学 $dailyGoal'),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: FilledButton.tonalIcon(
-                  onPressed: isPaused ? null : onReview,
-                  icon: const Icon(Icons.replay_rounded),
-                  label: Text('复习 $dueCount'),
-                ),
-              ),
-            ],
-          ),
+          if (isPaused)
+            OutlinedButton.icon(
+              onPressed: onOpenPlan,
+              icon: const Icon(Icons.play_circle_outline),
+              label: const Text('恢复计划以继续学习'),
+            )
+          else
+            FilledButton.icon(
+              onPressed: canStartNew ? onNewStudy : (hasReview ? onReview : null),
+              icon: const Icon(Icons.play_arrow_rounded),
+              label: Text('开始今日学习 ($totalTaskCount 词)'),
+            ),
+          if (!isPaused && hasReview) ...[
+            const SizedBox(height: 8),
+            OutlinedButton.icon(
+              onPressed: onReview,
+              icon: const Icon(Icons.replay_rounded),
+              label: Text('仅复习 ($dueCount 词)'),
+            ),
+          ],
         ],
       ),
     );
