@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
+import 'dart:typed_data';
 
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
@@ -49,7 +50,20 @@ Router buildRouter(AppConfig config, AppDatabase database) {
         await response.drain();
         return jsonResponse({'error': 'tts unavailable'}, status: 502);
       }
-      return Response.ok(response, headers: {
+      final bytesBuilder = BytesBuilder();
+      var totalBytes = 0;
+      const maxBytes = 5 * 1024 * 1024; // 5 MB
+      await for (final chunk
+          in response.timeout(const Duration(seconds: 5))) {
+        totalBytes += chunk.length;
+        if (totalBytes > maxBytes) {
+          await response.drain();
+          return jsonResponse({'error': 'tts response too large'}, status: 502);
+        }
+        bytesBuilder.add(chunk);
+      }
+      final bytes = bytesBuilder.takeBytes();
+      return Response.ok(bytes, headers: {
         'Content-Type': 'audio/mpeg',
         'Cache-Control': 'public, max-age=86400',
       });
