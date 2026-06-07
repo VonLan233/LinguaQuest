@@ -12,9 +12,6 @@ class WordBookAssetLoader {
     'ielts',
     'toefl',
     'gre',
-    'cet4',
-    'cet6',
-    'kaoyan',
   ];
 
   static List<WordBook>? _sharedCache;
