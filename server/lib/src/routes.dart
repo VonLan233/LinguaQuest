@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
-import 'dart:typed_data';
 
+import 'package:http/http.dart' as http;
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
@@ -21,9 +21,7 @@ Router buildRouter(AppConfig config, AppDatabase database) {
     return jsonResponse({'status': 'ok'});
   });
 
-  final httpClient = HttpClient()
-    ..connectionTimeout = const Duration(seconds: 5)
-    ..maxConnectionsPerHost = 100;
+  final httpClient = http.Client();
 
   router.get('/tts', (Request request) async {
     final word = request.url.queryParameters['word']?.trim() ?? '';
@@ -38,38 +36,26 @@ Router buildRouter(AppConfig config, AppDatabase database) {
         'error': 'type must be 1 (UK) or 2 (US)',
       }, status: 400);
     }
-    HttpClientRequest? req;
     try {
       final uri = Uri.https('dict.youdao.com', '/dictvoice', {
         'audio': word,
         'type': type,
       });
-      req = await httpClient.getUrl(uri);
-      final response = await req.close().timeout(const Duration(seconds: 5));
-      if (response.statusCode != HttpStatus.ok) {
-        await response.drain();
+      final response = await httpClient.get(uri).timeout(
+        const Duration(seconds: 5),
+      );
+      if (response.statusCode != 200) {
         return jsonResponse({'error': 'tts unavailable'}, status: 502);
       }
-      final bytesBuilder = BytesBuilder();
-      var totalBytes = 0;
-      const maxBytes = 5 * 1024 * 1024; // 5 MB
-      await for (final chunk
-          in response.timeout(const Duration(seconds: 5))) {
-        totalBytes += chunk.length;
-        if (totalBytes > maxBytes) {
-          return jsonResponse({'error': 'tts response too large'}, status: 502);
-        }
-        bytesBuilder.add(chunk);
+      final bytes = response.bodyBytes;
+      if (bytes.length > 5 * 1024 * 1024) {
+        return jsonResponse({'error': 'tts response too large'}, status: 502);
       }
-      final bytes = bytesBuilder.takeBytes();
       return Response.ok(bytes, headers: {
         'Content-Type': 'audio/mpeg',
         'Cache-Control': 'public, max-age=86400',
       });
     } catch (_) {
-      try {
-        req?.abort();
-      } catch (_) {}
       return jsonResponse({'error': 'tts unavailable'}, status: 502);
     }
   });
