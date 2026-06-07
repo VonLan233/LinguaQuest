@@ -125,16 +125,16 @@ class _PronunciationControlsState extends State<PronunciationControls> {
     if (hasAudioUrl) {
       try {
         await _player.stop();
-        if (!mounted) return;
+        if (!mounted || widget.word.trim() != word) return;
         await _player.play(UrlSource(audioUrl));
-        if (!mounted) return;
+        if (!mounted || widget.word.trim() != word) return;
         setState(() {
           _loadingAccent = null;
           _failedAccent = null;
         });
         _showMessage('${accent.label}发音：$word');
       } catch (_) {
-        if (!mounted) return;
+        if (!mounted || widget.word.trim() != word) return;
         setState(() {
           _loadingAccent = null;
           _failedAccent = accent;
@@ -142,7 +142,7 @@ class _PronunciationControlsState extends State<PronunciationControls> {
         _showMessage('${accent.label}发音失败，请重试');
       }
     } else {
-      if (!mounted) return;
+      if (!mounted || widget.word.trim() != word) return;
       setState(() {
         _loadingAccent = null;
         _failedAccent = hasWord ? null : accent;
