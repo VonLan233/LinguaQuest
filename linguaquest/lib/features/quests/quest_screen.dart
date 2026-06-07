@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_theme.dart';
-import '../../core/widgets/quest_card.dart';
+import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 
 class QuestScreen extends StatelessWidget {
@@ -13,65 +13,60 @@ class QuestScreen extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
       children: [
-        const GradientHeroCard(
-          title: 'Quest hub',
-          subtitle:
-              'Daily missions, badges, leaderboard, class mode, and AI feedback live here.',
-          icon: Icons.emoji_events_outlined,
-          badge: '20 XP available today',
-        ),
-        const SizedBox(height: 20),
         const SectionHeader(
-          title: 'Quest hub',
-          subtitle:
-              'Daily quests and social layers are wired as product-ready shells for phase two.',
+          title: '任务中心',
+          subtitle: '完成学习动作后领取积分，也可以查看排名、分析和班级学习。',
+        ),
+        const SizedBox(height: 12),
+        const PillLabel(
+          label: '任务 XP',
+          icon: Icons.bolt,
+          color: AppTheme.mango,
         ),
         const SizedBox(height: 16),
-        const _QuestCard(
+        const _QuestRow(
           icon: Icons.flag_outlined,
-          title: 'Daily quest',
-          body: 'Complete one lesson and review five due words.',
+          title: '每日任务',
+          body: '完成一节课程，并复习 5 个到期词。',
           value: '20 XP',
         ),
         const SizedBox(height: 10),
-        const _QuestCard(
+        const _QuestRow(
           icon: Icons.workspace_premium_outlined,
-          title: 'Badges',
-          body: '7-day streak, 100 words learned, first perfect lesson.',
-          value: '3 active',
+          title: '成就徽章',
+          body: '连续 7 天、已学 100 词、首次满分课程等成就。',
+          value: '3 个',
         ),
         const SizedBox(height: 10),
-        _QuestCard(
+        _QuestRow(
           icon: Icons.leaderboard_outlined,
-          title: 'Leaderboard',
-          body: 'Weekly XP ranking across friends and future classes.',
-          value: 'Mock',
+          title: '排行榜',
+          body: '好友和未来班级的每周 XP 排名。',
+          value: '每周',
           route: '/leaderboard',
         ),
         const SizedBox(height: 10),
-        _QuestCard(
+        _QuestRow(
           icon: Icons.insights_outlined,
-          title: 'Progress analytics',
-          body: 'Accuracy, vocabulary growth, and review completion trends.',
-          value: 'Preview',
+          title: '学习分析',
+          body: '正确率、词汇增长和复习完成趋势。',
+          value: '趋势',
           route: '/progress',
         ),
         const SizedBox(height: 10),
-        _QuestCard(
+        _QuestRow(
           icon: Icons.groups_outlined,
-          title: 'Class mode',
-          body:
-              'Join with class code; teacher progress is a server-backed phase three feature.',
-          value: 'Shell',
+          title: '班级模式',
+          body: '通过班级码加入，查看教师进度看板和小组学习情况。',
+          value: '班级码',
           route: '/class-mode',
         ),
         const SizedBox(height: 10),
-        _QuestCard(
+        _QuestRow(
           icon: Icons.smart_toy_outlined,
-          title: 'AI tutor',
-          body:
-              'Mock feedback explains mistakes and suggests example sentences.',
-          value: 'Mock',
+          title: 'AI 助教',
+          body: '解释错因，并给出例句建议。',
+          value: '可试用',
           route: '/ai-tutor',
         ),
       ],
@@ -79,8 +74,8 @@ class QuestScreen extends StatelessWidget {
   }
 }
 
-class _QuestCard extends StatelessWidget {
-  const _QuestCard({
+class _QuestRow extends StatelessWidget {
+  const _QuestRow({
     required this.icon,
     required this.title,
     required this.body,
@@ -96,20 +91,13 @@ class _QuestCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return QuestCard(
-      onTap: route == null ? null : () => context.push(route!),
-      padding: const EdgeInsets.all(16),
+    final theme = Theme.of(context);
+    final content = Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: AppTheme.coral.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Icon(icon, color: Theme.of(context).colorScheme.secondary),
-          ),
+          IconCueBadge(icon: icon, color: theme.colorScheme.secondary),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
@@ -117,18 +105,31 @@ class _QuestCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w800,
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(body),
+                Text(
+                  body,
+                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                ),
               ],
             ),
           ),
           const SizedBox(width: 10),
           PillLabel(label: value, color: AppTheme.coral),
         ],
+      ),
+    );
+
+    if (route == null) return content;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: () => context.push(route!),
+        child: content,
       ),
     );
   }

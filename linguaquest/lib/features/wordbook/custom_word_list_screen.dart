@@ -4,9 +4,11 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/fallback_back_button.dart';
-import '../../core/widgets/quest_card.dart';
+import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/section_header.dart';
 import '../../data/models/custom_word.dart';
 
 class CustomWordListScreen extends ConsumerStatefulWidget {
@@ -28,31 +30,32 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/wordbook'),
-        title: const Text('Custom words'),
+        title: const Text('生词本'),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/custom-words/new'),
         icon: const Icon(Icons.add),
-        label: const Text('Add'),
+        label: const Text('添加'),
       ),
       body: SafeArea(
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 10, 20, 4),
-              child: GradientHeroCard(
-                title: 'My word cards',
-                subtitle:
-                    'Create, search, filter, edit, and review your personal vocabulary deck.',
-                icon: Icons.add_card_outlined,
-                badge: '${state.customWords.length} custom cards',
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 8),
+              child: SectionHeader(
+                title: '我的词卡',
+                subtitle: '创建、搜索、筛选、编辑并复习你的个人词库。',
+                trailing: PillLabel(
+                  label: '${state.customWords.length} 张',
+                  icon: Icons.add_card_outlined,
+                ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
               child: TextField(
                 decoration: const InputDecoration(
-                  labelText: 'Search words, meanings, or tags',
+                  labelText: '搜索单词、释义或标签',
                   prefixIcon: Icon(Icons.search),
                 ),
                 onChanged: (value) => setState(() => _query = value),
@@ -73,10 +76,13 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
                   ])
                     Padding(
                       padding: const EdgeInsets.only(right: 8),
-                      child: ChoiceChip(
-                        label: Text(filter),
+                      child: FilterPillButton(
+                        label: displayDifficultyFilter(filter),
                         selected: _filter == filter,
-                        onSelected: (_) => setState(() => _filter = filter),
+                        onSelected: () => setState(() => _filter = filter),
+                        color: filter == 'Weak'
+                            ? AppTheme.coral
+                            : AppTheme.teal,
                       ),
                     ),
                 ],
@@ -86,12 +92,12 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
               child: words.isEmpty
                   ? EmptyState(
                       icon: Icons.style_outlined,
-                      title: 'No matching words',
-                      message: 'Add a custom card or adjust search filters.',
+                      title: '没有匹配的词卡',
+                      message: '可以添加一张个人词卡，或调整搜索条件。',
                       action: FilledButton.icon(
                         onPressed: () => context.push('/custom-words/new'),
                         icon: const Icon(Icons.add),
-                        label: const Text('Add word'),
+                        label: const Text('添加单词'),
                       ),
                     )
                   : ListView.separated(
@@ -117,7 +123,8 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
           query.isEmpty ||
           word.word.toLowerCase().contains(query) ||
           word.meaning.toLowerCase().contains(query) ||
-          word.tag.toLowerCase().contains(query);
+          word.tag.toLowerCase().contains(query) ||
+          displayCustomTag(word.tag).toLowerCase().contains(query);
       final matchesFilter =
           _filter == 'All' ||
           word.difficulty == _filter ||
@@ -130,19 +137,17 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Delete "${word.word}"?'),
-        content: const Text(
-          'This removes the custom card and its review schedule.',
-        ),
+        title: Text('删除“${word.word}”？'),
+        content: const Text('这会同时删除这张个人词卡和它的复习计划。'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: const Text('取消'),
           ),
           FilledButton.icon(
             onPressed: () => Navigator.pop(context, true),
             icon: const Icon(Icons.delete_outline),
-            label: const Text('Delete'),
+            label: const Text('删除'),
           ),
         ],
       ),
@@ -154,14 +159,14 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
     if (!mounted) return;
     if (!succeeded) {
       final message = ref.read(appControllerProvider).errorMessage;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message ?? 'Could not delete ${word.word}')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message ?? '暂时无法删除 ${word.word}')));
       return;
     }
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text('Deleted ${word.word}')));
+    ).showSnackBar(SnackBar(content: Text('已删除 ${word.word}')));
   }
 }
 
@@ -174,48 +179,65 @@ class _CustomWordTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mastery = word.masteryLevel / 5;
-    return QuestCard(
-      padding: const EdgeInsets.all(14),
-      onTap: () => context.push('/custom-words/${word.id}'),
-      child: Row(
-        children: [
-          ImageCueBadge(cue: wordInitialCue(word.word), size: 58),
-          const SizedBox(width: 13),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+    final theme = Theme.of(context);
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(12),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () => context.push('/custom-words/${word.id}'),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          child: Row(
+            children: [
+              ImageCueBadge(cue: wordInitialCue(word.word), size: 58),
+              const SizedBox(width: 13),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Text(
-                        word.word,
-                        style: Theme.of(context).textTheme.titleMedium,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            word.word,
+                            style: theme.textTheme.titleMedium,
+                          ),
+                        ),
+                        PillLabel(
+                          label: displayDifficulty(word.difficulty),
+                          color: AppTheme.coral,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      '${word.meaning} · ${displayCustomTag(word.tag)}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: theme.colorScheme.onSurface),
+                    ),
+                    const SizedBox(height: 9),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(999),
+                      child: LinearProgressIndicator(
+                        value: mastery,
+                        minHeight: 8,
+                        backgroundColor: AppTheme.progressTrack(context),
                       ),
                     ),
-                    PillLabel(label: word.difficulty, color: AppTheme.coral),
                   ],
                 ),
-                const SizedBox(height: 3),
-                Text('${word.meaning} · ${word.tag}'),
-                const SizedBox(height: 9),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(999),
-                  child: LinearProgressIndicator(
-                    value: mastery,
-                    minHeight: 8,
-                    backgroundColor: AppTheme.progressTrack(context),
-                  ),
-                ),
-              ],
-            ),
+              ),
+              QuestIconButton(
+                tooltip: '删除',
+                icon: Icons.delete_outline,
+                color: AppTheme.coral,
+                onPressed: onDelete,
+              ),
+            ],
           ),
-          IconButton(
-            tooltip: 'Delete',
-            icon: const Icon(Icons.delete_outline),
-            onPressed: onDelete,
-          ),
-        ],
+        ),
       ),
     );
   }

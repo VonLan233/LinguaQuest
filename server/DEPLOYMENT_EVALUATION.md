@@ -1,38 +1,38 @@
 # LinguaQuest Backend Deployment Evaluation
 
-## Recommended Path: Dockerized Dart Server + PostgreSQL
+## Recommended Path: Dockerized Dart Server + Firebase Firestore
 
-Use the included Dart `shelf` server, PostgreSQL, and Dockerfile. This satisfies the server deployment requirement, keeps the backend in Dart, and gives a clear upgrade path for auth, custom word CRUD, study sessions, review events, leaderboards, and classes.
+Use the included Dart `shelf` server with Firebase Firestore as the managed database. This keeps the current REST API stable for the Flutter app while removing PostgreSQL hosting and backup work from the deployment.
 
 Best fit:
 
-- VPS with Docker Compose for coursework demos and predictable cost.
+- VPS with Docker Compose for coursework demos and predictable API hosting.
 - Render, Fly.io, or similar container hosting for managed deployment.
-- Managed PostgreSQL when moving beyond a single demo server.
+- Firebase Firestore for managed persistence, security rules, backups, and future mobile-native integration.
 
 ## Option Comparison
 
 | Option | Pros | Cons | Recommendation |
 | --- | --- | --- | --- |
-| VPS + Docker Compose | Full control, lowest conceptual gap, easy to show deployment artifacts | You own backups, TLS, updates, and monitoring | Use for first server deployment |
-| Render/Fly container + managed PostgreSQL | Less ops work, direct Git-based deploys | Free/low tiers may sleep or throttle | Good second step |
-| Firebase Auth/Firestore | Fastest mobile integration, minimal server ops | Not a self-hosted/server backend, less aligned with this implementation request | Keep as future alternative |
+| VPS + Docker Compose + Firestore | Keeps existing Dart API, minimal server ops, no database container | Requires Firebase service account management | Use for first Firebase-backed deployment |
+| Render/Fly container + Firestore | Less VPS maintenance, direct Git-based deploys | Free/low tiers may sleep or throttle | Good second step |
+| Flutter direct to Firebase | Fast mobile integration, fewer API hops | Larger client refactor and weaker fit for protected AI proxy endpoints | Defer until the app is ready for Firebase Auth |
 
 ## Production Checklist
 
 - Replace `JWT_SECRET`.
-- Copy `.env.example` to `.env` and set a strong `POSTGRES_PASSWORD`.
+- Set `FIREBASE_PROJECT_ID`.
+- Set `FIREBASE_SERVICE_ACCOUNT_JSON_BASE64` from a service account JSON file.
+- Do not commit Firebase credentials.
 - Put API behind HTTPS.
-- Move PostgreSQL to a persistent managed database or backed-up volume.
 - Add structured logs and request IDs.
 - Add password reset and email verification.
-- Add profile update endpoint before enabling full remote goal sync.
 - Restrict CORS origins for web builds.
 
 ## Current Deployment Artifacts
 
 - `Dockerfile`: compiles the Dart server into a deployable executable.
-- `docker-compose.yml`: local development stack.
-- `docker-compose.prod.yml`: VPS/container production stack.
-- `.env.example`: required production environment variables.
+- `docker-compose.yml`: local API container.
+- `docker-compose.prod.yml`: VPS/container production API stack.
+- `.env`: required production environment variables, kept out of Git.
 - `deploy/vps_deploy.sh`: repeatable build/start script for a Linux host with Docker Compose.

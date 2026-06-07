@@ -1,16 +1,24 @@
+import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/app_notification.dart';
 import '../models/custom_word.dart';
 import '../models/lesson.dart';
 import '../models/review_event.dart';
 import '../models/study_session.dart';
+import '../models/study_plan.dart';
+import '../models/user_word.dart';
 import '../models/user_profile.dart';
+import '../lesson_factory.dart';
 import '../remote/api_client.dart';
-import '../seed/seed_lessons.dart';
+import '../wordbook_asset_loader.dart';
 import 'auth_repository.dart';
 import 'custom_word_repository.dart';
 import 'learning_repository.dart';
+import 'notification_repository.dart';
 import 'review_repository.dart';
+import 'study_plan_repository.dart';
+import 'user_word_repository.dart';
 
 class ApiAuthRepository implements AuthRepository {
   ApiAuthRepository(this._client);
@@ -25,11 +33,19 @@ class ApiAuthRepository implements AuthRepository {
     final token = prefs.getString(_tokenKey);
     if (token == null) return null;
     _client.setToken(token);
-    final response = await _client.dio.get<Map<String, dynamic>>('/me');
-    _profile = UserProfile.fromJson(
-      response.data!['user'] as Map<String, dynamic>,
-    );
-    return _profile;
+    try {
+      final response = await _client.dio.get<Map<String, dynamic>>('/me');
+      final user = response.data?['user'];
+      if (user is! Map) return null;
+      _profile = UserProfile.fromJson(Map<String, dynamic>.from(user));
+      return _profile;
+    } on DioException catch (error) {
+      if (error.response?.statusCode == 401) {
+        await logout();
+        return null;
+      }
+      rethrow;
+    }
   }
 
   @override
@@ -134,16 +150,164 @@ class ApiCustomWordRepository implements CustomWordRepository {
 }
 
 class ApiLearningRepository implements LearningRepository {
-  ApiLearningRepository(this._client);
+  ApiLearningRepository(this._client, {WordBookAssetLoader? fallbackLoader})
+    : _fallbackLoader = fallbackLoader ?? WordBookAssetLoader();
 
   final ApiClient _client;
+  final WordBookAssetLoader _fallbackLoader;
+  List<WordBook>? _cache;
 
   @override
-  Future<List<Lesson>> listLessons() async => seedLessons();
+  Future<List<WordBook>> listWordBooks() async {
+    final cached = _cache;
+    if (cached != null) return cached;
+    try {
+      final response = await _client.dio.get<List<dynamic>>('/wordbooks');
+      final books = (response.data ?? const <dynamic>[]).whereType<Map>().map((
+        item,
+      ) {
+        return WordBook.fromJson(Map<String, dynamic>.from(item));
+      }).toList();
+      _cache = List.unmodifiable(books);
+      return _cache!;
+    } catch (_) {
+      return _fallbackLoader.loadWordBooks();
+    }
+  }
+
+  @override
+  Future<List<Lesson>> listLessons() async {
+    final books = await listWordBooks();
+    if (books.isEmpty) return const [];
+    return listLessonsForWordBook(books.first.id);
+  }
+
+  @override
+  Future<List<Lesson>> listLessonsForWordBook(String wordBookId) async {
+    final books = await listWordBooks();
+    if (books.isEmpty) return const [];
+    final book = _bookById(books, wordBookId) ?? books.first;
+    return lessonsFromWordBook(book);
+  }
+
+  @override
+  Future<LearningProgress?> loadLearningProgress(DateTime now) async {
+    final response = await _client.dio.get<Map<String, dynamic>>(
+      '/learning-progress',
+      queryParameters: {
+        'localDate': _localDateKey(now),
+        'timezoneOffsetMinutes': now.timeZoneOffset.inMinutes,
+      },
+    );
+    final data = response.data;
+    if (data == null) return null;
+    return LearningProgress.fromJson(data);
+  }
 
   @override
   Future<void> recordStudySession(StudySession session) async {
     await _client.dio.post<void>('/study-sessions', data: session.toJson());
+  }
+
+  @override
+  Future<RewardClaimResult?> claimReward({
+    required String id,
+    required int points,
+    required DateTime now,
+  }) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/reward-claims',
+      data: {
+        'id': id,
+        'points': points,
+        'localDate': _localDateKey(now),
+        'timezoneOffsetMinutes': now.timeZoneOffset.inMinutes,
+      },
+    );
+    final data = response.data;
+    if (data == null) return null;
+    return RewardClaimResult.fromJson(data);
+  }
+
+  WordBook? _bookById(List<WordBook> books, String id) {
+    for (final book in books) {
+      if (book.id == id) return book;
+    }
+    return null;
+  }
+}
+
+class ApiUserWordRepository implements UserWordRepository {
+  ApiUserWordRepository(this._client);
+
+  final ApiClient _client;
+
+  @override
+  Future<List<UserWord>> list(String uid) async {
+    final response = await _client.dio.get<List<dynamic>>('/user-words');
+    return response.data!
+        .cast<Map<String, dynamic>>()
+        .map(UserWord.fromJson)
+        .toList();
+  }
+
+  @override
+  Future<UserWord> upsert(UserWord word) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/user-words',
+      data: word.toJson(),
+    );
+    return UserWord.fromJson(response.data!['word'] as Map<String, dynamic>);
+  }
+
+  @override
+  Future<List<UserWord>> upsertAll(List<UserWord> words) async {
+    if (words.isEmpty) return [];
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/user-words/batch',
+      data: {
+        'words': [for (final word in words) word.toJson()],
+      },
+    );
+    return (response.data!['words'] as List<dynamic>)
+        .cast<Map<String, dynamic>>()
+        .map(UserWord.fromJson)
+        .toList();
+  }
+}
+
+class ApiStudyPlanRepository implements StudyPlanRepository {
+  ApiStudyPlanRepository(this._client);
+
+  final ApiClient _client;
+
+  @override
+  Future<StudyPlan?> load(String uid) async {
+    final response = await _client.dio.get<Map<String, dynamic>>('/study-plan');
+    final plan = response.data?['studyPlan'];
+    if (plan is! Map<String, dynamic>) return null;
+    return StudyPlan.fromJson(plan);
+  }
+
+  @override
+  Future<StudyPlan> save(StudyPlan plan) async {
+    final response = await _client.dio.put<Map<String, dynamic>>(
+      '/study-plan',
+      data: plan.toJson(),
+    );
+    return StudyPlan.fromJson(
+      response.data!['studyPlan'] as Map<String, dynamic>,
+    );
+  }
+
+  @override
+  Future<StudyPlan> reset(StudyPlan plan) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/study-plan/reset',
+    );
+    return StudyPlan.fromJson(
+      response.data!['studyPlan'] as Map<String, dynamic>,
+    );
   }
 }
 
@@ -156,4 +320,64 @@ class ApiReviewRepository implements ReviewRepository {
   Future<void> recordReviewEvent(ReviewEvent event) async {
     await _client.dio.post<void>('/review-events', data: event.toJson());
   }
+}
+
+class ApiNotificationRepository implements NotificationRepository {
+  ApiNotificationRepository(this._client);
+
+  final ApiClient _client;
+
+  @override
+  Future<void> ensureGenerated(
+    String uid,
+    List<AppNotification> notifications,
+  ) async {}
+
+  @override
+  Future<List<AppNotification>> list(
+    String uid, {
+    bool unreadOnly = false,
+    AppNotificationType? type,
+  }) async {
+    final now = DateTime.now();
+    final response = await _client.dio.get<List<dynamic>>(
+      '/notifications',
+      queryParameters: {
+        if (unreadOnly) 'unreadOnly': true,
+        if (type != null) 'type': type.name,
+        'localDate': _localDateKey(now),
+        'timezoneOffsetMinutes': now.timeZoneOffset.inMinutes,
+      },
+    );
+    return (response.data ?? const <dynamic>[])
+        .whereType<Map>()
+        .map(
+          (item) => AppNotification.fromJson(Map<String, dynamic>.from(item)),
+        )
+        .toList();
+  }
+
+  @override
+  Future<int> markAllRead(String uid) async {
+    final response = await _client.dio.patch<Map<String, dynamic>>(
+      '/notifications/read-all',
+    );
+    return response.data!['updated'] as int? ?? 0;
+  }
+
+  @override
+  Future<AppNotification?> markRead(String uid, String id) async {
+    final response = await _client.dio.patch<Map<String, dynamic>>(
+      '/notifications/$id/read',
+    );
+    return AppNotification.fromJson(
+      response.data!['notification'] as Map<String, dynamic>,
+    );
+  }
+}
+
+String _localDateKey(DateTime date) {
+  final month = date.month.toString().padLeft(2, '0');
+  final day = date.day.toString().padLeft(2, '0');
+  return '${date.year}-$month-$day';
 }

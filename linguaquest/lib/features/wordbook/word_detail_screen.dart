@@ -5,9 +5,13 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/date_formatting.dart';
+import '../../core/utils/ui_labels.dart';
+import '../../core/widgets/ai_word_support_link.dart';
 import '../../core/widgets/fallback_back_button.dart';
-import '../../core/widgets/quest_card.dart';
+import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/pronunciation_controls.dart';
 import '../../data/models/custom_word.dart';
+import 'word_knowledge_sections.dart';
 
 class WordDetailScreen extends ConsumerWidget {
   const WordDetailScreen({required this.wordId, super.key});
@@ -18,7 +22,7 @@ class WordDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final word = _find(ref);
     if (word == null) {
-      return const Scaffold(body: Center(child: Text('Word not found')));
+      return const Scaffold(body: Center(child: Text('没有找到这个词')));
     }
     final state = ref.watch(appControllerProvider);
     final canReview = word.isDue(DateTime.now()) && !state.isLoading;
@@ -28,30 +32,39 @@ class WordDetailScreen extends ConsumerWidget {
         leading: const FallbackBackButton(fallbackLocation: '/custom-words'),
         title: Text(word.word),
         actions: [
-          IconButton(
-            tooltip: 'Edit',
+          QuestIconButton(
+            tooltip: '编辑',
             onPressed: () => context.push('/custom-words/${word.id}/edit'),
-            icon: const Icon(Icons.edit_outlined),
+            icon: Icons.edit_outlined,
           ),
+          const SizedBox(width: 12),
         ],
       ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            QuestCard(
-              color: AppTheme.warmSurface(context),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  ImageCueBadge(cue: wordInitialCue(word.word), size: 112),
+                  ImageCueBadge(cue: wordInitialCue(word.word), size: 104),
                   const SizedBox(height: 16),
-                  Text(
-                    word.word,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                      fontWeight: FontWeight.w900,
-                    ),
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 12,
+                    runSpacing: 8,
+                    children: [
+                      Text(
+                        word.word,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.displaySmall
+                            ?.copyWith(fontWeight: FontWeight.w900),
+                      ),
+                      PronunciationControls(word: word.word, compact: true),
+                    ],
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -77,47 +90,51 @@ class WordDetailScreen extends ConsumerWidget {
               spacing: 8,
               runSpacing: 8,
               children: [
-                PillLabel(label: word.tag),
-                PillLabel(label: word.difficulty, color: AppTheme.coral),
+                PillLabel(label: displayCustomTag(word.tag)),
                 PillLabel(
-                  label: 'Mastery ${word.masteryLevel}/5',
+                  label: displayDifficulty(word.difficulty),
+                  color: AppTheme.coral,
+                ),
+                PillLabel(
+                  label: '掌握 ${word.masteryLevel}/5',
                   icon: Icons.psychology_outlined,
                 ),
                 PillLabel(
                   label:
-                      'Next ${formatRelativeDue(word.nextReviewAt, DateTime.now())}',
+                      '下次 ${formatRelativeDue(word.nextReviewAt, DateTime.now())}',
                   icon: Icons.schedule_outlined,
                 ),
               ],
             ),
             const SizedBox(height: 20),
-            QuestCard(
-              padding: const EdgeInsets.all(14),
+            WordKnowledgeSections.custom(word: word),
+            const SizedBox(height: 20),
+            AiWordSupportLink(word: word.word),
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Review Stats',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
+                  Text('复习统计', style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: 10),
                   Row(
                     children: [
                       Expanded(
                         child: _StatLine(
-                          label: 'Remembered',
+                          label: '记住',
                           value: '${word.correctCount}',
                         ),
                       ),
                       Expanded(
                         child: _StatLine(
-                          label: 'Missed',
+                          label: '没记住',
                           value: '${word.wrongCount}',
                         ),
                       ),
                       Expanded(
                         child: _StatLine(
-                          label: 'Mastery',
+                          label: '掌握度',
                           value: '${word.masteryLevel}/5',
                         ),
                       ),
@@ -132,14 +149,14 @@ class WordDetailScreen extends ConsumerWidget {
                   ? () => _review(context, ref, word.id, isCorrect: true)
                   : null,
               icon: const Icon(Icons.check_circle_outline),
-              label: const Text('Mark remembered'),
+              label: const Text('标记为记住'),
             ),
             OutlinedButton.icon(
               onPressed: canReview
                   ? () => _review(context, ref, word.id, isCorrect: false)
                   : null,
               icon: const Icon(Icons.replay),
-              label: const Text('Practice again soon'),
+              label: const Text('安排近期再练'),
             ),
           ],
         ),
@@ -166,10 +183,9 @@ class WordDetailScreen extends ConsumerWidget {
     if (!context.mounted) return;
     final message = succeeded
         ? isCorrect
-              ? 'Marked as remembered'
-              : 'Scheduled for practice'
-        : ref.read(appControllerProvider).errorMessage ??
-              'Could not update this card';
+              ? '已标记为记住'
+              : '已安排近期再练'
+        : ref.read(appControllerProvider).errorMessage ?? '暂时无法更新这张卡片';
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));

@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
-import '../../core/widgets/quest_card.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -28,7 +27,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(appControllerProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('Log in')),
+      appBar: AppBar(title: const Text('登录')),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
@@ -37,45 +36,35 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(
-                  'Welcome Back',
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
+                Text('欢迎回来', style: Theme.of(context).textTheme.headlineMedium),
                 const SizedBox(height: 6),
                 Text(
-                  'Continue your learning path and clear today’s review cards.',
+                  '继续今天的学习路径，顺手清空到期复习卡。',
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
                 const SizedBox(height: 16),
-                QuestCard(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        controller: _emailController,
-                        decoration: const InputDecoration(
-                          labelText: 'Email',
-                          hintText: 'Enter your email',
-                          prefixIcon: Icon(Icons.mail_outline),
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                        validator: _emailValidator,
-                      ),
-                      const SizedBox(height: 12),
-                      TextFormField(
-                        controller: _passwordController,
-                        decoration: const InputDecoration(
-                          labelText: 'Password',
-                          hintText: 'Enter your password',
-                          prefixIcon: Icon(Icons.lock_outline),
-                        ),
-                        obscureText: true,
-                        validator: _passwordValidator,
-                      ),
-                    ],
+                TextFormField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                    labelText: '邮箱',
+                    hintText: '输入邮箱地址',
+                    prefixIcon: Icon(Icons.mail_outline),
                   ),
+                  keyboardType: TextInputType.emailAddress,
+                  validator: _emailValidator,
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _passwordController,
+                  decoration: const InputDecoration(
+                    labelText: '密码',
+                    hintText: '输入密码',
+                    prefixIcon: Icon(Icons.lock_outline),
+                  ),
+                  obscureText: true,
+                  validator: _passwordValidator,
                 ),
                 if (state.errorMessage != null) ...[
                   const SizedBox(height: 12),
@@ -96,11 +85,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Icon(Icons.login),
-                  label: const Text('Log in'),
+                  label: const Text('登录'),
                 ),
                 TextButton(
                   onPressed: () => context.go('/register'),
-                  child: const Text('Create a new account'),
+                  child: const Text('注册新账号'),
                 ),
               ],
             ),
@@ -122,12 +111,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 }
 
 String? _emailValidator(String? value) {
-  if (value == null || value.trim().isEmpty) return 'Email is required';
-  if (!value.contains('@')) return 'Use a valid email';
+  if (value == null || value.trim().isEmpty) return '请输入邮箱';
+  if (!value.contains('@')) return '请输入有效邮箱';
   return null;
 }
 
 String? _passwordValidator(String? value) {
-  if (value == null || value.length < 6) return 'Use at least 6 characters';
+  if (value == null || value.length < 6) return '密码至少 6 位';
   return null;
 }

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/brand_mark.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -30,7 +31,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       begin: 0.86,
       end: 1,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
-    Future.microtask(_start);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _start();
+      }
+    });
   }
 
   @override
@@ -44,7 +49,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     if (!mounted) return;
     final state = ref.read(appControllerProvider);
     if (!state.isBootstrapped && state.errorMessage != null) return;
-    await Future<void>.delayed(const Duration(milliseconds: 500));
     if (!mounted) return;
     context.go(state.isAuthenticated ? '/home' : '/onboarding');
   }
@@ -56,31 +60,36 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         !state.isLoading && !state.isBootstrapped && state.errorMessage != null;
 
     return Scaffold(
+      backgroundColor: AppTheme.paper,
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ScaleTransition(scale: _scale, child: const _LogoMark()),
-            const SizedBox(height: 20),
+            ScaleTransition(scale: _scale, child: const BrandMark(size: 118)),
+            const SizedBox(height: 22),
             FadeTransition(
               opacity: _fade,
               child: Column(
                 children: [
                   Text(
                     'LinguaQuest',
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      color: AppTheme.ink,
+                      height: 1.05,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Image cards. Guided paths. Smart review.',
+                    '图像词卡、清晰路径、智能复习。',
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 22),
+            const SizedBox(height: 24),
             if (failed)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 28),
@@ -97,7 +106,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                     FilledButton.icon(
                       onPressed: _start,
                       icon: const Icon(Icons.refresh_rounded),
-                      label: const Text('Retry'),
+                      label: const Text('重试'),
                     ),
                   ],
                 ),
@@ -107,51 +116,15 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                 width: 180,
                 child: ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(999)),
-                  child: TweenAnimationBuilder<double>(
-                    tween: Tween<double>(begin: 0, end: 1),
-                    duration: const Duration(milliseconds: 1000),
-                    curve: Curves.easeOutCubic,
-                    builder: (context, value, _) =>
-                        LinearProgressIndicator(value: value, minHeight: 8),
+                  child: LinearProgressIndicator(
+                    value: state.isLoading ? null : 1,
+                    minHeight: 10,
+                    backgroundColor: AppTheme.progressTrack(context),
                   ),
                 ),
               ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _LogoMark extends StatelessWidget {
-  const _LogoMark();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 84,
-      height: 84,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [AppTheme.deepTeal, AppTheme.teal, AppTheme.cyan],
-        ),
-        borderRadius: BorderRadius.circular(28),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.coral.withValues(alpha: 0.24),
-            blurRadius: 24,
-            offset: const Offset(0, 14),
-          ),
-        ],
-      ),
-      child: const Stack(
-        alignment: Alignment.center,
-        children: [
-          Icon(Icons.language, color: Colors.white, size: 42),
-          Positioned(right: 12, bottom: 10, child: Text('✨')),
-        ],
       ),
     );
   }
