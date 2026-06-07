@@ -802,12 +802,6 @@ String _targetExamForWordBook(String wordBookId) {
       return 'TOEFL';
     case 'gre':
       return 'GRE';
-    case 'cet4':
-      return 'CET-4';
-    case 'cet6':
-      return 'CET-6';
-    case 'kaoyan':
-      return '考研';
     case 'ielts':
     case 'exam-core':
       return 'IELTS';
