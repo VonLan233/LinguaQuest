@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS users (
   password_salt TEXT NOT NULL,
   name TEXT NOT NULL,
   target_exam TEXT NOT NULL DEFAULT 'Daily English',
-  level TEXT NOT NULL DEFAULT 'Elementary',
+  level TEXT NOT NULL DEFAULT 'Intermediate',
   daily_goal INTEGER NOT NULL DEFAULT 10,
   xp INTEGER NOT NULL DEFAULT 0,
   streak INTEGER NOT NULL DEFAULT 0,
@@ -42,6 +42,10 @@ CREATE TABLE IF NOT EXISTS users (
   updated_at TIMESTAMPTZ NOT NULL
 );
 ''');
+
+    await connection.execute(
+      "ALTER TABLE users ALTER COLUMN level SET DEFAULT 'Intermediate'",
+    );
 
     await connection.execute('''
 CREATE TABLE IF NOT EXISTS custom_words (

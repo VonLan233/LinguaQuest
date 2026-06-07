@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
+import 'dart:typed_data';
 
+import 'package:http/http.dart' as http;
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
@@ -13,11 +15,82 @@ import 'lesson_catalog.dart';
 import 'notification_policy.dart';
 import 'study_plan_policy.dart';
 
-Router buildRouter(AppConfig config, AppDatabase database) {
+final _httpClient = http.Client();
+
+Router buildRouter(AppConfig config, AppDatabase database,
+    {http.Client? httpClient}) {
+  final client = httpClient ?? _httpClient;
   final router = Router();
 
   router.get('/health', (Request request) {
     return jsonResponse({'status': 'ok'});
+  });
+
+  router.get('/tts', (Request request) async {
+    final word = request.url.queryParameters['word']?.trim() ?? '';
+    final type = request.url.queryParameters['type']?.trim() ?? '1';
+    if (word.isEmpty || word.length > 100) {
+      return jsonResponse({
+        'error': 'word is required and must be under 100 characters',
+      }, status: 400);
+    }
+    if (type != '1' && type != '2') {
+      return jsonResponse({
+        'error': 'type must be 1 (UK) or 2 (US)',
+      }, status: 400);
+    }
+    try {
+      final uri = Uri.https('dict.youdao.com', '/dictvoice', {
+        'audio': word,
+        'type': type,
+      });
+      final streamedResponse = await client
+          .send(http.Request('GET', uri))
+          .timeout(const Duration(seconds: 5));
+      if (streamedResponse.statusCode != 200) {
+        await streamedResponse.stream.listen((_) {}).cancel();
+        return jsonResponse({'error': 'tts unavailable'}, status: 502);
+      }
+      final contentLength = streamedResponse.contentLength;
+      if (contentLength != null && contentLength > 5 * 1024 * 1024) {
+        await streamedResponse.stream.listen((_) {}).cancel();
+        return jsonResponse({'error': 'tts response too large'}, status: 502);
+      }
+      final contentType = (streamedResponse.headers['content-type'] ??
+              streamedResponse.headers['Content-Type'] ??
+              'audio/mpeg')
+          .toLowerCase();
+      if (!contentType.startsWith('audio/')) {
+        await streamedResponse.stream.listen((_) {}).cancel();
+        return jsonResponse({'error': 'tts unavailable'}, status: 502);
+      }
+      final bytesBuilder = BytesBuilder();
+      var totalBytes = 0;
+      const maxBytes = 5 * 1024 * 1024;
+      await for (final chunk
+          in streamedResponse.stream.timeout(const Duration(seconds: 5))) {
+        totalBytes += chunk.length;
+        if (totalBytes > maxBytes) {
+          return jsonResponse({
+            'error': 'tts response invalid or too large',
+          }, status: 502);
+        }
+        bytesBuilder.add(chunk);
+      }
+      final bytes = bytesBuilder.takeBytes();
+      if (bytes.isEmpty) {
+        return jsonResponse({
+          'error': 'tts response invalid or too large',
+        }, status: 502);
+      }
+      return Response.ok(bytes, headers: {
+        'Content-Type': contentType,
+        'Cache-Control': 'public, max-age=86400',
+      });
+    } catch (e, stackTrace) {
+      stderr.writeln('TTS proxy error: $e\n$stackTrace');
+      return jsonResponse({'error': 'tts unavailable'}, status: 502);
+    }
   });
 
   router.get('/lessons', (Request request) {
@@ -802,12 +875,6 @@ String _targetExamForWordBook(String wordBookId) {
       return 'TOEFL';
     case 'gre':
       return 'GRE';
-    case 'cet4':
-      return 'CET-4';
-    case 'cet6':
-      return 'CET-6';
-    case 'kaoyan':
-      return '考研';
     case 'ielts':
     case 'exam-core':
       return 'IELTS';
