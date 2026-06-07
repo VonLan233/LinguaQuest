@@ -20,13 +20,16 @@ Router buildRouter(AppConfig config, AppDatabase database) {
     return jsonResponse({'status': 'ok'});
   });
 
-  final httpClient = HttpClient();
+  final httpClient = HttpClient()
+    ..connectionTimeout = const Duration(seconds: 5);
 
   router.get('/tts', (Request request) async {
     final word = request.url.queryParameters['word']?.trim() ?? '';
     final type = request.url.queryParameters['type']?.trim() ?? '1';
-    if (word.isEmpty) {
-      return jsonResponse({'error': 'word is required'}, status: 400);
+    if (word.isEmpty || word.length > 100) {
+      return jsonResponse({
+        'error': 'word is required and must be under 100 characters',
+      }, status: 400);
     }
     if (type != '1' && type != '2') {
       return jsonResponse({
@@ -37,15 +40,15 @@ Router buildRouter(AppConfig config, AppDatabase database) {
       final uri = Uri.parse(
         'https://dict.youdao.com/dictvoice?audio=${Uri.encodeComponent(word)}&type=$type',
       );
-      final response = await httpClient.getUrl(uri).then((req) => req.close());
+      final response = await httpClient
+          .getUrl(uri)
+          .then((req) => req.close())
+          .timeout(const Duration(seconds: 5));
       if (response.statusCode != HttpStatus.ok) {
+        await response.drain();
         return jsonResponse({'error': 'tts unavailable'}, status: 502);
       }
-      final bytes = await response.fold<List<int>>(
-        <int>[],
-        (prev, chunk) => prev..addAll(chunk),
-      );
-      return Response.ok(bytes, headers: {
+      return Response.ok(response, headers: {
         'Content-Type': 'audio/mpeg',
         'Cache-Control': 'public, max-age=86400',
       });
