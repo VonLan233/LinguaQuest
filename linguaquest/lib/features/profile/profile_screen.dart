@@ -204,7 +204,7 @@ class _ProfileIdentityHeader extends StatelessWidget {
           radius: 32,
           backgroundColor: theme.colorScheme.primaryContainer,
           child: Text(
-            name.characters.first.toUpperCase(),
+            (name.trim().isEmpty) ? '?' : name.trim().characters.first.toUpperCase(),
             style: TextStyle(
               color: theme.colorScheme.onPrimaryContainer,
               fontWeight: FontWeight.w900,

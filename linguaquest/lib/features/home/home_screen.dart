@@ -47,7 +47,9 @@ class HomeScreen extends ConsumerWidget {
                   radius: 24,
                   backgroundColor: Theme.of(context).colorScheme.primaryContainer,
                   child: Text(
-                    (user?.name ?? '?').characters.first.toUpperCase(),
+                    (user?.name == null || user!.name.trim().isEmpty)
+                        ? '?'
+                        : user.name.trim().characters.first.toUpperCase(),
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onPrimaryContainer,
                       fontWeight: FontWeight.w900,
@@ -447,7 +449,7 @@ class _DailyTaskPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final hasReview = dueCount > 0;
-    final totalTaskCount = dailyGoal + dueCount;
+    final totalTaskCount = canStartNew ? (dailyGoal + dueCount) : dueCount;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Column(
