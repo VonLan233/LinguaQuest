@@ -16,6 +16,8 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appControllerProvider);
     final user = state.user;
+    final name = user?.name.trim() ?? '';
+    final avatarLetter = name.isEmpty ? '?' : name.characters.first.toUpperCase();
     final currentBook = state.currentWordBook;
     final dueCount = state.reviewQueue.length;
     final dailyGoal = state.dailyNewTarget;
@@ -47,9 +49,7 @@ class HomeScreen extends ConsumerWidget {
                   radius: 24,
                   backgroundColor: Theme.of(context).colorScheme.primaryContainer,
                   child: Text(
-                    (user?.name == null || user!.name.trim().isEmpty)
-                        ? '?'
-                        : user.name.trim().characters.first.toUpperCase(),
+                    avatarLetter,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onPrimaryContainer,
                       fontWeight: FontWeight.w900,
