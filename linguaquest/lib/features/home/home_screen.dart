@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/ui_labels.dart';
-import '../../core/widgets/brand_mark.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/custom_word.dart';
@@ -40,10 +39,23 @@ class HomeScreen extends ConsumerWidget {
       children: [
         Row(
           children: [
-            BrandMark(
-              size: 48,
-              tooltip: '个人空间',
-              onTap: () => context.go('/profile'),
+            Tooltip(
+              message: '个人空间',
+              child: GestureDetector(
+                onTap: () => context.go('/profile'),
+                child: CircleAvatar(
+                  radius: 24,
+                  backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                  child: Text(
+                    (user?.name ?? '?').characters.first.toUpperCase(),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+              ),
             ),
             const SizedBox(width: 10),
             Expanded(

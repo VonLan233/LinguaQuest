@@ -6,7 +6,6 @@ import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/ui_labels.dart';
-import '../../core/widgets/brand_mark.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 
@@ -201,7 +200,18 @@ class _ProfileIdentityHeader extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const BrandMark(size: 60),
+        CircleAvatar(
+          radius: 32,
+          backgroundColor: theme.colorScheme.primaryContainer,
+          child: Text(
+            name.characters.first.toUpperCase(),
+            style: TextStyle(
+              color: theme.colorScheme.onPrimaryContainer,
+              fontWeight: FontWeight.w900,
+              fontSize: 26,
+            ),
+          ),
+        ),
         const SizedBox(width: 14),
         Expanded(
           child: Column(
