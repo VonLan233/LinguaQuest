@@ -37,9 +37,10 @@ Router buildRouter(AppConfig config, AppDatabase database) {
       }, status: 400);
     }
     try {
-      final uri = Uri.parse(
-        'https://dict.youdao.com/dictvoice?audio=${Uri.encodeComponent(word)}&type=$type',
-      );
+      final uri = Uri.https('dict.youdao.com', '/dictvoice', {
+        'audio': word,
+        'type': type,
+      });
       final response = await httpClient
           .getUrl(uri)
           .then((req) => req.close())
