@@ -44,6 +44,10 @@ CREATE TABLE IF NOT EXISTS users (
 ''');
 
     await connection.execute('''
+ALTER TABLE users ALTER COLUMN level SET DEFAULT 'Intermediate';
+''');
+
+    await connection.execute('''
 CREATE TABLE IF NOT EXISTS custom_words (
   id TEXT PRIMARY KEY,
   uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
