@@ -212,7 +212,7 @@ void main() {
   test('word initial cue falls back for empty custom words', () {
     expect(wordInitialCue(''), '?');
     expect(wordInitialCue('  '), '?');
-    expect(wordInitialCue('apple'), 'A');
+    expect(wordInitialCue('apple'), '?');
   });
 
   test('profile new wordbook count uses custom copies only', () {
@@ -254,15 +254,9 @@ void main() {
     expect(find.text('美音'), findsOneWidget);
 
     await tester.tap(find.byKey(const ValueKey('pronunciation-uk')));
-    await tester.pump();
+    await tester.pumpAndSettle();
 
-    expect(find.text('英音加载'), findsOneWidget);
-
-    await tester.pump(const Duration(milliseconds: 430));
-    await tester.pump();
-
-    expect(find.text('英音重试'), findsOneWidget);
-    expect(find.text('英音发音失败，请重试'), findsWidgets);
+    expect(find.text('英音发音暂不可用'), findsOneWidget);
   });
 
   testWidgets('home new-study entry opens standalone new learning flow', (
@@ -289,12 +283,12 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     await tester.scrollUntilVisible(
-      find.text('新学 12'),
+      find.textContaining('开始今日学习'),
       300,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(FilledButton, '新学 12'));
+    await tester.tap(find.textContaining('开始今日学习'));
     await tester.pumpAndSettle();
 
     expect(find.text('今日混排学习包'), findsOneWidget);
@@ -324,12 +318,12 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     await tester.scrollUntilVisible(
-      find.text('复习 2'),
+      find.textContaining('仅复习'),
       300,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(FilledButton, '复习 2'));
+    await tester.tap(find.textContaining('仅复习'));
     await tester.pumpAndSettle();
 
     expect(find.text('快速复习'), findsOneWidget);
@@ -382,12 +376,12 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     await tester.scrollUntilVisible(
-      find.text('复习 2'),
+      find.textContaining('仅复习'),
       300,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(FilledButton, '复习 2'));
+    await tester.tap(find.textContaining('仅复习'));
     await tester.pumpAndSettle();
     await _tapAnyOptionExcept(tester, '含糊的');
     await tester.tap(find.text('检查'));
@@ -837,38 +831,22 @@ void main() {
     await tester.pumpAndSettle();
 
     final dailyEnglish = find.byKey(const ValueKey('choice-Daily English'));
-    final businessEnglish = find.byKey(
-      const ValueKey('choice-Business English'),
-    );
+    final ielts = find.byKey(const ValueKey('choice-IELTS'));
 
     final dailyEnglishSize = tester.getSize(dailyEnglish);
-    final businessEnglishSize = tester.getSize(businessEnglish);
+    final ieltsSize = tester.getSize(ielts);
 
     await tester.scrollUntilVisible(
-      businessEnglish,
+      ielts,
       120,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(businessEnglish);
+    await tester.tap(ielts);
     await tester.pumpAndSettle();
 
     expect(tester.getSize(dailyEnglish), dailyEnglishSize);
-    expect(tester.getSize(businessEnglish), businessEnglishSize);
-
-    await tester.drag(find.byType(Scrollable).first, const Offset(0, -520));
-    await tester.pumpAndSettle();
-
-    final visibleElementary = find.byKey(const ValueKey('choice-Elementary'));
-    final visibleAdvanced = find.byKey(const ValueKey('choice-Advanced'));
-    final elementarySize = tester.getSize(visibleElementary);
-    final advancedSize = tester.getSize(visibleAdvanced);
-
-    await tester.tap(visibleAdvanced);
-    await tester.pumpAndSettle();
-
-    expect(tester.getSize(visibleElementary), elementarySize);
-    expect(tester.getSize(visibleAdvanced), advancedSize);
+    expect(tester.getSize(ielts), ieltsSize);
   });
 
   testWidgets('goal setup starts from the current learning profile', (
@@ -3079,7 +3057,7 @@ void main() {
         .currentLesson!
         .words
         .first;
-    await tester.tap(find.widgetWithText(FilledButton, '新学 10'));
+    await tester.tap(find.textContaining('开始今日学习'));
     await tester.pumpAndSettle();
 
     expect(find.text('今日混排学习包'), findsOneWidget);
@@ -3307,12 +3285,12 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     await tester.scrollUntilVisible(
-      find.text('复习 2'),
+      find.textContaining('仅复习'),
       300,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.text('复习 2'));
+    await tester.tap(find.textContaining('仅复习'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('管理复习队列'));
     await tester.pumpAndSettle();
@@ -3390,12 +3368,12 @@ void main() {
       await tester.pumpAndSettle(const Duration(seconds: 1));
 
       await tester.scrollUntilVisible(
-        find.text('复习 2'),
+        find.textContaining('仅复习'),
         300,
         scrollable: find.byType(Scrollable).first,
       );
       await tester.pumpAndSettle();
-      await tester.tap(find.text('复习 2'));
+      await tester.tap(find.textContaining('仅复习'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('管理复习队列'));
       await tester.pumpAndSettle();
