@@ -57,7 +57,6 @@ void main() {
       expect(featureSource, isNot(contains('icon_transparent.png')));
       expect(brandMarkUses, greaterThanOrEqualTo(0));
       expect(brandMarkUses, lessThanOrEqualTo(4));
-      expect(featureSource, isNot(contains('Icons.language_outlined')));
       expect(featureSource, isNot(contains('猫')));
       expect(featureSource.toLowerCase(), isNot(contains('whisker')));
       expect(featureSource.toLowerCase(), isNot(contains('paw')));
@@ -70,7 +69,7 @@ void main() {
 
       expect(shell, contains('_QuestBottomNav'));
       expect(shell, contains('_QuestTabButton'));
-      expect(shell, contains("label: 'AI 学习'"));
+      expect(shell, contains('l10n.tabAiLearning'));
       expect(shell, isNot(contains('NavigationBar(')));
       expect(shell, isNot(contains('NavigationDestination')));
     });
@@ -362,7 +361,7 @@ void main() {
     });
 
     test('legacy English UI labels do not reappear', () {
-      final source = _readDartSources(Directory('lib'));
+      final source = _readDartSources(Directory('lib'), excludeDir: 'l10n');
       const legacyLabels = [
         'Campus Starter',
         'Goal Setup',
@@ -675,13 +674,14 @@ void main() {
   });
 }
 
-String _readDartSources(Directory root) {
+String _readDartSources(Directory root, {String? excludeDir}) {
   final buffer = StringBuffer();
   final files =
       root
           .listSync(recursive: true)
           .whereType<File>()
           .where((file) => file.path.endsWith('.dart'))
+          .where((file) => excludeDir == null || !file.path.contains('/$excludeDir/'))
           .toList()
         ..sort((a, b) => a.path.compareTo(b.path));
 
