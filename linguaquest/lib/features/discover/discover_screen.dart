@@ -259,7 +259,7 @@ class _XpUseStatusLine extends StatelessWidget {
               Text(l10n.discoverXpUsage, style: theme.textTheme.titleMedium),
               const SizedBox(height: 2),
               Text(
-                '${l10n.discoverXpUsageDesc} $currentXp ${l10n.commonXP}。',
+                '${l10n.discoverXpUsageDesc} $currentXp ${l10n.commonXP}${l10n.localeName == 'zh' ? '。' : '.'}',
                 style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
               ),
             ],

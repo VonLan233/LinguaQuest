@@ -251,7 +251,7 @@ class AppState {
       customWords: [],
       userWords: [],
       themeMode: ThemeMode.system,
-      locale: const Locale('zh'),
+      locale: null,
       reminderSettings: DailyReminderSettings.defaults,
       completedLessonIds: {},
       todayCompletedLessonIds: {},

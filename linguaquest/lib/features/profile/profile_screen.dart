@@ -107,7 +107,7 @@ class ProfileScreen extends ConsumerWidget {
         _WeaknessStatusLine(
           text: weakestWord == null
               ? l10n.profileNoWeakness
-              : '${l10n.profileMostWrongWord}：${weakestWord.word} · ${weakestWord.wrongCount} ${l10n.quizMistakes} · ${displayWordStatus(weakestWord.status, l10n: l10n)}',
+              : '${l10n.profileMostWrongWord}${l10n.localeName == 'zh' ? '：' : ': '}${weakestWord.word} · ${weakestWord.wrongCount} ${l10n.quizMistakes} · ${displayWordStatus(weakestWord.status, l10n: l10n)}',
         ),
         const SizedBox(height: 22),
         if (state.studyPlan != null) ...[

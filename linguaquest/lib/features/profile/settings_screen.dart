@@ -137,7 +137,7 @@ class ReminderSettingsScreen extends ConsumerWidget {
               title: Text(l10n.settingsReminderTitle),
               subtitle: Text(
                 settings.enabled
-                    ? '${l10n.settingsReminderTime}：${settings.formattedTime}'
+                    ? '${l10n.settingsReminderTime}${l10n.localeName == 'zh' ? '：' : ': '}${settings.formattedTime}'
                     : l10n.settingsReminderDisabled,
               ),
             ),
