@@ -5,31 +5,33 @@ import '../../core/theme/app_theme.dart';
 import '../../core/widgets/brand_mark.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final steps = [
-      const _OnboardingStepData(
+      _OnboardingStepData(
         cue: '🖼',
         icon: Icons.image_search_outlined,
-        title: '图像词卡',
-        body: '单词、释义、例句、掌握度和视觉线索在同一条学习流里串起来。',
+        title: l10n.onboardingFeatureImageCards,
+        body: l10n.onboardingFeatureImageCardsDesc,
       ),
-      const _OnboardingStepData(
+      _OnboardingStepData(
         cue: '🛤',
         icon: Icons.route_outlined,
-        title: '清晰路径',
-        body: '短课节负责安排下一步学习，让每天打开应用后知道先做什么。',
+        title: l10n.onboardingFeaturePath,
+        body: l10n.onboardingFeaturePathDesc,
       ),
-      const _OnboardingStepData(
+      _OnboardingStepData(
         cue: '🔁',
         icon: Icons.replay_outlined,
-        title: '准时复习',
-        body: '弱项词更快回到队列，已掌握的词会拉长复习间隔。',
+        title: l10n.onboardingFeatureReview,
+        body: l10n.onboardingFeatureReviewDesc,
       ),
     ];
 
@@ -65,20 +67,20 @@ class OnboardingScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 22),
-            Text('像游戏闯关一样完成每日学习', style: theme.textTheme.titleLarge),
+            Text(l10n.onboardingTagline, style: theme.textTheme.titleLarge),
             const SizedBox(height: 12),
             _OnboardingStepList(steps: steps),
             const SizedBox(height: 18),
             FilledButton.icon(
               onPressed: () => context.go('/register'),
               icon: const Icon(Icons.person_add_alt_1),
-              label: const Text('注册账号'),
+              label: Text(l10n.onboardingRegisterButton),
             ),
             const SizedBox(height: 10),
             OutlinedButton.icon(
               onPressed: () => context.go('/login'),
               icon: const Icon(Icons.login),
-              label: const Text('登录'),
+              label: Text(l10n.commonLogin),
             ),
           ],
         ),

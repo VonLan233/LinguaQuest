@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -25,9 +26,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('登录')),
+      appBar: AppBar(title: Text(l10n.authLoginTitle)),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
@@ -36,10 +38,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text('欢迎回来', style: Theme.of(context).textTheme.headlineMedium),
+                Text(l10n.authWelcomeBack,
+                    style: Theme.of(context).textTheme.headlineMedium),
                 const SizedBox(height: 6),
                 Text(
-                  '继续今天的学习路径，顺手清空到期复习卡。',
+                  l10n.authWelcomeBackSubtitle,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
@@ -47,24 +50,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: '邮箱',
-                    hintText: '输入邮箱地址',
-                    prefixIcon: Icon(Icons.mail_outline),
+                  decoration: InputDecoration(
+                    labelText: l10n.authEmail,
+                    hintText: l10n.authEmailHint,
+                    prefixIcon: const Icon(Icons.mail_outline),
                   ),
                   keyboardType: TextInputType.emailAddress,
-                  validator: _emailValidator,
+                  validator: (value) => _emailValidator(value, l10n),
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _passwordController,
-                  decoration: const InputDecoration(
-                    labelText: '密码',
-                    hintText: '输入密码',
-                    prefixIcon: Icon(Icons.lock_outline),
+                  decoration: InputDecoration(
+                    labelText: l10n.authPassword,
+                    hintText: l10n.authPasswordHint,
+                    prefixIcon: const Icon(Icons.lock_outline),
                   ),
                   obscureText: true,
-                  validator: _passwordValidator,
+                  validator: (value) => _passwordValidator(value, l10n),
                 ),
                 if (state.errorMessage != null) ...[
                   const SizedBox(height: 12),
@@ -85,11 +88,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Icon(Icons.login),
-                  label: const Text('登录'),
+                  label: Text(l10n.commonLogin),
                 ),
                 TextButton(
                   onPressed: () => context.go('/register'),
-                  child: const Text('注册新账号'),
+                  child: Text(l10n.authRegisterNew),
                 ),
               ],
             ),
@@ -110,13 +113,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 }
 
-String? _emailValidator(String? value) {
-  if (value == null || value.trim().isEmpty) return '请输入邮箱';
-  if (!value.contains('@')) return '请输入有效邮箱';
+String? _emailValidator(String? value, AppLocalizations l10n) {
+  if (value == null || value.trim().isEmpty) return l10n.authEmailRequired;
+  if (!value.contains('@')) return l10n.authEmailInvalid;
   return null;
 }
 
-String? _passwordValidator(String? value) {
-  if (value == null || value.length < 6) return '密码至少 6 位';
+String? _passwordValidator(String? value, AppLocalizations l10n) {
+  if (value == null || value.length < 6) return l10n.authPasswordRequired;
   return null;
 }
