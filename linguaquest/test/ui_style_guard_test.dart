@@ -145,7 +145,7 @@ void main() {
       ).readAsStringSync();
 
       expect(profile, contains('CircleAvatar'));
-      expect(profile, contains('学习仪表盘'));
+      expect(profile, contains('profileDashboard'));
       expect(profile, isNot(contains('MetricTile')));
       expect(profile, isNot(contains('GridView.count')));
     });
@@ -351,8 +351,8 @@ void main() {
 
       expect(goalSetup, contains('_ChoiceList'));
       expect(goalSetup, contains('_PlanSnapshotLine'));
-      expect(goalSetup, contains('当前词书'));
-      expect(goalSetup, contains('查看完整词汇表'));
+      expect(goalSetup, contains('goalSetupCurrentBook'));
+      expect(goalSetup, contains('goalSetupViewWordbook'));
       expect(goalSetup, isNot(contains('_ChoiceGrid')));
       expect(goalSetup, isNot(contains('GridView.count')));
       expect(goalSetup, contains('radio_button_unchecked_rounded'));
