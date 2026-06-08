@@ -8,6 +8,7 @@ import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
+import '../../l10n/generated/app_localizations.dart';
 import 'lesson_result_screen.dart';
 
 enum QuizSessionMode { lesson, timed }
@@ -50,6 +51,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
   @override
   Widget build(BuildContext context) {
     final isTimed = widget.mode == QuizSessionMode.timed;
+    final l10n = AppLocalizations.of(context);
     final lessons = ref.watch(
       appControllerProvider.select(
         (state) => isTimed ? state.lessons : state.formalLessons,
@@ -57,12 +59,12 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
     );
     final lesson = _findLesson(lessons);
     if (lesson == null) {
-      return const Scaffold(body: Center(child: Text('没有找到这节课')));
+      return Scaffold(body: Center(child: Text(l10n.quizNoLesson)));
     }
     if (lesson.questions.isEmpty) {
       return Scaffold(
         appBar: AppBar(title: Text(lesson.title)),
-        body: const Center(child: Text('这节课还没有测验。')),
+        body: Center(child: Text(l10n.quizNoQuestions)),
       );
     }
     final question = lesson.questions[_index];
@@ -77,7 +79,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
       child: Scaffold(
         appBar: AppBar(
           leading: BackButton(onPressed: () => _handleBack(context)),
-          title: Text(isTimed ? '限时测试' : lesson.title),
+          title: Text(isTimed ? l10n.quizTimedTest : lesson.title),
         ),
         body: SafeArea(
           child: Padding(
@@ -107,8 +109,8 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
                     ),
                     if (isTimed) ...[
                       const SizedBox(width: 8),
-                      const PillLabel(
-                        label: '校园速测',
+                      PillLabel(
+                        label: l10n.quizCampusSpeed,
                         icon: Icons.timer_outlined,
                         color: AppTheme.coral,
                       ),
@@ -160,7 +162,9 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
                         ? Icons.arrow_forward_rounded
                         : Icons.check_rounded,
                   ),
-                  label: Text(_checked ? (_lastCorrect ? '继续' : '再试一次') : '检查'),
+                  label: Text(_checked
+                      ? (_lastCorrect ? l10n.quizContinue : l10n.quizRetry)
+                      : l10n.quizCheck),
                 ),
               ],
             ),
@@ -181,21 +185,22 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
   }
 
   Future<void> _handleBack(BuildContext activeContext) async {
+    final l10n = AppLocalizations.of(activeContext);
     if (!_canLeaveWithoutConfirmation) {
       final confirmed = await showDialog<bool>(
         context: activeContext,
         builder: (context) => AlertDialog(
-          title: const Text('离开测验？'),
-          content: const Text('当前测验进度将被放弃。'),
+          title: Text(l10n.quizLeaveTitle),
+          content: Text(l10n.quizLeaveContent),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('继续答题'),
+              child: Text(l10n.quizKeepAnswering),
             ),
             FilledButton.icon(
               onPressed: () => Navigator.pop(context, true),
               icon: const Icon(Icons.exit_to_app_rounded),
-              label: const Text('离开'),
+              label: Text(l10n.commonLeave),
             ),
           ],
         ),
@@ -403,9 +408,9 @@ class _QuestionInput extends StatelessWidget {
       return TextField(
         controller: controller,
         enabled: !checked,
-        decoration: const InputDecoration(
-          labelText: '输入单词',
-          prefixIcon: Icon(Icons.edit_outlined),
+        decoration: InputDecoration(
+          labelText: AppLocalizations.of(context).quizInputWord,
+          prefixIcon: const Icon(Icons.edit_outlined),
         ),
         onChanged: (_) => onInputChanged(),
       );
@@ -516,6 +521,7 @@ class _FeedbackPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     final color = isCorrect
         ? (theme.brightness == Brightness.dark
               ? theme.colorScheme.primary
@@ -545,14 +551,14 @@ class _FeedbackPanel extends StatelessWidget {
               children: [
                 Text(
                   isCorrect
-                      ? '答对了。${question.explanation}'
-                      : '还不对。${question.explanation}',
+                      ? '${l10n.quizCorrect}${question.explanation}'
+                      : '${l10n.quizWrong}${question.explanation}',
                   style: TextStyle(color: color),
                 ),
                 if (isCorrect) ...[
                   const SizedBox(height: 8),
                   Text(
-                    '强化记忆：${question.word.word} · ${question.word.meaning}',
+                    '${l10n.quizReinforce}${question.word.word} · ${question.word.meaning}',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                       fontWeight: FontWeight.w800,

@@ -6,12 +6,14 @@ import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class DiscoverScreen extends ConsumerWidget {
   const DiscoverScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final user = state.user;
     final claimed = state.todayClaimedRewardIds;
@@ -30,10 +32,10 @@ class DiscoverScreen extends ConsumerWidget {
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
       children: [
         SectionHeader(
-          title: '发现',
-          subtitle: '签到、积分任务、抽奖和学习社区；领取的 XP 会加入个人总积分。',
+          title: l10n.discoverTitle,
+          subtitle: l10n.discoverSubtitle,
           trailing: QuestIconButton(
-            tooltip: '任务中心',
+            tooltip: l10n.discoverTaskCenter,
             onPressed: () => context.push('/quest'),
             icon: Icons.emoji_events_outlined,
             color: AppTheme.mango,
@@ -45,12 +47,12 @@ class DiscoverScreen extends ConsumerWidget {
           runSpacing: 8,
           children: [
             PillLabel(
-              label: '${user?.xp ?? 0} XP',
+              label: '${user?.xp ?? 0} ${l10n.commonXP}',
               icon: Icons.bolt,
               color: AppTheme.mango,
             ),
             PillLabel(
-              label: '${user?.streak ?? 0} 天连续打卡',
+              label: '${user?.streak ?? 0} ${l10n.homeStreakLabel}',
               icon: Icons.local_fire_department_outlined,
               color: AppTheme.coral,
             ),
@@ -59,17 +61,17 @@ class DiscoverScreen extends ConsumerWidget {
         const SizedBox(height: 14),
         _XpUseStatusLine(currentXp: user?.xp ?? 0),
         const SizedBox(height: 22),
-        const SectionHeader(
-          title: '积分任务',
-          subtitle: '完成条件后点“领取”，XP 会立即加入个人主页和排行榜统计。',
+        SectionHeader(
+          title: l10n.discoverXpTasks,
+          subtitle: l10n.discoverXpTasksSubtitle,
         ),
         const SizedBox(height: 12),
         _RewardTaskList(
           tasks: [
             _RewardTaskData(
               icon: Icons.calendar_month_outlined,
-              title: '每日签到',
-              condition: '当天打开并完成一次学习动作',
+              title: l10n.discoverDailyCheckin,
+              condition: l10n.discoverDailyCheckinCondition,
               points: 5,
               isDone: checkedInToday,
               isClaimed: claimed.contains('daily-checkin'),
@@ -78,15 +80,15 @@ class DiscoverScreen extends ConsumerWidget {
                 context,
                 ref,
                 id: 'daily-checkin',
-                title: '每日签到',
+                title: l10n.discoverDailyCheckin,
                 points: 5,
                 isAvailable: checkedInToday,
               ),
             ),
             _RewardTaskData(
               icon: Icons.school_outlined,
-              title: '完成新学',
-              condition: '完成今日新学任务',
+              title: l10n.discoverNewLearning,
+              condition: l10n.discoverNewLearningCondition,
               points: 20,
               isDone: newLearningDone,
               isClaimed: claimed.contains('new-learning'),
@@ -95,15 +97,15 @@ class DiscoverScreen extends ConsumerWidget {
                 context,
                 ref,
                 id: 'new-learning',
-                title: '完成新学',
+                title: l10n.discoverNewLearning,
                 points: 20,
                 isAvailable: newLearningDone,
               ),
             ),
             _RewardTaskData(
               icon: Icons.replay_outlined,
-              title: '完成复习',
-              condition: '完成今日到期复习',
+              title: l10n.discoverReviewDone,
+              condition: l10n.discoverReviewDoneCondition,
               points: 15,
               isDone: reviewDone,
               isClaimed: claimed.contains('review-done'),
@@ -112,15 +114,15 @@ class DiscoverScreen extends ConsumerWidget {
                 context,
                 ref,
                 id: 'review-done',
-                title: '完成复习',
+                title: l10n.discoverReviewDone,
                 points: 15,
                 isAvailable: reviewDone,
               ),
             ),
             _RewardTaskData(
               icon: Icons.sports_esports_outlined,
-              title: '训练场挑战',
-              condition: '完成任意训练场游戏',
+              title: l10n.discoverTrainingChallenge,
+              condition: l10n.discoverTrainingChallengeCondition,
               points: 20,
               isDone: false,
               isClaimed: claimed.contains('training-challenge'),
@@ -129,8 +131,8 @@ class DiscoverScreen extends ConsumerWidget {
             ),
             _RewardTaskData(
               icon: Icons.cleaning_services_outlined,
-              title: '错词清理',
-              condition: '今日错词再次答对',
+              title: l10n.discoverWeakCleanup,
+              condition: l10n.discoverWeakCleanupCondition,
               points: 10,
               isDone: weakCleanupDone,
               isClaimed: claimed.contains('weak-cleanup'),
@@ -139,7 +141,7 @@ class DiscoverScreen extends ConsumerWidget {
                 context,
                 ref,
                 id: 'weak-cleanup',
-                title: '错词清理',
+                title: l10n.discoverWeakCleanup,
                 points: 10,
                 isAvailable: weakCleanupDone,
               ),
@@ -147,11 +149,11 @@ class DiscoverScreen extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: 22),
-        const SectionHeader(title: '积分抽奖', subtitle: '奖品只做虚拟装饰，不影响学习公平性。'),
+        SectionHeader(title: l10n.discoverLuckyDraw, subtitle: l10n.discoverLuckyDrawSubtitle),
         const SizedBox(height: 12),
         const _LotteryInfoLine(),
         const SizedBox(height: 22),
-        const SectionHeader(title: '社区帖子', subtitle: '学习打卡和错题讨论集中展示。'),
+        SectionHeader(title: l10n.discoverCommunityPosts, subtitle: l10n.discoverCommunityPostsSubtitle),
         const SizedBox(height: 12),
         const _ForumPostList(
           posts: [
@@ -207,6 +209,7 @@ class _LotteryInfoLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -218,12 +221,12 @@ class _LotteryInfoLine extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '头像框、主页背景、学习徽章、训练场称号、卡片皮肤',
+                l10n.discoverLuckyDrawItems,
                 style: theme.textTheme.titleMedium,
               ),
               const SizedBox(height: 4),
               Text(
-                '消耗 30 积分抽一次；稀有概率透明展示，未中奖也给碎片。',
+                l10n.discoverLuckyDrawCost,
                 style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
               ),
             ],
@@ -241,6 +244,7 @@ class _XpUseStatusLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -251,10 +255,10 @@ class _XpUseStatusLine extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('XP 用途', style: theme.textTheme.titleMedium),
+              Text(l10n.discoverXpUsage, style: theme.textTheme.titleMedium),
               const SizedBox(height: 2),
               Text(
-                '领取后同步到个人主页和排行榜；积分抽奖会消耗当前 XP。当前余额 $currentXp XP。',
+                '${l10n.discoverXpUsageDesc} $currentXp ${l10n.commonXP}${l10n.localeName == 'zh' ? '。' : '.'}',
                 style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
               ),
             ],

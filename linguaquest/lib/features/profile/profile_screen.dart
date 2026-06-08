@@ -8,6 +8,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 int newWordbookCount(AppState state) => state.customWords.length;
 
@@ -16,6 +17,7 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final user = state.user;
     final completedPlans = state.learningPathProgress >= 1 ? 1 : 0;
@@ -39,51 +41,54 @@ class ProfileScreen extends ConsumerWidget {
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
       children: [
         _ProfileIdentityHeader(
-          name: user?.name ?? '学习者',
-          email: user?.email ?? '未设置邮箱',
-          target: displayTarget(user?.targetExam),
-          level: displayLevel(user?.level),
+          name: user?.name ?? l10n.profileLearner,
+          email: user?.email ?? l10n.profileNoEmail,
+          target: displayTarget(user?.targetExam, l10n: l10n),
+          level: displayLevel(user?.level, l10n: l10n),
           xp: user?.xp ?? 0,
           streak: user?.streak ?? 0,
+          l10n: l10n,
         ),
         const SizedBox(height: 20),
-        const SectionHeader(title: '学习仪表盘', subtitle: '把关键进度放在一屏内，设置入口放到后面。'),
+        SectionHeader(
+            title: l10n.profileDashboard,
+            subtitle: l10n.profileDashboardSubtitle),
         const SizedBox(height: 12),
         _ProfileScoreboard(
           stats: [
             _ProfileStatData(
-              label: '已学单词',
+              label: l10n.profileLearnedWords,
               value: '${state.completedLearningWords}',
               icon: Icons.school_outlined,
               color: AppTheme.teal,
             ),
             _ProfileStatData(
-              label: '已掌握',
+              label: l10n.profileMasteredWords,
               value: '$masteredWords',
               icon: Icons.verified_outlined,
               color: AppTheme.success,
             ),
             _ProfileStatData(
-              label: '生词本',
+              label: l10n.profileCustomWords,
               value: '${newWordbookCount(state)}',
               icon: Icons.style_outlined,
               color: AppTheme.cyan,
             ),
             _ProfileStatData(
-              label: '平均正确率',
+              label: l10n.profileAverageAccuracy,
               value: '$averageAccuracy%',
               icon: Icons.percent_outlined,
               color: AppTheme.mango,
             ),
             _ProfileStatData(
-              label: '完成计划',
+              label: l10n.profilePlansCompleted,
               value: '$completedPlans',
               icon: Icons.flag_outlined,
               color: AppTheme.teal,
             ),
             _ProfileStatData(
-              label: '连续打卡',
-              value: '${user?.streak ?? 0} 天',
+              label: l10n.onboardingTagPillStreak,
+              value: '${user?.streak ?? 0} ${l10n.profileStreakDays}',
               icon: Icons.local_fire_department,
               color: AppTheme.coral,
             ),
@@ -96,12 +101,13 @@ class ProfileScreen extends ConsumerWidget {
           totalWords: state.totalLearningWords,
           todayLessons: state.todayCompletedFormalLessonIds.length,
           todayReviews: state.todayReviewWordIds.length,
+          l10n: l10n,
         ),
         const SizedBox(height: 22),
         _WeaknessStatusLine(
           text: weakestWord == null
-              ? '弱项分析：暂无常错词，继续完成学习和复习后会生成。'
-              : '最常错词：${weakestWord.word} · ${weakestWord.wrongCount} 次错误 · ${displayWordStatus(weakestWord.status)}',
+              ? l10n.profileNoWeakness
+              : '${l10n.profileMostWrongWord}${l10n.localeName == 'zh' ? '：' : ': '}${weakestWord.word} · ${weakestWord.wrongCount} ${l10n.quizMistakes} · ${displayWordStatus(weakestWord.status, l10n: l10n)}',
         ),
         const SizedBox(height: 22),
         if (state.studyPlan != null) ...[
@@ -110,57 +116,58 @@ class ProfileScreen extends ConsumerWidget {
             dailyNewTarget: state.studyPlan!.dailyNewTarget,
             dailyReviewLimit: state.studyPlan!.dailyReviewLimit,
             status: state.studyPlan!.status,
+            l10n: l10n,
           ),
           const SizedBox(height: 22),
         ],
-        const SectionHeader(title: '设置与支持'),
+        SectionHeader(title: l10n.profileSettingsSupport),
         const SizedBox(height: 10),
         _ProfileAction(
           icon: Icons.flag_outlined,
-          title: '学习计划',
+          title: l10n.profilePlanLabel,
           subtitle: state.currentStudyBook.name,
           route: '/settings/study-plan',
         ),
-        const _ProfileAction(
+        _ProfileAction(
           icon: Icons.menu_book_outlined,
-          title: '单词本',
-          subtitle: '当前词书与目标词汇',
+          title: l10n.commonWordbook,
+          subtitle: l10n.profileWordbookSubtitle,
           route: '/wordbook',
         ),
-        const _ProfileAction(
+        _ProfileAction(
           icon: Icons.style_outlined,
-          title: '生词本',
-          subtitle: '收藏的单词与个人词汇卡片',
+          title: l10n.commonCustomWords,
+          subtitle: l10n.profileCustomWordsSubtitle,
           route: '/custom-words',
         ),
-        const _ProfileAction(
+        _ProfileAction(
           icon: Icons.warning_amber_outlined,
-          title: '错题本',
-          subtitle: '课程错词与弱项词',
+          title: l10n.commonMistakeBook,
+          subtitle: l10n.profileMistakeBookSubtitle,
           route: '/mistake-book',
         ),
-        const _ProfileAction(
+        _ProfileAction(
           icon: Icons.notifications_outlined,
-          title: '每日提醒',
-          subtitle: '选择提醒时间和开启状态',
+          title: l10n.commonDailyReminder,
+          subtitle: l10n.profileReminderSubtitle,
           route: '/settings/reminder',
         ),
-        const _ProfileAction(
+        _ProfileAction(
           icon: Icons.dark_mode_outlined,
-          title: '深色模式',
-          subtitle: '跟随系统、浅色或深色主题',
+          title: l10n.commonTheme,
+          subtitle: l10n.profileDarkModeSubtitle,
           route: '/settings/theme',
         ),
-        const _ProfileAction(
+        _ProfileAction(
           icon: Icons.help_outline,
-          title: '帮助与反馈',
-          subtitle: '常见问题和支持入口',
+          title: l10n.profileHelpTitle,
+          subtitle: l10n.profileHelpSubtitle,
           route: '/help',
         ),
-        const _ProfileAction(
+        _ProfileAction(
           icon: Icons.info_outline,
-          title: '关于我们',
-          subtitle: 'LinguaQuest 产品愿景与版本 1.0.0',
+          title: l10n.profileAboutTitle,
+          subtitle: l10n.profileAboutSubtitle,
           route: '/about',
         ),
         const SizedBox(height: 20),
@@ -170,7 +177,7 @@ class ProfileScreen extends ConsumerWidget {
             if (context.mounted) context.go('/onboarding');
           },
           icon: const Icon(Icons.logout),
-          label: const Text('退出登录'),
+          label: Text(l10n.profileLogout),
         ),
       ],
     );
@@ -185,6 +192,7 @@ class _ProfileIdentityHeader extends StatelessWidget {
     required this.level,
     required this.xp,
     required this.streak,
+    required this.l10n,
   });
 
   final String name;
@@ -193,6 +201,7 @@ class _ProfileIdentityHeader extends StatelessWidget {
   final String level;
   final int xp;
   final int streak;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -204,7 +213,9 @@ class _ProfileIdentityHeader extends StatelessWidget {
           radius: 32,
           backgroundColor: theme.colorScheme.primaryContainer,
           child: Text(
-            (name.trim().isEmpty) ? '?' : name.trim().characters.first.toUpperCase(),
+            (name.trim().isEmpty)
+                ? '?'
+                : name.trim().characters.first.toUpperCase(),
             style: TextStyle(
               color: theme.colorScheme.onPrimaryContainer,
               fontWeight: FontWeight.w900,
@@ -229,12 +240,12 @@ class _ProfileIdentityHeader extends StatelessWidget {
                 runSpacing: 8,
                 children: [
                   PillLabel(
-                    label: '$xp XP',
+                    label: '$xp ${l10n.commonXP}',
                     icon: Icons.bolt,
                     color: AppTheme.mango,
                   ),
                   PillLabel(
-                    label: '$streak 天连续',
+                    label: '$streak ${l10n.profileStreakDays}',
                     icon: Icons.local_fire_department,
                     color: AppTheme.coral,
                   ),
@@ -347,6 +358,7 @@ class _ProfileProgressSummary extends StatelessWidget {
     required this.totalWords,
     required this.todayLessons,
     required this.todayReviews,
+    required this.l10n,
   });
 
   final double progress;
@@ -354,13 +366,15 @@ class _ProfileProgressSummary extends StatelessWidget {
   final int totalWords;
   final int todayLessons;
   final int todayReviews;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('当前词书进度', style: Theme.of(context).textTheme.titleMedium),
+        Text(l10n.profileCurrentBookProgress,
+            style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 12),
         ClipRRect(
           borderRadius: BorderRadius.circular(999),
@@ -373,7 +387,7 @@ class _ProfileProgressSummary extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         Text(
-          '$completedWords/$totalWords 词 · 今日学习 $todayLessons 课 · 今日复习 $todayReviews 词',
+          '$completedWords/$totalWords ${l10n.commonWords} · ${l10n.homeTodayProgress}: $todayLessons ${l10n.commonLessons} · ${l10n.commonReview} $todayReviews ${l10n.commonWords}',
         ),
       ],
     );
@@ -417,12 +431,14 @@ class _LearningPlanLine extends StatelessWidget {
     required this.dailyNewTarget,
     required this.dailyReviewLimit,
     required this.status,
+    required this.l10n,
   });
 
   final String wordBookName;
   final int dailyNewTarget;
   final int dailyReviewLimit;
   final String status;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -436,10 +452,10 @@ class _LearningPlanLine extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('学习计划', style: theme.textTheme.titleMedium),
+              Text(l10n.profilePlanLabel, style: theme.textTheme.titleMedium),
               const SizedBox(height: 2),
               Text(
-                '$wordBookName · 新学 $dailyNewTarget · 复习上限 $dailyReviewLimit · ${status == 'paused' ? '已暂停' : '进行中'}',
+                '$wordBookName · ${l10n.commonNew} $dailyNewTarget · ${l10n.goalSetupReviewLimit} $dailyReviewLimit · ${status == 'paused' ? l10n.profilePlanPaused : l10n.profilePlanRunning}',
                 style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
               ),
             ],
