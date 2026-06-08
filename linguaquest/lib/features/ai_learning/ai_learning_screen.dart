@@ -22,7 +22,6 @@ class AiLearningScreen extends StatelessWidget {
       children: [
         SectionHeader(
           title: l10n.aiLearningTitle,
-          subtitle: l10n.aiLearningDesc,
           trailing: QuestIconButton(
             tooltip: l10n.aiLearningTooltip,
             onPressed: () => context.push('/ai-tutor'),
