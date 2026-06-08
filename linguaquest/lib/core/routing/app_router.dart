@@ -7,6 +7,9 @@ import '../../features/auth/login_screen.dart';
 import '../../features/auth/register_screen.dart';
 import '../../features/ai_learning/ai_learning_screen.dart';
 import '../../features/discover/discover_screen.dart';
+import '../../features/discover/xp_tasks_screen.dart';
+import '../../features/discover/lucky_draw_screen.dart';
+import '../../features/discover/community_screen.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/learning/learning_path_screen.dart';
 import '../../features/learning/lesson_preview_screen.dart';
@@ -161,6 +164,18 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/search',
         builder: (context, state) => const SearchScreen(),
+      ),
+      GoRoute(
+        path: '/discover/xp-tasks',
+        builder: (context, state) => const XpTasksScreen(),
+      ),
+      GoRoute(
+        path: '/discover/lucky-draw',
+        builder: (context, state) => const LuckyDrawScreen(),
+      ),
+      GoRoute(
+        path: '/discover/community',
+        builder: (context, state) => const CommunityScreen(),
       ),
       GoRoute(
         path: '/wordbook',

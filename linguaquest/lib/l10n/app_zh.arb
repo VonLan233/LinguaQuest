@@ -193,7 +193,7 @@
   "discoverLuckyDrawItems": "头像框、主页背景、学习徽章、训练场称号、卡片皮肤",
   "discoverLuckyDrawCost": "消耗 30 积分抽一次；稀有概率透明展示，未中奖也给碎片。",
   "discoverCommunityPosts": "社区帖子",
-  "discoverCommunityPostsSubtitle": "学习打卡和错题讨论集中展示。",
+  "discoverCommunityPostsSubtitle": "社区动态",
   "discoverXpUsage": "XP 用途",
   "discoverXpUsageDesc": "领取后同步到个人主页和排行榜；积分抽奖会消耗当前 XP。当前余额",
   "discoverGoComplete": "去完成 +{points} XP",
@@ -231,10 +231,10 @@
   "quizMistakeTimed": "错题可去复习中心整理。",
 
   "trainingTitle": "训练场",
-  "trainingSubtitle": "限时测试、专项训练和排行榜放在这里。",
+  "trainingSubtitle": "限时测试、专项训练、排行榜",
   "trainingLeaderboard": "排行榜",
   "trainingTimedTests": "限时测试",
-  "trainingTimedTestsSubtitle": "校园词包和抢词挑战归入训练场，不再占用新学入口。",
+  "trainingTimedTestsSubtitle": "校园词包与抢词挑战",
   "trainingCampusSpeed": "校园速测",
   "trainingCampusSpeedDesc": "从当前词书抽题，适合课后快速检测，不影响正式复习节奏。",
   "trainingSpeedGame": "抢词",
@@ -258,7 +258,7 @@
   "trainingEnterCustomWords": "进入生词本",
 
   "learningPathTitle": "学习路径",
-  "learningPathSubtitle": "这里只展示词书进度；正式新学和复习回到首页的两个独立入口。",
+  "learningPathSubtitle": "词书学习进度",
   "learningPathOpenWordbook": "打开单词本和生词本",
   "learningPathAdjustPlan": "调整当前学习计划",
   "learningPathLessonLocked": "未解锁",
@@ -379,7 +379,7 @@
   "studyWordsLeft": "还剩 {count} 词",
 
   "aiLearningTitle": "AI 学习",
-  "aiLearningSubtitle": "AI 驱动的阅读、写作和练习功能。",
+  "aiLearningSubtitle": "阅读、写作和练习",
   "aiLearningComingSoon": "AI 学习功能即将上线。",
 
   "questTitle": "任务",

@@ -1201,7 +1201,7 @@ abstract class AppLocalizations {
   /// No description provided for @discoverCommunityPostsSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Learning check-ins and mistake discussions displayed here.'**
+  /// **'Community'**
   String get discoverCommunityPostsSubtitle;
 
   /// No description provided for @discoverXpUsage.
@@ -1417,7 +1417,7 @@ abstract class AppLocalizations {
   /// No description provided for @trainingSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Timed tests, skill drills, and leaderboard all here.'**
+  /// **'Timed tests, drills, leaderboard'**
   String get trainingSubtitle;
 
   /// No description provided for @trainingLeaderboard.
@@ -1435,7 +1435,7 @@ abstract class AppLocalizations {
   /// No description provided for @trainingTimedTestsSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Campus word packs and speed challenges are in the training ground, not the new learning entry.'**
+  /// **'Campus packs & speed challenges'**
   String get trainingTimedTestsSubtitle;
 
   /// No description provided for @trainingCampusSpeed.
@@ -1573,7 +1573,7 @@ abstract class AppLocalizations {
   /// No description provided for @learningPathSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Shows wordbook progress only. Formal new learning and review use the two separate entries on Home.'**
+  /// **'Wordbook progress'**
   String get learningPathSubtitle;
 
   /// No description provided for @learningPathOpenWordbook.
@@ -2257,7 +2257,7 @@ abstract class AppLocalizations {
   /// No description provided for @aiLearningSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'AI-powered reading, writing, and practice exercises.'**
+  /// **'Reading, writing, and practice'**
   String get aiLearningSubtitle;
 
   /// No description provided for @aiLearningComingSoon.

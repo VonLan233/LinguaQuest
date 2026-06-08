@@ -193,7 +193,7 @@
   "discoverLuckyDrawItems": "Avatar frames, profile backgrounds, learning badges, training titles, card skins",
   "discoverLuckyDrawCost": "30 XP per draw; rare probability displayed transparently, fragments given even without a prize.",
   "discoverCommunityPosts": "Community Posts",
-  "discoverCommunityPostsSubtitle": "Learning check-ins and mistake discussions displayed here.",
+  "discoverCommunityPostsSubtitle": "Community",
   "discoverXpUsage": "XP Usage",
   "discoverXpUsageDesc": "Claimed XP syncs to profile and leaderboard; lucky draw consumes current XP. Current balance",
   "discoverGoComplete": "Go +{points} XP",
@@ -231,10 +231,10 @@
   "quizMistakeTimed": "Mistakes can be reviewed in the review center.",
 
   "trainingTitle": "Training Ground",
-  "trainingSubtitle": "Timed tests, skill drills, and leaderboard all here.",
+  "trainingSubtitle": "Timed tests, drills, leaderboard",
   "trainingLeaderboard": "Leaderboard",
   "trainingTimedTests": "Timed Tests",
-  "trainingTimedTestsSubtitle": "Campus word packs and speed challenges are in the training ground, not the new learning entry.",
+  "trainingTimedTestsSubtitle": "Campus packs & speed challenges",
   "trainingCampusSpeed": "Campus Sprint",
   "trainingCampusSpeedDesc": "Draws from current wordbook. Good for post-class quick checks without affecting formal review rhythm.",
   "trainingSpeedGame": "Speed Game",
@@ -258,7 +258,7 @@
   "trainingEnterCustomWords": "Go to Custom Words",
 
   "learningPathTitle": "Learning Path",
-  "learningPathSubtitle": "Shows wordbook progress only. Formal new learning and review use the two separate entries on Home.",
+  "learningPathSubtitle": "Wordbook progress",
   "learningPathOpenWordbook": "Open Wordbook & Custom Words",
   "learningPathAdjustPlan": "Adjust Current Study Plan",
   "learningPathLessonLocked": "Locked",
@@ -379,7 +379,7 @@
   "studyWordsLeft": "{count} words left",
 
   "aiLearningTitle": "AI Learning",
-  "aiLearningSubtitle": "AI-powered reading, writing, and practice exercises.",
+  "aiLearningSubtitle": "Reading, writing, and practice",
   "aiLearningComingSoon": "AI learning features coming soon.",
 
   "questTitle": "Quests",

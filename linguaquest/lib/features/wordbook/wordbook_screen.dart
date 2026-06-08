@@ -277,7 +277,7 @@ class _TargetWordRow extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(word.word, style: theme.textTheme.titleMedium),
+                      Text(word.word.toLowerCase(), style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800)),
                       const SizedBox(height: 3),
                       Text(word.meaning),
                       const SizedBox(height: 3),

@@ -564,7 +564,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get discoverCommunityPosts => '社区帖子';
 
   @override
-  String get discoverCommunityPostsSubtitle => '学习打卡和错题讨论集中展示。';
+  String get discoverCommunityPostsSubtitle => '社区动态';
 
   @override
   String get discoverXpUsage => 'XP 用途';
@@ -680,7 +680,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get trainingTitle => '训练场';
 
   @override
-  String get trainingSubtitle => '限时测试、专项训练和排行榜放在这里。';
+  String get trainingSubtitle => '限时测试、专项训练、排行榜';
 
   @override
   String get trainingLeaderboard => '排行榜';
@@ -689,7 +689,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get trainingTimedTests => '限时测试';
 
   @override
-  String get trainingTimedTestsSubtitle => '校园词包和抢词挑战归入训练场，不再占用新学入口。';
+  String get trainingTimedTestsSubtitle => '校园词包与抢词挑战';
 
   @override
   String get trainingCampusSpeed => '校园速测';
@@ -758,7 +758,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get learningPathTitle => '学习路径';
 
   @override
-  String get learningPathSubtitle => '这里只展示词书进度；正式新学和复习回到首页的两个独立入口。';
+  String get learningPathSubtitle => '词书学习进度';
 
   @override
   String get learningPathOpenWordbook => '打开单词本和生词本';
@@ -1115,7 +1115,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get aiLearningTitle => 'AI 学习';
 
   @override
-  String get aiLearningSubtitle => 'AI 驱动的阅读、写作和练习功能。';
+  String get aiLearningSubtitle => '阅读、写作和练习';
 
   @override
   String get aiLearningComingSoon => 'AI 学习功能即将上线。';

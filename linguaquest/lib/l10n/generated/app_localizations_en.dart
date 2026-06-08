@@ -597,8 +597,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get discoverCommunityPosts => 'Community Posts';
 
   @override
-  String get discoverCommunityPostsSubtitle =>
-      'Learning check-ins and mistake discussions displayed here.';
+  String get discoverCommunityPostsSubtitle => 'Community';
 
   @override
   String get discoverXpUsage => 'XP Usage';
@@ -716,8 +715,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get trainingTitle => 'Training Ground';
 
   @override
-  String get trainingSubtitle =>
-      'Timed tests, skill drills, and leaderboard all here.';
+  String get trainingSubtitle => 'Timed tests, drills, leaderboard';
 
   @override
   String get trainingLeaderboard => 'Leaderboard';
@@ -726,8 +724,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get trainingTimedTests => 'Timed Tests';
 
   @override
-  String get trainingTimedTestsSubtitle =>
-      'Campus word packs and speed challenges are in the training ground, not the new learning entry.';
+  String get trainingTimedTestsSubtitle => 'Campus packs & speed challenges';
 
   @override
   String get trainingCampusSpeed => 'Campus Sprint';
@@ -803,8 +800,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get learningPathTitle => 'Learning Path';
 
   @override
-  String get learningPathSubtitle =>
-      'Shows wordbook progress only. Formal new learning and review use the two separate entries on Home.';
+  String get learningPathSubtitle => 'Wordbook progress';
 
   @override
   String get learningPathOpenWordbook => 'Open Wordbook & Custom Words';
@@ -1165,8 +1161,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aiLearningTitle => 'AI Learning';
 
   @override
-  String get aiLearningSubtitle =>
-      'AI-powered reading, writing, and practice exercises.';
+  String get aiLearningSubtitle => 'Reading, writing, and practice';
 
   @override
   String get aiLearningComingSoon => 'AI learning features coming soon.';

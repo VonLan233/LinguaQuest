@@ -432,8 +432,10 @@ void main() {
     await tester.tap(find.text('发现'));
     await tester.pumpAndSettle();
 
+    await tester.tap(find.text('积分任务'));
+    await tester.pumpAndSettle();
+
     expect(find.text('每日签到'), findsOneWidget);
-    expect(find.text('XP 用途'), findsOneWidget);
     expect(find.text('去完成 +5 XP'), findsOneWidget);
     expect(find.textContaining('已入账'), findsNothing);
   });
@@ -495,6 +497,9 @@ void main() {
       await tester.tap(find.text('发现'));
       await tester.pumpAndSettle();
 
+      await tester.tap(find.text('积分任务'));
+      await tester.pumpAndSettle();
+
       final newLearningTask = find.ancestor(
         of: find.text('完成新学'),
         matching: find.byType(InkWell),
@@ -553,6 +558,9 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     await tester.tap(find.text('发现'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('积分任务'));
     await tester.pumpAndSettle();
 
     await tester.scrollUntilVisible(
@@ -642,6 +650,9 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     await tester.tap(find.text('发现'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('积分任务'));
     await tester.pumpAndSettle();
 
     await tester.scrollUntilVisible(
