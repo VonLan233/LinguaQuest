@@ -219,9 +219,9 @@ class AppController extends Notifier<AppState> {
   }
 
   Future<void> updateLocale(Locale locale) async {
+    state = state.copyWith(locale: locale);
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_localeKey, locale.languageCode);
-    state = state.copyWith(locale: locale);
   }
 
   Future<void> updateReminderSettings(DailyReminderSettings settings) async {

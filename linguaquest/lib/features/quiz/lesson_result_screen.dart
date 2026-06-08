@@ -94,7 +94,7 @@ class LessonResultScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             if (resolved.mistakes.isEmpty)
-              _PerfectResultRow(l10n: l10n)
+              const _PerfectResultRow()
             else
               for (final mistake in resolved.mistakes)
                 _MistakeResultRow(mistake: mistake),
@@ -218,12 +218,11 @@ class _XpImpactNotice extends StatelessWidget {
 }
 
 class _PerfectResultRow extends StatelessWidget {
-  const _PerfectResultRow({required this.l10n});
-
-  final AppLocalizations l10n;
+  const _PerfectResultRow();
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),

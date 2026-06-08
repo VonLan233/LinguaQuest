@@ -151,7 +151,7 @@ class DiscoverScreen extends ConsumerWidget {
         const SizedBox(height: 22),
         SectionHeader(title: l10n.discoverLuckyDraw, subtitle: l10n.discoverLuckyDrawSubtitle),
         const SizedBox(height: 12),
-        _LotteryInfoLine(l10n: l10n),
+        const _LotteryInfoLine(),
         const SizedBox(height: 22),
         SectionHeader(title: l10n.discoverCommunityPosts, subtitle: l10n.discoverCommunityPostsSubtitle),
         const SizedBox(height: 12),
@@ -205,12 +205,11 @@ class DiscoverScreen extends ConsumerWidget {
 }
 
 class _LotteryInfoLine extends StatelessWidget {
-  const _LotteryInfoLine({required this.l10n});
-
-  final AppLocalizations l10n;
+  const _LotteryInfoLine();
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
