@@ -577,8 +577,8 @@ class _LanguageRow extends StatelessWidget {
               label: '中文',
               selected: current == 'zh',
               onTap: () {
-                onChanged(const Locale('zh'));
                 Navigator.pop(ctx);
+                onChanged(const Locale('zh'));
               },
             ),
             _LanguageOption(
@@ -586,8 +586,8 @@ class _LanguageRow extends StatelessWidget {
               label: 'Bahasa Melayu',
               selected: current == 'ms',
               onTap: () {
-                onChanged(const Locale('ms'));
                 Navigator.pop(ctx);
+                onChanged(const Locale('ms'));
               },
             ),
             _LanguageOption(
@@ -595,8 +595,8 @@ class _LanguageRow extends StatelessWidget {
               label: 'English',
               selected: current == 'en',
               onTap: () {
-                onChanged(const Locale('en'));
                 Navigator.pop(ctx);
+                onChanged(const Locale('en'));
               },
             ),
           ],

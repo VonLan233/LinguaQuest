@@ -496,8 +496,11 @@ class _DailyTaskPanel extends StatelessWidget {
                   child: FilledButton.icon(
                     onPressed: canStartNew ? onNewStudy : (hasReview ? onReview : null),
                     icon: const Icon(Icons.play_arrow_rounded),
-                    label: Text(
-                        '${l10n.homeStartLearning} ($totalTaskCount)'),
+                    label: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                          '${l10n.homeStartLearning} ($totalTaskCount)'),
+                    ),
                   ),
                 ),
                 if (hasReview) ...[
@@ -506,7 +509,10 @@ class _DailyTaskPanel extends StatelessWidget {
                     child: OutlinedButton.icon(
                       onPressed: onReview,
                       icon: const Icon(Icons.replay_rounded),
-                      label: Text('${l10n.homeReviewOnly} ($dueCount)'),
+                      label: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text('${l10n.homeReviewOnly} ($dueCount)'),
+                      ),
                     ),
                   ),
                 ],

@@ -12,18 +12,32 @@ class CommunityScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    const posts = [
-      _ForumPostData(
-        title: '今日打卡：用 12 分钟复习了 18 个词',
-        tag: '今日打卡',
-        body: '错词集中在近义辨析，明天准备从训练场的易混词挑战开始。',
-      ),
-      _ForumPostData(
-        title: '雅思阅读里怎么记 abstract?',
-        tag: '错题讨论',
-        body: 'abstract 在论文和阅读文章里经常不是"抽象"的意思，要结合语境判断。',
-      ),
-    ];
+    final isZh = Localizations.localeOf(context).languageCode == 'zh';
+    final posts = isZh
+        ? const [
+            _ForumPostData(
+              title: '今日打卡：用 12 分钟复习了 18 个词',
+              tag: '今日打卡',
+              body: '错词集中在近义辨析，明天准备从训练场的易混词挑战开始。',
+            ),
+            _ForumPostData(
+              title: '雅思阅读里怎么记 abstract?',
+              tag: '错题讨论',
+              body: 'abstract 在论文和阅读文章里经常不是"抽象"的意思，要结合语境判断。',
+            ),
+          ]
+        : const [
+            _ForumPostData(
+              title: "Today's check-in: Reviewed 18 words in 12 minutes",
+              tag: 'Daily Check-in',
+              body: "Mistakes were mostly synonyms. Tomorrow I'll start with the confusing words challenge in training.",
+            ),
+            _ForumPostData(
+              title: 'How to remember "abstract" in IELTS reading?',
+              tag: 'Mistake Discussion',
+              body: '"abstract" in academic contexts often does not mean "not concrete" — context matters.',
+            ),
+          ];
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/discover'),
