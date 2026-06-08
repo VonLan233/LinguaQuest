@@ -42,6 +42,11 @@ class SettingsScreen extends ConsumerWidget {
               subtitle: _themeModeLabel(state.themeMode),
               route: '/settings/theme',
             ),
+            _LanguageSetting(
+              currentLocale: state.locale,
+              onChanged: (locale) =>
+                  ref.read(appControllerProvider.notifier).updateLocale(locale),
+            ),
             const SizedBox(height: 8),
             const _SettingsInfoLine(
               icon: Icons.volume_up_outlined,
@@ -171,6 +176,129 @@ class ReminderSettingsScreen extends ConsumerWidget {
         .updateReminderSettings(
           settings.copyWith(hour: picked.hour, minute: picked.minute),
         );
+  }
+}
+
+class _LanguageSetting extends StatelessWidget {
+  const _LanguageSetting({
+    required this.currentLocale,
+    required this.onChanged,
+  });
+
+  final Locale? currentLocale;
+  final ValueChanged<Locale> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final langCode = currentLocale?.languageCode ?? 'zh';
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: () => _showLanguageSheet(context, langCode),
+        child: Row(
+          children: [
+            Icon(Icons.language_outlined, color: theme.colorScheme.primary),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('语言', style: theme.textTheme.titleMedium),
+                  Text(
+                    _localeLabel(langCode),
+                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right_rounded),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showLanguageSheet(BuildContext context, String current) {
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _LanguageOption(
+              code: 'zh',
+              label: '中文',
+              selected: current == 'zh',
+              onTap: () {
+                onChanged(const Locale('zh'));
+                Navigator.pop(ctx);
+              },
+            ),
+            _LanguageOption(
+              code: 'ms',
+              label: 'Bahasa Melayu',
+              selected: current == 'ms',
+              onTap: () {
+                onChanged(const Locale('ms'));
+                Navigator.pop(ctx);
+              },
+            ),
+            _LanguageOption(
+              code: 'en',
+              label: 'English',
+              selected: current == 'en',
+              onTap: () {
+                onChanged(const Locale('en'));
+                Navigator.pop(ctx);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _localeLabel(String langCode) {
+    switch (langCode) {
+      case 'zh':
+        return '中文';
+      case 'ms':
+        return 'Bahasa Melayu';
+      case 'en':
+        return 'English';
+      default:
+        return '中文';
+    }
+  }
+}
+
+class _LanguageOption extends StatelessWidget {
+  const _LanguageOption({
+    required this.code,
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String code;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return ListTile(
+      leading: Icon(
+        selected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+        color: selected ? theme.colorScheme.primary : null,
+      ),
+      title: Text(label),
+      selected: selected,
+      onTap: onTap,
+    );
   }
 }
 

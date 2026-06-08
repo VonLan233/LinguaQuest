@@ -87,6 +87,7 @@ final appControllerProvider = NotifierProvider<AppController, AppState>(
 
 class AppController extends Notifier<AppState> {
   static const _themeModeKey = 'linguaquest.themeMode';
+  static const _localeKey = 'linguaquest.locale';
   static const _reminderKey = 'linguaquest.reminderSettings';
   static const _currentWordBookIdKey = 'linguaquest.currentWordBookId';
   static const _completedLessonIdsKey = 'linguaquest.completedLessons';
@@ -192,6 +193,7 @@ class AppController extends Notifier<AppState> {
         customWords: words,
         userWords: userWords,
         themeMode: _themeModeFromName(prefs.getString(_themeModeKey)),
+        locale: _localeFromName(prefs.getString(_localeKey)),
         reminderSettings: reminderSettings,
         studyPlan: studyPlan,
         completedLessonIds: completedLessonIds,
@@ -214,6 +216,12 @@ class AppController extends Notifier<AppState> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_themeModeKey, _themeModeName(mode));
     state = state.copyWith(themeMode: mode);
+  }
+
+  Future<void> updateLocale(Locale locale) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_localeKey, locale.languageCode);
+    state = state.copyWith(locale: locale);
   }
 
   Future<void> updateReminderSettings(DailyReminderSettings settings) async {
@@ -1430,6 +1438,11 @@ class AppController extends Notifier<AppState> {
       default:
         return ThemeMode.system;
     }
+  }
+
+  Locale? _localeFromName(String? value) {
+    if (value == null || value.isEmpty) return null;
+    return Locale(value);
   }
 
   String _themeModeName(ThemeMode mode) {

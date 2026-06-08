@@ -68,6 +68,7 @@ class AppState {
     required this.todayReviewWordIds,
     required this.todayClaimedRewardIds,
     required this.notifications,
+    this.locale,
     this.user,
     this.lastResult,
     this.studyPlan,
@@ -86,6 +87,7 @@ class AppState {
   final List<CustomWord> customWords;
   final List<UserWord> userWords;
   final ThemeMode themeMode;
+  final Locale? locale;
   final DailyReminderSettings reminderSettings;
   final StudyPlan? studyPlan;
   final Set<String> completedLessonIds;
@@ -195,6 +197,7 @@ class AppState {
     List<CustomWord>? customWords,
     List<UserWord>? userWords,
     ThemeMode? themeMode,
+    Locale? locale,
     DailyReminderSettings? reminderSettings,
     StudyPlan? studyPlan,
     bool clearStudyPlan = false,
@@ -220,6 +223,7 @@ class AppState {
       customWords: nextCustomWords,
       userWords: nextUserWords,
       themeMode: themeMode ?? this.themeMode,
+      locale: locale ?? this.locale,
       reminderSettings: reminderSettings ?? this.reminderSettings,
       studyPlan: clearStudyPlan ? null : studyPlan ?? this.studyPlan,
       completedLessonIds: completedLessonIds ?? this.completedLessonIds,
@@ -247,6 +251,7 @@ class AppState {
       customWords: [],
       userWords: [],
       themeMode: ThemeMode.system,
+      locale: const Locale('zh'),
       reminderSettings: DailyReminderSettings.defaults,
       completedLessonIds: {},
       todayCompletedLessonIds: {},
