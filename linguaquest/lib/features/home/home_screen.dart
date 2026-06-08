@@ -18,8 +18,6 @@ class HomeScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final user = state.user;
-    final name = user?.name.trim() ?? '';
-    final avatarLetter = name.isEmpty ? '?' : name.characters.first.toUpperCase();
     final currentBook = state.currentWordBook;
     final dueCount = state.reviewQueue.length;
     final dailyGoal = state.dailyNewTarget;
@@ -50,13 +48,10 @@ class HomeScreen extends ConsumerWidget {
                 child: CircleAvatar(
                   radius: 24,
                   backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                  child: Text(
-                    avatarLetter,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 20,
-                    ),
+                  child: Icon(
+                    Icons.person_rounded,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    size: 28,
                   ),
                 ),
               ),
@@ -495,22 +490,28 @@ class _DailyTaskPanel extends StatelessWidget {
               label: Text(l10n.homeResumePlan),
             )
           else
-            FilledButton.icon(
-              onPressed: canStartNew
-                  ? onNewStudy
-                  : (hasReview ? onReview : null),
-              icon: const Icon(Icons.play_arrow_rounded),
-              label: Text(
-                  '${l10n.homeStartLearning} ($totalTaskCount ${l10n.commonWords})'),
+            Row(
+              children: [
+                Expanded(
+                  child: FilledButton.icon(
+                    onPressed: canStartNew ? onNewStudy : (hasReview ? onReview : null),
+                    icon: const Icon(Icons.play_arrow_rounded),
+                    label: Text(
+                        '${l10n.homeStartLearning} ($totalTaskCount)'),
+                  ),
+                ),
+                if (hasReview) ...[
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: onReview,
+                      icon: const Icon(Icons.replay_rounded),
+                      label: Text('${l10n.homeReviewOnly} ($dueCount)'),
+                    ),
+                  ),
+                ],
+              ],
             ),
-          if (!isPaused && hasReview) ...[
-            const SizedBox(height: 8),
-            OutlinedButton.icon(
-              onPressed: onReview,
-              icon: const Icon(Icons.replay_rounded),
-              label: Text('${l10n.homeReviewOnly} ($dueCount ${l10n.commonWords})'),
-            ),
-          ],
         ],
       ),
     );

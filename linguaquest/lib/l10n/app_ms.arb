@@ -231,10 +231,10 @@
   "quizMistakeTimed": "Kesilapan boleh disemak di pusat ulangkaji.",
 
   "trainingTitle": "Padang Latihan",
-  "trainingSubtitle": "Ujian bermasa, latihan kemahiran, dan papan pendahulu semuanya di sini.",
+  "trainingSubtitle": "Ujian bermasa, latihan, papan pendahulu",
   "trainingLeaderboard": "Papan Pendahulu",
   "trainingTimedTests": "Ujian Bermasa",
-  "trainingTimedTestsSubtitle": "Pek perkataan kampus dan cabaran kelajuan ada di padang latihan, bukan di pintu masuk pembelajaran baharu.",
+  "trainingTimedTestsSubtitle": "Pek kampus & cabaran kelajuan",
   "trainingCampusSpeed": "Pecut Kampus",
   "trainingCampusSpeedDesc": "Mengambil dari buku perkataan semasa. Sesuai untuk semakan pantas selepas kelas tanpa menjejaskan rentak ulangkaji formal.",
   "trainingSpeedGame": "Permainan Kelajuan",
@@ -258,7 +258,7 @@
   "trainingEnterCustomWords": "Pergi ke Perkataan Tersuai",
 
   "learningPathTitle": "Laluan Pembelajaran",
-  "learningPathSubtitle": "Hanya menunjukkan kemajuan buku perkataan. Pembelajaran baharu formal dan ulangkaji menggunakan dua pintu masuk berasingan di Utama.",
+  "learningPathSubtitle": "Kemajuan buku perkataan",
   "learningPathOpenWordbook": "Buka Buku Perkataan & Perkataan Tersuai",
   "learningPathAdjustPlan": "Laras Pelan Belajar Semasa",
   "learningPathLessonLocked": "Dikunci",
@@ -379,7 +379,7 @@
   "studyWordsLeft": "{count} perkataan tinggal",
 
   "aiLearningTitle": "Pembelajaran AI",
-  "aiLearningSubtitle": "Latihan membaca, menulis, dan praktis dikuasakan AI.",
+  "aiLearningSubtitle": "Membaca, menulis, dan praktis",
   "aiLearningComingSoon": "Ciri pembelajaran AI akan datang.",
 
   "questTitle": "Misi",

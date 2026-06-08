@@ -199,14 +199,18 @@ void main() {
       final discover = File(
         'lib/features/discover/discover_screen.dart',
       ).readAsStringSync();
+      final xpTasks = File(
+        'lib/features/discover/xp_tasks_screen.dart',
+      ).readAsStringSync();
+      final shared = File(
+        'lib/features/discover/shared_widgets.dart',
+      ).readAsStringSync();
 
-      expect(discover, contains('_RewardTaskList'));
-      expect(discover, contains('_RewardTaskRow'));
-      expect(discover, contains('_ForumPostList'));
-      expect(discover, contains('_ForumPostRow'));
-      expect(discover, isNot(contains('_RewardTaskCard')));
+      expect(discover, contains('_DiscoverNavCard'));
+      expect(xpTasks, contains('RewardTaskList'));
+      expect(shared, contains('RewardTaskRow'));
       expect(discover, isNot(contains('_ForumPostCard')));
-      expect(discover, contains('去完成 +'));
+      expect(shared, contains('去完成 +'));
     });
 
     test('onboarding explains features as a light step list', () {
@@ -278,7 +282,7 @@ void main() {
       expect(home, contains("context.push('/study/review')"));
       expect(home, contains("context.push('/learn')"));
       expect(home, isNot(contains("context.push('/leaderboard')")));
-      expect(discover, contains("context.push('/study/new')"));
+      expect(discover, contains("context.push('/discover/xp-tasks')"));
       expect(discover, isNot(contains("context.push('/learn')")));
       expect(home, isNot(contains('/timed-test/lesson-campus-1')));
       expect(

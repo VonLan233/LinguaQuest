@@ -718,8 +718,7 @@ class AppLocalizationsMs extends AppLocalizations {
   String get trainingTitle => 'Padang Latihan';
 
   @override
-  String get trainingSubtitle =>
-      'Ujian bermasa, latihan kemahiran, dan papan pendahulu semuanya di sini.';
+  String get trainingSubtitle => 'Ujian bermasa, latihan, papan pendahulu';
 
   @override
   String get trainingLeaderboard => 'Papan Pendahulu';
@@ -728,8 +727,7 @@ class AppLocalizationsMs extends AppLocalizations {
   String get trainingTimedTests => 'Ujian Bermasa';
 
   @override
-  String get trainingTimedTestsSubtitle =>
-      'Pek perkataan kampus dan cabaran kelajuan ada di padang latihan, bukan di pintu masuk pembelajaran baharu.';
+  String get trainingTimedTestsSubtitle => 'Pek kampus & cabaran kelajuan';
 
   @override
   String get trainingCampusSpeed => 'Pecut Kampus';
@@ -805,8 +803,7 @@ class AppLocalizationsMs extends AppLocalizations {
   String get learningPathTitle => 'Laluan Pembelajaran';
 
   @override
-  String get learningPathSubtitle =>
-      'Hanya menunjukkan kemajuan buku perkataan. Pembelajaran baharu formal dan ulangkaji menggunakan dua pintu masuk berasingan di Utama.';
+  String get learningPathSubtitle => 'Kemajuan buku perkataan';
 
   @override
   String get learningPathOpenWordbook =>
@@ -1169,8 +1166,7 @@ class AppLocalizationsMs extends AppLocalizations {
   String get aiLearningTitle => 'Pembelajaran AI';
 
   @override
-  String get aiLearningSubtitle =>
-      'Latihan membaca, menulis, dan praktis dikuasakan AI.';
+  String get aiLearningSubtitle => 'Membaca, menulis, dan praktis';
 
   @override
   String get aiLearningComingSoon => 'Ciri pembelajaran AI akan datang.';

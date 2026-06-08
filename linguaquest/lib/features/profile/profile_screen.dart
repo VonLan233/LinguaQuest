@@ -50,6 +50,12 @@ class ProfileScreen extends ConsumerWidget {
           l10n: l10n,
         ),
         const SizedBox(height: 20),
+        _LanguageRow(
+          currentLocale: state.locale,
+          onChanged: (locale) =>
+              ref.read(appControllerProvider.notifier).updateLocale(locale),
+        ),
+        const SizedBox(height: 20),
         SectionHeader(
             title: l10n.profileDashboard,
             subtitle: l10n.profileDashboardSubtitle),
@@ -212,15 +218,10 @@ class _ProfileIdentityHeader extends StatelessWidget {
         CircleAvatar(
           radius: 32,
           backgroundColor: theme.colorScheme.primaryContainer,
-          child: Text(
-            (name.trim().isEmpty)
-                ? '?'
-                : name.trim().characters.first.toUpperCase(),
-            style: TextStyle(
-              color: theme.colorScheme.onPrimaryContainer,
-              fontWeight: FontWeight.w900,
-              fontSize: 26,
-            ),
+          child: Icon(
+            Icons.person_rounded,
+            color: theme.colorScheme.onPrimaryContainer,
+            size: 34,
           ),
         ),
         const SizedBox(width: 14),
@@ -517,6 +518,131 @@ class _ProfileAction extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _LanguageRow extends StatelessWidget {
+  const _LanguageRow({
+    required this.currentLocale,
+    required this.onChanged,
+  });
+
+  final Locale? currentLocale;
+  final ValueChanged<Locale> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final langCode = currentLocale?.languageCode ?? 'zh';
+    return Material(
+      color: theme.colorScheme.primaryContainer.withValues(alpha: 0.35),
+      borderRadius: BorderRadius.circular(14),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () => _showLanguageSheet(context, langCode),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          child: Row(
+            children: [
+              Icon(Icons.language_rounded, color: theme.colorScheme.primary),
+              const SizedBox(width: 12),
+              Text(l10n.languageSetting,
+                  style: theme.textTheme.titleMedium),
+              const Spacer(),
+              Text(
+                _localeLabel(langCode),
+                style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+              ),
+              const SizedBox(width: 4),
+              Icon(Icons.chevron_right_rounded,
+                  color: theme.colorScheme.onSurfaceVariant),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showLanguageSheet(BuildContext context, String current) {
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _LanguageOption(
+              code: 'zh',
+              label: '中文',
+              selected: current == 'zh',
+              onTap: () {
+                onChanged(const Locale('zh'));
+                Navigator.pop(ctx);
+              },
+            ),
+            _LanguageOption(
+              code: 'ms',
+              label: 'Bahasa Melayu',
+              selected: current == 'ms',
+              onTap: () {
+                onChanged(const Locale('ms'));
+                Navigator.pop(ctx);
+              },
+            ),
+            _LanguageOption(
+              code: 'en',
+              label: 'English',
+              selected: current == 'en',
+              onTap: () {
+                onChanged(const Locale('en'));
+                Navigator.pop(ctx);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _localeLabel(String langCode) {
+    switch (langCode) {
+      case 'zh':
+        return '中文';
+      case 'ms':
+        return 'Bahasa Melayu';
+      case 'en':
+        return 'English';
+      default:
+        return '中文';
+    }
+  }
+}
+
+class _LanguageOption extends StatelessWidget {
+  const _LanguageOption({
+    required this.code,
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String code;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return ListTile(
+      leading: Icon(
+        selected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+        color: selected ? theme.colorScheme.primary : null,
+      ),
+      title: Text(label),
+      selected: selected,
+      onTap: onTap,
     );
   }
 }
