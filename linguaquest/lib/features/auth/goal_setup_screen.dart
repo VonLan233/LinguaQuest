@@ -117,7 +117,6 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
               dailyWords: dailyWords,
               reviewLimit: dailyWords * 2,
               onOpenWordbook: () => context.push('/wordbook'),
-              l10n: l10n,
             ),
             const SizedBox(height: 20),
             _ChoiceSection<String>(
@@ -294,7 +293,6 @@ class _PlanSnapshotLine extends StatelessWidget {
     required this.dailyWords,
     required this.reviewLimit,
     required this.onOpenWordbook,
-    required this.l10n,
   });
 
   final String target;
@@ -303,10 +301,10 @@ class _PlanSnapshotLine extends StatelessWidget {
   final int dailyWords;
   final int reviewLimit;
   final VoidCallback onOpenWordbook;
-  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final progress = totalWords == 0
         ? 0.0

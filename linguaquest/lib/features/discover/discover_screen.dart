@@ -59,7 +59,7 @@ class DiscoverScreen extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: 14),
-        _XpUseStatusLine(currentXp: user?.xp ?? 0, l10n: l10n),
+        _XpUseStatusLine(currentXp: user?.xp ?? 0),
         const SizedBox(height: 22),
         SectionHeader(
           title: l10n.discoverXpTasks,
@@ -238,13 +238,13 @@ class _LotteryInfoLine extends StatelessWidget {
 }
 
 class _XpUseStatusLine extends StatelessWidget {
-  const _XpUseStatusLine({required this.currentXp, required this.l10n});
+  const _XpUseStatusLine({required this.currentXp});
 
   final int currentXp;
-  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
