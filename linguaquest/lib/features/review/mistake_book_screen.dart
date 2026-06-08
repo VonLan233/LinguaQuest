@@ -3,19 +3,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
-import '../../core/theme/app_theme.dart';
 import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
-import '../../core/widgets/section_header.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class MistakeBookScreen extends ConsumerWidget {
   const MistakeBookScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final lessonMistakes = state.lastResult?.mistakes ?? const [];
     final weakWords = state.weakWords;
@@ -23,57 +23,47 @@ class MistakeBookScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/review'),
-        title: const Text('错词本'),
+        title: Text(l10n.mistakeBookTitle),
       ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
           children: [
-            SectionHeader(
-              title: lessonMistakes.isEmpty
-                  ? '暂时没有课程错题'
-                  : '${lessonMistakes.length} 个课程错题',
-              subtitle: '测验错题和弱项自定义卡会保留在这里，方便后续复习。',
-              trailing: QuestIconButton(
-                tooltip: '去练一课',
-                onPressed: () => context.go('/learn'),
-                icon: Icons.route_outlined,
-                color: AppTheme.coral,
-              ),
-            ),
-            const SizedBox(height: 14),
-            const PillLabel(
-              label: '错题修复',
-              icon: Icons.auto_fix_high_outlined,
-              color: AppTheme.coral,
-            ),
-            const SizedBox(height: 20),
             if (lessonMistakes.isEmpty && weakWords.isEmpty)
               EmptyState(
                 icon: Icons.check_circle_outline,
-                title: '错词本已清空',
-                message: '测验答错，或把生词本词卡标记为没记住后，这里会出现复习项。',
+                title: l10n.mistakeBookCleared,
+                message: l10n.mistakeBookClearedMsg,
                 action: OutlinedButton.icon(
                   onPressed: () => context.go('/learn'),
                   icon: const Icon(Icons.play_arrow_rounded),
-                  label: const Text('开始一课'),
+                  label: Text(l10n.commonContinue),
                 ),
               )
             else ...[
-              Text('课程错题', style: Theme.of(context).textTheme.titleLarge),
-              const SizedBox(height: 10),
-              if (lessonMistakes.isEmpty)
-                const Text('最近一课没有答错的题。')
-              else
+              if (lessonMistakes.isNotEmpty) ...[
+                Text(
+                  l10n.mistakeBookLessonMistakes,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: 10),
                 for (final mistake in lessonMistakes)
-                  _MistakeWordRow(mistake: mistake),
-              const SizedBox(height: 18),
-              Text('弱项生词', style: Theme.of(context).textTheme.titleLarge),
-              const SizedBox(height: 10),
-              if (weakWords.isEmpty)
-                const Text('还没有弱项生词。')
-              else
-                for (final word in weakWords) _WeakCustomWordRow(word: word),
+                  _MistakeWordRow(mistake: mistake, l10n: l10n),
+                const SizedBox(height: 18),
+              ],
+              if (weakWords.isNotEmpty) ...[
+                Text(
+                  l10n.mistakeBookWeakWords,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                for (final word in weakWords)
+                  _WeakCustomWordRow(word: word, l10n: l10n),
+              ],
             ],
           ],
         ),
@@ -83,9 +73,10 @@ class MistakeBookScreen extends ConsumerWidget {
 }
 
 class _MistakeWordRow extends StatelessWidget {
-  const _MistakeWordRow({required this.mistake});
+  const _MistakeWordRow({required this.mistake, required this.l10n});
 
   final QuizQuestion mistake;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -118,9 +109,10 @@ class _MistakeWordRow extends StatelessWidget {
 }
 
 class _WeakCustomWordRow extends StatelessWidget {
-  const _WeakCustomWordRow({required this.word});
+  const _WeakCustomWordRow({required this.word, required this.l10n});
 
   final CustomWord word;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +140,7 @@ class _WeakCustomWordRow extends StatelessWidget {
                       Text(word.word, style: theme.textTheme.titleMedium),
                       const SizedBox(height: 3),
                       Text(
-                        '错 ${word.wrongCount} 次 · ${word.meaning}',
+                        word.meaning,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
