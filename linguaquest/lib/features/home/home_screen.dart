@@ -465,23 +465,6 @@ class _DailyTaskPanel extends StatelessWidget {
               fontWeight: FontWeight.w900,
             ),
           ),
-          const SizedBox(height: 6),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Text(
-                  isPaused
-                      ? '${l10n.goalSetupCurrentBook} $currentSection · ${l10n.homePlanPaused}'
-                      : '${l10n.goalSetupCurrentBook} $currentSection · ${l10n.commonNew} $dailyGoal ${l10n.commonWords}${hasReview ? " + ${l10n.commonReview} $dueCount ${l10n.commonWords}" : ""}',
-                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
-                ),
-              ),
-              TextButton(
-                  onPressed: onOpenPlan,
-                  child: Text(l10n.homeAdjustPlan)),
-            ],
-          ),
           const SizedBox(height: 14),
           if (isPaused)
             OutlinedButton.icon(
