@@ -1355,6 +1355,110 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get wordbookNameBeginner => 'Beginner Basic Words';
+
+  @override
+  String get wordbookDescBeginner =>
+      'High-frequency words for beginners and daily expression.';
+
+  @override
+  String get wordbookNameIELTS => 'IELTS Core Words';
+
+  @override
+  String get wordbookDescIELTS =>
+      'High-frequency academic words for IELTS reading, listening, and writing.';
+
+  @override
+  String get wordbookNameTOEFL => 'TOEFL High-Frequency Words';
+
+  @override
+  String get wordbookDescTOEFL =>
+      'Academic vocabulary and campus expressions for TOEFL.';
+
+  @override
+  String get wordbookNameGRE => 'GRE High-Frequency Words';
+
+  @override
+  String get wordbookDescGRE =>
+      'Advanced words commonly seen in GRE reading and fill-in-the-blank.';
+
+  @override
+  String get wordbookNameCET4 => 'CET-4 Core Words';
+
+  @override
+  String get wordbookDescCET4 =>
+      'Core vocabulary for College English Test Band 4.';
+
+  @override
+  String get wordbookNameCET6 => 'CET-6 Core Words';
+
+  @override
+  String get wordbookDescCET6 =>
+      'Core vocabulary for College English Test Band 6.';
+
+  @override
+  String get wordbookNameKaoyan => 'Postgrad Core Words';
+
+  @override
+  String get wordbookDescKaoyan =>
+      'Core vocabulary for postgraduate entrance exams.';
+
+  @override
+  String get notificationTitle => 'Notifications';
+
+  @override
+  String get notificationMarkAllRead => 'Mark All Read';
+
+  @override
+  String get notificationCenter => 'Message Center';
+
+  @override
+  String get notificationCenterDesc =>
+      'Learning reminders, review due, check-in, and activity messages are gathered here.';
+
+  @override
+  String notificationUnreadCount(Object count) {
+    return '$count unread messages';
+  }
+
+  @override
+  String get notificationFilterAll => 'All';
+
+  @override
+  String get notificationFilterUnread => 'Unread';
+
+  @override
+  String get notificationFilterLearning => 'Learning';
+
+  @override
+  String get notificationFilterActivity => 'Activity';
+
+  @override
+  String get notificationEmptyTitle => 'No matching messages';
+
+  @override
+  String get notificationEmptyUnread => 'No unread messages right now.';
+
+  @override
+  String get notificationEmptyAll =>
+      'After completing learning and review, learning reminders and activity messages will continue to be gathered here.';
+
+  @override
+  String get notificationBackHome => 'Back to Home';
+
+  @override
+  String get notificationTypeLearningReminder => 'Learning Reminder';
+
+  @override
+  String get notificationTypeReviewDue => 'Review Due';
+
+  @override
+  String get notificationTypeCheckIn => 'Check-in Reminder';
+
+  @override
+  String get notificationTypeActivity => 'Activity Message';
+
+  @override
   String get studyNewStudy => 'New Study';
 
   @override

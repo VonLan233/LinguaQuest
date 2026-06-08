@@ -2596,6 +2596,192 @@ abstract class AppLocalizations {
   /// **'{count} words · Learning path {percent}% complete'**
   String wordbookTargetDesc(Object count, Object percent);
 
+  /// No description provided for @wordbookNameBeginner.
+  ///
+  /// In en, this message translates to:
+  /// **'Beginner Basic Words'**
+  String get wordbookNameBeginner;
+
+  /// No description provided for @wordbookDescBeginner.
+  ///
+  /// In en, this message translates to:
+  /// **'High-frequency words for beginners and daily expression.'**
+  String get wordbookDescBeginner;
+
+  /// No description provided for @wordbookNameIELTS.
+  ///
+  /// In en, this message translates to:
+  /// **'IELTS Core Words'**
+  String get wordbookNameIELTS;
+
+  /// No description provided for @wordbookDescIELTS.
+  ///
+  /// In en, this message translates to:
+  /// **'High-frequency academic words for IELTS reading, listening, and writing.'**
+  String get wordbookDescIELTS;
+
+  /// No description provided for @wordbookNameTOEFL.
+  ///
+  /// In en, this message translates to:
+  /// **'TOEFL High-Frequency Words'**
+  String get wordbookNameTOEFL;
+
+  /// No description provided for @wordbookDescTOEFL.
+  ///
+  /// In en, this message translates to:
+  /// **'Academic vocabulary and campus expressions for TOEFL.'**
+  String get wordbookDescTOEFL;
+
+  /// No description provided for @wordbookNameGRE.
+  ///
+  /// In en, this message translates to:
+  /// **'GRE High-Frequency Words'**
+  String get wordbookNameGRE;
+
+  /// No description provided for @wordbookDescGRE.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced words commonly seen in GRE reading and fill-in-the-blank.'**
+  String get wordbookDescGRE;
+
+  /// No description provided for @wordbookNameCET4.
+  ///
+  /// In en, this message translates to:
+  /// **'CET-4 Core Words'**
+  String get wordbookNameCET4;
+
+  /// No description provided for @wordbookDescCET4.
+  ///
+  /// In en, this message translates to:
+  /// **'Core vocabulary for College English Test Band 4.'**
+  String get wordbookDescCET4;
+
+  /// No description provided for @wordbookNameCET6.
+  ///
+  /// In en, this message translates to:
+  /// **'CET-6 Core Words'**
+  String get wordbookNameCET6;
+
+  /// No description provided for @wordbookDescCET6.
+  ///
+  /// In en, this message translates to:
+  /// **'Core vocabulary for College English Test Band 6.'**
+  String get wordbookDescCET6;
+
+  /// No description provided for @wordbookNameKaoyan.
+  ///
+  /// In en, this message translates to:
+  /// **'Postgrad Core Words'**
+  String get wordbookNameKaoyan;
+
+  /// No description provided for @wordbookDescKaoyan.
+  ///
+  /// In en, this message translates to:
+  /// **'Core vocabulary for postgraduate entrance exams.'**
+  String get wordbookDescKaoyan;
+
+  /// No description provided for @notificationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationTitle;
+
+  /// No description provided for @notificationMarkAllRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark All Read'**
+  String get notificationMarkAllRead;
+
+  /// No description provided for @notificationCenter.
+  ///
+  /// In en, this message translates to:
+  /// **'Message Center'**
+  String get notificationCenter;
+
+  /// No description provided for @notificationCenterDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning reminders, review due, check-in, and activity messages are gathered here.'**
+  String get notificationCenterDesc;
+
+  /// No description provided for @notificationUnreadCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} unread messages'**
+  String notificationUnreadCount(Object count);
+
+  /// No description provided for @notificationFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get notificationFilterAll;
+
+  /// No description provided for @notificationFilterUnread.
+  ///
+  /// In en, this message translates to:
+  /// **'Unread'**
+  String get notificationFilterUnread;
+
+  /// No description provided for @notificationFilterLearning.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning'**
+  String get notificationFilterLearning;
+
+  /// No description provided for @notificationFilterActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity'**
+  String get notificationFilterActivity;
+
+  /// No description provided for @notificationEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching messages'**
+  String get notificationEmptyTitle;
+
+  /// No description provided for @notificationEmptyUnread.
+  ///
+  /// In en, this message translates to:
+  /// **'No unread messages right now.'**
+  String get notificationEmptyUnread;
+
+  /// No description provided for @notificationEmptyAll.
+  ///
+  /// In en, this message translates to:
+  /// **'After completing learning and review, learning reminders and activity messages will continue to be gathered here.'**
+  String get notificationEmptyAll;
+
+  /// No description provided for @notificationBackHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Home'**
+  String get notificationBackHome;
+
+  /// No description provided for @notificationTypeLearningReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning Reminder'**
+  String get notificationTypeLearningReminder;
+
+  /// No description provided for @notificationTypeReviewDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Review Due'**
+  String get notificationTypeReviewDue;
+
+  /// No description provided for @notificationTypeCheckIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in Reminder'**
+  String get notificationTypeCheckIn;
+
+  /// No description provided for @notificationTypeActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity Message'**
+  String get notificationTypeActivity;
+
   /// No description provided for @studyNewStudy.
   ///
   /// In en, this message translates to:

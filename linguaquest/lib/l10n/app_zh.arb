@@ -464,7 +464,7 @@
   "notificationTypeLearningReminder": "学习提醒",
   "notificationTypeReviewDue": "复习到期",
   "notificationTypeCheckIn": "打卡提醒",
-  "notificationTypeActivity": "活动消息"
+  "notificationTypeActivity": "活动消息",
 
   "studyNewStudy": "新学",
   "studyReviewOnly": "复习",

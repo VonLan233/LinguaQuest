@@ -1,3 +1,5 @@
+import '../../l10n/generated/app_localizations.dart';
+
 enum AppNotificationType {
   learningReminder,
   reviewDue,

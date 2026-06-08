@@ -1298,6 +1298,101 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get wordbookNameBeginner => '入门基础词汇';
+
+  @override
+  String get wordbookDescBeginner => '适合初级英语和日常表达入门的基础高频词。';
+
+  @override
+  String get wordbookNameIELTS => '雅思核心词汇';
+
+  @override
+  String get wordbookDescIELTS => '覆盖雅思阅读、听力和写作中的高频学术词。';
+
+  @override
+  String get wordbookNameTOEFL => '托福高频词汇';
+
+  @override
+  String get wordbookDescTOEFL => '面向托福场景的学术词汇和校园表达。';
+
+  @override
+  String get wordbookNameGRE => 'GRE 高频词汇';
+
+  @override
+  String get wordbookDescGRE => '强化 GRE 阅读和填空常见高阶词。';
+
+  @override
+  String get wordbookNameCET4 => '四级核心词汇';
+
+  @override
+  String get wordbookDescCET4 => '大学英语四级核心词汇。';
+
+  @override
+  String get wordbookNameCET6 => '六级核心词汇';
+
+  @override
+  String get wordbookDescCET6 => '大学英语六级核心词汇。';
+
+  @override
+  String get wordbookNameKaoyan => '考研核心词汇';
+
+  @override
+  String get wordbookDescKaoyan => '考研英语核心词汇。';
+
+  @override
+  String get notificationTitle => '消息通知';
+
+  @override
+  String get notificationMarkAllRead => '全部已读';
+
+  @override
+  String get notificationCenter => '消息中心';
+
+  @override
+  String get notificationCenterDesc => '学习提醒、复习到期、打卡和活动消息都会集中在这里。';
+
+  @override
+  String notificationUnreadCount(Object count) {
+    return '$count 条未读消息';
+  }
+
+  @override
+  String get notificationFilterAll => '全部';
+
+  @override
+  String get notificationFilterUnread => '未读';
+
+  @override
+  String get notificationFilterLearning => '学习';
+
+  @override
+  String get notificationFilterActivity => '活动';
+
+  @override
+  String get notificationEmptyTitle => '没有符合条件的消息';
+
+  @override
+  String get notificationEmptyUnread => '当前没有未读消息。';
+
+  @override
+  String get notificationEmptyAll => '完成学习和复习后，这里会继续沉淀学习提醒和活动消息。';
+
+  @override
+  String get notificationBackHome => '回到首页';
+
+  @override
+  String get notificationTypeLearningReminder => '学习提醒';
+
+  @override
+  String get notificationTypeReviewDue => '复习到期';
+
+  @override
+  String get notificationTypeCheckIn => '打卡提醒';
+
+  @override
+  String get notificationTypeActivity => '活动消息';
+
+  @override
   String get studyNewStudy => '新学';
 
   @override

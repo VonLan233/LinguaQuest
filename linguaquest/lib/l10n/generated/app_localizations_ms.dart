@@ -1365,6 +1365,111 @@ class AppLocalizationsMs extends AppLocalizations {
   }
 
   @override
+  String get wordbookNameBeginner => 'Asas Pemula';
+
+  @override
+  String get wordbookDescBeginner =>
+      'Perkataan frekuensi tinggi untuk pemula dan ungkapan harian.';
+
+  @override
+  String get wordbookNameIELTS => 'Teras IELTS';
+
+  @override
+  String get wordbookDescIELTS =>
+      'Perkataan akademik frekuensi tinggi untuk bacaan, pendengaran, dan penulisan IELTS.';
+
+  @override
+  String get wordbookNameTOEFL => 'Frekuensi Tinggi TOEFL';
+
+  @override
+  String get wordbookDescTOEFL =>
+      'Perbendaharaan kata akademik dan ungkapan kampus untuk TOEFL.';
+
+  @override
+  String get wordbookNameGRE => 'Frekuensi Tinggi GRE';
+
+  @override
+  String get wordbookDescGRE =>
+      'Perkataan aras tinggi yang biasa dilihat dalam bacaan dan isi tempat kosong GRE.';
+
+  @override
+  String get wordbookNameCET4 => 'Teras CET-4';
+
+  @override
+  String get wordbookDescCET4 =>
+      'Perbendaharaan kata teras untuk Ujian Bahasa Inggeris Kolej Peringkat 4.';
+
+  @override
+  String get wordbookNameCET6 => 'Teras CET-6';
+
+  @override
+  String get wordbookDescCET6 =>
+      'Perbendaharaan kata teras untuk Ujian Bahasa Inggeris Kolej Peringkat 6.';
+
+  @override
+  String get wordbookNameKaoyan => 'Teras Pascasiswazah';
+
+  @override
+  String get wordbookDescKaoyan =>
+      'Perbendaharaan kata teras untuk peperiksaan kemasukan pascasiswazah.';
+
+  @override
+  String get notificationTitle => 'Pemberitahuan';
+
+  @override
+  String get notificationMarkAllRead => 'Semua Dibaca';
+
+  @override
+  String get notificationCenter => 'Pusat Mesej';
+
+  @override
+  String get notificationCenterDesc =>
+      'Peringatan pembelajaran, ulangkaji tamat tempoh, daftar masuk, dan mesej aktiviti akan dipusatkan di sini.';
+
+  @override
+  String notificationUnreadCount(Object count) {
+    return '$count mesej belum dibaca';
+  }
+
+  @override
+  String get notificationFilterAll => 'Semua';
+
+  @override
+  String get notificationFilterUnread => 'Belum Dibaca';
+
+  @override
+  String get notificationFilterLearning => 'Pembelajaran';
+
+  @override
+  String get notificationFilterActivity => 'Aktiviti';
+
+  @override
+  String get notificationEmptyTitle => 'Tiada mesej yang sepadan';
+
+  @override
+  String get notificationEmptyUnread =>
+      'Tiada mesej belum dibaca buat masa ini.';
+
+  @override
+  String get notificationEmptyAll =>
+      'Selepas menyelesaikan pembelajaran dan ulangkaji, peringatan pembelajaran dan mesej aktiviti akan terus dihimpunkan di sini.';
+
+  @override
+  String get notificationBackHome => 'Kembali ke Utama';
+
+  @override
+  String get notificationTypeLearningReminder => 'Peringatan Pembelajaran';
+
+  @override
+  String get notificationTypeReviewDue => 'Ulangkaji Tamat Tempoh';
+
+  @override
+  String get notificationTypeCheckIn => 'Peringatan Daftar Masuk';
+
+  @override
+  String get notificationTypeActivity => 'Mesej Aktiviti';
+
+  @override
   String get studyNewStudy => 'Pembelajaran Baru';
 
   @override
