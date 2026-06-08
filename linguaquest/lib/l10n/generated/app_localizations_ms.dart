@@ -1318,6 +1318,53 @@ class AppLocalizationsMs extends AppLocalizations {
   String get wordbookDeleteMessage => 'Tindakan ini tidak boleh dibuat asal.';
 
   @override
+  String get wordbookImageBook => 'Buku Perkataan Bergambar';
+
+  @override
+  String get wordbookCustomTooltip => 'Perkataan Tersuai';
+
+  @override
+  String wordbookWordsLearned(Object completed, Object total) {
+    return 'Dipelajari $completed/$total perkataan';
+  }
+
+  @override
+  String wordbookTargetWords(Object count) {
+    return '$count perkataan sasaran';
+  }
+
+  @override
+  String wordbookBookCount(Object count) {
+    return '$count buku perkataan';
+  }
+
+  @override
+  String wordbookCompletion(Object percent) {
+    return 'Penyiapan $percent%';
+  }
+
+  @override
+  String get wordbookSwitch => 'Tukar Buku Perkataan';
+
+  @override
+  String get wordbookSwitchDesc =>
+      'Buku perkataan semasa memacu laman utama, laluan pembelajaran, carian, latihan, dan kemasukan ulangkaji.';
+
+  @override
+  String get wordbookSwitched => 'Buku perkataan ditukar';
+
+  @override
+  String get wordbookSwitchFailed => 'Tidak dapat menukar buku perkataan';
+
+  @override
+  String get wordbookTargetSection => 'Perkataan Sasaran';
+
+  @override
+  String wordbookTargetDesc(Object count, Object percent) {
+    return '$count perkataan · Laluan pembelajaran $percent% selesai';
+  }
+
+  @override
   String get studyNewStudy => 'Pembelajaran Baru';
 
   @override
@@ -1335,6 +1382,110 @@ class AppLocalizationsMs extends AppLocalizations {
   }
 
   @override
+  String get studyPlanLoginRequired =>
+      'Sila log masuk sebelum menyediakan pelan pembelajaran.';
+
+  @override
+  String get studyPlanSave => 'Simpan Pelan Pembelajaran';
+
+  @override
+  String get studyPlanSettings => 'Tetapan Pelan Pembelajaran';
+
+  @override
+  String get studyPlanSettingsDesc =>
+      'Urus buku perkataan semasa, tugasan harian, rentak ulangkaji, dan masa peringatan.';
+
+  @override
+  String get studyPlanViewWords => 'Lihat Buku Perkataan Penuh';
+
+  @override
+  String get studyPlanDailyNew => 'Perkataan Baharu Harian';
+
+  @override
+  String get studyPlanDailyNewHint => 'Disyorkan 5-30 perkataan, maksimum 200.';
+
+  @override
+  String get studyPlanDailyReview => 'Had Ulangkaji Harian';
+
+  @override
+  String get studyPlanDailyReviewHint =>
+      'Giliran ulangkaji melebihi had akan disimpan untuk tarikh kemudian.';
+
+  @override
+  String get studyPlanTargetDate => 'Tarikh Tamat Peperiksaan/Sasaran';
+
+  @override
+  String get studyPlanReminderTime => 'Masa Peringatan Pembelajaran';
+
+  @override
+  String get studyPlanResume => 'Sambung Pelan';
+
+  @override
+  String get studyPlanPause => 'Hentikan Pelan';
+
+  @override
+  String get studyPlanReset => 'Tetapkan Semula Pelan';
+
+  @override
+  String get studyPlanResetConfirm =>
+      'Sahkan tetapkan semula pelan pembelajaran?';
+
+  @override
+  String get studyPlanResetDesc =>
+      'Tetapan semula akan mengosongkan kemajuan laluan pembelajaran buku perkataan semasa, dan menetapkan semula penguasaan perkataan tersuai, bilangan betul/salah, dan masa ulangkaji; giliran ulangkaji akan dijana semula. Ini mempengaruhi kemajuan pembelajaran dan jadual ulangkaji.';
+
+  @override
+  String get studyPlanCancel => 'Batal';
+
+  @override
+  String get studyPlanConfirm => 'Sahkan Tetap Semula';
+
+  @override
+  String get studyPlanInvalidDate =>
+      'Tarikh tamat sasaran tidak boleh lebih awal daripada hari ini.';
+
+  @override
+  String get studyPlanSaved => 'Pelan pembelajaran disimpan.';
+
+  @override
+  String get studyPlanSaveFailed => 'Tidak dapat menyimpan pelan.';
+
+  @override
+  String get studyPlanResumed => 'Pelan pembelajaran disambung.';
+
+  @override
+  String get studyPlanPaused =>
+      'Pelan pembelajaran dihentikan. Peringatan dan kemasukan tugas hari ini akan ditutup buat sementara waktu.';
+
+  @override
+  String get studyPlanPauseFailed => 'Tidak dapat mengemas kini status pelan.';
+
+  @override
+  String get studyPlanResetDone => 'Pelan pembelajaran ditetapkan semula.';
+
+  @override
+  String get studyPlanResetFailed => 'Tidak dapat menetapkan semula pelan.';
+
+  @override
+  String get studyPlanEnterNumber => 'Sila masukkan nombor';
+
+  @override
+  String studyPlanNumberRange(Object max, Object min) {
+    return 'Julat mestilah $min-$max';
+  }
+
+  @override
+  String studyPlanDaysLeft(Object count) {
+    return '$count hari tinggal';
+  }
+
+  @override
+  String get studyPlanActive => 'Aktif';
+
+  @override
+  String get studyPlanPausedLabel => 'Dihentikan';
+
+  @override
   String get aiLearningTitle => 'Pembelajaran AI';
 
   @override
@@ -1342,6 +1493,80 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get aiLearningComingSoon => 'Ciri pembelajaran AI akan datang.';
+
+  @override
+  String get aiLearningDesc =>
+      'Terangkan tatabahasa, bezakan makna perkataan, jana konteks; rekod pembelajaran formal masih dikemas kini oleh keputusan kuiz.';
+
+  @override
+  String get aiLearningTooltip => 'Soal Jawab';
+
+  @override
+  String get aiLearningPillError => 'Penjelasan Ralat';
+
+  @override
+  String get aiLearningPillNoKey => 'Tiada Kunci Klien Diperlukan';
+
+  @override
+  String get aiLearningCurrentWord => 'Perkataan Semasa';
+
+  @override
+  String get aiLearningToolsTitle => 'Senarai Alat';
+
+  @override
+  String get aiLearningToolsSubtitle =>
+      'Versi pertama memberi keutamaan kepada analisis ayat panjang dan soal jawab; pembetulan penulisan ditangguhkan.';
+
+  @override
+  String get aiLearningToolAiQA => 'Soal Jawab AI';
+
+  @override
+  String get aiLearningToolAiQADesc =>
+      'Jawab soalan tentang makna perkataan, tatabahasa, dan kesepaduan ungkapan berdasarkan perkataan semasa, contoh, dan matlamat pembelajaran.';
+
+  @override
+  String get aiLearningToolAiAnalysis => 'Analisis Ayat Panjang AI';
+
+  @override
+  String get aiLearningToolAiAnalysisDesc =>
+      'Ekstrak klausa utama, bahagikan klausa bawahan, terangkan bahan pengubah dan kata kunci, dan berikan terjemahan bahasa Cina yang semula jadi.';
+
+  @override
+  String get aiLearningToolAiWriting => 'Pembetulan Penulisan AI';
+
+  @override
+  String get aiLearningToolAiWritingDesc =>
+      'Pilih jenis peperiksaan, masukkan topik dan teks, keluarkan skor keseluruhan, skor terperinci, dan cadangan semakan per perenggan.';
+
+  @override
+  String get aiLearningToolCloze => 'Isi Tempat Kosong Perkataan Hari Ini';
+
+  @override
+  String get aiLearningToolClozeDesc =>
+      'Jana petikan pendek berdasarkan perkataan baharu hari ini, perkataan salah, atau perkataan lemah minggu ini, dengan 5 hingga 10 perkataan sasaran dibiarkan kosong.';
+
+  @override
+  String get aiLearningToolConfusion => 'Perkataan Keliru';
+
+  @override
+  String get aiLearningToolConfusionDesc =>
+      'Terangkan senario penggunaan kata hampir sama atau perkataan keliru seperti affect/effect berdasarkan rekod kesilapan.';
+
+  @override
+  String get aiLearningToolSentence => 'Penjanaan & Penulisan Semula Ayat';
+
+  @override
+  String get aiLearningToolSentenceDesc =>
+      'Jana ayat contoh yang lebih semula jadi berdasarkan matlamat peperiksaan, dengan tambahan satu klik ke nota atau buku perkataan.';
+
+  @override
+  String get aiLearningStatusSoon => 'Akan Datang';
+
+  @override
+  String get aiLearningStatusLater => 'Akan Dibuka';
+
+  @override
+  String get aiLearningStatusPlanning => 'Dalam Perancangan';
 
   @override
   String get questTitle => 'Misi';

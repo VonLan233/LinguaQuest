@@ -488,15 +488,12 @@ class _PlanHeroCard extends StatelessWidget {
             runSpacing: 8,
             children: [
               PillLabel(
-                label: l10n.wordbookWordsLearned
-                    .replaceAll('{completed}', '$completedWords')
-                    .replaceAll('{total}', '$totalWords'),
+                label: l10n.wordbookWordsLearned(completedWords, totalWords),
                 icon: Icons.school_outlined,
                 color: AppTheme.teal,
               ),
               PillLabel(
-                label: l10n.studyPlanDaysLeft
-                    .replaceAll('{count}', '$daysLeft'),
+                label: l10n.studyPlanDaysLeft(daysLeft),
                 icon: Icons.event_outlined,
                 color: AppTheme.mango,
               ),
@@ -639,9 +636,7 @@ class _NumberField extends StatelessWidget {
         final parsed = int.tryParse(value?.trim() ?? '');
         if (parsed == null) return l10n.studyPlanEnterNumber;
         if (parsed < min || parsed > max) {
-          return l10n.studyPlanNumberRange
-              .replaceAll('{min}', '$min')
-              .replaceAll('{max}', '$max');
+          return l10n.studyPlanNumberRange(min, max);
         }
         return null;
       },

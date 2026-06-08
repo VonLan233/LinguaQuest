@@ -1252,6 +1252,52 @@ class AppLocalizationsZh extends AppLocalizations {
   String get wordbookDeleteMessage => '此操作不可撤销。';
 
   @override
+  String get wordbookImageBook => '图片单词本';
+
+  @override
+  String get wordbookCustomTooltip => '生词本';
+
+  @override
+  String wordbookWordsLearned(Object completed, Object total) {
+    return '已学 $completed/$total 词';
+  }
+
+  @override
+  String wordbookTargetWords(Object count) {
+    return '$count 个目标词';
+  }
+
+  @override
+  String wordbookBookCount(Object count) {
+    return '$count 本词书';
+  }
+
+  @override
+  String wordbookCompletion(Object percent) {
+    return '完成 $percent%';
+  }
+
+  @override
+  String get wordbookSwitch => '切换词书';
+
+  @override
+  String get wordbookSwitchDesc => '当前词书会驱动首页、学习路径、搜索、训练场和复习入口。';
+
+  @override
+  String get wordbookSwitched => '已切换当前词书';
+
+  @override
+  String get wordbookSwitchFailed => '暂时无法切换词书';
+
+  @override
+  String get wordbookTargetSection => '目标词';
+
+  @override
+  String wordbookTargetDesc(Object count, Object percent) {
+    return '$count 词 · 学习路径完成 $percent%';
+  }
+
+  @override
   String get studyNewStudy => '新学';
 
   @override
@@ -1269,6 +1315,104 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get studyPlanLoginRequired => '请先登录后再设置学习计划。';
+
+  @override
+  String get studyPlanSave => '保存学习计划';
+
+  @override
+  String get studyPlanSettings => '学习计划设置';
+
+  @override
+  String get studyPlanSettingsDesc => '管理当前词书、每日任务、复习节奏和提醒时间。';
+
+  @override
+  String get studyPlanViewWords => '查看完整词汇表';
+
+  @override
+  String get studyPlanDailyNew => '每日新学词数';
+
+  @override
+  String get studyPlanDailyNewHint => '建议 5-30 词，最多 200 词。';
+
+  @override
+  String get studyPlanDailyReview => '每日复习上限';
+
+  @override
+  String get studyPlanDailyReviewHint => '复习队列超过上限时会保留到后续日期。';
+
+  @override
+  String get studyPlanTargetDate => '考试/目标完成日期';
+
+  @override
+  String get studyPlanReminderTime => '学习提醒时间';
+
+  @override
+  String get studyPlanResume => '恢复计划';
+
+  @override
+  String get studyPlanPause => '暂停计划';
+
+  @override
+  String get studyPlanReset => '重置计划';
+
+  @override
+  String get studyPlanResetConfirm => '确认重置学习计划？';
+
+  @override
+  String get studyPlanResetDesc =>
+      '重置后会清空当前词书的学习路径进度，并把生词本掌握度、正确/错误次数和复习时间重置；复习队列会重新生成。这个操作会影响学习进度和复习安排。';
+
+  @override
+  String get studyPlanCancel => '取消';
+
+  @override
+  String get studyPlanConfirm => '确认重置';
+
+  @override
+  String get studyPlanInvalidDate => '目标完成日期不能早于今天。';
+
+  @override
+  String get studyPlanSaved => '学习计划已保存。';
+
+  @override
+  String get studyPlanSaveFailed => '暂时无法保存计划。';
+
+  @override
+  String get studyPlanResumed => '学习计划已恢复。';
+
+  @override
+  String get studyPlanPaused => '学习计划已暂停，今日提醒和任务入口会暂时关闭。';
+
+  @override
+  String get studyPlanPauseFailed => '暂时无法更新计划状态。';
+
+  @override
+  String get studyPlanResetDone => '学习计划已重置。';
+
+  @override
+  String get studyPlanResetFailed => '暂时无法重置计划。';
+
+  @override
+  String get studyPlanEnterNumber => '请输入数字';
+
+  @override
+  String studyPlanNumberRange(Object max, Object min) {
+    return '范围必须是 $min-$max';
+  }
+
+  @override
+  String studyPlanDaysLeft(Object count) {
+    return '剩余 $count 天';
+  }
+
+  @override
+  String get studyPlanActive => '进行中';
+
+  @override
+  String get studyPlanPausedLabel => '已暂停';
+
+  @override
   String get aiLearningTitle => 'AI 学习';
 
   @override
@@ -1276,6 +1420,73 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get aiLearningComingSoon => 'AI 学习功能即将上线。';
+
+  @override
+  String get aiLearningDesc => '解释语法、辨析词义、生成语境；正式学习记录仍由答题结果更新。';
+
+  @override
+  String get aiLearningTooltip => '知识问答';
+
+  @override
+  String get aiLearningPillError => '错因讲解';
+
+  @override
+  String get aiLearningPillNoKey => '无需客户端密钥';
+
+  @override
+  String get aiLearningCurrentWord => '当前词';
+
+  @override
+  String get aiLearningToolsTitle => '工具列表';
+
+  @override
+  String get aiLearningToolsSubtitle => '首版优先落地长难句分析和知识问答，作文批改后置。';
+
+  @override
+  String get aiLearningToolAiQA => 'AI 知识问答';
+
+  @override
+  String get aiLearningToolAiQADesc => '结合当前单词、例句和学习目标回答词义、语法和表达自然度问题。';
+
+  @override
+  String get aiLearningToolAiAnalysis => 'AI 长难句分析';
+
+  @override
+  String get aiLearningToolAiAnalysisDesc => '提取主干、划分从句、解释修饰成分和关键词，并给出自然中文翻译。';
+
+  @override
+  String get aiLearningToolAiWriting => 'AI 作文批改';
+
+  @override
+  String get aiLearningToolAiWritingDesc => '选择考试类型、输入题目和正文，输出总评分、分项评分和逐段修改建议。';
+
+  @override
+  String get aiLearningToolCloze => '今日单词情景填空';
+
+  @override
+  String get aiLearningToolClozeDesc => '基于今日新词、错词或本周弱词生成短文，挖空 5 到 10 个目标词。';
+
+  @override
+  String get aiLearningToolConfusion => '易混词辨析';
+
+  @override
+  String get aiLearningToolConfusionDesc =>
+      '根据错题混淆记录，解释 affect/effect 这类近义或易混词的使用场景。';
+
+  @override
+  String get aiLearningToolSentence => '例句生成与改写';
+
+  @override
+  String get aiLearningToolSentenceDesc => '按考试目标生成更自然的例句，并支持一键加入笔记或生词本。';
+
+  @override
+  String get aiLearningStatusSoon => '暂未开放';
+
+  @override
+  String get aiLearningStatusLater => '待开放';
+
+  @override
+  String get aiLearningStatusPlanning => '规划中';
 
   @override
   String get questTitle => '任务';

@@ -56,19 +56,20 @@ class WordbookScreen extends ConsumerWidget {
               runSpacing: 8,
               children: [
                 PillLabel(
-                  label: l10n.wordbookTargetWords
-                      .replaceAll('{count}', '${currentBook?.totalWords ?? words.length}'),
+                  label: l10n.wordbookTargetWords(
+                    currentBook?.totalWords ?? words.length,
+                  ),
                   icon: Icons.style_outlined,
                   color: AppTheme.cyan,
                 ),
                 PillLabel(
-                  label: l10n.wordbookBookCount
-                      .replaceAll('{count}', '${state.wordBooks.length}'),
+                  label: l10n.wordbookBookCount(state.wordBooks.length),
                   icon: Icons.library_books_outlined,
                 ),
                 PillLabel(
-                  label: l10n.wordbookCompletion
-                      .replaceAll('{percent}', '${(state.learningPathProgress * 100).round()}'),
+                  label: l10n.wordbookCompletion(
+                    (state.learningPathProgress * 100).round(),
+                  ),
                   icon: Icons.route_outlined,
                 ),
               ],
@@ -103,9 +104,10 @@ class WordbookScreen extends ConsumerWidget {
             ],
             SectionHeader(
               title: l10n.wordbookTargetSection,
-              subtitle: l10n.wordbookTargetDesc
-                  .replaceAll('{count}', '${words.length}')
-                  .replaceAll('{percent}', '${(state.learningPathProgress * 100).round()}'),
+              subtitle: l10n.wordbookTargetDesc(
+                words.length,
+                (state.learningPathProgress * 100).round(),
+              ),
             ),
             const SizedBox(height: 16),
             for (final word in words) _TargetWordRow(word: word),
@@ -150,9 +152,7 @@ class _StudyBookCoverLine extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                l10n.wordbookWordsLearned
-                    .replaceAll('{completed}', '$completedWords')
-                    .replaceAll('{total}', '$totalWords'),
+                l10n.wordbookWordsLearned(completedWords, totalWords),
               ),
               const SizedBox(height: 8),
               ClipRRect(
@@ -254,8 +254,7 @@ class _WordBookSwitcher extends StatelessWidget {
                     children: [
                       PillLabel(label: book.examType),
                       PillLabel(
-                        label: l10n.wordbookTargetWords
-                            .replaceAll('{count}', '${book.totalWords}'),
+                        label: l10n.wordbookTargetWords(book.totalWords),
                       ),
                     ],
                   ),
