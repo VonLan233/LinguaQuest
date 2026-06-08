@@ -279,7 +279,17 @@ class AppLocalizationsZh extends AppLocalizations {
   String get goalSetupNewWords => '新学';
 
   @override
+  String goalSetupNewWordsCount(Object count) {
+    return '新学 $count 词';
+  }
+
+  @override
   String get goalSetupReviewLimit => '复习上限';
+
+  @override
+  String goalSetupReviewLimitCount(Object count) {
+    return '复习上限 $count 词';
+  }
 
   @override
   String get goalSetupViewWordbook => '查看完整词汇表';
@@ -319,6 +329,11 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get homeStreakLabel => '连续打卡';
+
+  @override
+  String homeStreakDays(num count) {
+    return '已连续打卡 $count 天';
+  }
 
   @override
   String get homeTodayProgress => '今日';

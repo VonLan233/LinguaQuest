@@ -285,13 +285,23 @@ class AppLocalizationsMs extends AppLocalizations {
   String get goalSetupCurrentBook => 'Buku Perkataan Semasa';
 
   @override
-  String get goalSetupLearned => 'Dipela';
+  String get goalSetupLearned => 'Dipelajari';
 
   @override
   String get goalSetupNewWords => 'Baru';
 
   @override
+  String goalSetupNewWordsCount(Object count) {
+    return '$count perkataan baru';
+  }
+
+  @override
   String get goalSetupReviewLimit => 'Had Ulangkaji';
+
+  @override
+  String goalSetupReviewLimitCount(Object count) {
+    return 'Had ulangkaji: $count perkataan';
+  }
 
   @override
   String get goalSetupViewWordbook => 'Lihat Buku Perkataan Penuh';
@@ -306,7 +316,7 @@ class AppLocalizationsMs extends AppLocalizations {
   String get homeNotifications => 'Pemberitahuan';
 
   @override
-  String get homeLearned => 'Dipela';
+  String get homeLearned => 'Dipelajari';
 
   @override
   String get homeMastered => 'Dikuasai';
@@ -331,6 +341,11 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get homeStreakLabel => 'daftar masuk berturut-turut';
+
+  @override
+  String homeStreakDays(num count) {
+    return '$count hari berturut-turut';
+  }
 
   @override
   String get homeTodayProgress => 'Hari Ini';

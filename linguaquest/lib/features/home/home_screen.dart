@@ -554,7 +554,7 @@ class _DailyFocusHeader extends StatelessWidget {
               color: theme.colorScheme.secondary,
             ),
             PillLabel(
-              label: '${l10n.homeStreakLabel} $streak ${l10n.commonDaysLabel}',
+              label: l10n.homeStreakDays(streak),
               icon: Icons.local_fire_department_outlined,
               color: AppTheme.mango,
             ),

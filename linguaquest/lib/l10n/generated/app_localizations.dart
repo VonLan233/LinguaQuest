@@ -640,11 +640,23 @@ abstract class AppLocalizations {
   /// **'New'**
   String get goalSetupNewWords;
 
+  /// No description provided for @goalSetupNewWordsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} new words'**
+  String goalSetupNewWordsCount(Object count);
+
   /// No description provided for @goalSetupReviewLimit.
   ///
   /// In en, this message translates to:
   /// **'Review Cap'**
   String get goalSetupReviewLimit;
+
+  /// No description provided for @goalSetupReviewLimitCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Review cap: {count} words'**
+  String goalSetupReviewLimitCount(Object count);
 
   /// No description provided for @goalSetupViewWordbook.
   ///
@@ -723,6 +735,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'continuous check-in'**
   String get homeStreakLabel;
+
+  /// No description provided for @homeStreakDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day streak} other{{count} days check-in}}'**
+  String homeStreakDays(num count);
 
   /// No description provided for @homeTodayProgress.
   ///

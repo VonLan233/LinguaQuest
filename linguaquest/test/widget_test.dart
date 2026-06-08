@@ -82,7 +82,7 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    expect(find.text('连续打卡 6 天'), findsOneWidget);
+    expect(find.text('已连续打卡 6 天'), findsOneWidget);
     expect(find.text('雅思核心词汇 · 中级'), findsOneWidget);
     expect(find.text('首页'), findsWidgets);
     expect(find.text('训练场'), findsWidgets);

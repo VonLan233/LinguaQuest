@@ -96,7 +96,9 @@
   "goalSetupCurrentBook": "Current Wordbook",
   "goalSetupLearned": "Learned",
   "goalSetupNewWords": "New",
+  "goalSetupNewWordsCount": "{count} new words",
   "goalSetupReviewLimit": "Review Cap",
+  "goalSetupReviewLimitCount": "Review cap: {count} words",
   "goalSetupViewWordbook": "View Full Wordbook",
 
   "homePersonalSpace": "Personal Space",
@@ -111,6 +113,7 @@
   "homeStartLearning": "Start Today's Learning",
   "homeReviewOnly": "Review Only",
   "homeStreakLabel": "continuous check-in",
+  "homeStreakDays": "{count, plural, =1{1 day streak} other{{count} days check-in}}",
   "homeTodayProgress": "Today",
   "homeWordbookShortcut": "Wordbook",
   "homeDailyArticle": "Daily Article",

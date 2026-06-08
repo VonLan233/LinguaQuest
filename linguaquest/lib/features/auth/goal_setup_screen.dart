@@ -356,12 +356,12 @@ class _PlanSnapshotLine extends StatelessWidget {
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             PillLabel(
-              label: '${l10n.goalSetupNewWords} $dailyWords ${l10n.commonWords}',
+              label: l10n.goalSetupNewWordsCount(dailyWords),
               icon: Icons.add_task_rounded,
               color: AppTheme.teal,
             ),
             PillLabel(
-              label: '${l10n.goalSetupReviewLimit} $reviewLimit ${l10n.commonWords}',
+              label: l10n.goalSetupReviewLimitCount(reviewLimit),
               icon: Icons.replay_rounded,
               color: AppTheme.mango,
             ),

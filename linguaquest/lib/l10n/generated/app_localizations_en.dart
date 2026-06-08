@@ -289,7 +289,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get goalSetupNewWords => 'New';
 
   @override
+  String goalSetupNewWordsCount(Object count) {
+    return '$count new words';
+  }
+
+  @override
   String get goalSetupReviewLimit => 'Review Cap';
+
+  @override
+  String goalSetupReviewLimitCount(Object count) {
+    return 'Review cap: $count words';
+  }
 
   @override
   String get goalSetupViewWordbook => 'View Full Wordbook';
@@ -329,6 +339,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get homeStreakLabel => 'continuous check-in';
+
+  @override
+  String homeStreakDays(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days check-in',
+      one: '1 day streak',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get homeTodayProgress => 'Today';

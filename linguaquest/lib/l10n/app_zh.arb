@@ -96,7 +96,9 @@
   "goalSetupCurrentBook": "当前词书",
   "goalSetupLearned": "已学",
   "goalSetupNewWords": "新学",
+  "goalSetupNewWordsCount": "新学 {count} 词",
   "goalSetupReviewLimit": "复习上限",
+  "goalSetupReviewLimitCount": "复习上限 {count} 词",
   "goalSetupViewWordbook": "查看完整词汇表",
 
   "homePersonalSpace": "个人空间",
@@ -111,6 +113,7 @@
   "homeStartLearning": "开始今日学习",
   "homeReviewOnly": "仅复习",
   "homeStreakLabel": "连续打卡",
+  "homeStreakDays": "已连续打卡 {count} 天",
   "homeTodayProgress": "今日",
   "homeWordbookShortcut": "单词本",
   "homeDailyArticle": "每日短文",
