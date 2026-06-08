@@ -731,6 +731,7 @@ class _WeakWordLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Material(
@@ -752,7 +753,7 @@ class _WeakWordLink extends StatelessWidget {
                       Text(word.word, style: theme.textTheme.titleMedium),
                       const SizedBox(height: 3),
                       Text(
-                        '${word.meaning} · 掌握 ${word.masteryLevel}/5',
+                        '${word.meaning} · ${l10n.commonMastery} ${word.masteryLevel}/5',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(

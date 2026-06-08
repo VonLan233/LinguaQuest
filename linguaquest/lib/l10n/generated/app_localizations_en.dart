@@ -133,6 +133,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commonDue => 'due';
 
   @override
+  String get commonMinutes => 'minutes';
+
+  @override
+  String get commonLesson => 'lesson';
+
+  @override
+  String get commonMastery => 'mastery';
+
+  @override
+  String get commonMasteryOutOf => '/5';
+
+  @override
+  String get commonAlreadyAdded => 'Already added';
+
+  @override
+  String get commonWrongPrefix => 'Wrong ';
+
+  @override
+  String get commonTimesSuffix => ' times';
+
+  @override
   String get authRegisterTitle => 'Register';
 
   @override
@@ -718,6 +739,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get trainingSubtitle => 'Timed tests, drills, leaderboard';
 
   @override
+  String get trainingPageSubtitle =>
+      'Timed tests, special drills, and the leaderboard live here.';
+
+  @override
+  String get trainingWeeklyXpPrefix => 'This week';
+
+  @override
+  String get trainingDailyXpAvailable => 'Up to 60 XP today';
+
+  @override
   String get trainingLeaderboard => 'Leaderboard';
 
   @override
@@ -739,6 +770,9 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get trainingSpeedGameDesc =>
       'Answer meaning-choice questions within 60 seconds. Score based on accuracy, combos, and speed.';
+
+  @override
+  String get trainingSpeedGameSource => 'Learned + due words';
 
   @override
   String get trainingNoWordbook => 'No wordbook';
@@ -764,11 +798,17 @@ class AppLocalizationsEn extends AppLocalizations {
       'Answer questions from easy to hard. Wrong answers go to weak words and mistake book.';
 
   @override
+  String get trainingSurvivorSource => 'Current wordbook + weak words';
+
+  @override
   String get trainingSpelling => 'Word Spelling';
 
   @override
   String get trainingSpellingDesc =>
       'See Chinese, hear pronunciation, or read sentence cloze, then type the English word.';
+
+  @override
+  String get trainingSpellingSource => 'Spelling weak words';
 
   @override
   String get trainingPassageCloze => 'Passage Cloze';
@@ -778,11 +818,17 @@ class AppLocalizationsEn extends AppLocalizations {
       'Generate passages with today\'s vocabulary, linking memorization and reading comprehension.';
 
   @override
+  String get trainingPassageClozeSource => 'Today\'s words + AI passage';
+
+  @override
   String get trainingListening => 'Listening Sprint';
 
   @override
   String get trainingListeningDesc =>
       'Listen to pronunciation, then select the word or meaning. Response time affects score.';
+
+  @override
+  String get trainingListeningSource => 'Listening weak words';
 
   @override
   String get trainingDueWords => 'Due Words';
@@ -798,6 +844,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get learningPathTitle => 'Learning Path';
+
+  @override
+  String get learningPathBackToHome => 'Back to Home';
+
+  @override
+  String get learningPathBookPath => 'Wordbook path';
+
+  @override
+  String get learningPathPathSuffix => 'path';
+
+  @override
+  String get learningPathPausedHint =>
+      'The study plan is paused, and path progress will be kept.';
+
+  @override
+  String get learningPathDescription =>
+      'This view shows only wordbook progress; formal new learning and review stay at the two separate entrances on Home.';
+
+  @override
+  String get learningPathPlanLabel => 'Learning plan';
+
+  @override
+  String get learningPathStartLearning => 'Start Learning';
 
   @override
   String get learningPathSubtitle => 'Wordbook progress';
@@ -861,6 +930,93 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reviewCenterTitle => 'Review';
 
   @override
+  String reviewCenterCardsDuePrefix(Object count) {
+    return '$count cards due';
+  }
+
+  @override
+  String get reviewCenterDailyCapPrefix => 'Today\'s review cap ';
+
+  @override
+  String get reviewCenterDailyCapMiddle => ' words, ';
+
+  @override
+  String get reviewCenterDailyCapSuffix => ' words will be scheduled later.';
+
+  @override
+  String get reviewCenterCurrentBook => 'Current wordbook';
+
+  @override
+  String get reviewCenterAutoQueueHint =>
+      'Wrong answers are added to the review queue automatically.';
+
+  @override
+  String get reviewCenterEmptyTitle => 'Review queue cleared';
+
+  @override
+  String get reviewCenterEmptyMessage =>
+      'Add custom word cards, or add mistake cards from wrong answers, and a review queue will be generated here.';
+
+  @override
+  String get reviewCenterAddCustomWord => 'Add custom word';
+
+  @override
+  String get reviewCenterNoMistakes => 'No weak words or lesson mistakes yet.';
+
+  @override
+  String get reviewCenterOpenMistakeBook => 'Open mistake book';
+
+  @override
+  String get reviewCenterLimitPrefix => 'Today\'s review is capped at ';
+
+  @override
+  String get reviewCenterLimitMiddle => ' words; ';
+
+  @override
+  String get reviewCenterLimitSuffix =>
+      ' words won\'t be lost and will stay in the review queue.';
+
+  @override
+  String get reviewCenterTargetWord => 'Target word';
+
+  @override
+  String get reviewCenterCustomCard => 'Custom word card';
+
+  @override
+  String get reviewCenterForgot => 'Forgot';
+
+  @override
+  String get reviewCenterRemembered => 'Remembered';
+
+  @override
+  String get reviewCenterPostponedMessage =>
+      'Marked as remembered; the next review will be delayed';
+
+  @override
+  String get reviewCenterCloserReviewMessage =>
+      'Added to a closer review schedule';
+
+  @override
+  String get reviewCenterUpdateFailed => 'Unable to update this card right now';
+
+  @override
+  String get reviewCenterAddMistakeCards => 'Add mistake cards';
+
+  @override
+  String get reviewCenterAllMistakesAdded =>
+      'All recent mistakes are already in the wordbook.';
+
+  @override
+  String get reviewCenterSelectMistakesHint =>
+      'After selecting mistakes, you can add them directly to review cards.';
+
+  @override
+  String get reviewCenterAddSelected => 'Add selected';
+
+  @override
+  String get reviewCenterMistakeCardsSuffix => ' mistake cards';
+
+  @override
   String get reviewCenterPlanPaused => 'Study plan paused';
 
   @override
@@ -911,11 +1067,19 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String mistakeBookMistakesPrefix(Object count) {
+    return '$count lesson mistakes';
+  }
+
+  @override
   String get mistakeBookSubtitle =>
       'Quiz mistakes and weak custom cards are kept here for later review.';
 
   @override
   String get mistakeBookFixLabel => 'Fix Mistakes';
+
+  @override
+  String get mistakeBookGoPractice => 'Practice a lesson';
 
   @override
   String get mistakeBookCleared => 'Mistake book cleared';
@@ -926,6 +1090,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get mistakeBookLessonMistakes => 'Lesson Mistakes';
+
+  @override
+  String get mistakeBookStartLesson => 'Start a lesson';
 
   @override
   String get mistakeBookWeakWords => 'Weak Custom Words';

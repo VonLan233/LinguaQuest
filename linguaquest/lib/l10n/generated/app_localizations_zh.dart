@@ -132,6 +132,27 @@ class AppLocalizationsZh extends AppLocalizations {
   String get commonDue => '待复习';
 
   @override
+  String get commonMinutes => '分钟';
+
+  @override
+  String get commonLesson => '课程';
+
+  @override
+  String get commonMastery => '掌握';
+
+  @override
+  String get commonMasteryOutOf => '/5';
+
+  @override
+  String get commonAlreadyAdded => '已加入';
+
+  @override
+  String get commonWrongPrefix => '错 ';
+
+  @override
+  String get commonTimesSuffix => ' 次';
+
+  @override
   String get authRegisterTitle => '注册';
 
   @override
@@ -683,6 +704,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get trainingSubtitle => '限时测试、专项训练、排行榜';
 
   @override
+  String get trainingPageSubtitle => '限时测试、专项训练和排行榜放在这里。';
+
+  @override
+  String get trainingWeeklyXpPrefix => '本周';
+
+  @override
+  String get trainingDailyXpAvailable => '今日可得 60 XP';
+
+  @override
   String get trainingLeaderboard => '排行榜';
 
   @override
@@ -702,6 +732,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get trainingSpeedGameDesc => '60 秒内尽可能答对英文选义题，按正确数、连击和准确率给积分。';
+
+  @override
+  String get trainingSpeedGameSource => '已学词 + 到期词';
 
   @override
   String get trainingNoWordbook => '暂无词书';
@@ -725,10 +758,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get trainingSurvivorDesc => '从简单到困难连续答题，错词会进入弱项词和错词本。';
 
   @override
+  String get trainingSurvivorSource => '当前词书 + 弱项词';
+
+  @override
   String get trainingSpelling => '单词拼写';
 
   @override
   String get trainingSpellingDesc => '看中文、听发音或看例句空格后输入英文，强化可产出能力。';
+
+  @override
+  String get trainingSpellingSource => '拼写弱项词';
 
   @override
   String get trainingPassageCloze => '文章挖词';
@@ -737,10 +776,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get trainingPassageClozeDesc => '用今日词汇生成短文并挖空，连接背词和阅读理解。';
 
   @override
+  String get trainingPassageClozeSource => '今日学习词 + AI 短文';
+
+  @override
   String get trainingListening => '听音速答';
 
   @override
   String get trainingListeningDesc => '播放发音后选择单词或释义，反应时间影响得分。';
+
+  @override
+  String get trainingListeningSource => '听力弱项词';
 
   @override
   String get trainingDueWords => '到期词';
@@ -756,6 +801,27 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get learningPathTitle => '学习路径';
+
+  @override
+  String get learningPathBackToHome => '回到首页';
+
+  @override
+  String get learningPathBookPath => '词书路径';
+
+  @override
+  String get learningPathPathSuffix => '路径';
+
+  @override
+  String get learningPathPausedHint => '学习计划已暂停，路径进度会保留。';
+
+  @override
+  String get learningPathDescription => '这里只展示词书进度；正式新学和复习回到首页的两个独立入口。';
+
+  @override
+  String get learningPathPlanLabel => '学习计划';
+
+  @override
+  String get learningPathStartLearning => '开始学习';
 
   @override
   String get learningPathSubtitle => '词书学习进度';
@@ -818,6 +884,86 @@ class AppLocalizationsZh extends AppLocalizations {
   String get reviewCenterTitle => '复习';
 
   @override
+  String reviewCenterCardsDuePrefix(Object count) {
+    return '$count 张卡片待复习';
+  }
+
+  @override
+  String get reviewCenterDailyCapPrefix => '今日复习上限 ';
+
+  @override
+  String get reviewCenterDailyCapMiddle => ' 词，另有 ';
+
+  @override
+  String get reviewCenterDailyCapSuffix => ' 词会排到后续。';
+
+  @override
+  String get reviewCenterCurrentBook => '当前词书';
+
+  @override
+  String get reviewCenterAutoQueueHint => '答错词会自动进入复习队列。';
+
+  @override
+  String get reviewCenterEmptyTitle => '复习队列已清空';
+
+  @override
+  String get reviewCenterEmptyMessage => '添加生词本词卡，或把错题加入错词本后，这里会生成复习队列。';
+
+  @override
+  String get reviewCenterAddCustomWord => '添加生词';
+
+  @override
+  String get reviewCenterNoMistakes => '还没有弱项词或课程错题。';
+
+  @override
+  String get reviewCenterOpenMistakeBook => '打开错词本';
+
+  @override
+  String get reviewCenterLimitPrefix => '已按学习计划限制今日复习 ';
+
+  @override
+  String get reviewCenterLimitMiddle => ' 词；剩余 ';
+
+  @override
+  String get reviewCenterLimitSuffix => ' 词不会丢失，会继续留在复习队列。';
+
+  @override
+  String get reviewCenterTargetWord => '目标词';
+
+  @override
+  String get reviewCenterCustomCard => '生词卡';
+
+  @override
+  String get reviewCenterForgot => '没记住';
+
+  @override
+  String get reviewCenterRemembered => '记住了';
+
+  @override
+  String get reviewCenterPostponedMessage => '已标记为记住，下次复习会延后';
+
+  @override
+  String get reviewCenterCloserReviewMessage => '已加入更近的复习计划';
+
+  @override
+  String get reviewCenterUpdateFailed => '暂时无法更新这张卡片';
+
+  @override
+  String get reviewCenterAddMistakeCards => '加入错词卡';
+
+  @override
+  String get reviewCenterAllMistakesAdded => '最近错题已经全部在生词本里。';
+
+  @override
+  String get reviewCenterSelectMistakesHint => '选择错词后，可以直接加入复习卡片。';
+
+  @override
+  String get reviewCenterAddSelected => '加入已选';
+
+  @override
+  String get reviewCenterMistakeCardsSuffix => '张错词卡';
+
+  @override
   String get reviewCenterPlanPaused => '学习计划已暂停';
 
   @override
@@ -867,10 +1013,18 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String mistakeBookMistakesPrefix(Object count) {
+    return '$count 个课程错题';
+  }
+
+  @override
   String get mistakeBookSubtitle => '测验错题和弱项自定义卡会保留在这里，方便后续复习。';
 
   @override
   String get mistakeBookFixLabel => '错题修复';
+
+  @override
+  String get mistakeBookGoPractice => '去练一课';
 
   @override
   String get mistakeBookCleared => '错词本已清空';
@@ -880,6 +1034,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get mistakeBookLessonMistakes => '课程错题';
+
+  @override
+  String get mistakeBookStartLesson => '开始一课';
 
   @override
   String get mistakeBookWeakWords => '弱项生词';

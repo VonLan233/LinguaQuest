@@ -5,121 +5,185 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/learning_badges.dart';
-import '../../core/widgets/section_header.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class TrainingScreen extends ConsumerWidget {
   const TrainingScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final user = state.user;
-    final currentBook = state.currentWordBook;
     final trainingLessons = state.lessons
         .where((lesson) => lesson.isTrainingPack)
         .toList();
     final speedLesson = trainingLessons.isEmpty ? null : trainingLessons.first;
+
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
       children: [
-        SectionHeader(
-          title: '训练场',
-          subtitle: '${currentBook?.title ?? '当前词书'} · 限时测试、专项训练和排行榜放在这里。',
-          trailing: QuestIconButton(
-            tooltip: '排行榜',
-            onPressed: () => context.push('/leaderboard'),
-            icon: Icons.leaderboard_outlined,
-            color: AppTheme.coral,
-          ),
-        ),
-        const SizedBox(height: 14),
         Wrap(
           spacing: 8,
           runSpacing: 8,
           children: [
             PillLabel(
-              label: '本周 ${user?.xp ?? 0} XP',
+              label: '${user?.xp ?? 0} ${l10n.commonXP}',
               icon: Icons.bolt,
               color: AppTheme.mango,
             ),
-            const PillLabel(
-              label: '今日可得 60 XP',
-              icon: Icons.add_circle_outline,
+            PillLabel(
+              label: '${user?.streak ?? 0} ${l10n.homeStreakLabel}',
+              icon: Icons.local_fire_department_outlined,
+              color: AppTheme.coral,
             ),
           ],
         ),
-        const SizedBox(height: 18),
+        const SizedBox(height: 22),
+        Row(
+          children: [
+            Expanded(
+              child: _TrainingNavCard(
+                icon: Icons.school_outlined,
+                title: l10n.trainingCampusSpeed,
+                subtitle: l10n.trainingCampusSpeedDesc,
+                color: AppTheme.teal,
+                onTap: speedLesson == null
+                    ? null
+                    : () => context.push('/timed-test/${speedLesson.id}'),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _TrainingNavCard(
+                icon: Icons.timer_outlined,
+                title: l10n.trainingSpeedGame,
+                subtitle: l10n.trainingSpeedGameDesc,
+                color: AppTheme.mango,
+                onTap: null,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 22),
+        Text(
+          l10n.trainingSpecialDrills,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          l10n.trainingSpecialDrillsSubtitle,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: 12),
+        _TrainingNavCard(
+          icon: Icons.stairs_outlined,
+          title: l10n.trainingSurvivor,
+          subtitle: l10n.trainingSurvivorDesc,
+          color: AppTheme.coral,
+          onTap: null,
+        ),
+        const SizedBox(height: 12),
+        _TrainingNavCard(
+          icon: Icons.edit_note_outlined,
+          title: l10n.trainingSpelling,
+          subtitle: l10n.trainingSpellingDesc,
+          color: AppTheme.cyan,
+          onTap: () => context.push('/custom-words'),
+        ),
+        const SizedBox(height: 12),
+        _TrainingNavCard(
+          icon: Icons.article_outlined,
+          title: l10n.trainingPassageCloze,
+          subtitle: l10n.trainingPassageClozeDesc,
+          color: AppTheme.teal,
+          onTap: null,
+        ),
+        const SizedBox(height: 12),
+        _TrainingNavCard(
+          icon: Icons.hearing_outlined,
+          title: l10n.trainingListening,
+          subtitle: l10n.trainingListeningDesc,
+          color: AppTheme.mango,
+          onTap: null,
+        ),
+        const SizedBox(height: 22),
         _TrainingReadinessLine(
           dueWords: state.dueWords.length,
           weakWords: state.weakWords.length,
           comboTarget: 10,
-        ),
-        const SizedBox(height: 22),
-        const SectionHeader(
-          title: '限时测试',
-          subtitle: '校园词包和抢词挑战归入训练场，不再占用新学入口。',
-        ),
-        const SizedBox(height: 12),
-        _TrainingGameList(
-          games: [
-            _TrainingGameData(
-              icon: Icons.school_outlined,
-              title: '校园速测',
-              body: '从当前词书抽题，适合课后快速检测，不影响正式复习节奏。',
-              source: currentBook == null
-                  ? '当前词书 · 限时测试'
-                  : '${currentBook.title} · 限时测试',
-              actionLabel: speedLesson == null ? '暂无词书' : '开始测试',
-              onTap: speedLesson == null
-                  ? null
-                  : () => context.push('/timed-test/${speedLesson.id}'),
-            ),
-            const _TrainingGameData(
-              icon: Icons.timer_outlined,
-              title: '抢词',
-              body: '60 秒内尽可能答对英文选义题，按正确数、连击和准确率给积分。',
-              source: '已学词 + 到期词',
-              actionLabel: '即将开放',
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        const SectionHeader(title: '专项训练', subtitle: '围绕拼写、听音、搭配和短文挖词补弱项。'),
-        const SizedBox(height: 12),
-        _TrainingGameList(
-          games: [
-            const _TrainingGameData(
-              icon: Icons.stairs_outlined,
-              title: '一站到底',
-              body: '从简单到困难连续答题，错词会进入弱项词和错词本。',
-              source: '当前词书 + 弱项词',
-              actionLabel: '即将开放',
-            ),
-            _TrainingGameData(
-              icon: Icons.edit_note_outlined,
-              title: '单词拼写',
-              body: '看中文、听发音或看例句空格后输入英文，强化可产出能力。',
-              source: '拼写弱项词',
-              actionLabel: '进入生词本',
-              onTap: () => context.push('/custom-words'),
-            ),
-            const _TrainingGameData(
-              icon: Icons.article_outlined,
-              title: '文章挖词',
-              body: '用今日词汇生成短文并挖空，连接背词和阅读理解。',
-              source: '今日学习词 + AI 短文',
-              actionLabel: '即将开放',
-            ),
-            const _TrainingGameData(
-              icon: Icons.hearing_outlined,
-              title: '听音速答',
-              body: '播放发音后选择单词或释义，反应时间影响得分。',
-              source: '听力弱项词',
-              actionLabel: '即将开放',
-            ),
-          ],
+          l10n: l10n,
         ),
       ],
+    );
+  }
+}
+
+class _TrainingNavCard extends StatelessWidget {
+  const _TrainingNavCard({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.color,
+    this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Color color;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(16),
+      clipBehavior: Clip.antiAlias,
+      child: Ink(
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: color.withValues(alpha: 0.24)),
+        ),
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(icon, color: color, size: 32),
+                const SizedBox(height: 12),
+                Text(title, style: theme.textTheme.titleMedium),
+                const SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    fontSize: 13,
+                  ),
+                ),
+                if (onTap == null) ...[
+                  const SizedBox(height: 10),
+                  PillLabel(
+                    label: 'Coming Soon',
+                    icon: Icons.lock_clock_outlined,
+                    color: Colors.blueGrey,
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -129,11 +193,13 @@ class _TrainingReadinessLine extends StatelessWidget {
     required this.dueWords,
     required this.weakWords,
     required this.comboTarget,
+    required this.l10n,
   });
 
   final int dueWords;
   final int weakWords;
   final int comboTarget;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +207,7 @@ class _TrainingReadinessLine extends StatelessWidget {
       children: [
         Expanded(
           child: _TrainingSignal(
-            label: '到期词',
+            label: l10n.trainingDueWords,
             value: '$dueWords',
             icon: Icons.today_outlined,
             color: AppTheme.teal,
@@ -150,7 +216,7 @@ class _TrainingReadinessLine extends StatelessWidget {
         const _TrainingSignalDivider(),
         Expanded(
           child: _TrainingSignal(
-            label: '弱项词',
+            label: l10n.trainingWeakWords,
             value: '$weakWords',
             icon: Icons.warning_amber_outlined,
             color: AppTheme.coral,
@@ -159,7 +225,7 @@ class _TrainingReadinessLine extends StatelessWidget {
         const _TrainingSignalDivider(),
         Expanded(
           child: _TrainingSignal(
-            label: '连击目标',
+            label: l10n.trainingComboTarget,
             value: '$comboTarget',
             icon: Icons.bolt,
             color: AppTheme.mango,
@@ -232,107 +298,4 @@ class _TrainingSignalDivider extends StatelessWidget {
       ),
     );
   }
-}
-
-class _TrainingGameList extends StatelessWidget {
-  const _TrainingGameList({required this.games});
-
-  final List<_TrainingGameData> games;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        for (var index = 0; index < games.length; index++) ...[
-          _TrainingGameRow(game: games[index]),
-          if (index != games.length - 1)
-            Divider(
-              height: 10,
-              color: Theme.of(
-                context,
-              ).colorScheme.outlineVariant.withValues(alpha: 0.7),
-            ),
-        ],
-      ],
-    );
-  }
-}
-
-class _TrainingGameRow extends StatelessWidget {
-  const _TrainingGameRow({required this.game});
-
-  final _TrainingGameData game;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final content = Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          IconCueBadge(icon: game.icon, color: AppTheme.coral),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(game.title, style: theme.textTheme.titleMedium),
-                const SizedBox(height: 4),
-                Text(
-                  game.body,
-                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
-                ),
-                const SizedBox(height: 10),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [
-                    PillLabel(label: game.source, icon: Icons.source_outlined),
-                    PillLabel(
-                      label: game.actionLabel,
-                      icon: game.onTap == null
-                          ? Icons.lock_clock_outlined
-                          : Icons.play_arrow_rounded,
-                      color: game.onTap == null
-                          ? Colors.blueGrey
-                          : AppTheme.teal,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-
-    if (game.onTap == null) return content;
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(8),
-        onTap: game.onTap,
-        child: content,
-      ),
-    );
-  }
-}
-
-class _TrainingGameData {
-  const _TrainingGameData({
-    required this.icon,
-    required this.title,
-    required this.body,
-    required this.source,
-    required this.actionLabel,
-    this.onTap,
-  });
-
-  final IconData icon;
-  final String title;
-  final String body;
-  final String source;
-  final String actionLabel;
-  final VoidCallback? onTap;
 }

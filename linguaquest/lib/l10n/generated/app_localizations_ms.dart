@@ -133,6 +133,27 @@ class AppLocalizationsMs extends AppLocalizations {
   String get commonDue => 'perlu ulangkaji';
 
   @override
+  String get commonMinutes => 'minit';
+
+  @override
+  String get commonLesson => 'pelajaran';
+
+  @override
+  String get commonMastery => 'penguasaan';
+
+  @override
+  String get commonMasteryOutOf => '/5';
+
+  @override
+  String get commonAlreadyAdded => 'Telah ditambah';
+
+  @override
+  String get commonWrongPrefix => 'Salah ';
+
+  @override
+  String get commonTimesSuffix => ' kali';
+
+  @override
   String get authRegisterTitle => 'Daftar';
 
   @override
@@ -721,6 +742,16 @@ class AppLocalizationsMs extends AppLocalizations {
   String get trainingSubtitle => 'Ujian bermasa, latihan, papan pendahulu';
 
   @override
+  String get trainingPageSubtitle =>
+      'Ujian bermasa, latihan khusus, dan papan pendahulu berada di sini.';
+
+  @override
+  String get trainingWeeklyXpPrefix => 'Minggu ini';
+
+  @override
+  String get trainingDailyXpAvailable => 'Sehingga 60 XP hari ini';
+
+  @override
   String get trainingLeaderboard => 'Papan Pendahulu';
 
   @override
@@ -742,6 +773,10 @@ class AppLocalizationsMs extends AppLocalizations {
   @override
   String get trainingSpeedGameDesc =>
       'Jawab soalan pilihan makna dalam masa 60 saat. Skor berdasarkan ketepatan, kombo, dan kelajuan.';
+
+  @override
+  String get trainingSpeedGameSource =>
+      'Perkataan dipelajari + perlu ulangkaji';
 
   @override
   String get trainingNoWordbook => 'Tiada buku perkataan';
@@ -767,11 +802,18 @@ class AppLocalizationsMs extends AppLocalizations {
       'Jawab soalan dari mudah ke sukar. Jawapan salah masuk ke perkataan lemah dan buku kesilapan.';
 
   @override
+  String get trainingSurvivorSource =>
+      'Buku perkataan semasa + perkataan lemah';
+
+  @override
   String get trainingSpelling => 'Ejaan Perkataan';
 
   @override
   String get trainingSpellingDesc =>
       'Lihat bahasa Cina, dengar sebutan, atau baca isi tempat kosong ayat, kemudian taip perkataan bahasa Inggeris.';
+
+  @override
+  String get trainingSpellingSource => 'Perkataan lemah ejaan';
 
   @override
   String get trainingPassageCloze => 'Isi Tempat Kosong Petikan';
@@ -781,11 +823,17 @@ class AppLocalizationsMs extends AppLocalizations {
       'Jana petikan dengan perbendaharaan kata hari ini, menghubungkan hafalan dan pemahaman bacaan.';
 
   @override
+  String get trainingPassageClozeSource => 'Perkataan hari ini + petikan AI';
+
+  @override
   String get trainingListening => 'Pecut Pendengaran';
 
   @override
   String get trainingListeningDesc =>
       'Dengar sebutan, kemudian pilih perkataan atau makna. Masa tindak balas mempengaruhi skor.';
+
+  @override
+  String get trainingListeningSource => 'Perkataan lemah pendengaran';
 
   @override
   String get trainingDueWords => 'Perkataan Tamat Tempoh';
@@ -801,6 +849,29 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get learningPathTitle => 'Laluan Pembelajaran';
+
+  @override
+  String get learningPathBackToHome => 'Kembali ke Utama';
+
+  @override
+  String get learningPathBookPath => 'Laluan buku perkataan';
+
+  @override
+  String get learningPathPathSuffix => 'laluan';
+
+  @override
+  String get learningPathPausedHint =>
+      'Pelan pembelajaran dihentikan, dan kemajuan laluan akan dikekalkan.';
+
+  @override
+  String get learningPathDescription =>
+      'Paparan ini hanya menunjukkan kemajuan buku perkataan; pembelajaran baharu formal dan ulangkaji kekal pada dua pintu masuk berasingan di Utama.';
+
+  @override
+  String get learningPathPlanLabel => 'Pelan pembelajaran';
+
+  @override
+  String get learningPathStartLearning => 'Mula Belajar';
 
   @override
   String get learningPathSubtitle => 'Kemajuan buku perkataan';
@@ -865,6 +936,96 @@ class AppLocalizationsMs extends AppLocalizations {
   String get reviewCenterTitle => 'Ulangkaji';
 
   @override
+  String reviewCenterCardsDuePrefix(Object count) {
+    return '$count kad perlu ulangkaji';
+  }
+
+  @override
+  String get reviewCenterDailyCapPrefix => 'Had ulangkaji hari ini ';
+
+  @override
+  String get reviewCenterDailyCapMiddle => ' perkataan, ';
+
+  @override
+  String get reviewCenterDailyCapSuffix =>
+      ' perkataan lagi akan dijadualkan kemudian.';
+
+  @override
+  String get reviewCenterCurrentBook => 'Buku perkataan semasa';
+
+  @override
+  String get reviewCenterAutoQueueHint =>
+      'Jawapan salah akan ditambah ke giliran ulangkaji secara automatik.';
+
+  @override
+  String get reviewCenterEmptyTitle => 'Giliran ulangkaji dikosongkan';
+
+  @override
+  String get reviewCenterEmptyMessage =>
+      'Tambah kad perkataan tersuai, atau tambah kad kesilapan daripada jawapan salah, dan giliran ulangkaji akan dijana di sini.';
+
+  @override
+  String get reviewCenterAddCustomWord => 'Tambah perkataan tersuai';
+
+  @override
+  String get reviewCenterNoMistakes =>
+      'Belum ada perkataan lemah atau kesilapan pelajaran.';
+
+  @override
+  String get reviewCenterOpenMistakeBook => 'Buka buku kesilapan';
+
+  @override
+  String get reviewCenterLimitPrefix => 'Ulangkaji hari ini dihadkan kepada ';
+
+  @override
+  String get reviewCenterLimitMiddle => ' perkataan; baki ';
+
+  @override
+  String get reviewCenterLimitSuffix =>
+      ' perkataan tidak akan hilang dan akan kekal dalam giliran ulangkaji.';
+
+  @override
+  String get reviewCenterTargetWord => 'Perkataan sasaran';
+
+  @override
+  String get reviewCenterCustomCard => 'Kad perkataan tersuai';
+
+  @override
+  String get reviewCenterForgot => 'Lupa';
+
+  @override
+  String get reviewCenterRemembered => 'Ingat';
+
+  @override
+  String get reviewCenterPostponedMessage =>
+      'Ditandakan sebagai diingat; ulangkaji seterusnya akan ditunda';
+
+  @override
+  String get reviewCenterCloserReviewMessage =>
+      'Ditambah ke jadual ulangkaji yang lebih awal';
+
+  @override
+  String get reviewCenterUpdateFailed =>
+      'Tidak dapat mengemas kini kad ini buat masa ini';
+
+  @override
+  String get reviewCenterAddMistakeCards => 'Tambah kad kesilapan';
+
+  @override
+  String get reviewCenterAllMistakesAdded =>
+      'Semua kesilapan terkini sudah berada dalam buku perkataan.';
+
+  @override
+  String get reviewCenterSelectMistakesHint =>
+      'Selepas memilih kesilapan, anda boleh menambahnya terus ke kad ulangkaji.';
+
+  @override
+  String get reviewCenterAddSelected => 'Tambah yang dipilih';
+
+  @override
+  String get reviewCenterMistakeCardsSuffix => ' kad kesilapan';
+
+  @override
   String get reviewCenterPlanPaused => 'Pelan belajar dihentikan';
 
   @override
@@ -915,11 +1076,19 @@ class AppLocalizationsMs extends AppLocalizations {
   }
 
   @override
+  String mistakeBookMistakesPrefix(Object count) {
+    return '$count kesilapan pelajaran';
+  }
+
+  @override
   String get mistakeBookSubtitle =>
       'Kesilapan kuiz dan kad tersuai lemah disimpan di sini untuk ulangkaji kemudian.';
 
   @override
   String get mistakeBookFixLabel => 'Betulkan Kesilapan';
+
+  @override
+  String get mistakeBookGoPractice => 'Latih satu pelajaran';
 
   @override
   String get mistakeBookCleared => 'Buku kesilapan dikosongkan';
@@ -930,6 +1099,9 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get mistakeBookLessonMistakes => 'Kesilapan Pelajaran';
+
+  @override
+  String get mistakeBookStartLesson => 'Mula satu pelajaran';
 
   @override
   String get mistakeBookWeakWords => 'Perkataan Tersuai Lemah';
