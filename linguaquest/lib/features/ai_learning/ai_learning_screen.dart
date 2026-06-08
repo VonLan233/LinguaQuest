@@ -39,11 +39,6 @@ class AiLearningScreen extends StatelessWidget {
               label: l10n.aiLearningPillError,
               icon: Icons.psychology_alt_outlined,
             ),
-            PillLabel(
-              label: l10n.aiLearningPillNoKey,
-              icon: Icons.lock_outline,
-              color: AppTheme.cyan,
-            ),
           ],
         ),
         const SizedBox(height: 22),
@@ -58,7 +53,6 @@ class AiLearningScreen extends StatelessWidget {
         ],
         SectionHeader(
           title: l10n.aiLearningToolsTitle,
-          subtitle: l10n.aiLearningToolsSubtitle,
         ),
         const SizedBox(height: 12),
         Row(
