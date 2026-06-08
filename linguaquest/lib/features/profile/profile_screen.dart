@@ -107,7 +107,7 @@ class ProfileScreen extends ConsumerWidget {
         _WeaknessStatusLine(
           text: weakestWord == null
               ? l10n.profileNoWeakness
-              : '${l10n.profileMostWrongWord}：${weakestWord.word} · ${weakestWord.wrongCount} ${l10n.commonWords}${l10n.commonMistakeBook} · ${displayWordStatus(weakestWord.status, l10n: l10n)}',
+              : '${l10n.profileMostWrongWord}：${weakestWord.word} · ${weakestWord.wrongCount} ${l10n.quizMistakes} · ${displayWordStatus(weakestWord.status, l10n: l10n)}',
         ),
         const SizedBox(height: 22),
         if (state.studyPlan != null) ...[
@@ -154,19 +154,19 @@ class ProfileScreen extends ConsumerWidget {
         ),
         _ProfileAction(
           icon: Icons.dark_mode_outlined,
-          title: l10n.profileDarkModeSubtitle,
+          title: l10n.commonTheme,
           subtitle: l10n.profileDarkModeSubtitle,
           route: '/settings/theme',
         ),
         _ProfileAction(
           icon: Icons.help_outline,
-          title: l10n.profileHelpSubtitle,
+          title: l10n.profileHelpTitle,
           subtitle: l10n.profileHelpSubtitle,
           route: '/help',
         ),
         _ProfileAction(
           icon: Icons.info_outline,
-          title: l10n.profileAboutSubtitle,
+          title: l10n.profileAboutTitle,
           subtitle: l10n.profileAboutSubtitle,
           route: '/about',
         ),
@@ -387,7 +387,7 @@ class _ProfileProgressSummary extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         Text(
-          '$completedWords/$totalWords ${l10n.commonWords} · ${l10n.homeTodayProgress}${l10n.commonLessons} $todayLessons · ${l10n.commonReview} $todayReviews ${l10n.commonWords}',
+          '$completedWords/$totalWords ${l10n.commonWords} · ${l10n.homeTodayProgress}: $todayLessons ${l10n.commonLessons} · ${l10n.commonReview} $todayReviews ${l10n.commonWords}',
         ),
       ],
     );

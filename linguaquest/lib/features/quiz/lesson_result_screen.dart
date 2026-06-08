@@ -62,8 +62,8 @@ class LessonResultScreen extends ConsumerWidget {
                   ? (accuracy >= 80 ? l10n.quizChallengeSuccess : l10n.quizChallengeDone)
                   : (accuracy >= 80 ? l10n.quizGreatJob : l10n.quizLessonDone),
               subtitle: isTimed
-                  ? '${l10n.quizCorrect} ${resolved.correctAnswers}/${resolved.totalQuestions} · +${resolved.xpEarned} ${l10n.commonXP} · ${l10n.quizMistakeTimed}'
-                  : '${l10n.quizCorrect} ${resolved.correctAnswers}/${resolved.totalQuestions} · +${resolved.xpEarned} ${l10n.commonXP} · ${l10n.quizMistakeReview}',
+                  ? '${resolved.correctAnswers}/${resolved.totalQuestions} · +${resolved.xpEarned} ${l10n.commonXP} · ${l10n.quizMistakeTimed}'
+                  : '${resolved.correctAnswers}/${resolved.totalQuestions} · +${resolved.xpEarned} ${l10n.commonXP} · ${l10n.quizMistakeReview}',
             ),
             const SizedBox(height: 12),
             PillLabel(

@@ -910,11 +910,23 @@ abstract class AppLocalizations {
   /// **'FAQ and support'**
   String get profileHelpSubtitle;
 
+  /// No description provided for @profileHelpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Help & Feedback'**
+  String get profileHelpTitle;
+
   /// No description provided for @profileAboutSubtitle.
   ///
   /// In en, this message translates to:
   /// **'LinguaQuest vision & version 1.0.0'**
   String get profileAboutSubtitle;
+
+  /// No description provided for @profileAboutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'About Us'**
+  String get profileAboutTitle;
 
   /// No description provided for @profileLogout.
   ///
@@ -1273,19 +1285,19 @@ abstract class AppLocalizations {
   /// No description provided for @quizCorrect.
   ///
   /// In en, this message translates to:
-  /// **'Correct.'**
+  /// **'Correct. '**
   String get quizCorrect;
 
   /// No description provided for @quizWrong.
   ///
   /// In en, this message translates to:
-  /// **'Not quite.'**
+  /// **'Not quite. '**
   String get quizWrong;
 
   /// No description provided for @quizReinforce.
   ///
   /// In en, this message translates to:
-  /// **'Reinforce:'**
+  /// **'Reinforce: '**
   String get quizReinforce;
 
   /// No description provided for @quizContinue.

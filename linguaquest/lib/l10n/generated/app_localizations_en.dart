@@ -428,7 +428,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileHelpSubtitle => 'FAQ and support';
 
   @override
+  String get profileHelpTitle => 'Help & Feedback';
+
+  @override
   String get profileAboutSubtitle => 'LinguaQuest vision & version 1.0.0';
+
+  @override
+  String get profileAboutTitle => 'About Us';
 
   @override
   String get profileLogout => 'Logout';
@@ -631,13 +637,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get quizInputWord => 'Enter word';
 
   @override
-  String get quizCorrect => 'Correct.';
+  String get quizCorrect => 'Correct. ';
 
   @override
-  String get quizWrong => 'Not quite.';
+  String get quizWrong => 'Not quite. ';
 
   @override
-  String get quizReinforce => 'Reinforce:';
+  String get quizReinforce => 'Reinforce: ';
 
   @override
   String get quizContinue => 'Continue';

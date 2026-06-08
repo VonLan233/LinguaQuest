@@ -13,6 +13,7 @@ import 'package:linguaquest/core/state/app_state.dart';
 import 'package:linguaquest/core/theme/app_theme.dart';
 import 'package:linguaquest/core/widgets/learning_badges.dart';
 import 'package:linguaquest/core/widgets/pronunciation_controls.dart';
+import 'package:linguaquest/l10n/generated/app_localizations.dart';
 import 'package:linguaquest/data/models/custom_word.dart';
 import 'package:linguaquest/data/models/lesson.dart';
 import 'package:linguaquest/data/models/lesson_result.dart';
@@ -81,7 +82,7 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    expect(find.text('已连续打卡 6 天'), findsOneWidget);
+    expect(find.text('连续打卡 6 天'), findsOneWidget);
     expect(find.text('雅思核心词汇 · 中级'), findsOneWidget);
     expect(find.text('首页'), findsWidgets);
     expect(find.text('训练场'), findsWidgets);
@@ -823,6 +824,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('zh'),
           theme: AppTheme.light(),
           home: const GoalSetupScreen(),
         ),
@@ -1476,6 +1480,9 @@ void main() {
       UncontrolledProviderScope(
         container: container,
         child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('zh'),
           theme: AppTheme.light(),
           home: QuizSessionScreen(lessonId: trainingLesson.id),
         ),
@@ -1490,6 +1497,9 @@ void main() {
       UncontrolledProviderScope(
         container: container,
         child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('zh'),
           theme: AppTheme.light(),
           home: QuizSessionScreen(
             lessonId: trainingLesson.id,
@@ -1521,6 +1531,9 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            locale: const Locale('zh'),
             theme: AppTheme.light(),
             home: LessonResultScreen(
               result: result,
@@ -1588,7 +1601,7 @@ void main() {
     await tester.tap(find.text('继续'));
     await tester.pumpAndSettle();
 
-    expect(find.text('答对 2/3 题 · 已入账 +15 XP · 错题已进入复习。'), findsOneWidget);
+    expect(find.text('2/3 · +15 XP · 错题已进入复习。'), findsOneWidget);
     expect(find.text('已入账 +15 XP'), findsOneWidget);
     expect(find.text('刚刚到账 +15 XP'), findsOneWidget);
     expect(find.text('总积分 15 XP'), findsOneWidget);

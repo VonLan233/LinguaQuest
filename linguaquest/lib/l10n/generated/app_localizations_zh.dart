@@ -414,7 +414,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get profileHelpSubtitle => '常见问题和支持入口';
 
   @override
+  String get profileHelpTitle => '帮助与反馈';
+
+  @override
   String get profileAboutSubtitle => 'LinguaQuest 产品愿景与版本 1.0.0';
+
+  @override
+  String get profileAboutTitle => '关于我们';
 
   @override
   String get profileLogout => '退出登录';

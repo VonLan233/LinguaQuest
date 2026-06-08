@@ -433,7 +433,13 @@ class AppLocalizationsMs extends AppLocalizations {
   String get profileHelpSubtitle => 'Soalan Lazim dan sokongan';
 
   @override
+  String get profileHelpTitle => 'Bantuan & Maklum Balas';
+
+  @override
   String get profileAboutSubtitle => 'Visi LinguaQuest & versi 1.0.0';
+
+  @override
+  String get profileAboutTitle => 'Tentang Kami';
 
   @override
   String get profileLogout => 'Log Keluar';
@@ -640,13 +646,13 @@ class AppLocalizationsMs extends AppLocalizations {
   String get quizInputWord => 'Masukkan perkataan';
 
   @override
-  String get quizCorrect => 'Betul.';
+  String get quizCorrect => 'Betul. ';
 
   @override
-  String get quizWrong => 'Belum tepat.';
+  String get quizWrong => 'Belum tepat. ';
 
   @override
-  String get quizReinforce => 'Kukuhkan:';
+  String get quizReinforce => 'Kukuhkan: ';
 
   @override
   String get quizContinue => 'Teruskan';

@@ -152,7 +152,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
                 Text(
                   _deadline == null
                       ? l10n.goalSetupDeadlineHint
-                      : '${formatShortDate(_deadline!)} · ${l10n.commonDay} ${plannedDailyWords ?? _dailyGoal} ${l10n.commonWords}',
+                      : '${formatShortDate(_deadline!)} · ${plannedDailyWords ?? _dailyGoal} ${l10n.commonWords}/${l10n.commonDay}',
                 ),
                 const SizedBox(height: 12),
                 Row(

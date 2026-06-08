@@ -194,6 +194,7 @@ class _LanguageSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final langCode = currentLocale?.languageCode ?? 'zh';
     return Padding(
@@ -209,7 +210,7 @@ class _LanguageSetting extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('语言', style: theme.textTheme.titleMedium),
+                  Text(l10n.languageSetting, style: theme.textTheme.titleMedium),
                   Text(
                     _localeLabel(langCode),
                     style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
