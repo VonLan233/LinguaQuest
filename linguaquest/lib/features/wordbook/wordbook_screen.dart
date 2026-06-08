@@ -9,12 +9,14 @@ import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class WordbookScreen extends ConsumerWidget {
   const WordbookScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final words = state.formalLessons.expand((lesson) => lesson.words).toList();
     final currentBook = state.currentWordBook;
@@ -23,17 +25,17 @@ class WordbookScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/home'),
-        title: const Text('单词本'),
+        title: Text(l10n.wordbookTitle),
       ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
             SectionHeader(
-              title: currentBook?.title ?? '图片单词本',
+              title: currentBook?.title ?? l10n.wordbookImageBook,
               subtitle: currentBook?.description ?? studyBook.description,
               trailing: QuestIconButton(
-                tooltip: '生词本',
+                tooltip: l10n.wordbookCustomTooltip,
                 onPressed: () => context.push('/custom-words'),
                 icon: Icons.add_card_outlined,
                 color: AppTheme.cyan,
@@ -46,6 +48,7 @@ class WordbookScreen extends ConsumerWidget {
               completedWords: state.completedLearningWords,
               progress: state.learningPathProgress,
               onOpenPlan: () => context.push('/settings/study-plan'),
+              l10n: l10n,
             ),
             const SizedBox(height: 14),
             Wrap(
@@ -53,16 +56,19 @@ class WordbookScreen extends ConsumerWidget {
               runSpacing: 8,
               children: [
                 PillLabel(
-                  label: '${currentBook?.totalWords ?? words.length} 个目标词',
+                  label: l10n.wordbookTargetWords
+                      .replaceAll('{count}', '${currentBook?.totalWords ?? words.length}'),
                   icon: Icons.style_outlined,
                   color: AppTheme.cyan,
                 ),
                 PillLabel(
-                  label: '${state.wordBooks.length} 本词书',
+                  label: l10n.wordbookBookCount
+                      .replaceAll('{count}', '${state.wordBooks.length}'),
                   icon: Icons.library_books_outlined,
                 ),
                 PillLabel(
-                  label: '完成 ${(state.learningPathProgress * 100).round()}%',
+                  label: l10n.wordbookCompletion
+                      .replaceAll('{percent}', '${(state.learningPathProgress * 100).round()}'),
                   icon: Icons.route_outlined,
                 ),
               ],
@@ -70,13 +76,14 @@ class WordbookScreen extends ConsumerWidget {
             const SizedBox(height: 22),
             if (state.wordBooks.isNotEmpty) ...[
               SectionHeader(
-                title: '切换词书',
-                subtitle: '当前词书会驱动首页、学习路径、搜索、训练场和复习入口。',
+                title: l10n.wordbookSwitch,
+                subtitle: l10n.wordbookSwitchDesc,
               ),
               const SizedBox(height: 12),
               _WordBookSwitcher(
                 currentId: state.currentWordBookId,
                 books: state.wordBooks,
+                l10n: l10n,
                 onSelect: (bookId) async {
                   final succeeded = await ref
                       .read(appControllerProvider.notifier)
@@ -85,7 +92,9 @@ class WordbookScreen extends ConsumerWidget {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       duration: const Duration(seconds: 2),
-                      content: Text(succeeded ? '已切换当前词书' : '暂时无法切换词书'),
+                      content: Text(
+                        succeeded ? l10n.wordbookSwitched : l10n.wordbookSwitchFailed,
+                      ),
                     ),
                   );
                 },
@@ -93,9 +102,10 @@ class WordbookScreen extends ConsumerWidget {
               const SizedBox(height: 22),
             ],
             SectionHeader(
-              title: '目标词',
-              subtitle:
-                  '${words.length} 词 · 学习路径完成 ${(state.learningPathProgress * 100).round()}%',
+              title: l10n.wordbookTargetSection,
+              subtitle: l10n.wordbookTargetDesc
+                  .replaceAll('{count}', '${words.length}')
+                  .replaceAll('{percent}', '${(state.learningPathProgress * 100).round()}'),
             ),
             const SizedBox(height: 16),
             for (final word in words) _TargetWordRow(word: word),
@@ -113,6 +123,7 @@ class _StudyBookCoverLine extends StatelessWidget {
     required this.completedWords,
     required this.progress,
     required this.onOpenPlan,
+    required this.l10n,
   });
 
   final String cover;
@@ -120,6 +131,7 @@ class _StudyBookCoverLine extends StatelessWidget {
   final int completedWords;
   final double progress;
   final VoidCallback onOpenPlan;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +149,11 @@ class _StudyBookCoverLine extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('已学 $completedWords/$totalWords 词'),
+              Text(
+                l10n.wordbookWordsLearned
+                    .replaceAll('{completed}', '$completedWords')
+                    .replaceAll('{total}', '$totalWords'),
+              ),
               const SizedBox(height: 8),
               ClipRRect(
                 borderRadius: BorderRadius.circular(999),
@@ -153,7 +169,7 @@ class _StudyBookCoverLine extends StatelessWidget {
               TextButton.icon(
                 onPressed: onOpenPlan,
                 icon: const Icon(Icons.tune_outlined),
-                label: const Text('切换词书或调整计划'),
+                label: Text(l10n.wordbookSwitch),
                 style: TextButton.styleFrom(
                   foregroundColor: theme.colorScheme.primary,
                   padding: EdgeInsets.zero,
@@ -171,11 +187,13 @@ class _WordBookSwitcher extends StatelessWidget {
   const _WordBookSwitcher({
     required this.currentId,
     required this.books,
+    required this.l10n,
     required this.onSelect,
   });
 
   final String currentId;
   final List<WordBook> books;
+  final AppLocalizations l10n;
   final Future<void> Function(String bookId) onSelect;
 
   @override
@@ -235,7 +253,10 @@ class _WordBookSwitcher extends StatelessWidget {
                     spacing: 6,
                     children: [
                       PillLabel(label: book.examType),
-                      PillLabel(label: '${book.totalWords} 词'),
+                      PillLabel(
+                        label: l10n.wordbookTargetWords
+                            .replaceAll('{count}', '${book.totalWords}'),
+                      ),
                     ],
                   ),
                 ],
