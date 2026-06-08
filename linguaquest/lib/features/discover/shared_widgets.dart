@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/learning_badges.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class RewardTaskList extends StatelessWidget {
   const RewardTaskList({super.key, required this.tasks});
@@ -35,6 +36,7 @@ class RewardTaskRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final canClaim = task.isDone && !task.isClaimed;
     final activeColor = canClaim
@@ -87,10 +89,10 @@ class RewardTaskRow extends StatelessWidget {
                   fit: BoxFit.scaleDown,
                   child: PillLabel(
                     label: task.isClaimed
-                        ? '已入账 +${task.points} XP'
+                        ? l10n.discoverClaimed(task.points.toString())
                         : canClaim
-                        ? '领取 +${task.points} XP'
-                        : '去完成 +${task.points} XP',
+                        ? l10n.discoverClaim(task.points.toString())
+                        : l10n.discoverGoComplete(task.points.toString()),
                     icon: task.isDone
                         ? Icons.check_circle_outline
                         : Icons.add_circle_outline,

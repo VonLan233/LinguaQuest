@@ -210,7 +210,7 @@ void main() {
       expect(xpTasks, contains('RewardTaskList'));
       expect(shared, contains('RewardTaskRow'));
       expect(discover, isNot(contains('_ForumPostCard')));
-      expect(shared, contains('去完成 +'));
+      expect(shared, contains('discoverGoComplete'));
     });
 
     test('onboarding explains features as a light step list', () {
