@@ -13,7 +13,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get appSubtitle =>
-      'Short lessons, visual memory cards, and smart review to steadily build your English vocabulary.';
+      'Build vocabulary with short lessons and smart review.';
 
   @override
   String get tabHome => 'Home';
@@ -216,14 +216,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingFeatureImageCardsDesc =>
-      'Words, meanings, examples, mastery progress, and visual cues connected in one learning flow.';
+      'Words, meanings, and examples connected in one learning flow.';
 
   @override
   String get onboardingFeaturePath => 'Clear Path';
 
   @override
   String get onboardingFeaturePathDesc =>
-      'Short lessons arrange your next steps so you know what to do every time you open the app.';
+      'Short lessons guide your daily learning path.';
 
   @override
   String get onboardingFeatureReview => 'Timely Review';

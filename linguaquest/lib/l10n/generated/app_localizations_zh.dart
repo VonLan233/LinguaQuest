@@ -12,7 +12,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get appTitle => 'LinguaQuest';
 
   @override
-  String get appSubtitle => '短课节、视觉记忆卡和智能复习，帮你稳定积累英语词汇。';
+  String get appSubtitle => '用短课节和智能复习积累词汇';
 
   @override
   String get tabHome => '首页';
@@ -210,19 +210,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingFeatureImageCards => '图像词卡';
 
   @override
-  String get onboardingFeatureImageCardsDesc => '单词、释义、例句、掌握度和视觉线索在同一条学习流里串起来。';
+  String get onboardingFeatureImageCardsDesc => '单词、释义、例句串联学习';
 
   @override
   String get onboardingFeaturePath => '清晰路径';
 
   @override
-  String get onboardingFeaturePathDesc => '短课节负责安排下一步学习，让每天打开应用后知道先做什么。';
+  String get onboardingFeaturePathDesc => '短课节引导每日学习路径';
 
   @override
   String get onboardingFeatureReview => '准时复习';
 
   @override
-  String get onboardingFeatureReviewDesc => '弱项词更快回到队列，已掌握的词会拉长复习间隔。';
+  String get onboardingFeatureReviewDesc => '弱项词优先复习，已掌握词间隔拉长';
 
   @override
   String get onboardingTagPillXp => 'XP';
@@ -243,7 +243,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get goalSetupSelectPlan => '选择学习计划';
 
   @override
-  String get goalSetupSelectPlanSubtitle => '系统会把目标拆成每日新学、到期复习和积分任务。';
+  String get goalSetupSelectPlanSubtitle => '系统自动规划每日新学和复习任务';
 
   @override
   String get goalSetupTarget => '目标';
@@ -354,7 +354,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get homeWeakWordsReview => '趁它们堆起来前先复习。';
 
   @override
-  String get homeWeakWordsEmptyHint => '添加生词或完成复习后，这里会展示需要重点处理的词。';
+  String get homeWeakWordsEmptyHint => '完成学习后这里显示重点词';
 
   @override
   String get homePlanPaused => '计划已暂停';
@@ -372,7 +372,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get profileDashboard => '学习仪表盘';
 
   @override
-  String get profileDashboardSubtitle => '把关键进度放在一屏内，设置入口放到后面。';
+  String get profileDashboardSubtitle => '学习数据一览';
 
   @override
   String get profileLearnedWords => '已学单词';
@@ -435,7 +435,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get profileWeaknessAnalysis => '弱项分析';
 
   @override
-  String get profileNoWeakness => '暂无常错词，继续完成学习和复习后会生成。';
+  String get profileNoWeakness => '暂无弱项，继续学习即可';
 
   @override
   String get profileMostWrongWord => '最常错词';
@@ -480,14 +480,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsReminderDisabled => '不会安排本地提醒';
 
   @override
-  String get settingsReminderDescription =>
-      '应用会记住提醒时间，并按这个时间安排本地系统提醒，提醒你开始学习和打卡。';
+  String get settingsReminderDescription => '按时提醒你开始每日学习和打卡';
 
   @override
   String get discoverTitle => '发现';
 
   @override
-  String get discoverSubtitle => '签到、积分任务、抽奖和学习社区；领取的 XP 会加入个人总积分。';
+  String get discoverSubtitle => '签到、积分任务和社区';
 
   @override
   String get discoverTaskCenter => '任务中心';
@@ -496,7 +495,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get discoverXpTasks => '积分任务';
 
   @override
-  String get discoverXpTasksSubtitle => '完成条件后点\"领取\"，XP 会立即加入个人主页和排行榜统计。';
+  String get discoverXpTasksSubtitle => '完成任务领取 XP';
 
   @override
   String get discoverDailyCheckin => '每日签到';

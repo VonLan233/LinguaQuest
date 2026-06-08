@@ -2,7 +2,7 @@
   "@@locale": "en",
 
   "appTitle": "LinguaQuest",
-  "appSubtitle": "Short lessons, visual memory cards, and smart review to steadily build your English vocabulary.",
+  "appSubtitle": "Build vocabulary with short lessons and smart review.",
 
   "tabHome": "Home",
   "tabTraining": "Training",
@@ -72,9 +72,9 @@
   "onboardingSubtitle": "Short lessons, visual memory cards, and smart review help you steadily build English vocabulary.",
   "onboardingTagline": "Level up daily like a game",
   "onboardingFeatureImageCards": "Image Word Cards",
-  "onboardingFeatureImageCardsDesc": "Words, meanings, examples, mastery progress, and visual cues connected in one learning flow.",
+  "onboardingFeatureImageCardsDesc": "Words, meanings, and examples connected in one learning flow.",
   "onboardingFeaturePath": "Clear Path",
-  "onboardingFeaturePathDesc": "Short lessons arrange your next steps so you know what to do every time you open the app.",
+  "onboardingFeaturePathDesc": "Short lessons guide your daily learning path.",
   "onboardingFeatureReview": "Timely Review",
   "onboardingFeatureReviewDesc": "Weak words return to queue faster; mastered words get longer review intervals.",
   "onboardingTagPillXp": "XP",

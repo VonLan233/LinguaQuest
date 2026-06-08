@@ -109,7 +109,7 @@ abstract class AppLocalizations {
   /// No description provided for @appSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Short lessons, visual memory cards, and smart review to steadily build your English vocabulary.'**
+  /// **'Build vocabulary with short lessons and smart review.'**
   String get appSubtitle;
 
   /// No description provided for @tabHome.
@@ -505,7 +505,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingFeatureImageCardsDesc.
   ///
   /// In en, this message translates to:
-  /// **'Words, meanings, examples, mastery progress, and visual cues connected in one learning flow.'**
+  /// **'Words, meanings, and examples connected in one learning flow.'**
   String get onboardingFeatureImageCardsDesc;
 
   /// No description provided for @onboardingFeaturePath.
@@ -517,7 +517,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingFeaturePathDesc.
   ///
   /// In en, this message translates to:
-  /// **'Short lessons arrange your next steps so you know what to do every time you open the app.'**
+  /// **'Short lessons guide your daily learning path.'**
   String get onboardingFeaturePathDesc;
 
   /// No description provided for @onboardingFeatureReview.
