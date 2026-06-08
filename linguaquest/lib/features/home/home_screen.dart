@@ -576,7 +576,7 @@ class _DailyFocusHeader extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 14),
-            _DailyProgressRing(progress: progress, l10n: l10n),
+            _DailyProgressRing(progress: progress),
           ],
         ),
       ],
@@ -585,13 +585,13 @@ class _DailyFocusHeader extends StatelessWidget {
 }
 
 class _DailyProgressRing extends StatelessWidget {
-  const _DailyProgressRing({required this.progress, required this.l10n});
+  const _DailyProgressRing({required this.progress});
 
   final double progress;
-  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final percent = (progress.clamp(0.0, 1.0) * 100).round();
     return SizedBox.square(
       dimension: 82,

@@ -51,6 +51,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
   @override
   Widget build(BuildContext context) {
     final isTimed = widget.mode == QuizSessionMode.timed;
+    final l10n = AppLocalizations.of(context);
     final lessons = ref.watch(
       appControllerProvider.select(
         (state) => isTimed ? state.lessons : state.formalLessons,
@@ -58,11 +59,9 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
     );
     final lesson = _findLesson(lessons);
     if (lesson == null) {
-      final l10n = AppLocalizations.of(context);
       return Scaffold(body: Center(child: Text(l10n.quizNoLesson)));
     }
     if (lesson.questions.isEmpty) {
-      final l10n = AppLocalizations.of(context);
       return Scaffold(
         appBar: AppBar(title: Text(lesson.title)),
         body: Center(child: Text(l10n.quizNoQuestions)),
@@ -70,7 +69,6 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
     }
     final question = lesson.questions[_index];
     final progress = (_index + 1) / lesson.questions.length;
-    final l10n = AppLocalizations.of(context);
 
     return PopScope(
       canPop: _canLeaveWithoutConfirmation,

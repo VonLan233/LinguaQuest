@@ -680,7 +680,7 @@ String _readDartSources(Directory root, {String? excludeDir}) {
           .listSync(recursive: true)
           .whereType<File>()
           .where((file) => file.path.endsWith('.dart'))
-          .where((file) => excludeDir == null || !file.path.contains('/$excludeDir/'))
+          .where((file) => excludeDir == null || !file.path.split(RegExp(r'[/\\]')).contains(excludeDir))
           .toList()
         ..sort((a, b) => a.path.compareTo(b.path));
 
