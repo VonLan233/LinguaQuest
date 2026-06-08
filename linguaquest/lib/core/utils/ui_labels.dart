@@ -335,3 +335,47 @@ String displayWordTag(String value, {AppLocalizations? l10n}) {
       return value.trim().isEmpty ? '目标词' : value.trim();
   }
 }
+
+String displayWordbookTitle(String id, {AppLocalizations? l10n}) {
+  if (l10n == null) return id;
+  switch (id.toLowerCase()) {
+    case 'beginner':
+      return l10n.wordbookNameBeginner;
+    case 'ielts':
+      return l10n.wordbookNameIELTS;
+    case 'toefl':
+      return l10n.wordbookNameTOEFL;
+    case 'gre':
+      return l10n.wordbookNameGRE;
+    case 'cet4':
+      return l10n.wordbookNameCET4;
+    case 'cet6':
+      return l10n.wordbookNameCET6;
+    case 'kaoyan':
+      return l10n.wordbookNameKaoyan;
+    default:
+      return id;
+  }
+}
+
+String displayWordbookDescription(String id, {AppLocalizations? l10n}) {
+  if (l10n == null) return '';
+  switch (id.toLowerCase()) {
+    case 'beginner':
+      return l10n.wordbookDescBeginner;
+    case 'ielts':
+      return l10n.wordbookDescIELTS;
+    case 'toefl':
+      return l10n.wordbookDescTOEFL;
+    case 'gre':
+      return l10n.wordbookDescGRE;
+    case 'cet4':
+      return l10n.wordbookDescCET4;
+    case 'cet6':
+      return l10n.wordbookDescCET6;
+    case 'kaoyan':
+      return l10n.wordbookDescKaoyan;
+    default:
+      return '';
+  }
+}

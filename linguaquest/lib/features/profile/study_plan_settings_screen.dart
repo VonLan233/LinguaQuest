@@ -459,10 +459,13 @@ class _PlanHeroCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(book.name, style: theme.textTheme.titleLarge),
+                    Text(
+                      displayWordbookTitle(book.id, l10n: l10n),
+                      style: theme.textTheme.titleLarge,
+                    ),
                     const SizedBox(height: 4),
                     Text(
-                      book.description,
+                      displayWordbookDescription(book.id, l10n: l10n),
                       style: TextStyle(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
@@ -587,7 +590,7 @@ class _StudyBookPill extends StatelessWidget {
               Text(book.cover),
               const SizedBox(width: 6),
               Text(
-                book.name,
+                displayWordbookTitle(book.id, l10n: l10n),
                 style: theme.textTheme.labelLarge?.copyWith(
                   color: selected
                       ? theme.colorScheme.onSecondaryContainer

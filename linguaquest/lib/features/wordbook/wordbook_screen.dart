@@ -32,8 +32,12 @@ class WordbookScreen extends ConsumerWidget {
           padding: const EdgeInsets.all(20),
           children: [
             SectionHeader(
-              title: currentBook?.title ?? l10n.wordbookImageBook,
-              subtitle: currentBook?.description ?? studyBook.description,
+              title: currentBook != null
+                  ? displayWordbookTitle(currentBook.id, l10n: l10n)
+                  : l10n.wordbookImageBook,
+              subtitle: currentBook != null
+                  ? displayWordbookDescription(currentBook.id, l10n: l10n)
+                  : displayWordbookDescription(studyBook.id, l10n: l10n),
               trailing: QuestIconButton(
                 tooltip: l10n.wordbookCustomTooltip,
                 onPressed: () => context.push('/custom-words'),
@@ -231,7 +235,7 @@ class _WordBookSwitcher extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          book.title,
+                          displayWordbookTitle(book.id, l10n: l10n),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: theme.textTheme.titleMedium,
@@ -243,7 +247,7 @@ class _WordBookSwitcher extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    book.description,
+                    displayWordbookDescription(book.id, l10n: l10n),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
