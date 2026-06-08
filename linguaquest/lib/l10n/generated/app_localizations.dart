@@ -346,6 +346,48 @@ abstract class AppLocalizations {
   /// **'due'**
   String get commonDue;
 
+  /// No description provided for @commonMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'minutes'**
+  String get commonMinutes;
+
+  /// No description provided for @commonLesson.
+  ///
+  /// In en, this message translates to:
+  /// **'lesson'**
+  String get commonLesson;
+
+  /// No description provided for @commonMastery.
+  ///
+  /// In en, this message translates to:
+  /// **'mastery'**
+  String get commonMastery;
+
+  /// No description provided for @commonMasteryOutOf.
+  ///
+  /// In en, this message translates to:
+  /// **'/5'**
+  String get commonMasteryOutOf;
+
+  /// No description provided for @commonAlreadyAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Already added'**
+  String get commonAlreadyAdded;
+
+  /// No description provided for @commonWrongPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong '**
+  String get commonWrongPrefix;
+
+  /// No description provided for @commonTimesSuffix.
+  ///
+  /// In en, this message translates to:
+  /// **' times'**
+  String get commonTimesSuffix;
+
   /// No description provided for @authRegisterTitle.
   ///
   /// In en, this message translates to:
@@ -1420,6 +1462,24 @@ abstract class AppLocalizations {
   /// **'Timed tests, drills, leaderboard'**
   String get trainingSubtitle;
 
+  /// No description provided for @trainingPageSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Timed tests, special drills, and the leaderboard live here.'**
+  String get trainingPageSubtitle;
+
+  /// No description provided for @trainingWeeklyXpPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'This week'**
+  String get trainingWeeklyXpPrefix;
+
+  /// No description provided for @trainingDailyXpAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to 60 XP today'**
+  String get trainingDailyXpAvailable;
+
   /// No description provided for @trainingLeaderboard.
   ///
   /// In en, this message translates to:
@@ -1461,6 +1521,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Answer meaning-choice questions within 60 seconds. Score based on accuracy, combos, and speed.'**
   String get trainingSpeedGameDesc;
+
+  /// No description provided for @trainingSpeedGameSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Learned + due words'**
+  String get trainingSpeedGameSource;
 
   /// No description provided for @trainingNoWordbook.
   ///
@@ -1504,6 +1570,12 @@ abstract class AppLocalizations {
   /// **'Answer questions from easy to hard. Wrong answers go to weak words and mistake book.'**
   String get trainingSurvivorDesc;
 
+  /// No description provided for @trainingSurvivorSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Current wordbook + weak words'**
+  String get trainingSurvivorSource;
+
   /// No description provided for @trainingSpelling.
   ///
   /// In en, this message translates to:
@@ -1515,6 +1587,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'See Chinese, hear pronunciation, or read sentence cloze, then type the English word.'**
   String get trainingSpellingDesc;
+
+  /// No description provided for @trainingSpellingSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Spelling weak words'**
+  String get trainingSpellingSource;
 
   /// No description provided for @trainingPassageCloze.
   ///
@@ -1528,6 +1606,12 @@ abstract class AppLocalizations {
   /// **'Generate passages with today\'s vocabulary, linking memorization and reading comprehension.'**
   String get trainingPassageClozeDesc;
 
+  /// No description provided for @trainingPassageClozeSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s words + AI passage'**
+  String get trainingPassageClozeSource;
+
   /// No description provided for @trainingListening.
   ///
   /// In en, this message translates to:
@@ -1539,6 +1623,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Listen to pronunciation, then select the word or meaning. Response time affects score.'**
   String get trainingListeningDesc;
+
+  /// No description provided for @trainingListeningSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening weak words'**
+  String get trainingListeningSource;
 
   /// No description provided for @trainingDueWords.
   ///
@@ -1569,6 +1659,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Learning Path'**
   String get learningPathTitle;
+
+  /// No description provided for @learningPathBackToHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Home'**
+  String get learningPathBackToHome;
+
+  /// No description provided for @learningPathBookPath.
+  ///
+  /// In en, this message translates to:
+  /// **'Wordbook path'**
+  String get learningPathBookPath;
+
+  /// No description provided for @learningPathPathSuffix.
+  ///
+  /// In en, this message translates to:
+  /// **'path'**
+  String get learningPathPathSuffix;
+
+  /// No description provided for @learningPathPausedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'The study plan is paused, and path progress will be kept.'**
+  String get learningPathPausedHint;
+
+  /// No description provided for @learningPathDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'This view shows only wordbook progress; formal new learning and review stay at the two separate entrances on Home.'**
+  String get learningPathDescription;
+
+  /// No description provided for @learningPathPlanLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning plan'**
+  String get learningPathPlanLabel;
+
+  /// No description provided for @learningPathStartLearning.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Learning'**
+  String get learningPathStartLearning;
 
   /// No description provided for @learningPathSubtitle.
   ///
@@ -1690,6 +1822,162 @@ abstract class AppLocalizations {
   /// **'Review'**
   String get reviewCenterTitle;
 
+  /// No description provided for @reviewCenterCardsDuePrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} cards due'**
+  String reviewCenterCardsDuePrefix(Object count);
+
+  /// No description provided for @reviewCenterDailyCapPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s review cap '**
+  String get reviewCenterDailyCapPrefix;
+
+  /// No description provided for @reviewCenterDailyCapMiddle.
+  ///
+  /// In en, this message translates to:
+  /// **' words, '**
+  String get reviewCenterDailyCapMiddle;
+
+  /// No description provided for @reviewCenterDailyCapSuffix.
+  ///
+  /// In en, this message translates to:
+  /// **' words will be scheduled later.'**
+  String get reviewCenterDailyCapSuffix;
+
+  /// No description provided for @reviewCenterCurrentBook.
+  ///
+  /// In en, this message translates to:
+  /// **'Current wordbook'**
+  String get reviewCenterCurrentBook;
+
+  /// No description provided for @reviewCenterAutoQueueHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong answers are added to the review queue automatically.'**
+  String get reviewCenterAutoQueueHint;
+
+  /// No description provided for @reviewCenterEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review queue cleared'**
+  String get reviewCenterEmptyTitle;
+
+  /// No description provided for @reviewCenterEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Add custom word cards, or add mistake cards from wrong answers, and a review queue will be generated here.'**
+  String get reviewCenterEmptyMessage;
+
+  /// No description provided for @reviewCenterAddCustomWord.
+  ///
+  /// In en, this message translates to:
+  /// **'Add custom word'**
+  String get reviewCenterAddCustomWord;
+
+  /// No description provided for @reviewCenterNoMistakes.
+  ///
+  /// In en, this message translates to:
+  /// **'No weak words or lesson mistakes yet.'**
+  String get reviewCenterNoMistakes;
+
+  /// No description provided for @reviewCenterOpenMistakeBook.
+  ///
+  /// In en, this message translates to:
+  /// **'Open mistake book'**
+  String get reviewCenterOpenMistakeBook;
+
+  /// No description provided for @reviewCenterLimitPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s review is capped at '**
+  String get reviewCenterLimitPrefix;
+
+  /// No description provided for @reviewCenterLimitMiddle.
+  ///
+  /// In en, this message translates to:
+  /// **' words; '**
+  String get reviewCenterLimitMiddle;
+
+  /// No description provided for @reviewCenterLimitSuffix.
+  ///
+  /// In en, this message translates to:
+  /// **' words won\'t be lost and will stay in the review queue.'**
+  String get reviewCenterLimitSuffix;
+
+  /// No description provided for @reviewCenterTargetWord.
+  ///
+  /// In en, this message translates to:
+  /// **'Target word'**
+  String get reviewCenterTargetWord;
+
+  /// No description provided for @reviewCenterCustomCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom word card'**
+  String get reviewCenterCustomCard;
+
+  /// No description provided for @reviewCenterForgot.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot'**
+  String get reviewCenterForgot;
+
+  /// No description provided for @reviewCenterRemembered.
+  ///
+  /// In en, this message translates to:
+  /// **'Remembered'**
+  String get reviewCenterRemembered;
+
+  /// No description provided for @reviewCenterPostponedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Marked as remembered; the next review will be delayed'**
+  String get reviewCenterPostponedMessage;
+
+  /// No description provided for @reviewCenterCloserReviewMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to a closer review schedule'**
+  String get reviewCenterCloserReviewMessage;
+
+  /// No description provided for @reviewCenterUpdateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to update this card right now'**
+  String get reviewCenterUpdateFailed;
+
+  /// No description provided for @reviewCenterAddMistakeCards.
+  ///
+  /// In en, this message translates to:
+  /// **'Add mistake cards'**
+  String get reviewCenterAddMistakeCards;
+
+  /// No description provided for @reviewCenterAllMistakesAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'All recent mistakes are already in the wordbook.'**
+  String get reviewCenterAllMistakesAdded;
+
+  /// No description provided for @reviewCenterSelectMistakesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'After selecting mistakes, you can add them directly to review cards.'**
+  String get reviewCenterSelectMistakesHint;
+
+  /// No description provided for @reviewCenterAddSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'Add selected'**
+  String get reviewCenterAddSelected;
+
+  /// No description provided for @reviewCenterMistakeCardsSuffix.
+  ///
+  /// In en, this message translates to:
+  /// **' mistake cards'**
+  String get reviewCenterMistakeCardsSuffix;
+
   /// No description provided for @reviewCenterPlanPaused.
   ///
   /// In en, this message translates to:
@@ -1762,6 +2050,12 @@ abstract class AppLocalizations {
   /// **'{count} lesson mistakes'**
   String mistakeBookMistakes(Object count);
 
+  /// No description provided for @mistakeBookMistakesPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} lesson mistakes'**
+  String mistakeBookMistakesPrefix(Object count);
+
   /// No description provided for @mistakeBookSubtitle.
   ///
   /// In en, this message translates to:
@@ -1773,6 +2067,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Fix Mistakes'**
   String get mistakeBookFixLabel;
+
+  /// No description provided for @mistakeBookGoPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice a lesson'**
+  String get mistakeBookGoPractice;
 
   /// No description provided for @mistakeBookCleared.
   ///
@@ -1791,6 +2091,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Lesson Mistakes'**
   String get mistakeBookLessonMistakes;
+
+  /// No description provided for @mistakeBookStartLesson.
+  ///
+  /// In en, this message translates to:
+  /// **'Start a lesson'**
+  String get mistakeBookStartLesson;
 
   /// No description provided for @mistakeBookWeakWords.
   ///
