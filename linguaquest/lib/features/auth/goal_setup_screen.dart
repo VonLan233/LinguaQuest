@@ -12,6 +12,7 @@ import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/study_plan.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class GoalSetupScreen extends ConsumerStatefulWidget {
   const GoalSetupScreen({super.key});
@@ -56,6 +57,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final selectedBook = _bookForTarget(state.wordBooks, _target);
     final selectedLessons = learningLessonsForTarget(state.lessons, _target);
@@ -77,29 +79,31 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/home'),
-        title: const Text('目标设置'),
+        title: Text(l10n.goalSetupTitle),
       ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
           children: [
-            SectionHeader(title: '选择学习计划', subtitle: '系统会把目标拆成每日新学、到期复习和积分任务。'),
+            SectionHeader(
+                title: l10n.goalSetupSelectPlan,
+                subtitle: l10n.goalSetupSelectPlanSubtitle),
             const SizedBox(height: 12),
             Wrap(
               spacing: 8,
               runSpacing: 8,
               children: [
                 PillLabel(
-                  label: '第 2 步 / 共 2 步',
+                  label: l10n.authStep2of2,
                   icon: Icons.track_changes_rounded,
                   color: AppTheme.cyan,
                 ),
                 PillLabel(
-                  label: displayTarget(_target),
+                  label: displayTarget(_target, l10n: l10n),
                   icon: Icons.flag_outlined,
                 ),
                 PillLabel(
-                  label: '$dailyWords/天',
+                  label: '$dailyWords${l10n.commonWords}/${l10n.commonDay}',
                   icon: Icons.today_outlined,
                   color: AppTheme.mango,
                 ),
@@ -107,7 +111,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
             ),
             const SizedBox(height: 16),
             _PlanSnapshotLine(
-              target: displayTarget(_target),
+              target: displayTarget(_target, l10n: l10n),
               totalWords: totalWords,
               completedWords: completedWords,
               dailyWords: dailyWords,
@@ -116,22 +120,23 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
             ),
             const SizedBox(height: 20),
             _ChoiceSection<String>(
-              title: '目标',
+              title: l10n.goalSetupTarget,
               values: targets,
               selected: _target,
-              labelFor: displayTarget,
+              labelFor: (v) => displayTarget(v, l10n: l10n),
               onSelected: (value) => setState(() => _target = value),
             ),
             const SizedBox(height: 24),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('每日目标', style: Theme.of(context).textTheme.titleMedium),
+                Text(l10n.goalSetupDailyGoal,
+                    style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),
                 _ChoiceList<int>(
                   values: goals,
                   selected: _dailyGoal,
-                  labelFor: (goal) => '$goal 词',
+                  labelFor: (goal) => '$goal ${l10n.commonWords}',
                   onSelected: (goal) => setState(() => _dailyGoal = goal),
                 ),
               ],
@@ -140,12 +145,13 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('按截止日期规划', style: Theme.of(context).textTheme.titleMedium),
+                Text(l10n.goalSetupDeadlinePlan,
+                    style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),
                 Text(
                   _deadline == null
-                      ? '选择目标日期后，系统会自动计算每天需要学习的词数。'
-                      : '${formatShortDate(_deadline!)} · 每天 ${plannedDailyWords ?? _dailyGoal} 词',
+                      ? l10n.goalSetupDeadlineHint
+                      : '${formatShortDate(_deadline!)} · ${plannedDailyWords ?? _dailyGoal} ${l10n.commonWords}/${l10n.commonDay}',
                 ),
                 const SizedBox(height: 12),
                 Row(
@@ -154,13 +160,17 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
                       child: OutlinedButton.icon(
                         onPressed: _pickDeadline,
                         icon: const Icon(Icons.event_outlined),
-                        label: Text(_deadline == null ? '选择日期' : '更改日期'),
+                        label: Text(
+                          _deadline == null
+                              ? l10n.goalSetupPickDate
+                              : l10n.goalSetupChangeDate,
+                        ),
                       ),
                     ),
                     if (_deadline != null) ...[
                       const SizedBox(width: 10),
                       QuestIconButton(
-                        tooltip: '清除日期规划',
+                        tooltip: l10n.goalSetupClearDate,
                         onPressed: () => setState(() => _deadline = null),
                         icon: Icons.close_rounded,
                         color: AppTheme.coral,
@@ -174,7 +184,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
             FilledButton.icon(
               onPressed: _save,
               icon: const Icon(Icons.check_circle_outline),
-              label: const Text('进入 LinguaQuest'),
+              label: Text(l10n.goalSetupEnterApp),
             ),
           ],
         ),
@@ -294,6 +304,7 @@ class _PlanSnapshotLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final progress = totalWords == 0
         ? 0.0
@@ -314,10 +325,11 @@ class _PlanSnapshotLine extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('当前词书', style: theme.textTheme.titleMedium),
+                  Text(l10n.goalSetupCurrentBook,
+                      style: theme.textTheme.titleMedium),
                   const SizedBox(height: 3),
                   Text(
-                    '$target · 已学 $completedWords/$totalWords 词',
+                    '$target · ${l10n.goalSetupLearned} $completedWords/$totalWords ${l10n.commonWords}',
                     style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                   ),
                 ],
@@ -342,19 +354,19 @@ class _PlanSnapshotLine extends StatelessWidget {
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             PillLabel(
-              label: '新学 $dailyWords 词',
+              label: l10n.goalSetupNewWordsCount(dailyWords),
               icon: Icons.add_task_rounded,
               color: AppTheme.teal,
             ),
             PillLabel(
-              label: '复习上限 $reviewLimit 词',
+              label: l10n.goalSetupReviewLimitCount(reviewLimit),
               icon: Icons.replay_rounded,
               color: AppTheme.mango,
             ),
             TextButton.icon(
               onPressed: onOpenWordbook,
               icon: const Icon(Icons.style_outlined),
-              label: const Text('查看完整词汇表'),
+              label: Text(l10n.goalSetupViewWordbook),
             ),
           ],
         ),

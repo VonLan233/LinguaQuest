@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_theme.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({required this.selectedIndex, required this.child, super.key});
@@ -110,41 +111,45 @@ class _QuestBottomNav extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onSelected;
 
-  static const tabs = [
-    _QuestTabData(
-      label: '首页',
-      icon: Icons.home_outlined,
-      selectedIcon: Icons.home_rounded,
-      color: AppTheme.teal,
-    ),
-    _QuestTabData(
-      label: '训练场',
-      icon: Icons.sports_esports_outlined,
-      selectedIcon: Icons.sports_esports_rounded,
-      color: AppTheme.coral,
-    ),
-    _QuestTabData(
-      label: 'AI 学习',
-      icon: Icons.psychology_alt_outlined,
-      selectedIcon: Icons.psychology_alt_rounded,
-      color: AppTheme.cyan,
-    ),
-    _QuestTabData(
-      label: '发现',
-      icon: Icons.explore_outlined,
-      selectedIcon: Icons.explore_rounded,
-      color: AppTheme.mango,
-    ),
-    _QuestTabData(
-      label: '我的',
-      icon: Icons.person_outline,
-      selectedIcon: Icons.person_rounded,
-      color: AppTheme.teal,
-    ),
-  ];
+  static List<_QuestTabData> _buildTabs(AppLocalizations l10n) {
+    return [
+      _QuestTabData(
+        label: l10n.tabHome,
+        icon: Icons.home_outlined,
+        selectedIcon: Icons.home_rounded,
+        color: AppTheme.teal,
+      ),
+      _QuestTabData(
+        label: l10n.tabTraining,
+        icon: Icons.sports_esports_outlined,
+        selectedIcon: Icons.sports_esports_rounded,
+        color: AppTheme.coral,
+      ),
+      _QuestTabData(
+        label: l10n.tabAiLearning,
+        icon: Icons.psychology_alt_outlined,
+        selectedIcon: Icons.psychology_alt_rounded,
+        color: AppTheme.cyan,
+      ),
+      _QuestTabData(
+        label: l10n.tabDiscover,
+        icon: Icons.explore_outlined,
+        selectedIcon: Icons.explore_rounded,
+        color: AppTheme.mango,
+      ),
+      _QuestTabData(
+        label: l10n.tabProfile,
+        icon: Icons.person_outline,
+        selectedIcon: Icons.person_rounded,
+        color: AppTheme.teal,
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final tabs = _buildTabs(l10n);
     final colorScheme = Theme.of(context).colorScheme;
     return Material(
       color: colorScheme.surface,
