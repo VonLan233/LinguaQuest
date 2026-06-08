@@ -5,17 +5,19 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/widgets/fallback_back_button.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/profile'),
-        title: const Text('设置'),
+        title: Text(l10n.settingsAppBar),
       ),
       body: SafeArea(
         child: ListView(
@@ -23,23 +25,23 @@ class SettingsScreen extends ConsumerWidget {
           children: [
             _SettingsAction(
               icon: Icons.flag_outlined,
-              title: '学习计划',
+              title: l10n.commonStudyPlan,
               subtitle:
-                  '${state.currentStudyBook.name} · 新学 ${state.dailyNewTarget} · 复习 ${state.dailyReviewLimit}',
+                  '${state.currentStudyBook.name} · ${l10n.commonNew} ${state.dailyNewTarget} · ${l10n.commonReview} ${state.dailyReviewLimit}',
               route: '/settings/study-plan',
             ),
             _SettingsAction(
               icon: Icons.notifications_outlined,
-              title: '每日提醒',
+              title: l10n.commonDailyReminder,
               subtitle: state.reminderSettings.enabled
-                  ? '每天 ${state.reminderSettings.formattedTime}'
-                  : '提醒已关闭',
+                  ? '${l10n.commonDay} ${state.reminderSettings.formattedTime}'
+                  : l10n.settingsReminderOff,
               route: '/settings/reminder',
             ),
             _SettingsAction(
               icon: Icons.dark_mode_outlined,
-              title: '主题',
-              subtitle: _themeModeLabel(state.themeMode),
+              title: l10n.commonTheme,
+              subtitle: _themeModeLabel(state.themeMode, l10n),
               route: '/settings/theme',
             ),
             _LanguageSetting(
@@ -48,10 +50,10 @@ class SettingsScreen extends ConsumerWidget {
                   ref.read(appControllerProvider.notifier).updateLocale(locale),
             ),
             const SizedBox(height: 8),
-            const _SettingsInfoLine(
+            _SettingsInfoLine(
               icon: Icons.volume_up_outlined,
-              title: '答题音效反馈',
-              subtitle: '用于提醒答题结果和练习节奏',
+              title: l10n.settingsSoundFeedback,
+              subtitle: l10n.settingsSoundFeedbackSubtitle,
             ),
           ],
         ),
@@ -65,13 +67,14 @@ class ThemeSettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final themeMode = ref.watch(
       appControllerProvider.select((state) => state.themeMode),
     );
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/settings'),
-        title: const Text('主题'),
+        title: Text(l10n.commonTheme),
       ),
       body: SafeArea(
         child: ListView(
@@ -81,22 +84,22 @@ class ThemeSettingsScreen extends ConsumerWidget {
               value: ThemeMode.system,
               groupValue: themeMode,
               icon: Icons.phone_android_outlined,
-              title: '跟随系统',
-              subtitle: '根据设备浅色或深色偏好自动切换',
+              title: l10n.settingsThemeSystem,
+              subtitle: l10n.settingsThemeSystemSubtitle,
             ),
             _ThemeOption(
               value: ThemeMode.light,
               groupValue: themeMode,
               icon: Icons.light_mode_outlined,
-              title: '浅色',
-              subtitle: '保持明亮清爽的学习界面',
+              title: l10n.settingsThemeLight,
+              subtitle: l10n.settingsThemeLightSubtitle,
             ),
             _ThemeOption(
               value: ThemeMode.dark,
               groupValue: themeMode,
               icon: Icons.dark_mode_outlined,
-              title: '深色',
-              subtitle: '使用深色学习界面',
+              title: l10n.settingsThemeDark,
+              subtitle: l10n.settingsThemeDarkSubtitle,
             ),
           ],
         ),
@@ -110,13 +113,14 @@ class ReminderSettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final settings = ref.watch(
       appControllerProvider.select((state) => state.reminderSettings),
     );
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/settings'),
-        title: const Text('每日提醒'),
+        title: Text(l10n.settingsReminderTitle),
       ),
       body: SafeArea(
         child: ListView(
@@ -130,11 +134,11 @@ class ReminderSettingsScreen extends ConsumerWidget {
                     .read(appControllerProvider.notifier)
                     .updateReminderSettings(settings.copyWith(enabled: value));
               },
-              title: const Text('每日提醒'),
+              title: Text(l10n.settingsReminderTitle),
               subtitle: Text(
                 settings.enabled
-                    ? '提醒时间：${settings.formattedTime}'
-                    : '不会安排本地提醒',
+                    ? '${l10n.settingsReminderTime}：${settings.formattedTime}'
+                    : l10n.settingsReminderDisabled,
               ),
             ),
             const Divider(height: 20),
@@ -142,7 +146,7 @@ class ReminderSettingsScreen extends ConsumerWidget {
               contentPadding: EdgeInsets.zero,
               enabled: settings.enabled,
               leading: const Icon(Icons.schedule_outlined),
-              title: const Text('提醒时间'),
+              title: Text(l10n.settingsReminderTime),
               subtitle: Text(settings.formattedTime),
               trailing: const Icon(Icons.chevron_right_rounded),
               onTap: settings.enabled
@@ -151,7 +155,7 @@ class ReminderSettingsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              '应用会记住提醒时间，并按这个时间安排本地系统提醒，提醒你开始学习和打卡。',
+              l10n.settingsReminderDescription,
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
@@ -454,13 +458,13 @@ class _ThemeOption extends ConsumerWidget {
   }
 }
 
-String _themeModeLabel(ThemeMode mode) {
+String _themeModeLabel(ThemeMode mode, AppLocalizations l10n) {
   switch (mode) {
     case ThemeMode.light:
-      return '浅色';
+      return l10n.settingsThemeLight;
     case ThemeMode.dark:
-      return '深色';
+      return l10n.settingsThemeDark;
     case ThemeMode.system:
-      return '跟随系统';
+      return l10n.settingsThemeSystem;
   }
 }

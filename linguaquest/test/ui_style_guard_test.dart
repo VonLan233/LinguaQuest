@@ -667,9 +667,8 @@ void main() {
       for (final phrase in prototypePhrases) {
         expect(sources, isNot(contains(phrase)));
       }
-      expect(sources, contains('应用会记住提醒时间'));
-      expect(sources, contains('学习打卡和错题讨论集中展示'));
-      expect(sources, contains('用于提醒答题结果和练习节奏'));
+      expect(sources, contains('discoverCommunityPostsSubtitle'));
+      expect(sources, contains('settingsSoundFeedbackSubtitle'));
     });
   });
 }
