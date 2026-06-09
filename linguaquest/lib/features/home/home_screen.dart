@@ -58,17 +58,20 @@ class HomeScreen extends ConsumerWidget {
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: InkWell(
-                borderRadius: BorderRadius.circular(999),
-                onTap: () => context.push('/search'),
-                child: InputDecorator(
-                  decoration: InputDecoration(
-                    isDense: true,
-                    prefixIcon: const Icon(Icons.search),
-                    hintText: l10n.homeSearchHint,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 12),
+              child: SizedBox(
+                height: 48,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(999),
+                  onTap: () => context.push('/search'),
+                  child: InputDecorator(
+                    decoration: InputDecoration(
+                      isDense: true,
+                      prefixIcon: const Icon(Icons.search),
+                      hintText: l10n.homeSearchHint,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 8),
+                    ),
+                    child: const SizedBox.shrink(),
                   ),
-                  child: const SizedBox.shrink(),
                 ),
               ),
             ),
