@@ -123,7 +123,7 @@ class _QuestBottomNav extends StatelessWidget {
         label: l10n.tabTraining,
         icon: Icons.sports_esports_outlined,
         selectedIcon: Icons.sports_esports_rounded,
-        color: AppTheme.coral,
+        color: AppTheme.leaf,
       ),
       _QuestTabData(
         label: l10n.tabAiLearning,
