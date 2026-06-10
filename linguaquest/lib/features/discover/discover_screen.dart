@@ -64,7 +64,7 @@ class DiscoverScreen extends ConsumerWidget {
           icon: Icons.forum_outlined,
           title: l10n.discoverCommunityPosts,
           subtitle: l10n.discoverCommunityPostsSubtitle,
-          color: AppTheme.cyan,
+          color: AppTheme.leaf,
           onTap: () => context.push('/discover/community'),
         ),
       ],

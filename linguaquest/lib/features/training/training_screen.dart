@@ -47,7 +47,7 @@ class TrainingScreen extends ConsumerWidget {
                 icon: Icons.school_outlined,
                 title: l10n.trainingCampusSpeed,
                 subtitle: l10n.trainingCampusSpeedDesc,
-                color: AppTheme.teal,
+                color: AppTheme.leaf,
                 onTap: speedLesson == null
                     ? null
                     : () => context.push('/timed-test/${speedLesson.id}'),
@@ -100,7 +100,7 @@ class TrainingScreen extends ConsumerWidget {
           icon: Icons.article_outlined,
           title: l10n.trainingPassageCloze,
           subtitle: l10n.trainingPassageClozeDesc,
-          color: AppTheme.teal,
+          color: AppTheme.leaf,
           onTap: null,
         ),
         const SizedBox(height: 12),
