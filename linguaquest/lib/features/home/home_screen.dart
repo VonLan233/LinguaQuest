@@ -456,7 +456,6 @@ class _DailyTaskPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final hasReview = dueCount > 0;
-    final totalTaskCount = canStartNew ? (dailyGoal + dueCount) : dueCount;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Column(
