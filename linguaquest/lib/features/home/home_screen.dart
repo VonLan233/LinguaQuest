@@ -589,7 +589,7 @@ class _DailyProgressRing extends StatelessWidget {
               strokeWidth: 8,
               strokeCap: StrokeCap.round,
               backgroundColor: AppTheme.progressTrack(context),
-              valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.teal),
+              valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.leaf),
             ),
           ),
           Column(

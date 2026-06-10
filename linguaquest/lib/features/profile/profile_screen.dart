@@ -357,7 +357,7 @@ class _ProfileProgressCard extends StatelessWidget {
               value: progress,
               minHeight: 10,
               backgroundColor: AppTheme.progressTrack(context),
-              valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.teal),
+              valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.leaf),
             ),
           ),
           const SizedBox(height: 10),
