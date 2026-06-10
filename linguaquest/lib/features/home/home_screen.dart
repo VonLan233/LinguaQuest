@@ -58,17 +58,20 @@ class HomeScreen extends ConsumerWidget {
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: InkWell(
-                borderRadius: BorderRadius.circular(999),
-                onTap: () => context.push('/search'),
-                child: InputDecorator(
-                  decoration: InputDecoration(
-                    isDense: true,
-                    prefixIcon: const Icon(Icons.search),
-                    hintText: l10n.homeSearchHint,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 12),
+              child: SizedBox(
+                height: 48,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(999),
+                  onTap: () => context.push('/search'),
+                  child: InputDecorator(
+                    decoration: InputDecoration(
+                      isDense: true,
+                      prefixIcon: const Icon(Icons.search),
+                      hintText: l10n.homeSearchHint,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 8),
+                    ),
+                    child: const SizedBox.shrink(),
                   ),
-                  child: const SizedBox.shrink(),
                 ),
               ),
             ),
@@ -465,23 +468,6 @@ class _DailyTaskPanel extends StatelessWidget {
               fontWeight: FontWeight.w900,
             ),
           ),
-          const SizedBox(height: 6),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Text(
-                  isPaused
-                      ? '${l10n.goalSetupCurrentBook} $currentSection · ${l10n.homePlanPaused}'
-                      : '${l10n.goalSetupCurrentBook} $currentSection · ${l10n.commonNew} $dailyGoal ${l10n.commonWords}${hasReview ? " + ${l10n.commonReview} $dueCount ${l10n.commonWords}" : ""}',
-                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
-                ),
-              ),
-              TextButton(
-                  onPressed: onOpenPlan,
-                  child: Text(l10n.homeAdjustPlan)),
-            ],
-          ),
           const SizedBox(height: 14),
           if (isPaused)
             OutlinedButton.icon(
@@ -492,30 +478,21 @@ class _DailyTaskPanel extends StatelessWidget {
           else
             Row(
               children: [
+              Expanded(
+                child: FilledButton(
+                  onPressed: canStartNew ? onNewStudy : (hasReview ? onReview : null),
+                  child: const Icon(Icons.play_arrow_rounded),
+                ),
+              ),
+              if (hasReview) ...[
+                const SizedBox(width: 12),
                 Expanded(
-                  child: FilledButton.icon(
-                    onPressed: canStartNew ? onNewStudy : (hasReview ? onReview : null),
-                    icon: const Icon(Icons.play_arrow_rounded),
-                    label: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                          '${l10n.homeStartLearning} ($totalTaskCount)'),
-                    ),
+                  child: OutlinedButton(
+                    onPressed: onReview,
+                    child: const Icon(Icons.replay_rounded),
                   ),
                 ),
-                if (hasReview) ...[
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: onReview,
-                      icon: const Icon(Icons.replay_rounded),
-                      label: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text('${l10n.homeReviewOnly} ($dueCount)'),
-                      ),
-                    ),
-                  ),
-                ],
+              ],
               ],
             ),
         ],

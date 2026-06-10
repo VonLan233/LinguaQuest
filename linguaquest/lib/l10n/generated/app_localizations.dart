@@ -2524,6 +2524,264 @@ abstract class AppLocalizations {
   /// **'This action cannot be undone.'**
   String get wordbookDeleteMessage;
 
+  /// No description provided for @wordbookImageBook.
+  ///
+  /// In en, this message translates to:
+  /// **'Image Wordbook'**
+  String get wordbookImageBook;
+
+  /// No description provided for @wordbookCustomTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Words'**
+  String get wordbookCustomTooltip;
+
+  /// No description provided for @wordbookWordsLearned.
+  ///
+  /// In en, this message translates to:
+  /// **'Learned {completed}/{total} words'**
+  String wordbookWordsLearned(Object completed, Object total);
+
+  /// No description provided for @wordbookTargetWords.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} target words'**
+  String wordbookTargetWords(Object count);
+
+  /// No description provided for @wordbookBookCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} wordbooks'**
+  String wordbookBookCount(Object count);
+
+  /// No description provided for @wordbookCompletion.
+  ///
+  /// In en, this message translates to:
+  /// **'Completion {percent}%'**
+  String wordbookCompletion(Object percent);
+
+  /// No description provided for @wordbookSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch Wordbook'**
+  String get wordbookSwitch;
+
+  /// No description provided for @wordbookSwitchDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Current wordbook drives home, learning path, search, training, and review entries.'**
+  String get wordbookSwitchDesc;
+
+  /// No description provided for @wordbookSwitched.
+  ///
+  /// In en, this message translates to:
+  /// **'Wordbook switched'**
+  String get wordbookSwitched;
+
+  /// No description provided for @wordbookSwitchFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to switch wordbook'**
+  String get wordbookSwitchFailed;
+
+  /// No description provided for @wordbookTargetSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Target Words'**
+  String get wordbookTargetSection;
+
+  /// No description provided for @wordbookTargetDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} words · Learning path {percent}% complete'**
+  String wordbookTargetDesc(Object count, Object percent);
+
+  /// No description provided for @wordbookNameBeginner.
+  ///
+  /// In en, this message translates to:
+  /// **'Beginner Basic Words'**
+  String get wordbookNameBeginner;
+
+  /// No description provided for @wordbookDescBeginner.
+  ///
+  /// In en, this message translates to:
+  /// **'High-frequency words for beginners and daily expression.'**
+  String get wordbookDescBeginner;
+
+  /// No description provided for @wordbookNameIELTS.
+  ///
+  /// In en, this message translates to:
+  /// **'IELTS Core Words'**
+  String get wordbookNameIELTS;
+
+  /// No description provided for @wordbookDescIELTS.
+  ///
+  /// In en, this message translates to:
+  /// **'High-frequency academic words for IELTS reading, listening, and writing.'**
+  String get wordbookDescIELTS;
+
+  /// No description provided for @wordbookNameTOEFL.
+  ///
+  /// In en, this message translates to:
+  /// **'TOEFL High-Frequency Words'**
+  String get wordbookNameTOEFL;
+
+  /// No description provided for @wordbookDescTOEFL.
+  ///
+  /// In en, this message translates to:
+  /// **'Academic vocabulary and campus expressions for TOEFL.'**
+  String get wordbookDescTOEFL;
+
+  /// No description provided for @wordbookNameGRE.
+  ///
+  /// In en, this message translates to:
+  /// **'GRE High-Frequency Words'**
+  String get wordbookNameGRE;
+
+  /// No description provided for @wordbookDescGRE.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced words commonly seen in GRE reading and fill-in-the-blank.'**
+  String get wordbookDescGRE;
+
+  /// No description provided for @wordbookNameCET4.
+  ///
+  /// In en, this message translates to:
+  /// **'CET-4 Core Words'**
+  String get wordbookNameCET4;
+
+  /// No description provided for @wordbookDescCET4.
+  ///
+  /// In en, this message translates to:
+  /// **'Core vocabulary for College English Test Band 4.'**
+  String get wordbookDescCET4;
+
+  /// No description provided for @wordbookNameCET6.
+  ///
+  /// In en, this message translates to:
+  /// **'CET-6 Core Words'**
+  String get wordbookNameCET6;
+
+  /// No description provided for @wordbookDescCET6.
+  ///
+  /// In en, this message translates to:
+  /// **'Core vocabulary for College English Test Band 6.'**
+  String get wordbookDescCET6;
+
+  /// No description provided for @wordbookNameKaoyan.
+  ///
+  /// In en, this message translates to:
+  /// **'Postgrad Core Words'**
+  String get wordbookNameKaoyan;
+
+  /// No description provided for @wordbookDescKaoyan.
+  ///
+  /// In en, this message translates to:
+  /// **'Core vocabulary for postgraduate entrance exams.'**
+  String get wordbookDescKaoyan;
+
+  /// No description provided for @notificationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationTitle;
+
+  /// No description provided for @notificationMarkAllRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark All Read'**
+  String get notificationMarkAllRead;
+
+  /// No description provided for @notificationCenter.
+  ///
+  /// In en, this message translates to:
+  /// **'Message Center'**
+  String get notificationCenter;
+
+  /// No description provided for @notificationCenterDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning reminders, review due, check-in, and activity messages are gathered here.'**
+  String get notificationCenterDesc;
+
+  /// No description provided for @notificationUnreadCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} unread messages'**
+  String notificationUnreadCount(Object count);
+
+  /// No description provided for @notificationFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get notificationFilterAll;
+
+  /// No description provided for @notificationFilterUnread.
+  ///
+  /// In en, this message translates to:
+  /// **'Unread'**
+  String get notificationFilterUnread;
+
+  /// No description provided for @notificationFilterLearning.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning'**
+  String get notificationFilterLearning;
+
+  /// No description provided for @notificationFilterActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity'**
+  String get notificationFilterActivity;
+
+  /// No description provided for @notificationEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching messages'**
+  String get notificationEmptyTitle;
+
+  /// No description provided for @notificationEmptyUnread.
+  ///
+  /// In en, this message translates to:
+  /// **'No unread messages right now.'**
+  String get notificationEmptyUnread;
+
+  /// No description provided for @notificationEmptyAll.
+  ///
+  /// In en, this message translates to:
+  /// **'After completing learning and review, learning reminders and activity messages will continue to be gathered here.'**
+  String get notificationEmptyAll;
+
+  /// No description provided for @notificationBackHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Home'**
+  String get notificationBackHome;
+
+  /// No description provided for @notificationTypeLearningReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning Reminder'**
+  String get notificationTypeLearningReminder;
+
+  /// No description provided for @notificationTypeReviewDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Review Due'**
+  String get notificationTypeReviewDue;
+
+  /// No description provided for @notificationTypeCheckIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in Reminder'**
+  String get notificationTypeCheckIn;
+
+  /// No description provided for @notificationTypeActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity Message'**
+  String get notificationTypeActivity;
+
   /// No description provided for @studyNewStudy.
   ///
   /// In en, this message translates to:
@@ -2554,6 +2812,192 @@ abstract class AppLocalizations {
   /// **'{count} words left'**
   String studyWordsLeft(Object count);
 
+  /// No description provided for @studyPlanLoginRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please log in before setting up a study plan.'**
+  String get studyPlanLoginRequired;
+
+  /// No description provided for @studyPlanSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Study Plan'**
+  String get studyPlanSave;
+
+  /// No description provided for @studyPlanSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Study Plan Settings'**
+  String get studyPlanSettings;
+
+  /// No description provided for @studyPlanSettingsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage current wordbook, daily tasks, review rhythm, and reminder time.'**
+  String get studyPlanSettingsDesc;
+
+  /// No description provided for @studyPlanViewWords.
+  ///
+  /// In en, this message translates to:
+  /// **'View Full Wordbook'**
+  String get studyPlanViewWords;
+
+  /// No description provided for @studyPlanDailyNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily New Words'**
+  String get studyPlanDailyNew;
+
+  /// No description provided for @studyPlanDailyNewHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended 5-30 words, max 200.'**
+  String get studyPlanDailyNewHint;
+
+  /// No description provided for @studyPlanDailyReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Review Limit'**
+  String get studyPlanDailyReview;
+
+  /// No description provided for @studyPlanDailyReviewHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Review queue beyond limit will be kept for later dates.'**
+  String get studyPlanDailyReviewHint;
+
+  /// No description provided for @studyPlanTargetDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Exam/Target Completion Date'**
+  String get studyPlanTargetDate;
+
+  /// No description provided for @studyPlanReminderTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Study Reminder Time'**
+  String get studyPlanReminderTime;
+
+  /// No description provided for @studyPlanResume.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume Plan'**
+  String get studyPlanResume;
+
+  /// No description provided for @studyPlanPause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause Plan'**
+  String get studyPlanPause;
+
+  /// No description provided for @studyPlanReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Plan'**
+  String get studyPlanReset;
+
+  /// No description provided for @studyPlanResetConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm reset study plan?'**
+  String get studyPlanResetConfirm;
+
+  /// No description provided for @studyPlanResetDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset will clear current wordbook learning path progress, and reset custom word mastery, correct/wrong counts, and review times; review queue will be regenerated. This affects learning progress and review schedule.'**
+  String get studyPlanResetDesc;
+
+  /// No description provided for @studyPlanCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get studyPlanCancel;
+
+  /// No description provided for @studyPlanConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Reset'**
+  String get studyPlanConfirm;
+
+  /// No description provided for @studyPlanInvalidDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Target completion date cannot be earlier than today.'**
+  String get studyPlanInvalidDate;
+
+  /// No description provided for @studyPlanSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Study plan saved.'**
+  String get studyPlanSaved;
+
+  /// No description provided for @studyPlanSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to save plan.'**
+  String get studyPlanSaveFailed;
+
+  /// No description provided for @studyPlanResumed.
+  ///
+  /// In en, this message translates to:
+  /// **'Study plan resumed.'**
+  String get studyPlanResumed;
+
+  /// No description provided for @studyPlanPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Study plan paused. Today\'s reminders and task entries will be temporarily closed.'**
+  String get studyPlanPaused;
+
+  /// No description provided for @studyPlanPauseFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to update plan status.'**
+  String get studyPlanPauseFailed;
+
+  /// No description provided for @studyPlanResetDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Study plan reset.'**
+  String get studyPlanResetDone;
+
+  /// No description provided for @studyPlanResetFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to reset plan.'**
+  String get studyPlanResetFailed;
+
+  /// No description provided for @studyPlanEnterNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a number'**
+  String get studyPlanEnterNumber;
+
+  /// No description provided for @studyPlanNumberRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Range must be {min}-{max}'**
+  String studyPlanNumberRange(Object max, Object min);
+
+  /// No description provided for @studyPlanDaysLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days left'**
+  String studyPlanDaysLeft(Object count);
+
+  /// No description provided for @studyPlanActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get studyPlanActive;
+
+  /// No description provided for @studyPlanPausedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get studyPlanPausedLabel;
+
   /// No description provided for @aiLearningTitle.
   ///
   /// In en, this message translates to:
@@ -2571,6 +3015,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'AI learning features coming soon.'**
   String get aiLearningComingSoon;
+
+  /// No description provided for @aiLearningDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Explain grammar, distinguish word meanings, generate context; formal learning records are still updated by quiz results.'**
+  String get aiLearningDesc;
+
+  /// No description provided for @aiLearningTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Q&A'**
+  String get aiLearningTooltip;
+
+  /// No description provided for @aiLearningPillError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error Explanation'**
+  String get aiLearningPillError;
+
+  /// No description provided for @aiLearningPillNoKey.
+  ///
+  /// In en, this message translates to:
+  /// **'No Client Key Required'**
+  String get aiLearningPillNoKey;
+
+  /// No description provided for @aiLearningCurrentWord.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Word'**
+  String get aiLearningCurrentWord;
+
+  /// No description provided for @aiLearningToolsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tool List'**
+  String get aiLearningToolsTitle;
+
+  /// No description provided for @aiLearningToolsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'First version focuses on long sentence analysis and Q&A; writing correction comes later.'**
+  String get aiLearningToolsSubtitle;
+
+  /// No description provided for @aiLearningToolAiQA.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Q&A'**
+  String get aiLearningToolAiQA;
+
+  /// No description provided for @aiLearningToolAiQADesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Answer questions about word meaning, grammar, and expression naturalness based on current words, examples, and learning goals.'**
+  String get aiLearningToolAiQADesc;
+
+  /// No description provided for @aiLearningToolAiAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Long Sentence Analysis'**
+  String get aiLearningToolAiAnalysis;
+
+  /// No description provided for @aiLearningToolAiAnalysisDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Extract main clauses, divide subordinate clauses, explain modifiers and key words, and provide natural Chinese translation.'**
+  String get aiLearningToolAiAnalysisDesc;
+
+  /// No description provided for @aiLearningToolAiWriting.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Writing Correction'**
+  String get aiLearningToolAiWriting;
+
+  /// No description provided for @aiLearningToolAiWritingDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Select exam type, enter topic and body text, output total score, itemized scores, and paragraph-by-paragraph revision suggestions.'**
+  String get aiLearningToolAiWritingDesc;
+
+  /// No description provided for @aiLearningToolCloze.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Word Cloze'**
+  String get aiLearningToolCloze;
+
+  /// No description provided for @aiLearningToolClozeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate short passages based on today\'s new words, mistake words, or this week\'s weak words, with 5 to 10 target words blanked out.'**
+  String get aiLearningToolClozeDesc;
+
+  /// No description provided for @aiLearningToolConfusion.
+  ///
+  /// In en, this message translates to:
+  /// **'Confusable Words'**
+  String get aiLearningToolConfusion;
+
+  /// No description provided for @aiLearningToolConfusionDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Explain usage scenarios of near-synonyms or confusable words like affect/effect based on mistake records.'**
+  String get aiLearningToolConfusionDesc;
+
+  /// No description provided for @aiLearningToolSentence.
+  ///
+  /// In en, this message translates to:
+  /// **'Sentence Generation & Rewrite'**
+  String get aiLearningToolSentence;
+
+  /// No description provided for @aiLearningToolSentenceDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate more natural example sentences based on exam goals, with one-click add to notes or wordbook.'**
+  String get aiLearningToolSentenceDesc;
+
+  /// No description provided for @aiLearningStatusSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming Soon'**
+  String get aiLearningStatusSoon;
+
+  /// No description provided for @aiLearningStatusLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming Later'**
+  String get aiLearningStatusLater;
+
+  /// No description provided for @aiLearningStatusPlanning.
+  ///
+  /// In en, this message translates to:
+  /// **'In Planning'**
+  String get aiLearningStatusPlanning;
 
   /// No description provided for @questTitle.
   ///

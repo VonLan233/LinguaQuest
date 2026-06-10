@@ -1308,6 +1308,157 @@ class AppLocalizationsEn extends AppLocalizations {
   String get wordbookDeleteMessage => 'This action cannot be undone.';
 
   @override
+  String get wordbookImageBook => 'Image Wordbook';
+
+  @override
+  String get wordbookCustomTooltip => 'Custom Words';
+
+  @override
+  String wordbookWordsLearned(Object completed, Object total) {
+    return 'Learned $completed/$total words';
+  }
+
+  @override
+  String wordbookTargetWords(Object count) {
+    return '$count target words';
+  }
+
+  @override
+  String wordbookBookCount(Object count) {
+    return '$count wordbooks';
+  }
+
+  @override
+  String wordbookCompletion(Object percent) {
+    return 'Completion $percent%';
+  }
+
+  @override
+  String get wordbookSwitch => 'Switch Wordbook';
+
+  @override
+  String get wordbookSwitchDesc =>
+      'Current wordbook drives home, learning path, search, training, and review entries.';
+
+  @override
+  String get wordbookSwitched => 'Wordbook switched';
+
+  @override
+  String get wordbookSwitchFailed => 'Unable to switch wordbook';
+
+  @override
+  String get wordbookTargetSection => 'Target Words';
+
+  @override
+  String wordbookTargetDesc(Object count, Object percent) {
+    return '$count words · Learning path $percent% complete';
+  }
+
+  @override
+  String get wordbookNameBeginner => 'Beginner Basic Words';
+
+  @override
+  String get wordbookDescBeginner =>
+      'High-frequency words for beginners and daily expression.';
+
+  @override
+  String get wordbookNameIELTS => 'IELTS Core Words';
+
+  @override
+  String get wordbookDescIELTS =>
+      'High-frequency academic words for IELTS reading, listening, and writing.';
+
+  @override
+  String get wordbookNameTOEFL => 'TOEFL High-Frequency Words';
+
+  @override
+  String get wordbookDescTOEFL =>
+      'Academic vocabulary and campus expressions for TOEFL.';
+
+  @override
+  String get wordbookNameGRE => 'GRE High-Frequency Words';
+
+  @override
+  String get wordbookDescGRE =>
+      'Advanced words commonly seen in GRE reading and fill-in-the-blank.';
+
+  @override
+  String get wordbookNameCET4 => 'CET-4 Core Words';
+
+  @override
+  String get wordbookDescCET4 =>
+      'Core vocabulary for College English Test Band 4.';
+
+  @override
+  String get wordbookNameCET6 => 'CET-6 Core Words';
+
+  @override
+  String get wordbookDescCET6 =>
+      'Core vocabulary for College English Test Band 6.';
+
+  @override
+  String get wordbookNameKaoyan => 'Postgrad Core Words';
+
+  @override
+  String get wordbookDescKaoyan =>
+      'Core vocabulary for postgraduate entrance exams.';
+
+  @override
+  String get notificationTitle => 'Notifications';
+
+  @override
+  String get notificationMarkAllRead => 'Mark All Read';
+
+  @override
+  String get notificationCenter => 'Message Center';
+
+  @override
+  String get notificationCenterDesc =>
+      'Learning reminders, review due, check-in, and activity messages are gathered here.';
+
+  @override
+  String notificationUnreadCount(Object count) {
+    return '$count unread messages';
+  }
+
+  @override
+  String get notificationFilterAll => 'All';
+
+  @override
+  String get notificationFilterUnread => 'Unread';
+
+  @override
+  String get notificationFilterLearning => 'Learning';
+
+  @override
+  String get notificationFilterActivity => 'Activity';
+
+  @override
+  String get notificationEmptyTitle => 'No matching messages';
+
+  @override
+  String get notificationEmptyUnread => 'No unread messages right now.';
+
+  @override
+  String get notificationEmptyAll =>
+      'After completing learning and review, learning reminders and activity messages will continue to be gathered here.';
+
+  @override
+  String get notificationBackHome => 'Back to Home';
+
+  @override
+  String get notificationTypeLearningReminder => 'Learning Reminder';
+
+  @override
+  String get notificationTypeReviewDue => 'Review Due';
+
+  @override
+  String get notificationTypeCheckIn => 'Check-in Reminder';
+
+  @override
+  String get notificationTypeActivity => 'Activity Message';
+
+  @override
   String get studyNewStudy => 'New Study';
 
   @override
@@ -1325,6 +1476,109 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get studyPlanLoginRequired =>
+      'Please log in before setting up a study plan.';
+
+  @override
+  String get studyPlanSave => 'Save Study Plan';
+
+  @override
+  String get studyPlanSettings => 'Study Plan Settings';
+
+  @override
+  String get studyPlanSettingsDesc =>
+      'Manage current wordbook, daily tasks, review rhythm, and reminder time.';
+
+  @override
+  String get studyPlanViewWords => 'View Full Wordbook';
+
+  @override
+  String get studyPlanDailyNew => 'Daily New Words';
+
+  @override
+  String get studyPlanDailyNewHint => 'Recommended 5-30 words, max 200.';
+
+  @override
+  String get studyPlanDailyReview => 'Daily Review Limit';
+
+  @override
+  String get studyPlanDailyReviewHint =>
+      'Review queue beyond limit will be kept for later dates.';
+
+  @override
+  String get studyPlanTargetDate => 'Exam/Target Completion Date';
+
+  @override
+  String get studyPlanReminderTime => 'Study Reminder Time';
+
+  @override
+  String get studyPlanResume => 'Resume Plan';
+
+  @override
+  String get studyPlanPause => 'Pause Plan';
+
+  @override
+  String get studyPlanReset => 'Reset Plan';
+
+  @override
+  String get studyPlanResetConfirm => 'Confirm reset study plan?';
+
+  @override
+  String get studyPlanResetDesc =>
+      'Reset will clear current wordbook learning path progress, and reset custom word mastery, correct/wrong counts, and review times; review queue will be regenerated. This affects learning progress and review schedule.';
+
+  @override
+  String get studyPlanCancel => 'Cancel';
+
+  @override
+  String get studyPlanConfirm => 'Confirm Reset';
+
+  @override
+  String get studyPlanInvalidDate =>
+      'Target completion date cannot be earlier than today.';
+
+  @override
+  String get studyPlanSaved => 'Study plan saved.';
+
+  @override
+  String get studyPlanSaveFailed => 'Unable to save plan.';
+
+  @override
+  String get studyPlanResumed => 'Study plan resumed.';
+
+  @override
+  String get studyPlanPaused =>
+      'Study plan paused. Today\'s reminders and task entries will be temporarily closed.';
+
+  @override
+  String get studyPlanPauseFailed => 'Unable to update plan status.';
+
+  @override
+  String get studyPlanResetDone => 'Study plan reset.';
+
+  @override
+  String get studyPlanResetFailed => 'Unable to reset plan.';
+
+  @override
+  String get studyPlanEnterNumber => 'Please enter a number';
+
+  @override
+  String studyPlanNumberRange(Object max, Object min) {
+    return 'Range must be $min-$max';
+  }
+
+  @override
+  String studyPlanDaysLeft(Object count) {
+    return '$count days left';
+  }
+
+  @override
+  String get studyPlanActive => 'Active';
+
+  @override
+  String get studyPlanPausedLabel => 'Paused';
+
+  @override
   String get aiLearningTitle => 'AI Learning';
 
   @override
@@ -1332,6 +1586,80 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aiLearningComingSoon => 'AI learning features coming soon.';
+
+  @override
+  String get aiLearningDesc =>
+      'Explain grammar, distinguish word meanings, generate context; formal learning records are still updated by quiz results.';
+
+  @override
+  String get aiLearningTooltip => 'Q&A';
+
+  @override
+  String get aiLearningPillError => 'Error Explanation';
+
+  @override
+  String get aiLearningPillNoKey => 'No Client Key Required';
+
+  @override
+  String get aiLearningCurrentWord => 'Current Word';
+
+  @override
+  String get aiLearningToolsTitle => 'Tool List';
+
+  @override
+  String get aiLearningToolsSubtitle =>
+      'First version focuses on long sentence analysis and Q&A; writing correction comes later.';
+
+  @override
+  String get aiLearningToolAiQA => 'AI Q&A';
+
+  @override
+  String get aiLearningToolAiQADesc =>
+      'Answer questions about word meaning, grammar, and expression naturalness based on current words, examples, and learning goals.';
+
+  @override
+  String get aiLearningToolAiAnalysis => 'AI Long Sentence Analysis';
+
+  @override
+  String get aiLearningToolAiAnalysisDesc =>
+      'Extract main clauses, divide subordinate clauses, explain modifiers and key words, and provide natural Chinese translation.';
+
+  @override
+  String get aiLearningToolAiWriting => 'AI Writing Correction';
+
+  @override
+  String get aiLearningToolAiWritingDesc =>
+      'Select exam type, enter topic and body text, output total score, itemized scores, and paragraph-by-paragraph revision suggestions.';
+
+  @override
+  String get aiLearningToolCloze => 'Today\'s Word Cloze';
+
+  @override
+  String get aiLearningToolClozeDesc =>
+      'Generate short passages based on today\'s new words, mistake words, or this week\'s weak words, with 5 to 10 target words blanked out.';
+
+  @override
+  String get aiLearningToolConfusion => 'Confusable Words';
+
+  @override
+  String get aiLearningToolConfusionDesc =>
+      'Explain usage scenarios of near-synonyms or confusable words like affect/effect based on mistake records.';
+
+  @override
+  String get aiLearningToolSentence => 'Sentence Generation & Rewrite';
+
+  @override
+  String get aiLearningToolSentenceDesc =>
+      'Generate more natural example sentences based on exam goals, with one-click add to notes or wordbook.';
+
+  @override
+  String get aiLearningStatusSoon => 'Coming Soon';
+
+  @override
+  String get aiLearningStatusLater => 'Coming Later';
+
+  @override
+  String get aiLearningStatusPlanning => 'In Planning';
 
   @override
   String get questTitle => 'Quests';

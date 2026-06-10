@@ -1,3 +1,5 @@
+import '../../l10n/generated/app_localizations.dart';
+
 enum AppNotificationType {
   learningReminder,
   reviewDue,
@@ -106,7 +108,19 @@ AppNotificationType appNotificationTypeFromName(String? value) {
   return AppNotificationType.activity;
 }
 
-String appNotificationTypeLabel(AppNotificationType type) {
+String appNotificationTypeLabel(AppNotificationType type, {AppLocalizations? l10n}) {
+  if (l10n != null) {
+    switch (type) {
+      case AppNotificationType.learningReminder:
+        return l10n.notificationTypeLearningReminder;
+      case AppNotificationType.reviewDue:
+        return l10n.notificationTypeReviewDue;
+      case AppNotificationType.checkInReminder:
+        return l10n.notificationTypeCheckIn;
+      case AppNotificationType.activity:
+        return l10n.notificationTypeActivity;
+    }
+  }
   switch (type) {
     case AppNotificationType.learningReminder:
       return '学习提醒';

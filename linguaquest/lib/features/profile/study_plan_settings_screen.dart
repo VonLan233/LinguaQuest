@@ -7,10 +7,12 @@ import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/date_formatting.dart';
+import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/study_plan.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class StudyPlanSettingsScreen extends ConsumerStatefulWidget {
   const StudyPlanSettingsScreen({super.key});
@@ -54,12 +56,13 @@ class _StudyPlanSettingsScreenState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final user = state.user;
     if (user == null) {
-      return const Scaffold(
-        appBar: _StudyPlanAppBar(),
-        body: Center(child: Text('请先登录后再设置学习计划。')),
+      return Scaffold(
+        appBar: const _StudyPlanAppBar(),
+        body: Center(child: Text(l10n.studyPlanLoginRequired)),
       );
     }
 
@@ -85,7 +88,7 @@ class _StudyPlanSettingsScreenState
           child: FilledButton.icon(
             onPressed: state.isLoading ? null : _save,
             icon: const Icon(Icons.save_outlined),
-            label: const Text('保存学习计划'),
+            label: Text(l10n.studyPlanSave),
           ),
         ),
       ),
@@ -101,10 +104,10 @@ class _StudyPlanSettingsScreenState
                   child: LinearProgressIndicator(),
                 ),
               SectionHeader(
-                title: '学习计划设置',
-                subtitle: '管理当前词书、每日任务、复习节奏和提醒时间。',
+                title: l10n.studyPlanSettings,
+                subtitle: l10n.studyPlanSettingsDesc,
                 trailing: QuestIconButton(
-                  tooltip: '查看完整词汇表',
+                  tooltip: l10n.studyPlanViewWords,
                   onPressed: () => context.push('/wordbook'),
                   icon: Icons.style_outlined,
                   color: AppTheme.cyan,
@@ -120,29 +123,33 @@ class _StudyPlanSettingsScreenState
                 daysLeft: (plan ?? _fallbackPlan(user.uid)).daysLeft(
                   DateTime.now(),
                 ),
+                l10n: l10n,
               ),
               const SizedBox(height: 24),
               _StudyBookSelector(
                 selectedId: _wordBookId,
                 onSelected: (value) => setState(() => _wordBookId = value),
+                l10n: l10n,
               ),
               const SizedBox(height: 24),
               _NumberField(
                 controller: _dailyNewController,
-                label: '每日新学词数',
-                helperText: '建议 5-30 词，最多 200 词。',
+                label: l10n.studyPlanDailyNew,
+                helperText: l10n.studyPlanDailyNewHint,
                 icon: Icons.add_task_outlined,
                 min: 1,
                 max: 200,
+                l10n: l10n,
               ),
               const SizedBox(height: 16),
               _NumberField(
                 controller: _dailyReviewController,
-                label: '每日复习上限',
-                helperText: '复习队列超过上限时会保留到后续日期。',
+                label: l10n.studyPlanDailyReview,
+                helperText: l10n.studyPlanDailyReviewHint,
                 icon: Icons.replay_outlined,
                 min: 0,
                 max: 500,
+                l10n: l10n,
               ),
               const SizedBox(height: 22),
               _PlanDateTimeSection(
@@ -150,6 +157,7 @@ class _StudyPlanSettingsScreenState
                 reminderTimeLabel: _reminderTimeLabel,
                 onPickDate: _pickTargetFinishDate,
                 onPickTime: _pickReminderTime,
+                l10n: l10n,
               ),
               const SizedBox(height: 24),
               _PlanActions(
@@ -158,6 +166,7 @@ class _StudyPlanSettingsScreenState
                 onOpenWords: () => context.push('/wordbook'),
                 onTogglePause: _togglePause,
                 onReset: _confirmReset,
+                l10n: l10n,
               ),
             ],
           ),
@@ -217,7 +226,7 @@ class _StudyPlanSettingsScreenState
       originalFinishDate: basePlan.targetFinishDate,
       today: today,
     )) {
-      _showMessage('目标完成日期不能早于今天。');
+      _showMessage(AppLocalizations.of(context).studyPlanInvalidDate);
       return;
     }
 
@@ -236,11 +245,14 @@ class _StudyPlanSettingsScreenState
     if (!mounted) return;
     final latestState = ref.read(appControllerProvider);
     _showMessage(
-      succeeded ? '学习计划已保存。' : latestState.errorMessage ?? '暂时无法保存计划。',
+      succeeded
+          ? AppLocalizations.of(context).studyPlanSaved
+          : latestState.errorMessage ?? AppLocalizations.of(context).studyPlanSaveFailed,
     );
   }
 
   Future<void> _togglePause() async {
+    final l10n = AppLocalizations.of(context);
     final wasPaused =
         ref.read(appControllerProvider).studyPlan?.isPaused ?? false;
     final succeeded = await ref
@@ -250,28 +262,27 @@ class _StudyPlanSettingsScreenState
     _showMessage(
       succeeded
           ? wasPaused
-                ? '学习计划已恢复。'
-                : '学习计划已暂停，今日提醒和任务入口会暂时关闭。'
-          : '暂时无法更新计划状态。',
+                ? l10n.studyPlanResumed
+                : l10n.studyPlanPaused
+          : l10n.studyPlanPauseFailed,
     );
   }
 
   Future<void> _confirmReset() async {
+    final l10n = AppLocalizations.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('确认重置学习计划？'),
-        content: const Text(
-          '重置后会清空当前词书的学习路径进度，并把生词本掌握度、正确/错误次数和复习时间重置；复习队列会重新生成。这个操作会影响学习进度和复习安排。',
-        ),
+        title: Text(l10n.studyPlanResetConfirm),
+        content: Text(l10n.studyPlanResetDesc),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
+            child: Text(l10n.studyPlanCancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('确认重置'),
+            child: Text(l10n.studyPlanConfirm),
           ),
         ],
       ),
@@ -281,7 +292,9 @@ class _StudyPlanSettingsScreenState
         .read(appControllerProvider.notifier)
         .resetStudyPlan();
     if (!mounted) return;
-    _showMessage(succeeded ? '学习计划已重置。' : '暂时无法重置计划。');
+    _showMessage(
+      succeeded ? l10n.studyPlanResetDone : l10n.studyPlanResetFailed,
+    );
   }
 
   Future<void> _pickTargetFinishDate() async {
@@ -394,7 +407,7 @@ class _StudyPlanAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       leading: const FallbackBackButton(fallbackLocation: '/settings'),
-      title: const Text('学习计划'),
+      title: Text(AppLocalizations.of(context).commonStudyPlan),
     );
   }
 
@@ -410,6 +423,7 @@ class _PlanHeroCard extends StatelessWidget {
     required this.progress,
     required this.status,
     required this.daysLeft,
+    required this.l10n,
   });
 
   final StudyBookInfo book;
@@ -418,6 +432,7 @@ class _PlanHeroCard extends StatelessWidget {
   final double progress;
   final String status;
   final int daysLeft;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -445,10 +460,13 @@ class _PlanHeroCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(book.name, style: theme.textTheme.titleLarge),
+                    Text(
+                      displayWordbookTitle(book.id, l10n: l10n),
+                      style: theme.textTheme.titleLarge,
+                    ),
                     const SizedBox(height: 4),
                     Text(
-                      book.description,
+                      displayWordbookDescription(book.id, l10n: l10n),
                       style: TextStyle(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
@@ -474,17 +492,19 @@ class _PlanHeroCard extends StatelessWidget {
             runSpacing: 8,
             children: [
               PillLabel(
-                label: '已学 $completedWords/$totalWords 词',
+                label: l10n.wordbookWordsLearned(completedWords, totalWords),
                 icon: Icons.school_outlined,
                 color: AppTheme.teal,
               ),
               PillLabel(
-                label: '剩余 $daysLeft 天',
+                label: l10n.studyPlanDaysLeft(daysLeft),
                 icon: Icons.event_outlined,
                 color: AppTheme.mango,
               ),
               PillLabel(
-                label: status == 'paused' ? '已暂停' : '进行中',
+                label: status == 'paused'
+                    ? l10n.studyPlanPausedLabel
+                    : l10n.studyPlanActive,
                 icon: status == 'paused'
                     ? Icons.pause_circle_outline
                     : Icons.play_circle_outline,
@@ -502,17 +522,19 @@ class _StudyBookSelector extends StatelessWidget {
   const _StudyBookSelector({
     required this.selectedId,
     required this.onSelected,
+    required this.l10n,
   });
 
   final String selectedId;
   final ValueChanged<String> onSelected;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('切换词书', style: Theme.of(context).textTheme.titleMedium),
+        Text(l10n.wordbookSwitch, style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 10),
         Wrap(
           spacing: 8,
@@ -544,6 +566,7 @@ class _StudyBookPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     return Material(
       color: selected
@@ -569,7 +592,7 @@ class _StudyBookPill extends StatelessWidget {
               Text(book.cover),
               const SizedBox(width: 6),
               Text(
-                book.name,
+                displayWordbookTitle(book.id, l10n: l10n),
                 style: theme.textTheme.labelLarge?.copyWith(
                   color: selected
                       ? theme.colorScheme.onSecondaryContainer
@@ -592,6 +615,7 @@ class _NumberField extends StatelessWidget {
     required this.icon,
     required this.min,
     required this.max,
+    required this.l10n,
   });
 
   final TextEditingController controller;
@@ -600,6 +624,7 @@ class _NumberField extends StatelessWidget {
   final IconData icon;
   final int min;
   final int max;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -614,8 +639,10 @@ class _NumberField extends StatelessWidget {
       ),
       validator: (value) {
         final parsed = int.tryParse(value?.trim() ?? '');
-        if (parsed == null) return '请输入数字';
-        if (parsed < min || parsed > max) return '范围必须是 $min-$max';
+        if (parsed == null) return l10n.studyPlanEnterNumber;
+        if (parsed < min || parsed > max) {
+          return l10n.studyPlanNumberRange(min, max);
+        }
         return null;
       },
     );
@@ -628,12 +655,14 @@ class _PlanDateTimeSection extends StatelessWidget {
     required this.reminderTimeLabel,
     required this.onPickDate,
     required this.onPickTime,
+    required this.l10n,
   });
 
   final DateTime targetFinishDate;
   final String reminderTimeLabel;
   final VoidCallback onPickDate;
   final VoidCallback onPickTime;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -641,14 +670,14 @@ class _PlanDateTimeSection extends StatelessWidget {
       children: [
         _PlanActionRow(
           icon: Icons.event_outlined,
-          title: '考试/目标完成日期',
+          title: l10n.studyPlanTargetDate,
           subtitle: formatShortDate(targetFinishDate),
           onTap: onPickDate,
         ),
         const Divider(height: 18),
         _PlanActionRow(
           icon: Icons.schedule_outlined,
-          title: '学习提醒时间',
+          title: l10n.studyPlanReminderTime,
           subtitle: reminderTimeLabel,
           onTap: onPickTime,
         ),
@@ -664,6 +693,7 @@ class _PlanActions extends StatelessWidget {
     required this.onOpenWords,
     required this.onTogglePause,
     required this.onReset,
+    required this.l10n,
   });
 
   final bool isPaused;
@@ -671,6 +701,7 @@ class _PlanActions extends StatelessWidget {
   final VoidCallback onOpenWords;
   final VoidCallback onTogglePause;
   final VoidCallback onReset;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -680,7 +711,7 @@ class _PlanActions extends StatelessWidget {
         OutlinedButton.icon(
           onPressed: onOpenWords,
           icon: const Icon(Icons.style_outlined),
-          label: const Text('查看完整词汇表'),
+          label: Text(l10n.studyPlanViewWords),
         ),
         const SizedBox(height: 10),
         OutlinedButton.icon(
@@ -688,13 +719,13 @@ class _PlanActions extends StatelessWidget {
           icon: Icon(
             isPaused ? Icons.play_circle_outline : Icons.pause_circle_outline,
           ),
-          label: Text(isPaused ? '恢复计划' : '暂停计划'),
+          label: Text(isPaused ? l10n.studyPlanResume : l10n.studyPlanPause),
         ),
         const SizedBox(height: 10),
         FilledButton.tonalIcon(
           onPressed: isLoading ? null : onReset,
           icon: const Icon(Icons.restart_alt_outlined),
-          label: const Text('重置计划'),
+          label: Text(l10n.studyPlanReset),
         ),
       ],
     );
