@@ -7,7 +7,9 @@ void main() {
     test('feature screens avoid heavy card and glass primitives', () {
       final source = _readDartSources(Directory('lib/features'));
       // Exclude home_screen which uses Card per Issue #55 design requirement
-      final homeSource = File('lib/features/home/home_screen.dart').readAsStringSync();
+      final homeSource = File(
+        'lib/features/home/home_screen.dart',
+      ).readAsStringSync();
       final sourceWithoutHome = source.replaceAll(homeSource, '');
       final forbiddenPatterns = [
         (RegExp(r'\bQuestCard\s*\('), 'QuestCard('),
@@ -181,8 +183,8 @@ void main() {
       expect(review, contains('FallbackBackButton'));
       expect(review, contains('_ReviewQueueSignals'));
       expect(review, isNot(contains('MetricTile')));
-      expect(review, contains('没记住'));
-      expect(review, contains('记住了'));
+      expect(review, contains('l10n.reviewCenterForgot'));
+      expect(review, contains('l10n.reviewCenterRemembered'));
     });
 
     test('progress analytics keeps summary status lightweight', () {
@@ -238,8 +240,8 @@ void main() {
       expect(reviewStudy, contains('_ReviewWordCard'));
       expect(reviewStudy, contains('_MemoryHintLine'));
       expect(reviewStudy, contains('PopScope'));
-      expect(reviewStudy, contains('离开复习？'));
-      expect(reviewStudy, contains('已完成的词卡已经保存'));
+      expect(reviewStudy, contains('reviewStudyLeaveTitle'));
+      expect(reviewStudy, contains('reviewStudyLeaveContent'));
       expect(reviewStudy, isNot(contains('_MemoryHintCard')));
       expect(lessonPreview, contains('didUpdateWidget'));
       expect(reviewStudy, contains('listenManual<AppState>'));
@@ -369,8 +371,8 @@ void main() {
       const legacyLabels = [
         'Campus Starter',
         'Goal Setup',
-        'Remembered',
-        'Forgot',
+        "'Remembered'",
+        "'Forgot'",
         "name: 'Learner'",
         "user?.name ?? 'Learner'",
         "TextEditingController(text: 'custom')",
@@ -438,14 +440,13 @@ void main() {
       ];
       final source = files.map((file) => file.readAsStringSync()).join('\n');
 
-      expect(source, contains("title: const Text('生词本')"));
-      expect(source, contains("_SearchSectionTitle(title: '生词本'"));
-      expect(source, contains('打开单词本和生词本'));
-      expect(source, contains("tooltip: '生词本'"));
-      expect(source, contains('弱项生词'));
-      expect(source, contains('添加生词本词卡'));
-      expect(source, contains('添加生词'));
-      expect(source, contains('生词本和学习记录'));
+      expect(source, contains('l10n.commonCustomWords'));
+      expect(source, contains('l10n.learningPathOpenWordbook'));
+      expect(source, contains('l10n.wordbookCustomTooltip'));
+      expect(source, contains('l10n.mistakeBookWeakWords'));
+      expect(source, contains('l10n.customWordsAddCard'));
+      expect(source, contains('l10n.wordbookAddCustom'));
+      expect(source, contains('l10n.aboutPrivacySubtitle'));
 
       for (final file in files) {
         final text = file.readAsStringSync();
@@ -491,9 +492,9 @@ void main() {
       ).readAsStringSync();
 
       expect(supportLink, contains('class AiWordSupportLink'));
-      expect(supportLink, contains('AI 学习'));
+      expect(supportLink, contains('l10n.aiLearningTitle'));
       expect(supportLink, contains("context.push('/ai-learning')"));
-      expect(supportLink, contains('近义词区别'));
+      expect(supportLink, contains('l10n.aiWordSupportDesc'));
       for (final source in [targetDetail, customDetail]) {
         expect(source, contains('AiWordSupportLink(word:'));
         expect(
@@ -537,7 +538,7 @@ void main() {
         'lib/features/wordbook/word_knowledge_sections.dart',
       ).readAsStringSync();
 
-      expect(targetDetail, contains('当前计划中'));
+      expect(targetDetail, contains('wordbookCurrentPlan'));
       expect(targetDetail, contains('WordKnowledgeSections(word: word)'));
       expect(
         customDetail,
@@ -567,11 +568,11 @@ void main() {
       expect(aiLearning, isNot(contains('先用模拟流程')));
       expect(aiLearning, isNot(contains('先用演示流程')));
       expect(aiLearning, isNot(contains('AI学习')));
-      expect(aiLearning, contains('AI 学习'));
-      expect(aiLearning, contains('错因讲解'));
-      expect(aiLearning, contains("status: '规划中'"));
-      expect(aiLearning, contains("status: '待开放'"));
-      expect(aiLearning, contains("status: '暂未开放'"));
+      expect(aiLearning, contains('l10n.aiLearningTitle'));
+      expect(aiLearning, contains('l10n.aiLearningToolAiQA'));
+      expect(aiLearning, contains('l10n.aiLearningStatusPlanning'));
+      expect(aiLearning, contains('l10n.aiLearningStatusSoon'));
+      expect(aiLearning, contains('l10n.aiLearningStatusLater'));
     });
 
     test('quest entry labels avoid development stage wording', () {
@@ -684,7 +685,11 @@ String _readDartSources(Directory root, {String? excludeDir}) {
           .listSync(recursive: true)
           .whereType<File>()
           .where((file) => file.path.endsWith('.dart'))
-          .where((file) => excludeDir == null || !file.path.split(RegExp(r'[/\\]')).contains(excludeDir))
+          .where(
+            (file) =>
+                excludeDir == null ||
+                !file.path.split(RegExp(r'[/\\]')).contains(excludeDir),
+          )
           .toList()
         ..sort((a, b) => a.path.compareTo(b.path));
 

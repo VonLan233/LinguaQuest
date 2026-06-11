@@ -1305,6 +1305,9 @@ void main() {
       UncontrolledProviderScope(
         container: container,
         child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('zh'),
           theme: AppTheme.light(),
           home: const WordbookScreen(),
         ),
@@ -1325,7 +1328,13 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: MaterialApp(theme: AppTheme.light(), home: const SearchScreen()),
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('zh'),
+          theme: AppTheme.light(),
+          home: const SearchScreen(),
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -1364,6 +1373,9 @@ void main() {
         UncontrolledProviderScope(
           container: container,
           child: MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            locale: const Locale('zh'),
             theme: AppTheme.light(),
             home: const SearchScreen(),
           ),
@@ -2593,6 +2605,9 @@ void main() {
       UncontrolledProviderScope(
         container: container,
         child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('zh'),
           theme: AppTheme.light(),
           home: TargetWordDetailScreen(wordId: targetWord.id),
         ),
@@ -2655,6 +2670,9 @@ void main() {
         UncontrolledProviderScope(
           container: container,
           child: MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            locale: const Locale('zh'),
             theme: AppTheme.light(),
             home: TargetWordDetailScreen(wordId: word.id),
           ),
@@ -2727,6 +2745,9 @@ void main() {
       UncontrolledProviderScope(
         container: container,
         child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('zh'),
           theme: AppTheme.light(),
           home: WordDetailScreen(wordId: word.id),
         ),
