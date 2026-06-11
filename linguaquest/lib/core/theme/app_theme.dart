@@ -14,6 +14,7 @@ class AppTheme {
   static const Color leaf = Color(0xFF6CBF3F);
   static const Color ink = Color(0xFF16315F);
   static const Color paper = Color(0xFFF2F8FE);
+  static const Color lightSurface = Color(0xFFEAF3FC);
   static const Color success = Color(0xFF5CB531);
   static const Color darkPaper = Color(0xFF0A1426);
   static const Color darkSurface = Color(0xFF0F1B33);
@@ -28,7 +29,7 @@ class AppTheme {
           primary: teal,
           secondary: cyan,
           tertiary: mango,
-          surface: Colors.white,
+          surface: lightSurface,
         ).copyWith(
           onPrimary: Colors.white,
           primaryContainer: mint,
@@ -38,10 +39,10 @@ class AppTheme {
           tertiaryContainer: const Color(0xFFFFF0C2),
           onTertiaryContainer: const Color(0xFF4A3A00),
           surfaceContainerLowest: Colors.white,
-          surfaceContainerLow: const Color(0xFFF8FBFE),
-          surfaceContainer: const Color(0xFFEFF5FC),
-          surfaceContainerHigh: const Color(0xFFE4EEF9),
-          surfaceContainerHighest: const Color(0xFFD5E5F5),
+          surfaceContainerLow: const Color(0xFFEAF3FC),
+          surfaceContainer: const Color(0xFFE0ECF8),
+          surfaceContainerHigh: const Color(0xFFD5E4F3),
+          surfaceContainerHighest: const Color(0xFFC7D9EB),
           onSurface: ink,
           onSurfaceVariant: const Color(0xFF4F6480),
           outline: const Color(0xFF93AECC),
@@ -177,6 +178,7 @@ class AppTheme {
         ),
       ),
       cardTheme: CardThemeData(
+        color: scheme.surface,
         elevation: 0,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
