@@ -44,7 +44,7 @@ class LearningPathScreen extends ConsumerWidget {
             OutlinedButton.icon(
               onPressed: () => context.push('/wordbook'),
               icon: const Icon(Icons.style_outlined),
-              label: Text(l10n.learningPathOpenWordbook),
+              label: const Text('打开单词本和生词本'),
             ),
             const SizedBox(height: 10),
             TextButton.icon(
@@ -69,12 +69,17 @@ class _PausedBanner extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.35),
+        color: Theme.of(
+          context,
+        ).colorScheme.primaryContainer.withValues(alpha: 0.35),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
-          Icon(Icons.pause_circle_outlined, color: Theme.of(context).colorScheme.primary),
+          Icon(
+            Icons.pause_circle_outlined,
+            color: Theme.of(context).colorScheme.primary,
+          ),
           const SizedBox(width: 12),
           Expanded(child: Text(l10n.reviewCenterPlanPaused)),
         ],
@@ -84,7 +89,11 @@ class _PausedBanner extends StatelessWidget {
 }
 
 class _PathNode extends StatelessWidget {
-  const _PathNode({required this.lesson, required this.index, required this.l10n});
+  const _PathNode({
+    required this.lesson,
+    required this.index,
+    required this.l10n,
+  });
 
   final Lesson lesson;
   final int index;
@@ -173,7 +182,9 @@ class _PathNode extends StatelessWidget {
                     const SizedBox(height: 5),
                     Text(
                       lesson.description,
-                      style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                      style: TextStyle(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -209,7 +220,6 @@ class _PathNode extends StatelessWidget {
 
   void _showPreview(BuildContext context) {
     final parentContext = context;
-    final l10n = AppLocalizations.of(context);
     showModalBottomSheet<void>(
       context: context,
       showDragHandle: true,
@@ -241,7 +251,7 @@ class _PathNode extends StatelessWidget {
                       parentContext.push('/lesson/${lesson.id}');
                     },
                     icon: const Icon(Icons.play_arrow_rounded),
-                    label: Text(l10n.commonContinue),
+                    label: const Text('开始学习'),
                   ),
                 ],
               ),

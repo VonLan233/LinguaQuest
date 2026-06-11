@@ -47,7 +47,9 @@ class HomeScreen extends ConsumerWidget {
                 onTap: () => context.go('/profile'),
                 child: CircleAvatar(
                   radius: 24,
-                  backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                  backgroundColor: Theme.of(
+                    context,
+                  ).colorScheme.primaryContainer,
                   child: Icon(
                     Icons.person_rounded,
                     color: Theme.of(context).colorScheme.onPrimaryContainer,
@@ -89,7 +91,9 @@ class HomeScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(16),
             child: _DailyFocusHeader(
               streak: user?.streak ?? 0,
-              target: currentBook?.title ?? displayTarget(user?.targetExam, l10n: l10n),
+              target:
+                  currentBook?.title ??
+                  displayTarget(user?.targetExam, l10n: l10n),
               level: state.isStudyPlanPaused
                   ? l10n.homePlanPaused
                   : displayLevel(user?.level, l10n: l10n),
@@ -206,7 +210,9 @@ class HomeScreen extends ConsumerWidget {
                   )
                 else ...[
                   const SizedBox(height: 8),
-                  ...state.weakWords.take(3).map((word) => _WeakWordLink(word: word)),
+                  ...state.weakWords
+                      .take(3)
+                      .map((word) => _WeakWordLink(word: word)),
                 ],
               ],
             ),
@@ -477,23 +483,33 @@ class _DailyTaskPanel extends StatelessWidget {
           else
             Row(
               children: [
-              Expanded(
-                child: FilledButton(
-                  onPressed: canStartNew ? onNewStudy : (hasReview ? onReview : null),
-                  child: const Icon(Icons.play_arrow_rounded),
-                ),
-              ),
-              if (hasReview) ...[
-                const SizedBox(width: 12),
                 Expanded(
-                  child: OutlinedButton(
-                    onPressed: onReview,
-                    child: const Icon(Icons.replay_rounded),
+                  child: FilledButton.icon(
+                    onPressed: canStartNew
+                        ? onNewStudy
+                        : (hasReview ? onReview : null),
+                    icon: const Icon(Icons.play_arrow_rounded),
+                    label: Text(l10n.homeStartLearning),
                   ),
                 ),
-              ],
+                if (hasReview) ...[
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: onReview,
+                      icon: const Icon(Icons.replay_rounded),
+                      label: Text(l10n.homeReviewOnly),
+                    ),
+                  ),
+                ],
               ],
             ),
+          const SizedBox(height: 10),
+          TextButton.icon(
+            onPressed: onOpenPlan,
+            icon: const Icon(Icons.tune_rounded),
+            label: Text(l10n.homeAdjustPlan),
+          ),
         ],
       ),
     );

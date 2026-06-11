@@ -55,7 +55,7 @@ class MistakeBookScreen extends ConsumerWidget {
               ],
               if (weakWords.isNotEmpty) ...[
                 Text(
-                  l10n.mistakeBookWeakWords,
+                  '弱项生词',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w800,
                   ),

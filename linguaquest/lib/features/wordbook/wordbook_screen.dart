@@ -10,13 +10,16 @@ import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../../l10n/generated/app_localizations_zh.dart';
 
 class WordbookScreen extends ConsumerWidget {
   const WordbookScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context);
+    final l10n =
+        Localizations.of<AppLocalizations>(context, AppLocalizations) ??
+        AppLocalizationsZh();
     final state = ref.watch(appControllerProvider);
     final words = state.formalLessons.expand((lesson) => lesson.words).toList();
     final currentBook = state.currentWordBook;
@@ -39,7 +42,7 @@ class WordbookScreen extends ConsumerWidget {
                   ? displayWordbookDescription(currentBook.id, l10n: l10n)
                   : displayWordbookDescription(studyBook.id, l10n: l10n),
               trailing: QuestIconButton(
-                tooltip: l10n.wordbookCustomTooltip,
+                tooltip: '生词本',
                 onPressed: () => context.push('/custom-words'),
                 icon: Icons.add_card_outlined,
                 color: AppTheme.cyan,
@@ -98,7 +101,9 @@ class WordbookScreen extends ConsumerWidget {
                     SnackBar(
                       duration: const Duration(seconds: 2),
                       content: Text(
-                        succeeded ? l10n.wordbookSwitched : l10n.wordbookSwitchFailed,
+                        succeeded
+                            ? l10n.wordbookSwitched
+                            : l10n.wordbookSwitchFailed,
                       ),
                     ),
                   );
@@ -155,9 +160,7 @@ class _StudyBookCoverLine extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                l10n.wordbookWordsLearned(completedWords, totalWords),
-              ),
+              Text(l10n.wordbookWordsLearned(completedWords, totalWords)),
               const SizedBox(height: 8),
               ClipRRect(
                 borderRadius: BorderRadius.circular(999),
@@ -257,9 +260,7 @@ class _WordBookSwitcher extends StatelessWidget {
                     spacing: 6,
                     children: [
                       PillLabel(label: book.examType),
-                      PillLabel(
-                        label: l10n.wordbookTargetWords(book.totalWords),
-                      ),
+                      PillLabel(label: '共 ${book.totalWords} 词'),
                     ],
                   ),
                 ],
@@ -301,7 +302,12 @@ class _TargetWordRow extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(word.word.toLowerCase(), style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800)),
+                      Text(
+                        word.word.toLowerCase(),
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
                       const SizedBox(height: 3),
                       Text(word.meaning),
                       const SizedBox(height: 3),

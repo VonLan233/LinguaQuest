@@ -97,7 +97,7 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
                       action: FilledButton.icon(
                         onPressed: () => context.push('/custom-words/new'),
                         icon: const Icon(Icons.add),
-                        label: const Text('添加单词'),
+                        label: const Text('添加生词本词卡'),
                       ),
                     )
                   : ListView.separated(

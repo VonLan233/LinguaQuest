@@ -21,7 +21,7 @@ class AiLearningScreen extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
       children: [
         SectionHeader(
-          title: l10n.aiLearningTitle,
+          title: 'AI 学习',
           trailing: QuestIconButton(
             tooltip: l10n.aiLearningTooltip,
             onPressed: () => context.push('/ai-tutor'),
@@ -50,67 +50,78 @@ class AiLearningScreen extends StatelessWidget {
           ),
           const SizedBox(height: 22),
         ],
-        SectionHeader(
-          title: l10n.aiLearningToolsTitle,
-        ),
+        SectionHeader(title: l10n.aiLearningToolsTitle),
         const SizedBox(height: 12),
-        Row(
+        _AiToolList(
           children: [
-            Expanded(
-              child: _AiToolCard(
-                icon: Icons.question_answer_outlined,
-                title: l10n.aiLearningToolAiQA,
-                subtitle: l10n.aiLearningToolAiQADesc,
-                color: AppTheme.cyan,
-                status: l10n.aiLearningStatusSoon,
-                onTap: () => context.push('/ai-tutor'),
-              ),
+            _AiToolLink(
+              icon: Icons.question_answer_outlined,
+              title: '错因讲解',
+              subtitle: l10n.aiLearningToolAiQADesc,
+              color: AppTheme.cyan,
+              status: '待开放',
+              onTap: () => context.push('/ai-tutor'),
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _AiToolCard(
-                icon: Icons.account_tree_outlined,
-                title: l10n.aiLearningToolAiAnalysis,
-                subtitle: l10n.aiLearningToolAiAnalysisDesc,
-                color: AppTheme.teal,
-                status: l10n.aiLearningStatusSoon,
-                onTap: () => context.push('/ai-tutor'),
-              ),
+            _AiToolLink(
+              icon: Icons.account_tree_outlined,
+              title: l10n.aiLearningToolAiAnalysis,
+              subtitle: l10n.aiLearningToolAiAnalysisDesc,
+              color: AppTheme.teal,
+              status: '待开放',
+              onTap: () => context.push('/ai-tutor'),
             ),
           ],
         ),
         const SizedBox(height: 12),
-        _AiToolCard(
+        _AiToolLink(
           icon: Icons.rate_review_outlined,
           title: l10n.aiLearningToolAiWriting,
           subtitle: l10n.aiLearningToolAiWritingDesc,
           color: AppTheme.coral,
-          status: l10n.aiLearningStatusLater,
+          status: '暂未开放',
         ),
         const SizedBox(height: 12),
-        _AiToolCard(
+        _AiToolLink(
           icon: Icons.auto_stories_outlined,
           title: l10n.aiLearningToolCloze,
           subtitle: l10n.aiLearningToolClozeDesc,
           color: AppTheme.mango,
-          status: l10n.aiLearningStatusPlanning,
+          status: '规划中',
         ),
         const SizedBox(height: 12),
-        _AiToolCard(
+        _AiToolLink(
           icon: Icons.compare_arrows_outlined,
           title: l10n.aiLearningToolConfusion,
           subtitle: l10n.aiLearningToolConfusionDesc,
           color: AppTheme.cyan,
-          status: l10n.aiLearningStatusPlanning,
+          status: '规划中',
         ),
         const SizedBox(height: 12),
-        _AiToolCard(
+        _AiToolLink(
           icon: Icons.tips_and_updates_outlined,
           title: l10n.aiLearningToolSentence,
           subtitle: l10n.aiLearningToolSentenceDesc,
           color: AppTheme.teal,
-          status: l10n.aiLearningStatusPlanning,
+          status: '规划中',
         ),
+      ],
+    );
+  }
+}
+
+class _AiToolList extends StatelessWidget {
+  const _AiToolList({required this.children});
+
+  final List<_AiToolLink> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        for (var index = 0; index < children.length; index++) ...[
+          Expanded(child: children[index]),
+          if (index < children.length - 1) const SizedBox(width: 12),
+        ],
       ],
     );
   }
@@ -142,10 +153,7 @@ class _AiWordContextCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const IconCueBadge(
-            icon: Icons.travel_explore,
-            color: AppTheme.cyan,
-          ),
+          const IconCueBadge(icon: Icons.travel_explore, color: AppTheme.cyan),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -163,9 +171,7 @@ class _AiWordContextCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     translation,
-                    style: TextStyle(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
+                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                   ),
                 ],
               ],
@@ -177,8 +183,8 @@ class _AiWordContextCard extends StatelessWidget {
   }
 }
 
-class _AiToolCard extends StatelessWidget {
-  const _AiToolCard({
+class _AiToolLink extends StatelessWidget {
+  const _AiToolLink({
     required this.icon,
     required this.title,
     required this.subtitle,

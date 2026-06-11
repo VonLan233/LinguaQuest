@@ -53,9 +53,9 @@ class ReviewCenterScreen extends ConsumerWidget {
             const SizedBox(height: 22),
             Text(
               l10n.reviewCenterTodayDue,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w800,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 10),
             if (due.isEmpty)
@@ -93,7 +93,8 @@ class ReviewCenterScreen extends ConsumerWidget {
                 _MistakeWordImporter(mistakes: lessonMistakes, l10n: l10n),
               for (final mistake in lessonMistakes.take(3))
                 _LessonMistakeRow(mistake: mistake, l10n: l10n),
-              for (final word in weak.take(3)) _WeakWordRow(word: word, l10n: l10n),
+              for (final word in weak.take(3))
+                _WeakWordRow(word: word, l10n: l10n),
             ],
           ],
         ),
@@ -321,7 +322,7 @@ class _ReviewTile extends ConsumerWidget {
                       ? () => _review(context, ref, isCorrect: false)
                       : null,
                   icon: const Icon(Icons.close),
-                  label: FittedBox(child: Text(l10n.quizWrong)),
+                  label: const FittedBox(child: Text('没记住')),
                 ),
               ),
               const SizedBox(width: 10),
@@ -334,7 +335,7 @@ class _ReviewTile extends ConsumerWidget {
                       ? () => _review(context, ref, isCorrect: true)
                       : null,
                   icon: const Icon(Icons.check),
-                  label: FittedBox(child: Text(l10n.quizCorrect)),
+                  label: const FittedBox(child: Text('记住了')),
                 ),
               ),
             ],
@@ -357,10 +358,13 @@ class _ReviewTile extends ConsumerWidget {
     if (!context.mounted) return;
     final message = succeeded
         ? isCorrect
-            ? 'Review postponed'
-            : 'Added to closer review'
-        : ref.read(appControllerProvider).errorMessage ?? 'Update failed';
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+              ? '已延后复习'
+              : '已加入近期复习'
+        : ref.read(appControllerProvider).errorMessage ??
+              l10n.reviewCenterUpdateFailed;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 }
 
@@ -396,7 +400,7 @@ class _LessonMistakeRow extends StatelessWidget {
           ),
           const SizedBox(width: 10),
           PillLabel(
-            label: l10n.commonLessons,
+            label: l10n.commonLesson,
             icon: Icons.school_outlined,
             color: AppTheme.coral,
           ),
@@ -516,6 +520,13 @@ class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
+            widget.l10n.reviewCenterAddMistakeCards,
+            style: Theme.of(
+              context,
+            ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
+          ),
+          const SizedBox(height: 6),
+          Text(
             selectableCount == 0
                 ? widget.l10n.mistakeBookNoLessonMistakes
                 : widget.l10n.mistakeBookMistakes(selectableCount),
@@ -556,7 +567,7 @@ class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
                   ? null
                   : _addSelected,
               icon: const Icon(Icons.add_card_outlined),
-              label: Text('${widget.l10n.commonAdd} ($selectedAddableCount)'),
+              label: Text('加入已选 ($selectedAddableCount)'),
             ),
         ],
       ),
@@ -570,9 +581,9 @@ class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
           _selectedIds.intersection(_visibleMistakeIds()),
         );
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('$added added')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('$added added')));
     if (added > 0) setState(() => _selectedIds.clear());
   }
 
