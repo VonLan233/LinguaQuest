@@ -34,12 +34,12 @@ class AppTheme {
           onPrimary: Colors.white,
           primaryContainer: mint,
           onPrimaryContainer: ink,
-          secondaryContainer: const Color(0xFFD8EBFB),
+          secondaryContainer: mint,
           onSecondaryContainer: ink,
           tertiaryContainer: const Color(0xFFFFF0C2),
           onTertiaryContainer: const Color(0xFF4A3A00),
           surfaceContainerLowest: Colors.white,
-          surfaceContainerLow: const Color(0xFFEAF3FC),
+          surfaceContainerLow: lightSurface,
           surfaceContainer: const Color(0xFFE0ECF8),
           surfaceContainerHigh: const Color(0xFFD5E4F3),
           surfaceContainerHighest: const Color(0xFFC7D9EB),
@@ -74,10 +74,10 @@ class AppTheme {
           onSurfaceVariant: const Color(0xFFBDD0E5),
           outline: const Color(0xFF7E97B8),
           outlineVariant: const Color(0xFF2D4263),
-          primaryContainer: const Color(0xFF1E3A7A),
-          onPrimaryContainer: const Color(0xFFD8EBFB),
-          secondaryContainer: const Color(0xFF16315F),
-          onSecondaryContainer: const Color(0xFFD8EBFB),
+          primaryContainer: deepTeal,
+          onPrimaryContainer: mint,
+          secondaryContainer: ink,
+          onSecondaryContainer: mint,
           tertiaryContainer: const Color(0xFF554500),
           onTertiaryContainer: const Color(0xFFFFF0C2),
         );
@@ -89,21 +89,21 @@ class AppTheme {
       Theme.of(context).colorScheme.brightness == Brightness.dark;
 
   static Color warmSurface(BuildContext context) =>
-      isDark(context) ? const Color(0xFF1F3458) : const Color(0xFFFFF6DD);
+      isDark(context) ? darkSurfaceHighest : const Color(0xFFFFF6DD);
 
   static Color accentSurface(BuildContext context) =>
-      isDark(context) ? const Color(0xFF16315F) : const Color(0xFFD8EBFB);
+      isDark(context) ? ink : mint;
 
   static Color selectedSurface(BuildContext context) =>
       isDark(context) ? Theme.of(context).colorScheme.primaryContainer : mint;
 
   static Color progressTrack(BuildContext context) => isDark(context)
       ? Theme.of(context).colorScheme.surfaceContainerHighest
-      : const Color(0xFFD8EBFB);
+      : mint;
 
   static Color iconBadgeSurface(BuildContext context) => isDark(context)
       ? Theme.of(context).colorScheme.surfaceContainerHighest
-      : const Color(0xFFD8EBFB);
+      : mint;
 
   static ThemeData _base(ColorScheme scheme) {
     final isDark = scheme.brightness == Brightness.dark;
@@ -155,9 +155,7 @@ class AppTheme {
         height: 76,
         elevation: 0,
         backgroundColor: isDark ? scheme.surfaceContainer : Colors.white,
-        indicatorColor: isDark
-            ? scheme.primaryContainer
-            : const Color(0xFFD8EBFB),
+        indicatorColor: isDark ? scheme.primaryContainer : mint,
         labelTextStyle: WidgetStateProperty.resolveWith(
           (states) => TextStyle(
             color: states.contains(WidgetState.selected)
