@@ -172,7 +172,10 @@ void main() {
       expect(training, contains('_TrainingGameRow'));
       expect(training, isNot(contains('MetricTile')));
       expect(training, isNot(contains('_TrainingGameCard')));
-      expect(training, contains("\${currentBook.title} · 限时测试"));
+      expect(
+        training,
+        contains("\${currentBook.title} · \${l10n.trainingTimedTests}"),
+      );
     });
 
     test('review center keeps queue status lightweight', () {
@@ -291,7 +294,10 @@ void main() {
         training,
         contains("context.push('/timed-test/\${speedLesson.id}')"),
       );
-      expect(training, contains("\${currentBook.title} · 限时测试"));
+      expect(
+        training,
+        contains("\${currentBook.title} · \${l10n.trainingTimedTests}"),
+      );
       expect(training, isNot(contains("context.push('/study/review')")));
       expect(wordbook, contains('state.formalLessons'));
       expect(search, contains('state.formalLessons'));
@@ -305,8 +311,8 @@ void main() {
       expect(quizSession, contains(': state.formalLessons'));
       expect(quizSession, contains('_fallbackExitRoute'));
       expect(quizSession, contains("? '/training' : '/learn'"));
-      expect(training, contains('限时测试'));
-      expect(training, contains('今日可得 60 XP'));
+      expect(training, contains('l10n.trainingTimedTests'));
+      expect(training, contains('l10n.trainingDailyXpAvailable'));
       expect(training, isNot(contains("label: '今日可得 60'")));
       expect(newStudy, contains('不做限时测试'));
       expect(router, contains("path: '/study/new'"));
@@ -605,8 +611,8 @@ void main() {
         'lib/features/quiz/lesson_result_screen.dart',
       ).readAsStringSync();
 
-      expect(training, contains("label: '本周 \${user?.xp ?? 0} XP'"));
-      expect(training, contains('今日可得 60 XP'));
+      expect(training, contains('l10n.trainingWeeklyXpPrefix'));
+      expect(training, contains('l10n.trainingDailyXpAvailable'));
       expect(training, isNot(contains('本周 \${user?.xp ?? 0} 积分')));
       expect(quest, contains("label: '任务 XP'"));
       expect(quest, isNot(contains("label: '今日可领 20 XP'")));

@@ -86,11 +86,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     final query = normalizeDictionaryQuery(_query);
     final hasQuery = query.isNotEmpty;
     final hasResults = _targetWords.isNotEmpty || _customWords.isNotEmpty;
+    final currentBookTitle = state.currentWordBook?.title.isNotEmpty == true
+        ? state.currentWordBook!.title
+        : null;
 
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/home'),
-        title: Text(state.currentWordBook?.title ?? l10n.searchTitle),
+        title: Text(currentBookTitle ?? l10n.searchTitle),
       ),
       body: SafeArea(
         child: ListView(
@@ -112,7 +115,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             _SearchScopeSelector(
               selected: _scope,
               currentBookTitle:
-                  state.currentWordBook?.title ?? l10n.reviewCenterCurrentBook,
+                  currentBookTitle ?? l10n.reviewCenterCurrentBook,
               l10n: l10n,
               onSelected: (scope) {
                 if (scope == _scope) return;
@@ -281,8 +284,8 @@ class _SearchScopeSelector extends StatelessWidget {
       children: [
         Text(
           l10n.searchScopeSummary(
-            currentBookTitle,
             l10n.searchAllWordbooksScope,
+            currentBookTitle,
           ),
           style: Theme.of(context).textTheme.bodySmall,
         ),

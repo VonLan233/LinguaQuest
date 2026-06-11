@@ -29,12 +29,12 @@ class TrainingScreen extends ConsumerWidget {
           runSpacing: 8,
           children: [
             PillLabel(
-              label: '本周 ${user?.xp ?? 0} XP',
+              label: '${l10n.trainingWeeklyXpPrefix} ${user?.xp ?? 0} XP',
               icon: Icons.bolt,
               color: AppTheme.mango,
             ),
-            const PillLabel(
-              label: '今日可得 60 XP',
+            PillLabel(
+              label: l10n.trainingDailyXpAvailable,
               icon: Icons.add_task_outlined,
               color: AppTheme.leaf,
             ),
@@ -59,8 +59,8 @@ class TrainingScreen extends ConsumerWidget {
               icon: Icons.school_outlined,
               title: l10n.trainingCampusSpeed,
               subtitle: currentBook == null
-                  ? '${state.currentStudyBook.name} · 限时测试'
-                  : '${currentBook.title} · 限时测试',
+                  ? '${state.currentStudyBook.name} · ${l10n.trainingTimedTests}'
+                  : '${currentBook.title} · ${l10n.trainingTimedTests}',
               color: AppTheme.leaf,
               onTap: speedLesson == null
                   ? null
@@ -202,7 +202,7 @@ class _TrainingGameRow extends StatelessWidget {
                 if (onTap == null) ...[
                   const SizedBox(height: 10),
                   PillLabel(
-                    label: 'Coming Soon',
+                    label: AppLocalizations.of(context).trainingComingSoon,
                     icon: Icons.lock_clock_outlined,
                     color: Colors.blueGrey,
                   ),
