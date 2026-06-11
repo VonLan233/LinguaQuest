@@ -322,7 +322,7 @@ class _ReviewTile extends ConsumerWidget {
                       ? () => _review(context, ref, isCorrect: false)
                       : null,
                   icon: const Icon(Icons.close),
-                  label: const FittedBox(child: Text('没记住')),
+                  label: FittedBox(child: Text(l10n.reviewCenterForgot)),
                 ),
               ),
               const SizedBox(width: 10),
@@ -335,7 +335,7 @@ class _ReviewTile extends ConsumerWidget {
                       ? () => _review(context, ref, isCorrect: true)
                       : null,
                   icon: const Icon(Icons.check),
-                  label: const FittedBox(child: Text('记住了')),
+                  label: FittedBox(child: Text(l10n.reviewCenterRemembered)),
                 ),
               ),
             ],
@@ -358,8 +358,8 @@ class _ReviewTile extends ConsumerWidget {
     if (!context.mounted) return;
     final message = succeeded
         ? isCorrect
-              ? '已延后复习'
-              : '已加入近期复习'
+              ? l10n.reviewCenterPostponedMessage
+              : l10n.reviewCenterCloserReviewMessage
         : ref.read(appControllerProvider).errorMessage ??
               l10n.reviewCenterUpdateFailed;
     ScaffoldMessenger.of(
@@ -567,7 +567,9 @@ class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
                   ? null
                   : _addSelected,
               icon: const Icon(Icons.add_card_outlined),
-              label: Text('加入已选 ($selectedAddableCount)'),
+              label: Text(
+                '${widget.l10n.reviewCenterAddSelected} ($selectedAddableCount)',
+              ),
             ),
         ],
       ),

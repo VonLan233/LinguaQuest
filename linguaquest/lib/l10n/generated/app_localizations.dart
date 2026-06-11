@@ -2548,6 +2548,12 @@ abstract class AppLocalizations {
   /// **'{count} target words'**
   String wordbookTargetWords(Object count);
 
+  /// No description provided for @wordbookTotalWords.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} words'**
+  String wordbookTotalWords(Object count);
+
   /// No description provided for @wordbookBookCount.
   ///
   /// In en, this message translates to:
@@ -3207,6 +3213,504 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Recent'**
   String get searchRecent;
+
+  /// No description provided for @searchStartTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a keyword to start searching'**
+  String get searchStartTitle;
+
+  /// No description provided for @searchStartMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Search English words, phrases, Chinese meanings, example snippets, and custom words.'**
+  String get searchStartMessage;
+
+  /// No description provided for @searchNoResultsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get searchNoResultsTitle;
+
+  /// No description provided for @searchNoResultsMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Try the full word library, or add a personal word card.'**
+  String get searchNoResultsMessage;
+
+  /// No description provided for @searchFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Search words, phrases, Chinese meanings, or example snippets'**
+  String get searchFieldLabel;
+
+  /// No description provided for @searchScopeSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Scope: {currentBookTitle} / {allWordBooksLabel}'**
+  String searchScopeSummary(Object allWordBooksLabel, Object currentBookTitle);
+
+  /// No description provided for @searchCurrentWordbookScope.
+  ///
+  /// In en, this message translates to:
+  /// **'Current wordbook'**
+  String get searchCurrentWordbookScope;
+
+  /// No description provided for @searchAllWordbooksScope.
+  ///
+  /// In en, this message translates to:
+  /// **'Full library'**
+  String get searchAllWordbooksScope;
+
+  /// No description provided for @searchCurrentPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Current plan'**
+  String get searchCurrentPlan;
+
+  /// No description provided for @customWordsMyCards.
+  ///
+  /// In en, this message translates to:
+  /// **'My word cards'**
+  String get customWordsMyCards;
+
+  /// No description provided for @customWordsMyCardsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create, search, filter, edit, and review your personal word library.'**
+  String get customWordsMyCardsSubtitle;
+
+  /// No description provided for @customWordsCardCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} cards'**
+  String customWordsCardCount(Object count);
+
+  /// No description provided for @customWordsSearchLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Search words, meanings, or tags'**
+  String get customWordsSearchLabel;
+
+  /// No description provided for @customWordsNoMatchTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching word cards'**
+  String get customWordsNoMatchTitle;
+
+  /// No description provided for @customWordsNoMatchMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a personal word card, or adjust the search filters.'**
+  String get customWordsNoMatchMessage;
+
+  /// No description provided for @customWordsAddCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Add custom word card'**
+  String get customWordsAddCard;
+
+  /// No description provided for @customWordsDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete \"{word}\"?'**
+  String customWordsDeleteTitle(Object word);
+
+  /// No description provided for @customWordsDeleteContent.
+  ///
+  /// In en, this message translates to:
+  /// **'This also deletes this personal word card and its review plan.'**
+  String get customWordsDeleteContent;
+
+  /// No description provided for @customWordsDeleteFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to delete {word} right now'**
+  String customWordsDeleteFailed(Object word);
+
+  /// No description provided for @customWordsDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted {word}'**
+  String customWordsDeleted(Object word);
+
+  /// No description provided for @wordbookWordNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Word not found'**
+  String get wordbookWordNotFound;
+
+  /// No description provided for @wordbookFavorite.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorite'**
+  String get wordbookFavorite;
+
+  /// No description provided for @wordbookFavorited.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorited'**
+  String get wordbookFavorited;
+
+  /// No description provided for @wordbookFavoriteRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from favorites'**
+  String get wordbookFavoriteRemoved;
+
+  /// No description provided for @wordbookAddToCustomWords.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to custom words'**
+  String get wordbookAddToCustomWords;
+
+  /// No description provided for @wordbookRemoveCustomWord.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from custom words'**
+  String get wordbookRemoveCustomWord;
+
+  /// No description provided for @wordbookAddedToCustomWords.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to custom words'**
+  String get wordbookAddedToCustomWords;
+
+  /// No description provided for @wordbookRemovedFromCustomWords.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from custom words'**
+  String get wordbookRemovedFromCustomWords;
+
+  /// No description provided for @wordbookResumeLearning.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume learning'**
+  String get wordbookResumeLearning;
+
+  /// No description provided for @wordbookIgnoreEasy.
+  ///
+  /// In en, this message translates to:
+  /// **'Ignore as too easy'**
+  String get wordbookIgnoreEasy;
+
+  /// No description provided for @wordbookLearningResumed.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning resumed'**
+  String get wordbookLearningResumed;
+
+  /// No description provided for @wordbookIgnored.
+  ///
+  /// In en, this message translates to:
+  /// **'Ignored and excluded from future review queues'**
+  String get wordbookIgnored;
+
+  /// No description provided for @wordbookUpdateTargetFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to update target word right now'**
+  String get wordbookUpdateTargetFailed;
+
+  /// No description provided for @wordbookCurrentPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'In current plan'**
+  String get wordbookCurrentPlan;
+
+  /// No description provided for @wordbookHighFrequencyDefinition.
+  ///
+  /// In en, this message translates to:
+  /// **'High-frequency exam meaning'**
+  String get wordbookHighFrequencyDefinition;
+
+  /// No description provided for @wordbookUkPhonetic.
+  ///
+  /// In en, this message translates to:
+  /// **'UK /{phonetic}/'**
+  String wordbookUkPhonetic(Object phonetic);
+
+  /// No description provided for @wordbookUsPhonetic.
+  ///
+  /// In en, this message translates to:
+  /// **'US /{phonetic}/'**
+  String wordbookUsPhonetic(Object phonetic);
+
+  /// No description provided for @wordbookBilingualDefinitions.
+  ///
+  /// In en, this message translates to:
+  /// **'Chinese and English definitions'**
+  String get wordbookBilingualDefinitions;
+
+  /// No description provided for @wordbookChineseDefinitions.
+  ///
+  /// In en, this message translates to:
+  /// **'Chinese definitions'**
+  String get wordbookChineseDefinitions;
+
+  /// No description provided for @wordbookEnglishDefinitions.
+  ///
+  /// In en, this message translates to:
+  /// **'English definitions'**
+  String get wordbookEnglishDefinitions;
+
+  /// No description provided for @wordbookHighFrequency.
+  ///
+  /// In en, this message translates to:
+  /// **'High frequency'**
+  String get wordbookHighFrequency;
+
+  /// No description provided for @wordbookContextExamples.
+  ///
+  /// In en, this message translates to:
+  /// **'Context examples'**
+  String get wordbookContextExamples;
+
+  /// No description provided for @wordbookMasteryLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Mastery {level}/5'**
+  String wordbookMasteryLevel(Object level);
+
+  /// No description provided for @reviewStudyManageQueue.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage review queue'**
+  String get reviewStudyManageQueue;
+
+  /// No description provided for @reviewStudyTodayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s review'**
+  String get reviewStudyTodayTitle;
+
+  /// No description provided for @reviewStudyTodaySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recall first, then reveal the answer; missed cards return later in this round for reinforcement.'**
+  String get reviewStudyTodaySubtitle;
+
+  /// No description provided for @reviewStudyLeaveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave review?'**
+  String get reviewStudyLeaveTitle;
+
+  /// No description provided for @reviewStudyLeaveContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed cards have been saved; unfinished cards will stay in the review queue.'**
+  String get reviewStudyLeaveContent;
+
+  /// No description provided for @reviewStudyKeepReviewing.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep reviewing'**
+  String get reviewStudyKeepReviewing;
+
+  /// No description provided for @reviewStudyReinforced.
+  ///
+  /// In en, this message translates to:
+  /// **'This reinforcement round is complete'**
+  String get reviewStudyReinforced;
+
+  /// No description provided for @reviewStudyRememberedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Remembered. The review interval has been extended.'**
+  String get reviewStudyRememberedMessage;
+
+  /// No description provided for @reviewStudyNeedsReinforcementMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Marked for reinforcement. Practice it again later.'**
+  String get reviewStudyNeedsReinforcementMessage;
+
+  /// No description provided for @reviewStudyReinforce.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to reinforcement queue'**
+  String get reviewStudyReinforce;
+
+  /// No description provided for @reviewStudyCompleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s review complete'**
+  String get reviewStudyCompleteTitle;
+
+  /// No description provided for @reviewStudyCompleteMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Next review times have been updated for this round.'**
+  String get reviewStudyCompleteMessage;
+
+  /// No description provided for @reviewStudyRecallHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Recall the Chinese meaning from the English word first. If you remember it, move on; if not, reveal the knowledge card.'**
+  String get reviewStudyRecallHint;
+
+  /// No description provided for @reviewStudyNextReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Next review: {due}'**
+  String reviewStudyNextReview(Object due);
+
+  /// No description provided for @reviewStudyHiddenHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct answers continue smoothly; wrong answers reveal the knowledge card and return later in this round.'**
+  String get reviewStudyHiddenHint;
+
+  /// No description provided for @aiWordSupportDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask about {word} usage, grammar, synonym differences, and example breakdowns.'**
+  String aiWordSupportDesc(Object word);
+
+  /// No description provided for @aiWordSupportWithExampleDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Send {word} and the current example to ask about usage, grammar, synonym differences, and example breakdowns.'**
+  String aiWordSupportWithExampleDesc(Object word);
+
+  /// No description provided for @helpFaqReviewScheduleQ.
+  ///
+  /// In en, this message translates to:
+  /// **'How is review time scheduled?'**
+  String get helpFaqReviewScheduleQ;
+
+  /// No description provided for @helpFaqReviewScheduleA.
+  ///
+  /// In en, this message translates to:
+  /// **'Each word moves between mastery levels 0-5. Higher mastery means a longer interval before the next review.'**
+  String get helpFaqReviewScheduleA;
+
+  /// No description provided for @helpFaqCustomWordsQ.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I add my own words?'**
+  String get helpFaqCustomWordsQ;
+
+  /// No description provided for @helpFaqCustomWordsA.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes. Open the wordbook or custom words page, then tap add to create a personal word card.'**
+  String get helpFaqCustomWordsA;
+
+  /// No description provided for @helpFaqAiTutorQ.
+  ///
+  /// In en, this message translates to:
+  /// **'What can the AI tutor do?'**
+  String get helpFaqAiTutorQ;
+
+  /// No description provided for @helpFaqAiTutorA.
+  ///
+  /// In en, this message translates to:
+  /// **'It can explain words, grammar, and mistakes, and suggest examples for further practice.'**
+  String get helpFaqAiTutorA;
+
+  /// No description provided for @helpContactSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact support'**
+  String get helpContactSupport;
+
+  /// No description provided for @aboutVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'LinguaQuest · Version 1.0.0'**
+  String get aboutVersion;
+
+  /// No description provided for @aboutIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'LinguaQuest brings visual word cards, learning paths, spaced review, XP, streaks, and personal word cards into a mobile-first English learning app.'**
+  String get aboutIntro;
+
+  /// No description provided for @aboutGoalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Project goal'**
+  String get aboutGoalTitle;
+
+  /// No description provided for @aboutGoalSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Help learners build a daily English study habit through short lessons, mistake repair, and visible progress.'**
+  String get aboutGoalSubtitle;
+
+  /// No description provided for @aboutTeamTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Development team'**
+  String get aboutTeamTitle;
+
+  /// No description provided for @aboutTeamSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'ASM2 Mobile team. Focused on a mobile-first English learning experience.'**
+  String get aboutTeamSubtitle;
+
+  /// No description provided for @aboutCoreTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Core experience'**
+  String get aboutCoreTitle;
+
+  /// No description provided for @aboutCoreSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal planning, visual vocabulary, quiz practice, review scheduling, and personal word cards.'**
+  String get aboutCoreSubtitle;
+
+  /// No description provided for @aboutPrivacyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy'**
+  String get aboutPrivacyTitle;
+
+  /// No description provided for @aboutPrivacySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom words and learning records belong only to the signed-in user.'**
+  String get aboutPrivacySubtitle;
+
+  /// No description provided for @communityPostCheckinTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s check-in: Reviewed 18 words in 12 minutes'**
+  String get communityPostCheckinTitle;
+
+  /// No description provided for @communityPostCheckinTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Check-in'**
+  String get communityPostCheckinTag;
+
+  /// No description provided for @communityPostCheckinBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Mistakes were mostly synonyms. Tomorrow I\'ll start with the confusing words challenge in training.'**
+  String get communityPostCheckinBody;
+
+  /// No description provided for @communityPostAbstractTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How to remember \"abstract\" in IELTS reading?'**
+  String get communityPostAbstractTitle;
+
+  /// No description provided for @communityPostMistakeTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Mistake Discussion'**
+  String get communityPostMistakeTag;
+
+  /// No description provided for @communityPostAbstractBody.
+  ///
+  /// In en, this message translates to:
+  /// **'\"abstract\" in academic contexts often does not mean \"not concrete\"; context matters.'**
+  String get communityPostAbstractBody;
 
   /// No description provided for @notificationsTitle.
   ///

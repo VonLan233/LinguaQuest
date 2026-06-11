@@ -1324,6 +1324,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String wordbookTotalWords(Object count) {
+    return '$count words';
+  }
+
+  @override
   String wordbookBookCount(Object count) {
     return '$count wordbooks';
   }
@@ -1690,6 +1695,304 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get searchRecent => 'Recent';
+
+  @override
+  String get searchStartTitle => 'Enter a keyword to start searching';
+
+  @override
+  String get searchStartMessage =>
+      'Search English words, phrases, Chinese meanings, example snippets, and custom words.';
+
+  @override
+  String get searchNoResultsTitle => 'No results found';
+
+  @override
+  String get searchNoResultsMessage =>
+      'Try the full word library, or add a personal word card.';
+
+  @override
+  String get searchFieldLabel =>
+      'Search words, phrases, Chinese meanings, or example snippets';
+
+  @override
+  String searchScopeSummary(Object allWordBooksLabel, Object currentBookTitle) {
+    return 'Scope: $currentBookTitle / $allWordBooksLabel';
+  }
+
+  @override
+  String get searchCurrentWordbookScope => 'Current wordbook';
+
+  @override
+  String get searchAllWordbooksScope => 'Full library';
+
+  @override
+  String get searchCurrentPlan => 'Current plan';
+
+  @override
+  String get customWordsMyCards => 'My word cards';
+
+  @override
+  String get customWordsMyCardsSubtitle =>
+      'Create, search, filter, edit, and review your personal word library.';
+
+  @override
+  String customWordsCardCount(Object count) {
+    return '$count cards';
+  }
+
+  @override
+  String get customWordsSearchLabel => 'Search words, meanings, or tags';
+
+  @override
+  String get customWordsNoMatchTitle => 'No matching word cards';
+
+  @override
+  String get customWordsNoMatchMessage =>
+      'Add a personal word card, or adjust the search filters.';
+
+  @override
+  String get customWordsAddCard => 'Add custom word card';
+
+  @override
+  String customWordsDeleteTitle(Object word) {
+    return 'Delete \"$word\"?';
+  }
+
+  @override
+  String get customWordsDeleteContent =>
+      'This also deletes this personal word card and its review plan.';
+
+  @override
+  String customWordsDeleteFailed(Object word) {
+    return 'Unable to delete $word right now';
+  }
+
+  @override
+  String customWordsDeleted(Object word) {
+    return 'Deleted $word';
+  }
+
+  @override
+  String get wordbookWordNotFound => 'Word not found';
+
+  @override
+  String get wordbookFavorite => 'Favorite';
+
+  @override
+  String get wordbookFavorited => 'Favorited';
+
+  @override
+  String get wordbookFavoriteRemoved => 'Removed from favorites';
+
+  @override
+  String get wordbookAddToCustomWords => 'Add to custom words';
+
+  @override
+  String get wordbookRemoveCustomWord => 'Remove from custom words';
+
+  @override
+  String get wordbookAddedToCustomWords => 'Added to custom words';
+
+  @override
+  String get wordbookRemovedFromCustomWords => 'Removed from custom words';
+
+  @override
+  String get wordbookResumeLearning => 'Resume learning';
+
+  @override
+  String get wordbookIgnoreEasy => 'Ignore as too easy';
+
+  @override
+  String get wordbookLearningResumed => 'Learning resumed';
+
+  @override
+  String get wordbookIgnored =>
+      'Ignored and excluded from future review queues';
+
+  @override
+  String get wordbookUpdateTargetFailed =>
+      'Unable to update target word right now';
+
+  @override
+  String get wordbookCurrentPlan => 'In current plan';
+
+  @override
+  String get wordbookHighFrequencyDefinition => 'High-frequency exam meaning';
+
+  @override
+  String wordbookUkPhonetic(Object phonetic) {
+    return 'UK /$phonetic/';
+  }
+
+  @override
+  String wordbookUsPhonetic(Object phonetic) {
+    return 'US /$phonetic/';
+  }
+
+  @override
+  String get wordbookBilingualDefinitions => 'Chinese and English definitions';
+
+  @override
+  String get wordbookChineseDefinitions => 'Chinese definitions';
+
+  @override
+  String get wordbookEnglishDefinitions => 'English definitions';
+
+  @override
+  String get wordbookHighFrequency => 'High frequency';
+
+  @override
+  String get wordbookContextExamples => 'Context examples';
+
+  @override
+  String wordbookMasteryLevel(Object level) {
+    return 'Mastery $level/5';
+  }
+
+  @override
+  String get reviewStudyManageQueue => 'Manage review queue';
+
+  @override
+  String get reviewStudyTodayTitle => 'Today\'s review';
+
+  @override
+  String get reviewStudyTodaySubtitle =>
+      'Recall first, then reveal the answer; missed cards return later in this round for reinforcement.';
+
+  @override
+  String get reviewStudyLeaveTitle => 'Leave review?';
+
+  @override
+  String get reviewStudyLeaveContent =>
+      'Completed cards have been saved; unfinished cards will stay in the review queue.';
+
+  @override
+  String get reviewStudyKeepReviewing => 'Keep reviewing';
+
+  @override
+  String get reviewStudyReinforced => 'This reinforcement round is complete';
+
+  @override
+  String get reviewStudyRememberedMessage =>
+      'Remembered. The review interval has been extended.';
+
+  @override
+  String get reviewStudyNeedsReinforcementMessage =>
+      'Marked for reinforcement. Practice it again later.';
+
+  @override
+  String get reviewStudyReinforce => 'Add to reinforcement queue';
+
+  @override
+  String get reviewStudyCompleteTitle => 'Today\'s review complete';
+
+  @override
+  String get reviewStudyCompleteMessage =>
+      'Next review times have been updated for this round.';
+
+  @override
+  String get reviewStudyRecallHint =>
+      'Recall the Chinese meaning from the English word first. If you remember it, move on; if not, reveal the knowledge card.';
+
+  @override
+  String reviewStudyNextReview(Object due) {
+    return 'Next review: $due';
+  }
+
+  @override
+  String get reviewStudyHiddenHint =>
+      'Correct answers continue smoothly; wrong answers reveal the knowledge card and return later in this round.';
+
+  @override
+  String aiWordSupportDesc(Object word) {
+    return 'Ask about $word usage, grammar, synonym differences, and example breakdowns.';
+  }
+
+  @override
+  String aiWordSupportWithExampleDesc(Object word) {
+    return 'Send $word and the current example to ask about usage, grammar, synonym differences, and example breakdowns.';
+  }
+
+  @override
+  String get helpFaqReviewScheduleQ => 'How is review time scheduled?';
+
+  @override
+  String get helpFaqReviewScheduleA =>
+      'Each word moves between mastery levels 0-5. Higher mastery means a longer interval before the next review.';
+
+  @override
+  String get helpFaqCustomWordsQ => 'Can I add my own words?';
+
+  @override
+  String get helpFaqCustomWordsA =>
+      'Yes. Open the wordbook or custom words page, then tap add to create a personal word card.';
+
+  @override
+  String get helpFaqAiTutorQ => 'What can the AI tutor do?';
+
+  @override
+  String get helpFaqAiTutorA =>
+      'It can explain words, grammar, and mistakes, and suggest examples for further practice.';
+
+  @override
+  String get helpContactSupport => 'Contact support';
+
+  @override
+  String get aboutVersion => 'LinguaQuest · Version 1.0.0';
+
+  @override
+  String get aboutIntro =>
+      'LinguaQuest brings visual word cards, learning paths, spaced review, XP, streaks, and personal word cards into a mobile-first English learning app.';
+
+  @override
+  String get aboutGoalTitle => 'Project goal';
+
+  @override
+  String get aboutGoalSubtitle =>
+      'Help learners build a daily English study habit through short lessons, mistake repair, and visible progress.';
+
+  @override
+  String get aboutTeamTitle => 'Development team';
+
+  @override
+  String get aboutTeamSubtitle =>
+      'ASM2 Mobile team. Focused on a mobile-first English learning experience.';
+
+  @override
+  String get aboutCoreTitle => 'Core experience';
+
+  @override
+  String get aboutCoreSubtitle =>
+      'Goal planning, visual vocabulary, quiz practice, review scheduling, and personal word cards.';
+
+  @override
+  String get aboutPrivacyTitle => 'Privacy';
+
+  @override
+  String get aboutPrivacySubtitle =>
+      'Custom words and learning records belong only to the signed-in user.';
+
+  @override
+  String get communityPostCheckinTitle =>
+      'Today\'s check-in: Reviewed 18 words in 12 minutes';
+
+  @override
+  String get communityPostCheckinTag => 'Daily Check-in';
+
+  @override
+  String get communityPostCheckinBody =>
+      'Mistakes were mostly synonyms. Tomorrow I\'ll start with the confusing words challenge in training.';
+
+  @override
+  String get communityPostAbstractTitle =>
+      'How to remember \"abstract\" in IELTS reading?';
+
+  @override
+  String get communityPostMistakeTag => 'Mistake Discussion';
+
+  @override
+  String get communityPostAbstractBody =>
+      '\"abstract\" in academic contexts often does not mean \"not concrete\"; context matters.';
 
   @override
   String get notificationsTitle => 'Notifications';

@@ -21,7 +21,7 @@ class AiLearningScreen extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
       children: [
         SectionHeader(
-          title: 'AI 学习',
+          title: l10n.aiLearningTitle,
           trailing: QuestIconButton(
             tooltip: l10n.aiLearningTooltip,
             onPressed: () => context.push('/ai-tutor'),
@@ -56,10 +56,10 @@ class AiLearningScreen extends StatelessWidget {
           children: [
             _AiToolLink(
               icon: Icons.question_answer_outlined,
-              title: '错因讲解',
+              title: l10n.aiLearningToolAiQA,
               subtitle: l10n.aiLearningToolAiQADesc,
               color: AppTheme.cyan,
-              status: '待开放',
+              status: l10n.aiLearningStatusSoon,
               onTap: () => context.push('/ai-tutor'),
             ),
             _AiToolLink(
@@ -67,7 +67,7 @@ class AiLearningScreen extends StatelessWidget {
               title: l10n.aiLearningToolAiAnalysis,
               subtitle: l10n.aiLearningToolAiAnalysisDesc,
               color: AppTheme.teal,
-              status: '待开放',
+              status: l10n.aiLearningStatusSoon,
               onTap: () => context.push('/ai-tutor'),
             ),
           ],
@@ -78,7 +78,7 @@ class AiLearningScreen extends StatelessWidget {
           title: l10n.aiLearningToolAiWriting,
           subtitle: l10n.aiLearningToolAiWritingDesc,
           color: AppTheme.coral,
-          status: '暂未开放',
+          status: l10n.aiLearningStatusLater,
         ),
         const SizedBox(height: 12),
         _AiToolLink(
@@ -86,7 +86,7 @@ class AiLearningScreen extends StatelessWidget {
           title: l10n.aiLearningToolCloze,
           subtitle: l10n.aiLearningToolClozeDesc,
           color: AppTheme.mango,
-          status: '规划中',
+          status: l10n.aiLearningStatusPlanning,
         ),
         const SizedBox(height: 12),
         _AiToolLink(
@@ -94,7 +94,7 @@ class AiLearningScreen extends StatelessWidget {
           title: l10n.aiLearningToolConfusion,
           subtitle: l10n.aiLearningToolConfusionDesc,
           color: AppTheme.cyan,
-          status: '规划中',
+          status: l10n.aiLearningStatusPlanning,
         ),
         const SizedBox(height: 12),
         _AiToolLink(
@@ -102,7 +102,7 @@ class AiLearningScreen extends StatelessWidget {
           title: l10n.aiLearningToolSentence,
           subtitle: l10n.aiLearningToolSentenceDesc,
           color: AppTheme.teal,
-          status: '规划中',
+          status: l10n.aiLearningStatusPlanning,
         ),
       ],
     );

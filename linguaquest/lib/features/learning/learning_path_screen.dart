@@ -44,7 +44,7 @@ class LearningPathScreen extends ConsumerWidget {
             OutlinedButton.icon(
               onPressed: () => context.push('/wordbook'),
               icon: const Icon(Icons.style_outlined),
-              label: const Text('打开单词本和生词本'),
+              label: Text(l10n.learningPathOpenWordbook),
             ),
             const SizedBox(height: 10),
             TextButton.icon(
@@ -251,7 +251,7 @@ class _PathNode extends StatelessWidget {
                       parentContext.push('/lesson/${lesson.id}');
                     },
                     icon: const Icon(Icons.play_arrow_rounded),
-                    label: const Text('开始学习'),
+                    label: Text(l10n.learningPathStartLearning),
                   ),
                 ],
               ),

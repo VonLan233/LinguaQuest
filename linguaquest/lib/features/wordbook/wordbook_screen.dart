@@ -10,16 +10,13 @@ import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson.dart';
 import '../../l10n/generated/app_localizations.dart';
-import '../../l10n/generated/app_localizations_zh.dart';
 
 class WordbookScreen extends ConsumerWidget {
   const WordbookScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n =
-        Localizations.of<AppLocalizations>(context, AppLocalizations) ??
-        AppLocalizationsZh();
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final words = state.formalLessons.expand((lesson) => lesson.words).toList();
     final currentBook = state.currentWordBook;
@@ -42,7 +39,7 @@ class WordbookScreen extends ConsumerWidget {
                   ? displayWordbookDescription(currentBook.id, l10n: l10n)
                   : displayWordbookDescription(studyBook.id, l10n: l10n),
               trailing: QuestIconButton(
-                tooltip: '生词本',
+                tooltip: l10n.wordbookCustomTooltip,
                 onPressed: () => context.push('/custom-words'),
                 icon: Icons.add_card_outlined,
                 color: AppTheme.cyan,
@@ -260,7 +257,9 @@ class _WordBookSwitcher extends StatelessWidget {
                     spacing: 6,
                     children: [
                       PillLabel(label: book.examType),
-                      PillLabel(label: '共 ${book.totalWords} 词'),
+                      PillLabel(
+                        label: l10n.wordbookTotalWords(book.totalWords),
+                      ),
                     ],
                   ),
                 ],
