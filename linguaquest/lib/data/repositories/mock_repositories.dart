@@ -2,17 +2,24 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/app_notification.dart';
 import '../models/custom_word.dart';
 import '../models/exercise_record.dart';
 import '../models/lesson.dart';
 import '../models/review_event.dart';
 import '../models/study_session.dart';
+import '../models/study_plan.dart';
+import '../models/user_word.dart';
 import '../models/user_profile.dart';
-import '../seed/seed_lessons.dart';
+import '../lesson_factory.dart';
+import '../wordbook_asset_loader.dart';
 import 'auth_repository.dart';
 import 'custom_word_repository.dart';
 import 'learning_repository.dart';
+import 'notification_repository.dart';
 import 'review_repository.dart';
+import 'study_plan_repository.dart';
+import 'user_word_repository.dart';
 
 class MockAuthRepository implements AuthRepository {
   static const _profileKey = 'linguaquest.profile';
@@ -177,11 +184,33 @@ class MockCustomWordRepository implements CustomWordRepository {
 }
 
 class MockLearningRepository implements LearningRepository {
+  MockLearningRepository({WordBookAssetLoader? loader})
+    : _loader = loader ?? WordBookAssetLoader();
+
+  final WordBookAssetLoader _loader;
   final List<StudySession> _sessions = [];
   final List<ExerciseRecord> _exerciseRecords = [];
 
   @override
-  Future<List<Lesson>> listLessons() async => seedLessons();
+  Future<List<WordBook>> listWordBooks() => _loader.loadWordBooks();
+
+  @override
+  Future<List<Lesson>> listLessons() async {
+    final books = await listWordBooks();
+    if (books.isEmpty) return const [];
+    return listLessonsForWordBook(books.first.id);
+  }
+
+  @override
+  Future<List<Lesson>> listLessonsForWordBook(String wordBookId) async {
+    final books = await listWordBooks();
+    if (books.isEmpty) return const [];
+    final book = _bookById(books, wordBookId) ?? books.first;
+    return lessonsFromWordBook(book);
+  }
+
+  @override
+  Future<LearningProgress?> loadLearningProgress(DateTime now) async => null;
 
   @override
   Future<void> recordStudySession(StudySession session) async {
@@ -192,6 +221,136 @@ class MockLearningRepository implements LearningRepository {
   Future<void> recordExerciseRecords(List<ExerciseRecord> records) async {
     _exerciseRecords.addAll(records);
   }
+
+  @override
+  Future<RewardClaimResult?> claimReward({
+    required String id,
+    required int points,
+    required DateTime now,
+  }) async {
+    return null;
+  }
+
+  WordBook? _bookById(List<WordBook> books, String id) {
+    for (final book in books) {
+      if (book.id == id) return book;
+    }
+    return null;
+  }
+}
+
+class MockUserWordRepository implements UserWordRepository {
+  static const _keyPrefix = 'linguaquest.user_words';
+  final Map<String, List<UserWord>> _cache = {};
+
+  @override
+  Future<List<UserWord>> list(String uid) async {
+    if (_cache[uid] != null) return _sorted(_cache[uid]!);
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString('$_keyPrefix.$uid');
+    if (raw == null) {
+      _cache[uid] = [];
+      return [];
+    }
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! List) {
+        _cache[uid] = [];
+        return [];
+      }
+      final words = decoded
+          .whereType<Map>()
+          .map((item) => UserWord.fromJson(Map<String, dynamic>.from(item)))
+          .toList();
+      _cache[uid] = words;
+      return _sorted(words);
+    } catch (_) {
+      await prefs.remove('$_keyPrefix.$uid');
+      _cache[uid] = [];
+      return [];
+    }
+  }
+
+  @override
+  Future<UserWord> upsert(UserWord word) async {
+    final updated = (await upsertAll([word])).first;
+    return updated;
+  }
+
+  @override
+  Future<List<UserWord>> upsertAll(List<UserWord> words) async {
+    if (words.isEmpty) return [];
+    final uid = words.first.uid;
+    final existing = await list(uid);
+    final byId = {for (final word in existing) word.id: word};
+    for (final word in words) {
+      byId[word.id] = word;
+    }
+    final merged = _sorted(byId.values.toList());
+    _cache[uid] = merged;
+    await _save(uid, merged);
+    return words;
+  }
+
+  Future<void> _save(String uid, List<UserWord> words) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+      '$_keyPrefix.$uid',
+      jsonEncode([for (final word in words) word.toJson()]),
+    );
+  }
+
+  List<UserWord> _sorted(List<UserWord> words) {
+    return [...words]..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+  }
+}
+
+class MockStudyPlanRepository implements StudyPlanRepository {
+  static const _keyPrefix = 'linguaquest.studyPlan';
+
+  @override
+  Future<StudyPlan?> load(String uid) async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString('$_keyPrefix.$uid');
+    if (raw == null) return null;
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! Map) return null;
+      return StudyPlan.fromJson(Map<String, dynamic>.from(decoded));
+    } catch (_) {
+      await prefs.remove('$_keyPrefix.$uid');
+      return null;
+    }
+  }
+
+  @override
+  Future<StudyPlan> save(StudyPlan plan) async {
+    final normalized = plan.copyWith(updatedAt: DateTime.now());
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+      '$_keyPrefix.${normalized.uid}',
+      jsonEncode(normalized.toJson()),
+    );
+    return normalized;
+  }
+
+  @override
+  Future<StudyPlan> reset(StudyPlan plan) async {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final targetFinishDate = plan.targetFinishDate.isBefore(today)
+        ? today.add(const Duration(days: 30))
+        : plan.targetFinishDate;
+    return save(
+      plan.copyWith(
+        startDate: today,
+        targetFinishDate: targetFinishDate,
+        status: 'active',
+        createdAt: now,
+        updatedAt: now,
+      ),
+    );
+  }
 }
 
 class MockReviewRepository implements ReviewRepository {
@@ -200,5 +359,109 @@ class MockReviewRepository implements ReviewRepository {
   @override
   Future<void> recordReviewEvent(ReviewEvent event) async {
     _events.add(event);
+  }
+}
+
+class MockNotificationRepository implements NotificationRepository {
+  static const _keyPrefix = 'linguaquest.notifications';
+
+  @override
+  Future<void> ensureGenerated(
+    String uid,
+    List<AppNotification> notifications,
+  ) async {
+    if (notifications.isEmpty) return;
+    final existing = await _load(uid);
+    final sourceKeys = existing
+        .map((notification) => notification.sourceKey)
+        .whereType<String>()
+        .toSet();
+    final ids = existing.map((notification) => notification.id).toSet();
+    final merged = [...existing];
+    for (final notification in notifications) {
+      final sourceKey = notification.sourceKey;
+      if (sourceKey != null && sourceKeys.contains(sourceKey)) continue;
+      if (ids.contains(notification.id)) continue;
+      merged.add(notification);
+      if (sourceKey != null) sourceKeys.add(sourceKey);
+      ids.add(notification.id);
+    }
+    await _save(uid, merged);
+  }
+
+  @override
+  Future<List<AppNotification>> list(
+    String uid, {
+    bool unreadOnly = false,
+    AppNotificationType? type,
+  }) async {
+    final notifications = await _load(uid);
+    return notifications.where((notification) {
+      if (unreadOnly && notification.isRead) return false;
+      if (type != null && notification.type != type) return false;
+      return true;
+    }).toList()..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+  }
+
+  @override
+  Future<int> markAllRead(String uid) async {
+    final now = DateTime.now();
+    final existing = await _load(uid);
+    final updated = existing
+        .where((notification) => !notification.isRead)
+        .length;
+    final notifications = [
+      for (final notification in existing)
+        if (notification.isRead)
+          notification
+        else
+          notification.markRead(now: now),
+    ];
+    await _save(uid, notifications);
+    return updated;
+  }
+
+  @override
+  Future<AppNotification?> markRead(String uid, String id) async {
+    final now = DateTime.now();
+    AppNotification? updated;
+    final notifications = [
+      for (final notification in await _load(uid))
+        if (notification.id == id)
+          updated = notification.markRead(now: now)
+        else
+          notification,
+    ];
+    await _save(uid, notifications);
+    return updated;
+  }
+
+  Future<List<AppNotification>> _load(String uid) async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString('$_keyPrefix.$uid');
+    if (raw == null) return [];
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! List) return [];
+      return decoded
+          .whereType<Map>()
+          .map(
+            (item) => AppNotification.fromJson(Map<String, dynamic>.from(item)),
+          )
+          .toList();
+    } catch (_) {
+      await prefs.remove('$_keyPrefix.$uid');
+      return [];
+    }
+  }
+
+  Future<void> _save(String uid, List<AppNotification> notifications) async {
+    final prefs = await SharedPreferences.getInstance();
+    final sorted = [...notifications]
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    await prefs.setString(
+      '$_keyPrefix.$uid',
+      jsonEncode([for (final notification in sorted) notification.toJson()]),
+    );
   }
 }

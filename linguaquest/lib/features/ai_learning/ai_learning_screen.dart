@@ -4,85 +4,105 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class AiLearningScreen extends StatelessWidget {
   const AiLearningScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final query = GoRouterState.of(context).uri.queryParameters;
+    final word = query['word']?.trim() ?? '';
+    final example = query['example']?.trim() ?? '';
+    final translation = query['translation']?.trim() ?? '';
+
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
       children: [
         SectionHeader(
-          title: 'AI 学习',
-          subtitle: '解释语法、辨析词义、生成语境；正式学习记录仍由答题结果更新。',
+          title: l10n.aiLearningTitle,
           trailing: QuestIconButton(
-            tooltip: '知识问答',
+            tooltip: l10n.aiLearningTooltip,
             onPressed: () => context.push('/ai-tutor'),
             icon: Icons.chat_bubble_outline,
             color: AppTheme.cyan,
           ),
         ),
         const SizedBox(height: 14),
-        const Wrap(
+        Wrap(
           spacing: 8,
           runSpacing: 8,
           children: [
-            PillLabel(label: '错因讲解', icon: Icons.psychology_alt_outlined),
             PillLabel(
-              label: '无需客户端密钥',
-              icon: Icons.lock_outline,
-              color: AppTheme.cyan,
+              label: l10n.aiLearningPillError,
+              icon: Icons.psychology_alt_outlined,
             ),
           ],
         ),
         const SizedBox(height: 22),
-        const SectionHeader(
-          title: '工具列表',
-          subtitle: '首版优先落地长难句分析和知识问答，作文批改后置。',
-        ),
+        if (word.isNotEmpty) ...[
+          _AiWordContextCard(
+            word: word,
+            example: example,
+            translation: translation,
+            l10n: l10n,
+          ),
+          const SizedBox(height: 22),
+        ],
+        SectionHeader(title: l10n.aiLearningToolsTitle),
         const SizedBox(height: 12),
         _AiToolList(
-          tools: [
-            _AiToolData(
+          children: [
+            _AiToolLink(
               icon: Icons.question_answer_outlined,
-              title: 'AI 知识问答',
-              body: '结合当前单词、例句和学习目标回答词义、语法和表达自然度问题。',
-              status: '可用',
+              title: l10n.aiLearningToolAiQA,
+              subtitle: l10n.aiLearningToolAiQADesc,
+              color: AppTheme.cyan,
+              status: l10n.aiLearningStatusSoon,
               onTap: () => context.push('/ai-tutor'),
             ),
-            _AiToolData(
+            _AiToolLink(
               icon: Icons.account_tree_outlined,
-              title: 'AI 长难句分析',
-              body: '提取主干、划分从句、解释修饰成分和关键词，并给出自然中文翻译。',
-              status: '可试用',
+              title: l10n.aiLearningToolAiAnalysis,
+              subtitle: l10n.aiLearningToolAiAnalysisDesc,
+              color: AppTheme.teal,
+              status: l10n.aiLearningStatusSoon,
               onTap: () => context.push('/ai-tutor'),
-            ),
-            const _AiToolData(
-              icon: Icons.rate_review_outlined,
-              title: 'AI 作文批改',
-              body: '选择考试类型、输入题目和正文，输出总评分、分项评分和逐段修改建议。',
-              status: '待开放',
-            ),
-            const _AiToolData(
-              icon: Icons.auto_stories_outlined,
-              title: '今日单词情景填空',
-              body: '基于今日新词、错词或本周弱词生成短文，挖空 5 到 10 个目标词。',
-              status: '规划中',
-            ),
-            const _AiToolData(
-              icon: Icons.compare_arrows_outlined,
-              title: '易混词辨析',
-              body: '根据错题混淆记录，解释 affect/effect 这类近义或易混词的使用场景。',
-              status: '规划中',
-            ),
-            const _AiToolData(
-              icon: Icons.tips_and_updates_outlined,
-              title: '例句生成与改写',
-              body: '按考试目标生成更自然的例句，并支持一键加入笔记或生词本。',
-              status: '规划中',
             ),
           ],
+        ),
+        const SizedBox(height: 12),
+        _AiToolLink(
+          icon: Icons.rate_review_outlined,
+          title: l10n.aiLearningToolAiWriting,
+          subtitle: l10n.aiLearningToolAiWritingDesc,
+          color: AppTheme.coral,
+          status: l10n.aiLearningStatusLater,
+        ),
+        const SizedBox(height: 12),
+        _AiToolLink(
+          icon: Icons.auto_stories_outlined,
+          title: l10n.aiLearningToolCloze,
+          subtitle: l10n.aiLearningToolClozeDesc,
+          color: AppTheme.mango,
+          status: l10n.aiLearningStatusPlanning,
+        ),
+        const SizedBox(height: 12),
+        _AiToolLink(
+          icon: Icons.compare_arrows_outlined,
+          title: l10n.aiLearningToolConfusion,
+          subtitle: l10n.aiLearningToolConfusionDesc,
+          color: AppTheme.cyan,
+          status: l10n.aiLearningStatusPlanning,
+        ),
+        const SizedBox(height: 12),
+        _AiToolLink(
+          icon: Icons.tips_and_updates_outlined,
+          title: l10n.aiLearningToolSentence,
+          subtitle: l10n.aiLearningToolSentenceDesc,
+          color: AppTheme.teal,
+          status: l10n.aiLearningStatusPlanning,
         ),
       ],
     );
@@ -90,90 +110,143 @@ class AiLearningScreen extends StatelessWidget {
 }
 
 class _AiToolList extends StatelessWidget {
-  const _AiToolList({required this.tools});
+  const _AiToolList({required this.children});
 
-  final List<_AiToolData> tools;
+  final List<_AiToolLink> children;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
       children: [
-        for (var index = 0; index < tools.length; index++) ...[
-          _AiToolLink(tool: tools[index]),
-          if (index != tools.length - 1)
-            Divider(
-              height: 10,
-              color: Theme.of(
-                context,
-              ).colorScheme.outlineVariant.withValues(alpha: 0.7),
-            ),
+        for (var index = 0; index < children.length; index++) ...[
+          Expanded(child: children[index]),
+          if (index < children.length - 1) const SizedBox(width: 12),
         ],
       ],
     );
   }
 }
 
-class _AiToolLink extends StatelessWidget {
-  const _AiToolLink({required this.tool});
+class _AiWordContextCard extends StatelessWidget {
+  const _AiWordContextCard({
+    required this.word,
+    required this.example,
+    required this.translation,
+    required this.l10n,
+  });
 
-  final _AiToolData tool;
+  final String word;
+  final String example;
+  final String translation;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final content = Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppTheme.selectedSurface(context),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: theme.colorScheme.outlineVariant),
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          IconCueBadge(icon: tool.icon, color: AppTheme.deepTeal),
-          const SizedBox(width: 14),
+          const IconCueBadge(icon: Icons.travel_explore, color: AppTheme.cyan),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(tool.title, style: theme.textTheme.titleMedium),
-                const SizedBox(height: 4),
                 Text(
-                  tool.body,
-                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                  '${l10n.aiLearningCurrentWord}: $word',
+                  style: theme.textTheme.titleMedium,
                 ),
+                if (example.isNotEmpty) ...[
+                  const SizedBox(height: 6),
+                  Text(example),
+                ],
+                if (translation.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    translation,
+                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                  ),
+                ],
               ],
             ),
           ),
-          const SizedBox(width: 10),
-          PillLabel(
-            label: tool.status,
-            color: tool.onTap == null ? Colors.blueGrey : AppTheme.teal,
-          ),
         ],
-      ),
-    );
-
-    if (tool.onTap == null) return content;
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(8),
-        onTap: tool.onTap,
-        child: content,
       ),
     );
   }
 }
 
-class _AiToolData {
-  const _AiToolData({
+class _AiToolLink extends StatelessWidget {
+  const _AiToolLink({
     required this.icon,
     required this.title,
-    required this.body,
+    required this.subtitle,
+    required this.color,
     required this.status,
     this.onTap,
   });
 
   final IconData icon;
   final String title;
-  final String body;
+  final String subtitle;
+  final Color color;
   final String status;
   final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(16),
+      clipBehavior: Clip.antiAlias,
+      child: Ink(
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: color.withValues(alpha: 0.24)),
+        ),
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(icon, color: color, size: 32),
+                    const Spacer(),
+                    PillLabel(
+                      label: status,
+                      color: onTap == null ? Colors.blueGrey : AppTheme.teal,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Text(title, style: theme.textTheme.titleMedium),
+                const SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }

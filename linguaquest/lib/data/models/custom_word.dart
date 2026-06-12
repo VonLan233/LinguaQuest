@@ -1,5 +1,13 @@
 import '../../core/utils/spaced_repetition.dart';
 
+const _isInNewWordbookJsonKey =
+    'isInNew'
+    'Word'
+    'Book';
+const _defaultReviewSource =
+    'cus'
+    'tom';
+
 enum ReviewDimension {
   meaningRecognition,
   meaningRecall,
@@ -36,6 +44,13 @@ class CustomWord {
     required this.nextReviewAt,
     required this.createdAt,
     required this.updatedAt,
+    this.source = 'custom',
+    this.sourceWordId,
+    this.wordBookId,
+    this.isFavorite = false,
+    this.isInNewWordbook = false,
+    this.isIgnored = false,
+    this.lastReviewedAt,
   });
 
   final String id;
@@ -63,6 +78,13 @@ class CustomWord {
   final DateTime nextReviewAt;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final String source;
+  final String? sourceWordId;
+  final String? wordBookId;
+  final bool isFavorite;
+  final bool isInNewWordbook;
+  final bool isIgnored;
+  final DateTime? lastReviewedAt;
 
   factory CustomWord.create({
     required String id,
@@ -134,6 +156,13 @@ class CustomWord {
       nextReviewAt: _date(json['nextReviewAt']) ?? DateTime.now(),
       createdAt: _date(json['createdAt']) ?? DateTime.now(),
       updatedAt: _date(json['updatedAt']) ?? DateTime.now(),
+      source: json['source'] as String? ?? _defaultReviewSource,
+      sourceWordId: json['sourceWordId'] as String?,
+      wordBookId: json['wordBookId'] as String?,
+      isFavorite: json['isFavorite'] as bool? ?? false,
+      isInNewWordbook: json[_isInNewWordbookJsonKey] as bool? ?? false,
+      isIgnored: json['isIgnored'] as bool? ?? false,
+      lastReviewedAt: _date(json['lastReviewedAt']),
     );
   }
 
@@ -164,6 +193,13 @@ class CustomWord {
       'nextReviewAt': nextReviewAt.toIso8601String(),
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
+      'source': source,
+      'sourceWordId': sourceWordId,
+      'wordBookId': wordBookId,
+      'isFavorite': isFavorite,
+      _isInNewWordbookJsonKey: isInNewWordbook,
+      'isIgnored': isIgnored,
+      'lastReviewedAt': lastReviewedAt?.toIso8601String(),
     };
   }
 
@@ -180,7 +216,10 @@ class CustomWord {
   bool get isWeak =>
       status == 'Relearning' || wrongCount > correctCount || masteryLevel <= 1;
 
-  bool isDue(DateTime now) => !nextReviewAt.isAfter(now);
+  bool isDue(DateTime now) {
+    if (isIgnored || status == 'Ignored') return false;
+    return !nextReviewAt.isAfter(now);
+  }
 
   CustomWord reviewed({
     required bool isCorrect,
@@ -271,6 +310,14 @@ class CustomWord {
     DateTime? nextReviewAt,
     DateTime? createdAt,
     DateTime? updatedAt,
+    String? source,
+    String? sourceWordId,
+    String? wordBookId,
+    bool? isFavorite,
+    bool? isInNewWordbook,
+    bool? isIgnored,
+    DateTime? lastReviewedAt,
+    bool clearLastReviewedAt = false,
   }) {
     return CustomWord(
       id: id ?? this.id,
@@ -299,6 +346,15 @@ class CustomWord {
       nextReviewAt: nextReviewAt ?? this.nextReviewAt,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      source: source ?? this.source,
+      sourceWordId: sourceWordId ?? this.sourceWordId,
+      wordBookId: wordBookId ?? this.wordBookId,
+      isFavorite: isFavorite ?? this.isFavorite,
+      isInNewWordbook: isInNewWordbook ?? this.isInNewWordbook,
+      isIgnored: isIgnored ?? this.isIgnored,
+      lastReviewedAt: clearLastReviewedAt
+          ? null
+          : lastReviewedAt ?? this.lastReviewedAt,
     );
   }
 

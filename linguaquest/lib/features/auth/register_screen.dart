@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -29,9 +30,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('注册')),
+      appBar: AppBar(title: Text(l10n.authRegisterTitle)),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
@@ -40,47 +42,49 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SectionHeader(
-                  title: '创建学习档案',
-                  subtitle: '先建立账号，再选择目标和每日节奏。',
+                SectionHeader(
+                  title: l10n.authCreateProfile,
+                  subtitle: l10n.authCreateProfileSubtitle,
                 ),
                 const SizedBox(height: 12),
-                const PillLabel(
-                  label: '第 1 步 / 共 2 步',
+                PillLabel(
+                  label: l10n.authStep1of2,
                   icon: Icons.person_add_alt_1,
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
                   controller: _nameController,
-                  decoration: const InputDecoration(
-                    labelText: '昵称',
-                    hintText: '输入昵称',
-                    prefixIcon: Icon(Icons.badge_outlined),
+                  decoration: InputDecoration(
+                    labelText: l10n.authNickname,
+                    hintText: l10n.authNicknameHint,
+                    prefixIcon: const Icon(Icons.badge_outlined),
                   ),
                   validator: (value) =>
-                      value == null || value.trim().isEmpty ? '请输入昵称' : null,
+                      value == null || value.trim().isEmpty
+                          ? l10n.authNameRequired
+                          : null,
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: '邮箱',
-                    hintText: 'name@example.com',
-                    prefixIcon: Icon(Icons.mail_outline),
+                  decoration: InputDecoration(
+                    labelText: l10n.authEmail,
+                    hintText: l10n.authEmailHint,
+                    prefixIcon: const Icon(Icons.mail_outline),
                   ),
                   keyboardType: TextInputType.emailAddress,
-                  validator: _emailValidator,
+                  validator: (value) => _emailValidator(value, l10n),
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _passwordController,
-                  decoration: const InputDecoration(
-                    labelText: '密码',
-                    hintText: '设置密码',
-                    prefixIcon: Icon(Icons.lock_outline),
+                  decoration: InputDecoration(
+                    labelText: l10n.authPassword,
+                    hintText: l10n.authPasswordHint,
+                    prefixIcon: const Icon(Icons.lock_outline),
                   ),
                   obscureText: true,
-                  validator: _passwordValidator,
+                  validator: (value) => _passwordValidator(value, l10n),
                 ),
                 if (state.errorMessage != null) ...[
                   const SizedBox(height: 12),
@@ -101,11 +105,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Icon(Icons.arrow_forward_rounded),
-                  label: const Text('继续设置目标'),
+                  label: Text(l10n.authContinueToGoal),
                 ),
                 TextButton(
                   onPressed: () => context.go('/login'),
-                  child: const Text('已有账号，去登录'),
+                  child: Text(l10n.authHaveAccount),
                 ),
               ],
             ),
@@ -126,20 +130,21 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         );
     if (!mounted) return;
     if (!succeeded) return;
+    final l10n = AppLocalizations.of(context);
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('账号已创建，请继续选择学习计划。')));
+    ).showSnackBar(SnackBar(content: Text(l10n.authAccountCreated)));
     context.go('/goal-setup');
   }
 }
 
-String? _emailValidator(String? value) {
-  if (value == null || value.trim().isEmpty) return '请输入邮箱';
-  if (!value.contains('@')) return '请输入有效邮箱';
+String? _emailValidator(String? value, AppLocalizations l10n) {
+  if (value == null || value.trim().isEmpty) return l10n.authEmailRequired;
+  if (!value.contains('@')) return l10n.authEmailInvalid;
   return null;
 }
 
-String? _passwordValidator(String? value) {
-  if (value == null || value.length < 6) return '密码至少 6 位';
+String? _passwordValidator(String? value, AppLocalizations l10n) {
+  if (value == null || value.length < 6) return l10n.authPasswordRequired;
   return null;
 }

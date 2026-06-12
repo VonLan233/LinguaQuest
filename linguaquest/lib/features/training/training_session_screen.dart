@@ -287,6 +287,7 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
       ..addAll(_buildQuestions(game, distinctWords));
     _initialized = true;
     _questionStartedAt = DateTime.now();
+    _timer?.cancel();
     if (game == TrainingGameType.wordRush) {
       _timer = Timer.periodic(const Duration(seconds: 1), (_) {
         if (!mounted || _isSubmitting) return;
@@ -390,12 +391,13 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
             word: word,
           );
         }
+        final hasExample = word.exampleSentence.trim().isNotEmpty;
         return QuizQuestion(
           id: '${game.id}-${word.id}-$index',
-          type: variant == 2
+          type: variant == 2 && hasExample
               ? QuizQuestionType.contextChoice
               : QuizQuestionType.meaningChoice,
-          prompt: variant == 2
+          prompt: variant == 2 && hasExample
               ? '结合例句选择释义：${word.exampleSentence}'
               : '选择“${word.word}”的中文释义',
           answer: word.meaning,
@@ -915,7 +917,7 @@ class _SpellingInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
-      enabled: !checked,
+      readOnly: checked,
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
         labelText: '输入英文拼写',

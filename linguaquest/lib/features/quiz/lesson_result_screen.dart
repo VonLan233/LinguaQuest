@@ -9,6 +9,7 @@ import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 enum LessonResultSource { lesson, timed, training }
 
@@ -34,10 +35,11 @@ class LessonResultScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final resolved = result ?? state.lastResult;
     if (resolved == null) {
-      return const Scaffold(body: Center(child: Text('还没有课程结果')));
+      return Scaffold(body: Center(child: Text(l10n.quizNoResult)));
     }
 
     final accuracy = (resolved.accuracy * 100).round();
@@ -49,7 +51,11 @@ class LessonResultScreen extends ConsumerWidget {
         leading: FallbackBackButton(
           fallbackLocation: isTimed || isTraining ? '/training' : '/learn',
         ),
-        title: Text(isTimed || isTraining ? '训练结果' : '课程结果'),
+        title: Text(
+          isTimed || isTraining
+              ? l10n.quizTimedResultTitle
+              : l10n.quizResultTitle,
+        ),
       ),
       bottomNavigationBar: _ResultActions(
         source: source,
@@ -61,11 +67,13 @@ class LessonResultScreen extends ConsumerWidget {
           children: [
             SectionHeader(
               title: isTimed || isTraining
-                  ? (accuracy >= 80 ? '挑战成功！' : '挑战完成')
-                  : (accuracy >= 80 ? '表现很棒！' : '课程完成'),
+                  ? (accuracy >= 80
+                        ? l10n.quizChallengeSuccess
+                        : l10n.quizChallengeDone)
+                  : (accuracy >= 80 ? l10n.quizGreatJob : l10n.quizLessonDone),
               subtitle: isTimed || isTraining
-                  ? '答对 ${resolved.correctAnswers}/${resolved.totalQuestions} 题 · 已入账 +${resolved.xpEarned} XP · 错题可去复习中心整理。'
-                  : '答对 ${resolved.correctAnswers}/${resolved.totalQuestions} 题 · 已入账 +${resolved.xpEarned} XP · 错题已进入复习。',
+                  ? '${resolved.correctAnswers}/${resolved.totalQuestions} · +${resolved.xpEarned} ${l10n.commonXP} · ${l10n.quizMistakeTimed}'
+                  : '${resolved.correctAnswers}/${resolved.totalQuestions} · +${resolved.xpEarned} ${l10n.commonXP} · ${l10n.quizMistakeReview}',
             ),
             const SizedBox(height: 12),
             PillLabel(
@@ -91,7 +99,7 @@ class LessonResultScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 20),
             Text(
-              '错题',
+              l10n.quizMistakes,
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
@@ -239,6 +247,7 @@ class _PerfectResultRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
@@ -250,10 +259,10 @@ class _PerfectResultRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('全对通关', style: theme.textTheme.titleMedium),
+                Text(l10n.quizAllCorrect, style: theme.textTheme.titleMedium),
                 const SizedBox(height: 3),
                 Text(
-                  '没有错题需要加入复习。',
+                  l10n.quizMistakeReview,
                   style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                 ),
               ],
