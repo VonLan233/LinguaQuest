@@ -698,6 +698,60 @@ class AppLocalizationsZh extends AppLocalizations {
   String get quizMistakeTimed => '错题可去复习中心整理。';
 
   @override
+  String get quizRetryMistakes => '错词再练';
+
+  @override
+  String get quizGoReviewCenter => '去复习中心';
+
+  @override
+  String get quizBackTraining => '返回训练场';
+
+  @override
+  String get quizBackLearningPath => '返回学习路径';
+
+  @override
+  String get quizXpBalanceUpdated => '总积分已更新';
+
+  @override
+  String quizCurrentXp(Object xp) {
+    return '当前总积分 $xp XP';
+  }
+
+  @override
+  String quizXpCredited(Object xp) {
+    return '刚刚到账 +$xp XP';
+  }
+
+  @override
+  String quizXpImpactBody(Object balance) {
+    return '$balance。XP 会同步到个人主页、排行榜和发现页抽奖余额。';
+  }
+
+  @override
+  String get quizTimedReward => '限时测试奖励';
+
+  @override
+  String get quizLessonReward => '课程奖励';
+
+  @override
+  String get quizViewXpUses => '查看 XP 用途';
+
+  @override
+  String quizXpEarned(Object xp) {
+    return '已入账 +$xp XP';
+  }
+
+  @override
+  String quizTotalXp(Object xp) {
+    return '总积分 $xp XP';
+  }
+
+  @override
+  String quizMistakeCount(Object count) {
+    return '$count 个错题';
+  }
+
+  @override
   String get trainingTitle => '训练场';
 
   @override
@@ -798,6 +852,153 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get trainingEnterCustomWords => '进入生词本';
+
+  @override
+  String get trainingEntryMissingTitle => '训练入口不存在';
+
+  @override
+  String get trainingEntryMissingHeader => '没有找到这个训练';
+
+  @override
+  String get trainingEntryMissingSubtitle => '请回到训练场，从抢词、一站到底或单词拼写入口开始。';
+
+  @override
+  String get trainingSourceInsufficientTitle => '训练题源不足';
+
+  @override
+  String get trainingSourceInsufficientSubtitle =>
+      '先完成一节新学、添加生词，或在错词本里积累弱项词后再来挑战。';
+
+  @override
+  String get trainingBack => '返回训练场';
+
+  @override
+  String get trainingMistakesOnly => '错词再练';
+
+  @override
+  String get trainingNextQuestion => '下一题';
+
+  @override
+  String get trainingSubmitSpelling => '提交拼写';
+
+  @override
+  String get trainingExitTitle => '离开训练？';
+
+  @override
+  String get trainingExitContent => '当前训练进度不会结算。';
+
+  @override
+  String get trainingContinue => '继续训练';
+
+  @override
+  String get trainingExit => '离开';
+
+  @override
+  String trainingPromptWordRush(Object word) {
+    return '抢答“$word”的中文释义';
+  }
+
+  @override
+  String trainingExplanationWordRush(
+    Object example,
+    Object meaning,
+    Object word,
+  ) {
+    return '“$word”表示$meaning。$example';
+  }
+
+  @override
+  String trainingPromptChineseChoice(Object meaning) {
+    return '根据中文释义选择英文：$meaning';
+  }
+
+  @override
+  String trainingExplanationChineseChoice(Object meaning, Object word) {
+    return '$meaning 对应 “$word”。';
+  }
+
+  @override
+  String trainingPromptContextChoice(Object example) {
+    return '结合例句选择释义：$example';
+  }
+
+  @override
+  String trainingPromptMeaningChoice(Object word) {
+    return '选择“$word”的中文释义';
+  }
+
+  @override
+  String trainingExplanationMeaningChoice(Object meaning, Object word) {
+    return '这题考察 $word：$meaning。';
+  }
+
+  @override
+  String trainingPromptChineseSpelling(Object meaning) {
+    return '看中文拼写英文：$meaning';
+  }
+
+  @override
+  String trainingPromptAudioSpelling(Object cue) {
+    return '听音后拼写英文：$cue';
+  }
+
+  @override
+  String trainingPromptContextSpelling(Object example) {
+    return '根据例句空格拼写：$example';
+  }
+
+  @override
+  String trainingExplanationSpelling(Object example, Object word) {
+    return '正确拼写是 “$word”。$example';
+  }
+
+  @override
+  String get trainingNoEffectiveAnswers => '本轮还没有有效答题，不计入训练记录。';
+
+  @override
+  String trainingResultMistakesSuffix(Object title) {
+    return '$title · 错词再练';
+  }
+
+  @override
+  String trainingCorrectAttempts(Object attempts, Object correct) {
+    return '正确 $correct/$attempts';
+  }
+
+  @override
+  String trainingStreak(Object streak) {
+    return '连击 $streak';
+  }
+
+  @override
+  String trainingAccuracyValue(Object accuracy) {
+    return '准确率 $accuracy%';
+  }
+
+  @override
+  String trainingSurvivalResources(Object nodes, Object revives) {
+    return '复活 $revives · 节点 $nodes';
+  }
+
+  @override
+  String trainingBestStreak(Object streak) {
+    return '最佳 $streak';
+  }
+
+  @override
+  String get trainingRealSource => '真实题源';
+
+  @override
+  String get trainingSpellingInputLabel => '输入英文拼写';
+
+  @override
+  String get trainingReviveConsumed => '已消耗一次复活机会，继续闯关。';
+
+  @override
+  String get trainingReviveExhausted => '复活机会已用完，本轮结束。';
+
+  @override
+  String get trainingCorrectFeedback => '回答正确，连击继续！';
 
   @override
   String get learningPathTitle => '学习路径';

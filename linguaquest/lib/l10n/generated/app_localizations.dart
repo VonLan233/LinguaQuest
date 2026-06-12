@@ -1450,6 +1450,90 @@ abstract class AppLocalizations {
   /// **'Mistakes can be reviewed in the review center.'**
   String get quizMistakeTimed;
 
+  /// No description provided for @quizRetryMistakes.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice mistakes again'**
+  String get quizRetryMistakes;
+
+  /// No description provided for @quizGoReviewCenter.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to review center'**
+  String get quizGoReviewCenter;
+
+  /// No description provided for @quizBackTraining.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to training'**
+  String get quizBackTraining;
+
+  /// No description provided for @quizBackLearningPath.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to learning path'**
+  String get quizBackLearningPath;
+
+  /// No description provided for @quizXpBalanceUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Total XP updated'**
+  String get quizXpBalanceUpdated;
+
+  /// No description provided for @quizCurrentXp.
+  ///
+  /// In en, this message translates to:
+  /// **'Current total {xp} XP'**
+  String quizCurrentXp(Object xp);
+
+  /// No description provided for @quizXpCredited.
+  ///
+  /// In en, this message translates to:
+  /// **'+{xp} XP credited'**
+  String quizXpCredited(Object xp);
+
+  /// No description provided for @quizXpImpactBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{balance}. XP syncs to your profile, leaderboard, and lucky-draw balance.'**
+  String quizXpImpactBody(Object balance);
+
+  /// No description provided for @quizTimedReward.
+  ///
+  /// In en, this message translates to:
+  /// **'Timed test reward'**
+  String get quizTimedReward;
+
+  /// No description provided for @quizLessonReward.
+  ///
+  /// In en, this message translates to:
+  /// **'Lesson reward'**
+  String get quizLessonReward;
+
+  /// No description provided for @quizViewXpUses.
+  ///
+  /// In en, this message translates to:
+  /// **'View XP uses'**
+  String get quizViewXpUses;
+
+  /// No description provided for @quizXpEarned.
+  ///
+  /// In en, this message translates to:
+  /// **'Credited +{xp} XP'**
+  String quizXpEarned(Object xp);
+
+  /// No description provided for @quizTotalXp.
+  ///
+  /// In en, this message translates to:
+  /// **'Total {xp} XP'**
+  String quizTotalXp(Object xp);
+
+  /// No description provided for @quizMistakeCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} mistakes'**
+  String quizMistakeCount(Object count);
+
   /// No description provided for @trainingTitle.
   ///
   /// In en, this message translates to:
@@ -1653,6 +1737,226 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Go to Custom Words'**
   String get trainingEnterCustomWords;
+
+  /// No description provided for @trainingEntryMissingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Training entry unavailable'**
+  String get trainingEntryMissingTitle;
+
+  /// No description provided for @trainingEntryMissingHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Training not found'**
+  String get trainingEntryMissingHeader;
+
+  /// No description provided for @trainingEntryMissingSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Go back to training and start from Speed Game, Last One Standing, or Word Spelling.'**
+  String get trainingEntryMissingSubtitle;
+
+  /// No description provided for @trainingSourceInsufficientTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough training questions'**
+  String get trainingSourceInsufficientTitle;
+
+  /// No description provided for @trainingSourceInsufficientSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish a new lesson, add custom words, or build weak words in the mistake book before challenging again.'**
+  String get trainingSourceInsufficientSubtitle;
+
+  /// No description provided for @trainingBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to training'**
+  String get trainingBack;
+
+  /// No description provided for @trainingMistakesOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice mistakes again'**
+  String get trainingMistakesOnly;
+
+  /// No description provided for @trainingNextQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Next question'**
+  String get trainingNextQuestion;
+
+  /// No description provided for @trainingSubmitSpelling.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit spelling'**
+  String get trainingSubmitSpelling;
+
+  /// No description provided for @trainingExitTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave training?'**
+  String get trainingExitTitle;
+
+  /// No description provided for @trainingExitContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Current training progress will not be settled.'**
+  String get trainingExitContent;
+
+  /// No description provided for @trainingContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep training'**
+  String get trainingContinue;
+
+  /// No description provided for @trainingExit.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave'**
+  String get trainingExit;
+
+  /// No description provided for @trainingPromptWordRush.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the Chinese meaning of \"{word}\" quickly'**
+  String trainingPromptWordRush(Object word);
+
+  /// No description provided for @trainingExplanationWordRush.
+  ///
+  /// In en, this message translates to:
+  /// **'\"{word}\" means {meaning}. {example}'**
+  String trainingExplanationWordRush(
+    Object example,
+    Object meaning,
+    Object word,
+  );
+
+  /// No description provided for @trainingPromptChineseChoice.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the English word for: {meaning}'**
+  String trainingPromptChineseChoice(Object meaning);
+
+  /// No description provided for @trainingExplanationChineseChoice.
+  ///
+  /// In en, this message translates to:
+  /// **'{meaning} matches \"{word}\".'**
+  String trainingExplanationChineseChoice(Object meaning, Object word);
+
+  /// No description provided for @trainingPromptContextChoice.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the meaning from the example: {example}'**
+  String trainingPromptContextChoice(Object example);
+
+  /// No description provided for @trainingPromptMeaningChoice.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the Chinese meaning of \"{word}\"'**
+  String trainingPromptMeaningChoice(Object word);
+
+  /// No description provided for @trainingExplanationMeaningChoice.
+  ///
+  /// In en, this message translates to:
+  /// **'This question checks {word}: {meaning}.'**
+  String trainingExplanationMeaningChoice(Object meaning, Object word);
+
+  /// No description provided for @trainingPromptChineseSpelling.
+  ///
+  /// In en, this message translates to:
+  /// **'Spell the English word from Chinese: {meaning}'**
+  String trainingPromptChineseSpelling(Object meaning);
+
+  /// No description provided for @trainingPromptAudioSpelling.
+  ///
+  /// In en, this message translates to:
+  /// **'Spell the English word after listening: {cue}'**
+  String trainingPromptAudioSpelling(Object cue);
+
+  /// No description provided for @trainingPromptContextSpelling.
+  ///
+  /// In en, this message translates to:
+  /// **'Spell the blank in the example: {example}'**
+  String trainingPromptContextSpelling(Object example);
+
+  /// No description provided for @trainingExplanationSpelling.
+  ///
+  /// In en, this message translates to:
+  /// **'The correct spelling is \"{word}\". {example}'**
+  String trainingExplanationSpelling(Object example, Object word);
+
+  /// No description provided for @trainingNoEffectiveAnswers.
+  ///
+  /// In en, this message translates to:
+  /// **'No valid answer this round, so no training record was saved.'**
+  String get trainingNoEffectiveAnswers;
+
+  /// No description provided for @trainingResultMistakesSuffix.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} · mistake practice'**
+  String trainingResultMistakesSuffix(Object title);
+
+  /// No description provided for @trainingCorrectAttempts.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct {correct}/{attempts}'**
+  String trainingCorrectAttempts(Object attempts, Object correct);
+
+  /// No description provided for @trainingStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Streak {streak}'**
+  String trainingStreak(Object streak);
+
+  /// No description provided for @trainingAccuracyValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Accuracy {accuracy}%'**
+  String trainingAccuracyValue(Object accuracy);
+
+  /// No description provided for @trainingSurvivalResources.
+  ///
+  /// In en, this message translates to:
+  /// **'Revives {revives} · Nodes {nodes}'**
+  String trainingSurvivalResources(Object nodes, Object revives);
+
+  /// No description provided for @trainingBestStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Best {streak}'**
+  String trainingBestStreak(Object streak);
+
+  /// No description provided for @trainingRealSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Real question source'**
+  String get trainingRealSource;
+
+  /// No description provided for @trainingSpellingInputLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter English spelling'**
+  String get trainingSpellingInputLabel;
+
+  /// No description provided for @trainingReviveConsumed.
+  ///
+  /// In en, this message translates to:
+  /// **'One revive was consumed. Keep going.'**
+  String get trainingReviveConsumed;
+
+  /// No description provided for @trainingReviveExhausted.
+  ///
+  /// In en, this message translates to:
+  /// **'No revives left. This round ends.'**
+  String get trainingReviveExhausted;
+
+  /// No description provided for @trainingCorrectFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct. Streak continues!'**
+  String get trainingCorrectFeedback;
 
   /// No description provided for @learningPathTitle.
   ///

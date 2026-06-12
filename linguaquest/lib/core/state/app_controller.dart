@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/models/app_notification.dart';
 import '../../data/models/custom_word.dart';
+import '../../data/models/exercise_record.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
 import '../../data/models/review_event.dart';
@@ -94,6 +95,8 @@ class AppController extends Notifier<AppState> {
   static const _todayDateKey = 'linguaquest.today.date';
   static const _todayLessonIdsKey = 'linguaquest.today.lessons';
   static const _todayReviewIdsKey = 'linguaquest.today.reviews';
+  static const _todayTrainingGameIdsKey = 'linguaquest.today.training.games';
+  static const _todayTrainingXpKey = 'linguaquest.today.training.xp';
   static const _todayRewardIdsKey = 'linguaquest.today.rewards';
 
   late final AuthRepository _authRepository;
@@ -133,6 +136,12 @@ class AppController extends Notifier<AppState> {
       final localTodayReviewWordIds = hasTodayState
           ? _stringSet(prefs, _todayReviewIdsKey)
           : <String>{};
+      final localTodayTrainingGameIds = hasTodayState
+          ? _stringSet(prefs, _todayTrainingGameIdsKey)
+          : <String>{};
+      final localTodayTrainingXp = hasTodayState
+          ? prefs.getInt(_todayTrainingXpKey) ?? 0
+          : 0;
       final localTodayClaimedRewardIds = hasTodayState
           ? _stringSet(prefs, _todayRewardIdsKey)
           : <String>{};
@@ -199,6 +208,8 @@ class AppController extends Notifier<AppState> {
         completedLessonIds: completedLessonIds,
         todayCompletedLessonIds: todayCompletedLessonIds,
         todayReviewWordIds: todayReviewWordIds,
+        todayTrainingGameIds: localTodayTrainingGameIds,
+        todayTrainingXp: localTodayTrainingXp,
         todayClaimedRewardIds: todayClaimedRewardIds,
       );
       await refreshNotifications();
@@ -890,6 +901,184 @@ class AppController extends Notifier<AppState> {
     });
   }
 
+  Future<bool> completeTraining({
+    required LessonResult result,
+    required String gameId,
+    required DateTime startedAt,
+    required List<ExerciseRecord> exerciseRecords,
+  }) async {
+    final user = state.user;
+    if (user == null) return false;
+    return _run(() async {
+      final now = DateTime.now();
+      final lastStudy = user.lastStudyDate;
+      final streak = _nextStreak(lastStudy, now, user.streak);
+      final sessionId = 'training-${now.microsecondsSinceEpoch}';
+      await _learningRepository.recordStudySession(
+        StudySession(
+          id: sessionId,
+          uid: user.uid,
+          lessonId: gameId,
+          startedAt: startedAt,
+          endedAt: now,
+          totalQuestions: result.totalQuestions,
+          correctAnswers: result.correctAnswers,
+          xpEarned: result.xpEarned,
+          mistakeWordIds: result.mistakes
+              .map((question) => question.word.id)
+              .toList(),
+        ),
+      );
+      await _learningRepository.recordExerciseRecords(
+        exerciseRecords
+            .map(
+              (record) => ExerciseRecord(
+                id: record.id,
+                uid: user.uid,
+                sessionId: sessionId,
+                gameId: record.gameId,
+                wordId: record.wordId,
+                promptType: record.promptType,
+                isCorrect: record.isCorrect,
+                answer: record.answer,
+                correctAnswer: record.correctAnswer,
+                answerTimeMs: record.answerTimeMs,
+                dimension: record.dimension,
+                createdAt: record.createdAt,
+              ),
+            )
+            .toList(),
+      );
+      final customWords = await _applyTrainingWordUpdates(
+        uid: user.uid,
+        mistakes: result.mistakes,
+        records: exerciseRecords,
+        now: now,
+      );
+      final todayTrainingGameIds = {...state.todayTrainingGameIds, gameId};
+      final todayTrainingXp = state.todayTrainingXp + result.xpEarned;
+      final updatedUser = await _authRepository.updateProfile(
+        user.copyWith(
+          xp: user.xp + result.xpEarned,
+          streak: streak,
+          lastStudyDate: now,
+          updatedAt: now,
+        ),
+      );
+      await _saveTodayTraining(todayTrainingGameIds, todayTrainingXp);
+      state = state.copyWith(
+        user: updatedUser,
+        customWords: customWords,
+        todayTrainingGameIds: todayTrainingGameIds,
+        todayTrainingXp: todayTrainingXp,
+        lastResult: result,
+      );
+      await refreshNotifications();
+      unawaited(_scheduleLocalNotifications());
+    });
+  }
+
+  Future<List<CustomWord>> _applyTrainingWordUpdates({
+    required String uid,
+    required List<QuizQuestion> mistakes,
+    required List<ExerciseRecord> records,
+    required DateTime now,
+  }) async {
+    final updatedById = {for (final word in state.customWords) word.id: word};
+    final byText = {
+      for (final word in state.customWords)
+        word.word.trim().toLowerCase(): word,
+    };
+    final wordIdToText = {
+      for (final word in state.trainingWords) word.id: word.word,
+    };
+    final mistakesByWordId = {
+      for (final question in mistakes) question.word.id: question,
+    };
+
+    for (final record in records) {
+      final englishWord = wordIdToText[record.wordId];
+      final existing =
+          updatedById[record.wordId] ??
+          (englishWord == null
+              ? null
+              : byText[englishWord.trim().toLowerCase()]);
+      if (existing == null) continue;
+      final updated = _trainingAdjustedWord(existing, record, now);
+      await _customWordRepository.update(updated);
+      updatedById[updated.id] = updated;
+      byText[updated.word.trim().toLowerCase()] = updated;
+    }
+
+    for (final question in mistakesByWordId.values) {
+      final normalized = question.word.word.trim().toLowerCase();
+      if (byText.containsKey(normalized)) continue;
+      final created = await _customWordRepository.create(
+        CustomWord.create(
+          id: 'training-mistake-${question.word.id}-${now.microsecondsSinceEpoch}',
+          uid: uid,
+          word: question.word.word,
+          meaning: question.word.meaning,
+          exampleSentence: question.word.exampleSentence,
+          note: '${question.word.definition}\n${question.explanation}',
+          tag: question.word.tags.isEmpty
+              ? '错题'
+              : displayWordTag(question.word.tags.first),
+          difficulty: question.word.difficulty,
+          now: now,
+        ).copyWith(
+          status: 'Relearning',
+          masteryLevel: 0,
+          wrongCount: 1,
+          nextReviewAt: now.add(const Duration(hours: 2)),
+          updatedAt: now,
+        ),
+      );
+      updatedById[created.id] = created;
+      byText[normalized] = created;
+    }
+
+    return updatedById.values.toList()
+      ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+  }
+
+  CustomWord _trainingAdjustedWord(
+    CustomWord word,
+    ExerciseRecord record,
+    DateTime now,
+  ) {
+    final scoreDelta = record.isCorrect ? 4 : -8;
+    int adjust(ReviewDimension target, int current) {
+      if (target != record.dimension) return current;
+      return (current + scoreDelta).clamp(0, 100).toInt();
+    }
+
+    return word.copyWith(
+      status: record.isCorrect ? word.status : 'Relearning',
+      correctCount: word.correctCount + (record.isCorrect ? 1 : 0),
+      wrongCount: word.wrongCount + (record.isCorrect ? 0 : 1),
+      masteryLevel: record.isCorrect
+          ? word.masteryLevel
+          : (word.masteryLevel - 1).clamp(0, 5).toInt(),
+      meaningRecognitionScore: adjust(
+        ReviewDimension.meaningRecognition,
+        word.meaningRecognitionScore,
+      ),
+      meaningRecallScore: adjust(
+        ReviewDimension.meaningRecall,
+        word.meaningRecallScore,
+      ),
+      spellingScore: adjust(ReviewDimension.spelling, word.spellingScore),
+      listeningScore: adjust(ReviewDimension.listening, word.listeningScore),
+      contextScore: adjust(ReviewDimension.context, word.contextScore),
+      confidenceScore: adjust(ReviewDimension.confidence, word.confidenceScore),
+      nextReviewAt: record.isCorrect
+          ? word.nextReviewAt
+          : now.add(const Duration(hours: 2)),
+      updatedAt: now,
+    );
+  }
+
   Future<void> refreshNotifications() async {
     final user = state.user;
     if (user == null) {
@@ -1416,6 +1605,13 @@ class AppController extends Notifier<AppState> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_todayDateKey, _dateKey(DateTime.now()));
     await prefs.setStringList(_todayReviewIdsKey, todayReviewWordIds.toList());
+  }
+
+  Future<void> _saveTodayTraining(Set<String> gameIds, int xp) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_todayDateKey, _dateKey(DateTime.now()));
+    await prefs.setStringList(_todayTrainingGameIdsKey, gameIds.toList());
+    await prefs.setInt(_todayTrainingXpKey, xp);
   }
 
   Future<void> _saveTodayClaimedRewards(

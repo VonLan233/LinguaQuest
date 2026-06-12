@@ -36,6 +36,7 @@ import '../../features/shell/app_shell.dart';
 import '../../features/study/mixed_study_session_screen.dart';
 import '../../features/study/session/session_queue_builder.dart';
 import '../../features/training/training_screen.dart';
+import '../../features/training/training_session_screen.dart';
 import '../../features/wordbook/add_edit_custom_word_screen.dart';
 import '../../features/wordbook/custom_word_list_screen.dart';
 import '../../features/wordbook/target_word_detail_screen.dart';
@@ -219,6 +220,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => QuizSessionScreen(
           lessonId: state.pathParameters['id']!,
           mode: QuizSessionMode.timed,
+        ),
+      ),
+      GoRoute(
+        path: '/training/:game',
+        builder: (context, state) => TrainingSessionScreen(
+          gameId: state.pathParameters['game']!,
+          mistakesOnly: state.uri.queryParameters['source'] == 'mistakes',
         ),
       ),
       GoRoute(

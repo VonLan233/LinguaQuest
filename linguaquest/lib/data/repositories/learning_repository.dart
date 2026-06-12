@@ -1,3 +1,4 @@
+import '../models/exercise_record.dart';
 import '../models/lesson.dart';
 import '../models/study_session.dart';
 import '../models/user_profile.dart';
@@ -61,6 +62,8 @@ abstract class LearningRepository {
   }
 
   Future<void> recordStudySession(StudySession session);
+
+  Future<void> recordExerciseRecords(List<ExerciseRecord> records);
 
   Future<RewardClaimResult?> claimReward({
     required String id,

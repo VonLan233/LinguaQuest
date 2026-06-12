@@ -17,8 +17,11 @@ import 'study_plan_policy.dart';
 
 final _httpClient = http.Client();
 
-Router buildRouter(AppConfig config, AppDatabase database,
-    {http.Client? httpClient}) {
+Router buildRouter(
+  AppConfig config,
+  AppDatabase database, {
+  http.Client? httpClient,
+}) {
   final client = httpClient ?? _httpClient;
   final router = Router();
 
@@ -56,10 +59,11 @@ Router buildRouter(AppConfig config, AppDatabase database,
         await streamedResponse.stream.listen((_) {}).cancel();
         return jsonResponse({'error': 'tts response too large'}, status: 502);
       }
-      final contentType = (streamedResponse.headers['content-type'] ??
-              streamedResponse.headers['Content-Type'] ??
-              'audio/mpeg')
-          .toLowerCase();
+      final contentType =
+          (streamedResponse.headers['content-type'] ??
+                  streamedResponse.headers['Content-Type'] ??
+                  'audio/mpeg')
+              .toLowerCase();
       if (!contentType.startsWith('audio/')) {
         await streamedResponse.stream.listen((_) {}).cancel();
         return jsonResponse({'error': 'tts unavailable'}, status: 502);
@@ -67,8 +71,9 @@ Router buildRouter(AppConfig config, AppDatabase database,
       final bytesBuilder = BytesBuilder();
       var totalBytes = 0;
       const maxBytes = 5 * 1024 * 1024;
-      await for (final chunk
-          in streamedResponse.stream.timeout(const Duration(seconds: 5))) {
+      await for (final chunk in streamedResponse.stream.timeout(
+        const Duration(seconds: 5),
+      )) {
         totalBytes += chunk.length;
         if (totalBytes > maxBytes) {
           return jsonResponse({
@@ -83,10 +88,13 @@ Router buildRouter(AppConfig config, AppDatabase database,
           'error': 'tts response invalid or too large',
         }, status: 502);
       }
-      return Response.ok(bytes, headers: {
-        'Content-Type': contentType,
-        'Cache-Control': 'public, max-age=86400',
-      });
+      return Response.ok(
+        bytes,
+        headers: {
+          'Content-Type': contentType,
+          'Cache-Control': 'public, max-age=86400',
+        },
+      );
     } catch (e, stackTrace) {
       stderr.writeln('TTS proxy error: $e\n$stackTrace');
       return jsonResponse({'error': 'tts unavailable'}, status: 502);
@@ -368,6 +376,37 @@ Router buildRouter(AppConfig config, AppDatabase database,
     return _protected(config, request, (uid) async {
       final body = await readJsonMap(request);
       await database.insertReviewEvent(uid, body);
+      return jsonResponse({'recorded': true}, status: 201);
+    });
+  });
+
+  router.post('/exercise-records', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      final rawRecords = body['records'];
+      if (rawRecords is! List) {
+        return jsonResponse({'error': 'records must be a list'}, status: 400);
+      }
+      if (rawRecords.length > 250) {
+        return jsonResponse({
+          'error': 'too many exercise records',
+        }, status: 400);
+      }
+      final records = <Map<String, dynamic>>[];
+      for (final rawRecord in rawRecords) {
+        if (rawRecord is! Map) {
+          return jsonResponse({
+            'error': 'invalid exercise record',
+          }, status: 400);
+        }
+        final record = Map<String, dynamic>.from(rawRecord);
+        final validationError = _validateExerciseRecord(record);
+        if (validationError != null) {
+          return jsonResponse({'error': validationError}, status: 400);
+        }
+        records.add(record);
+      }
+      await database.insertExerciseRecords(uid, records);
       return jsonResponse({'recorded': true}, status: 201);
     });
   });
@@ -831,6 +870,23 @@ Future<void> _ensureNotificationsForToday(
 String _dateValue(Object? value) {
   if (value is DateTime) return value.toIso8601String();
   return value?.toString() ?? DateTime.now().toUtc().toIso8601String();
+}
+
+String? _validateExerciseRecord(Map<String, dynamic> record) {
+  for (final field in ['id', 'sessionId', 'gameId', 'wordId', 'promptType']) {
+    final value = record[field];
+    if (value is! String || value.trim().isEmpty) return '$field is required';
+  }
+  if (record['isCorrect'] is! bool) return 'isCorrect must be a boolean';
+  final answerTimeMs = record['answerTimeMs'];
+  if (answerTimeMs is! int || answerTimeMs < 0) {
+    return 'answerTimeMs must be a non-negative integer';
+  }
+  final createdAt = record['createdAt'];
+  if (createdAt is! String || DateTime.tryParse(createdAt) == null) {
+    return 'createdAt must be an ISO timestamp';
+  }
+  return null;
 }
 
 NotificationDayWindow? _dayWindowFromQuery(Request request) {

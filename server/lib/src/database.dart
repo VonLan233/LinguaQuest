@@ -186,6 +186,23 @@ CREATE TABLE IF NOT EXISTS review_events (
     );
 
     await connection.execute('''
+CREATE TABLE IF NOT EXISTS exercise_records (
+  id TEXT PRIMARY KEY,
+  uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  session_id TEXT NOT NULL,
+  game_id TEXT NOT NULL,
+  word_id TEXT NOT NULL,
+  prompt_type TEXT NOT NULL,
+  is_correct BOOLEAN NOT NULL,
+  answer TEXT NOT NULL DEFAULT '',
+  correct_answer TEXT NOT NULL DEFAULT '',
+  answer_time_ms INTEGER NOT NULL DEFAULT 0,
+  dimension TEXT NOT NULL DEFAULT 'confidence',
+  created_at TIMESTAMPTZ NOT NULL
+);
+''');
+
+    await connection.execute('''
 CREATE TABLE IF NOT EXISTS reward_claims (
   uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   reward_id TEXT NOT NULL,
@@ -692,6 +709,40 @@ INSERT INTO review_events (
         'nextReviewAt': _date(data['nextReviewAt']) ?? DateTime.now().toUtc(),
       },
     );
+  }
+
+  Future<void> insertExerciseRecords(
+    String uid,
+    List<Map<String, dynamic>> records,
+  ) async {
+    for (final data in records) {
+      await connection.execute(
+        Sql.named('''
+INSERT INTO exercise_records (
+  id, uid, session_id, game_id, word_id, prompt_type, is_correct,
+  answer, correct_answer, answer_time_ms, dimension, created_at
+) VALUES (
+  @id, @uid, @sessionId, @gameId, @wordId, @promptType, @isCorrect,
+  @answer, @correctAnswer, @answerTimeMs, @dimension, @createdAt
+)
+ON CONFLICT (id) DO NOTHING
+'''),
+        parameters: {
+          'id': data['id'],
+          'uid': uid,
+          'sessionId': data['sessionId'],
+          'gameId': data['gameId'],
+          'wordId': data['wordId'],
+          'promptType': data['promptType'] ?? 'choice',
+          'isCorrect': data['isCorrect'] ?? false,
+          'answer': data['answer'] ?? '',
+          'correctAnswer': data['correctAnswer'] ?? '',
+          'answerTimeMs': data['answerTimeMs'] ?? 0,
+          'dimension': data['dimension'] ?? 'confidence',
+          'createdAt': _date(data['createdAt']) ?? DateTime.now().toUtc(),
+        },
+      );
+    }
   }
 
   Future<List<String>> completedLessonIds(String uid) async {

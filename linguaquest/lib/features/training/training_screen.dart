@@ -75,7 +75,7 @@ class TrainingScreen extends ConsumerWidget {
               title: l10n.trainingSpeedGame,
               subtitle: l10n.trainingSpeedGameDesc,
               color: AppTheme.mango,
-              onTap: null,
+              onTap: () => context.push('/training/word-rush'),
             ),
           ],
         ),
@@ -99,7 +99,7 @@ class TrainingScreen extends ConsumerWidget {
           title: l10n.trainingSurvivor,
           subtitle: l10n.trainingSurvivorDesc,
           color: AppTheme.coral,
-          onTap: null,
+          onTap: () => context.push('/training/survival'),
         ),
         const SizedBox(height: 12),
         _TrainingGameRow(
@@ -107,7 +107,7 @@ class TrainingScreen extends ConsumerWidget {
           title: l10n.trainingSpelling,
           subtitle: l10n.trainingSpellingDesc,
           color: AppTheme.cyan,
-          onTap: () => context.push('/custom-words'),
+          onTap: () => context.push('/training/spelling'),
         ),
         const SizedBox(height: 12),
         _TrainingGameRow(

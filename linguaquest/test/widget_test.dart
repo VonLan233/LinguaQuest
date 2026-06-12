@@ -15,6 +15,7 @@ import 'package:linguaquest/core/widgets/learning_badges.dart';
 import 'package:linguaquest/core/widgets/pronunciation_controls.dart';
 import 'package:linguaquest/l10n/generated/app_localizations.dart';
 import 'package:linguaquest/data/models/custom_word.dart';
+import 'package:linguaquest/data/models/exercise_record.dart';
 import 'package:linguaquest/data/models/lesson.dart';
 import 'package:linguaquest/data/models/lesson_result.dart';
 import 'package:linguaquest/data/models/study_session.dart';
@@ -3621,6 +3622,9 @@ class _StaticLearningRepository implements LearningRepository {
   Future<void> recordStudySession(StudySession session) async {}
 
   @override
+  Future<void> recordExerciseRecords(List<ExerciseRecord> records) async {}
+
+  @override
   Future<RewardClaimResult?> claimReward({
     required String id,
     required int points,
@@ -3654,6 +3658,9 @@ class _FlakyLearningRepository implements LearningRepository {
 
   @override
   Future<void> recordStudySession(StudySession session) async {}
+
+  @override
+  Future<void> recordExerciseRecords(List<ExerciseRecord> records) async {}
 
   @override
   Future<RewardClaimResult?> claimReward({

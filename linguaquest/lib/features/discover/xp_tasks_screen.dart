@@ -18,6 +18,7 @@ class XpTasksScreen extends ConsumerWidget {
     final claimed = state.todayClaimedRewardIds;
     final newLearningDone = state.todayCompletedFormalLessonIds.isNotEmpty;
     final reviewDone = state.todayReviewWordIds.isNotEmpty;
+    final trainingDone = state.todayTrainingGameIds.isNotEmpty;
     final reviewedMistakeToday = state.customWords.any(
       (word) =>
           state.todayReviewWordIds.contains(word.id) && word.wrongCount > 0,
@@ -93,10 +94,17 @@ class XpTasksScreen extends ConsumerWidget {
                 title: l10n.discoverTrainingChallenge,
                 condition: l10n.discoverTrainingChallengeCondition,
                 points: 20,
-                isDone: false,
+                isDone: trainingDone,
                 isClaimed: claimed.contains('training-challenge'),
                 onTap: () => context.go('/training'),
-                onClaim: () {},
+                onClaim: () => _claimReward(
+                  context,
+                  ref,
+                  id: 'training-challenge',
+                  title: l10n.discoverTrainingChallenge,
+                  points: 20,
+                  isAvailable: trainingDone,
+                ),
               ),
               RewardTaskData(
                 icon: Icons.cleaning_services_outlined,
@@ -137,8 +145,13 @@ class XpTasksScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final currentXp = ref.read(appControllerProvider).user?.xp ?? 0;
     final message = succeeded
-        ? l10n.discoverClaimedMessage(title, points.toString(), currentXp.toString())
-        : ref.read(appControllerProvider).errorMessage ?? l10n.discoverCannotClaim;
+        ? l10n.discoverClaimedMessage(
+            title,
+            points.toString(),
+            currentXp.toString(),
+          )
+        : ref.read(appControllerProvider).errorMessage ??
+              l10n.discoverCannotClaim;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         duration: const Duration(seconds: 2),

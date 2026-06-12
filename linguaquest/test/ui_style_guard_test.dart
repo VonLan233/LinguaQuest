@@ -616,14 +616,14 @@ void main() {
       expect(training, isNot(contains('本周 \${user?.xp ?? 0} 积分')));
       expect(quest, contains("label: '任务 XP'"));
       expect(quest, isNot(contains("label: '今日可领 20 XP'")));
-      expect(lessonResult, contains('已入账 +'));
-      expect(lessonResult, contains('总积分 \$currentXp XP'));
+      expect(lessonResult, contains('l10n.quizXpEarned'));
+      expect(lessonResult, contains('l10n.quizTotalXp'));
       expect(lessonResult, contains('_ResultActions'));
       expect(lessonResult, contains('bottomNavigationBar: _ResultActions'));
       expect(lessonResult, contains('_XpImpactNotice'));
-      expect(lessonResult, contains('刚刚到账 +\$xpEarned XP'));
-      expect(lessonResult, contains('XP 会同步到个人主页、排行榜和发现页抽奖余额'));
-      expect(lessonResult, contains('查看 XP 用途'));
+      expect(lessonResult, contains('l10n.quizXpCredited'));
+      expect(lessonResult, contains('l10n.quizXpImpactBody'));
+      expect(lessonResult, contains('l10n.quizViewXpUses'));
     });
 
     test('async and route safety checks stay explicit', () {

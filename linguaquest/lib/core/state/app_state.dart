@@ -66,6 +66,8 @@ class AppState {
     required this.completedLessonIds,
     required this.todayCompletedLessonIds,
     required this.todayReviewWordIds,
+    required this.todayTrainingGameIds,
+    required this.todayTrainingXp,
     required this.todayClaimedRewardIds,
     required this.notifications,
     this.locale,
@@ -93,6 +95,8 @@ class AppState {
   final Set<String> completedLessonIds;
   final Set<String> todayCompletedLessonIds;
   final Set<String> todayReviewWordIds;
+  final Set<String> todayTrainingGameIds;
+  final int todayTrainingXp;
   final Set<String> todayClaimedRewardIds;
   final List<AppNotification> notifications;
   final LessonResult? lastResult;
@@ -186,6 +190,27 @@ class AppState {
     return weak;
   }
 
+  List<Word> get trainingWords {
+    final learnedWords = formalLessons
+        .where(
+          (lesson) =>
+              completedLessonIds.contains(lesson.id) ||
+              lesson.id == currentLesson?.id,
+        )
+        .expand((lesson) => lesson.words);
+    final customTrainingWords = customWords.map(_wordFromCustomWord);
+    final weakFirst = weakWords.map(_wordFromCustomWord);
+    final merged = <String, Word>{};
+    for (final word in [
+      ...weakFirst,
+      ...customTrainingWords,
+      ...learnedWords,
+    ]) {
+      merged.putIfAbsent(word.word.toLowerCase(), () => word);
+    }
+    return merged.values.toList(growable: false);
+  }
+
   AppState copyWith({
     bool? isBootstrapped,
     bool? isLoading,
@@ -204,6 +229,8 @@ class AppState {
     Set<String>? completedLessonIds,
     Set<String>? todayCompletedLessonIds,
     Set<String>? todayReviewWordIds,
+    Set<String>? todayTrainingGameIds,
+    int? todayTrainingXp,
     Set<String>? todayClaimedRewardIds,
     List<AppNotification>? notifications,
     LessonResult? lastResult,
@@ -230,6 +257,8 @@ class AppState {
       todayCompletedLessonIds:
           todayCompletedLessonIds ?? this.todayCompletedLessonIds,
       todayReviewWordIds: todayReviewWordIds ?? this.todayReviewWordIds,
+      todayTrainingGameIds: todayTrainingGameIds ?? this.todayTrainingGameIds,
+      todayTrainingXp: todayTrainingXp ?? this.todayTrainingXp,
       todayClaimedRewardIds:
           todayClaimedRewardIds ?? this.todayClaimedRewardIds,
       notifications: notifications ?? this.notifications,
@@ -256,10 +285,34 @@ class AppState {
       completedLessonIds: {},
       todayCompletedLessonIds: {},
       todayReviewWordIds: {},
+      todayTrainingGameIds: {},
+      todayTrainingXp: 0,
       todayClaimedRewardIds: {},
       notifications: [],
     );
   }
+}
+
+Word _wordFromCustomWord(CustomWord word) {
+  return Word(
+    id: word.id,
+    word: word.word,
+    phonetic: '',
+    meaning: word.meaning,
+    definition: word.note.isEmpty ? word.meaning : word.note,
+    partOfSpeech: 'word',
+    exampleSentence: word.exampleSentence,
+    exampleTranslation: '',
+    imageCue: _wordInitialForTraining(word.word),
+    difficulty: word.difficulty,
+    tags: [word.tag],
+  );
+}
+
+String _wordInitialForTraining(String value) {
+  final trimmed = value.trim();
+  if (trimmed.isEmpty) return '?';
+  return trimmed.characters.first.toUpperCase();
 }
 
 List<CustomWord> _buildReviewWords(

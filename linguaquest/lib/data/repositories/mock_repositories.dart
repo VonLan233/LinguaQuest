@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/app_notification.dart';
 import '../models/custom_word.dart';
+import '../models/exercise_record.dart';
 import '../models/lesson.dart';
 import '../models/review_event.dart';
 import '../models/study_session.dart';
@@ -188,6 +189,7 @@ class MockLearningRepository implements LearningRepository {
 
   final WordBookAssetLoader _loader;
   final List<StudySession> _sessions = [];
+  final List<ExerciseRecord> _exerciseRecords = [];
 
   @override
   Future<List<WordBook>> listWordBooks() => _loader.loadWordBooks();
@@ -213,6 +215,11 @@ class MockLearningRepository implements LearningRepository {
   @override
   Future<void> recordStudySession(StudySession session) async {
     _sessions.add(session);
+  }
+
+  @override
+  Future<void> recordExerciseRecords(List<ExerciseRecord> records) async {
+    _exerciseRecords.addAll(records);
   }
 
   @override
