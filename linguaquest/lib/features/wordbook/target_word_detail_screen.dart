@@ -24,7 +24,7 @@ class TargetWordDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
-    final detail = _find(state);
+    final detail = _find(state, l10n);
     if (detail == null) {
       return Scaffold(body: Center(child: Text(l10n.wordbookWordNotFound)));
     }
@@ -274,7 +274,7 @@ class TargetWordDetailScreen extends ConsumerWidget {
     return null;
   }
 
-  _TargetWordDetail? _find(AppState state) {
+  _TargetWordDetail? _find(AppState state, AppLocalizations l10n) {
     final currentBook = state.currentWordBook;
     if (currentBook != null) {
       for (final word in currentBook.words) {
@@ -293,7 +293,7 @@ class TargetWordDetailScreen extends ConsumerWidget {
         if (word.id == wordId) {
           return _TargetWordDetail(
             word: word,
-            book: currentBook ?? _fallbackBook(word),
+            book: currentBook ?? _fallbackBook(word, l10n),
           );
         }
       }
@@ -310,10 +310,10 @@ class TargetWordDetailScreen extends ConsumerWidget {
     return null;
   }
 
-  WordBook _fallbackBook(Word word) {
+  WordBook _fallbackBook(Word word, AppLocalizations l10n) {
     return WordBook(
       id: 'unknown',
-      title: '',
+      title: l10n.wordbookCurrentPlan,
       category: 'exam',
       examType: '',
       coverUrl: '',

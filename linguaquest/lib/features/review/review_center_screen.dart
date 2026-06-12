@@ -356,6 +356,7 @@ class _ReviewTile extends ConsumerWidget {
         .read(appControllerProvider.notifier)
         .reviewWord(word.id, isCorrect);
     if (!context.mounted) return;
+    final l10n = AppLocalizations.of(context);
     final message = succeeded
         ? isCorrect
               ? l10n.reviewCenterPostponedMessage

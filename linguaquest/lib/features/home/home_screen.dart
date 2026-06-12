@@ -136,7 +136,6 @@ class HomeScreen extends ConsumerWidget {
               onOpenPlan: () => context.push('/settings/study-plan'),
               onNewStudy: () => context.push('/study/new'),
               onReview: () => context.push('/study/review'),
-              l10n: l10n,
             ),
           ),
         ),
@@ -445,7 +444,6 @@ class _DailyTaskPanel extends StatelessWidget {
     required this.onOpenPlan,
     required this.onNewStudy,
     required this.onReview,
-    required this.l10n,
   });
 
   final String currentSection;
@@ -456,11 +454,11 @@ class _DailyTaskPanel extends StatelessWidget {
   final VoidCallback onOpenPlan;
   final VoidCallback onNewStudy;
   final VoidCallback onReview;
-  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     final hasReview = dueCount > 0;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),

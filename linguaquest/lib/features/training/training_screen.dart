@@ -16,6 +16,10 @@ class TrainingScreen extends ConsumerWidget {
     final state = ref.watch(appControllerProvider);
     final user = state.user;
     final currentBook = state.currentWordBook;
+    final studyBookName = state.currentStudyBook.name;
+    final studyBookTitle = studyBookName.isNotEmpty
+        ? studyBookName
+        : l10n.searchCurrentPlan;
     final trainingLessons = state.lessons
         .where((lesson) => lesson.isTrainingPack)
         .toList();
@@ -59,7 +63,7 @@ class TrainingScreen extends ConsumerWidget {
               icon: Icons.school_outlined,
               title: l10n.trainingCampusSpeed,
               subtitle: currentBook == null
-                  ? '${state.currentStudyBook.name} · ${l10n.trainingTimedTests}'
+                  ? '$studyBookTitle · ${l10n.trainingTimedTests}'
                   : '${currentBook.title} · ${l10n.trainingTimedTests}',
               color: AppTheme.leaf,
               onTap: speedLesson == null
