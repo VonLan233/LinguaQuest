@@ -736,6 +736,60 @@ class AppLocalizationsMs extends AppLocalizations {
   String get quizMistakeTimed => 'Kesilapan boleh disemak di pusat ulangkaji.';
 
   @override
+  String get quizRetryMistakes => 'Latih kesilapan semula';
+
+  @override
+  String get quizGoReviewCenter => 'Pergi ke pusat ulangkaji';
+
+  @override
+  String get quizBackTraining => 'Kembali ke latihan';
+
+  @override
+  String get quizBackLearningPath => 'Kembali ke laluan belajar';
+
+  @override
+  String get quizXpBalanceUpdated => 'Jumlah XP dikemas kini';
+
+  @override
+  String quizCurrentXp(Object xp) {
+    return 'Jumlah semasa $xp XP';
+  }
+
+  @override
+  String quizXpCredited(Object xp) {
+    return '+$xp XP dikreditkan';
+  }
+
+  @override
+  String quizXpImpactBody(Object balance) {
+    return '$balance. XP diselaraskan ke profil, papan pendahulu, dan baki cabutan bertuah.';
+  }
+
+  @override
+  String get quizTimedReward => 'Ganjaran ujian bermasa';
+
+  @override
+  String get quizLessonReward => 'Ganjaran pelajaran';
+
+  @override
+  String get quizViewXpUses => 'Lihat kegunaan XP';
+
+  @override
+  String quizXpEarned(Object xp) {
+    return 'Dikreditkan +$xp XP';
+  }
+
+  @override
+  String quizTotalXp(Object xp) {
+    return 'Jumlah $xp XP';
+  }
+
+  @override
+  String quizMistakeCount(Object count) {
+    return '$count kesilapan';
+  }
+
+  @override
   String get trainingTitle => 'Padang Latihan';
 
   @override
@@ -846,6 +900,158 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get trainingEnterCustomWords => 'Pergi ke Perkataan Tersuai';
+
+  @override
+  String get trainingEntryMissingTitle => 'Pintu masuk latihan tidak tersedia';
+
+  @override
+  String get trainingEntryMissingHeader => 'Latihan tidak ditemui';
+
+  @override
+  String get trainingEntryMissingSubtitle =>
+      'Kembali ke latihan dan mula daripada Permainan Kelajuan, Bertahan Terakhir, atau Ejaan Perkataan.';
+
+  @override
+  String get trainingSourceInsufficientTitle =>
+      'Soalan latihan tidak mencukupi';
+
+  @override
+  String get trainingSourceInsufficientSubtitle =>
+      'Selesaikan pelajaran baharu, tambah perkataan tersuai, atau bina perkataan lemah dalam buku kesilapan sebelum mencabar lagi.';
+
+  @override
+  String get trainingBack => 'Kembali ke latihan';
+
+  @override
+  String get trainingMistakesOnly => 'Latih kesilapan semula';
+
+  @override
+  String get trainingNextQuestion => 'Soalan seterusnya';
+
+  @override
+  String get trainingSubmitSpelling => 'Hantar ejaan';
+
+  @override
+  String get trainingExitTitle => 'Tinggalkan latihan?';
+
+  @override
+  String get trainingExitContent =>
+      'Kemajuan latihan semasa tidak akan dikira.';
+
+  @override
+  String get trainingContinue => 'Teruskan latihan';
+
+  @override
+  String get trainingExit => 'Tinggalkan';
+
+  @override
+  String trainingPromptWordRush(Object word) {
+    return 'Pilih makna Cina untuk \"$word\" dengan cepat';
+  }
+
+  @override
+  String trainingExplanationWordRush(
+    Object example,
+    Object meaning,
+    Object word,
+  ) {
+    return '\"$word\" bermaksud $meaning. $example';
+  }
+
+  @override
+  String trainingPromptChineseChoice(Object meaning) {
+    return 'Pilih perkataan Inggeris untuk: $meaning';
+  }
+
+  @override
+  String trainingExplanationChineseChoice(Object meaning, Object word) {
+    return '$meaning sepadan dengan \"$word\".';
+  }
+
+  @override
+  String trainingPromptContextChoice(Object example) {
+    return 'Pilih makna berdasarkan contoh: $example';
+  }
+
+  @override
+  String trainingPromptMeaningChoice(Object word) {
+    return 'Pilih makna Cina untuk \"$word\"';
+  }
+
+  @override
+  String trainingExplanationMeaningChoice(Object meaning, Object word) {
+    return 'Soalan ini menguji $word: $meaning.';
+  }
+
+  @override
+  String trainingPromptChineseSpelling(Object meaning) {
+    return 'Eja perkataan Inggeris daripada bahasa Cina: $meaning';
+  }
+
+  @override
+  String trainingPromptAudioSpelling(Object cue) {
+    return 'Eja perkataan Inggeris selepas mendengar: $cue';
+  }
+
+  @override
+  String trainingPromptContextSpelling(Object example) {
+    return 'Eja tempat kosong dalam contoh: $example';
+  }
+
+  @override
+  String trainingExplanationSpelling(Object example, Object word) {
+    return 'Ejaan betul ialah \"$word\". $example';
+  }
+
+  @override
+  String get trainingNoEffectiveAnswers =>
+      'Tiada jawapan sah dalam pusingan ini, jadi rekod latihan tidak disimpan.';
+
+  @override
+  String trainingResultMistakesSuffix(Object title) {
+    return '$title · latihan kesilapan';
+  }
+
+  @override
+  String trainingCorrectAttempts(Object attempts, Object correct) {
+    return 'Betul $correct/$attempts';
+  }
+
+  @override
+  String trainingStreak(Object streak) {
+    return 'Kombo $streak';
+  }
+
+  @override
+  String trainingAccuracyValue(Object accuracy) {
+    return 'Ketepatan $accuracy%';
+  }
+
+  @override
+  String trainingSurvivalResources(Object nodes, Object revives) {
+    return 'Nyawa $revives · Nod $nodes';
+  }
+
+  @override
+  String trainingBestStreak(Object streak) {
+    return 'Terbaik $streak';
+  }
+
+  @override
+  String get trainingRealSource => 'Sumber soalan sebenar';
+
+  @override
+  String get trainingSpellingInputLabel => 'Masukkan ejaan Inggeris';
+
+  @override
+  String get trainingReviveConsumed => 'Satu nyawa telah digunakan. Teruskan.';
+
+  @override
+  String get trainingReviveExhausted =>
+      'Tiada nyawa tinggal. Pusingan ini tamat.';
+
+  @override
+  String get trainingCorrectFeedback => 'Betul. Kombo diteruskan!';
 
   @override
   String get learningPathTitle => 'Laluan Pembelajaran';

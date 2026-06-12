@@ -733,6 +733,60 @@ class AppLocalizationsEn extends AppLocalizations {
       'Mistakes can be reviewed in the review center.';
 
   @override
+  String get quizRetryMistakes => 'Practice mistakes again';
+
+  @override
+  String get quizGoReviewCenter => 'Go to review center';
+
+  @override
+  String get quizBackTraining => 'Back to training';
+
+  @override
+  String get quizBackLearningPath => 'Back to learning path';
+
+  @override
+  String get quizXpBalanceUpdated => 'Total XP updated';
+
+  @override
+  String quizCurrentXp(Object xp) {
+    return 'Current total $xp XP';
+  }
+
+  @override
+  String quizXpCredited(Object xp) {
+    return '+$xp XP credited';
+  }
+
+  @override
+  String quizXpImpactBody(Object balance) {
+    return '$balance. XP syncs to your profile, leaderboard, and lucky-draw balance.';
+  }
+
+  @override
+  String get quizTimedReward => 'Timed test reward';
+
+  @override
+  String get quizLessonReward => 'Lesson reward';
+
+  @override
+  String get quizViewXpUses => 'View XP uses';
+
+  @override
+  String quizXpEarned(Object xp) {
+    return 'Credited +$xp XP';
+  }
+
+  @override
+  String quizTotalXp(Object xp) {
+    return 'Total $xp XP';
+  }
+
+  @override
+  String quizMistakeCount(Object count) {
+    return '$count mistakes';
+  }
+
+  @override
   String get trainingTitle => 'Training Ground';
 
   @override
@@ -841,6 +895,156 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get trainingEnterCustomWords => 'Go to Custom Words';
+
+  @override
+  String get trainingEntryMissingTitle => 'Training entry unavailable';
+
+  @override
+  String get trainingEntryMissingHeader => 'Training not found';
+
+  @override
+  String get trainingEntryMissingSubtitle =>
+      'Go back to training and start from Speed Game, Last One Standing, or Word Spelling.';
+
+  @override
+  String get trainingSourceInsufficientTitle => 'Not enough training questions';
+
+  @override
+  String get trainingSourceInsufficientSubtitle =>
+      'Finish a new lesson, add custom words, or build weak words in the mistake book before challenging again.';
+
+  @override
+  String get trainingBack => 'Back to training';
+
+  @override
+  String get trainingMistakesOnly => 'Practice mistakes again';
+
+  @override
+  String get trainingNextQuestion => 'Next question';
+
+  @override
+  String get trainingSubmitSpelling => 'Submit spelling';
+
+  @override
+  String get trainingExitTitle => 'Leave training?';
+
+  @override
+  String get trainingExitContent =>
+      'Current training progress will not be settled.';
+
+  @override
+  String get trainingContinue => 'Keep training';
+
+  @override
+  String get trainingExit => 'Leave';
+
+  @override
+  String trainingPromptWordRush(Object word) {
+    return 'Choose the Chinese meaning of \"$word\" quickly';
+  }
+
+  @override
+  String trainingExplanationWordRush(
+    Object example,
+    Object meaning,
+    Object word,
+  ) {
+    return '\"$word\" means $meaning. $example';
+  }
+
+  @override
+  String trainingPromptChineseChoice(Object meaning) {
+    return 'Choose the English word for: $meaning';
+  }
+
+  @override
+  String trainingExplanationChineseChoice(Object meaning, Object word) {
+    return '$meaning matches \"$word\".';
+  }
+
+  @override
+  String trainingPromptContextChoice(Object example) {
+    return 'Choose the meaning from the example: $example';
+  }
+
+  @override
+  String trainingPromptMeaningChoice(Object word) {
+    return 'Choose the Chinese meaning of \"$word\"';
+  }
+
+  @override
+  String trainingExplanationMeaningChoice(Object meaning, Object word) {
+    return 'This question checks $word: $meaning.';
+  }
+
+  @override
+  String trainingPromptChineseSpelling(Object meaning) {
+    return 'Spell the English word from Chinese: $meaning';
+  }
+
+  @override
+  String trainingPromptAudioSpelling(Object cue) {
+    return 'Spell the English word after listening: $cue';
+  }
+
+  @override
+  String trainingPromptContextSpelling(Object example) {
+    return 'Spell the blank in the example: $example';
+  }
+
+  @override
+  String trainingExplanationSpelling(Object example, Object word) {
+    return 'The correct spelling is \"$word\". $example';
+  }
+
+  @override
+  String get trainingNoEffectiveAnswers =>
+      'No valid answer this round, so no training record was saved.';
+
+  @override
+  String trainingResultMistakesSuffix(Object title) {
+    return '$title · mistake practice';
+  }
+
+  @override
+  String trainingCorrectAttempts(Object attempts, Object correct) {
+    return 'Correct $correct/$attempts';
+  }
+
+  @override
+  String trainingStreak(Object streak) {
+    return 'Streak $streak';
+  }
+
+  @override
+  String trainingAccuracyValue(Object accuracy) {
+    return 'Accuracy $accuracy%';
+  }
+
+  @override
+  String trainingSurvivalResources(Object nodes, Object revives) {
+    return 'Revives $revives · Nodes $nodes';
+  }
+
+  @override
+  String trainingBestStreak(Object streak) {
+    return 'Best $streak';
+  }
+
+  @override
+  String get trainingRealSource => 'Real question source';
+
+  @override
+  String get trainingSpellingInputLabel => 'Enter English spelling';
+
+  @override
+  String get trainingReviveConsumed => 'One revive was consumed. Keep going.';
+
+  @override
+  String get trainingReviveExhausted => 'No revives left. This round ends.';
+
+  @override
+  String get trainingCorrectFeedback => 'Correct. Streak continues!';
 
   @override
   String get learningPathTitle => 'Learning Path';

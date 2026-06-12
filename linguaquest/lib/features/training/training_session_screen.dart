@@ -14,17 +14,17 @@ import '../../data/models/custom_word.dart';
 import '../../data/models/exercise_record.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../quiz/lesson_result_screen.dart';
 
 enum TrainingGameType {
-  wordRush('word-rush', '抢词', Icons.timer_outlined),
-  survival('survival', '一站到底', Icons.stairs_outlined),
-  spelling('spelling', '单词拼写', Icons.edit_note_outlined);
+  wordRush('word-rush', Icons.timer_outlined),
+  survival('survival', Icons.stairs_outlined),
+  spelling('spelling', Icons.edit_note_outlined);
 
-  const TrainingGameType(this.id, this.title, this.icon);
+  const TrainingGameType(this.id, this.icon);
 
   final String id;
-  final String title;
   final IconData icon;
 
   static TrainingGameType? fromId(String id) {
@@ -33,6 +33,12 @@ enum TrainingGameType {
     }
     return null;
   }
+
+  String title(AppLocalizations l10n) => switch (this) {
+    TrainingGameType.wordRush => l10n.trainingSpeedGame,
+    TrainingGameType.survival => l10n.trainingSurvivor,
+    TrainingGameType.spelling => l10n.trainingSpelling,
+  };
 }
 
 class TrainingSessionScreen extends ConsumerStatefulWidget {
@@ -96,47 +102,48 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final game = _game ?? TrainingGameType.fromId(widget.gameId);
     if (game == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('训练入口不存在')),
+        appBar: AppBar(title: Text(l10n.trainingEntryMissingTitle)),
         body: SafeArea(
           child: ListView(
             padding: const EdgeInsets.all(20),
             children: [
-              const SectionHeader(
-                title: '没有找到这个训练',
-                subtitle: '请回到训练场，从抢词、一站到底或单词拼写入口开始。',
+              SectionHeader(
+                title: l10n.trainingEntryMissingHeader,
+                subtitle: l10n.trainingEntryMissingSubtitle,
               ),
               const SizedBox(height: 16),
               FilledButton.icon(
                 onPressed: () => context.go('/training'),
                 icon: const Icon(Icons.arrow_back_rounded),
-                label: const Text('返回训练场'),
+                label: Text(l10n.trainingBack),
               ),
             ],
           ),
         ),
       );
     }
-    _ensureQuestions(state, game);
+    _ensureQuestions(state, game, l10n);
     if (_questions.isEmpty) {
       return Scaffold(
-        appBar: AppBar(title: Text(game.title)),
+        appBar: AppBar(title: Text(game.title(l10n))),
         body: SafeArea(
           child: ListView(
             padding: const EdgeInsets.all(20),
             children: [
-              const SectionHeader(
-                title: '训练题源不足',
-                subtitle: '先完成一节新学、添加生词，或在错词本里积累弱项词后再来挑战。',
+              SectionHeader(
+                title: l10n.trainingSourceInsufficientTitle,
+                subtitle: l10n.trainingSourceInsufficientSubtitle,
               ),
               const SizedBox(height: 16),
               FilledButton.icon(
                 onPressed: () => context.go('/training'),
                 icon: const Icon(Icons.arrow_back_rounded),
-                label: const Text('返回训练场'),
+                label: Text(l10n.trainingBack),
               ),
             ],
           ),
@@ -156,7 +163,9 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
       child: Scaffold(
         appBar: AppBar(
           leading: BackButton(onPressed: _confirmExit),
-          title: Text(widget.mistakesOnly ? '错词再练' : game.title),
+          title: Text(
+            widget.mistakesOnly ? l10n.trainingMistakesOnly : game.title(l10n),
+          ),
         ),
         body: SafeArea(
           child: Padding(
@@ -226,7 +235,11 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
                           ? Icons.arrow_forward_rounded
                           : Icons.check_rounded,
                     ),
-                    label: Text(_checked ? '下一题' : '提交拼写'),
+                    label: Text(
+                      _checked
+                          ? l10n.trainingNextQuestion
+                          : l10n.trainingSubmitSpelling,
+                    ),
                   ),
               ],
             ),
@@ -244,20 +257,21 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
 
   Future<void> _confirmExit() async {
     if (_attempts > 0 || _checked) {
+      final l10n = AppLocalizations.of(context);
       final confirmed = await showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('离开训练？'),
-          content: const Text('当前训练进度不会结算。'),
+          title: Text(l10n.trainingExitTitle),
+          content: Text(l10n.trainingExitContent),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('继续训练'),
+              child: Text(l10n.trainingContinue),
             ),
             FilledButton.icon(
               onPressed: () => Navigator.pop(context, true),
               icon: const Icon(Icons.exit_to_app_rounded),
-              label: const Text('离开'),
+              label: Text(l10n.trainingExit),
             ),
           ],
         ),
@@ -267,7 +281,11 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
     context.go('/training');
   }
 
-  void _ensureQuestions(AppState state, TrainingGameType game) {
+  void _ensureQuestions(
+    AppState state,
+    TrainingGameType game,
+    AppLocalizations l10n,
+  ) {
     if (_initialized && _game == game) return;
     _game = game;
     final words = _sourceWordsForGame(state, game);
@@ -284,7 +302,7 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
     }
     _questions
       ..clear()
-      ..addAll(_buildQuestions(game, distinctWords));
+      ..addAll(_buildQuestions(game, distinctWords, l10n));
     _initialized = true;
     _questionStartedAt = DateTime.now();
     _timer?.cancel();
@@ -340,7 +358,11 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
     return merged.values.toList(growable: false);
   }
 
-  List<QuizQuestion> _buildQuestions(TrainingGameType game, List<Word> words) {
+  List<QuizQuestion> _buildQuestions(
+    TrainingGameType game,
+    List<Word> words,
+    AppLocalizations l10n,
+  ) {
     final count = switch (game) {
       TrainingGameType.wordRush => words.length * 4,
       TrainingGameType.survival => _survivalQuestionCount,
@@ -348,7 +370,7 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
     };
     return [
       for (var index = 0; index < count; index++)
-        _questionFor(game, words[index % words.length], words, index),
+        _questionFor(game, words[index % words.length], words, index, l10n),
     ];
   }
 
@@ -357,21 +379,25 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
     Word word,
     List<Word> words,
     int index,
+    AppLocalizations l10n,
   ) {
     switch (game) {
       case TrainingGameType.wordRush:
         return QuizQuestion(
           id: '${game.id}-${word.id}-$index',
           type: QuizQuestionType.meaningChoice,
-          prompt: '抢答“${word.word}”的中文释义',
+          prompt: l10n.trainingPromptWordRush(word.word),
           answer: word.meaning,
           options: _options(
             answer: word.meaning,
             values: words.map((item) => item.meaning),
             offset: index,
           ),
-          explanation:
-              '“${word.word}”表示${word.meaning}。${word.exampleSentence}',
+          explanation: l10n.trainingExplanationWordRush(
+            word.word,
+            word.meaning,
+            word.exampleSentence,
+          ),
           word: word,
         );
       case TrainingGameType.survival:
@@ -380,14 +406,17 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
           return QuizQuestion(
             id: '${game.id}-${word.id}-$index',
             type: QuizQuestionType.chineseChoice,
-            prompt: '根据中文释义选择英文：${word.meaning}',
+            prompt: l10n.trainingPromptChineseChoice(word.meaning),
             answer: word.word,
             options: _options(
               answer: word.word,
               values: words.map((item) => item.word),
               offset: index,
             ),
-            explanation: '${word.meaning} 对应 “${word.word}”。',
+            explanation: l10n.trainingExplanationChineseChoice(
+              word.meaning,
+              word.word,
+            ),
             word: word,
           );
         }
@@ -398,23 +427,28 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
               ? QuizQuestionType.contextChoice
               : QuizQuestionType.meaningChoice,
           prompt: variant == 2 && hasExample
-              ? '结合例句选择释义：${word.exampleSentence}'
-              : '选择“${word.word}”的中文释义',
+              ? l10n.trainingPromptContextChoice(word.exampleSentence)
+              : l10n.trainingPromptMeaningChoice(word.word),
           answer: word.meaning,
           options: _options(
             answer: word.meaning,
             values: words.map((item) => item.meaning),
             offset: index,
           ),
-          explanation: '这题考察 ${word.word}：${word.meaning}。',
+          explanation: l10n.trainingExplanationMeaningChoice(
+            word.word,
+            word.meaning,
+          ),
           word: word,
         );
       case TrainingGameType.spelling:
         final variant = index % 3;
         final prompt = switch (variant) {
-          0 => '看中文拼写英文：${word.meaning}',
-          1 => '听音后拼写英文：${word.phonetic.isEmpty ? word.word : word.phonetic}',
-          _ => '根据例句空格拼写：${_blankExample(word)}',
+          0 => l10n.trainingPromptChineseSpelling(word.meaning),
+          1 => l10n.trainingPromptAudioSpelling(
+            word.phonetic.isEmpty ? word.word : word.phonetic,
+          ),
+          _ => l10n.trainingPromptContextSpelling(_blankExample(word)),
         };
         return QuizQuestion(
           id: '${game.id}-${word.id}-$index',
@@ -422,7 +456,10 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
           prompt: prompt,
           answer: word.word,
           options: const [],
-          explanation: '正确拼写是 “${word.word}”。${word.exampleSentence}',
+          explanation: l10n.trainingExplanationSpelling(
+            word.word,
+            word.exampleSentence,
+          ),
           word: word,
         );
     }
@@ -617,16 +654,21 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
     _timer?.cancel();
     if (_attempts == 0) {
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context);
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('本轮还没有有效答题，不计入训练记录。')));
+      ).showSnackBar(SnackBar(content: Text(l10n.trainingNoEffectiveAnswers)));
       context.go('/training');
       return;
     }
     setState(() => _isSubmitting = true);
+    final l10n = AppLocalizations.of(context);
+    final gameTitle = game.title(l10n);
     final result = LessonResult(
       lessonId: game.id,
-      lessonTitle: widget.mistakesOnly ? '${game.title} · 错词再练' : game.title,
+      lessonTitle: widget.mistakesOnly
+          ? l10n.trainingResultMistakesSuffix(gameTitle)
+          : gameTitle,
       totalQuestions: _attempts,
       correctAnswers: _correct,
       xpEarned: _xpFor(game),
@@ -711,24 +753,35 @@ class _TrainingStatusLine extends StatelessWidget {
                 color: AppTheme.coral,
               ),
             PillLabel(
-              label: '正确 $correct/$attempts',
+              label: AppLocalizations.of(
+                context,
+              ).trainingCorrectAttempts(correct, attempts),
               icon: Icons.check_rounded,
             ),
             PillLabel(
-              label: '连击 $streak',
+              label: AppLocalizations.of(context).trainingStreak(streak),
               icon: Icons.bolt,
               color: AppTheme.mango,
             ),
-            PillLabel(label: '准确率 $accuracy%', icon: Icons.insights_outlined),
+            PillLabel(
+              label: AppLocalizations.of(
+                context,
+              ).trainingAccuracyValue(accuracy),
+              icon: Icons.insights_outlined,
+            ),
             if (game == TrainingGameType.survival)
               PillLabel(
-                label: '复活 $revives · 节点 $nodeRewards',
+                label: AppLocalizations.of(
+                  context,
+                ).trainingSurvivalResources(revives, nodeRewards),
                 icon: Icons.favorite_border_rounded,
                 color: AppTheme.coral,
               ),
             if (game == TrainingGameType.wordRush)
               PillLabel(
-                label: '最佳 $bestStreak',
+                label: AppLocalizations.of(
+                  context,
+                ).trainingBestStreak(bestStreak),
                 icon: Icons.local_fire_department_outlined,
               ),
           ],
@@ -781,8 +834,16 @@ class _TrainingPromptPanel extends StatelessWidget {
           runSpacing: 8,
           alignment: WrapAlignment.center,
           children: [
-            PillLabel(label: game.title, icon: game.icon, color: AppTheme.cyan),
-            PillLabel(label: mistakesOnly ? '错词再练' : '真实题源'),
+            PillLabel(
+              label: game.title(AppLocalizations.of(context)),
+              icon: game.icon,
+              color: AppTheme.cyan,
+            ),
+            PillLabel(
+              label: mistakesOnly
+                  ? AppLocalizations.of(context).trainingMistakesOnly
+                  : AppLocalizations.of(context).trainingRealSource,
+            ),
             PillLabel(label: question.word.difficulty, color: AppTheme.coral),
           ],
         ),
@@ -920,7 +981,7 @@ class _SpellingInput extends StatelessWidget {
       readOnly: checked,
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
-        labelText: '输入英文拼写',
+        labelText: AppLocalizations.of(context).trainingSpellingInputLabel,
         prefixIcon: const Icon(Icons.edit_outlined),
         suffixIcon: checked
             ? Icon(
@@ -956,7 +1017,9 @@ class _TrainingFeedback extends StatelessWidget {
     final theme = Theme.of(context);
     final color = isCorrect ? AppTheme.success : theme.colorScheme.error;
     final survivalMessage = game == TrainingGameType.survival && !isCorrect
-        ? (reviveConsumed ? '已消耗一次复活机会，继续闯关。' : '复活机会已用完，本轮结束。')
+        ? (reviveConsumed
+              ? AppLocalizations.of(context).trainingReviveConsumed
+              : AppLocalizations.of(context).trainingReviveExhausted)
         : question.explanation;
     return Container(
       padding: const EdgeInsets.all(14),
@@ -975,7 +1038,9 @@ class _TrainingFeedback extends StatelessWidget {
           const SizedBox(width: 10),
           Expanded(
             child: Text(
-              isCorrect ? '回答正确，连击继续！' : survivalMessage,
+              isCorrect
+                  ? AppLocalizations.of(context).trainingCorrectFeedback
+                  : survivalMessage,
               style: theme.textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w800,
               ),
