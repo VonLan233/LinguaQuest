@@ -25,6 +25,7 @@ class ProfileScreen extends ConsumerWidget {
         .length;
 
     return ListView(
+      key: const ValueKey('profileDashboard'),
       padding: const EdgeInsets.fromLTRB(0, 0, 0, 88),
       children: [
         // Telegram-style header: large centered avatar + name
@@ -250,7 +251,9 @@ class _ProfileStatsRow extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+        color: Theme.of(
+          context,
+        ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -357,7 +360,7 @@ class _ProfileProgressCard extends StatelessWidget {
               value: progress,
               minHeight: 10,
               backgroundColor: AppTheme.progressTrack(context),
-              valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.teal),
+              valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.leaf),
             ),
           ),
           const SizedBox(height: 10),
@@ -384,7 +387,9 @@ class _SettingsGroup extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+        color: Theme.of(
+          context,
+        ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -395,7 +400,9 @@ class _SettingsGroup extends StatelessWidget {
               Divider(
                 height: 1,
                 indent: 56,
-                color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.5),
+                color: Theme.of(
+                  context,
+                ).colorScheme.outlineVariant.withValues(alpha: 0.5),
               ),
           ],
         ],
@@ -435,9 +442,7 @@ class _SettingsItem extends StatelessWidget {
               Expanded(
                 child: Text(
                   title,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontSize: 15,
-                  ),
+                  style: theme.textTheme.titleMedium?.copyWith(fontSize: 15),
                 ),
               ),
               if (value != null)
@@ -486,7 +491,11 @@ class _LanguageSettingsItem extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           child: Row(
             children: [
-              Icon(Icons.language_rounded, color: theme.colorScheme.primary, size: 22),
+              Icon(
+                Icons.language_rounded,
+                color: theme.colorScheme.primary,
+                size: 22,
+              ),
               const SizedBox(width: 16),
               Expanded(
                 child: Text(

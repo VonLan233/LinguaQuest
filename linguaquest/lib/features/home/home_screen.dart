@@ -47,7 +47,9 @@ class HomeScreen extends ConsumerWidget {
                 onTap: () => context.go('/profile'),
                 child: CircleAvatar(
                   radius: 24,
-                  backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                  backgroundColor: Theme.of(
+                    context,
+                  ).colorScheme.primaryContainer,
                   child: Icon(
                     Icons.person_rounded,
                     color: Theme.of(context).colorScheme.onPrimaryContainer,
@@ -89,7 +91,9 @@ class HomeScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(16),
             child: _DailyFocusHeader(
               streak: user?.streak ?? 0,
-              target: currentBook?.title ?? displayTarget(user?.targetExam, l10n: l10n),
+              target:
+                  currentBook?.title ??
+                  displayTarget(user?.targetExam, l10n: l10n),
               level: state.isStudyPlanPaused
                   ? l10n.homePlanPaused
                   : displayLevel(user?.level, l10n: l10n),
@@ -132,7 +136,6 @@ class HomeScreen extends ConsumerWidget {
               onOpenPlan: () => context.push('/settings/study-plan'),
               onNewStudy: () => context.push('/study/new'),
               onReview: () => context.push('/study/review'),
-              l10n: l10n,
             ),
           ),
         ),
@@ -206,7 +209,9 @@ class HomeScreen extends ConsumerWidget {
                   )
                 else ...[
                   const SizedBox(height: 8),
-                  ...state.weakWords.take(3).map((word) => _WeakWordLink(word: word)),
+                  ...state.weakWords
+                      .take(3)
+                      .map((word) => _WeakWordLink(word: word)),
                 ],
               ],
             ),
@@ -439,7 +444,6 @@ class _DailyTaskPanel extends StatelessWidget {
     required this.onOpenPlan,
     required this.onNewStudy,
     required this.onReview,
-    required this.l10n,
   });
 
   final String currentSection;
@@ -450,13 +454,12 @@ class _DailyTaskPanel extends StatelessWidget {
   final VoidCallback onOpenPlan;
   final VoidCallback onNewStudy;
   final VoidCallback onReview;
-  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     final hasReview = dueCount > 0;
-    final totalTaskCount = canStartNew ? (dailyGoal + dueCount) : dueCount;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Column(
@@ -478,23 +481,33 @@ class _DailyTaskPanel extends StatelessWidget {
           else
             Row(
               children: [
-              Expanded(
-                child: FilledButton(
-                  onPressed: canStartNew ? onNewStudy : (hasReview ? onReview : null),
-                  child: const Icon(Icons.play_arrow_rounded),
-                ),
-              ),
-              if (hasReview) ...[
-                const SizedBox(width: 12),
                 Expanded(
-                  child: OutlinedButton(
-                    onPressed: onReview,
-                    child: const Icon(Icons.replay_rounded),
+                  child: FilledButton.icon(
+                    onPressed: canStartNew
+                        ? onNewStudy
+                        : (hasReview ? onReview : null),
+                    icon: const Icon(Icons.play_arrow_rounded),
+                    label: Text(l10n.homeStartLearning),
                   ),
                 ),
-              ],
+                if (hasReview) ...[
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: onReview,
+                      icon: const Icon(Icons.replay_rounded),
+                      label: Text(l10n.homeReviewOnly),
+                    ),
+                  ),
+                ],
               ],
             ),
+          const SizedBox(height: 10),
+          TextButton.icon(
+            onPressed: onOpenPlan,
+            icon: const Icon(Icons.tune_rounded),
+            label: Text(l10n.homeAdjustPlan),
+          ),
         ],
       ),
     );
@@ -589,7 +602,7 @@ class _DailyProgressRing extends StatelessWidget {
               strokeWidth: 8,
               strokeCap: StrokeCap.round,
               backgroundColor: AppTheme.progressTrack(context),
-              valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.teal),
+              valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.leaf),
             ),
           ),
           Column(

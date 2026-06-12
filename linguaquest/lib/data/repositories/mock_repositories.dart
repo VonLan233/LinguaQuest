@@ -202,6 +202,7 @@ class MockLearningRepository implements LearningRepository {
   @override
   Future<List<Lesson>> listLessonsForWordBook(String wordBookId) async {
     final books = await listWordBooks();
+    if (books.isEmpty) return const [];
     final book = _bookById(books, wordBookId) ?? books.first;
     return lessonsFromWordBook(book);
   }

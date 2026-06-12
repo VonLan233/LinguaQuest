@@ -98,7 +98,9 @@ class WordbookScreen extends ConsumerWidget {
                     SnackBar(
                       duration: const Duration(seconds: 2),
                       content: Text(
-                        succeeded ? l10n.wordbookSwitched : l10n.wordbookSwitchFailed,
+                        succeeded
+                            ? l10n.wordbookSwitched
+                            : l10n.wordbookSwitchFailed,
                       ),
                     ),
                   );
@@ -155,9 +157,7 @@ class _StudyBookCoverLine extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                l10n.wordbookWordsLearned(completedWords, totalWords),
-              ),
+              Text(l10n.wordbookWordsLearned(completedWords, totalWords)),
               const SizedBox(height: 8),
               ClipRRect(
                 borderRadius: BorderRadius.circular(999),
@@ -258,7 +258,7 @@ class _WordBookSwitcher extends StatelessWidget {
                     children: [
                       PillLabel(label: book.examType),
                       PillLabel(
-                        label: l10n.wordbookTargetWords(book.totalWords),
+                        label: l10n.wordbookTotalWords(book.totalWords),
                       ),
                     ],
                   ),
@@ -301,7 +301,12 @@ class _TargetWordRow extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(word.word.toLowerCase(), style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800)),
+                      Text(
+                        word.word.toLowerCase(),
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
                       const SizedBox(height: 3),
                       Text(word.meaning),
                       const SizedBox(height: 3),

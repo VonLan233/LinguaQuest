@@ -14,6 +14,7 @@ import '../../core/widgets/learning_badges.dart';
 import '../../data/dictionary_search.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -56,7 +57,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       AppState state,
     ) {
       if (!mounted) return;
-      final shouldSearch = _lastCurrentWordBookId != state.currentWordBookId ||
+      final shouldSearch =
+          _lastCurrentWordBookId != state.currentWordBookId ||
           !_listEquals(_lastWordBooks, state.wordBooks) ||
           !_listEquals(_lastCustomWords, state.customWords) ||
           !identical(_lastFormalLessons, state.formalLessons);
@@ -79,15 +81,19 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final query = normalizeDictionaryQuery(_query);
     final hasQuery = query.isNotEmpty;
     final hasResults = _targetWords.isNotEmpty || _customWords.isNotEmpty;
+    final currentBookTitle = state.currentWordBook?.title.isNotEmpty == true
+        ? state.currentWordBook!.title
+        : null;
 
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/home'),
-        title: Text(state.currentWordBook?.title ?? '搜索'),
+        title: Text(currentBookTitle ?? l10n.searchTitle),
       ),
       body: SafeArea(
         child: ListView(
@@ -95,9 +101,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           children: [
             TextField(
               autofocus: true,
-              decoration: const InputDecoration(
-                labelText: '搜索单词、短语、中文释义或例句片段',
-                prefixIcon: Icon(Icons.search),
+              decoration: InputDecoration(
+                labelText: l10n.searchFieldLabel,
+                prefixIcon: const Icon(Icons.search),
               ),
               textInputAction: TextInputAction.search,
               onChanged: (value) {
@@ -108,7 +114,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             const SizedBox(height: 12),
             _SearchScopeSelector(
               selected: _scope,
-              currentBookTitle: state.currentWordBook?.title ?? '当前词书',
+              currentBookTitle:
+                  currentBookTitle ?? l10n.reviewCenterCurrentBook,
+              l10n: l10n,
               onSelected: (scope) {
                 if (scope == _scope) return;
                 setState(() => _scope = scope);
@@ -124,20 +132,20 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 ),
               )
             else if (!hasQuery)
-              const EmptyState(
+              EmptyState(
                 icon: Icons.search,
-                title: '输入关键词开始搜索',
-                message: '可以搜索英文单词、词组、中文释义、例句片段和生词本。',
+                title: l10n.searchStartTitle,
+                message: l10n.searchStartMessage,
               )
             else if (!hasResults)
               EmptyState(
                 icon: Icons.manage_search_outlined,
-                title: '没有找到结果',
-                message: '切到全词库再试，或添加一张个人词卡。',
+                title: l10n.searchNoResultsTitle,
+                message: l10n.searchNoResultsMessage,
                 action: OutlinedButton.icon(
                   onPressed: () => context.push('/custom-words/new'),
                   icon: const Icon(Icons.add),
-                  label: const Text('添加生词'),
+                  label: Text(l10n.wordbookAddCustom),
                 ),
               )
             else ...[
@@ -147,11 +155,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   count: _targetWords.length,
                 ),
                 for (final result in _targetWords.take(20))
-                  _TargetWordTile(result: result),
+                  _TargetWordTile(result: result, l10n: l10n),
               ],
               if (_customWords.isNotEmpty) ...[
                 const SizedBox(height: 12),
-                _SearchSectionTitle(title: '生词本', count: _customWords.length),
+                _SearchSectionTitle(
+                  title: l10n.commonCustomWords,
+                  count: _customWords.length,
+                ),
                 for (final result in _customWords.take(20))
                   _CustomWordTile(result: result),
               ],
@@ -257,11 +268,13 @@ class _SearchScopeSelector extends StatelessWidget {
   const _SearchScopeSelector({
     required this.selected,
     required this.currentBookTitle,
+    required this.l10n,
     required this.onSelected,
   });
 
   final DictionarySearchScope selected;
   final String currentBookTitle;
+  final AppLocalizations l10n;
   final ValueChanged<DictionarySearchScope> onSelected;
 
   @override
@@ -270,7 +283,10 @@ class _SearchScopeSelector extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '搜索范围：$currentBookTitle / 全词库',
+          l10n.searchScopeSummary(
+            l10n.searchAllWordbooksScope,
+            currentBookTitle,
+          ),
           style: Theme.of(context).textTheme.bodySmall,
         ),
         const SizedBox(height: 8),
@@ -279,13 +295,13 @@ class _SearchScopeSelector extends StatelessWidget {
           runSpacing: 8,
           children: [
             FilterPillButton(
-              label: '当前词书',
+              label: l10n.searchCurrentWordbookScope,
               selected: selected == DictionarySearchScope.currentWordBook,
               onSelected: () =>
                   onSelected(DictionarySearchScope.currentWordBook),
             ),
             FilterPillButton(
-              label: '全词库',
+              label: l10n.searchAllWordbooksScope,
               selected: selected == DictionarySearchScope.allWordBooks,
               onSelected: () => onSelected(DictionarySearchScope.allWordBooks),
               color: AppTheme.cyan,
@@ -319,9 +335,10 @@ class _SearchSectionTitle extends StatelessWidget {
 }
 
 class _TargetWordTile extends StatelessWidget {
-  const _TargetWordTile({required this.result});
+  const _TargetWordTile({required this.result, required this.l10n});
 
   final DictionaryWordSearchResult result;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -378,7 +395,10 @@ class _TargetWordTile extends StatelessWidget {
                     ),
                     if (result.inCurrentWordBook) ...[
                       const SizedBox(height: 6),
-                      const PillLabel(label: '当前计划', color: AppTheme.cyan),
+                      PillLabel(
+                        label: l10n.searchCurrentPlan,
+                        color: AppTheme.cyan,
+                      ),
                     ],
                   ],
                 ),

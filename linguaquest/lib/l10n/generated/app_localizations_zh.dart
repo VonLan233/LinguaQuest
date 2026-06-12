@@ -1268,6 +1268,11 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String wordbookTotalWords(Object count) {
+    return '共 $count 词';
+  }
+
+  @override
   String wordbookBookCount(Object count) {
     return '$count 本词书';
   }
@@ -1612,6 +1617,279 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get searchRecent => '最近搜索';
+
+  @override
+  String get searchStartTitle => '输入关键词开始搜索';
+
+  @override
+  String get searchStartMessage => '可以搜索英文单词、词组、中文释义、例句片段和生词本。';
+
+  @override
+  String get searchNoResultsTitle => '没有找到结果';
+
+  @override
+  String get searchNoResultsMessage => '切到全词库再试，或添加一张个人词卡。';
+
+  @override
+  String get searchFieldLabel => '搜索单词、短语、中文释义或例句片段';
+
+  @override
+  String searchScopeSummary(Object allWordBooksLabel, Object currentBookTitle) {
+    return '搜索范围：$currentBookTitle / $allWordBooksLabel';
+  }
+
+  @override
+  String get searchCurrentWordbookScope => '当前词书';
+
+  @override
+  String get searchAllWordbooksScope => '全词库';
+
+  @override
+  String get searchCurrentPlan => '当前计划';
+
+  @override
+  String get customWordsMyCards => '我的词卡';
+
+  @override
+  String get customWordsMyCardsSubtitle => '创建、搜索、筛选、编辑并复习你的个人词库。';
+
+  @override
+  String customWordsCardCount(Object count) {
+    return '$count 张';
+  }
+
+  @override
+  String get customWordsSearchLabel => '搜索单词、释义或标签';
+
+  @override
+  String get customWordsNoMatchTitle => '没有匹配的词卡';
+
+  @override
+  String get customWordsNoMatchMessage => '可以添加一张个人词卡，或调整搜索条件。';
+
+  @override
+  String get customWordsAddCard => '添加生词本词卡';
+
+  @override
+  String customWordsDeleteTitle(Object word) {
+    return '删除“$word”？';
+  }
+
+  @override
+  String get customWordsDeleteContent => '这会同时删除这张个人词卡和它的复习计划。';
+
+  @override
+  String customWordsDeleteFailed(Object word) {
+    return '暂时无法删除 $word';
+  }
+
+  @override
+  String customWordsDeleted(Object word) {
+    return '已删除 $word';
+  }
+
+  @override
+  String get wordbookWordNotFound => '没有找到这个词';
+
+  @override
+  String get wordbookFavorite => '收藏';
+
+  @override
+  String get wordbookFavorited => '已收藏';
+
+  @override
+  String get wordbookFavoriteRemoved => '已取消收藏';
+
+  @override
+  String get wordbookAddToCustomWords => '加入生词本';
+
+  @override
+  String get wordbookRemoveCustomWord => '移出生词本';
+
+  @override
+  String get wordbookAddedToCustomWords => '已加入生词本';
+
+  @override
+  String get wordbookRemovedFromCustomWords => '已移出生词本';
+
+  @override
+  String get wordbookResumeLearning => '恢复学习';
+
+  @override
+  String get wordbookIgnoreEasy => '忽略太简单';
+
+  @override
+  String get wordbookLearningResumed => '已恢复学习';
+
+  @override
+  String get wordbookIgnored => '已忽略，后续不进入复习队列';
+
+  @override
+  String get wordbookUpdateTargetFailed => '暂时无法更新目标词';
+
+  @override
+  String get wordbookCurrentPlan => '当前计划中';
+
+  @override
+  String get wordbookHighFrequencyDefinition => '考试高频释义';
+
+  @override
+  String wordbookUkPhonetic(Object phonetic) {
+    return '英 /$phonetic/';
+  }
+
+  @override
+  String wordbookUsPhonetic(Object phonetic) {
+    return '美 /$phonetic/';
+  }
+
+  @override
+  String get wordbookBilingualDefinitions => '中英释义';
+
+  @override
+  String get wordbookChineseDefinitions => '中文释义';
+
+  @override
+  String get wordbookEnglishDefinitions => '英文释义';
+
+  @override
+  String get wordbookHighFrequency => '高频';
+
+  @override
+  String get wordbookContextExamples => '语境例句';
+
+  @override
+  String wordbookMasteryLevel(Object level) {
+    return '掌握 $level/5';
+  }
+
+  @override
+  String get reviewStudyManageQueue => '管理复习队列';
+
+  @override
+  String get reviewStudyTodayTitle => '今日复习';
+
+  @override
+  String get reviewStudyTodaySubtitle => '先回想，再翻开答案；答错会回到本轮稍后巩固。';
+
+  @override
+  String get reviewStudyLeaveTitle => '离开复习？';
+
+  @override
+  String get reviewStudyLeaveContent => '已完成的词卡已经保存；未完成的词仍会保留在复习队列。';
+
+  @override
+  String get reviewStudyKeepReviewing => '继续复习';
+
+  @override
+  String get reviewStudyReinforced => '已完成本轮巩固';
+
+  @override
+  String get reviewStudyRememberedMessage => '已记住，复习间隔已延后';
+
+  @override
+  String get reviewStudyNeedsReinforcementMessage => '已标记为需巩固，稍后再练';
+
+  @override
+  String get reviewStudyReinforce => '加入巩固队列';
+
+  @override
+  String get reviewStudyCompleteTitle => '今日复习完成';
+
+  @override
+  String get reviewStudyCompleteMessage => '已更新本轮词卡的下次复习时间。';
+
+  @override
+  String get reviewStudyRecallHint => '看英文先回想中文释义。记得就直接进入下一张，忘了再展开知识卡。';
+
+  @override
+  String reviewStudyNextReview(Object due) {
+    return '下次复习：$due';
+  }
+
+  @override
+  String get reviewStudyHiddenHint => '答对不打断；答错才展示知识卡，并在本轮稍后再出现。';
+
+  @override
+  String aiWordSupportDesc(Object word) {
+    return '围绕 $word 提问用法、语法、近义词区别和例句拆解。';
+  }
+
+  @override
+  String aiWordSupportWithExampleDesc(Object word) {
+    return '携带 $word 和当前例句，提问用法、语法、近义词区别和例句拆解。';
+  }
+
+  @override
+  String get helpFaqReviewScheduleQ => '复习时间如何安排？';
+
+  @override
+  String get helpFaqReviewScheduleA => '每个词会在 0-5 的掌握度之间变化，掌握度越高，下次复习间隔越长。';
+
+  @override
+  String get helpFaqCustomWordsQ => '可以添加自己的单词吗？';
+
+  @override
+  String get helpFaqCustomWordsA => '可以。进入单词本或生词本，点击添加即可创建个人词卡。';
+
+  @override
+  String get helpFaqAiTutorQ => 'AI 助教可以做什么？';
+
+  @override
+  String get helpFaqAiTutorA => '可以解释单词、语法和错题，并给出适合继续练习的例句。';
+
+  @override
+  String get helpContactSupport => '联系支持';
+
+  @override
+  String get aboutVersion => '词境星球 · 版本 1.0.0';
+
+  @override
+  String get aboutIntro =>
+      'LinguaQuest 将图像词卡、学习路径、间隔复习、XP、连续打卡和个人生词卡整合到一个移动优先的英语学习应用中。';
+
+  @override
+  String get aboutGoalTitle => '项目目标';
+
+  @override
+  String get aboutGoalSubtitle => '通过短课节、错题修复和可见进度，帮助学习者建立每日英语学习习惯。';
+
+  @override
+  String get aboutTeamTitle => '开发团队';
+
+  @override
+  String get aboutTeamSubtitle => 'ASM2 Mobile 团队。专注移动优先的英语学习体验。';
+
+  @override
+  String get aboutCoreTitle => '核心体验';
+
+  @override
+  String get aboutCoreSubtitle => '目标规划、视觉词汇、测验练习、复习排程和个人词卡。';
+
+  @override
+  String get aboutPrivacyTitle => '隐私';
+
+  @override
+  String get aboutPrivacySubtitle => '生词本和学习记录仅归属于当前登录用户。';
+
+  @override
+  String get communityPostCheckinTitle => '今日打卡：用 12 分钟复习了 18 个词';
+
+  @override
+  String get communityPostCheckinTag => '今日打卡';
+
+  @override
+  String get communityPostCheckinBody => '错词集中在近义辨析，明天准备从训练场的易混词挑战开始。';
+
+  @override
+  String get communityPostAbstractTitle => '雅思阅读里怎么记 abstract?';
+
+  @override
+  String get communityPostMistakeTag => '错题讨论';
+
+  @override
+  String get communityPostAbstractBody =>
+      'abstract 在论文和阅读文章里经常不是“抽象”的意思，要结合语境判断。';
 
   @override
   String get notificationsTitle => '消息通知';

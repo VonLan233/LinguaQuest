@@ -1334,6 +1334,11 @@ class AppLocalizationsMs extends AppLocalizations {
   }
 
   @override
+  String wordbookTotalWords(Object count) {
+    return '$count perkataan';
+  }
+
+  @override
   String wordbookBookCount(Object count) {
     return '$count buku perkataan';
   }
@@ -1702,6 +1707,306 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get searchRecent => 'Terkini';
+
+  @override
+  String get searchStartTitle => 'Masukkan kata kunci untuk mula mencari';
+
+  @override
+  String get searchStartMessage =>
+      'Cari perkataan Inggeris, frasa, maksud Cina, petikan contoh, dan perkataan tersuai.';
+
+  @override
+  String get searchNoResultsTitle => 'Tiada hasil dijumpai';
+
+  @override
+  String get searchNoResultsMessage =>
+      'Cuba seluruh pustaka perkataan, atau tambah kad perkataan peribadi.';
+
+  @override
+  String get searchFieldLabel =>
+      'Cari perkataan, frasa, maksud Cina, atau petikan contoh';
+
+  @override
+  String searchScopeSummary(Object allWordBooksLabel, Object currentBookTitle) {
+    return 'Skop: $currentBookTitle / $allWordBooksLabel';
+  }
+
+  @override
+  String get searchCurrentWordbookScope => 'Buku perkataan semasa';
+
+  @override
+  String get searchAllWordbooksScope => 'Seluruh pustaka';
+
+  @override
+  String get searchCurrentPlan => 'Pelan semasa';
+
+  @override
+  String get customWordsMyCards => 'Kad perkataan saya';
+
+  @override
+  String get customWordsMyCardsSubtitle =>
+      'Cipta, cari, tapis, edit, dan ulangkaji pustaka perkataan peribadi anda.';
+
+  @override
+  String customWordsCardCount(Object count) {
+    return '$count kad';
+  }
+
+  @override
+  String get customWordsSearchLabel => 'Cari perkataan, maksud, atau tag';
+
+  @override
+  String get customWordsNoMatchTitle => 'Tiada kad perkataan yang sepadan';
+
+  @override
+  String get customWordsNoMatchMessage =>
+      'Tambah kad perkataan peribadi, atau laraskan syarat carian.';
+
+  @override
+  String get customWordsAddCard => 'Tambah kad perkataan tersuai';
+
+  @override
+  String customWordsDeleteTitle(Object word) {
+    return 'Padam \"$word\"?';
+  }
+
+  @override
+  String get customWordsDeleteContent =>
+      'Ini juga memadam kad perkataan peribadi ini dan pelan ulangkajinya.';
+
+  @override
+  String customWordsDeleteFailed(Object word) {
+    return 'Tidak dapat memadam $word sekarang';
+  }
+
+  @override
+  String customWordsDeleted(Object word) {
+    return '$word dipadam';
+  }
+
+  @override
+  String get wordbookWordNotFound => 'Perkataan tidak dijumpai';
+
+  @override
+  String get wordbookFavorite => 'Kegemaran';
+
+  @override
+  String get wordbookFavorited => 'Ditanda kegemaran';
+
+  @override
+  String get wordbookFavoriteRemoved => 'Dikeluarkan daripada kegemaran';
+
+  @override
+  String get wordbookAddToCustomWords => 'Tambah ke perkataan tersuai';
+
+  @override
+  String get wordbookRemoveCustomWord => 'Keluarkan daripada perkataan tersuai';
+
+  @override
+  String get wordbookAddedToCustomWords => 'Ditambah ke perkataan tersuai';
+
+  @override
+  String get wordbookRemovedFromCustomWords =>
+      'Dikeluarkan daripada perkataan tersuai';
+
+  @override
+  String get wordbookResumeLearning => 'Sambung pembelajaran';
+
+  @override
+  String get wordbookIgnoreEasy => 'Abaikan kerana terlalu mudah';
+
+  @override
+  String get wordbookLearningResumed => 'Pembelajaran disambung';
+
+  @override
+  String get wordbookIgnored =>
+      'Diabaikan dan tidak akan masuk ke giliran ulangkaji seterusnya';
+
+  @override
+  String get wordbookUpdateTargetFailed =>
+      'Tidak dapat mengemas kini perkataan sasaran sekarang';
+
+  @override
+  String get wordbookCurrentPlan => 'Dalam pelan semasa';
+
+  @override
+  String get wordbookHighFrequencyDefinition =>
+      'Maksud peperiksaan frekuensi tinggi';
+
+  @override
+  String wordbookUkPhonetic(Object phonetic) {
+    return 'UK /$phonetic/';
+  }
+
+  @override
+  String wordbookUsPhonetic(Object phonetic) {
+    return 'US /$phonetic/';
+  }
+
+  @override
+  String get wordbookBilingualDefinitions => 'Definisi Cina dan Inggeris';
+
+  @override
+  String get wordbookChineseDefinitions => 'Definisi Cina';
+
+  @override
+  String get wordbookEnglishDefinitions => 'Definisi Inggeris';
+
+  @override
+  String get wordbookHighFrequency => 'Frekuensi tinggi';
+
+  @override
+  String get wordbookContextExamples => 'Contoh konteks';
+
+  @override
+  String wordbookMasteryLevel(Object level) {
+    return 'Penguasaan $level/5';
+  }
+
+  @override
+  String get reviewStudyManageQueue => 'Urus giliran ulangkaji';
+
+  @override
+  String get reviewStudyTodayTitle => 'Ulangkaji hari ini';
+
+  @override
+  String get reviewStudyTodaySubtitle =>
+      'Ingat dahulu, kemudian dedahkan jawapan; kad yang salah akan kembali kemudian dalam pusingan ini untuk pengukuhan.';
+
+  @override
+  String get reviewStudyLeaveTitle => 'Tinggalkan ulangkaji?';
+
+  @override
+  String get reviewStudyLeaveContent =>
+      'Kad yang selesai telah disimpan; kad belum selesai akan kekal dalam giliran ulangkaji.';
+
+  @override
+  String get reviewStudyKeepReviewing => 'Terus ulangkaji';
+
+  @override
+  String get reviewStudyReinforced => 'Pusingan pengukuhan ini selesai';
+
+  @override
+  String get reviewStudyRememberedMessage =>
+      'Diingati. Selang ulangkaji telah dipanjangkan.';
+
+  @override
+  String get reviewStudyNeedsReinforcementMessage =>
+      'Ditandakan untuk pengukuhan. Latih semula kemudian.';
+
+  @override
+  String get reviewStudyReinforce => 'Tambah ke giliran pengukuhan';
+
+  @override
+  String get reviewStudyCompleteTitle => 'Ulangkaji hari ini selesai';
+
+  @override
+  String get reviewStudyCompleteMessage =>
+      'Masa ulangkaji seterusnya telah dikemas kini untuk pusingan ini.';
+
+  @override
+  String get reviewStudyRecallHint =>
+      'Ingat maksud Cina daripada perkataan Inggeris dahulu. Jika ingat, teruskan; jika tidak, dedahkan kad pengetahuan.';
+
+  @override
+  String reviewStudyNextReview(Object due) {
+    return 'Ulangkaji seterusnya: $due';
+  }
+
+  @override
+  String get reviewStudyHiddenHint =>
+      'Jawapan betul diteruskan lancar; jawapan salah mendedahkan kad pengetahuan dan kembali kemudian dalam pusingan ini.';
+
+  @override
+  String aiWordSupportDesc(Object word) {
+    return 'Tanya tentang penggunaan $word, tatabahasa, perbezaan sinonim, dan huraian contoh.';
+  }
+
+  @override
+  String aiWordSupportWithExampleDesc(Object word) {
+    return 'Hantar $word dan contoh semasa untuk bertanya tentang penggunaan, tatabahasa, perbezaan sinonim, dan huraian contoh.';
+  }
+
+  @override
+  String get helpFaqReviewScheduleQ => 'Bagaimana masa ulangkaji dijadualkan?';
+
+  @override
+  String get helpFaqReviewScheduleA =>
+      'Setiap perkataan bergerak antara tahap penguasaan 0-5. Penguasaan yang lebih tinggi bermaksud selang lebih panjang sebelum ulangkaji seterusnya.';
+
+  @override
+  String get helpFaqCustomWordsQ => 'Bolehkah saya menambah perkataan sendiri?';
+
+  @override
+  String get helpFaqCustomWordsA =>
+      'Ya. Buka buku perkataan atau halaman perkataan tersuai, kemudian ketik tambah untuk mencipta kad perkataan peribadi.';
+
+  @override
+  String get helpFaqAiTutorQ => 'Apa yang boleh dilakukan tutor AI?';
+
+  @override
+  String get helpFaqAiTutorA =>
+      'Ia boleh menerangkan perkataan, tatabahasa, dan kesilapan, serta mencadangkan contoh untuk latihan lanjut.';
+
+  @override
+  String get helpContactSupport => 'Hubungi sokongan';
+
+  @override
+  String get aboutVersion => 'LinguaQuest · Versi 1.0.0';
+
+  @override
+  String get aboutIntro =>
+      'LinguaQuest menggabungkan kad perkataan visual, laluan pembelajaran, ulangkaji berjarak, XP, rentetan kehadiran, dan kad perkataan peribadi dalam aplikasi pembelajaran Inggeris berfokus mudah alih.';
+
+  @override
+  String get aboutGoalTitle => 'Matlamat projek';
+
+  @override
+  String get aboutGoalSubtitle =>
+      'Membantu pelajar membina tabiat belajar Bahasa Inggeris harian melalui pelajaran pendek, pembaikan kesilapan, dan kemajuan yang jelas.';
+
+  @override
+  String get aboutTeamTitle => 'Pasukan pembangunan';
+
+  @override
+  String get aboutTeamSubtitle =>
+      'Pasukan ASM2 Mobile. Fokus pada pengalaman pembelajaran Inggeris berasaskan mudah alih.';
+
+  @override
+  String get aboutCoreTitle => 'Pengalaman utama';
+
+  @override
+  String get aboutCoreSubtitle =>
+      'Perancangan matlamat, kosa kata visual, latihan kuiz, jadual ulangkaji, dan kad perkataan peribadi.';
+
+  @override
+  String get aboutPrivacyTitle => 'Privasi';
+
+  @override
+  String get aboutPrivacySubtitle =>
+      'Perkataan tersuai dan rekod pembelajaran hanya dimiliki oleh pengguna yang log masuk.';
+
+  @override
+  String get communityPostCheckinTitle =>
+      'Daftar masuk hari ini: Ulangkaji 18 perkataan dalam 12 minit';
+
+  @override
+  String get communityPostCheckinTag => 'Daftar Masuk Harian';
+
+  @override
+  String get communityPostCheckinBody =>
+      'Kesilapan kebanyakannya pada sinonim. Esok saya akan mula dengan cabaran perkataan mengelirukan dalam latihan.';
+
+  @override
+  String get communityPostAbstractTitle =>
+      'Bagaimana mengingat \"abstract\" dalam bacaan IELTS?';
+
+  @override
+  String get communityPostMistakeTag => 'Perbincangan Kesilapan';
+
+  @override
+  String get communityPostAbstractBody =>
+      '\"abstract\" dalam konteks akademik selalunya tidak bermaksud \"tidak konkrit\"; konteks adalah penting.';
 
   @override
   String get notificationsTitle => 'Pemberitahuan';
