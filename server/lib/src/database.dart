@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:postgres/postgres.dart';
 
+import 'auth.dart';
 import 'config.dart';
 
 const resetCustomWordProgressSql = '''
@@ -273,6 +274,19 @@ CREATE TABLE IF NOT EXISTS reward_claims (
 ''');
 
     await connection.execute('''
+CREATE TABLE IF NOT EXISTS point_transactions (
+  id TEXT PRIMARY KEY,
+  uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  source_type TEXT NOT NULL,
+  source_id TEXT NOT NULL,
+  points INTEGER NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
+  created_at TIMESTAMPTZ NOT NULL,
+  UNIQUE (uid, source_type, source_id)
+);
+''');
+
+    await connection.execute('''
 CREATE TABLE IF NOT EXISTS study_plans (
   id TEXT PRIMARY KEY,
   uid TEXT UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -346,7 +360,6 @@ UPDATE users SET
   target_exam=@targetExam,
   level=@level,
   daily_goal=@dailyGoal,
-  xp=@xp,
   streak=@streak,
   last_study_date=@lastStudyDate,
   updated_at=@updatedAt
@@ -358,7 +371,6 @@ WHERE id=@uid
         'targetExam': data['targetExam'] ?? existing['target_exam'],
         'level': data['level'] ?? existing['level'],
         'dailyGoal': data['dailyGoal'] ?? existing['daily_goal'],
-        'xp': data['xp'] ?? existing['xp'],
         'streak': data['streak'] ?? existing['streak'],
         'lastStudyDate':
             _date(data['lastStudyDate']) ?? existing['last_study_date'],
@@ -662,6 +674,65 @@ INSERT INTO study_sessions (
         'answerEvents': jsonEncode((data['answerEvents'] as List?) ?? const []),
       },
     );
+  }
+
+  Future<Map<String, dynamic>> grantPoints(
+    String uid, {
+    required String sourceType,
+    required String sourceId,
+    required int points,
+    required String description,
+  }) async {
+    final now = DateTime.now().toUtc();
+    final rows = await connection.execute(
+      Sql.named('''
+WITH inserted AS (
+  INSERT INTO point_transactions (
+    id, uid, source_type, source_id, points, description, created_at
+  ) VALUES (
+    @id, @uid, @sourceType, @sourceId, @points, @description, @createdAt
+  )
+  ON CONFLICT (uid, source_type, source_id) DO NOTHING
+  RETURNING points
+), updated AS (
+  UPDATE users
+  SET xp = xp + COALESCE((SELECT points FROM inserted), 0),
+      updated_at = @createdAt
+  WHERE id = @uid AND EXISTS (SELECT 1 FROM inserted)
+  RETURNING *
+)
+SELECT
+  EXISTS (SELECT 1 FROM inserted) AS awarded,
+  COALESCE((SELECT points FROM inserted), 0) AS points_awarded,
+  COALESCE((SELECT id FROM updated), users.id) AS id,
+  COALESCE((SELECT email FROM updated), users.email) AS email,
+  COALESCE((SELECT password_hash FROM updated), users.password_hash) AS password_hash,
+  COALESCE((SELECT password_salt FROM updated), users.password_salt) AS password_salt,
+  COALESCE((SELECT name FROM updated), users.name) AS name,
+  COALESCE((SELECT target_exam FROM updated), users.target_exam) AS target_exam,
+  COALESCE((SELECT level FROM updated), users.level) AS level,
+  COALESCE((SELECT daily_goal FROM updated), users.daily_goal) AS daily_goal,
+  COALESCE((SELECT xp FROM updated), users.xp) AS xp,
+  COALESCE((SELECT streak FROM updated), users.streak) AS streak,
+  COALESCE((SELECT last_study_date FROM updated), users.last_study_date) AS last_study_date,
+  COALESCE((SELECT created_at FROM updated), users.created_at) AS created_at,
+  COALESCE((SELECT updated_at FROM updated), users.updated_at) AS updated_at
+FROM users
+WHERE id = @uid
+LIMIT 1
+'''),
+      parameters: {
+        'id': newId(),
+        'uid': uid,
+        'sourceType': sourceType,
+        'sourceId': sourceId,
+        'points': points,
+        'description': description,
+        'createdAt': now,
+      },
+    );
+    if (rows.isEmpty) throw StateError('user not found');
+    return rows.first.toColumnMap();
   }
 
   Future<Map<String, dynamic>?> studyPlanByUid(String uid) async {

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:linguaquest/data/models/daily_reward_task.dart';
-import 'package:linguaquest/data/repositories/reward_repository.dart';
+import 'package:linguaquest/data/repositories/reward_task_repository.dart';
 
 void main() {
   test('daily reward task parses backend status flow', () {

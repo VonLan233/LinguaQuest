@@ -7,6 +7,7 @@ import '../models/custom_word.dart';
 import '../models/daily_reward_task.dart';
 import '../models/exercise_record.dart';
 import '../models/lesson.dart';
+import '../models/point_grant_result.dart';
 import '../models/review_event.dart';
 import '../models/study_session.dart';
 import '../models/study_plan.dart';
@@ -19,6 +20,7 @@ import 'custom_word_repository.dart';
 import 'learning_repository.dart';
 import 'notification_repository.dart';
 import 'reward_repository.dart';
+import 'reward_task_repository.dart';
 import 'review_repository.dart';
 import 'study_plan_repository.dart';
 import 'user_word_repository.dart';
@@ -468,7 +470,7 @@ class MockNotificationRepository implements NotificationRepository {
   }
 }
 
-class MockRewardRepository implements RewardRepository {
+class MockRewardTaskRepository implements RewardTaskRepository {
   static const _keyPrefix = 'linguaquest.rewards';
 
   @override
@@ -694,5 +696,32 @@ class _MockRewardState {
       'forumInteractionDone': forumInteractionDone,
       'claimedTaskIds': claimedTaskIds.toList(),
     };
+  }
+}
+
+class MockRewardRepository implements RewardRepository {
+  static const _grantedSourceKeys = 'linguaquest.mock.point_sources';
+
+  @override
+  Future<PointGrantResult> grantPoints({
+    required String uid,
+    required String sourceType,
+    required String sourceId,
+    required int points,
+    required String description,
+  }) async {
+    if (points <= 0) {
+      return const PointGrantResult(pointsAwarded: 0, alreadyGranted: false);
+    }
+    final prefs = await SharedPreferences.getInstance();
+    final key = '$uid::$sourceType::$sourceId';
+    final granted =
+        (prefs.getStringList(_grantedSourceKeys) ?? const <String>[]).toSet();
+    if (granted.contains(key)) {
+      return const PointGrantResult(pointsAwarded: 0, alreadyGranted: true);
+    }
+    granted.add(key);
+    await prefs.setStringList(_grantedSourceKeys, granted.toList());
+    return PointGrantResult(pointsAwarded: points, alreadyGranted: false);
   }
 }

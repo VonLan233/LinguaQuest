@@ -1,142 +1,99 @@
-const rewardTaskTypes = {
-  'dailyCheckIn',
-  'newLearning',
-  'reviewDone',
-  'trainingChallenge',
-  'wrongCleanup',
-  'forumInteraction',
-};
+import 'notification_policy.dart';
 
-class DailyRewardBehavior {
-  const DailyRewardBehavior({
-    required this.checkedIn,
-    required this.newLearningDone,
-    required this.reviewDone,
-    required this.trainingChallengeDone,
-    required this.wrongCleanupDone,
-    required this.forumInteractionDone,
-  });
-
-  final bool checkedIn;
-  final bool newLearningDone;
-  final bool reviewDone;
-  final bool trainingChallengeDone;
-  final bool wrongCleanupDone;
-  final bool forumInteractionDone;
-}
-
-class RewardTaskDefinition {
-  const RewardTaskDefinition({
-    required this.id,
-    required this.title,
-    required this.condition,
+class RewardValidation {
+  const RewardValidation({
     required this.points,
-    required this.targetRoute,
+    required this.canonicalSourceId,
   });
 
-  final String id;
-  final String title;
-  final String condition;
   final int points;
-  final String targetRoute;
+  final String canonicalSourceId;
 }
 
-const rewardTaskDefinitions = <RewardTaskDefinition>[
-  RewardTaskDefinition(
-    id: 'dailyCheckIn',
-    title: '每日签到',
-    condition: '当天打开并点击签到',
-    points: 5,
-    targetRoute: '/discover',
-  ),
-  RewardTaskDefinition(
-    id: 'newLearning',
-    title: '完成新学',
-    condition: '完成今日新学任务',
-    points: 20,
-    targetRoute: '/study/new',
-  ),
-  RewardTaskDefinition(
-    id: 'reviewDone',
-    title: '完成复习',
-    condition: '完成今日到期复习',
-    points: 15,
-    targetRoute: '/study/review',
-  ),
-  RewardTaskDefinition(
-    id: 'trainingChallenge',
-    title: '训练场挑战',
-    condition: '完成任意训练场游戏',
-    points: 20,
-    targetRoute: '/training',
-  ),
-  RewardTaskDefinition(
-    id: 'wrongCleanup',
-    title: '错词清理',
-    condition: '今日错词再次答对',
-    points: 10,
-    targetRoute: '/review',
-  ),
-  RewardTaskDefinition(
-    id: 'forumInteraction',
-    title: '论坛互动',
-    condition: '发帖或评论通过审核',
-    points: 5,
-    targetRoute: '/discover',
-  ),
-];
-
-List<Map<String, dynamic>> dailyRewardTaskDtos({
-  required DailyRewardBehavior behavior,
-  required Set<String> claimedTaskIds,
+RewardValidation? validatedRewardPoints({
+  required String sourceType,
+  required String sourceId,
+  required int requestedPoints,
+  DateTime? nowUtc,
 }) {
-  return [
-    for (final definition in rewardTaskDefinitions)
-      {
-        'id': definition.id,
-        'title': definition.title,
-        'condition': definition.condition,
-        'points': definition.points,
-        'targetRoute': definition.targetRoute,
-        'status': _statusFor(
-          isDone: _isDone(definition.id, behavior),
-          isClaimed: claimedTaskIds.contains(definition.id),
-        ),
-      },
-  ];
-}
-
-RewardTaskDefinition? rewardTaskDefinitionById(String id) {
-  for (final definition in rewardTaskDefinitions) {
-    if (definition.id == id) return definition;
+  if (requestedPoints <= 0 || sourceId.isEmpty) return null;
+  final rewardDay = (nowUtc ?? DateTime.now().toUtc()).toUtc();
+  switch (sourceType) {
+    case 'study_lesson':
+      if (sourceId.contains(':')) return null;
+      return requestedPoints <= 30
+          ? RewardValidation(
+              points: requestedPoints,
+              canonicalSourceId: sourceId,
+            )
+          : null;
+    case 'training_session':
+      final parts = _dailySourceIdParts(sourceId, rewardDay);
+      if (parts == null) return null;
+      return requestedPoints <= 30
+          ? RewardValidation(
+              points: requestedPoints,
+              canonicalSourceId: _canonicalDailySourceId(
+                parts.first,
+                rewardDay,
+              ),
+            )
+          : null;
+    case 'review_word':
+      final parts = _dailySourceIdParts(sourceId, rewardDay);
+      if (parts == null) return null;
+      return requestedPoints == 3
+          ? RewardValidation(
+              points: requestedPoints,
+              canonicalSourceId: _canonicalDailySourceId(
+                parts.first,
+                rewardDay,
+              ),
+            )
+          : null;
+    case 'reward_task':
+      final parts = _dailySourceIdParts(sourceId, rewardDay);
+      if (parts == null) return null;
+      final taskId = parts.first;
+      final points = switch (taskId) {
+        'daily-checkin' => requestedPoints == 5 ? requestedPoints : null,
+        'new-learning' => requestedPoints == 20 ? requestedPoints : null,
+        'review-done' => requestedPoints == 15 ? requestedPoints : null,
+        'training-challenge' => requestedPoints == 20 ? requestedPoints : null,
+        'weak-cleanup' => requestedPoints == 10 ? requestedPoints : null,
+        _ => null,
+      };
+      return points == null
+          ? null
+          : RewardValidation(
+              points: points,
+              canonicalSourceId: _canonicalDailySourceId(taskId, rewardDay),
+            );
+    default:
+      return null;
   }
-  return null;
 }
 
-bool isRewardTaskDone(String id, DailyRewardBehavior behavior) {
-  return _isDone(id, behavior);
+List<String>? _dailySourceIdParts(String sourceId, DateTime nowUtc) {
+  final lastColon = sourceId.lastIndexOf(':');
+  if (lastColon == -1) return null;
+  final id = sourceId.substring(0, lastColon).trim();
+  final dateKey = sourceId.substring(lastColon + 1).trim();
+  if (id.isEmpty || dateKey.isEmpty) return null;
+  if (!isNotificationDateKey(dateKey)) return null;
+  if (!_isDateKeyInRewardWindow(dateKey, nowUtc)) return null;
+  return [id, dateKey];
 }
 
-String _statusFor({required bool isDone, required bool isClaimed}) {
-  if (isClaimed) return 'claimed';
-  if (isDone) return 'claimable';
-  return 'incomplete';
+bool _isDateKeyInRewardWindow(String dateKey, DateTime nowUtc) {
+  final rewardDay = DateTime.utc(nowUtc.year, nowUtc.month, nowUtc.day);
+  final parts = dateKey.split('-').map(int.tryParse).toList();
+  if (parts.length != 3 || parts.any((part) => part == null)) return false;
+  final requestedDay = DateTime.utc(parts[0]!, parts[1]!, parts[2]!);
+  final difference = requestedDay.difference(rewardDay).inDays;
+  return difference >= -1 && difference <= 1;
 }
 
-bool _isDone(String id, DailyRewardBehavior behavior) {
-  switch (id) {
-    case 'dailyCheckIn':
-      return behavior.checkedIn;
-    case 'newLearning':
-      return behavior.newLearningDone;
-    case 'reviewDone':
-      return behavior.reviewDone;
-    case 'trainingChallenge':
-      return behavior.trainingChallengeDone;
-    case 'wrongCleanup':
-      return behavior.wrongCleanupDone;
-    case 'forumInteraction':
-      return behavior.forumInteractionDone;
-  }
-  return false;
+String _canonicalDailySourceId(String id, DateTime nowUtc) {
+  return '$id:${notificationDateKey(nowUtc.toUtc())}';
 }
