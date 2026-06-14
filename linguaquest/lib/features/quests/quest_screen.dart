@@ -66,7 +66,7 @@ class QuestScreen extends StatelessWidget {
           icon: Icons.smart_toy_outlined,
           title: 'AI 助教',
           body: '解释错因，并给出例句建议。',
-          value: '可试用',
+          value: '暂未开放',
           route: '/ai-tutor',
         ),
       ],

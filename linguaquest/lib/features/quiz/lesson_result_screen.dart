@@ -9,8 +9,9 @@ import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
+import '../../l10n/generated/app_localizations.dart';
 
-enum LessonResultSource { lesson, timed }
+enum LessonResultSource { lesson, timed, training }
 
 class LessonResultViewArgs {
   const LessonResultViewArgs({
@@ -36,6 +37,7 @@ class LessonResultScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final lastResult = state.lastResult;
     final resolved =
@@ -44,42 +46,51 @@ class LessonResultScreen extends ConsumerWidget {
             ? lastResult
             : null);
     if (resolved == null) {
-      return const Scaffold(body: Center(child: Text('还没有课程结果')));
+      return Scaffold(body: Center(child: Text(l10n.quizNoResult)));
     }
 
     final accuracy = (resolved.accuracy * 100).round();
     final currentXp = state.user?.xp;
     final isTimed = source == LessonResultSource.timed;
-    final rewardText = resolved.xpEarned > 0
-        ? '已入账 +${resolved.xpEarned} XP'
-        : '本次未重复入账';
+    final isTraining = source == LessonResultSource.training;
     return Scaffold(
       appBar: AppBar(
         leading: FallbackBackButton(
-          fallbackLocation: isTimed ? '/training' : '/learn',
+          fallbackLocation: isTimed || isTraining ? '/training' : '/learn',
         ),
-        title: Text(isTimed ? '限时测试结果' : '课程结果'),
+        title: Text(
+          isTimed || isTraining
+              ? l10n.quizTimedResultTitle
+              : l10n.quizResultTitle,
+        ),
       ),
-      bottomNavigationBar: _ResultActions(isTimed: isTimed),
+      bottomNavigationBar: _ResultActions(
+        source: source,
+        hasMistakes: resolved.mistakes.isNotEmpty,
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 150),
           children: [
             SectionHeader(
-              title: isTimed
-                  ? (accuracy >= 80 ? '挑战成功！' : '挑战完成')
-                  : (accuracy >= 80 ? '表现很棒！' : '课程完成'),
-              subtitle: isTimed
-                  ? '答对 ${resolved.correctAnswers}/${resolved.totalQuestions} 题 · $rewardText · 错题可去复习中心整理。'
-                  : '答对 ${resolved.correctAnswers}/${resolved.totalQuestions} 题 · $rewardText · 错题已进入复习。',
+              title: isTimed || isTraining
+                  ? (accuracy >= 80
+                        ? l10n.quizChallengeSuccess
+                        : l10n.quizChallengeDone)
+                  : (accuracy >= 80 ? l10n.quizGreatJob : l10n.quizLessonDone),
+              subtitle: isTimed || isTraining
+                  ? '${resolved.correctAnswers}/${resolved.totalQuestions} · +${resolved.xpEarned} ${l10n.commonXP} · ${l10n.quizMistakeTimed}'
+                  : '${resolved.correctAnswers}/${resolved.totalQuestions} · +${resolved.xpEarned} ${l10n.commonXP} · ${l10n.quizMistakeReview}',
             ),
             const SizedBox(height: 12),
             PillLabel(
               label: resolved.lessonTitle,
               icon: isTimed
                   ? Icons.timer_outlined
+                  : isTraining
+                  ? Icons.sports_esports_outlined
                   : Icons.workspace_premium_outlined,
-              color: isTimed ? AppTheme.coral : AppTheme.cyan,
+              color: isTimed || isTraining ? AppTheme.coral : AppTheme.cyan,
             ),
             const SizedBox(height: 12),
             _ResultScoreSummary(
@@ -91,11 +102,11 @@ class LessonResultScreen extends ConsumerWidget {
             _XpImpactNotice(
               xpEarned: resolved.xpEarned,
               currentXp: currentXp,
-              isTimed: isTimed,
+              isTimed: isTimed || isTraining,
             ),
             const SizedBox(height: 20),
             Text(
-              '错题',
+              l10n.quizMistakes,
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
@@ -114,13 +125,16 @@ class LessonResultScreen extends ConsumerWidget {
 }
 
 class _ResultActions extends StatelessWidget {
-  const _ResultActions({required this.isTimed});
+  const _ResultActions({required this.source, required this.hasMistakes});
 
-  final bool isTimed;
+  final LessonResultSource source;
+  final bool hasMistakes;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+    final isTraining = source != LessonResultSource.lesson;
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
@@ -134,18 +148,31 @@ class _ResultActions extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            if (isTraining && hasMistakes) ...[
+              FilledButton.icon(
+                onPressed: () =>
+                    context.go('/training/spelling?source=mistakes'),
+                icon: const Icon(Icons.replay_circle_filled_outlined),
+                label: Text(l10n.quizRetryMistakes),
+              ),
+              const SizedBox(height: 8),
+            ],
             FilledButton.icon(
               onPressed: () => context.go('/review'),
               icon: const Icon(Icons.replay),
-              label: const Text('去复习中心'),
+              label: Text(l10n.quizGoReviewCenter),
             ),
             const SizedBox(height: 8),
             OutlinedButton.icon(
-              onPressed: () => context.go(isTimed ? '/training' : '/learn'),
+              onPressed: () => context.go(isTraining ? '/training' : '/learn'),
               icon: Icon(
-                isTimed ? Icons.sports_esports_outlined : Icons.route_outlined,
+                isTraining
+                    ? Icons.sports_esports_outlined
+                    : Icons.route_outlined,
               ),
-              label: Text(isTimed ? '返回训练场' : '返回学习路径'),
+              label: Text(
+                isTraining ? l10n.quizBackTraining : l10n.quizBackLearningPath,
+              ),
             ),
           ],
         ),
@@ -168,7 +195,10 @@ class _XpImpactNotice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final balanceText = currentXp == null ? '总积分已更新' : '当前总积分 $currentXp XP';
+    final l10n = AppLocalizations.of(context);
+    final balanceText = currentXp == null
+        ? l10n.quizXpBalanceUpdated
+        : l10n.quizCurrentXp(currentXp!);
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -186,14 +216,14 @@ class _XpImpactNotice extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  xpEarned > 0 ? '刚刚到账 +$xpEarned XP' : '本次未重复入账',
+                  l10n.quizXpCredited(xpEarned),
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w900,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '$balanceText。XP 会同步到个人主页、排行榜和发现页抽奖余额。',
+                  l10n.quizXpImpactBody(balanceText),
                   style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                 ),
                 const SizedBox(height: 10),
@@ -203,7 +233,9 @@ class _XpImpactNotice extends StatelessWidget {
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     PillLabel(
-                      label: isTimed ? '限时测试奖励' : '课程奖励',
+                      label: isTimed
+                          ? l10n.quizTimedReward
+                          : l10n.quizLessonReward,
                       icon: isTimed
                           ? Icons.timer_outlined
                           : Icons.workspace_premium_outlined,
@@ -212,7 +244,7 @@ class _XpImpactNotice extends StatelessWidget {
                     OutlinedButton.icon(
                       onPressed: () => context.go('/discover'),
                       icon: const Icon(Icons.help_outline_rounded),
-                      label: const Text('查看 XP 用途'),
+                      label: Text(l10n.quizViewXpUses),
                     ),
                   ],
                 ),
@@ -230,6 +262,7 @@ class _PerfectResultRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
@@ -241,10 +274,10 @@ class _PerfectResultRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('全对通关', style: theme.textTheme.titleMedium),
+                Text(l10n.quizAllCorrect, style: theme.textTheme.titleMedium),
                 const SizedBox(height: 3),
                 Text(
-                  '没有错题需要加入复习。',
+                  l10n.quizMistakeReview,
                   style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                 ),
               ],
@@ -305,6 +338,7 @@ class _ResultScoreSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Column(
@@ -324,7 +358,7 @@ class _ResultScoreSummary extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: 6),
                 child: Text(
-                  '正确率',
+                  l10n.quizAccuracy,
                   style: theme.textTheme.titleMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -347,18 +381,18 @@ class _ResultScoreSummary extends StatelessWidget {
             runSpacing: 8,
             children: [
               PillLabel(
-                label: '已入账 +${result.xpEarned} XP',
+                label: l10n.quizXpEarned(result.xpEarned),
                 icon: Icons.bolt,
                 color: AppTheme.mango,
               ),
               if (currentXp != null)
                 PillLabel(
-                  label: '总积分 $currentXp XP',
+                  label: l10n.quizTotalXp(currentXp!),
                   icon: Icons.account_balance_wallet_outlined,
                   color: AppTheme.cyan,
                 ),
               PillLabel(
-                label: '${result.mistakes.length} 个错题',
+                label: l10n.quizMistakeCount(result.mistakes.length),
                 icon: Icons.replay_rounded,
                 color: AppTheme.coral,
               ),

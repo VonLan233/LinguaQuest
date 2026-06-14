@@ -6,8 +6,8 @@ import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
-import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 const _pathRailWidth = 74.0;
 const _pathNodeHorizontalPadding = 8.0;
@@ -20,44 +20,37 @@ class LearningPathScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final lessons = state.formalLessons;
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/home'),
-        title: const Text('学习路径'),
-        actions: [
-          QuestIconButton(
-            tooltip: '回到首页',
-            onPressed: () => context.go('/home'),
-            icon: Icons.home_outlined,
-          ),
-          const SizedBox(width: 12),
-        ],
+        title: Text(l10n.learningPathTitle),
       ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
           children: [
-            SectionHeader(
-              title: '词书路径',
-              subtitle: '这里只展示词书进度；正式新学和复习回到首页的两个独立入口。',
-              trailing: QuestIconButton(
-                tooltip: '单词本',
-                onPressed: () => context.push('/wordbook'),
-                icon: Icons.menu_book_outlined,
-              ),
-            ),
-            const SizedBox(height: 18),
+            if (state.isStudyPlanPaused) ...[
+              _PausedBanner(l10n: l10n),
+              const SizedBox(height: 16),
+            ],
             for (var index = 0; index < lessons.length; index++) ...[
-              _PathNode(lesson: lessons[index], index: index),
+              _PathNode(lesson: lessons[index], index: index, l10n: l10n),
               if (index != lessons.length - 1) const _PathConnector(),
             ],
             const SizedBox(height: 10),
             OutlinedButton.icon(
               onPressed: () => context.push('/wordbook'),
               icon: const Icon(Icons.style_outlined),
-              label: const Text('打开单词本和生词本'),
+              label: Text(l10n.learningPathOpenWordbook),
+            ),
+            const SizedBox(height: 10),
+            TextButton.icon(
+              onPressed: () => context.push('/settings/study-plan'),
+              icon: const Icon(Icons.tune_outlined),
+              label: Text(l10n.learningPathAdjustPlan),
             ),
           ],
         ),
@@ -66,11 +59,45 @@ class LearningPathScreen extends ConsumerWidget {
   }
 }
 
+class _PausedBanner extends StatelessWidget {
+  const _PausedBanner({required this.l10n});
+
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(
+          context,
+        ).colorScheme.primaryContainer.withValues(alpha: 0.35),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.pause_circle_outlined,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          const SizedBox(width: 12),
+          Expanded(child: Text(l10n.reviewCenterPlanPaused)),
+        ],
+      ),
+    );
+  }
+}
+
 class _PathNode extends StatelessWidget {
-  const _PathNode({required this.lesson, required this.index});
+  const _PathNode({
+    required this.lesson,
+    required this.index,
+    required this.l10n,
+  });
 
   final Lesson lesson;
   final int index;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +171,7 @@ class _PathNode extends StatelessWidget {
                           ),
                         ),
                         PillLabel(
-                          label: _statusLabel(lesson.status),
+                          label: _statusLabel(lesson.status, l10n),
                           icon: locked ? Icons.lock_outline : Icons.bolt,
                           color: color,
                         ),
@@ -153,23 +180,30 @@ class _PathNode extends StatelessWidget {
                     const SizedBox(height: 8),
                     Text(lesson.title, style: theme.textTheme.titleLarge),
                     const SizedBox(height: 5),
-                    Text(lesson.description),
+                    Text(
+                      lesson.description,
+                      style: TextStyle(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     const SizedBox(height: 14),
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
                       children: [
                         PillLabel(
-                          label: '${lesson.xpReward} XP',
+                          label: '${lesson.xpReward} ${l10n.commonXP}',
                           icon: Icons.bolt,
                           color: AppTheme.mango,
                         ),
                         PillLabel(
-                          label: '${lesson.estimatedMinutes} 分钟',
+                          label: '${lesson.estimatedMinutes} min',
                           icon: Icons.timer_outlined,
                         ),
                         PillLabel(
-                          label: '${lesson.words.length} 词',
+                          label: '${lesson.words.length} ${l10n.commonWords}',
                           icon: Icons.style_outlined,
                         ),
                       ],
@@ -217,7 +251,7 @@ class _PathNode extends StatelessWidget {
                       parentContext.push('/lesson/${lesson.id}');
                     },
                     icon: const Icon(Icons.play_arrow_rounded),
-                    label: const Text('开始学习'),
+                    label: Text(l10n.learningPathStartLearning),
                   ),
                 ],
               ),
@@ -229,14 +263,14 @@ class _PathNode extends StatelessWidget {
   }
 }
 
-String _statusLabel(String status) {
+String _statusLabel(String status, AppLocalizations l10n) {
   switch (status) {
     case 'completed':
-      return '已完成';
+      return l10n.learningPathLessonCompleted;
     case 'current':
-      return '当前';
+      return l10n.learningPathLessonCurrent;
     case 'locked':
-      return '未解锁';
+      return l10n.learningPathLessonLocked;
     default:
       return status;
   }

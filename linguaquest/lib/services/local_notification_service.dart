@@ -68,6 +68,7 @@ class FlutterLocalNotificationService implements LocalNotificationService {
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
   bool _isInitialized = false;
+  bool _isPluginAvailable = false;
 
   @override
   Future<void> initialize({
@@ -99,10 +100,18 @@ class FlutterLocalNotificationService implements LocalNotificationService {
             AndroidFlutterLocalNotificationsPlugin
           >()
           ?.requestNotificationsPermission();
+      _isPluginAvailable = true;
       _isInitialized = true;
     } on MissingPluginException {
+      _isPluginAvailable = false;
       _isInitialized = true;
-    } catch (_) {
+    } catch (error, stackTrace) {
+      _isPluginAvailable = false;
+      assert(() {
+        debugPrint('LocalNotificationService initialization unavailable: $error');
+        debugPrintStack(stackTrace: stackTrace);
+        return true;
+      }());
       _isInitialized = true;
     }
   }
@@ -116,7 +125,7 @@ class FlutterLocalNotificationService implements LocalNotificationService {
           : (localTimezone as dynamic).identifier.toString();
       timezone.setLocalLocation(timezone.getLocation(timezoneIdentifier));
     } catch (_) {
-      timezone.setLocalLocation(timezone.getLocation('UTC'));
+      timezone.setLocalLocation(timezone.UTC);
     }
   }
 
@@ -126,6 +135,7 @@ class FlutterLocalNotificationService implements LocalNotificationService {
     required int hour,
     required int minute,
   }) async {
+    if (!_isPluginAvailable) return;
     await _guarded(() async {
       if (!enabled) {
         await _plugin.cancel(id: _studyReminderId);
@@ -146,6 +156,7 @@ class FlutterLocalNotificationService implements LocalNotificationService {
 
   @override
   Future<void> scheduleReviewDueReminder({required int dueCount}) async {
+    if (!_isPluginAvailable) return;
     await _guarded(() async {
       if (dueCount <= 0) {
         await _plugin.cancel(id: _reviewReminderId);

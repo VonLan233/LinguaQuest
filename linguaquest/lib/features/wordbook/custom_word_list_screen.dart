@@ -10,6 +10,7 @@ import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/custom_word.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class CustomWordListScreen extends ConsumerStatefulWidget {
   const CustomWordListScreen({super.key});
@@ -25,17 +26,18 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final words = _filtered(state.customWords);
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/wordbook'),
-        title: const Text('生词本'),
+        title: Text(l10n.commonCustomWords),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/custom-words/new'),
         icon: const Icon(Icons.add),
-        label: const Text('添加'),
+        label: Text(l10n.commonAdd),
       ),
       body: SafeArea(
         child: Column(
@@ -43,10 +45,10 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 8),
               child: SectionHeader(
-                title: '我的词卡',
-                subtitle: '创建、搜索、筛选、编辑并复习你的个人词库。',
+                title: l10n.customWordsMyCards,
+                subtitle: l10n.customWordsMyCardsSubtitle,
                 trailing: PillLabel(
-                  label: '${state.customWords.length} 张',
+                  label: l10n.customWordsCardCount(state.customWords.length),
                   icon: Icons.add_card_outlined,
                 ),
               ),
@@ -54,9 +56,9 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
               child: TextField(
-                decoration: const InputDecoration(
-                  labelText: '搜索单词、释义或标签',
-                  prefixIcon: Icon(Icons.search),
+                decoration: InputDecoration(
+                  labelText: l10n.customWordsSearchLabel,
+                  prefixIcon: const Icon(Icons.search),
                 ),
                 onChanged: (value) => setState(() => _query = value),
               ),
@@ -92,12 +94,12 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
               child: words.isEmpty
                   ? EmptyState(
                       icon: Icons.style_outlined,
-                      title: '没有匹配的词卡',
-                      message: '可以添加一张个人词卡，或调整搜索条件。',
+                      title: l10n.customWordsNoMatchTitle,
+                      message: l10n.customWordsNoMatchMessage,
                       action: FilledButton.icon(
                         onPressed: () => context.push('/custom-words/new'),
                         icon: const Icon(Icons.add),
-                        label: const Text('添加单词'),
+                        label: Text(l10n.customWordsAddCard),
                       ),
                     )
                   : ListView.separated(
@@ -134,20 +136,21 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
   }
 
   Future<void> _confirmDelete(CustomWord word) async {
+    final l10n = AppLocalizations.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('删除“${word.word}”？'),
-        content: const Text('这会同时删除这张个人词卡和它的复习计划。'),
+        title: Text(l10n.customWordsDeleteTitle(word.word)),
+        content: Text(l10n.customWordsDeleteContent),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
+            child: Text(l10n.commonCancel),
           ),
           FilledButton.icon(
             onPressed: () => Navigator.pop(context, true),
             icon: const Icon(Icons.delete_outline),
-            label: const Text('删除'),
+            label: Text(l10n.commonDelete),
           ),
         ],
       ),
@@ -159,14 +162,16 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
     if (!mounted) return;
     if (!succeeded) {
       final message = ref.read(appControllerProvider).errorMessage;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message ?? '暂时无法删除 ${word.word}')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message ?? l10n.customWordsDeleteFailed(word.word)),
+        ),
+      );
       return;
     }
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text('已删除 ${word.word}')));
+    ).showSnackBar(SnackBar(content: Text(l10n.customWordsDeleted(word.word))));
   }
 }
 
@@ -180,6 +185,7 @@ class _CustomWordTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final mastery = word.masteryLevel / 5;
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     return Material(
       color: Colors.transparent,
       borderRadius: BorderRadius.circular(12),
@@ -230,7 +236,7 @@ class _CustomWordTile extends StatelessWidget {
                 ),
               ),
               QuestIconButton(
-                tooltip: '删除',
+                tooltip: l10n.commonDelete,
                 icon: Icons.delete_outline,
                 color: AppTheme.coral,
                 onPressed: onDelete,
