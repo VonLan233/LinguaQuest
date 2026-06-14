@@ -9,6 +9,7 @@ class StudySession {
     required this.correctAnswers,
     required this.xpEarned,
     required this.mistakeWordIds,
+    this.answerEvents = const [],
   });
 
   final String id;
@@ -20,6 +21,7 @@ class StudySession {
   final int correctAnswers;
   final int xpEarned;
   final List<String> mistakeWordIds;
+  final List<Map<String, dynamic>> answerEvents;
 
   Map<String, dynamic> toJson() {
     return {
@@ -32,6 +34,7 @@ class StudySession {
       'correctAnswers': correctAnswers,
       'xpEarned': xpEarned,
       'mistakeWordIds': mistakeWordIds,
+      'answerEvents': answerEvents,
     };
   }
 }

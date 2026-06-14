@@ -1,0 +1,5439 @@
+{
+  "id": "beginner",
+  "title": "入门基础词汇",
+  "category": "general",
+  "examType": "Beginner",
+  "coverUrl": "https://source.unsplash.com/featured/800x480/?english,vocabulary,beginner",
+  "totalWords": 90,
+  "includedWords": 90,
+  "description": "适合初级英语和日常表达入门的基础高频词。",
+  "wordIds": [
+    "beginner_001_a",
+    "beginner_002_abandon",
+    "beginner_003_ability",
+    "beginner_004_able",
+    "beginner_005_about",
+    "beginner_006_above",
+    "beginner_007_abroad",
+    "beginner_008_absolute",
+    "beginner_009_absolutely",
+    "beginner_010_academic",
+    "beginner_011_accept",
+    "beginner_012_acceptable",
+    "beginner_013_access",
+    "beginner_014_accident",
+    "beginner_015_accommodation",
+    "beginner_016_accompany",
+    "beginner_017_account",
+    "beginner_018_accurate",
+    "beginner_019_accuse",
+    "beginner_020_achieve",
+    "beginner_021_achievement",
+    "beginner_022_acknowledge",
+    "beginner_023_acquire",
+    "beginner_024_across",
+    "beginner_025_act",
+    "beginner_026_action",
+    "beginner_027_active",
+    "beginner_028_activity",
+    "beginner_029_actor",
+    "beginner_030_actress",
+    "beginner_031_actual",
+    "beginner_032_actually",
+    "beginner_033_adapt",
+    "beginner_034_add",
+    "beginner_035_addition",
+    "beginner_036_additional",
+    "beginner_037_address",
+    "beginner_038_administration",
+    "beginner_039_admire",
+    "beginner_040_admit",
+    "beginner_041_adopt",
+    "beginner_042_adult",
+    "beginner_043_advance",
+    "beginner_044_advanced",
+    "beginner_045_advantage",
+    "beginner_046_adventure",
+    "beginner_047_advertise",
+    "beginner_048_advertisement",
+    "beginner_049_advertising",
+    "beginner_050_advice",
+    "beginner_051_advise",
+    "beginner_052_affair",
+    "beginner_053_affect",
+    "beginner_054_afford",
+    "beginner_055_afraid",
+    "beginner_056_after",
+    "beginner_057_afternoon",
+    "beginner_058_afterwards",
+    "beginner_059_again",
+    "beginner_060_against",
+    "beginner_061_age",
+    "beginner_062_aged",
+    "beginner_063_agency",
+    "beginner_064_agenda",
+    "beginner_065_agent",
+    "beginner_066_aggressive",
+    "beginner_067_ago",
+    "beginner_068_agree",
+    "beginner_069_agreement",
+    "beginner_070_ah",
+    "beginner_071_ahead",
+    "beginner_072_aid",
+    "beginner_073_aim",
+    "beginner_074_air",
+    "beginner_075_aircraft",
+    "beginner_076_airline",
+    "beginner_077_airport",
+    "beginner_078_alarm",
+    "beginner_079_album",
+    "beginner_080_alcohol",
+    "beginner_081_alcoholic",
+    "beginner_082_alive",
+    "beginner_083_all",
+    "beginner_084_allow",
+    "beginner_085_almost",
+    "beginner_086_alone",
+    "beginner_087_along",
+    "beginner_088_already",
+    "beginner_089_also",
+    "beginner_090_alter"
+  ],
+  "createdAt": "2026-06-04T00:00:00.000Z",
+  "words": [
+    {
+      "id": "beginner_001_a",
+      "word": "a",
+      "phoneticUK": "ə; eɪ",
+      "phoneticUS": "ə; e",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=a&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=a&type=2",
+      "partOfSpeech": "art",
+      "definitions": [
+        "字母A",
+        "第一流的",
+        "学业成绩达最高标准的评价符号",
+        "[物]安（ampere）"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “字母A”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Would you like a sandwich?",
+          "cn": "来块三明治好吗？"
+        },
+        {
+          "en": "I want to train to be an engineer.",
+          "cn": "我想经过培训成为一名工程师。"
+        },
+        {
+          "en": "He’s a really nice man.",
+          "cn": "他真是个好人。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "a in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use a",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "a related"
+      ],
+      "antonyms": [
+        "not a"
+      ],
+      "derivatives": [
+        "as",
+        "aing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “a”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,a",
+      "sceneCue": "Beginner · 字母A"
+    },
+    {
+      "id": "beginner_002_abandon",
+      "word": "abandon",
+      "phoneticUK": "ə'bændən",
+      "phoneticUS": "ə'bændən",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=abandon&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=abandon&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "离弃，丢弃",
+        "遗弃，抛弃",
+        "放弃",
+        "放任"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “离弃，丢弃”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "How could she abandon her own child?",
+          "cn": "她怎么能抛弃自己的孩子呢？"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "with abandon",
+          "cn": "恣意地，放纵地"
+        },
+        {
+          "phrase": "abandon ship",
+          "cn": "弃船"
+        }
+      ],
+      "synonyms": [
+        "abandon related"
+      ],
+      "antonyms": [
+        "not abandon"
+      ],
+      "derivatives": [
+        "abandons",
+        "abandoning"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “abandon”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abandon",
+      "sceneCue": "Beginner · 离弃，丢弃"
+    },
+    {
+      "id": "beginner_003_ability",
+      "word": "ability",
+      "phoneticUK": "ə'bɪləti",
+      "phoneticUS": "əˈbɪlətɪ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=ability&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=ability&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "能力， 本领",
+        "才能， 才智"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “能力， 本领”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "The test measures your mathematical ability.",
+          "cn": "这种测试考查的是数学能力。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "innovation ability",
+          "cn": "创新能力"
+        },
+        {
+          "phrase": "ability for",
+          "cn": "在…的能力"
+        },
+        {
+          "phrase": "learning ability",
+          "cn": "学习能力"
+        },
+        {
+          "phrase": "practical ability",
+          "cn": "实践能力；实际能力"
+        }
+      ],
+      "synonyms": [
+        "ability related"
+      ],
+      "antonyms": [
+        "not ability"
+      ],
+      "derivatives": [
+        "abilitys",
+        "abilitying"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “ability”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ability",
+      "sceneCue": "Beginner · 能力， 本领"
+    },
+    {
+      "id": "beginner_004_able",
+      "word": "able",
+      "phoneticUK": "'eɪb(ə)l",
+      "phoneticUS": "'ebl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=able&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=able&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "能",
+        "[经管] 有能力的",
+        "能干的",
+        "(Able)人名"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “能”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "one of my more able students",
+          "cn": "我班上能力比较强的学生之一"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "will be able to",
+          "cn": "将能够"
+        },
+        {
+          "phrase": "be able to do",
+          "cn": "能够做"
+        },
+        {
+          "phrase": "be able to take",
+          "cn": "经受得住某事(指困难、痛苦的事)"
+        },
+        {
+          "phrase": "able person",
+          "cn": "能人；有能力的人；有用的人才"
+        }
+      ],
+      "synonyms": [
+        "able related"
+      ],
+      "antonyms": [
+        "not able"
+      ],
+      "derivatives": [
+        "ables",
+        "ableing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “able”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,able",
+      "sceneCue": "Beginner · 能"
+    },
+    {
+      "id": "beginner_005_about",
+      "word": "about",
+      "phoneticUK": "ə'baʊt",
+      "phoneticUS": "ə'baʊt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=about&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=about&type=2",
+      "partOfSpeech": "prep",
+      "definitions": [
+        "关于",
+        "大约",
+        "在附近的",
+        "四处走动的"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “关于”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "a book about politics",
+          "cn": "一本有关政治的书"
+        },
+        {
+          "en": "She said something about leaving town.",
+          "cn": "她说了些要离开镇子的话。"
+        },
+        {
+          "en": "He lied about his age.",
+          "cn": "他谎报年龄。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "how about",
+          "cn": "你认为…怎样"
+        },
+        {
+          "phrase": "what about",
+          "cn": "怎么样；（对于）…怎么样"
+        },
+        {
+          "phrase": "all about",
+          "cn": "到处，各处；关于…的一切"
+        },
+        {
+          "phrase": "about us",
+          "cn": "关于我们；公司简介"
+        }
+      ],
+      "synonyms": [
+        "about related"
+      ],
+      "antonyms": [
+        "not about"
+      ],
+      "derivatives": [
+        "abouts",
+        "abouting"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “about”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,about",
+      "sceneCue": "Beginner · 关于"
+    },
+    {
+      "id": "beginner_006_above",
+      "word": "above",
+      "phoneticUK": "ə'bʌv",
+      "phoneticUS": "ə'bʌv",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=above&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=above&type=2",
+      "partOfSpeech": "prep",
+      "definitions": [
+        "超过",
+        "在……上面",
+        "在……之上",
+        "在上面"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “超过”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Our office is above the hairdresser’s.",
+          "cn": "我们的办公室在理发店上面。"
+        },
+        {
+          "en": "He had a bruise just above his left eye.",
+          "cn": "就在他左眼上方有块瘀伤。"
+        },
+        {
+          "en": "I heard a strange noise coming from the room above.",
+          "cn": "我听见楼上房间传来奇怪的响声。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "above oneself",
+          "cn": "自高自大；趾高气扬；兴高采烈"
+        },
+        {
+          "phrase": "above all",
+          "cn": "首先；尤其是"
+        },
+        {
+          "phrase": "from above",
+          "cn": "从…上面；从上级；从天上"
+        },
+        {
+          "phrase": "all above",
+          "cn": "以上都是；所有上面的"
+        }
+      ],
+      "synonyms": [
+        "above related"
+      ],
+      "antonyms": [
+        "not above"
+      ],
+      "derivatives": [
+        "aboves",
+        "aboveing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “above”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,above",
+      "sceneCue": "Beginner · 超过"
+    },
+    {
+      "id": "beginner_007_abroad",
+      "word": "abroad",
+      "phoneticUK": "ə'brɔːd",
+      "phoneticUS": "ə'brɔd",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=abroad&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=abroad&type=2",
+      "partOfSpeech": "adv",
+      "definitions": [
+        "到国外",
+        "在传播， 在流传"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “到国外”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "I’ve never lived abroad before.",
+          "cn": "我以前从未在国外生活过。"
+        },
+        {
+          "en": "She often goes abroad on business.",
+          "cn": "她经常出国公干。"
+        },
+        {
+          "en": "We never travelled abroad when we were kids.",
+          "cn": "我们小时候从来没有去国外旅行过。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "home and abroad",
+          "cn": "国内外，海内外"
+        },
+        {
+          "phrase": "at home and abroad",
+          "cn": "国内外"
+        },
+        {
+          "phrase": "study abroad",
+          "cn": "出国留学；海外学习"
+        },
+        {
+          "phrase": "go abroad",
+          "cn": "去国外，出国"
+        }
+      ],
+      "synonyms": [
+        "abroad related"
+      ],
+      "antonyms": [
+        "not abroad"
+      ],
+      "derivatives": [
+        "abroads",
+        "abroading"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “abroad”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abroad",
+      "sceneCue": "Beginner · 到国外"
+    },
+    {
+      "id": "beginner_008_absolute",
+      "word": "absolute",
+      "phoneticUK": "'æbsəluːt",
+      "phoneticUS": "'æbsəlut",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=absolute&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=absolute&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "十足的， 地道的",
+        "绝对的， 完全的",
+        "不受任何限制的"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “十足的， 地道的”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "I have absolute confidence in her.",
+          "cn": "我对她充满信心。"
+        },
+        {
+          "en": "We don’t know with absolute certainty that the project will succeed.",
+          "cn": "我们没有绝对的把握这个项目一定会成功。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "absolute value",
+          "cn": "绝对值"
+        },
+        {
+          "phrase": "absolute advantage",
+          "cn": "绝对利益"
+        },
+        {
+          "phrase": "absolute power",
+          "cn": "绝对权力（电影名称）"
+        },
+        {
+          "phrase": "absolute error",
+          "cn": "绝对误差"
+        }
+      ],
+      "synonyms": [
+        "absolute related"
+      ],
+      "antonyms": [
+        "not absolute"
+      ],
+      "derivatives": [
+        "absolutes",
+        "absoluteing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “absolute”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,absolute",
+      "sceneCue": "Beginner · 十足的， 地道的"
+    },
+    {
+      "id": "beginner_009_absolutely",
+      "word": "absolutely",
+      "phoneticUK": "ˈæbsəluːtli",
+      "phoneticUS": "ˈæbsəluːtli",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=absolutely&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=absolutely&type=2",
+      "partOfSpeech": "adv",
+      "definitions": [
+        "绝对地",
+        "完全地"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “绝对地”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "You are absolutely right.",
+          "cn": "你完全正确。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "absolutely in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use absolutely",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "absolutely related"
+      ],
+      "antonyms": [
+        "not absolutely"
+      ],
+      "derivatives": [
+        "absolutelys",
+        "absolutelying"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “absolutely”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,absolutely",
+      "sceneCue": "Beginner · 绝对地"
+    },
+    {
+      "id": "beginner_010_academic",
+      "word": "academic",
+      "phoneticUK": "ˌækə'demɪk",
+      "phoneticUS": ",ækə'dɛmɪk",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=academic&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=academic&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "学院的",
+        "学术的",
+        "纯理论的， 不切实际的"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “学院的”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "He possessed no academic qualifications.",
+          "cn": "他没有学历。"
+        },
+        {
+          "en": "a program to raise academic standards",
+          "cn": "旨在提高学术水平的计划"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "academic research",
+          "cn": "学术研究"
+        },
+        {
+          "phrase": "academic circles",
+          "cn": "学术界"
+        },
+        {
+          "phrase": "academic year",
+          "cn": "学年"
+        },
+        {
+          "phrase": "academic achievement",
+          "cn": "学业成就；学业成绩"
+        }
+      ],
+      "synonyms": [
+        "academic related"
+      ],
+      "antonyms": [
+        "not academic"
+      ],
+      "derivatives": [
+        "academics",
+        "academicing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “academic”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,academic",
+      "sceneCue": "Beginner · 学院的"
+    },
+    {
+      "id": "beginner_011_accept",
+      "word": "accept",
+      "phoneticUK": "ə'ksept",
+      "phoneticUS": "ækˈsɛpt; əkˈsɛpt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=accept&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=accept&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "接受",
+        "承认",
+        "承担",
+        "承兑"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “接受”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Rick accepted her offer of coffee.",
+          "cn": "她请里克喝咖啡，他接受了。"
+        },
+        {
+          "en": "He accepted the invitation to stay with us.",
+          "cn": "他接受了邀请来我们家住。"
+        },
+        {
+          "en": "His school reports said that he is always ready to accept a challenge (=  agree to do something difficult  ) .",
+          "cn": "他的学业报告上说他乐于接受挑战。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "accept of",
+          "cn": "v. 承兑"
+        }
+      ],
+      "synonyms": [
+        "accept related"
+      ],
+      "antonyms": [
+        "not accept"
+      ],
+      "derivatives": [
+        "accepts",
+        "accepting"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “accept”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accept",
+      "sceneCue": "Beginner · 接受"
+    },
+    {
+      "id": "beginner_012_acceptable",
+      "word": "acceptable",
+      "phoneticUK": "ək'septəbl",
+      "phoneticUS": "ək'sɛptəbl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=acceptable&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=acceptable&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "可接受的"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “可接受的”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Students who achieve an acceptable standard will progress to degree studies.",
+          "cn": "达到一定程度的学生可以进一步攻读学位。"
+        },
+        {
+          "en": "How do we reach an acceptable level of data security?",
+          "cn": "我们如何使数据安全达到令人满意的程度？"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "acceptable level",
+          "cn": "可接受的程度"
+        },
+        {
+          "phrase": "acceptable quality",
+          "cn": "合格质量，可接受的质量"
+        },
+        {
+          "phrase": "acceptable performance",
+          "cn": "可接受的性能；合格性能"
+        },
+        {
+          "phrase": "acceptable risk",
+          "cn": "可接受的风险"
+        }
+      ],
+      "synonyms": [
+        "acceptable related"
+      ],
+      "antonyms": [
+        "not acceptable"
+      ],
+      "derivatives": [
+        "acceptables",
+        "acceptableing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “acceptable”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acceptable",
+      "sceneCue": "Beginner · 可接受的"
+    },
+    {
+      "id": "beginner_013_access",
+      "word": "access",
+      "phoneticUK": "'ækses",
+      "phoneticUS": "'æksɛs",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=access&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=access&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "接近",
+        "通道，入口",
+        "接近的机会",
+        "存取"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “接近”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Access is by means of a small door on the right.",
+          "cn": "入口是右边的一扇小门。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "access control",
+          "cn": "访问控制"
+        },
+        {
+          "phrase": "have access to",
+          "cn": "使用；接近；可以利用"
+        },
+        {
+          "phrase": "internet access",
+          "cn": "互联网接入"
+        },
+        {
+          "phrase": "easy access",
+          "cn": "便于检修；容易接近"
+        }
+      ],
+      "synonyms": [
+        "access related"
+      ],
+      "antonyms": [
+        "not access"
+      ],
+      "derivatives": [
+        "accesss",
+        "accessing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “access”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,access",
+      "sceneCue": "Beginner · 接近"
+    },
+    {
+      "id": "beginner_014_accident",
+      "word": "accident",
+      "phoneticUK": "'æksɪdənt",
+      "phoneticUS": "'æksədənt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=accident&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=accident&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "意外， 事故"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “意外， 事故”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "I met her quite by accident (=  completely by accident  ) .",
+          "cn": "我遇见她完全是偶然。"
+        },
+        {
+          "en": "The discovery was made almost by accident.",
+          "cn": "这项发现几乎纯属意外。"
+        },
+        {
+          "en": "The pilot, whether by accident or design (=  whether it was planned or not planned  ) , made the plane do a sharp turn.",
+          "cn": "不知是有意还是无意，那名飞行员让飞机来了个急转弯。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "traffic accident",
+          "cn": "交通事故"
+        },
+        {
+          "phrase": "by accident",
+          "cn": "偶然；意外地"
+        },
+        {
+          "phrase": "car accident",
+          "cn": "车祸；交通事故"
+        },
+        {
+          "phrase": "accident insurance",
+          "cn": "意外保险；事故保险"
+        }
+      ],
+      "synonyms": [
+        "accident related"
+      ],
+      "antonyms": [
+        "not accident"
+      ],
+      "derivatives": [
+        "accidents",
+        "accidenting"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “accident”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accident",
+      "sceneCue": "Beginner · 意外， 事故"
+    },
+    {
+      "id": "beginner_015_accommodation",
+      "word": "accommodation",
+      "phoneticUK": "əˌkɒmə'deɪʃn",
+      "phoneticUS": "ə,kɑmə'deʃən",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=accommodation&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=accommodation&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "住处",
+        "膳宿"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “住处”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "The price for the holiday includes flights and accommodation.",
+          "cn": "度假的价格包括机票和住宿。"
+        },
+        {
+          "en": "living accommodations for the crews",
+          "cn": "船员的起居舱"
+        },
+        {
+          "en": "travel and hotel accommodations",
+          "cn": "旅行及酒店住宿"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "accommodation space",
+          "cn": "起居舱室"
+        },
+        {
+          "phrase": "hostel accommodation",
+          "cn": "宿舍单位"
+        }
+      ],
+      "synonyms": [
+        "accommodation related"
+      ],
+      "antonyms": [
+        "not accommodation"
+      ],
+      "derivatives": [
+        "accommodations",
+        "accommodationing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “accommodation”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accommodation",
+      "sceneCue": "Beginner · 住处"
+    },
+    {
+      "id": "beginner_016_accompany",
+      "word": "accompany",
+      "phoneticUK": "ə'kʌmpəni",
+      "phoneticUS": "ə'kʌmpəni",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=accompany&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=accompany&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "陪伴， 陪同， 伴随",
+        "为…伴奏"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “陪伴， 陪同， 伴随”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Children under 14 must be accompanied by an adult.",
+          "cn": "14岁以下儿童必须有成人陪同。"
+        },
+        {
+          "en": "Wherever her husband went, she would accompany him.",
+          "cn": "不论丈夫去哪里，她都陪伴左右。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "accompany with",
+          "cn": "伴随着，兼带着；陪…同行"
+        },
+        {
+          "phrase": "accompany by",
+          "cn": "随行，伴奏；在…的陪同下"
+        }
+      ],
+      "synonyms": [
+        "accompany related"
+      ],
+      "antonyms": [
+        "not accompany"
+      ],
+      "derivatives": [
+        "accompanys",
+        "accompanying"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “accompany”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accompany",
+      "sceneCue": "Beginner · 陪伴， 陪同， 伴随"
+    },
+    {
+      "id": "beginner_017_account",
+      "word": "account",
+      "phoneticUK": "ə'kaunt",
+      "phoneticUS": "ə'kaʊnt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=account&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=account&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "说明原因",
+        "占",
+        "记述",
+        "解释"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “说明原因”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "My salary is paid into my bank account.",
+          "cn": "我的工资直接存入我的银行账户。"
+        },
+        {
+          "en": "I’ve opened an account with Barclay’s Bank.",
+          "cn": "我在巴克莱银行开了一个账户。"
+        },
+        {
+          "en": "My husband and I have a joint account (=  one that is shared between two people  ) .",
+          "cn": "我和丈夫有个联名账户。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "account of",
+          "cn": "在某人帐上重视，\t记帐"
+        },
+        {
+          "phrase": "account for",
+          "cn": "对…负有责任；对…做出解释；说明……的原因"
+        },
+        {
+          "phrase": "your account",
+          "cn": "您的帐号"
+        },
+        {
+          "phrase": "take into account",
+          "cn": "考虑；重视；体谅"
+        }
+      ],
+      "synonyms": [
+        "account related"
+      ],
+      "antonyms": [
+        "not account"
+      ],
+      "derivatives": [
+        "accounts",
+        "accounting"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “account”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,account",
+      "sceneCue": "Beginner · 说明原因"
+    },
+    {
+      "id": "beginner_018_accurate",
+      "word": "accurate",
+      "phoneticUK": "'ækjərət",
+      "phoneticUS": "'ækjərət",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=accurate&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=accurate&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "准确的， 正确无误的"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “准确的， 正确无误的”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "The brochure tries to give a fair and accurate description of each hotel.",
+          "cn": "该手册尽量公正、准确地介绍每一家酒店。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "accurate measurement",
+          "cn": "精确测量"
+        },
+        {
+          "phrase": "accurate positioning",
+          "cn": "精确定位"
+        },
+        {
+          "phrase": "accurate model",
+          "cn": "准确模型"
+        },
+        {
+          "phrase": "accurate simulation",
+          "cn": "准确模拟"
+        }
+      ],
+      "synonyms": [
+        "accurate related"
+      ],
+      "antonyms": [
+        "not accurate"
+      ],
+      "derivatives": [
+        "accurates",
+        "accurateing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “accurate”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accurate",
+      "sceneCue": "Beginner · 准确的， 正确无误的"
+    },
+    {
+      "id": "beginner_019_accuse",
+      "word": "accuse",
+      "phoneticUK": "ə'kjuːz",
+      "phoneticUS": "ə'kjuz",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=accuse&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=accuse&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "指责， 归咎于"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “指责， 归咎于”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "The professor stands accused of (=  has been accused of  ) stealing his student’s ideas and publishing them.",
+          "cn": "那位教授被指控剽窃学生的观点拿去发表。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "accuse of",
+          "cn": "谴责，控告"
+        }
+      ],
+      "synonyms": [
+        "accuse related"
+      ],
+      "antonyms": [
+        "not accuse"
+      ],
+      "derivatives": [
+        "accuses",
+        "accuseing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “accuse”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accuse",
+      "sceneCue": "Beginner · 指责， 归咎于"
+    },
+    {
+      "id": "beginner_020_achieve",
+      "word": "achieve",
+      "phoneticUK": "ə'tʃiːv",
+      "phoneticUS": "ə'tʃiv",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=achieve&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=achieve&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "取得",
+        "获得",
+        "实现",
+        "成功"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “取得”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Frances achieved very good exam results.",
+          "cn": "弗朗西丝考试取得了优异成绩。"
+        },
+        {
+          "en": "Wilson has achieved considerable success as an artist.",
+          "cn": "威尔逊作为一名艺术家成就斐然。"
+        },
+        {
+          "en": "She eventually achieved her goal of becoming a professor.",
+          "cn": "她终于实现目标，当上了教授。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "achieve success",
+          "cn": "取得成功；获得成功"
+        },
+        {
+          "phrase": "achieve one's goals",
+          "cn": "实现目标"
+        }
+      ],
+      "synonyms": [
+        "achieve related"
+      ],
+      "antonyms": [
+        "not achieve"
+      ],
+      "derivatives": [
+        "achieves",
+        "achieveing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “achieve”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,achieve",
+      "sceneCue": "Beginner · 取得"
+    },
+    {
+      "id": "beginner_021_achievement",
+      "word": "achievement",
+      "phoneticUK": "ə'tʃiːvmənt",
+      "phoneticUS": "ə'tʃivmənt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=achievement&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=achievement&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "完成",
+        "成就， 成绩"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “完成”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "His great achievement is to make all the players into a united team.",
+          "cn": "他的伟大成就在于把所有选手组织成一支团结的队伍。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "outstanding achievement",
+          "cn": "业绩；杰出成就"
+        },
+        {
+          "phrase": "academic achievement",
+          "cn": "学业成就；学业成绩"
+        },
+        {
+          "phrase": "achievement motivation",
+          "cn": "成就动机"
+        },
+        {
+          "phrase": "lifetime achievement",
+          "cn": "终身成就"
+        }
+      ],
+      "synonyms": [
+        "achievement related"
+      ],
+      "antonyms": [
+        "not achievement"
+      ],
+      "derivatives": [
+        "achievements",
+        "achievementing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “achievement”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,achievement",
+      "sceneCue": "Beginner · 完成"
+    },
+    {
+      "id": "beginner_022_acknowledge",
+      "word": "acknowledge",
+      "phoneticUK": "ək'nɒlɪdʒ",
+      "phoneticUS": "ək'nɑlɪdʒ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=acknowledge&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=acknowledge&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "承认， 承认…的权威",
+        "告知收到， 确认",
+        "对…表示感谢， 报偿"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “承认， 承认…的权威”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "The family acknowledge the need for change.",
+          "cn": "全家人都承认需要改变一下。"
+        },
+        {
+          "en": "Claire acknowledged that she was guilty.",
+          "cn": "克莱尔承认有罪。"
+        },
+        {
+          "en": "The government must acknowledge what is happening and do something about it.",
+          "cn": "对于目前的情况，政府必须承认其存在并对此采取措施。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "acknowledge receipt",
+          "cn": "证实收到"
+        },
+        {
+          "phrase": "acknowledge receipt of",
+          "cn": "收到"
+        }
+      ],
+      "synonyms": [
+        "acknowledge related"
+      ],
+      "antonyms": [
+        "not acknowledge"
+      ],
+      "derivatives": [
+        "acknowledges",
+        "acknowledgeing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “acknowledge”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acknowledge",
+      "sceneCue": "Beginner · 承认， 承认…的权威"
+    },
+    {
+      "id": "beginner_023_acquire",
+      "word": "acquire",
+      "phoneticUK": "ə'kwaɪə",
+      "phoneticUS": "ə'kwaɪr",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=acquire&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=acquire&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "取得， 获得， 学到"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “取得， 获得， 学到”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Manning hoped to acquire valuable works of art as cheaply as possible.",
+          "cn": "曼宁希望以尽可能低的价格买到有价值的艺术品。"
+        },
+        {
+          "en": "She has acquired an email address and a site on the World Wide Web.",
+          "cn": "她获得了一个电子邮件地址和万维网网址。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "acquire in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use acquire",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "acquire related"
+      ],
+      "antonyms": [
+        "not acquire"
+      ],
+      "derivatives": [
+        "acquires",
+        "acquireing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “acquire”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acquire",
+      "sceneCue": "Beginner · 取得， 获得， 学到"
+    },
+    {
+      "id": "beginner_024_across",
+      "word": "across",
+      "phoneticUK": "ə'krɔːs",
+      "phoneticUS": "ə'krɔs",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=across&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=across&type=2",
+      "partOfSpeech": "adv",
+      "definitions": [
+        "横过",
+        "到对面，向对面",
+        "穿过， 越过",
+        "在对面"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “横过”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "There’s Brendan. Why don’t you go across and say hello?",
+          "cn": "那是布伦丹，你为什么不去打个招呼呢？"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "across the board",
+          "cn": "全面地；包括一切地；以三等分的钱数赌同一匹马赢得前三名"
+        },
+        {
+          "phrase": "across from",
+          "cn": "在…对面"
+        },
+        {
+          "phrase": "go across",
+          "cn": "穿过，横过；走过"
+        },
+        {
+          "phrase": "back across",
+          "cn": "后背宽"
+        }
+      ],
+      "synonyms": [
+        "across related"
+      ],
+      "antonyms": [
+        "not across"
+      ],
+      "derivatives": [
+        "acrosss",
+        "acrossing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “across”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,across",
+      "sceneCue": "Beginner · 横过"
+    },
+    {
+      "id": "beginner_025_act",
+      "word": "act",
+      "phoneticUK": "ækt",
+      "phoneticUS": "ækt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=act&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=act&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "扮演",
+        "装作，举动像",
+        "行为，行动",
+        "法令，法案"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “扮演”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "I first started acting when I was 12 years old.",
+          "cn": "我12岁开始演戏。"
+        },
+        {
+          "en": "The movie is very well acted.",
+          "cn": "这部影片演得非常好。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "act as",
+          "cn": "担当"
+        },
+        {
+          "phrase": "act on",
+          "cn": "对…起作用；按照…行事"
+        },
+        {
+          "phrase": "act in",
+          "cn": "扮演；在…方面行动"
+        },
+        {
+          "phrase": "act like",
+          "cn": "举止像..."
+        }
+      ],
+      "synonyms": [
+        "act related"
+      ],
+      "antonyms": [
+        "not act"
+      ],
+      "derivatives": [
+        "acts",
+        "acting"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “act”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,act",
+      "sceneCue": "Beginner · 扮演"
+    },
+    {
+      "id": "beginner_026_action",
+      "word": "action",
+      "phoneticUK": "'ækʃn",
+      "phoneticUS": "'ækʃən",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=action&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=action&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "行动",
+        "已做的事",
+        "作用， 功能",
+        "情节"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “行动”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "The government must take action (=  do something  ) now to stop the rise in violent crime.",
+          "cn": "政府现在必须采取行动遏止暴力犯罪的上升。"
+        },
+        {
+          "en": "She was looking forward to putting her ideas into action (=  doing the things she had planned  ) .",
+          "cn": "她盼望着将自己的想法付诸实施。"
+        },
+        {
+          "en": "Ambulance crews are ready to spring into action (=  suddenly start doing something  ) if anything goes wrong during the race.",
+          "cn": "救护车急救人员随时准备出动，以应对比赛期间发生的意外。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "take action",
+          "cn": "采取行动；提出诉讼"
+        },
+        {
+          "phrase": "action on",
+          "cn": "对…的作用"
+        },
+        {
+          "phrase": "in action",
+          "cn": "在活动；在运转"
+        },
+        {
+          "phrase": "action plan",
+          "cn": "行动计划；行动方案"
+        }
+      ],
+      "synonyms": [
+        "action related"
+      ],
+      "antonyms": [
+        "not action"
+      ],
+      "derivatives": [
+        "actions",
+        "actioning"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “action”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,action",
+      "sceneCue": "Beginner · 行动"
+    },
+    {
+      "id": "beginner_027_active",
+      "word": "active",
+      "phoneticUK": "'æktɪv",
+      "phoneticUS": "'æktɪv",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=active&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=active&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "活跃的， 积极的",
+        "主动的",
+        "起作用的"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “活跃的， 积极的”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "games for active youngsters",
+          "cn": "活跃好动的年轻人玩的游戏"
+        },
+        {
+          "en": "She’s over 80, but is still very active.",
+          "cn": "她80多岁了，但仍旧很活跃。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "active in",
+          "cn": "积极于"
+        },
+        {
+          "phrase": "active role",
+          "cn": "积极任务；活跃角色"
+        },
+        {
+          "phrase": "active part",
+          "cn": "积极的作用；能动部分，主动部分"
+        },
+        {
+          "phrase": "active power",
+          "cn": "有功（有效）功率"
+        }
+      ],
+      "synonyms": [
+        "active related"
+      ],
+      "antonyms": [
+        "not active"
+      ],
+      "derivatives": [
+        "actives",
+        "activeing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “active”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,active",
+      "sceneCue": "Beginner · 活跃的， 积极的"
+    },
+    {
+      "id": "beginner_028_activity",
+      "word": "activity",
+      "phoneticUK": "æk'tɪvəti",
+      "phoneticUS": "ækˈtɪvətɪ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=activity&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=activity&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "活动",
+        "活力",
+        "行动"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “活动”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Everyone is free to engage in peaceful political activity.",
+          "cn": "每个人都可以自由参加和平的政治活动。"
+        },
+        {
+          "en": "fund-raising activities",
+          "cn": "筹款活动"
+        },
+        {
+          "en": "Regular physical activity helps to control your weight.",
+          "cn": "定期参加体育活动有助于控制体重。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "economic activity",
+          "cn": "经济活动"
+        },
+        {
+          "phrase": "catalytic activity",
+          "cn": "催化活性"
+        },
+        {
+          "phrase": "physical activity",
+          "cn": "身体活动，体育活动；体力活动"
+        },
+        {
+          "phrase": "biological activity",
+          "cn": "生物活性"
+        }
+      ],
+      "synonyms": [
+        "activity related"
+      ],
+      "antonyms": [
+        "not activity"
+      ],
+      "derivatives": [
+        "activitys",
+        "activitying"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “activity”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,activity",
+      "sceneCue": "Beginner · 活动"
+    },
+    {
+      "id": "beginner_029_actor",
+      "word": "actor",
+      "phoneticUK": "'æktə",
+      "phoneticUS": "'æktɚ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=actor&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=actor&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "男演员",
+        "行动者",
+        "作用物"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “男演员”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "His father was an actor in the Cantonese Opera Company.",
+          "cn": "他父亲曾是粤剧团的一名演员。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "best actor",
+          "cn": "最佳男主角；最佳男演员"
+        },
+        {
+          "phrase": "leading actor",
+          "cn": "主角，主要演员"
+        },
+        {
+          "phrase": "supporting actor",
+          "cn": "最佳男配角"
+        },
+        {
+          "phrase": "best supporting actor",
+          "cn": "最佳男配角"
+        }
+      ],
+      "synonyms": [
+        "actor related"
+      ],
+      "antonyms": [
+        "not actor"
+      ],
+      "derivatives": [
+        "actors",
+        "actoring"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “actor”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,actor",
+      "sceneCue": "Beginner · 男演员"
+    },
+    {
+      "id": "beginner_030_actress",
+      "word": "actress",
+      "phoneticUK": "'æktrɪs",
+      "phoneticUS": "'æktrɪs",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=actress&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=actress&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "女演员"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “女演员”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "She's not only a great dramatic actress but she's also very funny.",
+          "cn": "她不仅是一位伟大的女戏剧演员，而且也很幽默。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "actress in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use actress",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "actress related"
+      ],
+      "antonyms": [
+        "not actress"
+      ],
+      "derivatives": [
+        "actresss",
+        "actressing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “actress”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,actress",
+      "sceneCue": "Beginner · 女演员"
+    },
+    {
+      "id": "beginner_031_actual",
+      "word": "actual",
+      "phoneticUK": "'æktʃʊəl",
+      "phoneticUS": "'æktʃuəl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=actual&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=actual&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "实际的",
+        "真实的"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “实际的”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "I’m not joking. Those were his actual words.",
+          "cn": "我没开玩笑，那都是他的原话。"
+        },
+        {
+          "en": "I know Germany won, but I can’t tell you the actual score.",
+          "cn": "我知道德国队胜了，但我不知道确切的比分。"
+        },
+        {
+          "en": "Interest is only charged on the actual amount borrowed.",
+          "cn": "利息只按实际借款额收取。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "actual situation",
+          "cn": "实际情况"
+        },
+        {
+          "phrase": "actual strength",
+          "cn": "实际强度"
+        },
+        {
+          "phrase": "actual condition",
+          "cn": "实际情况；实际状况"
+        },
+        {
+          "phrase": "actual production",
+          "cn": "生产实绩；实际产量"
+        }
+      ],
+      "synonyms": [
+        "actual related"
+      ],
+      "antonyms": [
+        "not actual"
+      ],
+      "derivatives": [
+        "actuals",
+        "actualing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “actual”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,actual",
+      "sceneCue": "Beginner · 实际的"
+    },
+    {
+      "id": "beginner_032_actually",
+      "word": "actually",
+      "phoneticUK": "ˈæktʃuəli",
+      "phoneticUS": "ˈæktʃuəli",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=actually&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=actually&type=2",
+      "partOfSpeech": "adv",
+      "definitions": [
+        "实际上",
+        "事实上"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “实际上”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Actually, I don't know.",
+          "cn": "实际上，我不知道。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "actually in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use actually",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "actually related"
+      ],
+      "antonyms": [
+        "not actually"
+      ],
+      "derivatives": [
+        "actuallys",
+        "actuallying"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “actually”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,actually",
+      "sceneCue": "Beginner · 实际上"
+    },
+    {
+      "id": "beginner_033_adapt",
+      "word": "adapt",
+      "phoneticUK": "ə'dæpt",
+      "phoneticUS": "ə'dæpt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=adapt&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=adapt&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "使适应",
+        "改编"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “使适应”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "The ability to adapt is a definite asset in this job.",
+          "cn": "适应能力是做这份工作的绝对有利条件。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "adapt to something",
+          "cn": "（使）适合；（使）适应"
+        },
+        {
+          "phrase": "adapt for",
+          "cn": "调整，使适合于；为…改编"
+        }
+      ],
+      "synonyms": [
+        "adapt related"
+      ],
+      "antonyms": [
+        "not adapt"
+      ],
+      "derivatives": [
+        "adapts",
+        "adapting"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “adapt”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adapt",
+      "sceneCue": "Beginner · 使适应"
+    },
+    {
+      "id": "beginner_034_add",
+      "word": "add",
+      "phoneticUK": "æd",
+      "phoneticUS": "æd",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=add&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=add&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "加",
+        "增加",
+        "加起来",
+        "做加法"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “加”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "If the mixture seems dry, add water.",
+          "cn": "如果混合物看上去干，加点水。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "add up",
+          "cn": "v. 合计"
+        },
+        {
+          "phrase": "add in",
+          "cn": "添加；把…包括在内"
+        },
+        {
+          "phrase": "add value",
+          "cn": "增加价值；附加价值；添加值"
+        },
+        {
+          "phrase": "add on",
+          "cn": "插入；另外加上去"
+        }
+      ],
+      "synonyms": [
+        "add related"
+      ],
+      "antonyms": [
+        "not add"
+      ],
+      "derivatives": [
+        "adds",
+        "adding"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “add”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,add",
+      "sceneCue": "Beginner · 加"
+    },
+    {
+      "id": "beginner_035_addition",
+      "word": "addition",
+      "phoneticUK": "ə'dɪʃn",
+      "phoneticUS": "ə'dɪʃən",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=addition&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=addition&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "加， 加法",
+        "附加物"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “加， 加法”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "This is a fine book; a worthy addition to the series.",
+          "cn": "这是一本好书——是对这套丛书有价值的增补。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "in addition",
+          "cn": "另外，此外"
+        },
+        {
+          "phrase": "addition to sth",
+          "cn": "增加"
+        },
+        {
+          "phrase": "with the addition of",
+          "cn": "外加"
+        },
+        {
+          "phrase": "addition reaction",
+          "cn": "[化]加成；加成反应"
+        }
+      ],
+      "synonyms": [
+        "addition related"
+      ],
+      "antonyms": [
+        "not addition"
+      ],
+      "derivatives": [
+        "additions",
+        "additioning"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “addition”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,addition",
+      "sceneCue": "Beginner · 加， 加法"
+    },
+    {
+      "id": "beginner_036_additional",
+      "word": "additional",
+      "phoneticUK": "ə'dɪʃənl",
+      "phoneticUS": "ə'dɪʃənl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=additional&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=additional&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "附加的， 追加的"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “附加的， 追加的”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Additional information can be obtained from the centre.",
+          "cn": "可以从中心获取更多信息。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "additional information",
+          "cn": "附加信息；其他信息"
+        },
+        {
+          "phrase": "additional cost",
+          "cn": "额外费用，追加成本"
+        },
+        {
+          "phrase": "additional premium",
+          "cn": "附加保险费；追加保费"
+        },
+        {
+          "phrase": "additional charge",
+          "cn": "附加费；补充装料"
+        }
+      ],
+      "synonyms": [
+        "additional related"
+      ],
+      "antonyms": [
+        "not additional"
+      ],
+      "derivatives": [
+        "additionals",
+        "additionaling"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “additional”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,additional",
+      "sceneCue": "Beginner · 附加的， 追加的"
+    },
+    {
+      "id": "beginner_037_address",
+      "word": "address",
+      "phoneticUK": "ə'dres",
+      "phoneticUS": "əˈdrɛs;(for n)ˈædres; ædrɛs",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=address&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=address&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "作讲话",
+        "写姓名地址",
+        "地址",
+        "讲话"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “作讲话”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Send a stamped, self-addressed envelope (=  with your address on it so it can be sent back to you  ) .",
+          "cn": "寄上一个贴好邮票的、写有回邮地址的信封。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "email address",
+          "cn": "电子邮箱信箱"
+        },
+        {
+          "phrase": "ip address",
+          "cn": "网络地址，IP地址"
+        },
+        {
+          "phrase": "address book",
+          "cn": "通讯簿；住址名册"
+        },
+        {
+          "phrase": "home address",
+          "cn": "家庭住址；标识地址；内部地址"
+        }
+      ],
+      "synonyms": [
+        "address related"
+      ],
+      "antonyms": [
+        "not address"
+      ],
+      "derivatives": [
+        "addresss",
+        "addressing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “address”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,address",
+      "sceneCue": "Beginner · 作讲话"
+    },
+    {
+      "id": "beginner_038_administration",
+      "word": "administration",
+      "phoneticUK": "ədˌmɪnɪ'streɪʃn",
+      "phoneticUS": "əd,mɪnɪ'streʃən",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=administration&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=administration&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "管理",
+        "管理部门， 行政机关",
+        "实行， 执行"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “管理”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "We’re looking for someone with experience in administration.",
+          "cn": "我们正在寻找一个有管理经验的人。"
+        },
+        {
+          "en": "The health service spends too much on administration.",
+          "cn": "医疗服务部门在行政方面花费太多。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "administration of",
+          "cn": "◎(法律、惩罚等的)施行，执行，实行，实施；(药的)服用；用法；给与；(庄严的誓言或诺言的)提出，宣誓"
+        },
+        {
+          "phrase": "business administration",
+          "cn": "企业管理；经营管理"
+        },
+        {
+          "phrase": "public administration",
+          "cn": "公共行政；公共管理；行政管理"
+        },
+        {
+          "phrase": "general administration",
+          "cn": "总管理处"
+        }
+      ],
+      "synonyms": [
+        "administration related"
+      ],
+      "antonyms": [
+        "not administration"
+      ],
+      "derivatives": [
+        "administrations",
+        "administrationing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “administration”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,administration",
+      "sceneCue": "Beginner · 管理"
+    },
+    {
+      "id": "beginner_039_admire",
+      "word": "admire",
+      "phoneticUK": "əd'maɪə",
+      "phoneticUS": "ədˈmaɪr",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=admire&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=admire&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "钦佩， 羡慕",
+        "赞赏， 称赞， 夸奖"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “钦佩， 羡慕”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "I really admire the way she brings up those kids all on her own.",
+          "cn": "我十分佩服她独力把那些孩子抚养大。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "admire for",
+          "cn": "vt. 赞赏"
+        }
+      ],
+      "synonyms": [
+        "admire related"
+      ],
+      "antonyms": [
+        "not admire"
+      ],
+      "derivatives": [
+        "admires",
+        "admireing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “admire”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,admire",
+      "sceneCue": "Beginner · 钦佩， 羡慕"
+    },
+    {
+      "id": "beginner_040_admit",
+      "word": "admit",
+      "phoneticUK": "əd'mɪt",
+      "phoneticUS": "əd'mɪt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=admit&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=admit&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "承认， 供认",
+        "准许…进入"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “承认， 供认”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "‘Okay, so maybe I was a little bit scared,’ Jenny admitted.",
+          "cn": "“行了，也许我是有点害怕。”珍妮承认道。"
+        },
+        {
+          "en": "I must admit , I didn’t actually do anything to help her.",
+          "cn": "我必须承认，实际上我并没有帮她什么忙。"
+        },
+        {
+          "en": "Admit it! I’m right, aren’t I?",
+          "cn": "承认吧！我对了，是不是？"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "admit of",
+          "cn": "容许，有…的可能"
+        }
+      ],
+      "synonyms": [
+        "admit related"
+      ],
+      "antonyms": [
+        "not admit"
+      ],
+      "derivatives": [
+        "admits",
+        "admiting"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “admit”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,admit",
+      "sceneCue": "Beginner · 承认， 供认"
+    },
+    {
+      "id": "beginner_041_adopt",
+      "word": "adopt",
+      "phoneticUK": "ə'dɒpt",
+      "phoneticUS": "ə'dɑpt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=adopt&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=adopt&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "收养",
+        "采用， 采取",
+        "正式通过， 批准"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “收养”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Sally was adopted when she was four.",
+          "cn": "莎莉四岁时被人收养。"
+        },
+        {
+          "en": "The couple are unable to have children of their own, but hope to adopt.",
+          "cn": "那对夫妇自己无法生育，但希望领养孩子。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "adopt various methods",
+          "cn": "采取不同办法"
+        }
+      ],
+      "synonyms": [
+        "adopt related"
+      ],
+      "antonyms": [
+        "not adopt"
+      ],
+      "derivatives": [
+        "adopts",
+        "adopting"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “adopt”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adopt",
+      "sceneCue": "Beginner · 收养"
+    },
+    {
+      "id": "beginner_042_adult",
+      "word": "adult",
+      "phoneticUK": "'ædʌlt; ə'dʌlt",
+      "phoneticUS": "'ædʌlt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=adult&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=adult&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "成年的",
+        "成年人的， 适宜于成年人的",
+        "成年人"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “成年的”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "an adult lion",
+          "cn": "一头成年的狮子"
+        },
+        {
+          "en": "the adult population",
+          "cn": "成年人口"
+        },
+        {
+          "en": "He lived most of his adult life in Scotland.",
+          "cn": "他成年后大部分时间住在苏格兰。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "adult education",
+          "cn": "成人教育"
+        },
+        {
+          "phrase": "young adult",
+          "cn": "年轻人；大学生"
+        },
+        {
+          "phrase": "adult population",
+          "cn": "成年人口"
+        },
+        {
+          "phrase": "adult learning",
+          "cn": "成人学习"
+        }
+      ],
+      "synonyms": [
+        "adult related"
+      ],
+      "antonyms": [
+        "not adult"
+      ],
+      "derivatives": [
+        "adults",
+        "adulting"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “adult”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adult",
+      "sceneCue": "Beginner · 成年的"
+    },
+    {
+      "id": "beginner_043_advance",
+      "word": "advance",
+      "phoneticUK": "əd'væns",
+      "phoneticUS": "əd'væns",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=advance&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=advance&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "前进，向前移动",
+        "发展，进步",
+        "促进",
+        "预付"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “前进，向前移动”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "A line of US tanks slowly advanced.",
+          "cn": "一列美军坦克缓缓前进。"
+        },
+        {
+          "en": "They don't normally give any advance notice about which building they're going to inspect.",
+          "cn": "他们对要视察哪座大楼通常不作事先通知。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "in advance",
+          "cn": "adv. 预先，提前"
+        },
+        {
+          "phrase": "in advance of",
+          "cn": "超过；在…前面"
+        },
+        {
+          "phrase": "advance in",
+          "cn": "进步；改进"
+        },
+        {
+          "phrase": "with the advance of",
+          "cn": "随着…的增加；随着(时间)的推移"
+        }
+      ],
+      "synonyms": [
+        "advance related"
+      ],
+      "antonyms": [
+        "not advance"
+      ],
+      "derivatives": [
+        "advances",
+        "advanceing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “advance”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,advance",
+      "sceneCue": "Beginner · 前进，向前移动"
+    },
+    {
+      "id": "beginner_044_advanced",
+      "word": "advanced",
+      "phoneticUK": "əd'vɑːnst",
+      "phoneticUS": "əd'vænst",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=advanced&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=advanced&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "先进的",
+        "高级的",
+        "年迈的",
+        "后阶段的"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “先进的”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "advanced weapon systems",
+          "cn": "先进的武器系统"
+        },
+        {
+          "en": "advanced technology",
+          "cn": "先进的技术"
+        },
+        {
+          "en": "high levels of unemployment in the advanced industrial societies",
+          "cn": "发达工业社会中的高失业率"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "advanced technology",
+          "cn": "先进技术"
+        },
+        {
+          "phrase": "advanced level",
+          "cn": "n. （英国）一般学历证书考试优等（等于A level）"
+        },
+        {
+          "phrase": "advanced science",
+          "cn": "先进科学；尖端科学"
+        },
+        {
+          "phrase": "advanced control",
+          "cn": "[计]先行控制"
+        }
+      ],
+      "synonyms": [
+        "advanced related"
+      ],
+      "antonyms": [
+        "not advanced"
+      ],
+      "derivatives": [
+        "advanceds",
+        "advanceding"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “advanced”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,advanced",
+      "sceneCue": "Beginner · 先进的"
+    },
+    {
+      "id": "beginner_045_advantage",
+      "word": "advantage",
+      "phoneticUK": "əd'vɑːntɪdʒ",
+      "phoneticUS": "əd'væntɪdʒ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=advantage&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=advantage&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "优点， 优势， 好处"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “优点， 优势， 好处”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Younger workers tend to be at an advantage (=  have an advantage  ) when applying for jobs.",
+          "cn": "年轻点的工人申请工作时往往处于优势地位。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "take advantage of",
+          "cn": "利用"
+        },
+        {
+          "phrase": "competitive advantage",
+          "cn": "竞争优势"
+        },
+        {
+          "phrase": "advantage in",
+          "cn": "发球占先；发球人领先"
+        },
+        {
+          "phrase": "comparative advantage",
+          "cn": "[经]比较利益；相对优势"
+        }
+      ],
+      "synonyms": [
+        "advantage related"
+      ],
+      "antonyms": [
+        "not advantage"
+      ],
+      "derivatives": [
+        "advantages",
+        "advantageing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “advantage”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,advantage",
+      "sceneCue": "Beginner · 优点， 优势， 好处"
+    },
+    {
+      "id": "beginner_046_adventure",
+      "word": "adventure",
+      "phoneticUK": "əd'ventʃə",
+      "phoneticUS": "əd'vɛntʃɚ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=adventure&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=adventure&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "奇遇",
+        "冒险， 冒险活动"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “奇遇”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "a great adventure",
+          "cn": "一大奇遇"
+        },
+        {
+          "en": "Ahab’s adventures at sea",
+          "cn": "亚哈的海上历险"
+        },
+        {
+          "en": "an adventure story",
+          "cn": "一个历险故事"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "adventure film",
+          "cn": "惊险片"
+        }
+      ],
+      "synonyms": [
+        "adventure related"
+      ],
+      "antonyms": [
+        "not adventure"
+      ],
+      "derivatives": [
+        "adventures",
+        "adventureing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “adventure”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adventure",
+      "sceneCue": "Beginner · 奇遇"
+    },
+    {
+      "id": "beginner_047_advertise",
+      "word": "advertise",
+      "phoneticUK": "'ædvətaɪz",
+      "phoneticUS": "'ædvɚtaɪz",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=advertise&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=advertise&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "为…做广告， 宣传",
+        "公告",
+        "登广告"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “为…做广告， 宣传”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "They no longer advertise alcohol or cigarettes at sporting events.",
+          "cn": "他们不再在体育赛事上做烟酒广告了。"
+        },
+        {
+          "en": "Colleges and universities have found that it pays to advertise (=  advertising brings good results  ) .",
+          "cn": "大专院校发现做广告效果很好。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "advertise for",
+          "cn": "登广告征求（寻找）某物；登招请（待聘等）广告"
+        }
+      ],
+      "synonyms": [
+        "advertise related"
+      ],
+      "antonyms": [
+        "not advertise"
+      ],
+      "derivatives": [
+        "advertises",
+        "advertiseing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “advertise”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,advertise",
+      "sceneCue": "Beginner · 为…做广告， 宣传"
+    },
+    {
+      "id": "beginner_048_advertisement",
+      "word": "advertisement",
+      "phoneticUK": "əd'vɜːtɪsmənt",
+      "phoneticUS": ",ædvɚ'taɪzmənt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=advertisement&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=advertisement&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "广告， 公告， 登广告",
+        "广告活动， 宣传"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “广告， 公告， 登广告”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "They put an advertisement in ‘The Morning News’, offering a high salary for the right person.",
+          "cn": "他们在《晨报》上刊登了一则启事，出高薪寻找合适的人选。"
+        },
+        {
+          "en": "The organizers of the concert had taken out a full page advertisement in ‘The New York Times’.",
+          "cn": "音乐会筹办者在《纽约时报》上刊登了整版广告。"
+        },
+        {
+          "en": "Only a handful of people answered the advertisement .",
+          "cn": "只有寥寥数人对该广告作出了回应。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "advertisement company",
+          "cn": "广告公司"
+        },
+        {
+          "phrase": "commercial advertisement",
+          "cn": "商业广告"
+        },
+        {
+          "phrase": "advertisement plan",
+          "cn": "广告策划"
+        },
+        {
+          "phrase": "classified advertisement",
+          "cn": "分类广告"
+        }
+      ],
+      "synonyms": [
+        "advertisement related"
+      ],
+      "antonyms": [
+        "not advertisement"
+      ],
+      "derivatives": [
+        "advertisements",
+        "advertisementing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “advertisement”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,advertisement",
+      "sceneCue": "Beginner · 广告， 公告， 登广告"
+    },
+    {
+      "id": "beginner_049_advertising",
+      "word": "advertising",
+      "phoneticUK": "ˈædvətaɪzɪŋ",
+      "phoneticUS": "ˈædvərtaɪzɪŋ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=advertising&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=advertising&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "广告",
+        "广告业"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “广告”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "She works in advertising.",
+          "cn": "她在广告业工作。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "advertising in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use advertising",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "advertising related"
+      ],
+      "antonyms": [
+        "not advertising"
+      ],
+      "derivatives": [
+        "advertisings",
+        "advertisinging"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “advertising”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,advertising",
+      "sceneCue": "Beginner · 广告"
+    },
+    {
+      "id": "beginner_050_advice",
+      "word": "advice",
+      "phoneticUK": "əd'vaɪs",
+      "phoneticUS": "ədˈvaɪs",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=advice&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=advice&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "劝告， 忠告",
+        "建议， 意见"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “劝告， 忠告”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "You should have followed my advice.",
+          "cn": "你真该听我的建议。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "seek advice",
+          "cn": "征求意见；请教"
+        },
+        {
+          "phrase": "good advice",
+          "cn": "好建议"
+        },
+        {
+          "phrase": "give advice",
+          "cn": "劝告，忠告"
+        },
+        {
+          "phrase": "legal advice",
+          "cn": "法律意见；[法]法律谘询"
+        }
+      ],
+      "synonyms": [
+        "advice related"
+      ],
+      "antonyms": [
+        "not advice"
+      ],
+      "derivatives": [
+        "advices",
+        "adviceing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “advice”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,advice",
+      "sceneCue": "Beginner · 劝告， 忠告"
+    },
+    {
+      "id": "beginner_051_advise",
+      "word": "advise",
+      "phoneticUK": "əd'vaɪz",
+      "phoneticUS": "əd'vaɪz",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=advise&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=advise&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "建议",
+        "劝告，忠告",
+        "通知",
+        "警告"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “建议”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "She needed someone to advise her.",
+          "cn": "她需要有个人给她出主意。"
+        },
+        {
+          "en": "‘Make sure that you keep the documents in a safe place,’ Otley advised him.",
+          "cn": "“一定要把文件放在安全的地方。”奥特利向他建议道。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "please advise",
+          "cn": "请指导；请指示"
+        },
+        {
+          "phrase": "advise of",
+          "cn": "通知"
+        }
+      ],
+      "synonyms": [
+        "advise related"
+      ],
+      "antonyms": [
+        "not advise"
+      ],
+      "derivatives": [
+        "advises",
+        "adviseing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “advise”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,advise",
+      "sceneCue": "Beginner · 建议"
+    },
+    {
+      "id": "beginner_052_affair",
+      "word": "affair",
+      "phoneticUK": "ə'feə",
+      "phoneticUS": "ə'fɛr",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=affair&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=affair&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "事情",
+        "事务",
+        "私事",
+        "（尤指关系不长久的）风流韵事"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “事情”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Are you interested in world affairs?",
+          "cn": "你对世界大事感兴趣吗？"
+        },
+        {
+          "en": "the Ministry of Foreign Affairs",
+          "cn": "外交部"
+        },
+        {
+          "en": "Women had little role in public affairs.",
+          "cn": "女性过去几乎不参与公共事务。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "state of affairs",
+          "cn": "事态；情势"
+        },
+        {
+          "phrase": "love affair",
+          "cn": "风流韵事；强烈爱好"
+        },
+        {
+          "phrase": "have an affair",
+          "cn": "有外遇；通奸；婚外恋"
+        },
+        {
+          "phrase": "private affair",
+          "cn": "私事"
+        }
+      ],
+      "synonyms": [
+        "affair related"
+      ],
+      "antonyms": [
+        "not affair"
+      ],
+      "derivatives": [
+        "affairs",
+        "affairing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “affair”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,affair",
+      "sceneCue": "Beginner · 事情"
+    },
+    {
+      "id": "beginner_053_affect",
+      "word": "affect",
+      "phoneticUK": "ə'fekt",
+      "phoneticUS": "ə'fɛkt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=affect&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=affect&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "影响",
+        "感动"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “影响”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "the areas affected by the hurricane",
+          "cn": "受飓风影响的地区"
+        },
+        {
+          "en": "a disease that affects the central nervous system",
+          "cn": "影响中枢神经系统的疾病"
+        },
+        {
+          "en": "decisions which affect our lives",
+          "cn": "影响我们生活的决定"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "affect in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use affect",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "affect related"
+      ],
+      "antonyms": [
+        "not affect"
+      ],
+      "derivatives": [
+        "affects",
+        "affecting"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “affect”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,affect",
+      "sceneCue": "Beginner · 影响"
+    },
+    {
+      "id": "beginner_054_afford",
+      "word": "afford",
+      "phoneticUK": "ə'fɔːd",
+      "phoneticUS": "ə'fɔrd",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=afford&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=afford&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "担负得起",
+        "提供"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “担负得起”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "The room affords a beautiful view over the city.",
+          "cn": "这房间可以俯瞰城市美景。"
+        },
+        {
+          "en": "The new law will afford protection to employees.",
+          "cn": "新法律将为雇员提供保障。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "can afford",
+          "cn": "买得起；有能力负担"
+        }
+      ],
+      "synonyms": [
+        "afford related"
+      ],
+      "antonyms": [
+        "not afford"
+      ],
+      "derivatives": [
+        "affords",
+        "affording"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “afford”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,afford",
+      "sceneCue": "Beginner · 担负得起"
+    },
+    {
+      "id": "beginner_055_afraid",
+      "word": "afraid",
+      "phoneticUK": "ə'freɪd",
+      "phoneticUS": "ə'fred",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=afraid&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=afraid&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "害怕的",
+        "恐怕",
+        "担心的"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “害怕的”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "There’s no need to be afraid.",
+          "cn": "没有必要害怕。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "afraid of",
+          "cn": "害怕"
+        },
+        {
+          "phrase": "i'm afraid",
+          "cn": "我害怕；恐怕"
+        }
+      ],
+      "synonyms": [
+        "afraid related"
+      ],
+      "antonyms": [
+        "not afraid"
+      ],
+      "derivatives": [
+        "afraids",
+        "afraiding"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “afraid”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,afraid",
+      "sceneCue": "Beginner · 害怕的"
+    },
+    {
+      "id": "beginner_056_after",
+      "word": "after",
+      "phoneticUK": "'ɑːftə",
+      "phoneticUS": "'æftɚ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=after&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=after&type=2",
+      "partOfSpeech": "adv",
+      "definitions": [
+        "后来，以后",
+        "在……之后",
+        "以后的"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “后来，以后”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Tomorrow. Or the day after.",
+          "cn": "明天。或者后天。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "after all",
+          "cn": "毕竟；终究"
+        },
+        {
+          "phrase": "go after",
+          "cn": "追求，追逐"
+        },
+        {
+          "phrase": "ever after",
+          "cn": "从此以后一直"
+        },
+        {
+          "phrase": "after hours",
+          "cn": "adv. 下班；工作完毕后"
+        }
+      ],
+      "synonyms": [
+        "after related"
+      ],
+      "antonyms": [
+        "not after"
+      ],
+      "derivatives": [
+        "afters",
+        "aftering"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “after”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,after",
+      "sceneCue": "Beginner · 后来，以后"
+    },
+    {
+      "id": "beginner_057_afternoon",
+      "word": "afternoon",
+      "phoneticUK": "ɑːftə'nuːn",
+      "phoneticUS": ",æftɚ'nun",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=afternoon&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=afternoon&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "午后，下午"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “午后，下午”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "There’s a meeting on Thursday afternoon .",
+          "cn": "星期四下午有个会议。"
+        },
+        {
+          "en": "It was very hot in the afternoon .",
+          "cn": "下午很热。"
+        },
+        {
+          "en": "See you tomorrow afternoon .",
+          "cn": "明天下午见。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "in the afternoon",
+          "cn": "adv. 在下午"
+        },
+        {
+          "phrase": "good afternoon",
+          "cn": "int. 下午好"
+        },
+        {
+          "phrase": "tomorrow afternoon",
+          "cn": "明天下午"
+        },
+        {
+          "phrase": "every afternoon",
+          "cn": "每天下午"
+        }
+      ],
+      "synonyms": [
+        "afternoon related"
+      ],
+      "antonyms": [
+        "not afternoon"
+      ],
+      "derivatives": [
+        "afternoons",
+        "afternooning"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “afternoon”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,afternoon",
+      "sceneCue": "Beginner · 午后，下午"
+    },
+    {
+      "id": "beginner_058_afterwards",
+      "word": "afterwards",
+      "phoneticUK": "'ɑːftəwəd(z)",
+      "phoneticUS": "'æftɚwɚdz",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=afterwards&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=afterwards&type=2",
+      "partOfSpeech": "adv",
+      "definitions": [
+        "后来， 以后"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “后来， 以后”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Charles arrived shortly afterwards .",
+          "cn": "过了不多久，查尔斯来了。"
+        },
+        {
+          "en": "She died not long afterwards .",
+          "cn": "不久以后她去世了。"
+        },
+        {
+          "en": "Afterwards, I was asked to write a book.",
+          "cn": "后来，有人要我写一本书。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "afterwards in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use afterwards",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "afterwards related"
+      ],
+      "antonyms": [
+        "not afterwards"
+      ],
+      "derivatives": [
+        "afterwardss",
+        "afterwardsing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “afterwards”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,afterwards",
+      "sceneCue": "Beginner · 后来， 以后"
+    },
+    {
+      "id": "beginner_059_again",
+      "word": "again",
+      "phoneticUK": "ə'gen; ə'geɪn",
+      "phoneticUS": "ə'ɡɛn",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=again&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=again&type=2",
+      "partOfSpeech": "adv",
+      "definitions": [
+        "又，此外",
+        "再一次",
+        "再说",
+        "增加"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “又，此外”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Can you say that again? I didn’t hear.",
+          "cn": "你能再说一遍吗？ 我没听见。"
+        },
+        {
+          "en": "I’ll never go there again.",
+          "cn": "我再也不会去那儿了。"
+        },
+        {
+          "en": "Mr Khan’s busy. Can you try again later?",
+          "cn": "卡恩先生正忙着。 你能不能过一会儿再打来？"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "again and again",
+          "cn": "adv. 再三地，反复地"
+        },
+        {
+          "phrase": "try again",
+          "cn": "再来一次"
+        },
+        {
+          "phrase": "over again",
+          "cn": "再一次"
+        },
+        {
+          "phrase": "come again",
+          "cn": "回来；重新赶上去；回去"
+        }
+      ],
+      "synonyms": [
+        "again related"
+      ],
+      "antonyms": [
+        "not again"
+      ],
+      "derivatives": [
+        "agains",
+        "againing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “again”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,again",
+      "sceneCue": "Beginner · 又，此外"
+    },
+    {
+      "id": "beginner_060_against",
+      "word": "against",
+      "phoneticUK": "ə'genst; ə'geɪnst",
+      "phoneticUS": "ə'ɡɛnst",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=against&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=against&type=2",
+      "partOfSpeech": "prep",
+      "definitions": [
+        "反对，违反",
+        "靠",
+        "倚",
+        "防备"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “反对，违反”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "There was a ladder propped up against the wall.",
+          "cn": "有一把梯子靠在墙边。"
+        },
+        {
+          "en": "The younger policeman was leaning against the bureau with his arms folded.",
+          "cn": "那位较年轻的警官两臂交叉，倚靠在办公桌旁。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "up against",
+          "cn": "面临"
+        },
+        {
+          "phrase": "go against",
+          "cn": "不利于；违反；反对"
+        },
+        {
+          "phrase": "over against",
+          "cn": "在…对面；正对着；与…相反；与…形成对照"
+        },
+        {
+          "phrase": "as against",
+          "cn": "与…相对照；比…"
+        }
+      ],
+      "synonyms": [
+        "against related"
+      ],
+      "antonyms": [
+        "not against"
+      ],
+      "derivatives": [
+        "againsts",
+        "againsting"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “against”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,against",
+      "sceneCue": "Beginner · 反对，违反"
+    },
+    {
+      "id": "beginner_061_age",
+      "word": "age",
+      "phoneticUK": "eɪdʒ",
+      "phoneticUS": "edʒ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=age&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=age&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "年龄",
+        "时代",
+        "寿命，使用年限",
+        "阶段"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “年龄”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Francis is the same age as me.",
+          "cn": "弗朗西斯和我同年岁。"
+        },
+        {
+          "en": "Experts disagree over the age of the drawings.",
+          "cn": "专家对这些画作的年代意见不统一。"
+        },
+        {
+          "en": "Dad retired at the age of 56.",
+          "cn": "爸爸是在56岁时退休的。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "at the age of",
+          "cn": "在…岁"
+        },
+        {
+          "phrase": "of age",
+          "cn": "成年"
+        },
+        {
+          "phrase": "old age",
+          "cn": "老年；晚年"
+        },
+        {
+          "phrase": "at one's age",
+          "cn": "在…这个年龄(或岁数)"
+        }
+      ],
+      "synonyms": [
+        "age related"
+      ],
+      "antonyms": [
+        "not age"
+      ],
+      "derivatives": [
+        "ages",
+        "ageing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “age”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,age",
+      "sceneCue": "Beginner · 年龄"
+    },
+    {
+      "id": "beginner_062_aged",
+      "word": "aged",
+      "phoneticUK": "eɪdʒd",
+      "phoneticUS": "eɪdʒd",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=aged&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=aged&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "年老的",
+        "...岁的"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “年老的”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "An aged man sat in the corner.",
+          "cn": "一位老人坐在角落里。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "aged in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use aged",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "aged related"
+      ],
+      "antonyms": [
+        "not aged"
+      ],
+      "derivatives": [
+        "ageds",
+        "ageding"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “aged”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aged",
+      "sceneCue": "Beginner · 年老的"
+    },
+    {
+      "id": "beginner_063_agency",
+      "word": "agency",
+      "phoneticUK": "'eɪdʒənsi",
+      "phoneticUS": "'edʒənsi",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=agency&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=agency&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "经办， 代理",
+        "代理处",
+        "专门行政部门"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “经办， 代理”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "a UN agency responsible for helping refugees",
+          "cn": "负责为难民提供帮助的联合国机构"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "news agency",
+          "cn": "通讯社；新闻通讯社"
+        },
+        {
+          "phrase": "xinhua news agency",
+          "cn": "新华社"
+        },
+        {
+          "phrase": "travel agency",
+          "cn": "旅行社"
+        },
+        {
+          "phrase": "agency business",
+          "cn": "代理业务"
+        }
+      ],
+      "synonyms": [
+        "agency related"
+      ],
+      "antonyms": [
+        "not agency"
+      ],
+      "derivatives": [
+        "agencys",
+        "agencying"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “agency”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,agency",
+      "sceneCue": "Beginner · 经办， 代理"
+    },
+    {
+      "id": "beginner_064_agenda",
+      "word": "agenda",
+      "phoneticUK": "ə'dʒendə",
+      "phoneticUS": "ə'dʒɛndə",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=agenda&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=agenda&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "议事日程"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “议事日程”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "The Republicans have stuck to their conservative agenda.",
+          "cn": "共和党人坚持自己的保守议题。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "item on the agenda",
+          "cn": "议程项目"
+        },
+        {
+          "phrase": "hidden agenda",
+          "cn": "隐秘的议程；幕后的动机"
+        },
+        {
+          "phrase": "agenda setting",
+          "cn": "议题设定；议程设定"
+        }
+      ],
+      "synonyms": [
+        "agenda related"
+      ],
+      "antonyms": [
+        "not agenda"
+      ],
+      "derivatives": [
+        "agendas",
+        "agendaing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “agenda”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,agenda",
+      "sceneCue": "Beginner · 议事日程"
+    },
+    {
+      "id": "beginner_065_agent",
+      "word": "agent",
+      "phoneticUK": "'eɪdʒənt",
+      "phoneticUS": "'edʒənt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=agent&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=agent&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "代理人， 代理商",
+        "政府代表",
+        "动因， 原因",
+        "剂"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “代理人， 代理商”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Our agent in Rio deals with all our Brazilian business.",
+          "cn": "我们在里约热内卢的业务代表处理我们在巴西的全部业务。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "coupling agent",
+          "cn": "[化]偶联剂"
+        },
+        {
+          "phrase": "curing agent",
+          "cn": "固化剂；[化]硬化剂"
+        },
+        {
+          "phrase": "sales agent",
+          "cn": "销售代理商"
+        },
+        {
+          "phrase": "reducing agent",
+          "cn": "还原剂"
+        }
+      ],
+      "synonyms": [
+        "agent related"
+      ],
+      "antonyms": [
+        "not agent"
+      ],
+      "derivatives": [
+        "agents",
+        "agenting"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “agent”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,agent",
+      "sceneCue": "Beginner · 代理人， 代理商"
+    },
+    {
+      "id": "beginner_066_aggressive",
+      "word": "aggressive",
+      "phoneticUK": "ə'gresɪv",
+      "phoneticUS": "ə'ɡrɛsɪv",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=aggressive&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=aggressive&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "侵略的， 好斗的",
+        "敢做敢为的",
+        "有进取心的"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “侵略的， 好斗的”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Jim’s voice became aggressive.",
+          "cn": "吉姆的声音凶了起来。"
+        },
+        {
+          "en": "Teachers apparently expect a certain amount of aggressive behaviour from boys.",
+          "cn": "老师显然料到男孩子多少会有些好勇斗狠的行为。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "aggressive behavior",
+          "cn": "攻击行为；侵犯行为"
+        },
+        {
+          "phrase": "aggressive action",
+          "cn": "侵蚀作用；腐蚀性"
+        },
+        {
+          "phrase": "aggressive attitude",
+          "cn": "侵犯态度"
+        },
+        {
+          "phrase": "aggressive growth",
+          "cn": "积极成长型；进取型的投资管理"
+        }
+      ],
+      "synonyms": [
+        "aggressive related"
+      ],
+      "antonyms": [
+        "not aggressive"
+      ],
+      "derivatives": [
+        "aggressives",
+        "aggressiveing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “aggressive”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aggressive",
+      "sceneCue": "Beginner · 侵略的， 好斗的"
+    },
+    {
+      "id": "beginner_067_ago",
+      "word": "ago",
+      "phoneticUK": "ə'gəʊ",
+      "phoneticUS": "ə'ɡo",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=ago&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=ago&type=2",
+      "partOfSpeech": "adv",
+      "definitions": [
+        "以前，以往",
+        "以前的",
+        "过去的",
+        "(Ago)人名"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “以前，以往”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "They moved to a new house some time ago (=  a fairly long time ago  ) .",
+          "cn": "他们搬进新居已有些日子了。"
+        },
+        {
+          "en": "We had our bicentenary celebrations not that long ago.",
+          "cn": "不久前，我们举行了200周年庆典活动。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "ago in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use ago",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "ago related"
+      ],
+      "antonyms": [
+        "not ago"
+      ],
+      "derivatives": [
+        "agos",
+        "agoing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “ago”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ago",
+      "sceneCue": "Beginner · 以前，以往"
+    },
+    {
+      "id": "beginner_068_agree",
+      "word": "agree",
+      "phoneticUK": "ə'griː",
+      "phoneticUS": "ə'ɡri",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=agree&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=agree&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "同意，赞成",
+        "承认",
+        "约定，商定"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “同意，赞成”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Teenagers and their parents rarely agree.",
+          "cn": "十几岁的孩子跟父母意见很少一致。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "agree with",
+          "cn": "同意，和…意见一致"
+        },
+        {
+          "phrase": "agree on",
+          "cn": "对…取得一致意见"
+        },
+        {
+          "phrase": "agree in",
+          "cn": "在…方面意见一致；在…相同"
+        },
+        {
+          "phrase": "agree about",
+          "cn": "对…有相同的看法；就…取得一致意见"
+        }
+      ],
+      "synonyms": [
+        "agree related"
+      ],
+      "antonyms": [
+        "not agree"
+      ],
+      "derivatives": [
+        "agrees",
+        "agreeing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “agree”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,agree",
+      "sceneCue": "Beginner · 同意，赞成"
+    },
+    {
+      "id": "beginner_069_agreement",
+      "word": "agreement",
+      "phoneticUK": "ə'griːm(ə)nt",
+      "phoneticUS": "ə'grimənt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=agreement&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=agreement&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "协议",
+        "同意，一致"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “协议”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "It is easier for two parties to reach agreement than for three.",
+          "cn": "两方达成一致比三方达成一致容易。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "agreement with",
+          "cn": "同…达成协议"
+        },
+        {
+          "phrase": "agreement on",
+          "cn": "一致意见"
+        },
+        {
+          "phrase": "in agreement",
+          "cn": "一致；同意；意见一致"
+        },
+        {
+          "phrase": "in agreement with",
+          "cn": "同意；与…一致"
+        }
+      ],
+      "synonyms": [
+        "agreement related"
+      ],
+      "antonyms": [
+        "not agreement"
+      ],
+      "derivatives": [
+        "agreements",
+        "agreementing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “agreement”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,agreement",
+      "sceneCue": "Beginner · 协议"
+    },
+    {
+      "id": "beginner_070_ah",
+      "word": "ah",
+      "phoneticUK": "ɑː",
+      "phoneticUS": "ɑː",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=ah&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=ah&type=2",
+      "partOfSpeech": "interj",
+      "definitions": [
+        "啊"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “啊”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Ah, I understand now.",
+          "cn": "啊，我现在明白了。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "ah in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use ah",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "ah related"
+      ],
+      "antonyms": [
+        "not ah"
+      ],
+      "derivatives": [
+        "ahs",
+        "ahing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “ah”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ah",
+      "sceneCue": "Beginner · 啊"
+    },
+    {
+      "id": "beginner_071_ahead",
+      "word": "ahead",
+      "phoneticUK": "ə'hed",
+      "phoneticUS": "ə'hɛd",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=ahead&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=ahead&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "向前",
+        "在前的",
+        "领先",
+        "向前地"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “向前”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "He kept his gaze fixed on the car ahead.",
+          "cn": "他的目光一直盯着前面的那辆汽车。"
+        },
+        {
+          "en": "We could see the lights of Las Vegas up ahead .",
+          "cn": "我们能看到前方拉斯维加斯的灯光。"
+        },
+        {
+          "en": "Henry hurried on ahead (=  went in front of the others  ) .",
+          "cn": "亨利赶紧跑到前面。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "ahead of",
+          "cn": "在…之前"
+        },
+        {
+          "phrase": "go ahead",
+          "cn": "前进；进行"
+        },
+        {
+          "phrase": "forge ahead",
+          "cn": "继续进行，取得进展"
+        },
+        {
+          "phrase": "ahead of time",
+          "cn": "提前；提早"
+        }
+      ],
+      "synonyms": [
+        "ahead related"
+      ],
+      "antonyms": [
+        "not ahead"
+      ],
+      "derivatives": [
+        "aheads",
+        "aheading"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “ahead”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ahead",
+      "sceneCue": "Beginner · 向前"
+    },
+    {
+      "id": "beginner_072_aid",
+      "word": "aid",
+      "phoneticUK": "eɪd",
+      "phoneticUS": "ed",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=aid&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=aid&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "帮助",
+        "救护",
+        "助手",
+        "辅助手段"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “帮助”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Foreign aid from many countries poured into the famine area.",
+          "cn": "来自许多国家的救援物资纷纷送到饥荒地区。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "with the aid of",
+          "cn": "在…的帮助下，在…援助下"
+        },
+        {
+          "phrase": "give aid to",
+          "cn": "给…予帮助"
+        },
+        {
+          "phrase": "first aid",
+          "cn": "急救；急救护理"
+        },
+        {
+          "phrase": "aid in",
+          "cn": "vt. 帮助；帮助（在...给予帮助）"
+        }
+      ],
+      "synonyms": [
+        "aid related"
+      ],
+      "antonyms": [
+        "not aid"
+      ],
+      "derivatives": [
+        "aids",
+        "aiding"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “aid”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aid",
+      "sceneCue": "Beginner · 帮助"
+    },
+    {
+      "id": "beginner_073_aim",
+      "word": "aim",
+      "phoneticUK": "eɪm",
+      "phoneticUS": "em",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=aim&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=aim&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "目的在于",
+        "引导",
+        "把…对准",
+        "目的"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “目的在于”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Denver aimed his gun but did not shoot.",
+          "cn": "丹佛举枪瞄准，但是没有射击。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "aim of",
+          "cn": "旨在；瞄准；致力于…"
+        },
+        {
+          "phrase": "aim at",
+          "cn": "v. 针对；瞄准；目的在于"
+        },
+        {
+          "phrase": "aim for",
+          "cn": "瞄准；以…为目标"
+        },
+        {
+          "phrase": "aim high",
+          "cn": "胸怀大志，力争上游；向高处瞄准"
+        }
+      ],
+      "synonyms": [
+        "aim related"
+      ],
+      "antonyms": [
+        "not aim"
+      ],
+      "derivatives": [
+        "aims",
+        "aiming"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “aim”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aim",
+      "sceneCue": "Beginner · 目的在于"
+    },
+    {
+      "id": "beginner_074_air",
+      "word": "air",
+      "phoneticUK": "eə",
+      "phoneticUS": "ɛr",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=air&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=air&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "空气，大气",
+        "天空",
+        "样子",
+        "曲调"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “空气，大气”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Let’s go outside and get some fresh air.",
+          "cn": "我们出去呼吸些新鲜空气吧。"
+        },
+        {
+          "en": "You need to put some air in the tyres.",
+          "cn": "你得给轮胎充气了。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "in the air",
+          "cn": "在空中；悬而未决；在流传中；不设防"
+        },
+        {
+          "phrase": "air conditioning",
+          "cn": "空调；空气调节"
+        },
+        {
+          "phrase": "air pollution",
+          "cn": "大气污染，空气污染"
+        },
+        {
+          "phrase": "by air",
+          "cn": "乘飞机；通过航空途径"
+        }
+      ],
+      "synonyms": [
+        "air related"
+      ],
+      "antonyms": [
+        "not air"
+      ],
+      "derivatives": [
+        "airs",
+        "airing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “air”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,air",
+      "sceneCue": "Beginner · 空气，大气"
+    },
+    {
+      "id": "beginner_075_aircraft",
+      "word": "aircraft",
+      "phoneticUK": "'eəkrɑːft",
+      "phoneticUS": "'ɛr'kræft",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=aircraft&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=aircraft&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "飞机， 飞行器"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “飞机， 飞行器”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "The return flight of the aircraft was delayed.",
+          "cn": "飞机的返回航程被推迟了。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "aircraft carrier",
+          "cn": "n. 航空母舰；全能篮球中锋"
+        },
+        {
+          "phrase": "civil aircraft",
+          "cn": "民航机，民用飞机"
+        },
+        {
+          "phrase": "military aircraft",
+          "cn": "军用飞机"
+        },
+        {
+          "phrase": "aircraft engine",
+          "cn": "[机]航空发动机；飞机发动机"
+        }
+      ],
+      "synonyms": [
+        "aircraft related"
+      ],
+      "antonyms": [
+        "not aircraft"
+      ],
+      "derivatives": [
+        "aircrafts",
+        "aircrafting"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “aircraft”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aircraft",
+      "sceneCue": "Beginner · 飞机， 飞行器"
+    },
+    {
+      "id": "beginner_076_airline",
+      "word": "airline",
+      "phoneticUK": "'eəlaɪn",
+      "phoneticUS": "'ɛrlaɪn",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=airline&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=airline&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "航空公司",
+        "航线"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “航空公司”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "an airline pilot",
+          "cn": "航空公司飞行员"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "airline ticket",
+          "cn": "飞机票"
+        },
+        {
+          "phrase": "airline industry",
+          "cn": "航空公司；航线"
+        },
+        {
+          "phrase": "airline company",
+          "cn": "航空公司"
+        },
+        {
+          "phrase": "international airline",
+          "cn": "国际航线，国际航空公司"
+        }
+      ],
+      "synonyms": [
+        "airline related"
+      ],
+      "antonyms": [
+        "not airline"
+      ],
+      "derivatives": [
+        "airlines",
+        "airlineing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “airline”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,airline",
+      "sceneCue": "Beginner · 航空公司"
+    },
+    {
+      "id": "beginner_077_airport",
+      "word": "airport",
+      "phoneticUK": "'eəpɔːt",
+      "phoneticUS": "'ɛrpɔrt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=airport&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=airport&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "机场， 航空港"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “机场， 航空港”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "The plane landed at Heathrow Airport.",
+          "cn": "飞机降落在希思罗机场。"
+        },
+        {
+          "en": "Her family went to see her off at the airport.",
+          "cn": "她的家人去机场送她。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "international airport",
+          "cn": "国际机场"
+        },
+        {
+          "phrase": "airport bus",
+          "cn": "机场巴士；机场班车"
+        },
+        {
+          "phrase": "airport terminal",
+          "cn": "航站楼；机场候机楼"
+        },
+        {
+          "phrase": "heathrow airport",
+          "cn": "希思罗机场，位于英国伦敦"
+        }
+      ],
+      "synonyms": [
+        "airport related"
+      ],
+      "antonyms": [
+        "not airport"
+      ],
+      "derivatives": [
+        "airports",
+        "airporting"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “airport”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,airport",
+      "sceneCue": "Beginner · 机场， 航空港"
+    },
+    {
+      "id": "beginner_078_alarm",
+      "word": "alarm",
+      "phoneticUK": "ə'lɑːm",
+      "phoneticUS": "ə'lɑrm",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=alarm&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=alarm&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "惊恐",
+        "忧虑",
+        "警报",
+        "使惊恐"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “惊恐”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "I forgot to set the burglar alarm.",
+          "cn": "我忘记打开防盗警报器了。"
+        },
+        {
+          "en": "Car alarms are always going off in the street.",
+          "cn": "街上总有汽车警报器在响。"
+        },
+        {
+          "en": "a sophisticated alarm system",
+          "cn": "精密的警报系统"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "alarm system",
+          "cn": "报警系统"
+        },
+        {
+          "phrase": "fire alarm",
+          "cn": "火警；火警警报器"
+        },
+        {
+          "phrase": "alarm clock",
+          "cn": "闹钟"
+        },
+        {
+          "phrase": "false alarm",
+          "cn": "假警报；引起一场空喜欢的人"
+        }
+      ],
+      "synonyms": [
+        "alarm related"
+      ],
+      "antonyms": [
+        "not alarm"
+      ],
+      "derivatives": [
+        "alarms",
+        "alarming"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “alarm”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alarm",
+      "sceneCue": "Beginner · 惊恐"
+    },
+    {
+      "id": "beginner_079_album",
+      "word": "album",
+      "phoneticUK": "'ælbəm",
+      "phoneticUS": "'ælbəm",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=album&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=album&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "粘贴簿， 集邮簿， 相册"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “粘贴簿， 集邮簿， 相册”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "a photograph album",
+          "cn": "相册"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "photo album",
+          "cn": "相册；相簿"
+        },
+        {
+          "phrase": "debut album",
+          "cn": "首张专辑；处女专辑"
+        },
+        {
+          "phrase": "stamp album",
+          "cn": "n. 集邮册"
+        },
+        {
+          "phrase": "photograph album",
+          "cn": "相册，影集"
+        }
+      ],
+      "synonyms": [
+        "album related"
+      ],
+      "antonyms": [
+        "not album"
+      ],
+      "derivatives": [
+        "albums",
+        "albuming"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “album”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,album",
+      "sceneCue": "Beginner · 粘贴簿， 集邮簿， 相册"
+    },
+    {
+      "id": "beginner_080_alcohol",
+      "word": "alcohol",
+      "phoneticUK": "'ælkəhɒl",
+      "phoneticUS": "'ælkəhɔl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=alcohol&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=alcohol&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "酒精， 乙醇"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “酒精， 乙醇”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "I don’t drink alcohol anymore.",
+          "cn": "我不再喝酒了。"
+        },
+        {
+          "en": "{\"GLOSS\":[\"when someone drinks too much\"],\"COLLOINEXA\":[\"alcohol abuse\"]}",
+          "cn": "酗酒"
+        },
+        {
+          "en": "people with alcohol problems",
+          "cn": "有酗酒问题的人"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "polyvinyl alcohol",
+          "cn": "聚乙烯醇"
+        },
+        {
+          "phrase": "ethyl alcohol",
+          "cn": "乙醇；酒精；威士忌"
+        },
+        {
+          "phrase": "alcohol content",
+          "cn": "酒精含量"
+        },
+        {
+          "phrase": "fatty alcohol",
+          "cn": "脂肪醇；脂肪族醇；高级醇"
+        }
+      ],
+      "synonyms": [
+        "alcohol related"
+      ],
+      "antonyms": [
+        "not alcohol"
+      ],
+      "derivatives": [
+        "alcohols",
+        "alcoholing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “alcohol”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alcohol",
+      "sceneCue": "Beginner · 酒精， 乙醇"
+    },
+    {
+      "id": "beginner_081_alcoholic",
+      "word": "alcoholic",
+      "phoneticUK": "ælkə'hɒlɪk",
+      "phoneticUS": ",ælkə'hɔlɪk",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=alcoholic&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=alcoholic&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "酒精的，含酒精的",
+        "酒鬼，酗酒者"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “酒精的，含酒精的”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "alcoholic drinks",
+          "cn": "酒精饮料"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "alcoholic beverage",
+          "cn": "酒精饮料"
+        },
+        {
+          "phrase": "alcoholic fermentation",
+          "cn": "[化]酒精发酵，乙醇发酵"
+        },
+        {
+          "phrase": "alcoholic liquor",
+          "cn": "[医]醇制溶液；含醇液"
+        },
+        {
+          "phrase": "alcoholic extract",
+          "cn": "酒精提出物，酒精萃取物"
+        }
+      ],
+      "synonyms": [
+        "alcoholic related"
+      ],
+      "antonyms": [
+        "not alcoholic"
+      ],
+      "derivatives": [
+        "alcoholics",
+        "alcoholicing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “alcoholic”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alcoholic",
+      "sceneCue": "Beginner · 酒精的，含酒精的"
+    },
+    {
+      "id": "beginner_082_alive",
+      "word": "alive",
+      "phoneticUK": "ə'laɪv",
+      "phoneticUS": "ə'laɪv",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=alive&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=alive&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "活着的",
+        "活泼的",
+        "有生气的"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “活着的”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "It was a bad accident – they’re lucky to be alive.",
+          "cn": "这是一宗严重事故——他们能活着实属幸运。"
+        },
+        {
+          "en": "My grandparents are still alive .",
+          "cn": "我的祖父母和外祖父母都还健在。"
+        },
+        {
+          "en": "We stayed alive by eating berries.",
+          "cn": "我们靠吃浆果活命。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "alive with",
+          "cn": "充满着；洋溢着"
+        },
+        {
+          "phrase": "come alive",
+          "cn": "活跃起来；看上去像真的"
+        },
+        {
+          "phrase": "stay alive",
+          "cn": "活着；仍然活着"
+        },
+        {
+          "phrase": "alive and well",
+          "cn": "盛行的；依然存在的"
+        }
+      ],
+      "synonyms": [
+        "alive related"
+      ],
+      "antonyms": [
+        "not alive"
+      ],
+      "derivatives": [
+        "alives",
+        "aliveing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “alive”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alive",
+      "sceneCue": "Beginner · 活着的"
+    },
+    {
+      "id": "beginner_083_all",
+      "word": "all",
+      "phoneticUK": "ɔːl",
+      "phoneticUS": "ɔl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=all&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=all&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "全部的",
+        "全然地",
+        "越发",
+        "全部"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “全部的”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "You shouldn’t be sitting here by yourself, all alone.",
+          "cn": "你不应该一个人孤零零地坐在这儿。"
+        },
+        {
+          "en": "a strange woman, dressed all in black",
+          "cn": "一袭黑衣的奇怪女子"
+        },
+        {
+          "en": "If people want more freedom of choice, then I’m all for it (=  I strongly support it  ) .",
+          "cn": "如果民众想要更多选择的自由，我完全支持。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "all the",
+          "cn": "◎惟一的，仅有的"
+        },
+        {
+          "phrase": "all of",
+          "cn": "adv. 不少于；实足"
+        },
+        {
+          "phrase": "in all",
+          "cn": "总共，合计"
+        },
+        {
+          "phrase": "and all",
+          "cn": "等等；的确；此外；连…一齐都"
+        }
+      ],
+      "synonyms": [
+        "all related"
+      ],
+      "antonyms": [
+        "not all"
+      ],
+      "derivatives": [
+        "alls",
+        "alling"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “all”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,all",
+      "sceneCue": "Beginner · 全部的"
+    },
+    {
+      "id": "beginner_084_allow",
+      "word": "allow",
+      "phoneticUK": "ə'lau",
+      "phoneticUS": "ə'laʊ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=allow&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=allow&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "允许， 准许",
+        "同意给",
+        "承认",
+        "允许…进入"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “允许， 准许”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "We don’t allow diving in the pool.",
+          "cn": "泳池内禁止跳水。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "allow for",
+          "cn": "考虑到，虑及"
+        },
+        {
+          "phrase": "allow of",
+          "cn": "容许"
+        }
+      ],
+      "synonyms": [
+        "allow related"
+      ],
+      "antonyms": [
+        "not allow"
+      ],
+      "derivatives": [
+        "allows",
+        "allowing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “allow”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,allow",
+      "sceneCue": "Beginner · 允许， 准许"
+    },
+    {
+      "id": "beginner_085_almost",
+      "word": "almost",
+      "phoneticUK": "'ɔːlməʊst",
+      "phoneticUS": "'ɔlmost",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=almost&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=almost&type=2",
+      "partOfSpeech": "adv",
+      "definitions": [
+        "差不多，几乎"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “差不多，几乎”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Have you almost finished?",
+          "cn": "你差不多完成了吗？"
+        },
+        {
+          "en": "Supper’s almost ready.",
+          "cn": "晚饭就要做好了。"
+        },
+        {
+          "en": "It was almost midnight.",
+          "cn": "午夜将至。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "almost all",
+          "cn": "几乎处处"
+        }
+      ],
+      "synonyms": [
+        "almost related"
+      ],
+      "antonyms": [
+        "not almost"
+      ],
+      "derivatives": [
+        "almosts",
+        "almosting"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “almost”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,almost",
+      "sceneCue": "Beginner · 差不多，几乎"
+    },
+    {
+      "id": "beginner_086_alone",
+      "word": "alone",
+      "phoneticUK": "ə'ləʊn",
+      "phoneticUS": "ə'lon",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=alone&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=alone&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "独自的",
+        "单独的",
+        "孤独的",
+        "独自地"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “独自的”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "She lives alone .",
+          "cn": "她一个人生活。"
+        },
+        {
+          "en": "You shouldn’t leave a child alone in the house.",
+          "cn": "你不应该把小孩独自留在家里。"
+        },
+        {
+          "en": "My wife and I like to spend time alone together away from the kids.",
+          "cn": "我和妻子喜欢没有孩子打扰，过二人世界。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "let alone",
+          "cn": "更不必说；听任；不打扰"
+        },
+        {
+          "phrase": "all alone",
+          "cn": "独立地，独自地"
+        },
+        {
+          "phrase": "stand alone",
+          "cn": "孤立；独一无二"
+        },
+        {
+          "phrase": "alone with",
+          "cn": "与…一起"
+        }
+      ],
+      "synonyms": [
+        "alone related"
+      ],
+      "antonyms": [
+        "not alone"
+      ],
+      "derivatives": [
+        "alones",
+        "aloneing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “alone”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alone",
+      "sceneCue": "Beginner · 独自的"
+    },
+    {
+      "id": "beginner_087_along",
+      "word": "along",
+      "phoneticUK": "ə'lɔːŋ",
+      "phoneticUS": "ə'lɔŋ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=along&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=along&type=2",
+      "partOfSpeech": "adv",
+      "definitions": [
+        "向前",
+        "一起",
+        "沿着"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “向前”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "I was driving along, thinking about Chris.",
+          "cn": "我一边开车，一边想着克里斯。"
+        },
+        {
+          "en": "a group of children walking along in a line",
+          "cn": "排着队向前走的一群孩子"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "along with",
+          "cn": "沿（顺）着；连同…一起；与…一道；随同…一起"
+        },
+        {
+          "phrase": "get along",
+          "cn": "（勉强）生活；进展；（使）前进；与…和睦相处"
+        },
+        {
+          "phrase": "all along",
+          "cn": "自始至终，一直"
+        },
+        {
+          "phrase": "go along",
+          "cn": "进行；支持；前进；赞同"
+        }
+      ],
+      "synonyms": [
+        "along related"
+      ],
+      "antonyms": [
+        "not along"
+      ],
+      "derivatives": [
+        "alongs",
+        "alonging"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “along”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,along",
+      "sceneCue": "Beginner · 向前"
+    },
+    {
+      "id": "beginner_088_already",
+      "word": "already",
+      "phoneticUK": "ɔːl'redi",
+      "phoneticUS": "ɔl'rɛdi",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=already&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=already&type=2",
+      "partOfSpeech": "adv",
+      "definitions": [
+        "已， 已经"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “已， 已经”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "The design of the new house is similar to those that have already been built.",
+          "cn": "新房的设计与那些已建好的房子相似。"
+        },
+        {
+          "en": "The performance had already started when we arrived.",
+          "cn": "我们到达时表演已经开始了。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "already in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use already",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "already related"
+      ],
+      "antonyms": [
+        "not already"
+      ],
+      "derivatives": [
+        "alreadys",
+        "alreadying"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “already”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,already",
+      "sceneCue": "Beginner · 已， 已经"
+    },
+    {
+      "id": "beginner_089_also",
+      "word": "also",
+      "phoneticUK": "'ɔːlsəʊ",
+      "phoneticUS": "'ɔlso",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=also&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=also&type=2",
+      "partOfSpeech": "adv",
+      "definitions": [
+        "也",
+        "而且",
+        "同样",
+        "并且"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “也”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Information is also available on women’s health care.",
+          "cn": "还可以获得有关女性保健方面的资料。"
+        },
+        {
+          "en": "She sings beautifully and also plays the flute and piano.",
+          "cn": "她歌唱得好，而且还会吹长笛和弹钢琴。"
+        },
+        {
+          "en": "The system was not only complicated but also ineffective.",
+          "cn": "这套系统不仅复杂而且效率低。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "but also",
+          "cn": "不仅……而且…… 并且；表强调"
+        },
+        {
+          "phrase": "as also",
+          "cn": "同样；照样"
+        },
+        {
+          "phrase": "see also",
+          "cn": "参见；另请参阅"
+        },
+        {
+          "phrase": "also notify",
+          "cn": "另请通知"
+        }
+      ],
+      "synonyms": [
+        "also related"
+      ],
+      "antonyms": [
+        "not also"
+      ],
+      "derivatives": [
+        "alsos",
+        "alsoing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “also”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,also",
+      "sceneCue": "Beginner · 也"
+    },
+    {
+      "id": "beginner_090_alter",
+      "word": "alter",
+      "phoneticUK": "'ɔːltə",
+      "phoneticUS": "'ɔltɚ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=alter&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=alter&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "改变， 变更， 变动"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “改变， 变更， 变动”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Her face hadn’t altered much over the years.",
+          "cn": "过了这么多年，她的容貌并没有多大改变。"
+        },
+        {
+          "en": "The city centre has altered beyond recognition (=  changed very much  ) .",
+          "cn": "市中心变得都认不出来了。"
+        },
+        {
+          "en": "Nothing can alter the fact that the refugees are our responsibility.",
+          "cn": "我们有责任帮助难民，这一事实无法改变。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "alter ego",
+          "cn": "n. 密友；个性的另一面；至交"
+        }
+      ],
+      "synonyms": [
+        "alter related"
+      ],
+      "antonyms": [
+        "not alter"
+      ],
+      "derivatives": [
+        "alters",
+        "altering"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “alter”.",
+      "examTags": [
+        "Beginner",
+        "beginner"
+      ],
+      "difficulty": "Easy",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alter",
+      "sceneCue": "Beginner · 改变， 变更， 变动"
+    }
+  ]
+}

@@ -49,7 +49,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     if (!mounted) return;
     final state = ref.read(appControllerProvider);
     if (!state.isBootstrapped && state.errorMessage != null) return;
-    await Future<void>.delayed(const Duration(milliseconds: 1400));
     if (!mounted) return;
     context.go(state.isAuthenticated ? '/home' : '/onboarding');
   }
@@ -117,15 +116,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                 width: 180,
                 child: ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(999)),
-                  child: TweenAnimationBuilder<double>(
-                    tween: Tween<double>(begin: 0, end: 1),
-                    duration: const Duration(milliseconds: 1000),
-                    curve: Curves.easeOutCubic,
-                    builder: (context, value, _) => LinearProgressIndicator(
-                      value: value,
-                      minHeight: 10,
-                      backgroundColor: AppTheme.progressTrack(context),
-                    ),
+                  child: LinearProgressIndicator(
+                    value: state.isLoading ? null : 1,
+                    minHeight: 10,
+                    backgroundColor: AppTheme.progressTrack(context),
                   ),
                 ),
               ),

@@ -1,0 +1,7004 @@
+{
+  "id": "ielts",
+  "title": "雅思核心词汇",
+  "category": "exam",
+  "examType": "IELTS",
+  "coverUrl": "https://source.unsplash.com/featured/800x480/?english,vocabulary,ielts",
+  "totalWords": 120,
+  "includedWords": 120,
+  "description": "覆盖雅思阅读、写作和口语高频学术词汇。",
+  "wordIds": [
+    "ielts_001_cancel",
+    "ielts_002_explosive",
+    "ielts_003_prepare",
+    "ielts_004_surgeon",
+    "ielts_005_hall",
+    "ielts_006_discourage",
+    "ielts_007_predispose",
+    "ielts_008_oversee",
+    "ielts_009_pollution",
+    "ielts_010_pretend",
+    "ielts_011_convection",
+    "ielts_012_warrant",
+    "ielts_013_ecliptic",
+    "ielts_014_conceal",
+    "ielts_015_overrate",
+    "ielts_016_meanwhile",
+    "ielts_017_opulent",
+    "ielts_018_coincide",
+    "ielts_019_competent",
+    "ielts_020_require",
+    "ielts_021_scratch",
+    "ielts_022_compassionate",
+    "ielts_023_cooperative",
+    "ielts_024_strategist",
+    "ielts_025_irritable",
+    "ielts_026_triple",
+    "ielts_027_reserved",
+    "ielts_028_temper",
+    "ielts_029_tickle",
+    "ielts_030_object",
+    "ielts_031_accessible",
+    "ielts_032_hang",
+    "ielts_033_authenticate",
+    "ielts_034_suffice",
+    "ielts_035_concede",
+    "ielts_036_notable",
+    "ielts_037_unparalleled",
+    "ielts_038_plush",
+    "ielts_039_evaporate",
+    "ielts_040_commission",
+    "ielts_041_staircase",
+    "ielts_042_flip",
+    "ielts_043_connect",
+    "ielts_044_resume",
+    "ielts_045_address",
+    "ielts_046_posture",
+    "ielts_047_spiral",
+    "ielts_048_decapitate",
+    "ielts_049_exorbitant",
+    "ielts_050_surgery",
+    "ielts_051_violent",
+    "ielts_052_resolve",
+    "ielts_053_confront",
+    "ielts_054_deploy",
+    "ielts_055_reproduce",
+    "ielts_056_huddle",
+    "ielts_057_rendition",
+    "ielts_058_intersection",
+    "ielts_059_scholarship",
+    "ielts_060_besides",
+    "ielts_061_instil",
+    "ielts_062_inflammable",
+    "ielts_063_implement",
+    "ielts_064_export",
+    "ielts_065_incinerate",
+    "ielts_066_fantasy",
+    "ielts_067_erode",
+    "ielts_068_check",
+    "ielts_069_frustrate",
+    "ielts_070_gorgeous",
+    "ielts_071_pragmatic",
+    "ielts_072_methane",
+    "ielts_073_erosion",
+    "ielts_074_ascend",
+    "ielts_075_superstitious",
+    "ielts_076_provided",
+    "ielts_077_indispensable",
+    "ielts_078_lens",
+    "ielts_079_embody",
+    "ielts_080_bacterial",
+    "ielts_081_motive",
+    "ielts_082_envisage",
+    "ielts_083_anticipation",
+    "ielts_084_motivate",
+    "ielts_085_reinforcement",
+    "ielts_086_tutorial",
+    "ielts_087_spoil",
+    "ielts_088_multiply",
+    "ielts_089_pasture",
+    "ielts_090_infirmity",
+    "ielts_091_pilot",
+    "ielts_092_approval",
+    "ielts_093_curative",
+    "ielts_094_multiple",
+    "ielts_095_microbiology",
+    "ielts_096_magnet",
+    "ielts_097_expose",
+    "ielts_098_versatile",
+    "ielts_099_concentrate",
+    "ielts_100_versus",
+    "ielts_101_populate",
+    "ielts_102_up-to-date",
+    "ielts_103_suitable",
+    "ielts_104_personnel",
+    "ielts_105_splash",
+    "ielts_106_outlook",
+    "ielts_107_romance",
+    "ielts_108_fountain",
+    "ielts_109_irrelevant",
+    "ielts_110_gadget",
+    "ielts_111_compatriot",
+    "ielts_112_implication",
+    "ielts_113_fierce",
+    "ielts_114_reservation",
+    "ielts_115_block",
+    "ielts_116_extinguisher",
+    "ielts_117_cooperation",
+    "ielts_118_timid",
+    "ielts_119_propose",
+    "ielts_120_in-comparison-with"
+  ],
+  "createdAt": "2026-06-04T00:00:00.000Z",
+  "words": [
+    {
+      "id": "ielts_001_cancel",
+      "word": "cancel",
+      "phoneticUK": "'kænsl",
+      "phoneticUS": "'kænsl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=cancel&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=cancel&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "取消， 废除",
+        "抵消， 对消",
+        "删去， 划掉"
+      ],
+      "englishDefinitions": [
+        "to decide that something that was officially planned will not happen"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Our flight was cancelled.",
+          "cn": "我们的航班取消了。"
+        },
+        {
+          "en": "I’m afraid I’ll have to cancel our meeting tomorrow.",
+          "cn": "恐怕我得取消我们明天的会议。"
+        },
+        {
+          "en": "You’ll just have to ring John and cancel.",
+          "cn": "你只能打电话给约翰取消了。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "cancel button",
+          "cn": "取消按钮"
+        },
+        {
+          "phrase": "cancel out",
+          "cn": "取消；抵销"
+        },
+        {
+          "phrase": "cancel after verification",
+          "cn": "核销"
+        }
+      ],
+      "synonyms": [
+        "recall",
+        "call it off",
+        "declare off",
+        "withdrawal"
+      ],
+      "antonyms": [
+        "not cancel"
+      ],
+      "derivatives": [
+        "cancellation"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “cancel”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,cancel",
+      "sceneCue": "IELTS · 取消， 废除"
+    },
+    {
+      "id": "ielts_002_explosive",
+      "word": "explosive",
+      "phoneticUK": "ɪk'spləusɪv",
+      "phoneticUS": "ɪk'splosɪv; ɪk'splozɪv",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=explosive&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=explosive&type=2",
+      "partOfSpeech": "adj/n",
+      "definitions": [
+        "爆炸的， 爆发的",
+        "使人冲动的",
+        "爆炸物，炸药"
+      ],
+      "englishDefinitions": [
+        "able or likely to explode",
+        "a substance that can cause an explosion"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Because the gas is highly explosive, it needs to be kept in high-pressure containers.",
+          "cn": "由于这种气体极易爆炸，因此需要保存在高压容器内。"
+        },
+        {
+          "en": "A small explosive device (= bomb ) was set off outside the UN headquarters today.",
+          "cn": "今天有一枚小型炸弹在联合国总部外爆炸。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "explosive welding",
+          "cn": "爆炸焊接；爆炸成形"
+        },
+        {
+          "phrase": "emulsion explosive",
+          "cn": "乳胶炸药"
+        },
+        {
+          "phrase": "explosive gas",
+          "cn": "易爆气，爆炸气；爆炸性气体"
+        },
+        {
+          "phrase": "high explosive",
+          "cn": "烈性炸药；高爆炸药；猛炸药"
+        }
+      ],
+      "synonyms": [
+        "volatile",
+        "fulminic",
+        "blasting agent",
+        "detonator"
+      ],
+      "antonyms": [
+        "not explosive"
+      ],
+      "derivatives": [
+        "exploded",
+        "explosively",
+        "explosion",
+        "exploding"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “explosive”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,explosive",
+      "sceneCue": "IELTS · 爆炸的， 爆发的"
+    },
+    {
+      "id": "ielts_003_prepare",
+      "word": "prepare",
+      "phoneticUK": "prɪ'peə(r)",
+      "phoneticUS": "prɪ'pɛr",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=prepare&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=prepare&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "准备， 预备"
+      ],
+      "englishDefinitions": [
+        "to make plans or arrangements for something that will happen in the future"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The prosecution wanted more time to prepare their case.",
+          "cn": "原告想要有更多的时间来准备诉讼。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "prepare something for someone",
+          "cn": "为某人准备某物"
+        },
+        {
+          "phrase": "prepare for",
+          "cn": "为…准备，使有准备"
+        },
+        {
+          "phrase": "prepare the way",
+          "cn": "排除障碍，扫清道路"
+        },
+        {
+          "phrase": "prepare for the worst",
+          "cn": "作最坏的打算"
+        }
+      ],
+      "synonyms": [
+        "provide",
+        "make",
+        "fix"
+      ],
+      "antonyms": [
+        "not prepare"
+      ],
+      "derivatives": [
+        "prepared",
+        "preparatory",
+        "preparative",
+        "preparation"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “prepare”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,prepare",
+      "sceneCue": "IELTS · 准备， 预备"
+    },
+    {
+      "id": "ielts_004_surgeon",
+      "word": "surgeon",
+      "phoneticUK": "'sɜːdʒən",
+      "phoneticUS": "'sɝdʒən",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=surgeon&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=surgeon&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "外科医生"
+      ],
+      "englishDefinitions": [
+        "a doctor who does operations in a hospital"
+      ],
+      "exampleSentences": [
+        {
+          "en": "...a heart surgeon.",
+          "cn": "…一位心脏外科医生。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "plastic surgeon",
+          "cn": "整形外科医生"
+        },
+        {
+          "phrase": "surgeon general",
+          "cn": "卫生局局长；军医处处长"
+        },
+        {
+          "phrase": "orthopedic surgeon",
+          "cn": "整形外科医生；骨科医师"
+        },
+        {
+          "phrase": "veterinary surgeon",
+          "cn": "兽医"
+        }
+      ],
+      "synonyms": [
+        "sawbones",
+        "chirurgeon"
+      ],
+      "antonyms": [
+        "not surgeon"
+      ],
+      "derivatives": [
+        "surgical",
+        "surgically",
+        "surgery"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “surgeon”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,surgeon",
+      "sceneCue": "IELTS · 外科医生"
+    },
+    {
+      "id": "ielts_005_hall",
+      "word": "hall",
+      "phoneticUK": "hɔːl",
+      "phoneticUS": "hɔl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=hall&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=hall&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "门厅",
+        "礼堂"
+      ],
+      "englishDefinitions": [
+        "the area just inside the door of a house or other building, that leads to other rooms"
+      ],
+      "exampleSentences": [
+        {
+          "en": "a huge tiled entrance hall",
+          "cn": "铺着地砖的大门厅"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "exhibition hall",
+          "cn": "展览厅"
+        },
+        {
+          "phrase": "in the hall",
+          "cn": "在大厅里；在饭厅"
+        },
+        {
+          "phrase": "city hall",
+          "cn": "市政厅"
+        },
+        {
+          "phrase": "memorial hall",
+          "cn": "纪念馆；纪念堂"
+        }
+      ],
+      "synonyms": [
+        "passage",
+        "corridor"
+      ],
+      "antonyms": [
+        "not hall"
+      ],
+      "derivatives": [
+        "halls",
+        "halling"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “hall”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,hall",
+      "sceneCue": "IELTS · 门厅"
+    },
+    {
+      "id": "ielts_006_discourage",
+      "word": "discourage",
+      "phoneticUK": "dɪs'kʌrɪdʒ",
+      "phoneticUS": "dɪs'kɝɪdʒ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=discourage&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=discourage&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "使泄气， 使灰心",
+        "阻止， 劝阻"
+      ],
+      "englishDefinitions": [
+        "to make someone less confident or less willing to do something"
+      ],
+      "exampleSentences": [
+        {
+          "en": "You should not let one failure discourage you.",
+          "cn": "你不该失败一次就灰心丧气。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "discourage in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use discourage",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "stem",
+        "block",
+        "dispute",
+        "prohibit"
+      ],
+      "antonyms": [
+        "not discourage"
+      ],
+      "derivatives": [
+        "discouraged",
+        "discouraging",
+        "discouragingly",
+        "discouragement"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “discourage”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,discourage",
+      "sceneCue": "IELTS · 使泄气， 使灰心"
+    },
+    {
+      "id": "ielts_007_predispose",
+      "word": "predispose",
+      "phoneticUK": "ˌpriːdɪ'spəuz",
+      "phoneticUS": "'pridɪ'spoz",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=predispose&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=predispose&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "事先影响某人",
+        "偏爱",
+        "易受感染"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “事先影响某人”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "They take pains to hire people whose personalities predispose them to serve customers well.",
+          "cn": "他们煞费苦心雇用那些具备把顾客服务好的个性的人。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "predispose in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use predispose",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "predispose related"
+      ],
+      "antonyms": [
+        "not predispose"
+      ],
+      "derivatives": [
+        "predisposed",
+        "predisposition"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “predispose”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,predispose",
+      "sceneCue": "IELTS · 事先影响某人"
+    },
+    {
+      "id": "ielts_008_oversee",
+      "word": "oversee",
+      "phoneticUK": "ˌəuvə'siː",
+      "phoneticUS": "'ovɚ'si",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=oversee&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=oversee&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "监督， 监视",
+        "俯瞰， 眺望"
+      ],
+      "englishDefinitions": [
+        "to be in charge of a group of workers and check that a piece of work is done satisfactorily"
+      ],
+      "exampleSentences": [
+        {
+          "en": "A team leader was appointed to oversee the project.",
+          "cn": "任命了一位组长来监管该工程。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "oversee in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use oversee",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "police",
+        "survey"
+      ],
+      "antonyms": [
+        "not oversee"
+      ],
+      "derivatives": [
+        "overseer"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “oversee”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,oversee",
+      "sceneCue": "IELTS · 监督， 监视"
+    },
+    {
+      "id": "ielts_009_pollution",
+      "word": "pollution",
+      "phoneticUK": "pə'luːʃn",
+      "phoneticUS": "pə'luʃən",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=pollution&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=pollution&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "污染， 污染物",
+        "玷污"
+      ],
+      "englishDefinitions": [
+        "the process of making air, water, soil etc dangerously dirty and not suitable for people to use, or the state of being dangerously dirty"
+      ],
+      "exampleSentences": [
+        {
+          "en": "California’s tough anti-pollution laws",
+          "cn": "加利福尼亚州严厉的反污染法"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "environmental pollution",
+          "cn": "n. 环境污染"
+        },
+        {
+          "phrase": "air pollution",
+          "cn": "大气污染，空气污染"
+        },
+        {
+          "phrase": "water pollution",
+          "cn": "水污染"
+        },
+        {
+          "phrase": "pollution control",
+          "cn": "污染控制"
+        }
+      ],
+      "synonyms": [
+        "contamination",
+        "impureness"
+      ],
+      "antonyms": [
+        "not pollution"
+      ],
+      "derivatives": [
+        "polluted",
+        "pollutant",
+        "polluter",
+        "pollute"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “pollution”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,pollution",
+      "sceneCue": "IELTS · 污染， 污染物"
+    },
+    {
+      "id": "ielts_010_pretend",
+      "word": "pretend",
+      "phoneticUK": "prɪ'tend",
+      "phoneticUS": "prɪ'tɛnd",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=pretend&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=pretend&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "装作， 假装"
+      ],
+      "englishDefinitions": [
+        "to behave as if something is true when in fact you know it is not, in order to deceive people or for fun"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Let’s pretend we’re on the moon.",
+          "cn": "我们假装自己是在月球上吧。"
+        },
+        {
+          "en": "He’s not asleep – he’s just pretending.",
+          "cn": "他并没睡着，不过是装睡而已。"
+        },
+        {
+          "en": "To pretend ignorance of the situation would be irresponsible.",
+          "cn": "装作不知情是不负责任的做法。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "pretend in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use pretend",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "simulate",
+        "come",
+        "act",
+        "fox"
+      ],
+      "antonyms": [
+        "not pretend"
+      ],
+      "derivatives": [
+        "pretended",
+        "pretense",
+        "pretence",
+        "pretender"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “pretend”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,pretend",
+      "sceneCue": "IELTS · 装作， 假装"
+    },
+    {
+      "id": "ielts_011_convection",
+      "word": "convection",
+      "phoneticUK": "kən'vekʃn",
+      "phoneticUS": "kən'vɛkʃən",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=convection&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=convection&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "传送",
+        "对流"
+      ],
+      "englishDefinitions": [
+        "the movement in a gas or liquid caused by warm gas or liquid rising, and cold gas or liquid sinking"
+      ],
+      "exampleSentences": [
+        {
+          "en": "...clouds which lift warm, moist air by convection high into the atmosphere.",
+          "cn": "...云层通过对流把温暖湿润的空气送到高的大气层中。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "natural convection",
+          "cn": "自然对流"
+        },
+        {
+          "phrase": "convection heat transfer",
+          "cn": "对流传热"
+        },
+        {
+          "phrase": "forced convection",
+          "cn": "强制对流；人工对流"
+        },
+        {
+          "phrase": "heat convection",
+          "cn": "热对流"
+        }
+      ],
+      "synonyms": [
+        "transmission",
+        "convective flow"
+      ],
+      "antonyms": [
+        "not convection"
+      ],
+      "derivatives": [
+        "convector",
+        "convect"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “convection”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,convection",
+      "sceneCue": "IELTS · 传送"
+    },
+    {
+      "id": "ielts_012_warrant",
+      "word": "warrant",
+      "phoneticUK": "'wɒrənt",
+      "phoneticUS": "'wɔrənt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=warrant&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=warrant&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "保证"
+      ],
+      "englishDefinitions": [
+        "to promise that something is true"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Therefore, it is important to note that individual situations may warrant including additional characters in the list of special characters.",
+          "cn": "因此，要注意可能保证把额外字符包括到特殊字符列表中的个别情况，这一点很重要。"
+        },
+        {
+          "en": "Learning incessantly is the surest way to keep pace with the times in the information age and an infallible warrant of success in times of uncertainty.",
+          "cn": "持续的学习是在资讯时代中跟时代并驾齐驱的最稳当的方法，也是在变动的世代中成功的可靠保证。"
+        },
+        {
+          "en": "At Dean Miller's suggestion, I have allowed her to give the current student organizers the opportunity to propose a program for next semester that might warrant continuation of this event on campus.",
+          "cn": "根据米勒学监的建议，我允许她给学生机会，让他们给下学期的活动提出一个方案，保证这个活动得以在校园内继续开展。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "arrest warrant",
+          "cn": "逮捕证"
+        },
+        {
+          "phrase": "search warrant",
+          "cn": "［法］搜查证"
+        }
+      ],
+      "synonyms": [
+        "authentication",
+        "certification",
+        "demonstration",
+        "foundation"
+      ],
+      "antonyms": [
+        "not warrant"
+      ],
+      "derivatives": [
+        "warranted",
+        "warranty",
+        "warrantee",
+        "warranter"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “warrant”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,warrant",
+      "sceneCue": "IELTS · 保证"
+    },
+    {
+      "id": "ielts_013_ecliptic",
+      "word": "ecliptic",
+      "phoneticUK": "ɪ'klɪptɪk",
+      "phoneticUS": "ɪ'klɪptɪk",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=ecliptic&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=ecliptic&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "【天】"
+      ],
+      "englishDefinitions": [
+        "the path along which the Sun seems to move"
+      ],
+      "exampleSentences": [
+        {
+          "en": "On the astrolabe, an off - centered circle represents the orbit of the sun - the ecliptic.",
+          "cn": "在星盘上， 一个偏心的圆代表了太阳的运行轨道――黄道。"
+        },
+        {
+          "en": "Recall that vernal equinox is one of the two intersection points of the celestial equator and the ecliptic.",
+          "cn": "赤经计算的起点为春分点，相信你仍记得春分点是天球赤道和黄道的其中一个相交点。"
+        },
+        {
+          "en": "Because the Moon and bright planets wander through the sky near the ecliptic plane, such occultation events are not uncommon, but they are dramatic, especially in telescopic views.",
+          "cn": "因为月球和明亮的行星出现在天空中黄道平面附近，这种掩星事件也很平常，但是它们也很富有戏剧性，特别是在望远镜影像里。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "obliquity of the ecliptic",
+          "cn": "黄赤交角"
+        }
+      ],
+      "synonyms": [
+        "ecliptic related"
+      ],
+      "antonyms": [
+        "not ecliptic"
+      ],
+      "derivatives": [
+        "ecliptics",
+        "eclipticing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “ecliptic”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ecliptic",
+      "sceneCue": "IELTS · 【天】"
+    },
+    {
+      "id": "ielts_014_conceal",
+      "word": "conceal",
+      "phoneticUK": "kən'siːl",
+      "phoneticUS": "kən'sil",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=conceal&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=conceal&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "隐藏",
+        "隐瞒",
+        "掩盖"
+      ],
+      "englishDefinitions": [
+        "to hide something carefully"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The shadows concealed her as she crept up to the house.",
+          "cn": "她借着阴影蹑手蹑脚地走向房子。"
+        },
+        {
+          "en": "The path was concealed by long grass.",
+          "cn": "小路隐藏在长长的草里。"
+        },
+        {
+          "en": "a concealed weapon",
+          "cn": "藏匿的武器"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "conceal in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use conceal",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "lock",
+        "pocket",
+        "to hide"
+      ],
+      "antonyms": [
+        "not conceal"
+      ],
+      "derivatives": [
+        "concealment",
+        "concealer"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “conceal”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,conceal",
+      "sceneCue": "IELTS · 隐藏"
+    },
+    {
+      "id": "ielts_015_overrate",
+      "word": "overrate",
+      "phoneticUK": "ˌəuvə'reɪt",
+      "phoneticUS": ",ovɚ'ret",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=overrate&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=overrate&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "对…评价过高， 高估"
+      ],
+      "englishDefinitions": [
+        "If you say that something or someone is overrated, you mean that people have a higher opinion of them than they deserve"
+      ],
+      "exampleSentences": [
+        {
+          "en": "More men are finding out that the joys of work have been overrated.",
+          "cn": "更多的男士正发现工作的种种乐趣被高估了。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "overrate in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use overrate",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "overrate related"
+      ],
+      "antonyms": [
+        "not overrate"
+      ],
+      "derivatives": [
+        "overrating",
+        "overprice"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “overrate”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,overrate",
+      "sceneCue": "IELTS · 对…评价过高， 高估"
+    },
+    {
+      "id": "ielts_016_meanwhile",
+      "word": "meanwhile",
+      "phoneticUK": "'miːnwaɪl",
+      "phoneticUS": "'minwaɪl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=meanwhile&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=meanwhile&type=2",
+      "partOfSpeech": "adv",
+      "definitions": [
+        "与此同时"
+      ],
+      "englishDefinitions": [
+        "while something else is happening"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Cook the sauce over a medium heat until it thickens. Meanwhile start boiling the water for the pasta.",
+          "cn": "用中火把调味汁煮到变稠，同时烧水准备煮意大利面。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "in the meanwhile",
+          "cn": "同时；在此期间"
+        }
+      ],
+      "synonyms": [
+        "together",
+        "simul"
+      ],
+      "antonyms": [
+        "not meanwhile"
+      ],
+      "derivatives": [
+        "meanwhiles",
+        "meanwhileing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “meanwhile”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,meanwhile",
+      "sceneCue": "IELTS · 与此同时"
+    },
+    {
+      "id": "ielts_017_opulent",
+      "word": "opulent",
+      "phoneticUK": "'ɒpjələnt",
+      "phoneticUS": "'ɑpjələnt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=opulent&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=opulent&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "豪华的， 华丽的， 富裕的",
+        "丰富的， 丰饶的"
+      ],
+      "englishDefinitions": [
+        "very beautiful, with a lot of decoration, and made from expensive materials"
+      ],
+      "exampleSentences": [
+        {
+          "en": "evening dresses in opulent fabrics",
+          "cn": "用华丽织物做成的晚礼服"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "opulent in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use opulent",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "abundant",
+        "massive",
+        "extensive",
+        "substantial"
+      ],
+      "antonyms": [
+        "not opulent"
+      ],
+      "derivatives": [
+        "opulently",
+        "opulence"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “opulent”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,opulent",
+      "sceneCue": "IELTS · 豪华的， 华丽的， 富裕的"
+    },
+    {
+      "id": "ielts_018_coincide",
+      "word": "coincide",
+      "phoneticUK": "ˌkəuɪn'saɪd",
+      "phoneticUS": ",koɪn'saɪd",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=coincide&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=coincide&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "同时发生",
+        "一致"
+      ],
+      "englishDefinitions": [
+        "to happen at the same time as something else, especially by chance"
+      ],
+      "exampleSentences": [
+        {
+          "en": "When our vacations coincided, we often holidayed together.",
+          "cn": "我们的假期要是凑巧赶在一起，我们常常会一同去度假。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "coincide with",
+          "cn": "符合；与...相一致"
+        },
+        {
+          "phrase": "happen to coincide",
+          "cn": "不约而同；不谋而合"
+        }
+      ],
+      "synonyms": [
+        "cotton",
+        "square",
+        "identify",
+        "accord"
+      ],
+      "antonyms": [
+        "not coincide"
+      ],
+      "derivatives": [
+        "coincident",
+        "coincidental",
+        "coincidentally",
+        "coincidence"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “coincide”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,coincide",
+      "sceneCue": "IELTS · 同时发生"
+    },
+    {
+      "id": "ielts_019_competent",
+      "word": "competent",
+      "phoneticUK": "'kɒmpɪtnt",
+      "phoneticUS": "'kɑmpɪtənt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=competent&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=competent&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "有能力的",
+        "能胜任的"
+      ],
+      "englishDefinitions": [
+        "having enough skill or knowledge to do something to a satisfactory standard"
+      ],
+      "exampleSentences": [
+        {
+          "en": "A competent mechanic should be able to fix the problem.",
+          "cn": "一名合格的机修工应该能够解决这个问题。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "competent authority",
+          "cn": "[法]主管当局，主管部门"
+        },
+        {
+          "phrase": "competent department",
+          "cn": "主管部门"
+        },
+        {
+          "phrase": "competent in",
+          "cn": "胜任的；有能力"
+        },
+        {
+          "phrase": "be competent for",
+          "cn": "胜任"
+        }
+      ],
+      "synonyms": [
+        "able",
+        "capable",
+        "efficient",
+        "sufficient"
+      ],
+      "antonyms": [
+        "not competent"
+      ],
+      "derivatives": [
+        "competently",
+        "competence",
+        "competency"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “competent”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,competent",
+      "sceneCue": "IELTS · 有能力的"
+    },
+    {
+      "id": "ielts_020_require",
+      "word": "require",
+      "phoneticUK": "rɪ'kwaɪə(r)",
+      "phoneticUS": "rɪ'kwaɪr",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=require&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=require&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "需要",
+        "命令",
+        "规定， 要求"
+      ],
+      "englishDefinitions": [
+        "to need something"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Campbell’s broken leg will probably require surgery.",
+          "cn": "坎贝尔的一条腿骨折，可能需要手术。"
+        },
+        {
+          "en": "What’s required is a complete reorganization of the system.",
+          "cn": "需要做的是彻底整顿整个系统。"
+        },
+        {
+          "en": "Most house plants require regular watering.",
+          "cn": "大多数室内盆栽植物需要定期浇水。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "require in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use require",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "lack",
+        "exact",
+        "desire",
+        "order"
+      ],
+      "antonyms": [
+        "not require"
+      ],
+      "derivatives": [
+        "required",
+        "requirement"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “require”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,require",
+      "sceneCue": "IELTS · 需要"
+    },
+    {
+      "id": "ielts_021_scratch",
+      "word": "scratch",
+      "phoneticUK": "skrætʃ",
+      "phoneticUS": "skrætʃ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=scratch&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=scratch&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "划伤，"
+      ],
+      "englishDefinitions": [
+        "a small cut on someone’s skin"
+      ],
+      "exampleSentences": [
+        {
+          "en": "There were deep scratches all over her face.",
+          "cn": "她脸上全是深深的伤痕。"
+        },
+        {
+          "en": "Don’t worry, it’s only a scratch (= not a serious injury ) .",
+          "cn": "别担心，只是一道划伤。"
+        },
+        {
+          "en": "She was unharmed apart from a few cuts and scratches.",
+          "cn": "除了几处皮外伤外，她安然无恙。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "from scratch",
+          "cn": "白手起家；从头做起"
+        },
+        {
+          "phrase": "start from scratch",
+          "cn": "从头开始；白手起家；从起跑线开始"
+        },
+        {
+          "phrase": "up to scratch",
+          "cn": "达到标准"
+        },
+        {
+          "phrase": "without a scratch",
+          "cn": "一点儿也没受伤，安然无恙"
+        }
+      ],
+      "synonyms": [
+        "abrasion",
+        "brush-burn",
+        "hit-and-miss",
+        "paw"
+      ],
+      "antonyms": [
+        "not scratch"
+      ],
+      "derivatives": [
+        "scratchy",
+        "scratcher"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “scratch”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,scratch",
+      "sceneCue": "IELTS · 划伤，"
+    },
+    {
+      "id": "ielts_022_compassionate",
+      "word": "compassionate",
+      "phoneticUK": "kəm'pæʃənət",
+      "phoneticUS": "kəm'pæʃənət",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=compassionate&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=compassionate&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "有同情心的， 表示怜悯的"
+      ],
+      "englishDefinitions": [
+        "feeling sympathy for people who are suffering"
+      ],
+      "exampleSentences": [
+        {
+          "en": "a caring, compassionate man",
+          "cn": "有同情心并关爱他人的人"
+        },
+        {
+          "en": "I allowed him to go home on compassionate grounds .",
+          "cn": "我出于同情让他回家了。"
+        },
+        {
+          "en": "One measure of a civilized and compassionate society is how well it treats its prison population.",
+          "cn": "衡量一个文明和有同情心的社会的尺度之一，就是看它如何对待囚犯。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "compassionate in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use compassionate",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "tender-hearted",
+        "merciful",
+        "feel for",
+        "have pity on"
+      ],
+      "antonyms": [
+        "not compassionate"
+      ],
+      "derivatives": [
+        "compassionately",
+        "compassion"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “compassionate”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,compassionate",
+      "sceneCue": "IELTS · 有同情心的， 表示怜悯的"
+    },
+    {
+      "id": "ielts_023_cooperative",
+      "word": "cooperative",
+      "phoneticUK": "kəu'ɒpərətɪv",
+      "phoneticUS": "ko'ɑpərətɪv",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=cooperative&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=cooperative&type=2",
+      "partOfSpeech": "adj/n",
+      "definitions": [
+        "合作的，协作的",
+        "合作社"
+      ],
+      "englishDefinitions": [
+        "willing to cooperate",
+        "a business or organization owned equally by all the people working there"
+      ],
+      "exampleSentences": [
+        {
+          "en": "He was doing his best to be cooperative.",
+          "cn": "他在尽全力配合。"
+        },
+        {
+          "en": "a cooperative witness",
+          "cn": "肯配合的目击者"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "cooperative relationship",
+          "cn": "合作关系"
+        },
+        {
+          "phrase": "cooperative learning",
+          "cn": "合作学习，共同学习"
+        },
+        {
+          "phrase": "cooperative system",
+          "cn": "合作制度"
+        },
+        {
+          "phrase": "cooperative development",
+          "cn": "合作开发"
+        }
+      ],
+      "synonyms": [
+        "coefficient",
+        "collaborative",
+        "artel",
+        "co-op"
+      ],
+      "antonyms": [
+        "not cooperative"
+      ],
+      "derivatives": [
+        "cooperatively",
+        "cooperation",
+        "cooperator",
+        "cooperativity"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “cooperative”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,cooperative",
+      "sceneCue": "IELTS · 合作的，协作的"
+    },
+    {
+      "id": "ielts_024_strategist",
+      "word": "strategist",
+      "phoneticUK": "'strætədʒɪst",
+      "phoneticUS": "'strætədʒɪst",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=strategist&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=strategist&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "战略家"
+      ],
+      "englishDefinitions": [
+        "someone who is good at planning things, especially military or political actions"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Military strategists had devised a plan that guaranteed a series of stunning victories.",
+          "cn": "军事战略家们设计了一个保证了一系列惊人胜利的计划。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "strategist in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use strategist",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "militarist"
+      ],
+      "antonyms": [
+        "not strategist"
+      ],
+      "derivatives": [
+        "strategic",
+        "strategically",
+        "strategy",
+        "strategics"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “strategist”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,strategist",
+      "sceneCue": "IELTS · 战略家"
+    },
+    {
+      "id": "ielts_025_irritable",
+      "word": "irritable",
+      "phoneticUK": "'ɪrɪtəbl",
+      "phoneticUS": "'ɪrɪtəbl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=irritable&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=irritable&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "急躁的， 易怒的， 易受刺激的",
+        "过敏的"
+      ],
+      "englishDefinitions": [
+        "getting annoyed quickly or easily"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Jo was tired, irritable, and depressed.",
+          "cn": "乔疲惫暴躁，而且情绪低落。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "irritable bowel syndrome",
+          "cn": "[医]肠道易激综合症"
+        }
+      ],
+      "synonyms": [
+        "passionate",
+        "hypersusceptible"
+      ],
+      "antonyms": [
+        "not irritable"
+      ],
+      "derivatives": [
+        "irritables",
+        "irritableing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “irritable”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,irritable",
+      "sceneCue": "IELTS · 急躁的， 易怒的， 易受刺激的"
+    },
+    {
+      "id": "ielts_026_triple",
+      "word": "triple",
+      "phoneticUK": "'trɪpl",
+      "phoneticUS": "'trɪpl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=triple&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=triple&type=2",
+      "partOfSpeech": "adj/v",
+      "definitions": [
+        "三部分的",
+        "三倍的",
+        "增至三倍"
+      ],
+      "englishDefinitions": [
+        "having three parts or involving three groups, people, events etc",
+        "to increase by three times as much, or to make something do this"
+      ],
+      "exampleSentences": [
+        {
+          "en": "a triple murder investigation",
+          "cn": "对一宗三重谋杀案的调查"
+        },
+        {
+          "en": "a triple bill of horror movies",
+          "cn": "三部恐怖电影的连续放映"
+        },
+        {
+          "en": "the triple world champion",
+          "cn": "三连冠世界冠军"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "triple jump",
+          "cn": "三级跳远"
+        },
+        {
+          "phrase": "triple integral",
+          "cn": "三重积分"
+        },
+        {
+          "phrase": "triple point",
+          "cn": "三相点"
+        },
+        {
+          "phrase": "triple threat",
+          "cn": "（美）三面手"
+        }
+      ],
+      "synonyms": [
+        "trinary",
+        "threefold",
+        "ternion",
+        "triad"
+      ],
+      "antonyms": [
+        "not triple"
+      ],
+      "derivatives": [
+        "tripling",
+        "triplicity"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “triple”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,triple",
+      "sceneCue": "IELTS · 三部分的"
+    },
+    {
+      "id": "ielts_027_reserved",
+      "word": "reserved",
+      "phoneticUK": "rɪ'zɜːvd",
+      "phoneticUS": "rɪ'zɝvd",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=reserved&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=reserved&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "说话不多的， 内向的",
+        "有所保留的， 预订的"
+      ],
+      "englishDefinitions": [
+        "A table in a restaurant or a seat in a theatre that is reserved is being kept for someone rather than given or sold to anyone else"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Seats, or sometimes entire tables, were reserved.",
+          "cn": "座位，有时候全部的桌子，都被预订了。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "rights reserved",
+          "cn": "保留权利"
+        },
+        {
+          "phrase": "all rights reserved",
+          "cn": "版权所有"
+        },
+        {
+          "phrase": "all right reserved",
+          "cn": "保留一切权力"
+        },
+        {
+          "phrase": "reserved area",
+          "cn": "保留区"
+        }
+      ],
+      "synonyms": [
+        "cold",
+        "saving",
+        "retained"
+      ],
+      "antonyms": [
+        "not reserved"
+      ],
+      "derivatives": [
+        "reservedly",
+        "reserve",
+        "reservation",
+        "reservedness"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “reserved”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,reserved",
+      "sceneCue": "IELTS · 说话不多的， 内向的"
+    },
+    {
+      "id": "ielts_028_temper",
+      "word": "temper",
+      "phoneticUK": "'tempə(r)",
+      "phoneticUS": "'tɛmpɚ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=temper&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=temper&type=2",
+      "partOfSpeech": "n/v",
+      "definitions": [
+        "情绪",
+        "使缓和"
+      ],
+      "englishDefinitions": [
+        "the way you are feeling at a particular time, especially when you are feeling angry for a short time",
+        "to make something less severe or extreme"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Pete hit his brother in a fit of temper .",
+          "cn": "皮特一气之下打了他弟弟。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "bad temper",
+          "cn": "坏脾气；暴躁"
+        },
+        {
+          "phrase": "temper mill",
+          "cn": "平整机"
+        },
+        {
+          "phrase": "hot temper",
+          "cn": "急躁的脾气"
+        },
+        {
+          "phrase": "in a temper",
+          "cn": "在盛怒之下；发着脾气"
+        }
+      ],
+      "synonyms": [
+        "tendency",
+        "liability",
+        "trend",
+        "preference"
+      ],
+      "antonyms": [
+        "not temper"
+      ],
+      "derivatives": [
+        "tempered",
+        "temperamental",
+        "temperance",
+        "temperamentally"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “temper”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,temper",
+      "sceneCue": "IELTS · 情绪"
+    },
+    {
+      "id": "ielts_029_tickle",
+      "word": "tickle",
+      "phoneticUK": "'tɪkl",
+      "phoneticUS": "'tɪkl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=tickle&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=tickle&type=2",
+      "partOfSpeech": "v/n",
+      "definitions": [
+        "发痒",
+        "使高兴，逗乐",
+        "痒"
+      ],
+      "englishDefinitions": [
+        "if something touching your body tickles you, it makes you want to rub your body because it is slightly uncomfortable",
+        "a feeling in your throat that makes you want to cough"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Mommy, this blanket tickles.",
+          "cn": "妈妈，这毛毯扎人。"
+        },
+        {
+          "en": "Mazie’s fur collar was tickling her neck.",
+          "cn": "马齐耶的毛领子扎得她脖子痒痒的。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "tickle in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use tickle",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "please",
+        "glad",
+        "satisfy",
+        "content"
+      ],
+      "antonyms": [
+        "not tickle"
+      ],
+      "derivatives": [
+        "ticklish",
+        "ticker",
+        "tickler",
+        "tickling"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “tickle”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,tickle",
+      "sceneCue": "IELTS · 发痒"
+    },
+    {
+      "id": "ielts_030_object",
+      "word": "object",
+      "phoneticUK": "'ɒbdʒɪkt",
+      "phoneticUS": "'ɑbdʒɛkt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=object&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=object&type=2",
+      "partOfSpeech": "v/n",
+      "definitions": [
+        "反对， 不赞成",
+        "物体",
+        "对象",
+        "目标"
+      ],
+      "englishDefinitions": [
+        "to feel or say that you oppose or disapprove of something",
+        "a solid thing that you can hold, touch, or see but that is not alive"
+      ],
+      "exampleSentences": [
+        {
+          "en": "If no one objects, I would like Mrs Harrison to be present.",
+          "cn": "如果没人反对的话，我想请哈里森夫人出席。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "object oriented",
+          "cn": "面向对象的；对象趋向的；物件导向的"
+        },
+        {
+          "phrase": "object of study",
+          "cn": "研究对象"
+        },
+        {
+          "phrase": "object function",
+          "cn": "目标函数；原函数"
+        },
+        {
+          "phrase": "controlled object",
+          "cn": "被控对象，受控对象；控制对象"
+        }
+      ],
+      "synonyms": [
+        "target",
+        "goal",
+        "end",
+        "cause"
+      ],
+      "antonyms": [
+        "not object"
+      ],
+      "derivatives": [
+        "objective",
+        "objectionable",
+        "objectively",
+        "objection"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “object”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,object",
+      "sceneCue": "IELTS · 反对， 不赞成"
+    },
+    {
+      "id": "ielts_031_accessible",
+      "word": "accessible",
+      "phoneticUK": "ək'sesəbl",
+      "phoneticUS": "ək'sɛsəbl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=accessible&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=accessible&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "能接近的",
+        "易达到的"
+      ],
+      "englishDefinitions": [
+        "a place, building, or object that is accessible is easy to reach or get into"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The island is only accessible by boat.",
+          "cn": "这个岛只有坐船才能到。"
+        },
+        {
+          "en": "There is a church which is easily accessible from my home.",
+          "cn": "有座教堂离我家很近。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "readily accessible",
+          "cn": "易接近的；易达到的；可存取的"
+        }
+      ],
+      "synonyms": [
+        "accostable",
+        "comprehensible"
+      ],
+      "antonyms": [
+        "not accessible"
+      ],
+      "derivatives": [
+        "access",
+        "accessibility",
+        "accession"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “accessible”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accessible",
+      "sceneCue": "IELTS · 能接近的"
+    },
+    {
+      "id": "ielts_032_hang",
+      "word": "hang",
+      "phoneticUK": "hæŋ",
+      "phoneticUS": "hæŋ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=hang&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=hang&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "悬挂， 吊， 垂下",
+        "吊死， 绞死"
+      ],
+      "englishDefinitions": [
+        "to kill someone by dropping them with a rope around their neck, or to die in this way, especially as a punishment for a serious crime"
+      ],
+      "exampleSentences": [
+        {
+          "en": "If he is found guilty, he will almost certainly hang.",
+          "cn": "如果被判有罪，他几乎肯定会被处以绞刑。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "hang on",
+          "cn": "坚持下去；不挂断；握住不放"
+        },
+        {
+          "phrase": "hang out",
+          "cn": "挂出；闲逛"
+        },
+        {
+          "phrase": "hang up",
+          "cn": "挂断电话；搁置，拖延"
+        },
+        {
+          "phrase": "get the hang of",
+          "cn": "得知……的窍门；熟悉某物的用法；理解某事，摸清概况；鉴赏"
+        }
+      ],
+      "synonyms": [
+        "paint",
+        "swing from",
+        "trail",
+        "moratorium"
+      ],
+      "antonyms": [
+        "not hang"
+      ],
+      "derivatives": [
+        "hanging",
+        "hanger"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “hang”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,hang",
+      "sceneCue": "IELTS · 悬挂， 吊， 垂下"
+    },
+    {
+      "id": "ielts_033_authenticate",
+      "word": "authenticate",
+      "phoneticUK": "ɔː'θentɪkeɪt",
+      "phoneticUS": "ɔ'θɛntɪket",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=authenticate&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=authenticate&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "鉴别， 证明"
+      ],
+      "englishDefinitions": [
+        "to prove that something is true or real"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The painting has been authenticated by experts.",
+          "cn": "这幅画专家鉴定为真迹。"
+        },
+        {
+          "en": "passwords which can authenticate electronic documents",
+          "cn": "能够验证电子文档的密码"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "authenticate in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use authenticate",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "appraise",
+        "to identify"
+      ],
+      "antonyms": [
+        "not authenticate"
+      ],
+      "derivatives": [
+        "authentic",
+        "authentication",
+        "authenticity",
+        "authenticator"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “authenticate”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,authenticate",
+      "sceneCue": "IELTS · 鉴别， 证明"
+    },
+    {
+      "id": "ielts_034_suffice",
+      "word": "suffice",
+      "phoneticUK": "sə'faɪs",
+      "phoneticUS": "sə'faɪs",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=suffice&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=suffice&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "满足， 满意",
+        "足够"
+      ],
+      "englishDefinitions": [
+        "to be enough"
+      ],
+      "exampleSentences": [
+        {
+          "en": "A light lunch will suffice .",
+          "cn": "简单的午餐就够了。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "suffice for",
+          "cn": "满足……的需要"
+        }
+      ],
+      "synonyms": [
+        "content",
+        "gratify",
+        "serve",
+        "be in a position"
+      ],
+      "antonyms": [
+        "not suffice"
+      ],
+      "derivatives": [
+        "sufficient",
+        "sufficiently"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “suffice”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,suffice",
+      "sceneCue": "IELTS · 满足， 满意"
+    },
+    {
+      "id": "ielts_035_concede",
+      "word": "concede",
+      "phoneticUK": "kən'siːd",
+      "phoneticUS": "kən'sid",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=concede&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=concede&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "承认",
+        "让步"
+      ],
+      "englishDefinitions": [
+        "to admit that something is true or correct, although you wish it were not true"
+      ],
+      "exampleSentences": [
+        {
+          "en": "‘That’s the only possible solution.’ ‘Yes, I suppose so,’ Charles conceded.",
+          "cn": "“那是唯一可行的解决办法。”“对，我想是。”查尔斯承认道。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "concede in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use concede",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "afford",
+        "accept",
+        "agree",
+        "recognize"
+      ],
+      "antonyms": [
+        "not concede"
+      ],
+      "derivatives": [
+        "concedes",
+        "concedeing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “concede”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,concede",
+      "sceneCue": "IELTS · 承认"
+    },
+    {
+      "id": "ielts_036_notable",
+      "word": "notable",
+      "phoneticUK": "'nəutəbl",
+      "phoneticUS": "'notəbl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=notable&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=notable&type=2",
+      "partOfSpeech": "adj/n",
+      "definitions": [
+        "值得注意的",
+        "显著的，杰出的，显赫的",
+        "名人， 要人"
+      ],
+      "englishDefinitions": [
+        "important, interesting, excellent, or unusual enough to be noticed or mentioned"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Every country in the world signed the treaty, with one notable exception - the United States.",
+          "cn": "全世界每个国家都签署了那份条约，只有一个国家反其道而行之，就是美国。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "notable in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use notable",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "famous",
+        "obvious",
+        "remarkable",
+        "prominent"
+      ],
+      "antonyms": [
+        "not notable"
+      ],
+      "derivatives": [
+        "noted",
+        "notably",
+        "note",
+        "notation"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “notable”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,notable",
+      "sceneCue": "IELTS · 值得注意的"
+    },
+    {
+      "id": "ielts_037_unparalleled",
+      "word": "unparalleled",
+      "phoneticUK": "ʌn'pærəleld",
+      "phoneticUS": "ʌn'pærəlɛld",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=unparalleled&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=unparalleled&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "无双的， 无比的， 空前的"
+      ],
+      "englishDefinitions": [
+        "bigger, better, or worse than anything else"
+      ],
+      "exampleSentences": [
+        {
+          "en": "an achievement unparalleled in sporting history",
+          "cn": "体育史上空前的成就"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "unparalleled in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use unparalleled",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "matchless",
+        "incomparable"
+      ],
+      "antonyms": [
+        "not unparalleled"
+      ],
+      "derivatives": [
+        "unparalleleds",
+        "unparalleleding"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “unparalleled”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,unparalleled",
+      "sceneCue": "IELTS · 无双的， 无比的， 空前的"
+    },
+    {
+      "id": "ielts_038_plush",
+      "word": "plush",
+      "phoneticUK": "plʌʃ",
+      "phoneticUS": "plʌʃ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=plush&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=plush&type=2",
+      "partOfSpeech": "adj/n",
+      "definitions": [
+        "豪华的，舒适的",
+        "长毛绒"
+      ],
+      "englishDefinitions": [
+        "very comfortable, expensive, and of good quality",
+        "a silk or cotton material with a thick soft surface"
+      ],
+      "exampleSentences": [
+        {
+          "en": "a plush hotel",
+          "cn": "一家豪华酒店"
+        },
+        {
+          "en": "Their casino is the plushest in town.",
+          "cn": "他们的赌场是城里最豪华的。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "plush in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use plush",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "grand",
+        "comfortable",
+        "peluche"
+      ],
+      "antonyms": [
+        "not plush"
+      ],
+      "derivatives": [
+        "plushy"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “plush”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,plush",
+      "sceneCue": "IELTS · 豪华的，舒适的"
+    },
+    {
+      "id": "ielts_039_evaporate",
+      "word": "evaporate",
+      "phoneticUK": "ɪ'væpəreɪt",
+      "phoneticUS": "ɪ'væpəret",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=evaporate&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=evaporate&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "蒸发",
+        "消失",
+        "不复存在"
+      ],
+      "englishDefinitions": [
+        "if a liquid evaporates, or if heat evaporates it, it changes into a gas"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Most of the water had evaporated.",
+          "cn": "大部分的水都蒸发了。"
+        },
+        {
+          "en": "The sun evaporates moisture on the leaves.",
+          "cn": "太阳会蒸发叶子上的水分。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "evaporate in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use evaporate",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "vapor",
+        "disappear",
+        "blank"
+      ],
+      "antonyms": [
+        "not evaporate"
+      ],
+      "derivatives": [
+        "evaporated",
+        "evaporative",
+        "evaporable",
+        "evaporation"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “evaporate”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,evaporate",
+      "sceneCue": "IELTS · 蒸发"
+    },
+    {
+      "id": "ielts_040_commission",
+      "word": "commission",
+      "phoneticUK": "kə'mɪʃn",
+      "phoneticUS": "kə'mɪʃən",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=commission&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=commission&type=2",
+      "partOfSpeech": "n/v",
+      "definitions": [
+        "委托",
+        "佣金",
+        "授权， 委托"
+      ],
+      "englishDefinitions": [
+        "an extra amount of money that is paid to a person or organization according to the value of the goods they have sold or the services they have provided",
+        "to formally ask someone to write an official report, produce a work of art for you etc"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The dealer takes a 20% commission on the sales he makes.",
+          "cn": "经销商按销售额收取20%的佣金。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "arbitration commission",
+          "cn": "[经]仲裁委员会"
+        },
+        {
+          "phrase": "on commission",
+          "cn": "抽取佣金；受托代销；被授权"
+        },
+        {
+          "phrase": "european commission",
+          "cn": "欧洲委员会"
+        },
+        {
+          "phrase": "planning commission",
+          "cn": "计划委员会；规划委员会"
+        }
+      ],
+      "synonyms": [
+        "council",
+        "soviet",
+        "brokerage",
+        "authorization"
+      ],
+      "antonyms": [
+        "not commission"
+      ],
+      "derivatives": [
+        "committed",
+        "commissioned",
+        "commitment",
+        "commissioner"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “commission”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,commission",
+      "sceneCue": "IELTS · 委托"
+    },
+    {
+      "id": "ielts_041_staircase",
+      "word": "staircase",
+      "phoneticUK": "'steəkeɪs",
+      "phoneticUS": "'stɛrkes",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=staircase&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=staircase&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "楼梯"
+      ],
+      "englishDefinitions": [
+        "a set of stairs inside a building with its supports and the side parts that you hold on to"
+      ],
+      "exampleSentences": [
+        {
+          "en": "They walked down the staircase together.",
+          "cn": "他们一起沿楼梯通道往下走。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "spiral staircase",
+          "cn": "n. 螺旋梯"
+        }
+      ],
+      "synonyms": [
+        "apples and pears"
+      ],
+      "antonyms": [
+        "not staircase"
+      ],
+      "derivatives": [
+        "stairway"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “staircase”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,staircase",
+      "sceneCue": "IELTS · 楼梯"
+    },
+    {
+      "id": "ielts_042_flip",
+      "word": "flip",
+      "phoneticUK": "flɪp",
+      "phoneticUS": "flɪp",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=flip&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=flip&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "轻抛",
+        "轻弹"
+      ],
+      "englishDefinitions": [
+        "to make a flat object such as a coin go upwards and turn over in the air"
+      ],
+      "exampleSentences": [
+        {
+          "en": "We flipped a coin to see who would go first.",
+          "cn": "我们抛硬币决定谁先去。"
+        },
+        {
+          "en": "There’s quite an art to flipping pancakes.",
+          "cn": "翻煎饼真是门艺术。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "flip side",
+          "cn": "[引申]另一方面；唱片的反面；相对立的人"
+        },
+        {
+          "phrase": "flip chip",
+          "cn": "倒装法；覆晶技术"
+        },
+        {
+          "phrase": "flip over",
+          "cn": "翻页；翻过来"
+        },
+        {
+          "phrase": "flip a coin",
+          "cn": "抛钱币（决定）"
+        }
+      ],
+      "synonyms": [
+        "throw",
+        "pitch",
+        "frisk",
+        "rude"
+      ],
+      "antonyms": [
+        "not flip"
+      ],
+      "derivatives": [
+        "flipper",
+        "flippant",
+        "flippantly",
+        "flippancy"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “flip”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,flip",
+      "sceneCue": "IELTS · 轻抛"
+    },
+    {
+      "id": "ielts_043_connect",
+      "word": "connect",
+      "phoneticUK": "kə'nekt",
+      "phoneticUS": "kə'nɛkt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=connect&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=connect&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "连接， 衔接",
+        "联合， 关联",
+        "由…联想到",
+        "给…接通电话"
+      ],
+      "englishDefinitions": [
+        "to join two or more things together"
+      ],
+      "exampleSentences": [
+        {
+          "en": "We’d like two rooms with connecting doors (= doors that join the rooms ) .",
+          "cn": "我们想要两个有门相通的房间。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "connect with",
+          "cn": "连接；与…联系"
+        },
+        {
+          "phrase": "connect up",
+          "cn": "连接，接上"
+        },
+        {
+          "phrase": "network connect",
+          "cn": "网络连接"
+        }
+      ],
+      "synonyms": [
+        "couple",
+        "hand in hand",
+        "band",
+        "combine"
+      ],
+      "antonyms": [
+        "not connect"
+      ],
+      "derivatives": [
+        "connected",
+        "connective",
+        "connectible",
+        "connection"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “connect”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,connect",
+      "sceneCue": "IELTS · 连接， 衔接"
+    },
+    {
+      "id": "ielts_044_resume",
+      "word": "resume",
+      "phoneticUK": "rɪ'zjuːm",
+      "phoneticUS": "rɪ'zjuːm",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=resume&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=resume&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "重新开始， 继续恢复"
+      ],
+      "englishDefinitions": [
+        "to start doing something again after stopping or being interrupted"
+      ],
+      "exampleSentences": [
+        {
+          "en": "She hopes to resume work after the baby is born.",
+          "cn": "她想生完孩子后继续工作。"
+        },
+        {
+          "en": "The rebels have resumed hostilities against government troops.",
+          "cn": "叛乱分子继续与政府军发生冲突。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "personal resume",
+          "cn": "个人简历"
+        }
+      ],
+      "synonyms": [
+        "bio",
+        "abstract",
+        "brief",
+        "summary"
+      ],
+      "antonyms": [
+        "not resume"
+      ],
+      "derivatives": [
+        "resumption"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “resume”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,resume",
+      "sceneCue": "IELTS · 重新开始， 继续恢复"
+    },
+    {
+      "id": "ielts_045_address",
+      "word": "address",
+      "phoneticUK": "ə'dres",
+      "phoneticUS": "əˈdrɛs;(for n)ˈædres; ædrɛs",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=address&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=address&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "致函，写姓名地址",
+        "向…讲话，演说",
+        "处理，"
+      ],
+      "englishDefinitions": [
+        "if you address an envelope, package etc, you write on it the name and address of the person you are sending it to"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Send a stamped, self-addressed envelope (=  with your address on it so it can be sent back to you  ) .",
+          "cn": "寄上一个贴好邮票的、写有回邮地址的信封。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "email address",
+          "cn": "电子邮箱信箱"
+        },
+        {
+          "phrase": "ip address",
+          "cn": "网络地址，IP地址"
+        },
+        {
+          "phrase": "address book",
+          "cn": "通讯簿；住址名册"
+        },
+        {
+          "phrase": "home address",
+          "cn": "家庭住址；标识地址；内部地址"
+        }
+      ],
+      "synonyms": [
+        "undertake",
+        "pursue",
+        "have",
+        "speech"
+      ],
+      "antonyms": [
+        "not address"
+      ],
+      "derivatives": [
+        "addressable",
+        "addressee",
+        "addresser",
+        "addressograph"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “address”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,address",
+      "sceneCue": "IELTS · 致函，写姓名地址"
+    },
+    {
+      "id": "ielts_046_posture",
+      "word": "posture",
+      "phoneticUK": "'pɒstʃə(r)",
+      "phoneticUS": "'pɑstʃɚ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=posture&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=posture&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "姿势",
+        "心情",
+        "态度"
+      ],
+      "englishDefinitions": [
+        "the way you position your body when sitting or standing"
+      ],
+      "exampleSentences": [
+        {
+          "en": "her upright posture",
+          "cn": "她笔挺的姿势"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "body posture",
+          "cn": "体位；姿态；身体姿式"
+        }
+      ],
+      "synonyms": [
+        "behavior",
+        "status",
+        "pose"
+      ],
+      "antonyms": [
+        "not posture"
+      ],
+      "derivatives": [
+        "postural",
+        "posturing",
+        "posturer"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “posture”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,posture",
+      "sceneCue": "IELTS · 姿势"
+    },
+    {
+      "id": "ielts_047_spiral",
+      "word": "spiral",
+      "phoneticUK": "'spaɪərəl",
+      "phoneticUS": "'spaɪrəl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=spiral&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=spiral&type=2",
+      "partOfSpeech": "adj/v/n",
+      "definitions": [
+        "螺旋形的，盘旋的",
+        "盘旋上升",
+        "急剧增长",
+        "螺旋形"
+      ],
+      "englishDefinitions": [
+        "Spiral is also an adjective",
+        "to move in a continuous curve that gets nearer to or further from its central point as it goes round",
+        "A spiral is a shape which winds around and around, with each curve above or outside the previous one"
+      ],
+      "exampleSentences": [
+        {
+          "en": "...a spiral staircase.",
+          "cn": "…一段旋梯。"
+        },
+        {
+          "en": "The maze is actually two interlocking spirals.",
+          "cn": "这个迷宫实际上是两个连锁的螺旋体。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "spiral bevel gear",
+          "cn": "弧齿锥齿轮；螺旋伞齿轮"
+        },
+        {
+          "phrase": "spiral groove",
+          "cn": "螺旋沟"
+        },
+        {
+          "phrase": "spiral case",
+          "cn": "蜗壳；水轮机蜗壳"
+        },
+        {
+          "phrase": "downward spiral",
+          "cn": "向下旋转；螺旋式下跌；减记恶性循环"
+        }
+      ],
+      "synonyms": [
+        "screw",
+        "helix",
+        "helical",
+        "gyroidal"
+      ],
+      "antonyms": [
+        "not spiral"
+      ],
+      "derivatives": [
+        "spirally",
+        "spire",
+        "spirilla",
+        "spirillum"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “spiral”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,spiral",
+      "sceneCue": "IELTS · 螺旋形的，盘旋的"
+    },
+    {
+      "id": "ielts_048_decapitate",
+      "word": "decapitate",
+      "phoneticUK": "dɪ'kæpɪteɪt",
+      "phoneticUS": "dɪ'kæpɪtet",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=decapitate&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=decapitate&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "斩首"
+      ],
+      "englishDefinitions": [
+        "to cut off someone’s head"
+      ],
+      "exampleSentences": [
+        {
+          "en": "a decapitated body",
+          "cn": "一具无头尸体"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "decapitate in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use decapitate",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "decollate",
+        "get the boot"
+      ],
+      "antonyms": [
+        "not decapitate"
+      ],
+      "derivatives": [
+        "decapitation"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “decapitate”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,decapitate",
+      "sceneCue": "IELTS · 斩首"
+    },
+    {
+      "id": "ielts_049_exorbitant",
+      "word": "exorbitant",
+      "phoneticUK": "ɪg'zɔːbɪtənt",
+      "phoneticUS": "ɪɡ'zɔrbɪtənt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=exorbitant&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=exorbitant&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "过分的， 不合理的"
+      ],
+      "englishDefinitions": [
+        "an exorbitant price, amount of money etc is much higher than it should be"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Exorbitant housing prices have created an acute shortage of affordable housing for the poor.",
+          "cn": "过高的房价使穷人负担得起的房源严重短缺。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "exorbitant in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use exorbitant",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "excessive",
+        "ultra",
+        "tall"
+      ],
+      "antonyms": [
+        "not exorbitant"
+      ],
+      "derivatives": [
+        "exorbitantly",
+        "exorbitance"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “exorbitant”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,exorbitant",
+      "sceneCue": "IELTS · 过分的， 不合理的"
+    },
+    {
+      "id": "ielts_050_surgery",
+      "word": "surgery",
+      "phoneticUK": "'sɜːdʒəri",
+      "phoneticUS": "'sɝdʒəri",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=surgery&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=surgery&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "外科学",
+        "外科手术",
+        "手术室， 诊疗室"
+      ],
+      "englishDefinitions": [
+        "medical treatment in which a surgeon cuts open your body to repair or remove something inside"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Dr. Hanson is in surgery.",
+          "cn": "汉森医生在手术室。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "plastic surgery",
+          "cn": "[医]整形外科"
+        },
+        {
+          "phrase": "heart surgery",
+          "cn": "心脏手术"
+        },
+        {
+          "phrase": "cosmetic surgery",
+          "cn": "整容手术；整容外科"
+        },
+        {
+          "phrase": "laser surgery",
+          "cn": "激光手术"
+        }
+      ],
+      "synonyms": [
+        "theater",
+        "surgical department"
+      ],
+      "antonyms": [
+        "not surgery"
+      ],
+      "derivatives": [
+        "surgical",
+        "surgically",
+        "surgeon"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “surgery”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,surgery",
+      "sceneCue": "IELTS · 外科学"
+    },
+    {
+      "id": "ielts_051_violent",
+      "word": "violent",
+      "phoneticUK": "'vaɪələnt",
+      "phoneticUS": "'vaɪələnt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=violent&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=violent&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "暴力的",
+        "带有强烈感情的",
+        "猛烈的"
+      ],
+      "englishDefinitions": [
+        "involving actions that are intended to injure or kill people, by hitting them, shooting them etc"
+      ],
+      "exampleSentences": [
+        {
+          "en": "the increase in violent crime",
+          "cn": "暴力犯罪的增多"
+        },
+        {
+          "en": "violent clashes between the police and demonstrators",
+          "cn": "警方与示威者之间发生的暴力冲突"
+        },
+        {
+          "en": "31 people have been injured in violent incidents throughout the day.",
+          "cn": "今天一天有31人在暴力事件中受伤。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "violent crime",
+          "cn": "暴力犯罪，暴力罪行"
+        },
+        {
+          "phrase": "violent death",
+          "cn": "暴力死亡；横死"
+        },
+        {
+          "phrase": "violent storm",
+          "cn": "暴风；十一级风"
+        },
+        {
+          "phrase": "violent earthquake",
+          "cn": "大地震；强烈地震"
+        }
+      ],
+      "synonyms": [
+        "fierce",
+        "hard"
+      ],
+      "antonyms": [
+        "not violent"
+      ],
+      "derivatives": [
+        "violently",
+        "violence"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “violent”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,violent",
+      "sceneCue": "IELTS · 暴力的"
+    },
+    {
+      "id": "ielts_052_resolve",
+      "word": "resolve",
+      "phoneticUK": "rɪ'zɒlv",
+      "phoneticUS": "rɪ'zɑlv",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=resolve&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=resolve&type=2",
+      "partOfSpeech": "v/n",
+      "definitions": [
+        "解决，解答",
+        "决定，决意",
+        "分解，分析",
+        "决心， 决意"
+      ],
+      "englishDefinitions": [
+        "to find a satisfactory way of dealing with a problem or difficulty",
+        "strong determination to succeed in doing something"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Barnet was desperate for money to resolve his financial problems.",
+          "cn": "巴尼特急需钱来解决他的经济问题。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "resolve into",
+          "cn": "使分解为…；归结为"
+        },
+        {
+          "phrase": "fail to resolve",
+          "cn": "解决未果"
+        }
+      ],
+      "synonyms": [
+        "solve",
+        "condition",
+        "conclude",
+        "settle"
+      ],
+      "antonyms": [
+        "not resolve"
+      ],
+      "derivatives": [
+        "resolved",
+        "resolvable",
+        "resolvent",
+        "resolutely"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “resolve”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,resolve",
+      "sceneCue": "IELTS · 解决，解答"
+    },
+    {
+      "id": "ielts_053_confront",
+      "word": "confront",
+      "phoneticUK": "kən'frʌnt",
+      "phoneticUS": "kən'frʌnt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=confront&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=confront&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "遭遇",
+        "面对， 正视"
+      ],
+      "englishDefinitions": [
+        "if a problem, difficulty etc confronts you, it appears and needs to be dealt with"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The problems confronting the new government were enormous.",
+          "cn": "新政府面临的难题是巨大的。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "confront with",
+          "cn": "使面临"
+        }
+      ],
+      "synonyms": [
+        "front",
+        "compare"
+      ],
+      "antonyms": [
+        "not confront"
+      ],
+      "derivatives": [
+        "confrontational",
+        "confrontation"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “confront”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,confront",
+      "sceneCue": "IELTS · 遭遇"
+    },
+    {
+      "id": "ielts_054_deploy",
+      "word": "deploy",
+      "phoneticUK": "dɪ'plɔɪ",
+      "phoneticUS": "dɪ'plɔɪ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=deploy&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=deploy&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "部署",
+        "使用， 运用"
+      ],
+      "englishDefinitions": [
+        "to organize or move soldiers, military equipment etc so that they are in the right place and ready to be used"
+      ],
+      "exampleSentences": [
+        {
+          "en": "a job in which a variety of professional skills will be deployed",
+          "cn": "要用到多项专业技术的工作"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "deploy in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use deploy",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "station",
+        "configurate",
+        "expand",
+        "spread out"
+      ],
+      "antonyms": [
+        "not deploy"
+      ],
+      "derivatives": [
+        "deployment"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “deploy”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,deploy",
+      "sceneCue": "IELTS · 部署"
+    },
+    {
+      "id": "ielts_055_reproduce",
+      "word": "reproduce",
+      "phoneticUK": "ˌriːprə'djuːs",
+      "phoneticUS": ",riprə'dus",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=reproduce&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=reproduce&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "繁殖， 生育",
+        "复制， 仿造， 翻版",
+        "再现， 使…在脑海中重现"
+      ],
+      "englishDefinitions": [
+        "if an animal or plant reproduces, or reproduces itself, it produces young plants or animals"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The turtles return to the coast to reproduce.",
+          "cn": "海龟回到岸上繁殖。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "reproduce in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use reproduce",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "generate",
+        "repeat",
+        "breed",
+        "increase"
+      ],
+      "antonyms": [
+        "not reproduce"
+      ],
+      "derivatives": [
+        "reproductive",
+        "reproducible",
+        "reproducibly",
+        "reproduction"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “reproduce”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,reproduce",
+      "sceneCue": "IELTS · 繁殖， 生育"
+    },
+    {
+      "id": "ielts_056_huddle",
+      "word": "huddle",
+      "phoneticUK": "'hʌdl",
+      "phoneticUS": "'hʌdl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=huddle&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=huddle&type=2",
+      "partOfSpeech": "v/n",
+      "definitions": [
+        "聚集在一起",
+        "杂乱的一堆",
+        "拥挤"
+      ],
+      "englishDefinitions": [
+        "If people huddle in a group, they gather together to discuss something quietly or secretly",
+        "a group of people or things that are close together, but not arranged in any particular order, pattern, or system"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Off to one side, Sticht, Macomber, Jordan, and Kreps huddled to discuss something.",
+          "cn": "史蒂希特、麦康伯、乔丹和克雷普斯走到一边，私下商量起事情。"
+        },
+        {
+          "en": "The president has been huddling with his most senior aides.",
+          "cn": "总统一直在和他的顶级高级助理们秘密地聚到一起进行商谈。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "huddle in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use huddle",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "gather up",
+        "cower",
+        "chaos",
+        "disorder"
+      ],
+      "antonyms": [
+        "not huddle"
+      ],
+      "derivatives": [
+        "huddles",
+        "huddleing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “huddle”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,huddle",
+      "sceneCue": "IELTS · 聚集在一起"
+    },
+    {
+      "id": "ielts_057_rendition",
+      "word": "rendition",
+      "phoneticUK": "ren'dɪʃn",
+      "phoneticUS": "rɛn'dɪʃən",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=rendition&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=rendition&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "表演， 扮演， 演唱",
+        "翻译",
+        "视觉再现"
+      ],
+      "englishDefinitions": [
+        "someone’s performance of a play, piece of music etc"
+      ],
+      "exampleSentences": [
+        {
+          "en": "He gave a moving rendition of Lennon’s ‘Imagine’.",
+          "cn": "他深情地演唱了列侬的《想象》。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "rendition in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use rendition",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "version",
+        "translation",
+        "playing",
+        "offering"
+      ],
+      "antonyms": [
+        "not rendition"
+      ],
+      "derivatives": [
+        "renditions",
+        "renditioning"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “rendition”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,rendition",
+      "sceneCue": "IELTS · 表演， 扮演， 演唱"
+    },
+    {
+      "id": "ielts_058_intersection",
+      "word": "intersection",
+      "phoneticUK": "ˌɪntə'sekʃn",
+      "phoneticUS": ",ɪntɚ'sɛkʃən",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=intersection&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=intersection&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "道路交叉口， 十字路口"
+      ],
+      "englishDefinitions": [
+        "a place where roads, lines etc cross each other, especially where two roads meet"
+      ],
+      "exampleSentences": [
+        {
+          "en": "We crossed at a busy intersection.",
+          "cn": "我们穿过了一个繁忙的道路交叉口。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "intersection point",
+          "cn": "交点；交叉点"
+        },
+        {
+          "phrase": "road intersection",
+          "cn": "道路交汇处；道路交叉口；道路交叉"
+        },
+        {
+          "phrase": "point of intersection",
+          "cn": "交点；交叉点"
+        },
+        {
+          "phrase": "intersection line",
+          "cn": "交叉线；相交线"
+        }
+      ],
+      "synonyms": [
+        "junction",
+        "chiasm"
+      ],
+      "antonyms": [
+        "not intersection"
+      ],
+      "derivatives": [
+        "intersectant",
+        "intersect"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “intersection”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,intersection",
+      "sceneCue": "IELTS · 道路交叉口， 十字路口"
+    },
+    {
+      "id": "ielts_059_scholarship",
+      "word": "scholarship",
+      "phoneticUK": "'skɒləʃɪp",
+      "phoneticUS": "'skɑlɚʃɪp",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=scholarship&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=scholarship&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "奖学金",
+        "学问， 学识"
+      ],
+      "englishDefinitions": [
+        "an amount of money that is given to someone by an educational organization to help pay for their education"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Her latest publication is a fine piece of scholarship.",
+          "cn": "她最新出版的作品是一部优秀的学术著作。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "scholarship in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use scholarship",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "knowledge",
+        "wisdom",
+        "learning",
+        "study"
+      ],
+      "antonyms": [
+        "not scholarship"
+      ],
+      "derivatives": [
+        "scholarly",
+        "scholar"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “scholarship”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,scholarship",
+      "sceneCue": "IELTS · 奖学金"
+    },
+    {
+      "id": "ielts_060_besides",
+      "word": "besides",
+      "phoneticUK": "bɪ'saɪdz",
+      "phoneticUS": "bɪ'saɪdz",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=besides&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=besides&type=2",
+      "partOfSpeech": "adv",
+      "definitions": [
+        "除此之外，而且"
+      ],
+      "englishDefinitions": [
+        "used when adding another reason"
+      ],
+      "exampleSentences": [
+        {
+          "en": "I need the money. And besides, when I agree to do something, I do it.",
+          "cn": "我需要这笔钱，而且，我一旦答应做什么事情就会做到。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "besides in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use besides",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "moreover",
+        "again",
+        "also",
+        "additionally"
+      ],
+      "antonyms": [
+        "not besides"
+      ],
+      "derivatives": [
+        "besidess",
+        "besidesing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “besides”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,besides",
+      "sceneCue": "IELTS · 除此之外，而且"
+    },
+    {
+      "id": "ielts_061_instil",
+      "word": "instil",
+      "phoneticUK": "ɪn'stɪl",
+      "phoneticUS": "in'stil",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=instil&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=instil&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "滴注",
+        "逐渐灌输",
+        "逐步培养"
+      ],
+      "englishDefinitions": [
+        "to teach someone to think, behave, or feel in a particular way over a period of time"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The tough thing is trying to instil a winning attitude in the kids.",
+          "cn": "困难在于要尽力给孩子们灌输胜利的心态。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "instil in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use instil",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "imbue"
+      ],
+      "antonyms": [
+        "not instil"
+      ],
+      "derivatives": [
+        "instillation",
+        "instillator",
+        "instillment",
+        "instilment"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “instil”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,instil",
+      "sceneCue": "IELTS · 滴注"
+    },
+    {
+      "id": "ielts_062_inflammable",
+      "word": "inflammable",
+      "phoneticUK": "ɪn'flæməbl",
+      "phoneticUS": "ɪn'flæməbl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=inflammable&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=inflammable&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "易燃的",
+        "易怒的"
+      ],
+      "englishDefinitions": [
+        "inflammable materials or substances will start to burn very easily"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Petrol is highly inflammable.",
+          "cn": "汽油高度易燃。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "inflammable liquid",
+          "cn": "易燃液体"
+        },
+        {
+          "phrase": "inflammable gas",
+          "cn": "易燃气体"
+        }
+      ],
+      "synonyms": [
+        "emotional",
+        "passionate",
+        "tinderbox",
+        "flammable"
+      ],
+      "antonyms": [
+        "not inflammable"
+      ],
+      "derivatives": [
+        "inflammatory",
+        "inflame"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “inflammable”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,inflammable",
+      "sceneCue": "IELTS · 易燃的"
+    },
+    {
+      "id": "ielts_063_implement",
+      "word": "implement",
+      "phoneticUK": "'ɪmplɪment",
+      "phoneticUS": "'ɪmplɪmɛnt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=implement&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=implement&type=2",
+      "partOfSpeech": "v/n",
+      "definitions": [
+        "使生效，实施",
+        "贯彻，执行['ImplImənt]",
+        "工具"
+      ],
+      "englishDefinitions": [
+        "to take action or make changes that you have officially decided should happen",
+        "a tool, especially one used for outdoor physical work"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The government promised to implement a new system to control financial loan institutions.",
+          "cn": "政府许诺要实施新的制度来控制金融贷款机构。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "implement plan",
+          "cn": "执行计划，实施计划"
+        },
+        {
+          "phrase": "stone implement",
+          "cn": "石器；石器用具"
+        }
+      ],
+      "synonyms": [
+        "accomplish",
+        "perform",
+        "come true",
+        "fulfill"
+      ],
+      "antonyms": [
+        "not implement"
+      ],
+      "derivatives": [
+        "implemental",
+        "implementation"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “implement”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,implement",
+      "sceneCue": "IELTS · 使生效，实施"
+    },
+    {
+      "id": "ielts_064_export",
+      "word": "export",
+      "phoneticUK": "ɪk'spɔːt",
+      "phoneticUS": "ˈekspɔːrt；ɪkˈ-",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=export&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=export&type=2",
+      "partOfSpeech": "v/n",
+      "definitions": [
+        "出口",
+        "输出，传播['3kspɔːt]",
+        "输出",
+        "出口商品"
+      ],
+      "englishDefinitions": [
+        "to sell goods to another country",
+        "the business of selling and sending goods to other countries"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Italian food has been exported all over the world.",
+          "cn": "意大利食品已传遍世界。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "import and export",
+          "cn": "进出口；导入和导出；输入和输出"
+        },
+        {
+          "phrase": "export trade",
+          "cn": "出口贸易；出口商"
+        },
+        {
+          "phrase": "export commodities",
+          "cn": "出口商品"
+        },
+        {
+          "phrase": "export tax",
+          "cn": "出口税"
+        }
+      ],
+      "synonyms": [
+        "output",
+        "exit",
+        "bulk out"
+      ],
+      "antonyms": [
+        "not export"
+      ],
+      "derivatives": [
+        "exportable",
+        "exporter",
+        "exportation"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “export”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,export",
+      "sceneCue": "IELTS · 出口"
+    },
+    {
+      "id": "ielts_065_incinerate",
+      "word": "incinerate",
+      "phoneticUK": "ɪn'sɪnəreɪt",
+      "phoneticUS": "in'sinəreit",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=incinerate&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=incinerate&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "焚化， 焚毁， 把…烧成灰烬"
+      ],
+      "englishDefinitions": [
+        "to burn something completely in order to destroy it"
+      ],
+      "exampleSentences": [
+        {
+          "en": "All the infected clothing was incinerated.",
+          "cn": "所有沾染了细菌的衣服都被焚化了。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "incinerate in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use incinerate",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "cremate"
+      ],
+      "antonyms": [
+        "not incinerate"
+      ],
+      "derivatives": [
+        "incineration"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “incinerate”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,incinerate",
+      "sceneCue": "IELTS · 焚化， 焚毁， 把…烧成灰烬"
+    },
+    {
+      "id": "ielts_066_fantasy",
+      "word": "fantasy",
+      "phoneticUK": "'fæntəsi",
+      "phoneticUS": "'fæntəsi",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=fantasy&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=fantasy&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "想象"
+      ],
+      "englishDefinitions": [
+        "an exciting and unusual experience or situation you imagine happening to you, but which will probably never happen"
+      ],
+      "exampleSentences": [
+        {
+          "en": "I used to have fantasies about living in Paris with an artist.",
+          "cn": "我过去常幻想着在巴黎与一位艺术家同住。"
+        },
+        {
+          "en": "sexual fantasies",
+          "cn": "性幻想"
+        },
+        {
+          "en": "Young children sometimes can’t distinguish between fantasy and reality.",
+          "cn": "小孩子有时不能区分幻想与现实。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "sex fantasy",
+          "cn": "性幻想"
+        }
+      ],
+      "synonyms": [
+        "fancy",
+        "illusion",
+        "visional",
+        "imagine"
+      ],
+      "antonyms": [
+        "not fantasy"
+      ],
+      "derivatives": [
+        "fantastic",
+        "fantastical",
+        "fantastically",
+        "fantasia"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “fantasy”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,fantasy",
+      "sceneCue": "IELTS · 想象"
+    },
+    {
+      "id": "ielts_067_erode",
+      "word": "erode",
+      "phoneticUK": "ɪ'rəud",
+      "phoneticUS": "ɪ'rod",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=erode&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=erode&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "侵蚀， 腐蚀",
+        "削弱， 损害"
+      ],
+      "englishDefinitions": [
+        "if the weather erodes rock or soil, or if rock or soil erodes, its surface is gradually destroyed"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The cliffs are being constantly eroded by heavy seas.",
+          "cn": "悬崖正不断受到汹涌海浪的侵蚀。"
+        },
+        {
+          "en": "The rocks have gradually eroded away.",
+          "cn": "岩石逐渐风化。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "erode in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use erode",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "weather",
+        "eat into",
+        "burn into"
+      ],
+      "antonyms": [
+        "not erode"
+      ],
+      "derivatives": [
+        "eroded",
+        "eroding",
+        "erose",
+        "erosive"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “erode”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,erode",
+      "sceneCue": "IELTS · 侵蚀， 腐蚀"
+    },
+    {
+      "id": "ielts_068_check",
+      "word": "check",
+      "phoneticUK": "tʃek",
+      "phoneticUS": "tʃɛk",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=check&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=check&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "检查，核对",
+        "阻止，"
+      ],
+      "englishDefinitions": [
+        "to do something in order to find out whether something really is correct, true, or in good condition"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Check the tiles carefully before you buy them.",
+          "cn": "购买之前要把瓷砖仔细检查一下。"
+        },
+        {
+          "en": "A first rule in solving any mystery is to check the facts.",
+          "cn": "揭开谜团的第一条规则是核查事实。"
+        },
+        {
+          "en": "Fill in the cash book carefully and always check your calculations.",
+          "cn": "仔细填写现金账簿，每次都要检查计算结果。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "check in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use check",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "examine",
+        "inspect",
+        "review",
+        "park"
+      ],
+      "antonyms": [
+        "not check"
+      ],
+      "derivatives": [
+        "checked",
+        "checker"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “check”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,check",
+      "sceneCue": "IELTS · 检查，核对"
+    },
+    {
+      "id": "ielts_069_frustrate",
+      "word": "frustrate",
+      "phoneticUK": "frʌ'streɪt",
+      "phoneticUS": "'frʌstret",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=frustrate&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=frustrate&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "使沮丧",
+        "挫败"
+      ],
+      "englishDefinitions": [
+        "if something frustrates you, it makes you feel annoyed or angry because you are unable to do what you want"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The fact that he’s working with amateurs really frustrates him.",
+          "cn": "与生手共事着实让他沮丧。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "frustrate in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use frustrate",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "defeat",
+        "discomfit",
+        "founder",
+        "come to naught"
+      ],
+      "antonyms": [
+        "not frustrate"
+      ],
+      "derivatives": [
+        "frustrated",
+        "frustrating",
+        "frustration"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “frustrate”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,frustrate",
+      "sceneCue": "IELTS · 使沮丧"
+    },
+    {
+      "id": "ielts_070_gorgeous",
+      "word": "gorgeous",
+      "phoneticUK": "'gɔːdʒəs",
+      "phoneticUS": "'ɡɔrdʒəs",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=gorgeous&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=gorgeous&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "华丽的",
+        "极好的"
+      ],
+      "englishDefinitions": [
+        "extremely beautiful or attractive"
+      ],
+      "exampleSentences": [
+        {
+          "en": "‘What do you think of my new flatmate?’ ‘He’s absolutely gorgeous !’",
+          "cn": "“你觉得我的新室友怎么样？”“他帅极了！”"
+        },
+        {
+          "en": "You look gorgeous, Maria.",
+          "cn": "你看上去非常漂亮，玛丽亚。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "drop-dead gorgeous",
+          "cn": "[口]极其动人的"
+        }
+      ],
+      "synonyms": [
+        "brilliant",
+        "wonderful",
+        "excellent",
+        "famous"
+      ],
+      "antonyms": [
+        "not gorgeous"
+      ],
+      "derivatives": [
+        "gorgeously"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “gorgeous”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,gorgeous",
+      "sceneCue": "IELTS · 华丽的"
+    },
+    {
+      "id": "ielts_071_pragmatic",
+      "word": "pragmatic",
+      "phoneticUK": "præg'mætɪk",
+      "phoneticUS": "præg'mætɪk",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=pragmatic&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=pragmatic&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "务实的",
+        "实事求是的",
+        "实用主义观点的"
+      ],
+      "englishDefinitions": [
+        "dealing with problems in a sensible practical way instead of strictly following a set of ideas"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Williams took a more pragmatic approach to management problems.",
+          "cn": "威廉斯在管理问题上采用的是一种更务实的做法。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "pragmatic competence",
+          "cn": "语用能力"
+        },
+        {
+          "phrase": "pragmatic failure",
+          "cn": "语用失误；语用失效"
+        },
+        {
+          "phrase": "pragmatic approach",
+          "cn": "实际的方法；重实效的方法"
+        }
+      ],
+      "synonyms": [
+        "practical",
+        "actual",
+        "effective",
+        "real"
+      ],
+      "antonyms": [
+        "not pragmatic"
+      ],
+      "derivatives": [
+        "pragmatically",
+        "pragmatism",
+        "pragmatist"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “pragmatic”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,pragmatic",
+      "sceneCue": "IELTS · 务实的"
+    },
+    {
+      "id": "ielts_072_methane",
+      "word": "methane",
+      "phoneticUK": "'miːθeɪn",
+      "phoneticUS": "'mɛθen",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=methane&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=methane&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "甲烷， 沼气"
+      ],
+      "englishDefinitions": [
+        "a gas that you cannot see or smell, which can be burned to give heat"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Methane is one of the principal gases contributing to the greenhouse effect.",
+          "cn": "甲烷是造成温室效应的主要气体之一。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "methane emission",
+          "cn": "沼气泄出"
+        },
+        {
+          "phrase": "methane content",
+          "cn": "沼气含量"
+        },
+        {
+          "phrase": "methane bacteria",
+          "cn": "甲烷菌；甲烷细菌"
+        }
+      ],
+      "synonyms": [
+        "marsh gas",
+        "firedamp"
+      ],
+      "antonyms": [
+        "not methane"
+      ],
+      "derivatives": [
+        "methanal"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “methane”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,methane",
+      "sceneCue": "IELTS · 甲烷， 沼气"
+    },
+    {
+      "id": "ielts_073_erosion",
+      "word": "erosion",
+      "phoneticUK": "ɪ'rəuʒn",
+      "phoneticUS": "ɪ'roʒən",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=erosion&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=erosion&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "腐蚀",
+        "磨损"
+      ],
+      "englishDefinitions": [
+        "the process by which rock or soil is gradually destroyed by wind, rain, or the sea"
+      ],
+      "exampleSentences": [
+        {
+          "en": "the problem of soil erosion",
+          "cn": "水土流失的问题"
+        },
+        {
+          "en": "the erosion of the coastline",
+          "cn": "海岸线受到的侵蚀"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "soil erosion",
+          "cn": "n. 水土流失；土壤侵蚀；土壤流失；泥土流失"
+        },
+        {
+          "phrase": "wind erosion",
+          "cn": "风蚀，风蚀酌；风蚀作用"
+        },
+        {
+          "phrase": "erosion resistance",
+          "cn": "耐腐蚀性；抗腐蚀性"
+        },
+        {
+          "phrase": "water erosion",
+          "cn": "水侵蚀，水力侵蚀；水蚀酌"
+        }
+      ],
+      "synonyms": [
+        "corrosion",
+        "eating away"
+      ],
+      "antonyms": [
+        "not erosion"
+      ],
+      "derivatives": [
+        "eroded",
+        "eroding",
+        "erose",
+        "erosive"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “erosion”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,erosion",
+      "sceneCue": "IELTS · 腐蚀"
+    },
+    {
+      "id": "ielts_074_ascend",
+      "word": "ascend",
+      "phoneticUK": "ə'send",
+      "phoneticUS": "ə'sɛnd",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=ascend&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=ascend&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "攀登",
+        "上升， 升高"
+      ],
+      "englishDefinitions": [
+        "to move up through the air"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The plane ascended rapidly.",
+          "cn": "飞机迅速爬升。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "ascend in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use ascend",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "raise",
+        "arise",
+        "go up",
+        "climb"
+      ],
+      "antonyms": [
+        "not ascend"
+      ],
+      "derivatives": [
+        "ascending",
+        "ascendant",
+        "ascendent",
+        "ascensional"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “ascend”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ascend",
+      "sceneCue": "IELTS · 攀登"
+    },
+    {
+      "id": "ielts_075_superstitious",
+      "word": "superstitious",
+      "phoneticUK": "ˌsuːpə'stɪʃəs",
+      "phoneticUS": "'sʊpɚ'stɪʃəs",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=superstitious&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=superstitious&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "迷信的",
+        "根据迷信的， 由迷信引起的",
+        "受迷信思想支配的"
+      ],
+      "englishDefinitions": [
+        "influenced by superstitions"
+      ],
+      "exampleSentences": [
+        {
+          "en": "a superstitious woman",
+          "cn": "一个迷信的女人"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "superstitious in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use superstitious",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "fetishistic"
+      ],
+      "antonyms": [
+        "not superstitious"
+      ],
+      "derivatives": [
+        "superstitiously",
+        "superstition",
+        "superstitiousness"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “superstitious”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,superstitious",
+      "sceneCue": "IELTS · 迷信的"
+    },
+    {
+      "id": "ielts_076_provided",
+      "word": "provided",
+      "phoneticUK": "prə'vaɪdɪd",
+      "phoneticUS": "prə'vaɪdɪd",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=provided&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=provided&type=2",
+      "partOfSpeech": "conj",
+      "definitions": [
+        "倘若， 只要， 假如"
+      ],
+      "englishDefinitions": [
+        "used to say that something will only be possible if something else happens or is done"
+      ],
+      "exampleSentences": [
+        {
+          "en": "He can come with us, provided he pays for his own meals.",
+          "cn": "只要他付自己的饭钱，就可以跟我们一起来。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "provided by",
+          "cn": "具有；由…提供"
+        },
+        {
+          "phrase": "provided with",
+          "cn": "拥有，装备有…"
+        }
+      ],
+      "synonyms": [
+        "if",
+        "supposing",
+        "gave",
+        "supplied"
+      ],
+      "antonyms": [
+        "not provided"
+      ],
+      "derivatives": [
+        "provideds",
+        "provideding"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “provided”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,provided",
+      "sceneCue": "IELTS · 倘若， 只要， 假如"
+    },
+    {
+      "id": "ielts_077_indispensable",
+      "word": "indispensable",
+      "phoneticUK": "ˌɪndɪ'spensəbl",
+      "phoneticUS": "'ɪndɪ'spɛnsəbl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=indispensable&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=indispensable&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "必不可少的， 必需的"
+      ],
+      "englishDefinitions": [
+        "someone or something that is indispensable is so important or useful that it is impossible to manage without them"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Mobile phones have become an indispensable part of our lives.",
+          "cn": "移动电话已经成为我们生活中的必需品。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "indispensable in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use indispensable",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "obbligato"
+      ],
+      "antonyms": [
+        "not indispensable"
+      ],
+      "derivatives": [
+        "indispensability"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “indispensable”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,indispensable",
+      "sceneCue": "IELTS · 必不可少的， 必需的"
+    },
+    {
+      "id": "ielts_078_lens",
+      "word": "lens",
+      "phoneticUK": "lenz",
+      "phoneticUS": "lɛnz",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=lens&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=lens&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "透镜",
+        "镜片",
+        "镜头"
+      ],
+      "englishDefinitions": [
+        "the part of a camera through which the light travels before it reaches the film"
+      ],
+      "exampleSentences": [
+        {
+          "en": "a standard 50mm lens",
+          "cn": "50毫米标准镜头"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "intraocular lens",
+          "cn": "人工晶体；眼内透镜"
+        },
+        {
+          "phrase": "camera lens",
+          "cn": "摄影机镜头；摄像头"
+        },
+        {
+          "phrase": "contact lens",
+          "cn": "隐形眼镜；接触镜片"
+        },
+        {
+          "phrase": "optical lens",
+          "cn": "光学透镜；透镜"
+        }
+      ],
+      "synonyms": [
+        "cryst"
+      ],
+      "antonyms": [
+        "not lens"
+      ],
+      "derivatives": [
+        "lenss",
+        "lensing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “lens”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,lens",
+      "sceneCue": "IELTS · 透镜"
+    },
+    {
+      "id": "ielts_079_embody",
+      "word": "embody",
+      "phoneticUK": "ɪm'bɒdi",
+      "phoneticUS": "ɪm'bɑdi",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=embody&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=embody&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "表达， 体现",
+        "具体表现， 使具体化",
+        "包括， 包含"
+      ],
+      "englishDefinitions": [
+        "to be a very good example of an idea or quality"
+      ],
+      "exampleSentences": [
+        {
+          "en": "She embodies everything I admire in a teacher.",
+          "cn": "她具备了我所钦佩的教师该具备的一切素质。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "embody in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use embody",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "objectify",
+        "reify"
+      ],
+      "antonyms": [
+        "not embody"
+      ],
+      "derivatives": [
+        "embodiment"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “embody”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,embody",
+      "sceneCue": "IELTS · 表达， 体现"
+    },
+    {
+      "id": "ielts_080_bacterial",
+      "word": "bacterial",
+      "phoneticUK": "bæk'tɪəriəl",
+      "phoneticUS": "bæk'tɪrɪəl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=bacterial&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=bacterial&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "细菌的",
+        "由细菌引起的"
+      ],
+      "englishDefinitions": [
+        "Bacterial is used to describe things that relate to or are caused by bacteria"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Cholera is a bacterial infection.",
+          "cn": "霍乱是一种由细菌引起的感染。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "bacterial infection",
+          "cn": "细菌感染"
+        },
+        {
+          "phrase": "bacterial contamination",
+          "cn": "细菌污染"
+        },
+        {
+          "phrase": "bacterial wilt",
+          "cn": "细菌性枯萎病"
+        },
+        {
+          "phrase": "bacterial culture",
+          "cn": "细菌培养"
+        }
+      ],
+      "synonyms": [
+        "microbic"
+      ],
+      "antonyms": [
+        "not bacterial"
+      ],
+      "derivatives": [
+        "bacterials",
+        "bacterialing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “bacterial”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,bacterial",
+      "sceneCue": "IELTS · 细菌的"
+    },
+    {
+      "id": "ielts_081_motive",
+      "word": "motive",
+      "phoneticUK": "'məutɪv",
+      "phoneticUS": "'motɪv",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=motive&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=motive&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "动机， 目的"
+      ],
+      "englishDefinitions": [
+        "the reason that makes someone do something, especially when this reason is kept hidden"
+      ],
+      "exampleSentences": [
+        {
+          "en": "What do you suppose the killer’s motive was?",
+          "cn": "你认为凶手的动机是什么？"
+        },
+        {
+          "en": "The violence was clearly prompted by political motives.",
+          "cn": "这次暴力事件显然是由政治动机引发的。"
+        },
+        {
+          "en": "It’s not the kind of thing he’d do unless he had an ulterior motive (= a reason he kept hidden ) .",
+          "cn": "他不会做这种事的，除非他另有隐情。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "motive force",
+          "cn": "动力；起动力，原动力"
+        },
+        {
+          "phrase": "motive power",
+          "cn": "动力"
+        },
+        {
+          "phrase": "ulterior motive",
+          "cn": "隐秘不明的动机"
+        },
+        {
+          "phrase": "profit motive",
+          "cn": "利润动机"
+        }
+      ],
+      "synonyms": [
+        "incentive",
+        "goals",
+        "intention",
+        "topic"
+      ],
+      "antonyms": [
+        "not motive"
+      ],
+      "derivatives": [
+        "motor",
+        "motivated",
+        "motionless",
+        "motivational"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “motive”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,motive",
+      "sceneCue": "IELTS · 动机， 目的"
+    },
+    {
+      "id": "ielts_082_envisage",
+      "word": "envisage",
+      "phoneticUK": "ɪn'vɪzɪdʒ",
+      "phoneticUS": "ɪn'vɪzɪdʒ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=envisage&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=envisage&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "展望， 想象",
+        "面对"
+      ],
+      "englishDefinitions": [
+        "to think that something is likely to happen in the future"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The scheme cost a lot more than we had originally envisaged.",
+          "cn": "该计划的花费大大超出了我们最初所预想的数额。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "envisage in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use envisage",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "imagine",
+        "picture",
+        "think of"
+      ],
+      "antonyms": [
+        "not envisage"
+      ],
+      "derivatives": [
+        "envisages",
+        "envisageing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “envisage”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,envisage",
+      "sceneCue": "IELTS · 展望， 想象"
+    },
+    {
+      "id": "ielts_083_anticipation",
+      "word": "anticipation",
+      "phoneticUK": "ænˌtɪsɪ'peɪʃn",
+      "phoneticUS": "æn,tɪsɪ'peʃən",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=anticipation&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=anticipation&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "预料"
+      ],
+      "englishDefinitions": [
+        "when you are expecting something to happen"
+      ],
+      "exampleSentences": [
+        {
+          "en": "She waited in eager anticipation for Robert to arrive.",
+          "cn": "她急切地期盼着罗伯特到来。"
+        },
+        {
+          "en": "Taylor was excited and full of anticipation at the prospect of the trip.",
+          "cn": "泰勒很兴奋，对这次旅行满怀期待。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "in anticipation",
+          "cn": "预先"
+        },
+        {
+          "phrase": "in anticipation of",
+          "cn": "期待，预期"
+        }
+      ],
+      "synonyms": [
+        "wish",
+        "hope",
+        "pleasure",
+        "promise"
+      ],
+      "antonyms": [
+        "not anticipation"
+      ],
+      "derivatives": [
+        "anticipated",
+        "anticipatory",
+        "anticipant",
+        "anticipative"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “anticipation”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,anticipation",
+      "sceneCue": "IELTS · 预料"
+    },
+    {
+      "id": "ielts_084_motivate",
+      "word": "motivate",
+      "phoneticUK": "'məutɪveɪt",
+      "phoneticUS": "'motə'vet",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=motivate&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=motivate&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "使有动机",
+        "激励， 激发"
+      ],
+      "englishDefinitions": [
+        "to make someone want to achieve something and make them willing to work hard in order to do this"
+      ],
+      "exampleSentences": [
+        {
+          "en": "A good teacher has to be able to motivate her students.",
+          "cn": "好教师必须能够激发学生的积极性。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "motivate in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use motivate",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "stimulate",
+        "fan",
+        "needle",
+        "activate"
+      ],
+      "antonyms": [
+        "not motivate"
+      ],
+      "derivatives": [
+        "motor",
+        "motive",
+        "motivated",
+        "motionless"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “motivate”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,motivate",
+      "sceneCue": "IELTS · 使有动机"
+    },
+    {
+      "id": "ielts_085_reinforcement",
+      "word": "reinforcement",
+      "phoneticUK": "ˌriːɪn'fɔːsmənt",
+      "phoneticUS": ",riɪn'fɔrsmənt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=reinforcement&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=reinforcement&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "增援， 加强， 加固"
+      ],
+      "englishDefinitions": [
+        "the act of making something stronger"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The bridge needs some structural reinforcement.",
+          "cn": "这座桥需要结构性加固。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "steel reinforcement",
+          "cn": "钢筋，钢条"
+        },
+        {
+          "phrase": "reinforcement method",
+          "cn": "增量法，增强法；加筋法"
+        },
+        {
+          "phrase": "reinforcement ratio",
+          "cn": "配筋率"
+        },
+        {
+          "phrase": "fiber reinforcement",
+          "cn": "纤维增强；纤维强化热固性；纤维强化复合材料"
+        }
+      ],
+      "synonyms": [
+        "strengthening",
+        "intension"
+      ],
+      "antonyms": [
+        "not reinforcement"
+      ],
+      "derivatives": [
+        "reinforced",
+        "reinforce",
+        "reinforcer"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “reinforcement”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,reinforcement",
+      "sceneCue": "IELTS · 增援， 加强， 加固"
+    },
+    {
+      "id": "ielts_086_tutorial",
+      "word": "tutorial",
+      "phoneticUK": "tjuː'tɔːriəl",
+      "phoneticUS": "tu'tɔrɪəl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=tutorial&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=tutorial&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "大学导师的辅导课"
+      ],
+      "englishDefinitions": [
+        "a period of teaching and discussion with a tutor, especially in a British university"
+      ],
+      "exampleSentences": [
+        {
+          "en": "the tutorial system",
+          "cn": "导师制"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "tutorial system",
+          "cn": "n. 个别辅导制；大学导师制"
+        }
+      ],
+      "synonyms": [
+        "tutorial related"
+      ],
+      "antonyms": [
+        "not tutorial"
+      ],
+      "derivatives": [
+        "tutor",
+        "tutelage",
+        "tutee",
+        "tutorship"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “tutorial”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,tutorial",
+      "sceneCue": "IELTS · 大学导师的辅导课"
+    },
+    {
+      "id": "ielts_087_spoil",
+      "word": "spoil",
+      "phoneticUK": "spɔɪl",
+      "phoneticUS": "spɔɪl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=spoil&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=spoil&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "损坏，破坏，糟蹋",
+        "宠坏，溺爱",
+        "变质"
+      ],
+      "englishDefinitions": [
+        "to have a bad effect on something so that it is no longer attractive, enjoyable, useful etc"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The whole park is spoiled by litter.",
+          "cn": "整个公园环境都给垃圾破坏了。"
+        },
+        {
+          "en": "We didn’t let the incident spoil our day.",
+          "cn": "我们没有让这件事破坏我们一整天的气氛。"
+        },
+        {
+          "en": "I don’t want to spoil your fun.",
+          "cn": "我不想扫你的兴。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "the spoils of war",
+          "cn": "战利品"
+        }
+      ],
+      "synonyms": [
+        "harry",
+        "dote upon",
+        "prey upon",
+        "take a turn for the worse"
+      ],
+      "antonyms": [
+        "not spoil"
+      ],
+      "derivatives": [
+        "spoilt",
+        "spoilage",
+        "spoiler"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “spoil”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,spoil",
+      "sceneCue": "IELTS · 损坏，破坏，糟蹋"
+    },
+    {
+      "id": "ielts_088_multiply",
+      "word": "multiply",
+      "phoneticUK": "'mʌltɪplaɪ",
+      "phoneticUS": "'mʌltɪplaɪ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=multiply&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=multiply&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "增加， 繁殖",
+        "乘"
+      ],
+      "englishDefinitions": [
+        "to breed"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Bacteria multiply quickly in warm food.",
+          "cn": "细菌在温热的食物里繁殖得很快。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "multiply by",
+          "cn": "乘以；乘上"
+        }
+      ],
+      "synonyms": [
+        "ride",
+        "breed",
+        "improve",
+        "accelerate"
+      ],
+      "antonyms": [
+        "not multiply"
+      ],
+      "derivatives": [
+        "multiple",
+        "multiplex",
+        "multiplicative",
+        "multipliable"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “multiply”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,multiply",
+      "sceneCue": "IELTS · 增加， 繁殖"
+    },
+    {
+      "id": "ielts_089_pasture",
+      "word": "pasture",
+      "phoneticUK": "'pɑːstʃə(r)",
+      "phoneticUS": "'pæstʃɚ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=pasture&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=pasture&type=2",
+      "partOfSpeech": "n/v",
+      "definitions": [
+        "牧场，草原",
+        "放牧"
+      ],
+      "englishDefinitions": [
+        "land or a field that is covered with grass and is used for cattle, sheep etc to feed on",
+        "to put animals outside in a field to feed on the grass"
+      ],
+      "exampleSentences": [
+        {
+          "en": "large areas of rough upland pasture",
+          "cn": "大片起伏的山地牧场"
+        },
+        {
+          "en": "the lush pastures of the southern counties",
+          "cn": "南部各郡茂盛的牧场"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "put out to pasture",
+          "cn": "放牧"
+        },
+        {
+          "phrase": "pasture land",
+          "cn": "牧场"
+        },
+        {
+          "phrase": "pasture grass",
+          "cn": "牧草"
+        }
+      ],
+      "synonyms": [
+        "grass",
+        "field",
+        "lawn",
+        "meadow"
+      ],
+      "antonyms": [
+        "not pasture"
+      ],
+      "derivatives": [
+        "pastureland",
+        "pasturage"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “pasture”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,pasture",
+      "sceneCue": "IELTS · 牧场，草原"
+    },
+    {
+      "id": "ielts_090_infirmity",
+      "word": "infirmity",
+      "phoneticUK": "ɪn'fɜːməti",
+      "phoneticUS": "ɪn'fɝməti",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=infirmity&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=infirmity&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "虚弱， 衰弱"
+      ],
+      "englishDefinitions": [
+        "bad health or a particular illness"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Health is a state of complete physical, mental and social well-being and not merely the absence of disease or infirmity.",
+          "cn": "健康是身体的、心理的及社会的达到完全安适状态，而不仅是没有疾病或身体虚弱而已。"
+        },
+        {
+          "en": "Workers lose productivity by interrupting a business meeting and disrupt social gatherings because of their infirmity, the report said.",
+          "cn": "报告中说，因为工人们的虚弱，通过中断了业务会议而失去生产效率，并且破坏了社交聚会的范围。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "infirmity in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use infirmity",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "deficiency",
+        "defect",
+        "fault",
+        "vice"
+      ],
+      "antonyms": [
+        "not infirmity"
+      ],
+      "derivatives": [
+        "infirm"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “infirmity”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,infirmity",
+      "sceneCue": "IELTS · 虚弱， 衰弱"
+    },
+    {
+      "id": "ielts_091_pilot",
+      "word": "pilot",
+      "phoneticUK": "'paɪlət",
+      "phoneticUS": "'paɪlət",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=pilot&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=pilot&type=2",
+      "partOfSpeech": "n/v",
+      "definitions": [
+        "飞行员，引航员",
+        "驾驶， 为…引航"
+      ],
+      "englishDefinitions": [
+        "someone who operates the controls of an aircraft or spacecraft",
+        "to guide an aircraft, spacecraft, or ship as its pilot"
+      ],
+      "exampleSentences": [
+        {
+          "en": "an airline pilot",
+          "cn": "航空公司飞行员"
+        },
+        {
+          "en": "a fighter pilot",
+          "cn": "战斗机驾驶员"
+        },
+        {
+          "en": "The official report into the accident says that it was caused by pilot error (= a mistake by the pilot ) .",
+          "cn": "那宗事故的官方报告称事故是由飞行员失误造成的。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "pilot test",
+          "cn": "小规模试验；初步试验"
+        },
+        {
+          "phrase": "pilot project",
+          "cn": "试点项目，试点工程；样板工程，样板设计"
+        },
+        {
+          "phrase": "pilot study",
+          "cn": "n. 初步研究；预备试验；飞行员研究"
+        },
+        {
+          "phrase": "pilot plant",
+          "cn": "n. 试验工场；小规模试验厂"
+        }
+      ],
+      "synonyms": [
+        "aviator",
+        "amn",
+        "to navigate",
+        "experiment with"
+      ],
+      "antonyms": [
+        "not pilot"
+      ],
+      "derivatives": [
+        "pilotless",
+        "pilotage",
+        "piloting"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “pilot”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,pilot",
+      "sceneCue": "IELTS · 飞行员，引航员"
+    },
+    {
+      "id": "ielts_092_approval",
+      "word": "approval",
+      "phoneticUK": "ə'pruːvl",
+      "phoneticUS": "əˈpruvl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=approval&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=approval&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "赞成， 同意",
+        "正式批准"
+      ],
+      "englishDefinitions": [
+        "when a plan, decision, or person is officially accepted"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The president has already given his approval to the plan.",
+          "cn": "总统已经批准了这个计划。"
+        },
+        {
+          "en": "It is just three months since we received official approval to go ahead with the project.",
+          "cn": "三个月前我们刚刚得到正式批准进行这个项目。"
+        },
+        {
+          "en": "A company cannot be sold without the approval of the shareholders.",
+          "cn": "没有股东的同意不能出售公司。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "approval of",
+          "cn": "批准；同意"
+        },
+        {
+          "phrase": "examination and approval",
+          "cn": "审查准许"
+        },
+        {
+          "phrase": "for approval",
+          "cn": "提交批准"
+        },
+        {
+          "phrase": "approval process",
+          "cn": "审批流程；审批手续；批准流程"
+        }
+      ],
+      "synonyms": [
+        "confirmation",
+        "authorization",
+        "validation",
+        "ratification"
+      ],
+      "antonyms": [
+        "not approval"
+      ],
+      "derivatives": [
+        "approved",
+        "approving",
+        "approvingly",
+        "approver"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “approval”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,approval",
+      "sceneCue": "IELTS · 赞成， 同意"
+    },
+    {
+      "id": "ielts_093_curative",
+      "word": "curative",
+      "phoneticUK": "'kjuərətɪv",
+      "phoneticUS": "'kjʊrətɪv",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=curative&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=curative&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "有疗效的",
+        "医疗的"
+      ],
+      "englishDefinitions": [
+        "able to or intended to cure illness"
+      ],
+      "exampleSentences": [
+        {
+          "en": "the spring’s alleged curative properties",
+          "cn": "这处泉水号称能治病的功效"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "curative effect",
+          "cn": "疗效"
+        }
+      ],
+      "synonyms": [
+        "sanative",
+        "leechdom"
+      ],
+      "antonyms": [
+        "not curative"
+      ],
+      "derivatives": [
+        "curatives",
+        "curativeing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “curative”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,curative",
+      "sceneCue": "IELTS · 有疗效的"
+    },
+    {
+      "id": "ielts_094_multiple",
+      "word": "multiple",
+      "phoneticUK": "'mʌltɪpl",
+      "phoneticUS": "'mʌltəpl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=multiple&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=multiple&type=2",
+      "partOfSpeech": "adj/n",
+      "definitions": [
+        "多重的",
+        "多样的",
+        "倍数"
+      ],
+      "englishDefinitions": [
+        "many, or involving many things, people, events etc",
+        "a number that contains a smaller number an exact number of times"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Baxter was rushed to the hospital with multiple stab wounds.",
+          "cn": "巴克斯特因多处刺伤被紧急送往医院。"
+        },
+        {
+          "en": "Having multiple partners increases your risk of sexual diseases.",
+          "cn": "性伴侣多会增加得性病的风险。"
+        },
+        {
+          "en": "His new album includes multiple versions of the same songs.",
+          "cn": "他的新专辑包括同一些歌曲的多种版本。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "multiple access",
+          "cn": "[电脑]多路存取；多路访问"
+        },
+        {
+          "phrase": "multiple regression",
+          "cn": "多次回归"
+        },
+        {
+          "phrase": "multiple linear regression",
+          "cn": "多元线性回归；复直线回归"
+        },
+        {
+          "phrase": "multiple sclerosis",
+          "cn": "[医]多发性硬化"
+        }
+      ],
+      "synonyms": [
+        "numerous",
+        "many",
+        "hundred",
+        "time"
+      ],
+      "antonyms": [
+        "not multiple"
+      ],
+      "derivatives": [
+        "multiply",
+        "multiplicative",
+        "multipliable",
+        "multiplicity"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “multiple”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,multiple",
+      "sceneCue": "IELTS · 多重的"
+    },
+    {
+      "id": "ielts_095_microbiology",
+      "word": "microbiology",
+      "phoneticUK": "ˌmaɪkrəubaɪ'ɒlədʒi",
+      "phoneticUS": ",maɪkrobaɪ'ɑlədʒi",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=microbiology&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=microbiology&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "微生物学"
+      ],
+      "englishDefinitions": [
+        "the scientific study of very small living things such as  bacteria"
+      ],
+      "exampleSentences": [
+        {
+          "en": "...a professor of microbiology and immunology.",
+          "cn": "...一位微生物学和免疫学教授。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "medical microbiology",
+          "cn": "医学微生物学"
+        },
+        {
+          "phrase": "food microbiology",
+          "cn": "食品微生物学"
+        },
+        {
+          "phrase": "environmental microbiology",
+          "cn": "环境微生物学"
+        }
+      ],
+      "synonyms": [
+        "microbiology related"
+      ],
+      "antonyms": [
+        "not microbiology"
+      ],
+      "derivatives": [
+        "microbial",
+        "microbic",
+        "microbe",
+        "microbiologist"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “microbiology”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,microbiology",
+      "sceneCue": "IELTS · 微生物学"
+    },
+    {
+      "id": "ielts_096_magnet",
+      "word": "magnet",
+      "phoneticUK": "'mægnət",
+      "phoneticUS": "'mægnɪt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=magnet&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=magnet&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "磁铁， 磁石",
+        "磁体",
+        "有吸引力的人或物"
+      ],
+      "englishDefinitions": [
+        "a piece of iron or steel that can stick to metal or make other metal objects move towards itself"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Prospect Park, with its vast lake, is a magnet for all health freaks.",
+          "cn": "拥有大片湖区的展望公园是所有健身迷的向往之地。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "permanent magnet",
+          "cn": "永久磁铁"
+        },
+        {
+          "phrase": "superconducting magnet",
+          "cn": "超导磁体；超导磁铁"
+        },
+        {
+          "phrase": "bar magnet",
+          "cn": "棒磁铁；条形磁铁"
+        },
+        {
+          "phrase": "magnet wire",
+          "cn": "磁铁线；线圈线"
+        }
+      ],
+      "synonyms": [
+        "aimant",
+        "leading stone"
+      ],
+      "antonyms": [
+        "not magnet"
+      ],
+      "derivatives": [
+        "magnetized",
+        "magnetism",
+        "magnetization",
+        "magnetisation"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “magnet”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,magnet",
+      "sceneCue": "IELTS · 磁铁， 磁石"
+    },
+    {
+      "id": "ielts_097_expose",
+      "word": "expose",
+      "phoneticUK": "ɪk'spəuz",
+      "phoneticUS": "ɪk'spoz；ek-",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=expose&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=expose&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "使暴露， 揭露"
+      ],
+      "englishDefinitions": [
+        "to show something that is usually covered or hidden"
+      ],
+      "exampleSentences": [
+        {
+          "en": "He lifted his T-shirt to expose a jagged scar across his chest.",
+          "cn": "他撩起T恤衫，露出横贯胸部的锯齿状伤疤。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "expose in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use expose",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "reveal",
+        "prove",
+        "make clear",
+        "disclose"
+      ],
+      "antonyms": [
+        "not expose"
+      ],
+      "derivatives": [
+        "exposed",
+        "exposure"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “expose”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,expose",
+      "sceneCue": "IELTS · 使暴露， 揭露"
+    },
+    {
+      "id": "ielts_098_versatile",
+      "word": "versatile",
+      "phoneticUK": "'vɜːsətaɪl",
+      "phoneticUS": "'vɝsətl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=versatile&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=versatile&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "多才多艺的， 多面手的",
+        "多用途的， 通用的"
+      ],
+      "englishDefinitions": [
+        "someone who is versatile has many different skills"
+      ],
+      "exampleSentences": [
+        {
+          "en": "a very versatile performer",
+          "cn": "多才多艺的表演者"
+        },
+        {
+          "en": "a more versatile workforce",
+          "cn": "技术更全面的劳动力"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "versatile person",
+          "cn": "通才"
+        }
+      ],
+      "synonyms": [
+        "universal",
+        "current",
+        "utility"
+      ],
+      "antonyms": [
+        "not versatile"
+      ],
+      "derivatives": [
+        "versatility"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “versatile”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,versatile",
+      "sceneCue": "IELTS · 多才多艺的， 多面手的"
+    },
+    {
+      "id": "ielts_099_concentrate",
+      "word": "concentrate",
+      "phoneticUK": "'kɒnsntreɪt",
+      "phoneticUS": "'kɑnsn'tret",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=concentrate&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=concentrate&type=2",
+      "partOfSpeech": "v/n",
+      "definitions": [
+        "全神贯注，全力以赴",
+        "集中，聚集",
+        "浓缩",
+        "浓缩物， 浓缩液"
+      ],
+      "englishDefinitions": [
+        "to be present in large numbers or amounts somewhere, or to cause people or things to be present in large numbers or amounts somewhere",
+        "a substance or liquid which has been made stronger by removing most of the water from it"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Construction of the aircraft is being concentrated at Prestwick.",
+          "cn": "飞机制造正在向普雷斯特威克集中。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "concentrate on",
+          "cn": "集中精力于；全神贯注于"
+        },
+        {
+          "phrase": "copper concentrate",
+          "cn": "铜精矿"
+        },
+        {
+          "phrase": "ore concentrate",
+          "cn": "精矿"
+        },
+        {
+          "phrase": "zinc concentrate",
+          "cn": "锌精矿；精炼锌"
+        }
+      ],
+      "synonyms": [
+        "focus",
+        "collect",
+        "mass",
+        "crowd"
+      ],
+      "antonyms": [
+        "not concentrate"
+      ],
+      "derivatives": [
+        "concentrated",
+        "concentration",
+        "concentricity",
+        "concentre"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “concentrate”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,concentrate",
+      "sceneCue": "IELTS · 全神贯注，全力以赴"
+    },
+    {
+      "id": "ielts_100_versus",
+      "word": "versus",
+      "phoneticUK": "'vɜːsəs",
+      "phoneticUS": "'vɝsəs",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=versus&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=versus&type=2",
+      "partOfSpeech": "prep",
+      "definitions": [
+        "与…相对， 对抗"
+      ],
+      "englishDefinitions": [
+        "used to show that two people or teams are competing against each other in a game or court case"
+      ],
+      "exampleSentences": [
+        {
+          "en": "the New York Knicks versus the LA Lakers",
+          "cn": "纽约尼克斯队对洛杉矶湖人队"
+        },
+        {
+          "en": "the Supreme Court decision in Roe vs. Wade",
+          "cn": "最高法院关于罗诉韦德案的判决"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "versus in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use versus",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "in the teeth of"
+      ],
+      "antonyms": [
+        "not versus"
+      ],
+      "derivatives": [
+        "versuss",
+        "versusing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “versus”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,versus",
+      "sceneCue": "IELTS · 与…相对， 对抗"
+    },
+    {
+      "id": "ielts_101_populate",
+      "word": "populate",
+      "phoneticUK": "'pɒpjʊleɪt",
+      "phoneticUS": "'pɑpjulet",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=populate&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=populate&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "居住于， 生活于"
+      ],
+      "englishDefinitions": [
+        "if an area is populated by a particular group of people, they live there"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The highlands are populated mainly by peasant farmers.",
+          "cn": "高原人口主要是农民。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "populate in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use populate",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "people",
+        "inhabit"
+      ],
+      "antonyms": [
+        "not populate"
+      ],
+      "derivatives": [
+        "populated",
+        "populous",
+        "population",
+        "populace"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “populate”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,populate",
+      "sceneCue": "IELTS · 居住于， 生活于"
+    },
+    {
+      "id": "ielts_102_up-to-date",
+      "word": "up-to-date",
+      "phoneticUK": "ˌʌptə'deɪt",
+      "phoneticUS": "'ʌptə 'det",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=up-to-date&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=up-to-date&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "直到最近的",
+        "现代的"
+      ],
+      "englishDefinitions": [
+        "If something is up-to-date, it is the newest thing of its kind"
+      ],
+      "exampleSentences": [
+        {
+          "en": "...the most up-to-date information available on foods today.",
+          "cn": "…今日有关食品的最新消息。"
+        },
+        {
+          "en": "Web services are always up-to-date and available.",
+          "cn": "网络服务总是最新的且随时可用。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "keep up-to-date",
+          "cn": "赶时髦"
+        }
+      ],
+      "synonyms": [
+        "recent",
+        "latest",
+        "modern",
+        "current"
+      ],
+      "antonyms": [
+        "not up-to-date"
+      ],
+      "derivatives": [
+        "up-to-dates",
+        "up-to-dateing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “up-to-date”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,up-to-date",
+      "sceneCue": "IELTS · 直到最近的"
+    },
+    {
+      "id": "ielts_103_suitable",
+      "word": "suitable",
+      "phoneticUK": "'suːtəbl",
+      "phoneticUS": "'sutəbl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=suitable&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=suitable&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "适当的， 相配的",
+        "合适的， 适宜的"
+      ],
+      "englishDefinitions": [
+        "having the right qualities for a particular person, purpose, or situation"
+      ],
+      "exampleSentences": [
+        {
+          "en": "We are hoping to find a suitable school.",
+          "cn": "我们希望能找到一所合适的学校。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "suitable for",
+          "cn": "适合…的，适合于…"
+        },
+        {
+          "phrase": "suitable temperature",
+          "cn": "适用温度；舒适温度"
+        },
+        {
+          "phrase": "suitable candidate",
+          "cn": "合适人选"
+        }
+      ],
+      "synonyms": [
+        "appropriate",
+        "proper",
+        "adequate",
+        "becoming"
+      ],
+      "antonyms": [
+        "not suitable"
+      ],
+      "derivatives": [
+        "suited",
+        "suitably",
+        "suit",
+        "suitability"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “suitable”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,suitable",
+      "sceneCue": "IELTS · 适当的， 相配的"
+    },
+    {
+      "id": "ielts_104_personnel",
+      "word": "personnel",
+      "phoneticUK": "ˌpɜːsə'nel",
+      "phoneticUS": ",pɝsə'nɛl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=personnel&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=personnel&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "全体人员， 员工"
+      ],
+      "englishDefinitions": [
+        "the people who work in a company, organization, or military force"
+      ],
+      "exampleSentences": [
+        {
+          "en": "All personnel are to receive security badges.",
+          "cn": "所有人员都将拿到安保徽章。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "technical personnel",
+          "cn": "技术人员"
+        },
+        {
+          "phrase": "personnel training",
+          "cn": "人员培训"
+        },
+        {
+          "phrase": "management personnel",
+          "cn": "管理人员；管理人才"
+        },
+        {
+          "phrase": "personnel management",
+          "cn": "人事管理"
+        }
+      ],
+      "synonyms": [
+        "crew",
+        "Personnel Department"
+      ],
+      "antonyms": [
+        "not personnel"
+      ],
+      "derivatives": [
+        "personnels",
+        "personneling"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “personnel”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,personnel",
+      "sceneCue": "IELTS · 全体人员， 员工"
+    },
+    {
+      "id": "ielts_105_splash",
+      "word": "splash",
+      "phoneticUK": "splæʃ",
+      "phoneticUS": "splæʃ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=splash&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=splash&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "溅",
+        "泼"
+      ],
+      "englishDefinitions": [
+        "if a liquid splashes, it hits or falls on something and makes a noise"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The children were splashing about in the pool.",
+          "cn": "孩子们在水池里戏水。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "splash zone",
+          "cn": "浪溅区，飞溅区；干湿交替段"
+        },
+        {
+          "phrase": "splash into",
+          "cn": "溅入；滴入"
+        },
+        {
+          "phrase": "make a splash",
+          "cn": "引起轰动；发出溅泼声"
+        },
+        {
+          "phrase": "splash screen",
+          "cn": "启动画面（等于版权页）；飞溅屏幕"
+        }
+      ],
+      "synonyms": [
+        "spatter",
+        "jaup",
+        "tainture"
+      ],
+      "antonyms": [
+        "not splash"
+      ],
+      "derivatives": [
+        "splashy",
+        "splasher"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “splash”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,splash",
+      "sceneCue": "IELTS · 溅"
+    },
+    {
+      "id": "ielts_106_outlook",
+      "word": "outlook",
+      "phoneticUK": "'autluk",
+      "phoneticUS": "'aʊtlʊk",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=outlook&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=outlook&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "观点， 见解",
+        "展望， 前景"
+      ],
+      "englishDefinitions": [
+        "what is expected to happen in the future"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Exercise will improve your looks and your outlook.",
+          "cn": "运动将会改善你的外在形象和人生态度。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "outlook on",
+          "cn": "对…的看法；对…眺望"
+        },
+        {
+          "phrase": "world outlook",
+          "cn": "世界观"
+        },
+        {
+          "phrase": "outlook for",
+          "cn": "…的前途；…的远景"
+        },
+        {
+          "phrase": "outlook on life",
+          "cn": "人生观"
+        }
+      ],
+      "synonyms": [
+        "viewpoint",
+        "scenery",
+        "perspective",
+        "picture"
+      ],
+      "antonyms": [
+        "not outlook"
+      ],
+      "derivatives": [
+        "outlooks",
+        "outlooking"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “outlook”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,outlook",
+      "sceneCue": "IELTS · 观点， 见解"
+    },
+    {
+      "id": "ielts_107_romance",
+      "word": "romance",
+      "phoneticUK": "rəu'mæns",
+      "phoneticUS": "ro'mæns",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=romance&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=romance&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "恋爱",
+        "浪漫爱情",
+        "爱情小说， 传奇故事"
+      ],
+      "englishDefinitions": [
+        "love, or a feeling of being in love"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The romance had gone out of their relationship.",
+          "cn": "他们之间已经没有了爱意。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "romance languages",
+          "cn": "罗曼斯语（由拉丁语演变而成的语言）"
+        }
+      ],
+      "synonyms": [
+        "legend",
+        "affair",
+        "cook up",
+        "think up"
+      ],
+      "antonyms": [
+        "not romance"
+      ],
+      "derivatives": [
+        "romantic",
+        "romantically",
+        "romanticism",
+        "romanticist"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “romance”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,romance",
+      "sceneCue": "IELTS · 恋爱"
+    },
+    {
+      "id": "ielts_108_fountain",
+      "word": "fountain",
+      "phoneticUK": "'fauntən",
+      "phoneticUS": "'faʊntn",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=fountain&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=fountain&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "喷泉"
+      ],
+      "englishDefinitions": [
+        "a structure from which water is pushed up into the air, used for example as decoration in a garden or park"
+      ],
+      "exampleSentences": [
+        {
+          "en": "...the fountains on the 16th Street Mall.",
+          "cn": "…第16街商业区的喷泉。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "fountain pen",
+          "cn": "n. 钢笔"
+        },
+        {
+          "phrase": "water fountain",
+          "cn": "饮水器；供应饮用水之处"
+        },
+        {
+          "phrase": "fountain of youth",
+          "cn": "青春之泉"
+        },
+        {
+          "phrase": "soda fountain",
+          "cn": "冷饮柜台，冷饮小卖部"
+        }
+      ],
+      "synonyms": [
+        "principle",
+        "well"
+      ],
+      "antonyms": [
+        "not fountain"
+      ],
+      "derivatives": [
+        "fountains",
+        "fountaining"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “fountain”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,fountain",
+      "sceneCue": "IELTS · 喷泉"
+    },
+    {
+      "id": "ielts_109_irrelevant",
+      "word": "irrelevant",
+      "phoneticUK": "ɪ'reləvənt",
+      "phoneticUS": "ɪ'rɛləvənt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=irrelevant&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=irrelevant&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "不相关的",
+        "离题的"
+      ],
+      "englishDefinitions": [
+        "not useful or not relating to a particular situation, and therefore not important"
+      ],
+      "exampleSentences": [
+        {
+          "en": "We’re focussing too much on irrelevant details.",
+          "cn": "我们过于关注不相干的细节。"
+        },
+        {
+          "en": "Students viewed Latin as boring and irrelevant.",
+          "cn": "学生认为拉丁语无聊且无关紧要。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "irrelevant in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use irrelevant",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "inconnected",
+        "unrelated"
+      ],
+      "antonyms": [
+        "not irrelevant"
+      ],
+      "derivatives": [
+        "irrelevantly",
+        "irrelevance",
+        "irrelevancy"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “irrelevant”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,irrelevant",
+      "sceneCue": "IELTS · 不相关的"
+    },
+    {
+      "id": "ielts_110_gadget",
+      "word": "gadget",
+      "phoneticUK": "'gædʒɪt",
+      "phoneticUS": "'gædʒɪt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=gadget&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=gadget&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "小巧的器械， 精巧的装置",
+        "小玩意"
+      ],
+      "englishDefinitions": [
+        "a small, useful, and cleverly-designed machine or tool"
+      ],
+      "exampleSentences": [
+        {
+          "en": "a neat gadget for sharpening knives",
+          "cn": "精巧的磨刀工具"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "gadget in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use gadget",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "scheme",
+        "fraud"
+      ],
+      "antonyms": [
+        "not gadget"
+      ],
+      "derivatives": [
+        "gadgetry",
+        "gadgeteer"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “gadget”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,gadget",
+      "sceneCue": "IELTS · 小巧的器械， 精巧的装置"
+    },
+    {
+      "id": "ielts_111_compatriot",
+      "word": "compatriot",
+      "phoneticUK": "kəm'pætriət",
+      "phoneticUS": "kəm'petɪət",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=compatriot&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=compatriot&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "同胞",
+        "同国人"
+      ],
+      "englishDefinitions": [
+        "someone who was born in or is a citizen of the same country as someone else"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Chris Robertson of Australia beat his compatriot Chris Dittmar in the final.",
+          "cn": "澳大利亚的克里斯·罗伯逊在决赛中击败了他的本国对手克里斯·迪特玛。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "compatriot in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use compatriot",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "brethren",
+        "countryfolk"
+      ],
+      "antonyms": [
+        "not compatriot"
+      ],
+      "derivatives": [
+        "compatriots",
+        "compatrioting"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “compatriot”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,compatriot",
+      "sceneCue": "IELTS · 同胞"
+    },
+    {
+      "id": "ielts_112_implication",
+      "word": "implication",
+      "phoneticUK": "ˌɪmplɪ'keɪʃn",
+      "phoneticUS": "'ɪmplɪ'keʃən",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=implication&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=implication&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "含意",
+        "暗示， 暗指",
+        "卷入， 牵连"
+      ],
+      "englishDefinitions": [
+        "a situation in which it is shown or suggested that someone or something is involved in a crime or a dishonest act"
+      ],
+      "exampleSentences": [
+        {
+          "en": "They are called ‘Supertrams’, the implication being that (= which is meant to suggest that ) they are more advanced than earlier models.",
+          "cn": "它们被称作“超级电车”，这是暗指它们比先前的型号更先进。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "by implication",
+          "cn": "含蓄地；暗示地"
+        }
+      ],
+      "synonyms": [
+        "connotation",
+        "meaning",
+        "import",
+        "involvement"
+      ],
+      "antonyms": [
+        "not implication"
+      ],
+      "derivatives": [
+        "implicit",
+        "implicated",
+        "implicational",
+        "implicative"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “implication”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,implication",
+      "sceneCue": "IELTS · 含意"
+    },
+    {
+      "id": "ielts_113_fierce",
+      "word": "fierce",
+      "phoneticUK": "fɪəs",
+      "phoneticUS": "fɪrs",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=fierce&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=fierce&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "凶猛的",
+        "强烈的"
+      ],
+      "englishDefinitions": [
+        "done with a lot of energy and strong feelings, and sometimes violence"
+      ],
+      "exampleSentences": [
+        {
+          "en": "fierce fighting in the city",
+          "cn": "城里的激烈战斗"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "fierce competition",
+          "cn": "激烈的竞争"
+        }
+      ],
+      "synonyms": [
+        "fell",
+        "violent",
+        "hard"
+      ],
+      "antonyms": [
+        "not fierce"
+      ],
+      "derivatives": [
+        "fiery",
+        "fiercely",
+        "fierily",
+        "fierceness"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “fierce”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,fierce",
+      "sceneCue": "IELTS · 凶猛的"
+    },
+    {
+      "id": "ielts_114_reservation",
+      "word": "reservation",
+      "phoneticUK": "ˌrezə'veɪʃn",
+      "phoneticUS": ",rɛzɚ'veʃən",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=reservation&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=reservation&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "保留意见， 存疑",
+        "预定， 预订"
+      ],
+      "englishDefinitions": [
+        "an arrangement which you make so that a place in a hotel, restaurant, plane etc is kept for you at a particular time in the future"
+      ],
+      "exampleSentences": [
+        {
+          "en": "a dinner reservation",
+          "cn": "预订晚餐"
+        },
+        {
+          "en": "Customers are advised to make seat reservations well in advance.",
+          "cn": "建议顾客提前订座。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "hotel reservation",
+          "cn": "酒店预订；订旅馆"
+        },
+        {
+          "phrase": "make a reservation",
+          "cn": "预定（房间、票）；预约"
+        },
+        {
+          "phrase": "without reservation",
+          "cn": "无保留地"
+        },
+        {
+          "phrase": "ticket reservation",
+          "cn": "预订票，订座"
+        }
+      ],
+      "synonyms": [
+        "preservation",
+        "booking",
+        "hold",
+        "retention"
+      ],
+      "antonyms": [
+        "not reservation"
+      ],
+      "derivatives": [
+        "reserved",
+        "reserve"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “reservation”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,reservation",
+      "sceneCue": "IELTS · 保留意见， 存疑"
+    },
+    {
+      "id": "ielts_115_block",
+      "word": "block",
+      "phoneticUK": "blɒk",
+      "phoneticUS": "blɑk",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=block&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=block&type=2",
+      "partOfSpeech": "n/v",
+      "definitions": [
+        "一排房屋，街区",
+        "阻塞",
+        "大块木料",
+        "阻塞， 拦阻"
+      ],
+      "englishDefinitions": [
+        "a piece of hard material such as wood or stone with straight sides",
+        "to prevent anything moving through a space by being or placing something across it or in it"
+      ],
+      "exampleSentences": [
+        {
+          "en": "a wall made of concrete blocks",
+          "cn": "由混凝土块砌成的墙"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "in block",
+          "cn": "块装；整批"
+        },
+        {
+          "phrase": "block in",
+          "cn": "草拟，画草图"
+        },
+        {
+          "phrase": "block up",
+          "cn": "阻碍；垫高；停用；阻塞"
+        },
+        {
+          "phrase": "fault block",
+          "cn": "断块；故障闭塞；断裂地块"
+        }
+      ],
+      "synonyms": [
+        "piece",
+        "mass",
+        "barrier",
+        "bottleneck"
+      ],
+      "antonyms": [
+        "not block"
+      ],
+      "derivatives": [
+        "blocked",
+        "blocky",
+        "blocking",
+        "blockage"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “block”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,block",
+      "sceneCue": "IELTS · 一排房屋，街区"
+    },
+    {
+      "id": "ielts_116_extinguisher",
+      "word": "extinguisher",
+      "phoneticUK": "ɪk'stɪŋgwɪʃə(r)",
+      "phoneticUS": "ɪk'stɪŋɡwɪʃɚ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=extinguisher&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=extinguisher&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "灭火器",
+        "灭火者"
+      ],
+      "englishDefinitions": [
+        "a fire extinguisher"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Check the expiry date for all foam extinguisher.",
+          "cn": "检查所有泡沫灭火器的过期时间。"
+        },
+        {
+          "en": "They threw eggs, sticks, bottles and a fire extinguisher at the police.",
+          "cn": "他们向警察投掷了鸡蛋，木棍，酒瓶和一些灭火器。"
+        },
+        {
+          "en": "Abstr: The text elaborated the basic step of the high civil building extinguisher distribution design, and illustrate with example.",
+          "cn": "文章摘要： 本文阐述了高层民用建筑灭火器配置设计的基本步骤，并举例说明。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "fire extinguisher",
+          "cn": "灭火器"
+        }
+      ],
+      "synonyms": [
+        "fire-extinguisher",
+        "annihilator"
+      ],
+      "antonyms": [
+        "not extinguisher"
+      ],
+      "derivatives": [
+        "extinct",
+        "extinguishable",
+        "extinction",
+        "extinguish"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “extinguisher”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,extinguisher",
+      "sceneCue": "IELTS · 灭火器"
+    },
+    {
+      "id": "ielts_117_cooperation",
+      "word": "cooperation",
+      "phoneticUK": "kəuˌɒpə'reɪʃn",
+      "phoneticUS": "ko,ɑpə'reʃən",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=cooperation&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=cooperation&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "合作， 协作",
+        "配合"
+      ],
+      "englishDefinitions": [
+        "when you work with someone to achieve something that you both want"
+      ],
+      "exampleSentences": [
+        {
+          "en": "the need to strengthen international co-operation",
+          "cn": "加强国际合作的需要"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "economic cooperation",
+          "cn": "经济合作"
+        },
+        {
+          "phrase": "international cooperation",
+          "cn": "国际合作"
+        },
+        {
+          "phrase": "in cooperation with",
+          "cn": "与…合作"
+        },
+        {
+          "phrase": "technical cooperation",
+          "cn": "技术合作"
+        }
+      ],
+      "synonyms": [
+        "collaboration",
+        "synergism"
+      ],
+      "antonyms": [
+        "not cooperation"
+      ],
+      "derivatives": [
+        "cooperative",
+        "cooperatively",
+        "cooperator",
+        "cooperativity"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “cooperation”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,cooperation",
+      "sceneCue": "IELTS · 合作， 协作"
+    },
+    {
+      "id": "ielts_118_timid",
+      "word": "timid",
+      "phoneticUK": "'tɪmɪd",
+      "phoneticUS": "'tɪmɪd",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=timid&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=timid&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "胆小的",
+        "羞怯的"
+      ],
+      "englishDefinitions": [
+        "not having courage or confidence"
+      ],
+      "exampleSentences": [
+        {
+          "en": "I was a timid child.",
+          "cn": "我曾是个胆小的孩子。"
+        },
+        {
+          "en": "a policy that is both timid and inadequate",
+          "cn": "一项既无胆识又不完善的政策"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "timid in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use timid",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "modest",
+        "harehearted"
+      ],
+      "antonyms": [
+        "not timid"
+      ],
+      "derivatives": [
+        "timorous",
+        "timidly",
+        "timorously",
+        "timidity"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “timid”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,timid",
+      "sceneCue": "IELTS · 胆小的"
+    },
+    {
+      "id": "ielts_119_propose",
+      "word": "propose",
+      "phoneticUK": "prə'pəuz",
+      "phoneticUS": "prə'poz",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=propose&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=propose&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "提议， 建议",
+        "提名， 推荐",
+        "打算",
+        "求婚"
+      ],
+      "englishDefinitions": [
+        "to suggest something as a plan or course of action"
+      ],
+      "exampleSentences": [
+        {
+          "en": "the changes currently proposed by the local planning authorities",
+          "cn": "目前由地方规划局提议的改革"
+        },
+        {
+          "en": "the proposed budget cuts",
+          "cn": "所提出的预算削减"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "propose to someone",
+          "cn": "向某人求婚"
+        },
+        {
+          "phrase": "propose a toast",
+          "cn": "敬酒；举杯"
+        },
+        {
+          "phrase": "propose someone for",
+          "cn": "推荐某人(参加某组织)；提名某人(任某职)"
+        },
+        {
+          "phrase": "propose to do",
+          "cn": "建议做..."
+        }
+      ],
+      "synonyms": [
+        "schedule",
+        "design",
+        "map",
+        "think"
+      ],
+      "antonyms": [
+        "not propose"
+      ],
+      "derivatives": [
+        "proposed",
+        "proposal",
+        "proposition",
+        "proponent"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “propose”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,propose",
+      "sceneCue": "IELTS · 提议， 建议"
+    },
+    {
+      "id": "ielts_120_in-comparison-with",
+      "word": "in comparison with",
+      "phoneticUK": "/in comparison with/",
+      "phoneticUS": "/in comparison with/",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=in-comparison-with&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=in-comparison-with&type=2",
+      "partOfSpeech": "word",
+      "definitions": [
+        "与…比较，同…比较起来"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “与…比较，同…比较起来”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Alexander and Gaius and Pompeius, what are they in comparison with Diogenes and Heraclitus and Socrates?",
+          "cn": "亚历山大、盖耶斯和庞培与第欧根尼、赫拉克利特、苏格拉底比较起来是什么人呢？"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "in comparison with in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use in comparison with",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "in comparison with related"
+      ],
+      "antonyms": [
+        "not in comparison with"
+      ],
+      "derivatives": [
+        "in comparison withs",
+        "in comparison withing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “in comparison with”.",
+      "examTags": [
+        "IELTS",
+        "ielts"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,in-comparison-with",
+      "sceneCue": "IELTS · 与…比较，同…比较起来"
+    }
+  ]
+}

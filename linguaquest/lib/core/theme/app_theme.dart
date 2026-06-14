@@ -3,19 +3,23 @@ import 'package:flutter/material.dart';
 class AppTheme {
   const AppTheme._();
 
-  static const Color teal = Color(0xFF58CC02);
-  static const Color deepTeal = Color(0xFF1F5F8B);
-  static const Color cyan = Color(0xFF1CB0F6);
-  static const Color coral = Color(0xFFFF6B4A);
-  static const Color mango = Color(0xFFFFC800);
-  static const Color mint = Color(0xFFD7FFB8);
-  static const Color ink = Color(0xFF17324D);
-  static const Color paper = Color(0xFFF8FBF5);
-  static const Color success = Color(0xFF58CC02);
-  static const Color darkPaper = Color(0xFF0B1724);
-  static const Color darkSurface = Color(0xFF102033);
-  static const Color darkSurfaceHigh = Color(0xFF182A40);
-  static const Color darkSurfaceHighest = Color(0xFF22374F);
+  // Brand palette derived from the LinguaQuest cat mascot icon:
+  // deep navy cat, sky-blue tile, grass-green wordmark accent.
+  static const Color teal = Color(0xFF2F55A4);
+  static const Color deepTeal = Color(0xFF1E3A7A);
+  static const Color cyan = Color(0xFF3D9BE9);
+  static const Color coral = Color(0xFFFF7A59);
+  static const Color mango = Color(0xFFFFC83D);
+  static const Color mint = Color(0xFFD8EBFB);
+  static const Color leaf = Color(0xFF6CBF3F);
+  static const Color ink = Color(0xFF16315F);
+  static const Color paper = Color(0xFFF2F8FE);
+  static const Color lightSurface = Color(0xFFEAF3FC);
+  static const Color success = Color(0xFF5CB531);
+  static const Color darkPaper = Color(0xFF0A1426);
+  static const Color darkSurface = Color(0xFF0F1B33);
+  static const Color darkSurfaceHigh = Color(0xFF172A4A);
+  static const Color darkSurfaceHighest = Color(0xFF1F3458);
 
   static ThemeData light() {
     final scheme =
@@ -25,24 +29,24 @@ class AppTheme {
           primary: teal,
           secondary: cyan,
           tertiary: mango,
-          surface: Colors.white,
+          surface: lightSurface,
         ).copyWith(
           onPrimary: Colors.white,
           primaryContainer: mint,
-          onPrimaryContainer: const Color(0xFF214100),
-          secondaryContainer: const Color(0xFFDDF3FF),
-          onSecondaryContainer: const Color(0xFF063653),
-          tertiaryContainer: const Color(0xFFFFF1A6),
-          onTertiaryContainer: const Color(0xFF463B00),
+          onPrimaryContainer: ink,
+          secondaryContainer: mint,
+          onSecondaryContainer: ink,
+          tertiaryContainer: const Color(0xFFFFF0C2),
+          onTertiaryContainer: const Color(0xFF4A3A00),
           surfaceContainerLowest: Colors.white,
-          surfaceContainerLow: const Color(0xFFFBFDF8),
-          surfaceContainer: const Color(0xFFF3F8EE),
-          surfaceContainerHigh: const Color(0xFFEAF2E5),
-          surfaceContainerHighest: const Color(0xFFDDEBD7),
+          surfaceContainerLow: lightSurface,
+          surfaceContainer: const Color(0xFFE0ECF8),
+          surfaceContainerHigh: const Color(0xFFD5E4F3),
+          surfaceContainerHighest: const Color(0xFFC7D9EB),
           onSurface: ink,
-          onSurfaceVariant: const Color(0xFF536471),
-          outline: const Color(0xFFA9C49F),
-          outlineVariant: const Color(0xFFE0ECD9),
+          onSurfaceVariant: const Color(0xFF4F6480),
+          outline: const Color(0xFF93AECC),
+          outlineVariant: const Color(0xFFD7E4F2),
           error: const Color(0xFFE04F3A),
         );
 
@@ -54,28 +58,28 @@ class AppTheme {
         ColorScheme.fromSeed(
           seedColor: cyan,
           brightness: Brightness.dark,
-          primary: const Color(0xFF89E219),
-          secondary: const Color(0xFF6ED6FF),
-          tertiary: const Color(0xFFFFD85C),
+          primary: const Color(0xFF7FBCF2),
+          secondary: const Color(0xFFA3CFF5),
+          tertiary: const Color(0xFFFFD767),
           surface: darkSurface,
           error: const Color(0xFFFFB4A8),
         ).copyWith(
-          onPrimary: const Color(0xFF173000),
-          surfaceContainerLowest: const Color(0xFF101A1D),
-          surfaceContainerLow: const Color(0xFF172429),
+          onPrimary: const Color(0xFF10254B),
+          surfaceContainerLowest: const Color(0xFF0A1426),
+          surfaceContainerLow: const Color(0xFF0D1A30),
           surfaceContainer: darkSurfaceHigh,
-          surfaceContainerHigh: const Color(0xFF22364F),
+          surfaceContainerHigh: const Color(0xFF1C3050),
           surfaceContainerHighest: darkSurfaceHighest,
-          onSurface: const Color(0xFFEAF4F2),
-          onSurfaceVariant: const Color(0xFFC1D5E8),
-          outline: const Color(0xFF84A0B9),
-          outlineVariant: const Color(0xFF314963),
-          primaryContainer: const Color(0xFF255400),
-          onPrimaryContainer: const Color(0xFFE7FFD1),
-          secondaryContainer: const Color(0xFF053B59),
-          onSecondaryContainer: const Color(0xFFDDF3FF),
-          tertiaryContainer: const Color(0xFF554800),
-          onTertiaryContainer: const Color(0xFFFFF1A6),
+          onSurface: const Color(0xFFE3ECF6),
+          onSurfaceVariant: const Color(0xFFBDD0E5),
+          outline: const Color(0xFF7E97B8),
+          outlineVariant: const Color(0xFF2D4263),
+          primaryContainer: deepTeal,
+          onPrimaryContainer: mint,
+          secondaryContainer: ink,
+          onSecondaryContainer: mint,
+          tertiaryContainer: const Color(0xFF554500),
+          onTertiaryContainer: const Color(0xFFFFF0C2),
         );
 
     return _base(scheme).copyWith(scaffoldBackgroundColor: darkPaper);
@@ -85,21 +89,21 @@ class AppTheme {
       Theme.of(context).colorScheme.brightness == Brightness.dark;
 
   static Color warmSurface(BuildContext context) =>
-      isDark(context) ? const Color(0xFF1F3046) : const Color(0xFFFFF8D8);
+      isDark(context) ? darkSurfaceHighest : const Color(0xFFFFF6DD);
 
   static Color accentSurface(BuildContext context) =>
-      isDark(context) ? const Color(0xFF173A55) : const Color(0xFFE8F7FF);
+      isDark(context) ? ink : mint;
 
   static Color selectedSurface(BuildContext context) =>
       isDark(context) ? Theme.of(context).colorScheme.primaryContainer : mint;
 
   static Color progressTrack(BuildContext context) => isDark(context)
       ? Theme.of(context).colorScheme.surfaceContainerHighest
-      : const Color(0xFFDDF3FF);
+      : mint;
 
   static Color iconBadgeSurface(BuildContext context) => isDark(context)
       ? Theme.of(context).colorScheme.surfaceContainerHighest
-      : const Color(0xFFE9FFD9);
+      : mint;
 
   static ThemeData _base(ColorScheme scheme) {
     final isDark = scheme.brightness == Brightness.dark;
@@ -151,9 +155,7 @@ class AppTheme {
         height: 76,
         elevation: 0,
         backgroundColor: isDark ? scheme.surfaceContainer : Colors.white,
-        indicatorColor: isDark
-            ? scheme.primaryContainer
-            : const Color(0xFFE9FFD9),
+        indicatorColor: isDark ? scheme.primaryContainer : mint,
         labelTextStyle: WidgetStateProperty.resolveWith(
           (states) => TextStyle(
             color: states.contains(WidgetState.selected)
@@ -174,9 +176,22 @@ class AppTheme {
         ),
       ),
       cardTheme: CardThemeData(
+        color: scheme.surface,
         elevation: 0,
         margin: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      ),
+      dialogTheme: DialogThemeData(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      ),
+      bottomSheetTheme: const BottomSheetThemeData(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+      ),
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       ),
       chipTheme: ChipThemeData(
         backgroundColor: isDark ? scheme.surfaceContainerHigh : null,
@@ -196,7 +211,7 @@ class AppTheme {
           textStyle: const TextStyle(fontWeight: FontWeight.w900),
           elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(18),
           ),
         ),
       ),
@@ -205,7 +220,7 @@ class AppTheme {
           minimumSize: const Size(48, 56),
           textStyle: const TextStyle(fontWeight: FontWeight.w900),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(18),
           ),
         ),
       ),
