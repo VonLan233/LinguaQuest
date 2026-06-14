@@ -7,6 +7,9 @@ import '../../features/auth/login_screen.dart';
 import '../../features/auth/register_screen.dart';
 import '../../features/ai_learning/ai_learning_screen.dart';
 import '../../features/discover/discover_screen.dart';
+import '../../features/discover/xp_tasks_screen.dart';
+import '../../features/discover/lucky_draw_screen.dart';
+import '../../features/discover/community_screen.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/learning/learning_path_screen.dart';
 import '../../features/learning/lesson_preview_screen.dart';
@@ -17,6 +20,7 @@ import '../../features/profile/profile_screen.dart';
 import '../../features/profile/about_screen.dart';
 import '../../features/profile/help_support_screen.dart';
 import '../../features/profile/settings_screen.dart';
+import '../../features/profile/study_plan_settings_screen.dart';
 import '../../features/quests/ai_tutor_screen.dart';
 import '../../features/quests/class_mode_screen.dart';
 import '../../features/quests/class_progress_screen.dart';
@@ -29,9 +33,10 @@ import '../../features/review/mistake_book_screen.dart';
 import '../../features/review/review_center_screen.dart';
 import '../../features/search/search_screen.dart';
 import '../../features/shell/app_shell.dart';
-import '../../features/study/new_study_screen.dart';
-import '../../features/study/review_study_screen.dart';
+import '../../features/study/mixed_study_session_screen.dart';
+import '../../features/study/session/session_queue_builder.dart';
 import '../../features/training/training_screen.dart';
+import '../../features/training/training_session_screen.dart';
 import '../../features/wordbook/add_edit_custom_word_screen.dart';
 import '../../features/wordbook/custom_word_list_screen.dart';
 import '../../features/wordbook/target_word_detail_screen.dart';
@@ -95,11 +100,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/study/new',
-        builder: (context, state) => const NewStudyScreen(),
+        builder: (context, state) =>
+            const MixedStudySessionScreen(mode: StudySessionEntryMode.mixed),
       ),
       GoRoute(
         path: '/study/review',
-        builder: (context, state) => const ReviewStudyScreen(),
+        builder: (context, state) => const MixedStudySessionScreen(
+          mode: StudySessionEntryMode.reviewOnly,
+        ),
       ),
       GoRoute(
         path: '/review',
@@ -138,6 +146,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const SettingsScreen(),
       ),
       GoRoute(
+        path: '/settings/study-plan',
+        builder: (context, state) => const StudyPlanSettingsScreen(),
+      ),
+      GoRoute(
         path: '/settings/theme',
         builder: (context, state) => const ThemeSettingsScreen(),
       ),
@@ -153,6 +165,18 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/search',
         builder: (context, state) => const SearchScreen(),
+      ),
+      GoRoute(
+        path: '/discover/xp-tasks',
+        builder: (context, state) => const XpTasksScreen(),
+      ),
+      GoRoute(
+        path: '/discover/lucky-draw',
+        builder: (context, state) => const LuckyDrawScreen(),
+      ),
+      GoRoute(
+        path: '/discover/community',
+        builder: (context, state) => const CommunityScreen(),
       ),
       GoRoute(
         path: '/wordbook',
@@ -196,6 +220,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => QuizSessionScreen(
           lessonId: state.pathParameters['id']!,
           mode: QuizSessionMode.timed,
+        ),
+      ),
+      GoRoute(
+        path: '/training/:game',
+        builder: (context, state) => TrainingSessionScreen(
+          gameId: state.pathParameters['game']!,
+          mistakesOnly: state.uri.queryParameters['source'] == 'mistakes',
         ),
       ),
       GoRoute(

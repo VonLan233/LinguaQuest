@@ -12,14 +12,13 @@ class ProgressAnalyticsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appControllerProvider);
-    final mastered = state.customWords
-        .where((word) => word.masteryLevel >= 4)
-        .length;
-    final attempts = state.customWords.fold<int>(
+    final reviewWords = state.reviewWords;
+    final mastered = reviewWords.where((word) => word.masteryLevel >= 4).length;
+    final attempts = reviewWords.fold<int>(
       0,
       (sum, word) => sum + word.correctCount + word.wrongCount,
     );
-    final correct = state.customWords.fold<int>(
+    final correct = reviewWords.fold<int>(
       0,
       (sum, word) => sum + word.correctCount,
     );
@@ -40,9 +39,10 @@ class ProgressAnalyticsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             _ProgressSignals(
-              cardCount: state.customWords.length,
+              cardCount: reviewWords.length,
               masteredCount: mastered,
               accuracy: accuracy,
+              trainingXp: state.todayTrainingXp,
             ),
             const SizedBox(height: 20),
             Text(
@@ -53,17 +53,15 @@ class ProgressAnalyticsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 10),
             LinearProgressIndicator(
-              value: state.customWords.isEmpty
+              value: reviewWords.isEmpty
                   ? 0
-                  : (state.dueWords.length / state.customWords.length).clamp(
+                  : (state.dueWords.length / reviewWords.length).clamp(
                       0.0,
                       1.0,
                     ),
             ),
             const SizedBox(height: 8),
-            Text(
-              '${state.customWords.length} 张生词卡中有 ${state.dueWords.length} 张到期',
-            ),
+            Text('${reviewWords.length} 个学习资产中有 ${state.dueWords.length} 个到期'),
           ],
         ),
       ),
@@ -76,11 +74,13 @@ class _ProgressSignals extends StatelessWidget {
     required this.cardCount,
     required this.masteredCount,
     required this.accuracy,
+    required this.trainingXp,
   });
 
   final int cardCount;
   final int masteredCount;
   final int accuracy;
+  final int trainingXp;
 
   @override
   Widget build(BuildContext context) {
@@ -106,10 +106,19 @@ class _ProgressSignals extends StatelessWidget {
         const _ProgressSignalDivider(),
         Expanded(
           child: _ProgressSignal(
+            label: '训练 XP',
+            value: '$trainingXp',
+            icon: Icons.sports_esports_outlined,
+            color: AppTheme.mango,
+          ),
+        ),
+        const _ProgressSignalDivider(),
+        Expanded(
+          child: _ProgressSignal(
             label: '正确率',
             value: '$accuracy%',
             icon: Icons.insights_outlined,
-            color: AppTheme.mango,
+            color: AppTheme.coral,
           ),
         ),
       ],

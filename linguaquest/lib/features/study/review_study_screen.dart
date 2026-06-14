@@ -11,6 +11,7 @@ import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/custom_word.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class ReviewStudyScreen extends ConsumerStatefulWidget {
   const ReviewStudyScreen({super.key});
@@ -48,6 +49,7 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final currentWord = _queue.isEmpty ? null : _queue.first;
     final totalCount = _reviewedCount + _queue.length;
 
@@ -60,11 +62,11 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
       child: Scaffold(
         appBar: AppBar(
           leading: BackButton(onPressed: () => _handleBack(context)),
-          title: const Text('复习'),
+          title: Text(l10n.reviewCenterTitle),
           actions: [
             TextButton(
               onPressed: () => _openReviewCenter(context),
-              child: const Text('管理复习队列'),
+              child: Text(l10n.reviewStudyManageQueue),
             ),
           ],
         ),
@@ -77,16 +79,17 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
                 onContinueAfterReveal: () =>
                     _review(currentWord, isCorrect: false),
                 onKnown: () => _review(currentWord, isCorrect: true),
+                l10n: l10n,
               ),
         body: SafeArea(
           child: currentWord == null
-              ? _QueueCompleteView(hasReviewed: _reviewedCount > 0)
+              ? _QueueCompleteView(hasReviewed: _reviewedCount > 0, l10n: l10n)
               : ListView(
                   padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
                   children: [
                     SectionHeader(
-                      title: '今日复习',
-                      subtitle: '先回想，再翻开答案；答错会回到本轮稍后巩固。',
+                      title: l10n.reviewStudyTodayTitle,
+                      subtitle: l10n.reviewStudyTodaySubtitle,
                       trailing: PillLabel(
                         label: '${_reviewedCount + 1}/$totalCount',
                         icon: Icons.auto_graph,
@@ -103,9 +106,17 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
                       backgroundColor: AppTheme.progressTrack(context),
                     ),
                     const SizedBox(height: 18),
-                    _ReviewWordCard(word: currentWord, isRevealed: _revealed),
+                    _ReviewWordCard(
+                      word: currentWord,
+                      isRevealed: _revealed,
+                      l10n: l10n,
+                    ),
                     const SizedBox(height: 14),
-                    _MemoryHintLine(word: currentWord, isRevealed: _revealed),
+                    _MemoryHintLine(
+                      word: currentWord,
+                      isRevealed: _revealed,
+                      l10n: l10n,
+                    ),
                   ],
                 ),
         ),
@@ -138,17 +149,17 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
     final confirmed = await showDialog<bool>(
       context: activeContext,
       builder: (context) => AlertDialog(
-        title: const Text('离开复习？'),
-        content: const Text('已完成的词卡已经保存；未完成的词仍会保留在复习队列。'),
+        title: Text(AppLocalizations.of(context).reviewStudyLeaveTitle),
+        content: Text(AppLocalizations.of(context).reviewStudyLeaveContent),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('继续复习'),
+            child: Text(AppLocalizations.of(context).reviewStudyKeepReviewing),
           ),
           FilledButton.icon(
             onPressed: () => Navigator.pop(context, true),
             icon: const Icon(Icons.exit_to_app_rounded),
-            label: const Text('离开'),
+            label: Text(AppLocalizations.of(context).commonLeave),
           ),
         ],
       ),
@@ -164,9 +175,11 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
     if (isReinforcementPass) {
       _completeCurrentReview(word, requeue: false);
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('已完成本轮巩固')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context).reviewStudyReinforced),
+        ),
+      );
       return;
     }
 
@@ -176,7 +189,8 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
     if (!mounted) return;
     if (!succeeded) {
       final message =
-          ref.read(appControllerProvider).errorMessage ?? '暂时无法更新这张词卡';
+          ref.read(appControllerProvider).errorMessage ??
+          AppLocalizations.of(context).reviewCenterUpdateFailed;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(message)));
@@ -184,7 +198,10 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
       return;
     }
 
-    final message = isCorrect ? '已记住，复习间隔已延后' : '已标记为需巩固，稍后再练';
+    final l10n = AppLocalizations.of(context);
+    final message = isCorrect
+        ? l10n.reviewStudyRememberedMessage
+        : l10n.reviewStudyNeedsReinforcementMessage;
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
@@ -220,7 +237,7 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
   }
 
   CustomWord _latestWordSnapshot(CustomWord fallback) {
-    final words = ref.read(appControllerProvider).customWords;
+    final words = ref.read(appControllerProvider).reviewWords;
     for (final word in words) {
       if (word.id == fallback.id) return word;
     }
@@ -251,10 +268,15 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
 }
 
 class _ReviewWordCard extends StatelessWidget {
-  const _ReviewWordCard({required this.word, required this.isRevealed});
+  const _ReviewWordCard({
+    required this.word,
+    required this.isRevealed,
+    required this.l10n,
+  });
 
   final CustomWord word;
   final bool isRevealed;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -290,7 +312,18 @@ class _ReviewWordCard extends StatelessWidget {
                           color: AppTheme.teal,
                         ),
                         PillLabel(
-                          label: '熟练度 ${word.masteryLevel}/5',
+                          label: word.source == 'target'
+                              ? l10n.reviewCenterTargetWord
+                              : l10n.reviewCenterCustomCard,
+                          icon: word.source == 'target'
+                              ? Icons.route_outlined
+                              : Icons.style_outlined,
+                          color: word.source == 'target'
+                              ? AppTheme.cyan
+                              : AppTheme.teal,
+                        ),
+                        PillLabel(
+                          label: l10n.wordbookMasteryLevel(word.masteryLevel),
                           icon: Icons.psychology_alt_outlined,
                           color: AppTheme.mango,
                         ),
@@ -330,7 +363,7 @@ class _ReviewWordCard extends StatelessWidget {
           ] else ...[
             const SizedBox(height: 18),
             Text(
-              '看英文先回想中文释义。记得就直接进入下一张，忘了再展开知识卡。',
+              l10n.reviewStudyRecallHint,
               style: textTheme.bodyLarge?.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
                 height: 1.45,
@@ -344,10 +377,15 @@ class _ReviewWordCard extends StatelessWidget {
 }
 
 class _MemoryHintLine extends StatelessWidget {
-  const _MemoryHintLine({required this.word, required this.isRevealed});
+  const _MemoryHintLine({
+    required this.word,
+    required this.isRevealed,
+    required this.l10n,
+  });
 
   final CustomWord word;
   final bool isRevealed;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -366,8 +404,10 @@ class _MemoryHintLine extends StatelessWidget {
         Expanded(
           child: Text(
             isRevealed
-                ? '下次复习：${formatRelativeDue(word.nextReviewAt, DateTime.now())}'
-                : '答对不打断；答错才展示知识卡，并在本轮稍后再出现。',
+                ? l10n.reviewStudyNextReview(
+                    formatRelativeDue(word.nextReviewAt, DateTime.now()),
+                  )
+                : l10n.reviewStudyHiddenHint,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: colorScheme.onSurfaceVariant,
               height: 1.42,
@@ -404,6 +444,7 @@ class _ReviewActions extends StatelessWidget {
     required this.onMissed,
     required this.onContinueAfterReveal,
     required this.onKnown,
+    required this.l10n,
   });
 
   final bool isRevealed;
@@ -411,6 +452,7 @@ class _ReviewActions extends StatelessWidget {
   final VoidCallback onMissed;
   final VoidCallback onContinueAfterReveal;
   final VoidCallback onKnown;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -433,7 +475,7 @@ class _ReviewActions extends StatelessWidget {
                   onPressed: isSubmitting ? null : onContinueAfterReveal,
                   style: compactButtonStyle,
                   icon: const Icon(Icons.replay_rounded),
-                  label: const FittedBox(child: Text('加入巩固队列')),
+                  label: FittedBox(child: Text(l10n.reviewStudyReinforce)),
                 )
               : Row(
                   children: [
@@ -442,7 +484,7 @@ class _ReviewActions extends StatelessWidget {
                         onPressed: isSubmitting ? null : onMissed,
                         style: compactOutlineStyle,
                         icon: const Icon(Icons.visibility_outlined),
-                        label: const FittedBox(child: Text('没记住')),
+                        label: FittedBox(child: Text(l10n.reviewCenterForgot)),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -451,7 +493,9 @@ class _ReviewActions extends StatelessWidget {
                         onPressed: isSubmitting ? null : onKnown,
                         style: compactButtonStyle,
                         icon: const Icon(Icons.check_rounded),
-                        label: const FittedBox(child: Text('记住了')),
+                        label: FittedBox(
+                          child: Text(l10n.reviewCenterRemembered),
+                        ),
                       ),
                     ),
                   ],
@@ -463,9 +507,10 @@ class _ReviewActions extends StatelessWidget {
 }
 
 class _QueueCompleteView extends StatelessWidget {
-  const _QueueCompleteView({required this.hasReviewed});
+  const _QueueCompleteView({required this.hasReviewed, required this.l10n});
 
   final bool hasReviewed;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -474,10 +519,12 @@ class _QueueCompleteView extends StatelessWidget {
       children: [
         EmptyState(
           icon: Icons.check_circle_outline,
-          title: hasReviewed ? '今日复习完成' : '复习队列已清空',
+          title: hasReviewed
+              ? l10n.reviewStudyCompleteTitle
+              : l10n.reviewCenterEmptyTitle,
           message: hasReviewed
-              ? '已更新本轮词卡的下次复习时间。'
-              : '添加生词，或把错题加入错词卡后，这里会生成复习任务。',
+              ? l10n.reviewStudyCompleteMessage
+              : l10n.reviewCenterEmptyMessage,
           action: Wrap(
             alignment: WrapAlignment.center,
             spacing: 10,
@@ -486,12 +533,12 @@ class _QueueCompleteView extends StatelessWidget {
               FilledButton.icon(
                 onPressed: () => context.go('/home'),
                 icon: const Icon(Icons.home_outlined),
-                label: const Text('回到首页'),
+                label: Text(l10n.learningPathBackToHome),
               ),
               OutlinedButton.icon(
                 onPressed: () => context.push('/review'),
                 icon: const Icon(Icons.style_outlined),
-                label: const Text('管理复习队列'),
+                label: Text(l10n.reviewStudyManageQueue),
               ),
             ],
           ),

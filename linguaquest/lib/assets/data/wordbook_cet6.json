@@ -1,0 +1,5871 @@
+{
+  "id": "cet6",
+  "title": "六级核心词汇",
+  "category": "exam",
+  "examType": "CET-6",
+  "coverUrl": "https://source.unsplash.com/featured/800x480/?english,vocabulary,cet6",
+  "totalWords": 90,
+  "includedWords": 90,
+  "description": "面向大学英语六级的中高频阅读、听力和写作词汇。",
+  "wordIds": [
+    "cet6_001_artistic",
+    "cet6_002_plasma",
+    "cet6_003_violent",
+    "cet6_004_erratic",
+    "cet6_005_fantasy",
+    "cet6_006_capillary",
+    "cet6_007_erode",
+    "cet6_008_check",
+    "cet6_009_sparse",
+    "cet6_010_gorgeous",
+    "cet6_011_erosion",
+    "cet6_012_spoil",
+    "cet6_013_pasture",
+    "cet6_014_multiple",
+    "cet6_015_versatile",
+    "cet6_016_concentrate",
+    "cet6_017_versus",
+    "cet6_018_permit",
+    "cet6_019_translation",
+    "cet6_020_catalog",
+    "cet6_021_part-time",
+    "cet6_022_chilly",
+    "cet6_023_reservation",
+    "cet6_024_block",
+    "cet6_025_morphology",
+    "cet6_026_distant",
+    "cet6_027_resonance",
+    "cet6_028_propose",
+    "cet6_029_seismograph",
+    "cet6_030_daylight",
+    "cet6_031_crazy",
+    "cet6_032_microscopic",
+    "cet6_033_caterpillar",
+    "cet6_034_haul",
+    "cet6_035_energetic",
+    "cet6_036_quilt",
+    "cet6_037_hostile",
+    "cet6_038_crawl",
+    "cet6_039_academic",
+    "cet6_040_coral",
+    "cet6_041_function",
+    "cet6_042_raise",
+    "cet6_043_pliant",
+    "cet6_044_pigeon",
+    "cet6_045_lay",
+    "cet6_046_pernicious",
+    "cet6_047_cohabitation",
+    "cet6_048_herbivore",
+    "cet6_049_successive",
+    "cet6_050_adventure",
+    "cet6_051_ceremony",
+    "cet6_052_improve",
+    "cet6_053_idyllic",
+    "cet6_054_effective",
+    "cet6_055_muscle",
+    "cet6_056_flux",
+    "cet6_057_crescent",
+    "cet6_058_inflate",
+    "cet6_059_stable",
+    "cet6_060_incident",
+    "cet6_061_prey",
+    "cet6_062_vertebrate",
+    "cet6_063_expedition",
+    "cet6_064_concert",
+    "cet6_065_supply",
+    "cet6_066_circulate",
+    "cet6_067_state",
+    "cet6_068_press",
+    "cet6_069_jumble",
+    "cet6_070_environmental",
+    "cet6_071_crustacean",
+    "cet6_072_opposite",
+    "cet6_073_pack",
+    "cet6_074_untapped",
+    "cet6_075_battery",
+    "cet6_076_irreverent",
+    "cet6_077_fa-ade",
+    "cet6_078_divorce",
+    "cet6_079_quiz",
+    "cet6_080_ingredient",
+    "cet6_081_consolidate",
+    "cet6_082_contour",
+    "cet6_083_clan",
+    "cet6_084_economical",
+    "cet6_085_cabinet",
+    "cet6_086_principle",
+    "cet6_087_telecommunication",
+    "cet6_088_initiate",
+    "cet6_089_deception",
+    "cet6_090_budget"
+  ],
+  "createdAt": "2026-06-04T00:00:00.000Z",
+  "words": [
+    {
+      "id": "cet6_001_artistic",
+      "word": "artistic",
+      "phoneticUK": "ɑːr'tɪstɪk",
+      "phoneticUS": "ɑr'tɪstɪk",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=artistic&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=artistic&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "艺术的",
+        "富有艺术性的， 精美的",
+        "有艺术天赋的"
+      ],
+      "englishDefinitions": [
+        "relating to art or culture"
+      ],
+      "exampleSentences": [
+        {
+          "en": "artistic work",
+          "cn": "艺术作品"
+        },
+        {
+          "en": "Opinion about the artistic merit of his paintings has been mixed.",
+          "cn": "对于他的绘画作品的艺术价值，人们褒贬不一。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "artistic conception",
+          "cn": "意境"
+        },
+        {
+          "phrase": "artistic style",
+          "cn": "艺术风格"
+        },
+        {
+          "phrase": "artistic form",
+          "cn": "艺术形式"
+        },
+        {
+          "phrase": "artistic value",
+          "cn": "艺术价值"
+        }
+      ],
+      "synonyms": [
+        "artistic related"
+      ],
+      "antonyms": [
+        "not artistic"
+      ],
+      "derivatives": [
+        "artistically",
+        "artist",
+        "artistry"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “artistic”.",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,artistic",
+      "sceneCue": "CET-6 · 艺术的"
+    },
+    {
+      "id": "cet6_002_plasma",
+      "word": "plasma",
+      "phoneticUK": "'plæzmə",
+      "phoneticUS": "'plæzmə",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=plasma&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=plasma&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "血浆",
+        "等离子体"
+      ],
+      "englishDefinitions": [
+        "the yellowish liquid part of blood that contains the blood cells"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Now there are no gaps, so this is the state of matter, and this was the state of a plasma.",
+          "cn": "现在没有任何间隙，这样这是物质的状态，而以前是一个等离子体状态。"
+        },
+        {
+          "en": "Scientists think this plasma represents the state of the whole universe justmoments after it was born in the Big Bang, when the universe was extremely hotand dense.",
+          "cn": "科学家认为这种等离子体代表整个宇宙在它出生的大爆炸之后瞬间的状态，那时的宇宙是非常炎热和致密的。"
+        },
+        {
+          "en": "It receives only in lymph, it gives the emotion through the blood and the right current, what you call, through the nerve system, and it changes to be the same plasma the skin of the man or your nail.",
+          "cn": "它只会在淋巴中接收，而通过血液和合适的电流来给予情感，也就是通过你们所说的神经系统，然后它就变成与你的皮肤或者指甲相同的等离子体。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "plasma arc",
+          "cn": "等离子弧，等离子体电弧；电浆弧"
+        },
+        {
+          "phrase": "plasma spraying",
+          "cn": "等离子喷涂"
+        },
+        {
+          "phrase": "plasma cutting",
+          "cn": "等离子切割"
+        },
+        {
+          "phrase": "inductively coupled plasma",
+          "cn": "电感耦合等离子体"
+        }
+      ],
+      "synonyms": [
+        "plasma related"
+      ],
+      "antonyms": [
+        "not plasma"
+      ],
+      "derivatives": [
+        "plasmas",
+        "plasmaing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “plasma”.",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,plasma",
+      "sceneCue": "CET-6 · 血浆"
+    },
+    {
+      "id": "cet6_003_violent",
+      "word": "violent",
+      "phoneticUK": "'vaɪələnt",
+      "phoneticUS": "'vaɪələnt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=violent&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=violent&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "暴力的",
+        "感情强烈的， 激情的",
+        "强烈的， 激烈的"
+      ],
+      "englishDefinitions": [
+        "involving actions that are intended to injure or kill people, by hitting them, shooting them etc"
+      ],
+      "exampleSentences": [
+        {
+          "en": "the increase in violent crime",
+          "cn": "暴力犯罪的增多"
+        },
+        {
+          "en": "violent clashes between the police and demonstrators",
+          "cn": "警方与示威者之间发生的暴力冲突"
+        },
+        {
+          "en": "31 people have been injured in violent incidents throughout the day.",
+          "cn": "今天一天有31人在暴力事件中受伤。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "violent crime",
+          "cn": "暴力犯罪，暴力罪行"
+        },
+        {
+          "phrase": "violent death",
+          "cn": "暴力死亡；横死"
+        },
+        {
+          "phrase": "violent storm",
+          "cn": "暴风；十一级风"
+        },
+        {
+          "phrase": "violent earthquake",
+          "cn": "大地震；强烈地震"
+        }
+      ],
+      "synonyms": [
+        "fierce",
+        "hard"
+      ],
+      "antonyms": [
+        "not violent"
+      ],
+      "derivatives": [
+        "violently",
+        "violence"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “violent”.",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,violent",
+      "sceneCue": "CET-6 · 暴力的"
+    },
+    {
+      "id": "cet6_004_erratic",
+      "word": "erratic",
+      "phoneticUK": "ɪ'rætɪk",
+      "phoneticUS": "ɪ'rætɪk",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=erratic&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=erratic&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "古怪的， 反复无常的",
+        "不规则的",
+        "不稳定的"
+      ],
+      "englishDefinitions": [
+        "something that is erratic does not follow any pattern or plan but happens in a way that is not regular"
+      ],
+      "exampleSentences": [
+        {
+          "en": "His breathing was becoming erratic.",
+          "cn": "他的呼吸越来越不均匀。"
+        },
+        {
+          "en": "his erratic behaviour",
+          "cn": "他难以捉摸的行为"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "erratic in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use erratic",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "unstable",
+        "odd",
+        "volatile",
+        "curious"
+      ],
+      "antonyms": [
+        "not erratic"
+      ],
+      "derivatives": [
+        "erratics",
+        "erraticing"
+      ],
+      "rootAffix": "err(徘徊) + at + ic(形容词后缀) → 在某地徘徊的 → 反复无常的",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,erratic",
+      "sceneCue": "CET-6 · 古怪的， 反复无常的"
+    },
+    {
+      "id": "cet6_005_fantasy",
+      "word": "fantasy",
+      "phoneticUK": "'fæntəsi",
+      "phoneticUS": "'fæntəsi",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=fantasy&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=fantasy&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "想象， 幻想"
+      ],
+      "englishDefinitions": [
+        "an exciting and unusual experience or situation you imagine happening to you, but which will probably never happen"
+      ],
+      "exampleSentences": [
+        {
+          "en": "I used to have fantasies about living in Paris with an artist.",
+          "cn": "我过去常幻想着在巴黎与一位艺术家同住。"
+        },
+        {
+          "en": "sexual fantasies",
+          "cn": "性幻想"
+        },
+        {
+          "en": "Young children sometimes can’t distinguish between fantasy and reality.",
+          "cn": "小孩子有时不能区分幻想与现实。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "fantasy in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use fantasy",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "fancy",
+        "illusion",
+        "visional",
+        "imagine"
+      ],
+      "antonyms": [
+        "not fantasy"
+      ],
+      "derivatives": [
+        "fantastic",
+        "fantastical",
+        "fantastically",
+        "fantasia"
+      ],
+      "rootAffix": "游戏《最终幻想》的英文名为Final Fantasy",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,fantasy",
+      "sceneCue": "CET-6 · 想象， 幻想"
+    },
+    {
+      "id": "cet6_006_capillary",
+      "word": "capillary",
+      "phoneticUK": "'kæpəleri",
+      "phoneticUS": "'kæpəlɛri",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=capillary&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=capillary&type=2",
+      "partOfSpeech": "adj/n",
+      "definitions": [
+        "毛状的",
+        "毛细血管的",
+        "毛细血管"
+      ],
+      "englishDefinitions": [
+        "the smallest type of  blood vessel (= tube carrying blood )  in the body"
+      ],
+      "exampleSentences": [
+        {
+          "en": "This consists of a capillary connected to a mercury reservoir.",
+          "cn": "这由一根与汞池相连的毛细管所构成。"
+        },
+        {
+          "en": "The water can be sucked up near the surface by capillary attraction.",
+          "cn": "水能由于毛细管吸力作用而被吸引到靠近道路表面的地方。"
+        },
+        {
+          "en": "For safety consideration due to ruptured seal, reaction of capillary fluid with process fluid should be carefully examined.",
+          "cn": "由于密封破裂出于安全考虑，宜谨慎测试毛细管充液和工艺介质的反应。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "capillary electrophoresis",
+          "cn": "毛细管电泳；管电泳"
+        },
+        {
+          "phrase": "capillary column",
+          "cn": "[化]毛细管柱"
+        },
+        {
+          "phrase": "capillary pressure",
+          "cn": "[生]毛细管（血）压"
+        },
+        {
+          "phrase": "capillary tube",
+          "cn": "毛细管"
+        }
+      ],
+      "synonyms": [
+        "hairy",
+        "ciliary"
+      ],
+      "antonyms": [
+        "not capillary"
+      ],
+      "derivatives": [
+        "capillarys",
+        "capillarying"
+      ],
+      "rootAffix": "capill(毛发) + ary → 毛状的",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,capillary",
+      "sceneCue": "CET-6 · 毛状的"
+    },
+    {
+      "id": "cet6_007_erode",
+      "word": "erode",
+      "phoneticUK": "ɪ'roud",
+      "phoneticUS": "ɪ'rod",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=erode&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=erode&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "侵蚀， 腐蚀"
+      ],
+      "englishDefinitions": [
+        "if the weather erodes rock or soil, or if rock or soil erodes, its surface is gradually destroyed"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The cliffs are being constantly eroded by heavy seas.",
+          "cn": "悬崖正不断受到汹涌海浪的侵蚀。"
+        },
+        {
+          "en": "The rocks have gradually eroded away.",
+          "cn": "岩石逐渐风化。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "erode in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use erode",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "weather",
+        "eat into",
+        "burn into"
+      ],
+      "antonyms": [
+        "not erode"
+      ],
+      "derivatives": [
+        "eroded",
+        "eroding",
+        "erose",
+        "erosive"
+      ],
+      "rootAffix": "e(去掉) + rod(咬) + e → 咬掉 → 侵蚀， 腐蚀",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,erode",
+      "sceneCue": "CET-6 · 侵蚀， 腐蚀"
+    },
+    {
+      "id": "cet6_008_check",
+      "word": "check",
+      "phoneticUK": "tʃek",
+      "phoneticUS": "tʃɛk",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=check&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=check&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "支票",
+        "账单"
+      ],
+      "englishDefinitions": [
+        "the American spelling of  cheque"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Can you cash this check for me?",
+          "cn": "您可以为我兑现这张支票吗?。"
+        },
+        {
+          "en": "Can you cash this check for me?",
+          "cn": "你可以为我兑现这张支票吗?。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "check in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use check",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "examine",
+        "inspect",
+        "review",
+        "park"
+      ],
+      "antonyms": [
+        "not check"
+      ],
+      "derivatives": [
+        "checked",
+        "checker"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “check”.",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,check",
+      "sceneCue": "CET-6 · 支票"
+    },
+    {
+      "id": "cet6_009_sparse",
+      "word": "sparse",
+      "phoneticUK": "spɑːrs",
+      "phoneticUS": "spɑrs",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=sparse&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=sparse&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "稀疏的， 稀少的",
+        "贫乏的"
+      ],
+      "englishDefinitions": [
+        "existing only in small amounts"
+      ],
+      "exampleSentences": [
+        {
+          "en": "his sparse brown hair",
+          "cn": "他那稀疏的棕色头发"
+        },
+        {
+          "en": "rural areas with sparse populations",
+          "cn": "人口稀少的农村地区"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "sparse in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use sparse",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "exiguous",
+        "infrequent"
+      ],
+      "antonyms": [
+        "not sparse"
+      ],
+      "derivatives": [
+        "sparsely",
+        "sparsity",
+        "sparseness"
+      ],
+      "rootAffix": "稀疏的(sparse)火花(spark)",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,sparse",
+      "sceneCue": "CET-6 · 稀疏的， 稀少的"
+    },
+    {
+      "id": "cet6_010_gorgeous",
+      "word": "gorgeous",
+      "phoneticUK": "'gɔːrdʒəs",
+      "phoneticUS": "'ɡɔrdʒəs",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=gorgeous&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=gorgeous&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "漂亮的",
+        "令人愉快的",
+        "华丽的， 灿烂的"
+      ],
+      "englishDefinitions": [
+        "extremely pleasant or enjoyable"
+      ],
+      "exampleSentences": [
+        {
+          "en": "a gorgeous cake",
+          "cn": "漂亮的蛋糕"
+        },
+        {
+          "en": "The hotel room had a gorgeous view.",
+          "cn": "那间客房窗外景色迷人。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "gorgeous in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use gorgeous",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "brilliant",
+        "wonderful",
+        "excellent",
+        "famous"
+      ],
+      "antonyms": [
+        "not gorgeous"
+      ],
+      "derivatives": [
+        "gorgeouss",
+        "gorgeousing"
+      ],
+      "rootAffix": "gorge(峡谷) + ous → 春天到了， 峡谷里开满花， 很漂亮 → 漂亮的",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,gorgeous",
+      "sceneCue": "CET-6 · 漂亮的"
+    },
+    {
+      "id": "cet6_011_erosion",
+      "word": "erosion",
+      "phoneticUK": "ɪ'rouʒn",
+      "phoneticUS": "ɪ'roʒən",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=erosion&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=erosion&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "腐蚀， 侵蚀",
+        "削弱， 减少"
+      ],
+      "englishDefinitions": [
+        "the process by which rock or soil is gradually destroyed by wind, rain, or the sea"
+      ],
+      "exampleSentences": [
+        {
+          "en": "the problem of soil erosion",
+          "cn": "水土流失的问题"
+        },
+        {
+          "en": "the erosion of the coastline",
+          "cn": "海岸线受到的侵蚀"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "soil erosion",
+          "cn": "n. 水土流失；土壤侵蚀；土壤流失；泥土流失"
+        },
+        {
+          "phrase": "wind erosion",
+          "cn": "风蚀，风蚀酌；风蚀作用"
+        },
+        {
+          "phrase": "erosion resistance",
+          "cn": "耐腐蚀性；抗腐蚀性"
+        },
+        {
+          "phrase": "water erosion",
+          "cn": "水侵蚀，水力侵蚀；水蚀酌"
+        }
+      ],
+      "synonyms": [
+        "corrosion",
+        "eating away"
+      ],
+      "antonyms": [
+        "not erosion"
+      ],
+      "derivatives": [
+        "eroded",
+        "eroding",
+        "erose",
+        "erosive"
+      ],
+      "rootAffix": "来自erode(v. 腐蚀， 侵蚀)",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,erosion",
+      "sceneCue": "CET-6 · 腐蚀， 侵蚀"
+    },
+    {
+      "id": "cet6_012_spoil",
+      "word": "spoil",
+      "phoneticUK": "spɔɪl",
+      "phoneticUS": "spɔɪl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=spoil&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=spoil&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "破坏",
+        "宠坏， 溺爱",
+        "变质"
+      ],
+      "englishDefinitions": [
+        "to give a child everything they want, or let them do whatever they want, often with the result that they behave badly"
+      ],
+      "exampleSentences": [
+        {
+          "en": "She’s an only child, but they didn’t really spoil her.",
+          "cn": "她是独生女，不过他们也没有娇惯她。"
+        },
+        {
+          "en": "His mother and sisters spoil him rotten (= spoil him very much ) .",
+          "cn": "他母亲和姐姐把他给宠坏了。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "spoil in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use spoil",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "harry",
+        "dote upon",
+        "prey upon",
+        "take a turn for the worse"
+      ],
+      "antonyms": [
+        "not spoil"
+      ],
+      "derivatives": [
+        "spoilt",
+        "spoilage",
+        "spoiler"
+      ],
+      "rootAffix": "破坏(spoil)土地(soil)， 损人不利己",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,spoil",
+      "sceneCue": "CET-6 · 破坏"
+    },
+    {
+      "id": "cet6_013_pasture",
+      "word": "pasture",
+      "phoneticUK": "'pæstʃər",
+      "phoneticUS": "'pæstʃɚ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=pasture&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=pasture&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "牧场，草原"
+      ],
+      "englishDefinitions": [
+        "land or a field that is covered with grass and is used for cattle, sheep etc to feed on"
+      ],
+      "exampleSentences": [
+        {
+          "en": "large areas of rough upland pasture",
+          "cn": "大片起伏的山地牧场"
+        },
+        {
+          "en": "the lush pastures of the southern counties",
+          "cn": "南部各郡茂盛的牧场"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "put out to pasture",
+          "cn": "放牧"
+        },
+        {
+          "phrase": "pasture land",
+          "cn": "牧场"
+        },
+        {
+          "phrase": "pasture grass",
+          "cn": "牧草"
+        }
+      ],
+      "synonyms": [
+        "grass",
+        "field",
+        "lawn",
+        "meadow"
+      ],
+      "antonyms": [
+        "not pasture"
+      ],
+      "derivatives": [
+        "pastureland",
+        "pasturage"
+      ],
+      "rootAffix": "past(喂养) + ure → 喂养牛羊的地方 → 牧场， 草原",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,pasture",
+      "sceneCue": "CET-6 · 牧场，草原"
+    },
+    {
+      "id": "cet6_014_multiple",
+      "word": "multiple",
+      "phoneticUK": "'mʌltɪpl",
+      "phoneticUS": "'mʌltəpl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=multiple&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=multiple&type=2",
+      "partOfSpeech": "adj/n",
+      "definitions": [
+        "多样的",
+        "多重的",
+        "倍数"
+      ],
+      "englishDefinitions": [
+        "many, or involving many things, people, events etc",
+        "a number that contains a smaller number an exact number of times"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Baxter was rushed to the hospital with multiple stab wounds.",
+          "cn": "巴克斯特因多处刺伤被紧急送往医院。"
+        },
+        {
+          "en": "Having multiple partners increases your risk of sexual diseases.",
+          "cn": "性伴侣多会增加得性病的风险。"
+        },
+        {
+          "en": "His new album includes multiple versions of the same songs.",
+          "cn": "他的新专辑包括同一些歌曲的多种版本。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "multiple access",
+          "cn": "[电脑]多路存取；多路访问"
+        },
+        {
+          "phrase": "multiple regression",
+          "cn": "多次回归"
+        },
+        {
+          "phrase": "multiple linear regression",
+          "cn": "多元线性回归；复直线回归"
+        },
+        {
+          "phrase": "multiple sclerosis",
+          "cn": "[医]多发性硬化"
+        }
+      ],
+      "synonyms": [
+        "numerous",
+        "many",
+        "hundred",
+        "time"
+      ],
+      "antonyms": [
+        "not multiple"
+      ],
+      "derivatives": [
+        "multiply",
+        "multiplicative",
+        "multipliable",
+        "multiplicity"
+      ],
+      "rootAffix": "multi(多的) + ple(折叠) → 多样的； 多重的",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,multiple",
+      "sceneCue": "CET-6 · 多样的"
+    },
+    {
+      "id": "cet6_015_versatile",
+      "word": "versatile",
+      "phoneticUK": "'vɜːrsətl",
+      "phoneticUS": "'vɝsətl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=versatile&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=versatile&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "多才多艺的",
+        "多用途的"
+      ],
+      "englishDefinitions": [
+        "someone who is versatile has many different skills"
+      ],
+      "exampleSentences": [
+        {
+          "en": "a very versatile performer",
+          "cn": "多才多艺的表演者"
+        },
+        {
+          "en": "a more versatile workforce",
+          "cn": "技术更全面的劳动力"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "versatile in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use versatile",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "universal",
+        "current",
+        "utility"
+      ],
+      "antonyms": [
+        "not versatile"
+      ],
+      "derivatives": [
+        "versatiles",
+        "versatileing"
+      ],
+      "rootAffix": "vers(转) + atile → 玩得转的 → 多才多艺的",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,versatile",
+      "sceneCue": "CET-6 · 多才多艺的"
+    },
+    {
+      "id": "cet6_016_concentrate",
+      "word": "concentrate",
+      "phoneticUK": "'kɑːnsntreɪt",
+      "phoneticUS": "'kɑnsn'tret",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=concentrate&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=concentrate&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "集中，专心"
+      ],
+      "englishDefinitions": [
+        "to think very carefully about something that you are doing"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Now please concentrate.",
+          "cn": "现在请集中注意力。"
+        },
+        {
+          "en": "Adrian was finding it difficult to concentrate.",
+          "cn": "阿德里安觉得自己很难集中注意力。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "concentrate on",
+          "cn": "集中精力于；全神贯注于"
+        },
+        {
+          "phrase": "copper concentrate",
+          "cn": "铜精矿"
+        },
+        {
+          "phrase": "ore concentrate",
+          "cn": "精矿"
+        },
+        {
+          "phrase": "zinc concentrate",
+          "cn": "锌精矿；精炼锌"
+        }
+      ],
+      "synonyms": [
+        "focus",
+        "collect",
+        "mass",
+        "crowd"
+      ],
+      "antonyms": [
+        "not concentrate"
+      ],
+      "derivatives": [
+        "concentrated",
+        "concentration",
+        "concentricity",
+        "concentre"
+      ],
+      "rootAffix": "con(共同) + centr(中心) + ate → 聚集在一个中心 → 集中",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,concentrate",
+      "sceneCue": "CET-6 · 集中，专心"
+    },
+    {
+      "id": "cet6_017_versus",
+      "word": "versus",
+      "phoneticUK": "'vɜːrsəs",
+      "phoneticUS": "'vɝsəs",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=versus&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=versus&type=2",
+      "partOfSpeech": "prep",
+      "definitions": [
+        "对， 对抗",
+        "与…相对， 与…相比"
+      ],
+      "englishDefinitions": [
+        "used to show that two people or teams are competing against each other in a game or court case"
+      ],
+      "exampleSentences": [
+        {
+          "en": "the New York Knicks versus the LA Lakers",
+          "cn": "纽约尼克斯队对洛杉矶湖人队"
+        },
+        {
+          "en": "the Supreme Court decision in Roe vs. Wade",
+          "cn": "最高法院关于罗诉韦德案的判决"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "versus in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use versus",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "versus related"
+      ],
+      "antonyms": [
+        "not versus"
+      ],
+      "derivatives": [
+        "versuss",
+        "versusing"
+      ],
+      "rootAffix": "vers(转) + us → 转向→ 与…相对； 常缩写成vs",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,versus",
+      "sceneCue": "CET-6 · 对， 对抗"
+    },
+    {
+      "id": "cet6_018_permit",
+      "word": "permit",
+      "phoneticUK": "pə'mɪt",
+      "phoneticUS": "pɚ'mɪt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=permit&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=permit&type=2",
+      "partOfSpeech": "v/n",
+      "definitions": [
+        "允许， 许可",
+        "许可证， 执照"
+      ],
+      "englishDefinitions": [
+        "to allow something to happen, especially by an official decision, rule, or law",
+        "an official written statement giving you the right to do something"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Smoking is only permitted in the public lounge.",
+          "cn": "只允许在公共休息室里抽烟。"
+        },
+        {
+          "en": "He had more than the permitted level of alcohol in his blood.",
+          "cn": "他血液中的酒精含量超出了允许的水平。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "work permit",
+          "cn": "工作许可证"
+        },
+        {
+          "phrase": "residence permit",
+          "cn": "居留证"
+        },
+        {
+          "phrase": "permit of",
+          "cn": "允许；容许有"
+        },
+        {
+          "phrase": "entry permit",
+          "cn": "入境许可证"
+        }
+      ],
+      "synonyms": [
+        "to allow",
+        "make a promise",
+        "license",
+        "let"
+      ],
+      "antonyms": [
+        "not permit"
+      ],
+      "derivatives": [
+        "permissible",
+        "permissive",
+        "permissibly",
+        "permissively"
+      ],
+      "rootAffix": "per(贯穿， 自始至终) + mit(送) → 始终送出 → 允许， 许可",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,permit",
+      "sceneCue": "CET-6 · 允许， 许可"
+    },
+    {
+      "id": "cet6_019_translation",
+      "word": "translation",
+      "phoneticUK": "træns'leɪʃn",
+      "phoneticUS": "træns'leʃən",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=translation&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=translation&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "翻译",
+        "译文， 译本"
+      ],
+      "englishDefinitions": [
+        "when you translate something, or something that has been translated"
+      ],
+      "exampleSentences": [
+        {
+          "en": "She read the letter and gave us a rough translation (= she did not translate everything exactly ) .",
+          "cn": "她看了信，给我们大概翻译了一下。"
+        },
+        {
+          "en": "I’ve only read ‘Madame Bovary’ in translation (= not in its original language ) .",
+          "cn": "我只读过《包法利夫人》的翻译本。"
+        },
+        {
+          "en": "Much of the book’s humour has been lost in translation (= is no longer effective when translated ) .",
+          "cn": "本书的许多幽默元素已在翻译过程中丢失。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "english translation",
+          "cn": "英语翻译，英译本"
+        },
+        {
+          "phrase": "chinese translation",
+          "cn": "中文翻译；中译本"
+        },
+        {
+          "phrase": "machine translation",
+          "cn": "机器翻译，计算机翻译；机骗译"
+        },
+        {
+          "phrase": "literal translation",
+          "cn": "直译，直译法；逐字翻译"
+        }
+      ],
+      "synonyms": [
+        "interpretation",
+        "version"
+      ],
+      "antonyms": [
+        "not translation"
+      ],
+      "derivatives": [
+        "translational",
+        "translatable",
+        "translator",
+        "translate"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “translation”.",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,translation",
+      "sceneCue": "CET-6 · 翻译"
+    },
+    {
+      "id": "cet6_020_catalog",
+      "word": "catalog",
+      "phoneticUK": "'kætəlɔːg",
+      "phoneticUS": "'kætəlɔg",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=catalog&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=catalog&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "目录"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “目录”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "Can you catalog all these books?",
+          "cn": "你能给所有这些书编目录吗？"
+        },
+        {
+          "en": "Well. this is our latest catalog.",
+          "cn": "嗯，这是我们最新的产品目录。 。"
+        },
+        {
+          "en": "Can you send me a catalog?",
+          "cn": "你能给我寄一份商品目录吗？"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "product catalog",
+          "cn": "产品目录"
+        },
+        {
+          "phrase": "card catalog",
+          "cn": "图书馆里的卡片目录（等于card catalogue）"
+        }
+      ],
+      "synonyms": [
+        "registration",
+        "directory",
+        "entry",
+        "content"
+      ],
+      "antonyms": [
+        "not catalog"
+      ],
+      "derivatives": [
+        "catalogued",
+        "cataloger",
+        "cataloguer"
+      ],
+      "rootAffix": "cata(完全地) + log(说话) → 完整列出将说的话 → 目录",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,catalog",
+      "sceneCue": "CET-6 · 目录"
+    },
+    {
+      "id": "cet6_021_part-time",
+      "word": "part-time",
+      "phoneticUK": "'pɑːrtˌtaɪm",
+      "phoneticUS": ",pɑrt'taɪm",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=part-time&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=part-time&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "兼职的",
+        "部分时间的"
+      ],
+      "englishDefinitions": [
+        "someone who has a part-time job works for only part of each day or week"
+      ],
+      "exampleSentences": [
+        {
+          "en": "a part-time job",
+          "cn": "兼职工作"
+        },
+        {
+          "en": "women wishing to return to work on a part-time basis",
+          "cn": "希望以兼职形式重返职场的女性"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "part-time job",
+          "cn": "兼职"
+        },
+        {
+          "phrase": "part-time student",
+          "cn": "兼职学生；部分时制学生；在职学生；半工半读生"
+        }
+      ],
+      "synonyms": [
+        "part-time related"
+      ],
+      "antonyms": [
+        "not part-time"
+      ],
+      "derivatives": [
+        "part-times",
+        "part-timeing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “part-time”.",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,part-time",
+      "sceneCue": "CET-6 · 兼职的"
+    },
+    {
+      "id": "cet6_022_chilly",
+      "word": "chilly",
+      "phoneticUK": "'tʃɪli",
+      "phoneticUS": "'tʃɪli",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=chilly&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=chilly&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "寒冷的",
+        "冷淡的， 不友好的"
+      ],
+      "englishDefinitions": [
+        "chilly weather or places are cold enough to make you feel uncomfortable"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Getting chilly, isn’t it?",
+          "cn": "天冷了，是不是？"
+        },
+        {
+          "en": "The bathroom’s a bit chilly.",
+          "cn": "浴室里有点冷。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "chilly in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use chilly",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "cold",
+        "acold"
+      ],
+      "antonyms": [
+        "not chilly"
+      ],
+      "derivatives": [
+        "chill",
+        "chilling",
+        "chiller",
+        "chilliness"
+      ],
+      "rootAffix": "来自chill(n. 寒意)",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,chilly",
+      "sceneCue": "CET-6 · 寒冷的"
+    },
+    {
+      "id": "cet6_023_reservation",
+      "word": "reservation",
+      "phoneticUK": "ˌrezər'veɪʃn",
+      "phoneticUS": ",rɛzɚ'veʃən",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=reservation&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=reservation&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "预约， 预订",
+        "保留意见， 疑惑",
+        "居留地"
+      ],
+      "englishDefinitions": [
+        "an arrangement which you make so that a place in a hotel, restaurant, plane etc is kept for you at a particular time in the future"
+      ],
+      "exampleSentences": [
+        {
+          "en": "a dinner reservation",
+          "cn": "预订晚餐"
+        },
+        {
+          "en": "Customers are advised to make seat reservations well in advance.",
+          "cn": "建议顾客提前订座。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "hotel reservation",
+          "cn": "酒店预订；订旅馆"
+        },
+        {
+          "phrase": "make a reservation",
+          "cn": "预定（房间、票）；预约"
+        },
+        {
+          "phrase": "without reservation",
+          "cn": "无保留地"
+        },
+        {
+          "phrase": "ticket reservation",
+          "cn": "预订票，订座"
+        }
+      ],
+      "synonyms": [
+        "preservation",
+        "booking",
+        "hold",
+        "retention"
+      ],
+      "antonyms": [
+        "not reservation"
+      ],
+      "derivatives": [
+        "reserved",
+        "reserve"
+      ],
+      "rootAffix": "来自reserve(vt. 预订； 保留)",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,reservation",
+      "sceneCue": "CET-6 · 预约， 预订"
+    },
+    {
+      "id": "cet6_024_block",
+      "word": "block",
+      "phoneticUK": "blɑːk",
+      "phoneticUS": "blɑk",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=block&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=block&type=2",
+      "partOfSpeech": "v/n",
+      "definitions": [
+        "阻塞",
+        "阻碍，妨碍",
+        "大块",
+        "街区"
+      ],
+      "englishDefinitions": [
+        "to prevent anything moving through a space by being or placing something across it or in it",
+        "a piece of hard material such as wood or stone with straight sides"
+      ],
+      "exampleSentences": [
+        {
+          "en": "A fallen tree is blocking the road.",
+          "cn": "一棵倒下的树把路阻断了。"
+        },
+        {
+          "en": "The sink’s blocked up.",
+          "cn": "水槽堵住了。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "in block",
+          "cn": "块装；整批"
+        },
+        {
+          "phrase": "block in",
+          "cn": "草拟，画草图"
+        },
+        {
+          "phrase": "block up",
+          "cn": "阻碍；垫高；停用；阻塞"
+        },
+        {
+          "phrase": "fault block",
+          "cn": "断块；故障闭塞；断裂地块"
+        }
+      ],
+      "synonyms": [
+        "piece",
+        "mass",
+        "barrier",
+        "bottleneck"
+      ],
+      "antonyms": [
+        "not block"
+      ],
+      "derivatives": [
+        "blocked",
+        "blocky",
+        "blocking",
+        "blockage"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “block”.",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,block",
+      "sceneCue": "CET-6 · 阻塞"
+    },
+    {
+      "id": "cet6_025_morphology",
+      "word": "morphology",
+      "phoneticUK": "mɔːr'fɑːlədʒi",
+      "phoneticUS": "mɔr'fɑlədʒi",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=morphology&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=morphology&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "形态学， 形态论"
+      ],
+      "englishDefinitions": [
+        "the study of the  morpheme s  of a language and of the way in which they are joined together to make words"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Morpheme is the basic unit in the study of morphology.",
+          "cn": "词素是形态学研究的最基本的单位。"
+        },
+        {
+          "en": "No longer can biologists be content simply to study morphology.",
+          "cn": "生物学家不再满足于简单地研究形态学。"
+        },
+        {
+          "en": "The rings and networks have some classificatory characteristics in morphology.",
+          "cn": "菌环、菌网及孢子具有一定的形态学特征。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "surface morphology",
+          "cn": "表面形态"
+        },
+        {
+          "phrase": "crystal morphology",
+          "cn": "[晶]晶体形态学；形态结晶学；晶体结构"
+        },
+        {
+          "phrase": "plant morphology",
+          "cn": "植物形态学"
+        }
+      ],
+      "synonyms": [
+        "modalism",
+        "accidence"
+      ],
+      "antonyms": [
+        "not morphology"
+      ],
+      "derivatives": [
+        "morphological",
+        "morphologically",
+        "morph",
+        "morpheme"
+      ],
+      "rootAffix": "morph(形状) + ology(…学) → 形态学， 形态论",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,morphology",
+      "sceneCue": "CET-6 · 形态学， 形态论"
+    },
+    {
+      "id": "cet6_026_distant",
+      "word": "distant",
+      "phoneticUK": "'dɪstənt",
+      "phoneticUS": "'dɪstənt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=distant&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=distant&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "远离的， 遥远的",
+        "疏远的， 冷淡的",
+        "久远的",
+        "不同的"
+      ],
+      "englishDefinitions": [
+        "far away in space or time"
+      ],
+      "exampleSentences": [
+        {
+          "en": "the sound of distant gunfire",
+          "cn": "远处的炮火声"
+        },
+        {
+          "en": "Her honeymoon seemed a distant memory .",
+          "cn": "她的蜜月似乎成了遥远的记忆。"
+        },
+        {
+          "en": "That affair was in the dim and distant past (= a long time ago ) .",
+          "cn": "那件事已成为遥远的过去了。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "distant view",
+          "cn": "远景"
+        },
+        {
+          "phrase": "distant place",
+          "cn": "远方"
+        },
+        {
+          "phrase": "in the distant past",
+          "cn": "远古"
+        },
+        {
+          "phrase": "distant cousin",
+          "cn": "远表兄妹"
+        }
+      ],
+      "synonyms": [
+        "remote",
+        "faraway"
+      ],
+      "antonyms": [
+        "not distant"
+      ],
+      "derivatives": [
+        "distantly",
+        "distance"
+      ],
+      "rootAffix": "di(分开) + st(站) + ant → 分开站的 → 远离的， 遥远的； 疏远的",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,distant",
+      "sceneCue": "CET-6 · 远离的， 遥远的"
+    },
+    {
+      "id": "cet6_027_resonance",
+      "word": "resonance",
+      "phoneticUK": "'rezənəns",
+      "phoneticUS": "'rɛznəns",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=resonance&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=resonance&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "共振， 共鸣",
+        "回声， 反响"
+      ],
+      "englishDefinitions": [
+        "the special meaning or importance that something has for you because it relates to your own experiences"
+      ],
+      "exampleSentences": [
+        {
+          "en": "a tradition that has little resonance in the 21st century",
+          "cn": "在21世纪难以引起共鸣的传统"
+        },
+        {
+          "en": "His words will have resonance for many musicians.",
+          "cn": "他的话将在很多音乐家心里产生共鸣。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "magnetic resonance",
+          "cn": "磁共振；磁谐振"
+        },
+        {
+          "phrase": "magnetic resonance imaging",
+          "cn": "磁共振成象"
+        },
+        {
+          "phrase": "nuclear magnetic resonance",
+          "cn": "核磁共振"
+        },
+        {
+          "phrase": "resonance frequency",
+          "cn": "共振频率；谐振频率；共鸣频率"
+        }
+      ],
+      "synonyms": [
+        "sympathetic vibration",
+        "reflections"
+      ],
+      "antonyms": [
+        "not resonance"
+      ],
+      "derivatives": [
+        "resonant",
+        "resonating",
+        "resonator",
+        "resonate"
+      ],
+      "rootAffix": "re(再， 又) + son(声音) + ance → 声音再次响起 → 共振， 共鸣",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,resonance",
+      "sceneCue": "CET-6 · 共振， 共鸣"
+    },
+    {
+      "id": "cet6_028_propose",
+      "word": "propose",
+      "phoneticUK": "prə'pouz",
+      "phoneticUS": "prə'poz",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=propose&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=propose&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "建议， 提议",
+        "提名， 推荐",
+        "打算， 计划",
+        "求婚"
+      ],
+      "englishDefinitions": [
+        "to suggest something as a plan or course of action"
+      ],
+      "exampleSentences": [
+        {
+          "en": "the changes currently proposed by the local planning authorities",
+          "cn": "目前由地方规划局提议的改革"
+        },
+        {
+          "en": "the proposed budget cuts",
+          "cn": "所提出的预算削减"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "propose to someone",
+          "cn": "向某人求婚"
+        },
+        {
+          "phrase": "propose a toast",
+          "cn": "敬酒；举杯"
+        },
+        {
+          "phrase": "propose someone for",
+          "cn": "推荐某人(参加某组织)；提名某人(任某职)"
+        },
+        {
+          "phrase": "propose to do",
+          "cn": "建议做..."
+        }
+      ],
+      "synonyms": [
+        "schedule",
+        "design",
+        "map",
+        "think"
+      ],
+      "antonyms": [
+        "not propose"
+      ],
+      "derivatives": [
+        "proposed",
+        "proposal",
+        "proposition",
+        "proponent"
+      ],
+      "rootAffix": "pro(在…前面) + pos(放) + e → 放在前面 → 在行动之前提出 → 建议， 提议",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,propose",
+      "sceneCue": "CET-6 · 建议， 提议"
+    },
+    {
+      "id": "cet6_029_seismograph",
+      "word": "seismograph",
+      "phoneticUK": "'saɪzməgræf",
+      "phoneticUS": "'saɪzməɡræf",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=seismograph&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=seismograph&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "地震仪， 测震仪"
+      ],
+      "englishDefinitions": [
+        "an instrument that measures and records the movement of the earth during an  earthquake"
+      ],
+      "exampleSentences": [
+        {
+          "en": "On the right waist have a seismograph, it tender prior to the earthquake forecast the earthquake.",
+          "cn": "在右腰上有一个地震仪，它嫩在地震前预报地震。"
+        },
+        {
+          "en": "People always make some misunderstanding for the sampling rate and dynamic range of shallow seismograph.",
+          "cn": "人们对浅层地震仪的采样率及动态范围这两个指标往往产生某些误解。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "seismograph in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use seismograph",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "seismograph related"
+      ],
+      "antonyms": [
+        "not seismograph"
+      ],
+      "derivatives": [
+        "seismic",
+        "seismal",
+        "seismologic",
+        "seismological"
+      ],
+      "rootAffix": "seism(震动) + o + graph(写； 图) → 能描绘地震情况的(仪器) → 地震仪",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,seismograph",
+      "sceneCue": "CET-6 · 地震仪， 测震仪"
+    },
+    {
+      "id": "cet6_030_daylight",
+      "word": "daylight",
+      "phoneticUK": "'deɪlaɪt",
+      "phoneticUS": "'delaɪt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=daylight&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=daylight&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "日光",
+        "白昼"
+      ],
+      "englishDefinitions": [
+        "the light produced by the sun during the day"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The park is open to the public during daylight hours .",
+          "cn": "公园白天对公众开放。"
+        },
+        {
+          "en": "If possible, it’s better to work in natural daylight.",
+          "cn": "如果条件允许的话，最好在自然日光下工作。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "in broad daylight",
+          "cn": "在大白天；公开地"
+        },
+        {
+          "phrase": "broad daylight",
+          "cn": "光天化日；公开地"
+        },
+        {
+          "phrase": "daylight saving",
+          "cn": "夏令时（指在夏季把标准时间拨早1小时）"
+        },
+        {
+          "phrase": "in daylight",
+          "cn": "在阳光中；光天化日之下；在大白天"
+        }
+      ],
+      "synonyms": [
+        "morning",
+        "sunlight",
+        "publicity",
+        "open"
+      ],
+      "antonyms": [
+        "not daylight"
+      ],
+      "derivatives": [
+        "day",
+        "dayspring"
+      ],
+      "rootAffix": "day(白天) + light(光) → 白天的光 → 日光",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,daylight",
+      "sceneCue": "CET-6 · 日光"
+    },
+    {
+      "id": "cet6_031_crazy",
+      "word": "crazy",
+      "phoneticUK": "'kreɪzi",
+      "phoneticUS": "'krezi",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=crazy&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=crazy&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "疯狂的， 不理智的",
+        "狂热的， 热衷的",
+        "精神失常的"
+      ],
+      "englishDefinitions": [
+        "very strange or not sensible"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The neighbours must think we’re crazy.",
+          "cn": "邻居一定会认为我们疯了。"
+        },
+        {
+          "en": "It’s an absolutely crazy idea .",
+          "cn": "那绝对是个荒唐的想法。"
+        },
+        {
+          "en": "I know this idea sounds crazy , but it may be worth a try.",
+          "cn": "我知道这个主意听起来很荒唐，但也许值得一试。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "crazy about",
+          "cn": "热衷，着迷；狂热的"
+        },
+        {
+          "phrase": "a little crazy",
+          "cn": "有点儿疯狂"
+        },
+        {
+          "phrase": "go crazy",
+          "cn": "发疯；疯狂"
+        },
+        {
+          "phrase": "be crazy for",
+          "cn": "v. 渴望；对…疯狂"
+        }
+      ],
+      "synonyms": [
+        "wild",
+        "possessed",
+        "mad",
+        "enthusiastic"
+      ],
+      "antonyms": [
+        "not crazy"
+      ],
+      "derivatives": [
+        "crazed",
+        "crazily",
+        "craze",
+        "craziness"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “crazy”.",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,crazy",
+      "sceneCue": "CET-6 · 疯狂的， 不理智的"
+    },
+    {
+      "id": "cet6_032_microscopic",
+      "word": "microscopic",
+      "phoneticUK": "ˌmaɪkrə'skɑːpɪk",
+      "phoneticUS": ",maɪkrə'skɑpɪk",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=microscopic&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=microscopic&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "用显微镜可见的",
+        "极小的"
+      ],
+      "englishDefinitions": [
+        "extremely small and therefore very difficult to see"
+      ],
+      "exampleSentences": [
+        {
+          "en": "a microscopic speck of dust",
+          "cn": "微小的尘粒"
+        },
+        {
+          "en": "Inspectors discovered microscopic cracks in the hull of the submarine.",
+          "cn": "检测人员发现潜艇的船身有细微的裂缝。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "microscopic examination",
+          "cn": "显微镜检查；微观组织检查；金相试验"
+        },
+        {
+          "phrase": "microscopic observation",
+          "cn": "微观观察，显微观察"
+        },
+        {
+          "phrase": "microscopic analysis",
+          "cn": "显微镜分析；显微分析；微分析"
+        },
+        {
+          "phrase": "microscopic view",
+          "cn": "微观"
+        }
+      ],
+      "synonyms": [
+        "microscopic related"
+      ],
+      "antonyms": [
+        "not microscopic"
+      ],
+      "derivatives": [
+        "microscopical",
+        "microscopically",
+        "microscope",
+        "microscopy"
+      ],
+      "rootAffix": "micro(微小的) + scop(看) + ic → 小得看不清的 → 极小的",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,microscopic",
+      "sceneCue": "CET-6 · 用显微镜可见的"
+    },
+    {
+      "id": "cet6_033_caterpillar",
+      "word": "caterpillar",
+      "phoneticUK": "'kætərpɪlər",
+      "phoneticUS": "'kætɚpɪlɚ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=caterpillar&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=caterpillar&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "毛毛虫"
+      ],
+      "englishDefinitions": [
+        "a small creature like a  worm  with many legs that eats leaves and that develops into a  butterfly  or other flying insect"
+      ],
+      "exampleSentences": [
+        {
+          "en": "I saw a caterpillar on the leaf.",
+          "cn": "我看见一条毛毛虫在叶子上。"
+        },
+        {
+          "en": "The caterpillar might well give you nightmares though!",
+          "cn": "但是，它的毛虫却可能引起你噩梦！"
+        },
+        {
+          "en": "The caterpillars grow. This caterpillar is big and fat.",
+          "cn": "这毛虫渐渐成长。这个毛虫是大的和肥的。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "caterpillar in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use caterpillar",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "palmerworm",
+        "eruca"
+      ],
+      "antonyms": [
+        "not caterpillar"
+      ],
+      "derivatives": [
+        "caterpillars",
+        "caterpillaring"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “caterpillar”.",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,caterpillar",
+      "sceneCue": "CET-6 · 毛毛虫"
+    },
+    {
+      "id": "cet6_034_haul",
+      "word": "haul",
+      "phoneticUK": "hɔːl",
+      "phoneticUS": "hɔl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=haul&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=haul&type=2",
+      "partOfSpeech": "v/n",
+      "definitions": [
+        "拖，拖运",
+        "拖， 拉， 拖运",
+        "一次获得的数量",
+        "旅行的距离"
+      ],
+      "englishDefinitions": [
+        "to pull something heavy with a continuous steady movement",
+        "the amount of fish caught when fishing with a net"
+      ],
+      "exampleSentences": [
+        {
+          "en": "the steam locomotive which hauled the train",
+          "cn": "拖动火车的蒸汽机车"
+        },
+        {
+          "en": "I hauled the door shut behind me.",
+          "cn": "我用力拽上了门。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "long haul",
+          "cn": "长途运输；长距"
+        },
+        {
+          "phrase": "over the long haul",
+          "cn": "长远地；从长远观点看"
+        },
+        {
+          "phrase": "haul distance",
+          "cn": "运距；运输距离；行程长度；运程长度"
+        },
+        {
+          "phrase": "for the long haul",
+          "cn": "长远地"
+        }
+      ],
+      "synonyms": [
+        "pull",
+        "catch",
+        "drag",
+        "drag one's feet"
+      ],
+      "antonyms": [
+        "not haul"
+      ],
+      "derivatives": [
+        "haulage",
+        "hauler"
+      ],
+      "rootAffix": "用力拖(haul)个大箱子， 不时停下来(halt)休息",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,haul",
+      "sceneCue": "CET-6 · 拖，拖运"
+    },
+    {
+      "id": "cet6_035_energetic",
+      "word": "energetic",
+      "phoneticUK": "ˌenər'dʒetɪk",
+      "phoneticUS": ",ɛnɚ'dʒɛtɪk",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=energetic&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=energetic&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "精力充沛的， 积极的"
+      ],
+      "englishDefinitions": [
+        "having or needing a lot of energy or determination"
+      ],
+      "exampleSentences": [
+        {
+          "en": "an energetic man",
+          "cn": "精力旺盛的男子"
+        },
+        {
+          "en": "an energetic drive to get more customers",
+          "cn": "争取更多客户的十足干劲"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "energetic in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use energetic",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "active",
+        "positive",
+        "male",
+        "live"
+      ],
+      "antonyms": [
+        "not energetic"
+      ],
+      "derivatives": [
+        "energetically",
+        "energy",
+        "energise"
+      ],
+      "rootAffix": "来自energy(n. 精神， 活力)",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,energetic",
+      "sceneCue": "CET-6 · 精力充沛的， 积极的"
+    },
+    {
+      "id": "cet6_036_quilt",
+      "word": "quilt",
+      "phoneticUK": "kwɪlt",
+      "phoneticUS": "kwɪlt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=quilt&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=quilt&type=2",
+      "partOfSpeech": "v/n",
+      "definitions": [
+        "缝被",
+        "缝制",
+        "被褥"
+      ],
+      "englishDefinitions": [
+        "If you quilt, or if you quilt a piece of fabric, you make a quilt",
+        "a warm thick cover for a bed, made by sewing two layers of cloth together, with feathers or a thick material in between them"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Maggie knows how to quilt.",
+          "cn": "玛吉知道怎样缝被子。"
+        },
+        {
+          "en": "Quilting a bed cover can be laborious.",
+          "cn": "缝制一个床罩会很费力的。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "quilt cover",
+          "cn": "被套，被罩"
+        },
+        {
+          "phrase": "patchwork quilt",
+          "cn": "拼布床单；用小块布缝缀的被罩"
+        }
+      ],
+      "synonyms": [
+        "bedquilt",
+        "comforter"
+      ],
+      "antonyms": [
+        "not quilt"
+      ],
+      "derivatives": [
+        "quilts",
+        "quilting"
+      ],
+      "rootAffix": "他辞职(quit)后就天天躺在被窝(quilt)里度日",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,quilt",
+      "sceneCue": "CET-6 · 缝被"
+    },
+    {
+      "id": "cet6_037_hostile",
+      "word": "hostile",
+      "phoneticUK": "'hɑːstl",
+      "phoneticUS": "ˈhɑstl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=hostile&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=hostile&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "不友好的， 敌意的",
+        "敌方的"
+      ],
+      "englishDefinitions": [
+        "angry and deliberately unfriendly towards someone, and ready to argue with them"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Southampton fans gave their former coach a hostile reception .",
+          "cn": "南安普敦队的球迷对球队的前任教练很不友善。"
+        },
+        {
+          "en": "Carr wouldn’t meet Feng’s stare, which was openly hostile .",
+          "cn": "卡尔不愿意面对冯公然敌视的目光。"
+        },
+        {
+          "en": "his hostile attitude",
+          "cn": "他敌对的态度"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "hostile in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use hostile",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "adverse",
+        "enemy",
+        "opposed",
+        "opposition"
+      ],
+      "antonyms": [
+        "not hostile"
+      ],
+      "derivatives": [
+        "hostiles",
+        "hostileing"
+      ],
+      "rootAffix": "host(主人) + ile → 鸿门宴的主人 → 不友好的， 敌意的",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,hostile",
+      "sceneCue": "CET-6 · 不友好的， 敌意的"
+    },
+    {
+      "id": "cet6_038_crawl",
+      "word": "crawl",
+      "phoneticUK": "krɔːl",
+      "phoneticUS": "krɔl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=crawl&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=crawl&type=2",
+      "partOfSpeech": "v/n",
+      "definitions": [
+        "缓慢行进",
+        "爬行",
+        "缓慢的速度"
+      ],
+      "englishDefinitions": [
+        "to move along on your hands and knees with your body close to the ground",
+        "Crawl is also a noun"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The floor was crawling with ants.",
+          "cn": "地板上爬满了蚂蚁。"
+        },
+        {
+          "en": "The traffic on the off-ramp slowed to a crawl.",
+          "cn": "驶出匝道的交通慢得在爬进。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "crawl in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use crawl",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "creep",
+        "aquarium"
+      ],
+      "antonyms": [
+        "not crawl"
+      ],
+      "derivatives": [
+        "crawls",
+        "crawling"
+      ],
+      "rootAffix": "c + raw(生疏的) + l → 对地形生疏， 车开慢点 → 缓慢行进",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,crawl",
+      "sceneCue": "CET-6 · 缓慢行进"
+    },
+    {
+      "id": "cet6_039_academic",
+      "word": "academic",
+      "phoneticUK": "ˌækə'demɪk",
+      "phoneticUS": ",ækə'dɛmɪk",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=academic&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=academic&type=2",
+      "partOfSpeech": "adj/n",
+      "definitions": [
+        "学术的",
+        "学校的，学院的",
+        "纯理论的",
+        "大学教师"
+      ],
+      "englishDefinitions": [
+        "relating to education, especially at college or university level",
+        "a teacher in a college or university"
+      ],
+      "exampleSentences": [
+        {
+          "en": "He possessed no academic qualifications.",
+          "cn": "他没有学历。"
+        },
+        {
+          "en": "a program to raise academic standards",
+          "cn": "旨在提高学术水平的计划"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "academic research",
+          "cn": "学术研究"
+        },
+        {
+          "phrase": "academic circles",
+          "cn": "学术界"
+        },
+        {
+          "phrase": "academic year",
+          "cn": "学年"
+        },
+        {
+          "phrase": "academic achievement",
+          "cn": "学业成就；学业成绩"
+        }
+      ],
+      "synonyms": [
+        "theoretical",
+        "collegial",
+        "undergraduate",
+        "don"
+      ],
+      "antonyms": [
+        "not academic"
+      ],
+      "derivatives": [
+        "academically",
+        "academy",
+        "academia",
+        "academician"
+      ],
+      "rootAffix": "来自academy(n. 学会， 研究院)",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,academic",
+      "sceneCue": "CET-6 · 学术的"
+    },
+    {
+      "id": "cet6_040_coral",
+      "word": "coral",
+      "phoneticUK": "'kɔːrəl",
+      "phoneticUS": "'kɔrəl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=coral&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=coral&type=2",
+      "partOfSpeech": "adj/n",
+      "definitions": [
+        "珊瑚色的， 红色的",
+        "珊瑚"
+      ],
+      "englishDefinitions": [
+        "pink or reddish-orange in colour",
+        "a hard red, white, or pink substance formed from the bones of very small sea creatures, which is often used to make jewellery"
+      ],
+      "exampleSentences": [
+        {
+          "en": "It is like the bow of the King of the Persians that is painted with vermilion and is tipped with coral.",
+          "cn": "你的嘴唇就像是波斯王国的弯弓，那是一张涂上朱砂的弯弓，那是一张头上镶嵌珊瑚的弯弓。"
+        },
+        {
+          "en": "I believe they are doing a good job with that. How about the coral? Is it really as beautiful as they say?",
+          "cn": "我相信他们是在做好事。对了，珊瑚怎么样？它们真的就像人们说的那么漂亮吗？"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "coral in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use coral",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "coral related"
+      ],
+      "antonyms": [
+        "not coral"
+      ],
+      "derivatives": [
+        "coralberry",
+        "coralroot"
+      ],
+      "rootAffix": "cor(看做core， 核心) + al → 大海的核心之处有珊瑚 → 珊瑚(虫)",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,coral",
+      "sceneCue": "CET-6 · 珊瑚色的， 红色的"
+    },
+    {
+      "id": "cet6_041_function",
+      "word": "function",
+      "phoneticUK": "'fʌŋkʃn",
+      "phoneticUS": "'fʌŋkʃən",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=function&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=function&type=2",
+      "partOfSpeech": "v/n",
+      "definitions": [
+        "运行",
+        "起作用",
+        "机能，功能，作用",
+        "函数"
+      ],
+      "englishDefinitions": [
+        "to work in the correct or intended way",
+        "the purpose that something has, or the job that someone or something does"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Her legs have now ceased to function .",
+          "cn": "她的双腿现在已经丧失正常功能了。"
+        },
+        {
+          "en": "You know I can’t function (= cannot perform normal activities ) without a coffee in the morning.",
+          "cn": "你知道的，我早上不喝杯咖啡就无法工作。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "and function",
+          "cn": "[计]与酌"
+        },
+        {
+          "phrase": "objective function",
+          "cn": "目标函数"
+        },
+        {
+          "phrase": "system function",
+          "cn": "系统功能；系统函数"
+        },
+        {
+          "phrase": "transfer function",
+          "cn": "转移函数，传递函数"
+        }
+      ],
+      "synonyms": [
+        "action",
+        "obligation",
+        "fn",
+        "exercise one's activity"
+      ],
+      "antonyms": [
+        "not function"
+      ],
+      "derivatives": [
+        "functional",
+        "functionalist",
+        "functionally",
+        "functionality"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “function”.",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,function",
+      "sceneCue": "CET-6 · 运行"
+    },
+    {
+      "id": "cet6_042_raise",
+      "word": "raise",
+      "phoneticUK": "reɪz",
+      "phoneticUS": "rez",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=raise&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=raise&type=2",
+      "partOfSpeech": "v/n",
+      "definitions": [
+        "举起，提升",
+        "直立",
+        "增加",
+        "募集"
+      ],
+      "englishDefinitions": [
+        "to move or lift something to a higher position, place, or level",
+        "an increase in the money you earn"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Can you raise the lamp so I can see?",
+          "cn": "你能把灯举高点好让我看清吗？"
+        },
+        {
+          "en": "William raised his hat and smiled at her.",
+          "cn": "威廉抬一抬帽子，朝她笑了笑。"
+        },
+        {
+          "en": "Raise your hand if you know the right answer.",
+          "cn": "知道正确答案的话，请举手。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "raise oneself",
+          "cn": "长高，发迹"
+        },
+        {
+          "phrase": "raise money",
+          "cn": "集资；筹款；募捐"
+        },
+        {
+          "phrase": "get a raise",
+          "cn": "得到加薪"
+        },
+        {
+          "phrase": "raise capital",
+          "cn": "筹集资本，集资"
+        }
+      ],
+      "synonyms": [
+        "enhance",
+        "mother",
+        "foster",
+        "breed"
+      ],
+      "antonyms": [
+        "not raise"
+      ],
+      "derivatives": [
+        "raised",
+        "raising"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “raise”.",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,raise",
+      "sceneCue": "CET-6 · 举起，提升"
+    },
+    {
+      "id": "cet6_043_pliant",
+      "word": "pliant",
+      "phoneticUK": "'plaɪənt",
+      "phoneticUS": "'plaɪənt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=pliant&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=pliant&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "柔软的",
+        "温顺的",
+        "易受影响的"
+      ],
+      "englishDefinitions": [
+        "soft and moving easily in the way that you want"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Isabel was pliant in his arms.",
+          "cn": "伊莎贝尔温顺地依偎在他怀中。"
+        },
+        {
+          "en": "her pliant lips",
+          "cn": "她温软的嘴唇"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "pliant in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use pliant",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "compliant",
+        "obedient",
+        "compliance",
+        "deference"
+      ],
+      "antonyms": [
+        "not pliant"
+      ],
+      "derivatives": [
+        "pliants",
+        "plianting"
+      ],
+      "rootAffix": "pli(=ply重叠) + ant → 能重叠的 → 柔软的",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,pliant",
+      "sceneCue": "CET-6 · 柔软的"
+    },
+    {
+      "id": "cet6_044_pigeon",
+      "word": "pigeon",
+      "phoneticUK": "'pɪdʒɪn",
+      "phoneticUS": "'pɪdʒɪn",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=pigeon&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=pigeon&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "鸽子"
+      ],
+      "englishDefinitions": [
+        "a grey bird with short legs that is common in cities"
+      ],
+      "exampleSentences": [
+        {
+          "en": "One blue pigeon sitting on a wall.",
+          "cn": "一只蓝色的鸽子蹲坐在一堵墙上。"
+        },
+        {
+          "en": "As the name implies, pigeon is an awkward pose, and it happens to be the most challenging for me.",
+          "cn": "顾名思义，鸽子式是一个很棘手的姿势，它对于我来说是最有挑战性的。"
+        },
+        {
+          "en": "Above all, if you see an accident about to happen, on the road or in business, honk like a wild goose rather than cooing like a pet pigeon.",
+          "cn": "最重要的是，如果眼见事故就要发生，无论是在开车还是在公司，一定要学野鹅那样大声叫出来，千万别像鸽子似的小声嘀咕。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "carrier pigeon",
+          "cn": "信鸽"
+        },
+        {
+          "phrase": "homing pigeon",
+          "cn": "n. 信鸽，传信鸽"
+        },
+        {
+          "phrase": "young pigeon",
+          "cn": "乳鸽"
+        }
+      ],
+      "synonyms": [
+        "La paloma",
+        "dove"
+      ],
+      "antonyms": [
+        "not pigeon"
+      ],
+      "derivatives": [
+        "pigeons",
+        "pigeoning"
+      ],
+      "rootAffix": "“批准” → 非常时期养鸽子也要经过批准 → 鸽子",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,pigeon",
+      "sceneCue": "CET-6 · 鸽子"
+    },
+    {
+      "id": "cet6_045_lay",
+      "word": "lay",
+      "phoneticUK": "leɪ",
+      "phoneticUS": "le",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=lay&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=lay&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "产",
+        "放置",
+        "铺",
+        "筹划， 设置"
+      ],
+      "englishDefinitions": [
+        "to put someone or something down carefully into a flat position"
+      ],
+      "exampleSentences": [
+        {
+          "en": "He laid his hand on my shoulder.",
+          "cn": "他把一只手搭在我的肩上。"
+        },
+        {
+          "en": "They laid a wreath at the place where so many people died.",
+          "cn": "他们在这么多人丧生的地方放了一个花圈。"
+        },
+        {
+          "en": "Lay the material flat on the table.",
+          "cn": "把布料平铺在桌上。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "lay in",
+          "cn": "贮存"
+        },
+        {
+          "phrase": "lay down",
+          "cn": "放下；制定；铺设；主张"
+        },
+        {
+          "phrase": "lay a foundation",
+          "cn": "奠定基础；奠基；打下基础"
+        },
+        {
+          "phrase": "lay eggs",
+          "cn": "产蛋"
+        }
+      ],
+      "synonyms": [
+        "to lie down",
+        "strange",
+        "mundane",
+        "location"
+      ],
+      "antonyms": [
+        "not lay"
+      ],
+      "derivatives": [
+        "laid",
+        "lie",
+        "layman",
+        "laying"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “lay”.",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,lay",
+      "sceneCue": "CET-6 · 产"
+    },
+    {
+      "id": "cet6_046_pernicious",
+      "word": "pernicious",
+      "phoneticUK": "pər'nɪʃəs",
+      "phoneticUS": "pɚ'nɪʃəs",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=pernicious&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=pernicious&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "有害的， 恶性的"
+      ],
+      "englishDefinitions": [
+        "very harmful or evil, often in a way that you do not notice easily"
+      ],
+      "exampleSentences": [
+        {
+          "en": "the pernicious effects of poverty",
+          "cn": "贫穷的危害性"
+        },
+        {
+          "en": "the media’s pernicious influence",
+          "cn": "媒体的有害影响"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "pernicious in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use pernicious",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "harmful",
+        "evil",
+        "kill",
+        "malignant"
+      ],
+      "antonyms": [
+        "not pernicious"
+      ],
+      "derivatives": [
+        "perniciously",
+        "perniciousness"
+      ],
+      "rootAffix": "per(完全) + nic(=noc伤害) + ious → 完全伤害的 → 有害的",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,pernicious",
+      "sceneCue": "CET-6 · 有害的， 恶性的"
+    },
+    {
+      "id": "cet6_047_cohabitation",
+      "word": "cohabitation",
+      "phoneticUK": "ˌkouˌhæbɪ'teɪʃn",
+      "phoneticUS": "ko,hæbə'teʃən",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=cohabitation&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=cohabitation&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "同居， 同住"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “同居， 同住”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "The obligation of cohabitation of spouses is the basis of marital rights.",
+          "cn": "夫妻间的同居义务是夫妻其他权利与义务的基础。"
+        },
+        {
+          "en": "Or maybe it's about spending more time together if you're not at the cohabitation stage yet.",
+          "cn": "或者如果你们还没有到同居的阶段，或许只是花时间在一起的问题。"
+        },
+        {
+          "en": "More second marriages fail than first marriages. With the increasing acceptance of cohabitation, why remarry? Why risk that nightmare all over again?",
+          "cn": "更多的第二次婚姻比第一次更差。伴随更多同居被接受，为什么要再婚？为什么要再冒险那个噩梦？"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "cohabitation in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use cohabitation",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "messmateism",
+        "mutualism"
+      ],
+      "antonyms": [
+        "not cohabitation"
+      ],
+      "derivatives": [
+        "cohabitations",
+        "cohabitationing"
+      ],
+      "rootAffix": "来自cohabit(vi. 同居， 同住)",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,cohabitation",
+      "sceneCue": "CET-6 · 同居， 同住"
+    },
+    {
+      "id": "cet6_048_herbivore",
+      "word": "herbivore",
+      "phoneticUK": "'hɜːrbɪvɔːr",
+      "phoneticUS": "ɝ​bəˌvɔr",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=herbivore&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=herbivore&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "食草动物"
+      ],
+      "englishDefinitions": [
+        "an animal that only eats plants"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Most herbivore teeth are grinders, canines are usually absent.",
+          "cn": "食草动物的牙齿大部分是臼齿，通常没有犬齿。"
+        },
+        {
+          "en": "Some examples of heavy herbivore pressure may help appreciation of the possible brevity of the selection process .",
+          "cn": "植食动物强大压力的一些事例可以帮助我们对选择过程的简略性有所了解。"
+        },
+        {
+          "en": "Kangaroo is a herbivore, eating a variety of plants, fungi and some food.",
+          "cn": "袋鼠是食草动物，吃多种植物，有的还吃真菌类。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "herbivore in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use herbivore",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "phytophagans",
+        "primary consumer"
+      ],
+      "antonyms": [
+        "not herbivore"
+      ],
+      "derivatives": [
+        "herbivores",
+        "herbivoreing"
+      ],
+      "rootAffix": "herb(i)(草) + vor(吃) + e → 食草动物",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,herbivore",
+      "sceneCue": "CET-6 · 食草动物"
+    },
+    {
+      "id": "cet6_049_successive",
+      "word": "successive",
+      "phoneticUK": "sək'sesɪv",
+      "phoneticUS": "sək'sɛsɪv",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=successive&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=successive&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "接替的， 继承的",
+        "接连的， 连续的"
+      ],
+      "englishDefinitions": [
+        "coming or following one after the other"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The team has had five successive victories.",
+          "cn": "这支球队已经连胜五场了。"
+        },
+        {
+          "en": "Successive governments have tried to deal with this issue.",
+          "cn": "历届政府都试图解决这个问题。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "successive approximation",
+          "cn": "连续的近似值；连续的学习步骤；逐次近似计算法"
+        },
+        {
+          "phrase": "successive elimination",
+          "cn": "逐次消元"
+        }
+      ],
+      "synonyms": [
+        "continuing",
+        "straight",
+        "endless",
+        "running"
+      ],
+      "antonyms": [
+        "not successive"
+      ],
+      "derivatives": [
+        "successively",
+        "succession",
+        "successor",
+        "successiveness"
+      ],
+      "rootAffix": "suc(在…之下) + cess(走) + ive → 跟在后面走的 → 接替的",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,successive",
+      "sceneCue": "CET-6 · 接替的， 继承的"
+    },
+    {
+      "id": "cet6_050_adventure",
+      "word": "adventure",
+      "phoneticUK": "əd'ventʃər",
+      "phoneticUS": "əd'vɛntʃɚ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=adventure&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=adventure&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "奇遇",
+        "冒险活动"
+      ],
+      "englishDefinitions": [
+        "an exciting experience in which dangerous or unusual things happen"
+      ],
+      "exampleSentences": [
+        {
+          "en": "a great adventure",
+          "cn": "一大奇遇"
+        },
+        {
+          "en": "Ahab’s adventures at sea",
+          "cn": "亚哈的海上历险"
+        },
+        {
+          "en": "an adventure story",
+          "cn": "一个历险故事"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "adventure in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use adventure",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "risk",
+        "throw",
+        "venture",
+        "take a chance"
+      ],
+      "antonyms": [
+        "not adventure"
+      ],
+      "derivatives": [
+        "adventurous",
+        "adventuresome",
+        "adventuristic",
+        "adventurer"
+      ],
+      "rootAffix": "ad(to) + vent(来) + ure → 一步步地靠近危险 → 冒险活动",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adventure",
+      "sceneCue": "CET-6 · 奇遇"
+    },
+    {
+      "id": "cet6_051_ceremony",
+      "word": "ceremony",
+      "phoneticUK": "'serəmouni",
+      "phoneticUS": "ˈsɛrəˌmoʊni",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=ceremony&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=ceremony&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "典礼， 仪式",
+        "礼节"
+      ],
+      "englishDefinitions": [
+        "an important social or religious event, when a traditional set of actions is performed in a formal way"
+      ],
+      "exampleSentences": [
+        {
+          "en": "a wedding ceremony",
+          "cn": "婚礼"
+        },
+        {
+          "en": "the opening ceremony of the Olympic Games",
+          "cn": "奥运会开幕式"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "opening ceremony",
+          "cn": "开学典礼；开幕式；开幕仪式；开幕典礼"
+        },
+        {
+          "phrase": "wedding ceremony",
+          "cn": "n. 结婚典礼"
+        },
+        {
+          "phrase": "signing ceremony",
+          "cn": "签字仪式；签约仪式"
+        },
+        {
+          "phrase": "closing ceremony",
+          "cn": "闭幕典礼"
+        }
+      ],
+      "synonyms": [
+        "service",
+        "protocol",
+        "exercise"
+      ],
+      "antonyms": [
+        "not ceremony"
+      ],
+      "derivatives": [
+        "ceremonial",
+        "ceremonially",
+        "ceremoniousness"
+      ],
+      "rootAffix": "cere(蜡) + mony(看做money， 钱) → 为办典礼花钱买蜡烛 → 典礼",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ceremony",
+      "sceneCue": "CET-6 · 典礼， 仪式"
+    },
+    {
+      "id": "cet6_052_improve",
+      "word": "improve",
+      "phoneticUK": "ɪm'pruːv",
+      "phoneticUS": "ɪm'pruv",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=improve&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=improve&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "改善， 改进， 增进",
+        "好转， 进步"
+      ],
+      "englishDefinitions": [
+        "to make something better, or to become better"
+      ],
+      "exampleSentences": [
+        {
+          "en": "a course for students wishing to improve their English",
+          "cn": "为想提高英语水平的学生开设的一门课"
+        },
+        {
+          "en": "The doctors say she is improving (= after being ill ).",
+          "cn": "医生说她正在康复。"
+        },
+        {
+          "en": "You could use the money for improving your home.",
+          "cn": "你可以用这笔钱改善家居。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "improve efficiency",
+          "cn": "提高效率"
+        },
+        {
+          "phrase": "improve on",
+          "cn": "改进；对…加以改良"
+        },
+        {
+          "phrase": "improve in",
+          "cn": "在…方面有改进"
+        },
+        {
+          "phrase": "to improve the environment",
+          "cn": "改善环境"
+        }
+      ],
+      "synonyms": [
+        "further",
+        "build up",
+        "gain",
+        "accelerate"
+      ],
+      "antonyms": [
+        "not improve"
+      ],
+      "derivatives": [
+        "improved",
+        "improving",
+        "improvised",
+        "improvable"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “improve”.",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,improve",
+      "sceneCue": "CET-6 · 改善， 改进， 增进"
+    },
+    {
+      "id": "cet6_053_idyllic",
+      "word": "idyllic",
+      "phoneticUK": "aɪ'dɪlɪk",
+      "phoneticUS": "aɪ'dɪlɪk",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=idyllic&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=idyllic&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "田园诗般的， 田园风光的， 牧歌的"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “田园诗般的， 田园风光的， 牧歌的”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "This idyllic pastoral scene is only part of the picture.",
+          "cn": "但这种田园诗般的乡村风光仅仅是一个侧面。"
+        },
+        {
+          "en": "Some believe that lemurians were much more like early humans living in a sort of idyllic paradise largely agrarian with lush forests and an abundance of flowers and fruit trees.",
+          "cn": "一些就相信利莫里亚更加像早期的人类，生活在一种田园诗般的天堂里，主要地与繁荣的森林，盛开的花朵和结果的树在一起。"
+        },
+        {
+          "en": "I don't mind a bit of idiosyncrasy, but that strange ideology you believe in , coupled with your idyllic ideas on life, suggest to me that all you're doing is looking for some idol to follow.",
+          "cn": "你有一点特殊的癖性我不在乎，但你相信的那种奇怪的意识形态，加上你向往田园诗般生活的想法，给我的印象是你在做的就是要找到一个偶像来效仿。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "idyllic in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use idyllic",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "idyllic related"
+      ],
+      "antonyms": [
+        "not idyllic"
+      ],
+      "derivatives": [
+        "idyll",
+        "idyl"
+      ],
+      "rootAffix": "来自idyll(n. 田园诗)",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,idyllic",
+      "sceneCue": "CET-6 · 田园诗般的， 田园风光的， 牧歌的"
+    },
+    {
+      "id": "cet6_054_effective",
+      "word": "effective",
+      "phoneticUK": "ɪ'fektɪv",
+      "phoneticUS": "ɪ'fɛktɪv",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=effective&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=effective&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "有效的， 生效的",
+        "显著的",
+        "实际的， 事实上的"
+      ],
+      "englishDefinitions": [
+        "successful, and working in the way that was intended"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The cheaper drugs are just as effective in treating arthritis.",
+          "cn": "较便宜的药品对治疗关节炎同样有效。"
+        },
+        {
+          "en": "the painting’s highly effective use of colour",
+          "cn": "绘画中得心应手的色彩运用"
+        },
+        {
+          "en": "Training is often much less effective than expected.",
+          "cn": "训练的效果往往远低于预期。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "effective management",
+          "cn": "有效管理"
+        },
+        {
+          "phrase": "effective measure",
+          "cn": "有效措施"
+        },
+        {
+          "phrase": "cost effective",
+          "cn": "有成本效益的；划算的；成本效率"
+        },
+        {
+          "phrase": "effective rate",
+          "cn": "实际比率；有效利率"
+        }
+      ],
+      "synonyms": [
+        "valid",
+        "available",
+        "virtual",
+        "practical"
+      ],
+      "antonyms": [
+        "not effective"
+      ],
+      "derivatives": [
+        "effectively",
+        "effectually",
+        "effect",
+        "effectiveness"
+      ],
+      "rootAffix": "来自effect(n. 影响， 效果)",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,effective",
+      "sceneCue": "CET-6 · 有效的， 生效的"
+    },
+    {
+      "id": "cet6_055_muscle",
+      "word": "muscle",
+      "phoneticUK": "'mʌsl",
+      "phoneticUS": "'mʌsl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=muscle&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=muscle&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "肌肉",
+        "体力， 力量， 实力",
+        "影响力"
+      ],
+      "englishDefinitions": [
+        "one of the pieces of flesh inside your body that you use in order to move, and that connect your bones together"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Relax your stomach muscles , then stretch again.",
+          "cn": "放松腹部肌肉，然后再绷紧。"
+        },
+        {
+          "en": "Regular exercise will help to strengthen your muscles .",
+          "cn": "经常锻炼有助于强健肌肉。"
+        },
+        {
+          "en": "Rooney has pulled a muscle in his thigh and won’t play tomorrow.",
+          "cn": "鲁尼大腿肌肉拉伤，明天不能参赛了。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "smooth muscle",
+          "cn": "平滑肌"
+        },
+        {
+          "phrase": "skeletal muscle",
+          "cn": "n. 骨骼肌；骨肌"
+        },
+        {
+          "phrase": "muscle strength",
+          "cn": "肌肉强度"
+        },
+        {
+          "phrase": "cardiac muscle",
+          "cn": "n. [解]心肌"
+        }
+      ],
+      "synonyms": [
+        "strength",
+        "force",
+        "might",
+        "power"
+      ],
+      "antonyms": [
+        "not muscle"
+      ],
+      "derivatives": [
+        "muscular",
+        "musculature",
+        "muscularity"
+      ],
+      "rootAffix": "“马瘦” → 瘦马没有肌肉 → 肌肉",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,muscle",
+      "sceneCue": "CET-6 · 肌肉"
+    },
+    {
+      "id": "cet6_056_flux",
+      "word": "flux",
+      "phoneticUK": "flʌks",
+      "phoneticUS": "flʌks",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=flux&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=flux&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "变迁， 不断的变动"
+      ],
+      "englishDefinitions": [
+        "a situation in which things are changing a lot and you cannot be sure what will happen"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Everything is in flux at the moment.",
+          "cn": "眼下一切都变化不定。"
+        },
+        {
+          "en": "The education system is still in a state of flux .",
+          "cn": "教育体制仍处于不断变化之中。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "heat flux",
+          "cn": "热流，热通量"
+        },
+        {
+          "phrase": "magnetic flux",
+          "cn": "磁通量"
+        },
+        {
+          "phrase": "flux density",
+          "cn": "通量密度；辐射流密度；流量密度"
+        },
+        {
+          "phrase": "flux leakage",
+          "cn": "磁漏"
+        }
+      ],
+      "synonyms": [
+        "issue",
+        "instability",
+        "fuse",
+        "discharge"
+      ],
+      "antonyms": [
+        "not flux"
+      ],
+      "derivatives": [
+        "fluxs",
+        "fluxing"
+      ],
+      "rootAffix": "flu(流动) + x → 变动 → 变迁",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,flux",
+      "sceneCue": "CET-6 · 变迁， 不断的变动"
+    },
+    {
+      "id": "cet6_057_crescent",
+      "word": "crescent",
+      "phoneticUK": "'kresnt",
+      "phoneticUS": "'krɛsnt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=crescent&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=crescent&type=2",
+      "partOfSpeech": "adj/n",
+      "definitions": [
+        "新月形的",
+        "逐渐增强的",
+        "新月",
+        "新月形， 月牙形"
+      ],
+      "englishDefinitions": [
+        "a curved shape that is wider in the middle and pointed at the ends"
+      ],
+      "exampleSentences": [
+        {
+          "en": "a small crescent of pastry topped with cheese",
+          "cn": "顶上浇有奶酪的新月形油酥小糕点"
+        },
+        {
+          "en": "a crescent moon",
+          "cn": "新月"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "crescent moon",
+          "cn": "新月；盈月；娥眉月"
+        },
+        {
+          "phrase": "red crescent",
+          "cn": "红新月会（穆斯林国家的一种组织）"
+        }
+      ],
+      "synonyms": [
+        "new moon",
+        "meniscoid",
+        "lunular"
+      ],
+      "antonyms": [
+        "not crescent"
+      ],
+      "derivatives": [
+        "crescents",
+        "crescenting"
+      ],
+      "rootAffix": "cre + scent(香味) → 新月长到满月， 月饼飘香 → 新月",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,crescent",
+      "sceneCue": "CET-6 · 新月形的"
+    },
+    {
+      "id": "cet6_058_inflate",
+      "word": "inflate",
+      "phoneticUK": "ɪn'fleɪt",
+      "phoneticUS": "ɪn'flet",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=inflate&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=inflate&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "充气， 膨胀",
+        "鼓吹， 吹捧",
+        "涨价"
+      ],
+      "englishDefinitions": [
+        "to fill something with air or gas so it becomes larger, or to become filled with air or gas"
+      ],
+      "exampleSentences": [
+        {
+          "en": "It took us half an hour to inflate the dinghy.",
+          "cn": "我们用了半小时给橡皮筏充好气。"
+        },
+        {
+          "en": "Her life jacket failed to inflate.",
+          "cn": "她的救生衣未能充进去气。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "inflate in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use inflate",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "blow up",
+        "fill",
+        "swell with"
+      ],
+      "antonyms": [
+        "not inflate"
+      ],
+      "derivatives": [
+        "inflated",
+        "inflatable",
+        "inflationary",
+        "inflation"
+      ],
+      "rootAffix": "in(进入) + flat(吹) + e → 往里面吹气 → 使充气； 鼓吹",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,inflate",
+      "sceneCue": "CET-6 · 充气， 膨胀"
+    },
+    {
+      "id": "cet6_059_stable",
+      "word": "stable",
+      "phoneticUK": "'steɪbl",
+      "phoneticUS": "'stebl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=stable&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=stable&type=2",
+      "partOfSpeech": "adj/n",
+      "definitions": [
+        "稳定的，安定的",
+        "牢固的",
+        "沉稳的",
+        "马厩"
+      ],
+      "englishDefinitions": [
+        "steady and not likely to move or change",
+        "a building where horses are kept"
+      ],
+      "exampleSentences": [
+        {
+          "en": "A wide base will make the structure much more stable.",
+          "cn": "宽大的底座会使结构牢固许多。"
+        },
+        {
+          "en": "Children like a stable environment.",
+          "cn": "儿童喜欢稳定的环境。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "stable quality",
+          "cn": "质量稳定"
+        },
+        {
+          "phrase": "stable operation",
+          "cn": "稳定运行；稳定操作"
+        },
+        {
+          "phrase": "stable state",
+          "cn": "稳定状态"
+        },
+        {
+          "phrase": "stable isotope",
+          "cn": "稳定同位素"
+        }
+      ],
+      "synonyms": [
+        "mews",
+        "cowshed",
+        "steady",
+        "settled"
+      ],
+      "antonyms": [
+        "not stable"
+      ],
+      "derivatives": [
+        "stabilized",
+        "stabile",
+        "stably",
+        "stability"
+      ],
+      "rootAffix": "st(站) + able(能…的) → 能屹立不倒的 → 稳定的， 安定的",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,stable",
+      "sceneCue": "CET-6 · 稳定的，安定的"
+    },
+    {
+      "id": "cet6_060_incident",
+      "word": "incident",
+      "phoneticUK": "'ɪnsɪdənt",
+      "phoneticUS": "'ɪnsɪdənt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=incident&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=incident&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "事情， 事件",
+        "摩擦， 冲突"
+      ],
+      "englishDefinitions": [
+        "an event, especially one that is unusual, important, or violent"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Am I at risk because of some incident in my sexual past?",
+          "cn": "我过去性生活中的某件事会使我处于危险境地吗？"
+        },
+        {
+          "en": "Roads were sealed off because of a major incident.",
+          "cn": "因为发生重大事故，道路被封锁了。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "incident angle",
+          "cn": "入射角"
+        },
+        {
+          "phrase": "incident light",
+          "cn": "[化]入射光"
+        },
+        {
+          "phrase": "incident wave",
+          "cn": "入射波"
+        },
+        {
+          "phrase": "incident beam",
+          "cn": "入射光；入射波束，入射电子束"
+        }
+      ],
+      "synonyms": [
+        "event",
+        "circumstance",
+        "occurrence",
+        "scene"
+      ],
+      "antonyms": [
+        "not incident"
+      ],
+      "derivatives": [
+        "incidental",
+        "incidentally",
+        "incidence"
+      ],
+      "rootAffix": "in + cid(掉落) + ent(表物， 名词后缀) → 忽然掉落的东西 → 事件",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,incident",
+      "sceneCue": "CET-6 · 事情， 事件"
+    },
+    {
+      "id": "cet6_061_prey",
+      "word": "prey",
+      "phoneticUK": "preɪ",
+      "phoneticUS": "pre",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=prey&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=prey&type=2",
+      "partOfSpeech": "v/n",
+      "definitions": [
+        "捕食，捕获",
+        "猎物",
+        "受害者， 牺牲品"
+      ],
+      "englishDefinitions": [
+        "A creature that preys on other creatures lives by catching and eating them",
+        "A creature's prey are the creatures that it hunts and eats in order to live"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The effect was to disrupt the food chain, starving many animals and those that preyed on them.",
+          "cn": "后果是打断食物链，使许多动物和捕食它们的动物饿死。"
+        },
+        {
+          "en": "Electric rays stun their prey with huge electrical discharges.",
+          "cn": "电鳐释放大量的电荷将他们的猎物击昏。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "prey on",
+          "cn": "v. 捕食；掠夺"
+        },
+        {
+          "phrase": "easy prey",
+          "cn": "◎容易猎取的动物"
+        },
+        {
+          "phrase": "fall prey to",
+          "cn": "成为...的牺牲品；深受...之害"
+        },
+        {
+          "phrase": "bird of prey",
+          "cn": "猛禽；食肉鸟"
+        }
+      ],
+      "synonyms": [
+        "grind down",
+        "lie on",
+        "victim",
+        "predation"
+      ],
+      "antonyms": [
+        "not prey"
+      ],
+      "derivatives": [
+        "preys",
+        "preying"
+      ],
+      "rootAffix": "心中暗自祈祷(pray)不要成为受害者(prey)",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,prey",
+      "sceneCue": "CET-6 · 捕食，捕获"
+    },
+    {
+      "id": "cet6_062_vertebrate",
+      "word": "vertebrate",
+      "phoneticUK": "'vɜːrtɪbrət",
+      "phoneticUS": "'vɝtɪbrət",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=vertebrate&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=vertebrate&type=2",
+      "partOfSpeech": "adj/n",
+      "definitions": [
+        "有脊椎的",
+        "脊椎动物"
+      ],
+      "englishDefinitions": [
+        "a living creature that has a backbone"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Dead bodies of vertebrate in the field should not be collected or closely examined.",
+          "cn": "不要太接近脊椎动物的尸体或收集它们作样本。"
+        },
+        {
+          "en": "The unborn young of a viviparous vertebrate having a basic structural resemblance to the adult animal.",
+          "cn": "胎基本结构与成年动物相似的胎生脊椎动物未出生的幼子。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "vertebrate in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use vertebrate",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "backboned",
+        "amniote"
+      ],
+      "antonyms": [
+        "not vertebrate"
+      ],
+      "derivatives": [
+        "vertebral",
+        "vertebra",
+        "vertebrata"
+      ],
+      "rootAffix": "来自vertebra(n. 脊椎骨)",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,vertebrate",
+      "sceneCue": "CET-6 · 有脊椎的"
+    },
+    {
+      "id": "cet6_063_expedition",
+      "word": "expedition",
+      "phoneticUK": "ˌekspə'dɪʃn",
+      "phoneticUS": ",ɛkspə'dɪʃən",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=expedition&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=expedition&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "远征",
+        "探险"
+      ],
+      "englishDefinitions": [
+        "a long and carefully organized journey, especially to a dangerous or unfamiliar place, or the people that make this journey"
+      ],
+      "exampleSentences": [
+        {
+          "en": "an expedition to the North Pole",
+          "cn": "北极探险"
+        },
+        {
+          "en": "another Qomolangma expedition",
+          "cn": "又一次珠穆朗玛峰探险"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "expedition in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use expedition",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "velocity",
+        "speed"
+      ],
+      "antonyms": [
+        "not expedition"
+      ],
+      "derivatives": [
+        "expedite",
+        "expeditious",
+        "expeditionary",
+        "expeditiously"
+      ],
+      "rootAffix": "ex(出) + ped(脚) + ition → 出行 → 远征(队)； 探险(队)",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,expedition",
+      "sceneCue": "CET-6 · 远征"
+    },
+    {
+      "id": "cet6_064_concert",
+      "word": "concert",
+      "phoneticUK": "'kɑːnsərt",
+      "phoneticUS": "'kɑnsɚt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=concert&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=concert&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "音乐会， 演奏会",
+        "一致"
+      ],
+      "englishDefinitions": [
+        "a performance given by musicians or singers"
+      ],
+      "exampleSentences": [
+        {
+          "en": "a rock concert",
+          "cn": "摇滚音乐会"
+        },
+        {
+          "en": "a concert of French choral music",
+          "cn": "法国合唱音乐会"
+        },
+        {
+          "en": "We were going to a concert in Bath Abbey.",
+          "cn": "我们要去听一场在巴斯修道院内举行的音乐会。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "in concert",
+          "cn": "一致；齐声"
+        },
+        {
+          "phrase": "concert hall",
+          "cn": "音乐厅"
+        },
+        {
+          "phrase": "in concert with",
+          "cn": "和…相呼应；与…合作；和…一致"
+        },
+        {
+          "phrase": "go to the concert",
+          "cn": "去听音乐会，去参加音乐会"
+        }
+      ],
+      "synonyms": [
+        "accordance",
+        "unity",
+        "agreement",
+        "identity"
+      ],
+      "antonyms": [
+        "not concert"
+      ],
+      "derivatives": [
+        "concerted",
+        "concertize"
+      ],
+      "rootAffix": "那位身患癌症(cancer)的音乐家举办了最后一场个人音乐会(concert)",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,concert",
+      "sceneCue": "CET-6 · 音乐会， 演奏会"
+    },
+    {
+      "id": "cet6_065_supply",
+      "word": "supply",
+      "phoneticUK": "sə'plaɪ",
+      "phoneticUS": "sə'plaɪ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=supply&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=supply&type=2",
+      "partOfSpeech": "n/v",
+      "definitions": [
+        "供应",
+        "储备",
+        "补给",
+        "供给， 供应"
+      ],
+      "englishDefinitions": [
+        "an amount of something that is available to be used",
+        "to provide people with something that they need or want, especially regularly over a long period of time"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The nation’s fuel supplies will not last forever.",
+          "cn": "这个国家的燃料供应不会无穷无尽。"
+        },
+        {
+          "en": "To protect the food supply , the government ordered the slaughter of affected cattle.",
+          "cn": "为保护食品供应，政府下令宰杀被感染的牛。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "power supply",
+          "cn": "电源；电源供应器"
+        },
+        {
+          "phrase": "supply chain",
+          "cn": "供应链；供给链；供需链"
+        },
+        {
+          "phrase": "water supply",
+          "cn": "供水系统；水源"
+        },
+        {
+          "phrase": "in short supply",
+          "cn": "供应不足；缺乏"
+        }
+      ],
+      "synonyms": [
+        "provision",
+        "furnishing",
+        "afford",
+        "tender"
+      ],
+      "antonyms": [
+        "not supply"
+      ],
+      "derivatives": [
+        "supplementary",
+        "supplemental",
+        "supplying",
+        "supplier"
+      ],
+      "rootAffix": "sup(在…下面) + ply(填满) → 在下面填满 → 供给",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,supply",
+      "sceneCue": "CET-6 · 供应"
+    },
+    {
+      "id": "cet6_066_circulate",
+      "word": "circulate",
+      "phoneticUK": "'sɜːrkjəleɪt",
+      "phoneticUS": "'sɝkjəlet",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=circulate&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=circulate&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "循环",
+        "流通",
+        "传播， 流传"
+      ],
+      "englishDefinitions": [
+        "to move around within a system, or to make something do this"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Swimming helps to get the blood circulating through the muscles.",
+          "cn": "游泳有助于肌肉的血液循环。"
+        },
+        {
+          "en": "Ceiling fans circulated warm air around the room.",
+          "cn": "吊扇使暖空气在房间里循环。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "circulate in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use circulate",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "spread abroad",
+        "to disseminate",
+        "cycle"
+      ],
+      "antonyms": [
+        "not circulate"
+      ],
+      "derivatives": [
+        "circular",
+        "circulating",
+        "circulatory",
+        "circulative"
+      ],
+      "rootAffix": "circ(环绕) + ul + ate → (使)循环",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,circulate",
+      "sceneCue": "CET-6 · 循环"
+    },
+    {
+      "id": "cet6_067_state",
+      "word": "state",
+      "phoneticUK": "steɪt",
+      "phoneticUS": "stet",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=state&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=state&type=2",
+      "partOfSpeech": "v/n",
+      "definitions": [
+        "陈述， 说明， 声明",
+        "规定",
+        "情况，状况",
+        "国家"
+      ],
+      "englishDefinitions": [
+        "to formally say or write a piece of information or your opinion",
+        "the physical or mental condition that someone or something is in"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Please state your name and address.",
+          "cn": "请说出你的姓名和地址。"
+        },
+        {
+          "en": "Rembert again stated his intention to resign from Parliament.",
+          "cn": "兰伯特再次表明辞去议员职务的意向。"
+        },
+        {
+          "en": "The government needs to clearly state its policy on UN intervention.",
+          "cn": "政府需要就联合国的干预清楚地阐明其政策。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "state council",
+          "cn": "国务院"
+        },
+        {
+          "phrase": "in a state",
+          "cn": "[口语]"
+        },
+        {
+          "phrase": "in state",
+          "cn": "adv. 庄重地；正式地"
+        },
+        {
+          "phrase": "state ownership",
+          "cn": "公有制；国家所有制"
+        }
+      ],
+      "synonyms": [
+        "nation",
+        "country",
+        "soil",
+        "define"
+      ],
+      "antonyms": [
+        "not state"
+      ],
+      "derivatives": [
+        "stated",
+        "stateless",
+        "statement",
+        "stator"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “state”.",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,state",
+      "sceneCue": "CET-6 · 陈述， 说明， 声明"
+    },
+    {
+      "id": "cet6_068_press",
+      "word": "press",
+      "phoneticUK": "pres",
+      "phoneticUS": "prɛs",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=press&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=press&type=2",
+      "partOfSpeech": "v/n",
+      "definitions": [
+        "压， 按， 挤",
+        "压榨， 压迫",
+        "催促， 逼迫",
+        "报刊"
+      ],
+      "englishDefinitions": [
+        "to push something firmly against a surface",
+        "to be criticized in the newspapers or on radio or television"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Manville kept his back pressed flat against the wall.",
+          "cn": "曼维尔后背紧紧地贴在墙上。"
+        },
+        {
+          "en": "She pressed the gas pedal and the car leapt forwards.",
+          "cn": "她踩下油门，汽车向前冲了出去。"
+        },
+        {
+          "en": "He pressed a card into her hand before leaving.",
+          "cn": "离开之前他往她手里塞了一张卡片。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "press conference",
+          "cn": "记者招待会，新闻发布会"
+        },
+        {
+          "phrase": "in the press",
+          "cn": "正在印刷；即将出版"
+        },
+        {
+          "phrase": "press the button",
+          "cn": "按钮；按键"
+        },
+        {
+          "phrase": "press down",
+          "cn": "压"
+        }
+      ],
+      "synonyms": [
+        "push",
+        "hug",
+        "clic",
+        "news bulletin"
+      ],
+      "antonyms": [
+        "not press"
+      ],
+      "derivatives": [
+        "pressing",
+        "pressurized",
+        "pressor",
+        "pressure"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “press”.",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,press",
+      "sceneCue": "CET-6 · 压， 按， 挤"
+    },
+    {
+      "id": "cet6_069_jumble",
+      "word": "jumble",
+      "phoneticUK": "'dʒʌmbl",
+      "phoneticUS": "'dʒʌmbl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=jumble&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=jumble&type=2",
+      "partOfSpeech": "v/n",
+      "definitions": [
+        "混杂，掺杂",
+        "杂乱的一堆， 混乱的一团"
+      ],
+      "englishDefinitions": [
+        "to mix things together in an untidy way, without any order",
+        "a lot of different things mixed together in an untidy way, without any order"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The photographs were all jumbled up.",
+          "cn": "照片乱七八糟地堆在一起。"
+        },
+        {
+          "en": "Ben’s words became jumbled.",
+          "cn": "本开始语无伦次起来。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "jumble in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use jumble",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "disorder",
+        "chaos",
+        "confusion",
+        "turmoil"
+      ],
+      "antonyms": [
+        "not jumble"
+      ],
+      "derivatives": [
+        "jumbled",
+        "jumbal"
+      ],
+      "rootAffix": "jum(看做jump， 跳) + ble → 上蹿下跳， 群魔乱舞 → 混杂",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,jumble",
+      "sceneCue": "CET-6 · 混杂，掺杂"
+    },
+    {
+      "id": "cet6_070_environmental",
+      "word": "environmental",
+      "phoneticUK": "ɪnˌvaɪrən'mentl",
+      "phoneticUS": "ɪn,vaɪrən'mɛntl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=environmental&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=environmental&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "有关环境的， 自然环境的， 生态环境的",
+        "环境的"
+      ],
+      "englishDefinitions": [
+        "concerning or affecting the air, land, or water on Earth"
+      ],
+      "exampleSentences": [
+        {
+          "en": "the environmental damage caused by the chemical industry",
+          "cn": "化学工业对环境造成的破坏"
+        },
+        {
+          "en": "an international meeting to discuss environmental issues",
+          "cn": "探讨环境问题的国际会议"
+        },
+        {
+          "en": "the environmental impact of pollution from cars",
+          "cn": "汽车造成的污染对环境的影响"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "environmental protection",
+          "cn": "环境保护"
+        },
+        {
+          "phrase": "environmental pollution",
+          "cn": "n. 环境污染"
+        },
+        {
+          "phrase": "environmental impact",
+          "cn": "环境冲击，环境影响"
+        },
+        {
+          "phrase": "environmental quality",
+          "cn": "环境质量；环境品质"
+        }
+      ],
+      "synonyms": [
+        "surrounding",
+        "ambient"
+      ],
+      "antonyms": [
+        "not environmental"
+      ],
+      "derivatives": [
+        "environmentally",
+        "environment",
+        "environmentalist",
+        "environmentalism"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “environmental”.",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,environmental",
+      "sceneCue": "CET-6 · 有关环境的， 自然环境的， 生态环境的"
+    },
+    {
+      "id": "cet6_071_crustacean",
+      "word": "crustacean",
+      "phoneticUK": "krʌ'steɪʃn",
+      "phoneticUS": "krʌ'steʃən",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=crustacean&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=crustacean&type=2",
+      "partOfSpeech": "adj/n",
+      "definitions": [
+        "甲壳类的",
+        "甲壳类动物"
+      ],
+      "englishDefinitions": [
+        "an animal such as a  lobster  or a  crab  that has a hard outer shell and several pairs of legs, and usually lives in water"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Glucosamine can help to synthesize chitin in crustacean shells, which aids growth.",
+          "cn": "葡萄糖氨是甲壳类动物帮助壳中几丁质的生成，可促进生长。"
+        },
+        {
+          "en": "This pink tendril is another new species of crustacean found in the Sea of Japan (East Sea), near South Korea's Gangwon Province.",
+          "cn": "这个粉红的卷须状物种是科学家在韩国江原道附近的日本海（东海）发现的甲壳类生物。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "crustacean in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use crustacean",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "crustacean related"
+      ],
+      "antonyms": [
+        "not crustacean"
+      ],
+      "derivatives": [
+        "crustaceans",
+        "crustaceaning"
+      ],
+      "rootAffix": "crust(外壳) + acean(看做ocean， 海洋) → 海洋中的有壳动物 → 甲壳类动物",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,crustacean",
+      "sceneCue": "CET-6 · 甲壳类的"
+    },
+    {
+      "id": "cet6_072_opposite",
+      "word": "opposite",
+      "phoneticUK": "'ɑːpəzət",
+      "phoneticUS": "ˈɑpəzɪt; ˈɑpəsɪt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=opposite&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=opposite&type=2",
+      "partOfSpeech": "adj/prep/n",
+      "definitions": [
+        "对面的",
+        "对立的",
+        "相反的",
+        "在…对面"
+      ],
+      "englishDefinitions": [
+        "as different as possible from something else",
+        "if one thing or person is opposite another, they are facing each other",
+        "a person or thing that is as different as possible from someone or something else"
+      ],
+      "exampleSentences": [
+        {
+          "en": "I thought the medicine would make him sleep, but it had the opposite effect.",
+          "cn": "我以为这药会让他睡觉，但是它却起了反作用。"
+        },
+        {
+          "en": "At the opposite extreme, Ashworth’s style is very simple and modern.",
+          "cn": "截然相反的是，阿什沃思的风格非常简单和现代。"
+        },
+        {
+          "en": "Bob was quicker than Ed? It’s usually the opposite way round.",
+          "cn": "鲍勃比埃德快？通常是反过来的。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "opposite direction",
+          "cn": "相反方向；敌对方向"
+        },
+        {
+          "phrase": "opposite sex",
+          "cn": "异性"
+        },
+        {
+          "phrase": "just the opposite",
+          "cn": "正好相反，恰巧相反"
+        },
+        {
+          "phrase": "opposite side",
+          "cn": "对边；相对面"
+        }
+      ],
+      "synonyms": [
+        "contrary",
+        "adverse",
+        "counter",
+        "against"
+      ],
+      "antonyms": [
+        "not opposite"
+      ],
+      "derivatives": [
+        "opposed",
+        "opposing",
+        "opposable",
+        "oppositive"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “opposite”.",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,opposite",
+      "sceneCue": "CET-6 · 对面的"
+    },
+    {
+      "id": "cet6_073_pack",
+      "word": "pack",
+      "phoneticUK": "pæk",
+      "phoneticUS": "pæk",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=pack&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=pack&type=2",
+      "partOfSpeech": "v/n",
+      "definitions": [
+        "收拾，打包",
+        "捆扎",
+        "塞满",
+        "包， 包裹"
+      ],
+      "englishDefinitions": [
+        "to put things into cases, bags etc ready for a trip somewhere",
+        "something wrapped in paper or packed in a box and then sent by post or taken somewhere"
+      ],
+      "exampleSentences": [
+        {
+          "en": "I forgot to pack my razor.",
+          "cn": "我忘记把剃须刀放入行李包了。"
+        },
+        {
+          "en": "Have you finished packing yet?",
+          "cn": "你行李收拾完了吗？"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "a pack of",
+          "cn": "一包；（野兽等的）一群；一盒"
+        },
+        {
+          "phrase": "pack up",
+          "cn": "整理；把…打包"
+        },
+        {
+          "phrase": "battery pack",
+          "cn": "电池组"
+        },
+        {
+          "phrase": "pack in",
+          "cn": "停止"
+        }
+      ],
+      "synonyms": [
+        "pair",
+        "casing",
+        "impact",
+        "select"
+      ],
+      "antonyms": [
+        "not pack"
+      ],
+      "derivatives": [
+        "package",
+        "packed",
+        "packaged",
+        "packable"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “pack”.",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,pack",
+      "sceneCue": "CET-6 · 收拾，打包"
+    },
+    {
+      "id": "cet6_074_untapped",
+      "word": "untapped",
+      "phoneticUK": "ˌʌn'tæpt",
+      "phoneticUS": ",ʌn'tæpt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=untapped&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=untapped&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "未开发的， 未使用的"
+      ],
+      "englishDefinitions": [
+        "an untapped supply, market, or talent is available but has not yet been used"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Older people are an untapped resource in the employment market.",
+          "cn": "年龄较大的人是就业市场中有待利用的资源。"
+        },
+        {
+          "en": "We believe there is untapped potential.",
+          "cn": "我们相信还有潜力没有挖掘出来。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "untapped in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use untapped",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "undeveloped",
+        "unexploited"
+      ],
+      "antonyms": [
+        "not untapped"
+      ],
+      "derivatives": [
+        "untappeds",
+        "untappeding"
+      ],
+      "rootAffix": "来自tap(vt. 开发， 利用)",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,untapped",
+      "sceneCue": "CET-6 · 未开发的， 未使用的"
+    },
+    {
+      "id": "cet6_075_battery",
+      "word": "battery",
+      "phoneticUK": "'bætri",
+      "phoneticUS": "'bæt(ə)rɪ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=battery&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=battery&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "电池",
+        "排炮",
+        "一系列， 一批"
+      ],
+      "englishDefinitions": [
+        "an object that provides a supply of electricity for something such as a radio, car, or toy"
+      ],
+      "exampleSentences": [
+        {
+          "en": "You have to take the top off to change the batteries .",
+          "cn": "你得把顶盖拿掉才能更换电池。"
+        },
+        {
+          "en": "When the red light comes on, you should recharge the battery .",
+          "cn": "红灯亮起的时候你就应该给电池充电了。"
+        },
+        {
+          "en": "The car’s got a flat battery .",
+          "cn": "汽车的蓄电池没电了。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "battery of",
+          "cn": "一组；一套"
+        },
+        {
+          "phrase": "storage battery",
+          "cn": "蓄电池；蓄电池组"
+        },
+        {
+          "phrase": "lithium battery",
+          "cn": "锂电池；锂蓄电池"
+        },
+        {
+          "phrase": "battery charger",
+          "cn": "电池充电器"
+        }
+      ],
+      "synonyms": [
+        "electric cell",
+        "electric element"
+      ],
+      "antonyms": [
+        "not battery"
+      ],
+      "derivatives": [
+        "batterys",
+        "batterying"
+      ],
+      "rootAffix": "batt(看做bat， 蝙蝠) + ery → 给蝙蝠飞行提供能量 → 电池",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,battery",
+      "sceneCue": "CET-6 · 电池"
+    },
+    {
+      "id": "cet6_076_irreverent",
+      "word": "irreverent",
+      "phoneticUK": "ɪ'revərənt",
+      "phoneticUS": "ɪ'rɛvərənt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=irreverent&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=irreverent&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "不敬的"
+      ],
+      "englishDefinitions": [
+        "someone who is irreverent does not show respect for organizations, customs, beliefs etc that most other people respect – often used to show approval"
+      ],
+      "exampleSentences": [
+        {
+          "en": "his irreverent sense of humour",
+          "cn": "他失礼的幽默感"
+        },
+        {
+          "en": "She has an irreverent attitude towards marriage.",
+          "cn": "她对婚姻有一种不当回事的态度。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "irreverent in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use irreverent",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "rude",
+        "offensive"
+      ],
+      "antonyms": [
+        "not irreverent"
+      ],
+      "derivatives": [
+        "irreverently",
+        "irreverence"
+      ],
+      "rootAffix": "ir(不) + re(再) + ver(感到敬畏) + ent → 不再感到敬畏的 → 不敬的",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,irreverent",
+      "sceneCue": "CET-6 · 不敬的"
+    },
+    {
+      "id": "cet6_077_fa-ade",
+      "word": "façade",
+      "phoneticUK": "fə'sɑːd",
+      "phoneticUS": "fə'sɑːd",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=fa-ade&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=fa-ade&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "正面",
+        "表面"
+      ],
+      "englishDefinitions": [
+        "A target vocabulary item commonly tested as “正面”."
+      ],
+      "exampleSentences": [
+        {
+          "en": "The volume and the façade are the only territories of design freedom, along with some decisions with respect to finishes in the lobbies and the parking areas.",
+          "cn": "建筑体量与立面是建筑师唯一可自由发挥的地方，以及关于大堂和停车场装饰装修方面的某些决策，也可以自行决定。"
+        },
+        {
+          "en": "While the project wants to open up the facade for a through ventilation, the different identities of various shops on the façade would have made the building appear to be fragmented.",
+          "cn": "虽然这个项目想要实现自然通风并设计一个开放的外观，但是各种各样不同类型的商店将会使整个建筑表面显得零碎。"
+        },
+        {
+          "en": "The surface that encloses the columbarium is set back from its façade allowing a window box with enough space to place flowerplots, not only for small plants, but for all kind of flowers .",
+          "cn": "骨灰龛的表面从立面向后退缩了一些距离，让每个窗格都有足够的空间来种花，这里不仅能种小型植物，而是可以种多种花卉植物。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "façade in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use façade",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "façade related"
+      ],
+      "antonyms": [
+        "not façade"
+      ],
+      "derivatives": [
+        "façades",
+        "façadeing"
+      ],
+      "rootAffix": "faç(看做face， 正面) + ade → 正面； 表面",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,fa-ade",
+      "sceneCue": "CET-6 · 正面"
+    },
+    {
+      "id": "cet6_078_divorce",
+      "word": "divorce",
+      "phoneticUK": "dɪ'vɔːrs",
+      "phoneticUS": "dɪ'vɔrs",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=divorce&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=divorce&type=2",
+      "partOfSpeech": "v/n",
+      "definitions": [
+        "与…离婚",
+        "使分离， 使脱离",
+        "离婚",
+        "分离，脱离"
+      ],
+      "englishDefinitions": [
+        "if someone divorces their husband or wife, or if two people divorce, they legally end their marriage",
+        "the legal ending of a marriage"
+      ],
+      "exampleSentences": [
+        {
+          "en": "David’s parents divorced when he was six.",
+          "cn": "戴维的父母在他六岁时离婚了。"
+        },
+        {
+          "en": "My father threatened to divorce her.",
+          "cn": "我父亲威胁说要和她离婚。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "divorce rate",
+          "cn": "离婚率"
+        },
+        {
+          "phrase": "divorce from",
+          "cn": "离婚；分离"
+        },
+        {
+          "phrase": "divorce court",
+          "cn": "离婚法庭"
+        }
+      ],
+      "synonyms": [
+        "separate",
+        "split",
+        "separation",
+        "detachment"
+      ],
+      "antonyms": [
+        "not divorce"
+      ],
+      "derivatives": [
+        "divorced",
+        "divorcement"
+      ],
+      "rootAffix": "di(分开) + vorce(看做voice， 声音) → 夫妻两个发出不同的声音 → 离婚",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,divorce",
+      "sceneCue": "CET-6 · 与…离婚"
+    },
+    {
+      "id": "cet6_079_quiz",
+      "word": "quiz",
+      "phoneticUK": "kwɪz",
+      "phoneticUS": "kwɪz",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=quiz&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=quiz&type=2",
+      "partOfSpeech": "n/v",
+      "definitions": [
+        "小测验",
+        "智力竞赛",
+        "测验",
+        "盘问， 查问， 询问"
+      ],
+      "englishDefinitions": [
+        "a competition or game in which people have to answer questions",
+        "to ask someone a lot of questions"
+      ],
+      "exampleSentences": [
+        {
+          "en": "a love quiz in a magazine",
+          "cn": "杂志上的爱情问答"
+        },
+        {
+          "en": "a general knowledge quiz",
+          "cn": "常识问答竞赛"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "quiz show",
+          "cn": "机智问答；智力竞争节目"
+        },
+        {
+          "phrase": "quiz game",
+          "cn": "答问比赛；智力竞赛"
+        }
+      ],
+      "synonyms": [
+        "trick",
+        "mischief",
+        "dig at",
+        "test for"
+      ],
+      "antonyms": [
+        "not quiz"
+      ],
+      "derivatives": [
+        "quizmaster",
+        "quizzer"
+      ],
+      "rootAffix": "他最终放弃(quit)了口语测试(quiz)",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,quiz",
+      "sceneCue": "CET-6 · 小测验"
+    },
+    {
+      "id": "cet6_080_ingredient",
+      "word": "ingredient",
+      "phoneticUK": "ɪn'griːdiənt",
+      "phoneticUS": "ɪn'ɡridɪənt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=ingredient&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=ingredient&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "成分， 要素",
+        "原料"
+      ],
+      "englishDefinitions": [
+        "one of the foods that you use to make a particular food or dish"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Combine all the ingredients in a large bowl.",
+          "cn": "把所有食材都放在一个大碗里。"
+        },
+        {
+          "en": "The food is home-cooked using fresh ingredients.",
+          "cn": "这种食物是用新鲜的食材在家里烹制的。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "active ingredient",
+          "cn": "有效成分；活性组分"
+        },
+        {
+          "phrase": "food ingredient",
+          "cn": "食品配料成分"
+        },
+        {
+          "phrase": "accessory ingredient",
+          "cn": "助剂；配合剂"
+        }
+      ],
+      "synonyms": [
+        "element",
+        "factor",
+        "material",
+        "basic"
+      ],
+      "antonyms": [
+        "not ingredient"
+      ],
+      "derivatives": [
+        "ingredients",
+        "ingredienting"
+      ],
+      "rootAffix": "in(里， 内) + gred(=grad进入) + ient → 构成物体的内部物质 → 成分",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ingredient",
+      "sceneCue": "CET-6 · 成分， 要素"
+    },
+    {
+      "id": "cet6_081_consolidate",
+      "word": "consolidate",
+      "phoneticUK": "kən'sɑːlɪdeɪt",
+      "phoneticUS": "kən'sɑlɪdet",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=consolidate&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=consolidate&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "巩固",
+        "合并"
+      ],
+      "englishDefinitions": [
+        "to strengthen the position of power or success that you have, so that it becomes more effective or continues for longer"
+      ],
+      "exampleSentences": [
+        {
+          "en": "The company has consolidated its position as the country’s leading gas supplier.",
+          "cn": "这家公司巩固了作为该国主要煤气供应商的地位。"
+        },
+        {
+          "en": "The team consolidated their lead with a third goal.",
+          "cn": "球队以第三个进球巩固了领先优势。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "consolidate in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use consolidate",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "cement",
+        "strengthen",
+        "connect",
+        "fix"
+      ],
+      "antonyms": [
+        "not consolidate"
+      ],
+      "derivatives": [
+        "consolidated",
+        "consolidation",
+        "consolidator"
+      ],
+      "rootAffix": "con(共同) + solid(结实的) + ate → 联合在一起使更加结实 → (使)合并",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,consolidate",
+      "sceneCue": "CET-6 · 巩固"
+    },
+    {
+      "id": "cet6_082_contour",
+      "word": "contour",
+      "phoneticUK": "'kɑːntur",
+      "phoneticUS": "'kɑntʊr",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=contour&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=contour&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "等高线",
+        "轮廓"
+      ],
+      "englishDefinitions": [
+        "the shape of the outer edges of something such as an area of land or someone’s body"
+      ],
+      "exampleSentences": [
+        {
+          "en": "the contours of the hills",
+          "cn": "群山的轮廓"
+        },
+        {
+          "en": "the contours of her face",
+          "cn": "她脸部的轮廓"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "contour line",
+          "cn": "轮廓线；等高线"
+        },
+        {
+          "phrase": "contour map",
+          "cn": "等高线图；等值线图"
+        },
+        {
+          "phrase": "depth contour",
+          "cn": "等深线；等海深线；等水深线"
+        }
+      ],
+      "synonyms": [
+        "profile",
+        "brief"
+      ],
+      "antonyms": [
+        "not contour"
+      ],
+      "derivatives": [
+        "contours",
+        "contouring"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “contour”.",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,contour",
+      "sceneCue": "CET-6 · 等高线"
+    },
+    {
+      "id": "cet6_083_clan",
+      "word": "clan",
+      "phoneticUK": "klæn",
+      "phoneticUS": "klæn",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=clan&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=clan&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "家族， 宗族， 氏族",
+        "帮派"
+      ],
+      "englishDefinitions": [
+        "a large group of families who often share the same name"
+      ],
+      "exampleSentences": [
+        {
+          "en": "the Campbell clan",
+          "cn": "坎贝尔家族"
+        },
+        {
+          "en": "warring clans",
+          "cn": "交战的各氏族"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "clan in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use clan",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "nationality",
+        "collective",
+        "tribe"
+      ],
+      "antonyms": [
+        "not clan"
+      ],
+      "derivatives": [
+        "clans",
+        "claning"
+      ],
+      "rootAffix": "家族(clan)的形成是因为上帝用泥土(clay)造出了人 → 家族",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,clan",
+      "sceneCue": "CET-6 · 家族， 宗族， 氏族"
+    },
+    {
+      "id": "cet6_084_economical",
+      "word": "economical",
+      "phoneticUK": "ˌiːkə'nɑːmɪkl",
+      "phoneticUS": ",ɛkə'nɑmɪkl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=economical&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=economical&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "经济的， 实惠的",
+        "节俭的， 节约的",
+        "精打细算的"
+      ],
+      "englishDefinitions": [
+        "using money, time, goods etc carefully and without wasting any"
+      ],
+      "exampleSentences": [
+        {
+          "en": "A small car is more economical to run.",
+          "cn": "开小型汽车比较省油。"
+        },
+        {
+          "en": "good-quality clothes at economical prices",
+          "cn": "物美价廉的衣服"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "economical efficiency",
+          "cn": "经济效率，经济效果；经济有效"
+        },
+        {
+          "phrase": "economical and practical",
+          "cn": "经济实用；经济实惠"
+        },
+        {
+          "phrase": "economical operation",
+          "cn": "经济运行"
+        },
+        {
+          "phrase": "economical of",
+          "cn": "节俭，节约"
+        }
+      ],
+      "synonyms": [
+        "managing",
+        "paying",
+        "saving"
+      ],
+      "antonyms": [
+        "not economical"
+      ],
+      "derivatives": [
+        "economic",
+        "econometric",
+        "economically",
+        "economy"
+      ],
+      "rootAffix": "eco(家) + nom(管理) + ical → 管理家庭开支的 → 节俭的， 节约的",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,economical",
+      "sceneCue": "CET-6 · 经济的， 实惠的"
+    },
+    {
+      "id": "cet6_085_cabinet",
+      "word": "cabinet",
+      "phoneticUK": "'kæbɪnət",
+      "phoneticUS": "'kæbɪnət",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=cabinet&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=cabinet&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "内阁",
+        "储藏柜， 陈列柜"
+      ],
+      "englishDefinitions": [
+        "the politicians with important positions in a government who meet to make decisions or advise the leader of the government"
+      ],
+      "exampleSentences": [
+        {
+          "en": "a cabinet meeting",
+          "cn": "内阁会议"
+        },
+        {
+          "en": "a member of the Cabinet",
+          "cn": "内阁成员"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "control cabinet",
+          "cn": "控制柜；操纵室"
+        },
+        {
+          "phrase": "kitchen cabinet",
+          "cn": "n. 政府首脑的参谋团；厨房的餐具柜"
+        },
+        {
+          "phrase": "cabinet meeting",
+          "cn": "内阁会议；大臣会议"
+        },
+        {
+          "phrase": "filing cabinet",
+          "cn": "档案橱柜"
+        }
+      ],
+      "synonyms": [
+        "ambry",
+        "council of ministers",
+        "private",
+        "secret"
+      ],
+      "antonyms": [
+        "not cabinet"
+      ],
+      "derivatives": [
+        "cabinets",
+        "cabineting"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “cabinet”.",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,cabinet",
+      "sceneCue": "CET-6 · 内阁"
+    },
+    {
+      "id": "cet6_086_principle",
+      "word": "principle",
+      "phoneticUK": "'prɪnsəpl",
+      "phoneticUS": "'prɪnsəpl",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=principle&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=principle&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "原则",
+        "原理",
+        "道德准则， 行为规范",
+        "信念"
+      ],
+      "englishDefinitions": [
+        "a moral rule or belief about what is right and wrong, that influences how you behave"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Schools try to teach children a set of principles.",
+          "cn": "学校设法教给孩子们一套道德准则。"
+        },
+        {
+          "en": "He’s got no principles at all!",
+          "cn": "他毫无道德准则！"
+        },
+        {
+          "en": "It’s against my principles to accept gifts from clients.",
+          "cn": "收受客户礼物违背我的原则。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "working principle",
+          "cn": "工作原理"
+        },
+        {
+          "phrase": "basic principle",
+          "cn": "基本原理"
+        },
+        {
+          "phrase": "on the principle of",
+          "cn": "根据...的原则"
+        },
+        {
+          "phrase": "design principle",
+          "cn": "设计原理"
+        }
+      ],
+      "synonyms": [
+        "theory",
+        "mechanism",
+        "element",
+        "essence"
+      ],
+      "antonyms": [
+        "not principle"
+      ],
+      "derivatives": [
+        "principles",
+        "principleing"
+      ],
+      "rootAffix": "prin(第一) + cip(取) + le → 需第一位选取的 → 原则； 原理",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,principle",
+      "sceneCue": "CET-6 · 原则"
+    },
+    {
+      "id": "cet6_087_telecommunication",
+      "word": "telecommunication",
+      "phoneticUK": "ˌtelikəˌmjuːnɪ'keɪʃn",
+      "phoneticUS": ",tɛlɪkə,mjʊnə'keʃən",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=telecommunication&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=telecommunication&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "电信"
+      ],
+      "englishDefinitions": [
+        "the telegraphic or telephonic communication of audio, video, or digital information over a distance by means of radio waves, optical signals, etc, or along a transmission line"
+      ],
+      "exampleSentences": [
+        {
+          "en": "Connect wires and pipes for water, power and telecommunication from outside to the site specified in special terms to meet construction demands.",
+          "cn": "将施工所需水、电、电讯线路从施工场地外部接至专用条款约定地点，保证施工期间的需要； ；"
+        },
+        {
+          "en": "The formula indicates that there is a natural cross subsidization in the services pricing of telecommunication industry, and unpuzzles some dilemmas of telecommunication industry development nowadays.",
+          "cn": "这一定价公式表明电信产业的业务定价具有天然的交叉补贴特性，可以解释当今电信业发展中的若干问题。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "telecommunication network",
+          "cn": "远程通信网络"
+        },
+        {
+          "phrase": "telecommunication equipment",
+          "cn": "电信设备"
+        },
+        {
+          "phrase": "telecommunication system",
+          "cn": "远程通信系统"
+        },
+        {
+          "phrase": "international telecommunication union",
+          "cn": "国际电信联盟"
+        }
+      ],
+      "synonyms": [
+        "telecommunication related"
+      ],
+      "antonyms": [
+        "not telecommunication"
+      ],
+      "derivatives": [
+        "telecommunications",
+        "telecommunicationing"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “telecommunication”.",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,telecommunication",
+      "sceneCue": "CET-6 · 电信"
+    },
+    {
+      "id": "cet6_088_initiate",
+      "word": "initiate",
+      "phoneticUK": "ɪ'nɪʃɪeɪt",
+      "phoneticUS": "ɪ'nɪʃɪet",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=initiate&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=initiate&type=2",
+      "partOfSpeech": "v/n",
+      "definitions": [
+        "发起， 开始， 创始",
+        "接纳， 让…加入",
+        "新加入组织的人"
+      ],
+      "englishDefinitions": [
+        "to arrange for something important to start, such as an official process or a new plan",
+        "someone who has been allowed to join a particular organization, club, or group and has been taught its secrets"
+      ],
+      "exampleSentences": [
+        {
+          "en": "They have decided to initiate legal proceedings against the newspaper.",
+          "cn": "他们决定向该报提起法律诉讼。"
+        },
+        {
+          "en": "Intellectuals have initiated a debate on terrorism.",
+          "cn": "知识分子就恐怖主义发起了辩论。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "initiate in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use initiate",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "institute",
+        "start in",
+        "beginning",
+        "threshold"
+      ],
+      "antonyms": [
+        "not initiate"
+      ],
+      "derivatives": [
+        "initiation",
+        "initiator"
+      ],
+      "rootAffix": "in(向内) + it(走) + iate → 向内走 → 发起， 开始",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,initiate",
+      "sceneCue": "CET-6 · 发起， 开始， 创始"
+    },
+    {
+      "id": "cet6_089_deception",
+      "word": "deception",
+      "phoneticUK": "dɪ'sepʃn",
+      "phoneticUS": "dɪ'sɛpʃən",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=deception&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=deception&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "骗局",
+        "诡计",
+        "欺骗， 欺诈"
+      ],
+      "englishDefinitions": [
+        "the act of deliberately making someone believe something that is not true"
+      ],
+      "exampleSentences": [
+        {
+          "en": "She didn’t have the courage to admit to her deception.",
+          "cn": "她没有勇气承认自己的欺骗行为。"
+        },
+        {
+          "en": "He was convicted of obtaining money by deception .",
+          "cn": "他被判犯有诈骗钱财罪。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "deception in context",
+          "cn": "语境中使用"
+        },
+        {
+          "phrase": "use deception",
+          "cn": "使用该词"
+        }
+      ],
+      "synonyms": [
+        "fraud",
+        "confidence game"
+      ],
+      "antonyms": [
+        "not deception"
+      ],
+      "derivatives": [
+        "deceptive",
+        "deceptively",
+        "deceptiveness"
+      ],
+      "rootAffix": "de(分离) + cept(拿， 抓) + ion → 拿走 → 欺骗",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,deception",
+      "sceneCue": "CET-6 · 骗局"
+    },
+    {
+      "id": "cet6_090_budget",
+      "word": "budget",
+      "phoneticUK": "'bʌdʒɪt",
+      "phoneticUS": "'bʌdʒɪt",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=budget&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=budget&type=2",
+      "partOfSpeech": "v/adj/n",
+      "definitions": [
+        "做预算",
+        "价格低廉的",
+        "预算"
+      ],
+      "englishDefinitions": [
+        "to carefully plan and control how much money you spend and what you will buy with it",
+        "Budget is used in advertising to suggest that something is being sold cheaply",
+        "the money that is available to an organization or person, or a plan of how it will be spent"
+      ],
+      "exampleSentences": [
+        {
+          "en": "We’ll have to budget more carefully.",
+          "cn": "我们必须更仔细地安排开支。"
+        },
+        {
+          "en": "This scheme enables you to budget the cost through fixed monthly payments.",
+          "cn": "这个计划可以让你把费用分摊在每个月里等额偿还。"
+        },
+        {
+          "en": "Cheap flights are available from budget travel agents from $240.",
+          "cn": "起价$240的廉价机票可从一些经济旅行社那里买到。"
+        }
+      ],
+      "collocations": [
+        {
+          "phrase": "budget deficit",
+          "cn": "预算赤字"
+        },
+        {
+          "phrase": "budget for",
+          "cn": "为…作预算"
+        },
+        {
+          "phrase": "project budget",
+          "cn": "项目预算，工程预算"
+        },
+        {
+          "phrase": "overall budget",
+          "cn": "总体预算"
+        }
+      ],
+      "synonyms": [
+        "spend",
+        "place in",
+        "engage",
+        "settle"
+      ],
+      "antonyms": [
+        "not budget"
+      ],
+      "derivatives": [
+        "budgets",
+        "budgeting"
+      ],
+      "rootAffix": "Use the scene and example sentence to remember “budget”.",
+      "examTags": [
+        "CET-6",
+        "cet6",
+        "TOEFL"
+      ],
+      "difficulty": "Medium",
+      "imageUrl": "https://source.unsplash.com/featured/640x480/?english,budget",
+      "sceneCue": "CET-6 · 做预算"
+    }
+  ]
+}

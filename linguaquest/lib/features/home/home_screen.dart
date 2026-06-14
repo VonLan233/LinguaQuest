@@ -5,26 +5,26 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/ui_labels.dart';
-import '../../core/widgets/brand_mark.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/custom_word.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final user = state.user;
-    final dueCount = state.dueWords.length;
-    final dailyGoal = state.learningPlan?.dailyWords ?? user?.dailyGoal ?? 10;
-    final reviewTarget = state.learningPlan == null
-        ? dueCount
-        : dueCount.clamp(0, state.learningPlan!.dailyWords * 2).toInt();
+    final currentBook = state.currentWordBook;
+    final dueCount = state.reviewQueue.length;
+    final dailyGoal = state.dailyNewTarget;
+    final reviewTarget = state.isStudyPlanPaused ? 0 : dueCount;
     final todayLessonWords = state.todayLearningWords;
     final todayWork = todayLessonWords + state.todayReviewWordIds.length;
-    final totalWork = dailyGoal + reviewTarget;
+    final totalWork = state.isStudyPlanPaused ? 0 : dailyGoal + reviewTarget;
     final dailyProgress = totalWork <= 0
         ? 0.0
         : (todayWork / totalWork).clamp(0.0, 1.0);
@@ -37,28 +37,43 @@ class HomeScreen extends ConsumerWidget {
         : null;
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 88),
       children: [
         Row(
           children: [
-            BrandMark(
-              size: 48,
-              tooltip: '个人空间',
-              onTap: () => context.go('/profile'),
+            Tooltip(
+              message: l10n.homePersonalSpace,
+              child: GestureDetector(
+                onTap: () => context.go('/profile'),
+                child: CircleAvatar(
+                  radius: 24,
+                  backgroundColor: Theme.of(
+                    context,
+                  ).colorScheme.primaryContainer,
+                  child: Icon(
+                    Icons.person_rounded,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    size: 28,
+                  ),
+                ),
+              ),
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: InkWell(
-                borderRadius: BorderRadius.circular(999),
-                onTap: () => context.push('/search'),
-                child: InputDecorator(
-                  decoration: const InputDecoration(
-                    isDense: true,
-                    prefixIcon: Icon(Icons.search),
-                    hintText: '搜索单词、短语或例句',
-                    contentPadding: EdgeInsets.symmetric(vertical: 12),
+              child: SizedBox(
+                height: 48,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(999),
+                  onTap: () => context.push('/search'),
+                  child: InputDecorator(
+                    decoration: InputDecoration(
+                      isDense: true,
+                      prefixIcon: const Icon(Icons.search),
+                      hintText: l10n.homeSearchHint,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 8),
+                    ),
+                    child: const SizedBox.shrink(),
                   ),
-                  child: const SizedBox.shrink(),
                 ),
               ),
             ),
@@ -66,94 +81,142 @@ class HomeScreen extends ConsumerWidget {
             _NotificationBellButton(
               unreadCount: state.unreadNotificationCount,
               onPressed: () => context.push('/notifications'),
+              l10n: l10n,
             ),
           ],
         ),
-        const SizedBox(height: 18),
-        _DailyFocusHeader(
-          streak: user?.streak ?? 0,
-          target: displayTarget(user?.targetExam),
-          level: displayLevel(user?.level),
-          todayWork: todayWork,
-          totalWork: totalWork,
-          progress: dailyProgress,
-        ),
-        const SizedBox(height: 18),
-        _HomeLearningSignals(
-          completedWords: state.completedLearningWords,
-          masteredWords: state.customWords
-              .where((word) => word.masteryLevel >= 4)
-              .length,
-          dueWords: state.dueWords.length,
-        ),
-        const SizedBox(height: 18),
-        _DailyTaskPanel(
-          currentSection:
-              currentLesson?.section ??
-              displayTarget(state.learningPlan?.target ?? '雅思核心词汇'),
-          dailyGoal: dailyGoal,
-          dueCount: dueCount,
-          canStartNew: currentLesson != null && !pathComplete,
-          onNewStudy: () => context.push('/study/new'),
-          onReview: () => context.push('/study/review'),
-        ),
-        const SizedBox(height: 18),
-        _HomeShortcutList(
-          actions: [
-            _HomeShortcutData(
-              icon: Icons.flag_outlined,
-              title: '学习模式',
-              subtitle: displayTarget(user?.targetExam),
-              onTap: () => context.push('/goal-setup'),
+        const SizedBox(height: 14),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: _DailyFocusHeader(
+              streak: user?.streak ?? 0,
+              target:
+                  currentBook?.title ??
+                  displayTarget(user?.targetExam, l10n: l10n),
+              level: state.isStudyPlanPaused
+                  ? l10n.homePlanPaused
+                  : displayLevel(user?.level, l10n: l10n),
+              todayWork: todayWork,
+              totalWork: totalWork,
+              progress: dailyProgress,
+              isPaused: state.isStudyPlanPaused,
+              l10n: l10n,
             ),
-            _HomeShortcutData(
-              icon: Icons.menu_book_outlined,
-              title: '单词本',
-              subtitle: '${state.totalLearningWords} 词',
-              onTap: () => context.push('/wordbook'),
-            ),
-            _HomeShortcutData(
-              icon: Icons.article_outlined,
-              title: '每日短文',
-              subtitle: '情景填空',
-              onTap: () => context.go('/ai-learning'),
-            ),
-            _HomeShortcutData(
-              icon: Icons.route_outlined,
-              title: '学习路径',
-              subtitle: '正式词书',
-              onTap: () => context.push('/learn'),
-            ),
-          ],
-        ),
-        const SizedBox(height: 22),
-        _HomeInfoLink(
-          cue: wordOfDay?.imageCue ?? '🌟',
-          title: '今日词条',
-          body: wordOfDay == null
-              ? '打开单词卡片'
-              : '${wordOfDay.word} · ${wordOfDay.meaning}',
-          onTap: () => wordOfDay == null
-              ? context.push('/wordbook')
-              : context.push('/wordbook/${wordOfDay.id}'),
-        ),
-        const SizedBox(height: 22),
-        SectionHeader(
-          title: '弱项词',
-          subtitle: state.weakWords.isEmpty ? '当前还没有高频错词。' : '趁它们堆起来前先复习。',
-          trailing: TextButton(
-            onPressed: () => context.push('/study/review'),
-            child: const Text('复习'),
           ),
         ),
         const SizedBox(height: 12),
-        if (state.weakWords.isEmpty)
-          const _SoftPanel(
-            icon: Icons.check_circle_outline,
-            text: '添加生词或完成复习后，这里会展示需要重点处理的词。',
-          )
-        else
-          ...state.weakWords.take(3).map((word) => _WeakWordLink(word: word)),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            child: _HomeLearningSignals(
+              completedWords: state.completedLearningWords,
+              masteredWords: state.masteredReviewWords,
+              dueWords: state.dueWords.length,
+              l10n: l10n,
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: _DailyTaskPanel(
+              currentSection:
+                  currentLesson?.section ??
+                  currentBook?.title ??
+                  displayTarget(user?.targetExam ?? '雅思核心词汇', l10n: l10n),
+              dailyGoal: dailyGoal,
+              dueCount: dueCount,
+              isPaused: state.isStudyPlanPaused,
+              canStartNew:
+                  currentLesson != null &&
+                  !pathComplete &&
+                  !state.isStudyPlanPaused,
+              onOpenPlan: () => context.push('/settings/study-plan'),
+              onNewStudy: () => context.push('/study/new'),
+              onReview: () => context.push('/study/review'),
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: _HomeShortcutList(
+              actions: [
+                _HomeShortcutData(
+                  icon: Icons.menu_book_outlined,
+                  title: l10n.homeWordbookShortcut,
+                  subtitle: currentBook == null
+                      ? '${state.totalLearningWords} ${l10n.commonWords}'
+                      : '${currentBook.totalWords} ${l10n.commonWords}',
+                  onTap: () => context.push('/wordbook'),
+                ),
+                _HomeShortcutData(
+                  icon: Icons.article_outlined,
+                  title: l10n.homeDailyArticle,
+                  subtitle: l10n.homeDailyArticleSubtitle,
+                  onTap: () => context.go('/ai-learning'),
+                ),
+                _HomeShortcutData(
+                  icon: Icons.route_outlined,
+                  title: l10n.homeLearningPath,
+                  subtitle: currentBook?.title ?? l10n.homeLearningPathSubtitle,
+                  onTap: () => context.push('/learn'),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: _HomeInfoLink(
+              cue: wordOfDay?.imageCue ?? '🌟',
+              title: l10n.homeWordOfDay,
+              body: wordOfDay == null
+                  ? l10n.homeOpenWordCard
+                  : '${wordOfDay.word} · ${wordOfDay.meaning}',
+              onTap: () => wordOfDay == null
+                  ? context.push('/wordbook')
+                  : context.push('/wordbook/${wordOfDay.id}'),
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SectionHeader(
+                  title: l10n.homeWeakWords,
+                  subtitle: state.weakWords.isEmpty
+                      ? l10n.homeNoWeakWords
+                      : l10n.homeWeakWordsReview,
+                  trailing: TextButton(
+                    onPressed: () => context.push('/study/review'),
+                    child: Text(l10n.commonReview),
+                  ),
+                ),
+                if (state.weakWords.isEmpty)
+                  _SoftPanel(
+                    icon: Icons.check_circle_outline,
+                    text: l10n.homeWeakWordsEmptyHint,
+                  )
+                else ...[
+                  const SizedBox(height: 8),
+                  ...state.weakWords
+                      .take(3)
+                      .map((word) => _WeakWordLink(word: word)),
+                ],
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -162,10 +225,12 @@ class HomeScreen extends ConsumerWidget {
 class _NotificationBellButton extends StatelessWidget {
   const _NotificationBellButton({
     required this.unreadCount,
+    required this.l10n,
     required this.onPressed,
   });
 
   final int unreadCount;
+  final AppLocalizations l10n;
   final VoidCallback onPressed;
 
   @override
@@ -174,7 +239,7 @@ class _NotificationBellButton extends StatelessWidget {
       clipBehavior: Clip.none,
       children: [
         QuestIconButton(
-          tooltip: '消息通知',
+          tooltip: l10n.homeNotifications,
           onPressed: onPressed,
           icon: Icons.notifications_outlined,
           color: AppTheme.coral,
@@ -211,11 +276,13 @@ class _HomeLearningSignals extends StatelessWidget {
     required this.completedWords,
     required this.masteredWords,
     required this.dueWords,
+    required this.l10n,
   });
 
   final int completedWords;
   final int masteredWords;
   final int dueWords;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -223,7 +290,7 @@ class _HomeLearningSignals extends StatelessWidget {
       children: [
         Expanded(
           child: _HomeSignal(
-            label: '已学',
+            label: l10n.homeLearned,
             value: '$completedWords',
             icon: Icons.school_outlined,
             color: AppTheme.cyan,
@@ -232,7 +299,7 @@ class _HomeLearningSignals extends StatelessWidget {
         const _HomeSignalDivider(),
         Expanded(
           child: _HomeSignal(
-            label: '掌握',
+            label: l10n.homeMastered,
             value: '$masteredWords',
             icon: Icons.verified_outlined,
             color: AppTheme.success,
@@ -241,7 +308,7 @@ class _HomeLearningSignals extends StatelessWidget {
         const _HomeSignalDivider(),
         Expanded(
           child: _HomeSignal(
-            label: '复习',
+            label: l10n.homeReviewLabel,
             value: '$dueWords',
             icon: Icons.replay,
             color: AppTheme.mango,
@@ -372,7 +439,9 @@ class _DailyTaskPanel extends StatelessWidget {
     required this.currentSection,
     required this.dailyGoal,
     required this.dueCount,
+    required this.isPaused,
     required this.canStartNew,
+    required this.onOpenPlan,
     required this.onNewStudy,
     required this.onReview,
   });
@@ -380,48 +449,64 @@ class _DailyTaskPanel extends StatelessWidget {
   final String currentSection;
   final int dailyGoal;
   final int dueCount;
+  final bool isPaused;
   final bool canStartNew;
+  final VoidCallback onOpenPlan;
   final VoidCallback onNewStudy;
   final VoidCallback onReview;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+    final hasReview = dueCount > 0;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '今日任务控制台',
+            l10n.homeTaskConsole,
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.w900,
             ),
           ),
-          const SizedBox(height: 6),
-          Text(
-            '当前词书 $currentSection · 新学和复习分开完成',
-            style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
-          ),
           const SizedBox(height: 14),
-          Row(
-            children: [
-              Expanded(
-                child: FilledButton.icon(
-                  onPressed: canStartNew ? onNewStudy : null,
-                  icon: const Icon(Icons.add_task_rounded),
-                  label: Text('新学 $dailyGoal'),
+          if (isPaused)
+            OutlinedButton.icon(
+              onPressed: onOpenPlan,
+              icon: const Icon(Icons.play_circle_outline),
+              label: Text(l10n.homeResumePlan),
+            )
+          else
+            Row(
+              children: [
+                Expanded(
+                  child: FilledButton.icon(
+                    onPressed: canStartNew
+                        ? onNewStudy
+                        : (hasReview ? onReview : null),
+                    icon: const Icon(Icons.play_arrow_rounded),
+                    label: Text(l10n.homeStartLearning),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: FilledButton.tonalIcon(
-                  onPressed: onReview,
-                  icon: const Icon(Icons.replay_rounded),
-                  label: Text('复习 $dueCount'),
-                ),
-              ),
-            ],
+                if (hasReview) ...[
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: onReview,
+                      icon: const Icon(Icons.replay_rounded),
+                      label: Text(l10n.homeReviewOnly),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          const SizedBox(height: 10),
+          TextButton.icon(
+            onPressed: onOpenPlan,
+            icon: const Icon(Icons.tune_rounded),
+            label: Text(l10n.homeAdjustPlan),
           ),
         ],
       ),
@@ -437,6 +522,8 @@ class _DailyFocusHeader extends StatelessWidget {
     required this.todayWork,
     required this.totalWork,
     required this.progress,
+    required this.isPaused,
+    required this.l10n,
   });
 
   final int streak;
@@ -445,6 +532,8 @@ class _DailyFocusHeader extends StatelessWidget {
   final int todayWork;
   final int totalWork;
   final double progress;
+  final bool isPaused;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -462,7 +551,7 @@ class _DailyFocusHeader extends StatelessWidget {
               color: theme.colorScheme.secondary,
             ),
             PillLabel(
-              label: '已连续打卡 $streak 天',
+              label: l10n.homeStreakDays(streak),
               icon: Icons.local_fire_department_outlined,
               color: AppTheme.mango,
             ),
@@ -474,7 +563,9 @@ class _DailyFocusHeader extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                '今天完成 $todayWork/$totalWork 词',
+                isPaused
+                    ? l10n.homePlanPaused
+                    : '${l10n.homeTodayCompleted} $todayWork/$totalWork ${l10n.commonWords}',
                 style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w900,
                   height: 1.08,
@@ -497,6 +588,7 @@ class _DailyProgressRing extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final percent = (progress.clamp(0.0, 1.0) * 100).round();
     return SizedBox.square(
       dimension: 82,
@@ -510,7 +602,7 @@ class _DailyProgressRing extends StatelessWidget {
               strokeWidth: 8,
               strokeCap: StrokeCap.round,
               backgroundColor: AppTheme.progressTrack(context),
-              valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.teal),
+              valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.leaf),
             ),
           ),
           Column(
@@ -523,7 +615,7 @@ class _DailyProgressRing extends StatelessWidget {
                 ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900),
               ),
               Text(
-                '今日',
+                l10n.homeTodayProgress,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w800,
@@ -629,6 +721,7 @@ class _WeakWordLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Material(
@@ -650,7 +743,7 @@ class _WeakWordLink extends StatelessWidget {
                       Text(word.word, style: theme.textTheme.titleMedium),
                       const SizedBox(height: 3),
                       Text(
-                        '${word.meaning} · 掌握 ${word.masteryLevel}/5',
+                        '${word.meaning} · ${l10n.commonMastery} ${word.masteryLevel}/5',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(

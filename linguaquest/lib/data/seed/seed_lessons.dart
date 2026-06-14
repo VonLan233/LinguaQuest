@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import '../models/lesson.dart';
 
 List<Lesson> seedLessons() {
@@ -335,6 +337,7 @@ Lesson _lesson({
   required List<Word> words,
   required List<Word> distractorWords,
 }) {
+  assert(words.length >= 3, 'Lesson $id needs at least 3 words, got ${words.length}');
   return Lesson(
     id: id,
     title: title,
@@ -351,6 +354,7 @@ Lesson _lesson({
         prompt: '选择“${words[0].word}”的中文释义。',
         answer: words[0].meaning,
         options: _choiceOptions(
+          seed: _optionSeed(id, words[0].id, words[0].meaning),
           answer: words[0].meaning,
           localDistractors: [words[1].meaning, words[2].meaning],
           fallbackDistractors: distractorWords.map((word) => word.meaning),
@@ -365,6 +369,7 @@ Lesson _lesson({
         prompt: '根据中文释义选择英文单词：${words[1].meaning}',
         answer: words[1].word,
         options: _choiceOptions(
+          seed: _optionSeed(id, words[1].id, words[1].word),
           answer: words[1].word,
           localDistractors: [words[0].word, words[2].word],
           fallbackDistractors: distractorWords.map((word) => word.word),
@@ -379,6 +384,7 @@ Lesson _lesson({
         prompt: '根据语境选择“${words[2].word}”的中文释义：${words[2].exampleSentence}',
         answer: words[2].meaning,
         options: _choiceOptions(
+          seed: _optionSeed(id, words[2].id, words[2].meaning),
           answer: words[2].meaning,
           localDistractors: [words[0].meaning, words[1].meaning],
           fallbackDistractors: distractorWords.map((word) => word.meaning),
@@ -401,6 +407,7 @@ Lesson _lesson({
 }
 
 List<String> _choiceOptions({
+  required int seed,
   required String answer,
   required Iterable<String> localDistractors,
   required Iterable<String> fallbackDistractors,
@@ -418,12 +425,30 @@ List<String> _choiceOptions({
   addOption(answer);
   for (final option in localDistractors) {
     addOption(option);
-    if (options.length == 4) return List.unmodifiable(options);
+    if (options.length == 4) break;
   }
-  for (final option in fallbackDistractors) {
-    addOption(option);
-    if (options.length == 4) return List.unmodifiable(options);
+  if (options.length < 4) {
+    for (final option in fallbackDistractors) {
+      addOption(option);
+      if (options.length == 4) break;
+    }
   }
 
+  if (options.length > 1) {
+    options.shuffle(Random(seed));
+  }
   return List.unmodifiable(options);
+}
+
+int _optionSeed(String lessonId, String wordId, String answer) {
+  return _stableHash('$lessonId:$wordId:$answer');
+}
+
+int _stableHash(String value) {
+  var hash = 0x811c9dc5;
+  for (final unit in value.codeUnits) {
+    hash ^= unit;
+    hash = (hash * 0x01000193) & 0x7fffffff;
+  }
+  return hash;
 }
