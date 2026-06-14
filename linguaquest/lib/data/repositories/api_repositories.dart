@@ -4,6 +4,7 @@ import '../models/app_notification.dart';
 import '../models/custom_word.dart';
 import '../models/exercise_record.dart';
 import '../models/lesson.dart';
+import '../models/point_grant_result.dart';
 import '../models/review_event.dart';
 import '../models/study_session.dart';
 import '../models/study_plan.dart';
@@ -17,6 +18,7 @@ import 'custom_word_repository.dart';
 import 'learning_repository.dart';
 import 'notification_repository.dart';
 import 'review_repository.dart';
+import 'reward_repository.dart';
 import 'study_plan_repository.dart';
 import 'user_word_repository.dart';
 
@@ -74,7 +76,6 @@ class ApiAuthRepository implements AuthRepository {
         'targetExam': profile.targetExam,
         'level': profile.level,
         'dailyGoal': profile.dailyGoal,
-        'xp': profile.xp,
         'streak': profile.streak,
         'lastStudyDate': profile.lastStudyDate?.toIso8601String(),
       },
@@ -373,6 +374,39 @@ class ApiNotificationRepository implements NotificationRepository {
     );
     return AppNotification.fromJson(
       response.data!['notification'] as Map<String, dynamic>,
+    );
+  }
+}
+
+class ApiRewardRepository implements RewardRepository {
+  ApiRewardRepository(this._client);
+
+  final ApiClient _client;
+
+  @override
+  Future<PointGrantResult> grantPoints({
+    required String uid,
+    required String sourceType,
+    required String sourceId,
+    required int points,
+    required String description,
+  }) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/rewards/points',
+      data: {
+        'sourceType': sourceType,
+        'sourceId': sourceId,
+        'points': points,
+        'description': description,
+      },
+    );
+    final data = response.data!;
+    return PointGrantResult(
+      pointsAwarded: data['pointsAwarded'] as int? ?? 0,
+      alreadyGranted: data['alreadyGranted'] as bool? ?? false,
+      user: data['user'] != null
+          ? UserProfile.fromJson(data['user'] as Map<String, dynamic>)
+          : null,
     );
   }
 }

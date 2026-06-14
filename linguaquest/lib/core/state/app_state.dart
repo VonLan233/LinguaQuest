@@ -66,6 +66,7 @@ class AppState {
     required this.completedLessonIds,
     required this.todayCompletedLessonIds,
     required this.todayReviewWordIds,
+    required this.todayTrainingSessionIds,
     required this.todayTrainingGameIds,
     required this.todayTrainingXp,
     required this.todayClaimedRewardIds,
@@ -95,6 +96,7 @@ class AppState {
   final Set<String> completedLessonIds;
   final Set<String> todayCompletedLessonIds;
   final Set<String> todayReviewWordIds;
+  final Set<String> todayTrainingSessionIds;
   final Set<String> todayTrainingGameIds;
   final int todayTrainingXp;
   final Set<String> todayClaimedRewardIds;
@@ -229,6 +231,7 @@ class AppState {
     Set<String>? completedLessonIds,
     Set<String>? todayCompletedLessonIds,
     Set<String>? todayReviewWordIds,
+    Set<String>? todayTrainingSessionIds,
     Set<String>? todayTrainingGameIds,
     int? todayTrainingXp,
     Set<String>? todayClaimedRewardIds,
@@ -257,6 +260,8 @@ class AppState {
       todayCompletedLessonIds:
           todayCompletedLessonIds ?? this.todayCompletedLessonIds,
       todayReviewWordIds: todayReviewWordIds ?? this.todayReviewWordIds,
+      todayTrainingSessionIds:
+          todayTrainingSessionIds ?? this.todayTrainingSessionIds,
       todayTrainingGameIds: todayTrainingGameIds ?? this.todayTrainingGameIds,
       todayTrainingXp: todayTrainingXp ?? this.todayTrainingXp,
       todayClaimedRewardIds:
@@ -285,6 +290,7 @@ class AppState {
       completedLessonIds: {},
       todayCompletedLessonIds: {},
       todayReviewWordIds: {},
+      todayTrainingSessionIds: {},
       todayTrainingGameIds: {},
       todayTrainingXp: 0,
       todayClaimedRewardIds: {},

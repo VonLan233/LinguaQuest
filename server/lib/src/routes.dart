@@ -13,6 +13,7 @@ import 'database.dart';
 import 'json_response.dart';
 import 'lesson_catalog.dart';
 import 'notification_policy.dart';
+import 'reward_policy.dart';
 import 'study_plan_policy.dart';
 
 final _httpClient = http.Client();
@@ -377,6 +378,39 @@ Router buildRouter(
       final body = await readJsonMap(request);
       await database.insertReviewEvent(uid, body);
       return jsonResponse({'recorded': true}, status: 201);
+    });
+  });
+
+  router.post('/rewards/points', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      final sourceType = (body['sourceType'] as String? ?? '').trim();
+      final sourceId = (body['sourceId'] as String? ?? '').trim();
+      final requestedPoints = body['points'] as int? ?? 0;
+      final description = (body['description'] as String? ?? '').trim();
+      final reward = validatedRewardPoints(
+        sourceType: sourceType,
+        sourceId: sourceId,
+        requestedPoints: requestedPoints,
+      );
+      if (sourceType.isEmpty || sourceId.isEmpty || reward == null) {
+        return jsonResponse({
+          'error': 'invalid reward source or point rule',
+        }, status: 400);
+      }
+      final result = await database.grantPoints(
+        uid,
+        sourceType: sourceType,
+        sourceId: reward.canonicalSourceId,
+        points: reward.points,
+        description: description,
+      );
+      final awarded = result['awarded'] == true;
+      return jsonResponse({
+        'pointsAwarded': result['points_awarded'] ?? 0,
+        'alreadyGranted': !awarded,
+        'user': userDto(result),
+      }, status: awarded ? 201 : 200);
     });
   });
 

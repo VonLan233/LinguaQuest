@@ -27,17 +27,24 @@ class LessonResultScreen extends ConsumerWidget {
   const LessonResultScreen({
     this.result,
     this.source = LessonResultSource.lesson,
+    this.expectedLessonId,
     super.key,
   });
 
   final LessonResult? result;
   final LessonResultSource source;
+  final String? expectedLessonId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
-    final resolved = result ?? state.lastResult;
+    final lastResult = state.lastResult;
+    final resolved =
+        result ??
+        ((expectedLessonId == null || lastResult?.lessonId == expectedLessonId)
+            ? lastResult
+            : null);
     if (resolved == null) {
       return Scaffold(body: Center(child: Text(l10n.quizNoResult)));
     }
