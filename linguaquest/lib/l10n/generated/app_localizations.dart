@@ -1294,6 +1294,162 @@ abstract class AppLocalizations {
   /// **'View Profile'**
   String get discoverViewProfile;
 
+  /// No description provided for @discoverTasksEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s point tasks haven\'t loaded yet.'**
+  String get discoverTasksEmpty;
+
+  /// No description provided for @discoverForumCheckinTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in'**
+  String get discoverForumCheckinTag;
+
+  /// No description provided for @discoverForumMistakeTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Mistake Talk'**
+  String get discoverForumMistakeTag;
+
+  /// No description provided for @discoverForumPost1Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in: reviewed 18 words in 12 minutes'**
+  String get discoverForumPost1Title;
+
+  /// No description provided for @discoverForumPost1Body.
+  ///
+  /// In en, this message translates to:
+  /// **'Mistakes cluster around near-synonyms; tomorrow I\'ll start with the confusable-word challenge in training.'**
+  String get discoverForumPost1Body;
+
+  /// No description provided for @discoverForumPost2Title.
+  ///
+  /// In en, this message translates to:
+  /// **'How do you memorize \'abstract\' in IELTS reading?'**
+  String get discoverForumPost2Title;
+
+  /// No description provided for @discoverForumPost2Body.
+  ///
+  /// In en, this message translates to:
+  /// **'In papers and reading passages \'abstract\' often doesn\'t mean \'抽象\'; judge it by context.'**
+  String get discoverForumPost2Body;
+
+  /// No description provided for @discoverForumHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap \"Record interaction\" on a community post below to finish the forum interaction task.'**
+  String get discoverForumHint;
+
+  /// No description provided for @discoverCheckinSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Checked in! Today\'s check-in points are ready to claim.'**
+  String get discoverCheckinSuccess;
+
+  /// No description provided for @discoverCheckinFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in failed, please try again later.'**
+  String get discoverCheckinFailed;
+
+  /// No description provided for @discoverForumSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Forum interaction approved; the point task is ready to claim.'**
+  String get discoverForumSuccess;
+
+  /// No description provided for @discoverForumFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to record forum interaction, please try again later.'**
+  String get discoverForumFailed;
+
+  /// No description provided for @discoverCheckinLoadingHint.
+  ///
+  /// In en, this message translates to:
+  /// **'You can check in once tasks finish loading.'**
+  String get discoverCheckinLoadingHint;
+
+  /// No description provided for @discoverCheckinClaimedDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Checked in today and claimed +{points} XP.'**
+  String discoverCheckinClaimedDesc(int points);
+
+  /// No description provided for @discoverCheckinClaimableDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Checked in today; remember to claim +{points} XP.'**
+  String discoverCheckinClaimableDesc(int points);
+
+  /// No description provided for @discoverCheckinPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'After checking in, the check-in task becomes claimable.'**
+  String get discoverCheckinPrompt;
+
+  /// No description provided for @discoverCheckingIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking in'**
+  String get discoverCheckingIn;
+
+  /// No description provided for @discoverCheckedIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Checked in'**
+  String get discoverCheckedIn;
+
+  /// No description provided for @discoverCheckIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Check in'**
+  String get discoverCheckIn;
+
+  /// No description provided for @discoverAlreadyClaimed.
+  ///
+  /// In en, this message translates to:
+  /// **'Claimed'**
+  String get discoverAlreadyClaimed;
+
+  /// No description provided for @discoverClaimCheckin.
+  ///
+  /// In en, this message translates to:
+  /// **'Claim check-in XP'**
+  String get discoverClaimCheckin;
+
+  /// No description provided for @discoverLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading'**
+  String get discoverLoading;
+
+  /// No description provided for @discoverReloadTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Reload tasks'**
+  String get discoverReloadTasks;
+
+  /// No description provided for @discoverConditionMet.
+  ///
+  /// In en, this message translates to:
+  /// **'Conditions met — tap to claim your reward.'**
+  String get discoverConditionMet;
+
+  /// No description provided for @discoverProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing'**
+  String get discoverProcessing;
+
+  /// No description provided for @discoverRecordInteraction.
+  ///
+  /// In en, this message translates to:
+  /// **'Record interaction'**
+  String get discoverRecordInteraction;
+
   /// No description provided for @quizNoLesson.
   ///
   /// In en, this message translates to:

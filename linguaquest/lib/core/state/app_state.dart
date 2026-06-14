@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/models/app_notification.dart';
 import '../../data/models/custom_word.dart';
+import '../../data/models/daily_reward_task.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
 import '../../data/models/study_plan.dart';
@@ -70,6 +71,9 @@ class AppState {
     required this.todayTrainingGameIds,
     required this.todayTrainingXp,
     required this.todayClaimedRewardIds,
+    required this.rewardTasks,
+    required this.pendingRewardTaskIds,
+    required this.isRewardLoading,
     required this.notifications,
     this.locale,
     this.user,
@@ -100,6 +104,9 @@ class AppState {
   final Set<String> todayTrainingGameIds;
   final int todayTrainingXp;
   final Set<String> todayClaimedRewardIds;
+  final List<DailyRewardTask> rewardTasks;
+  final Set<String> pendingRewardTaskIds;
+  final bool isRewardLoading;
   final List<AppNotification> notifications;
   final LessonResult? lastResult;
   final String? errorMessage;
@@ -235,6 +242,9 @@ class AppState {
     Set<String>? todayTrainingGameIds,
     int? todayTrainingXp,
     Set<String>? todayClaimedRewardIds,
+    List<DailyRewardTask>? rewardTasks,
+    Set<String>? pendingRewardTaskIds,
+    bool? isRewardLoading,
     List<AppNotification>? notifications,
     LessonResult? lastResult,
     bool clearLastResult = false,
@@ -266,6 +276,9 @@ class AppState {
       todayTrainingXp: todayTrainingXp ?? this.todayTrainingXp,
       todayClaimedRewardIds:
           todayClaimedRewardIds ?? this.todayClaimedRewardIds,
+      rewardTasks: rewardTasks ?? this.rewardTasks,
+      pendingRewardTaskIds: pendingRewardTaskIds ?? this.pendingRewardTaskIds,
+      isRewardLoading: isRewardLoading ?? this.isRewardLoading,
       notifications: notifications ?? this.notifications,
       lastResult: clearLastResult ? null : lastResult ?? this.lastResult,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
@@ -294,6 +307,9 @@ class AppState {
       todayTrainingGameIds: {},
       todayTrainingXp: 0,
       todayClaimedRewardIds: {},
+      rewardTasks: [],
+      pendingRewardTaskIds: {},
+      isRewardLoading: false,
       notifications: [],
     );
   }

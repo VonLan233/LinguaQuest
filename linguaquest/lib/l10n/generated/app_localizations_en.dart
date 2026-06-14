@@ -654,6 +654,100 @@ class AppLocalizationsEn extends AppLocalizations {
   String get discoverViewProfile => 'View Profile';
 
   @override
+  String get discoverTasksEmpty => 'Today\'s point tasks haven\'t loaded yet.';
+
+  @override
+  String get discoverForumCheckinTag => 'Check-in';
+
+  @override
+  String get discoverForumMistakeTag => 'Mistake Talk';
+
+  @override
+  String get discoverForumPost1Title =>
+      'Check-in: reviewed 18 words in 12 minutes';
+
+  @override
+  String get discoverForumPost1Body =>
+      'Mistakes cluster around near-synonyms; tomorrow I\'ll start with the confusable-word challenge in training.';
+
+  @override
+  String get discoverForumPost2Title =>
+      'How do you memorize \'abstract\' in IELTS reading?';
+
+  @override
+  String get discoverForumPost2Body =>
+      'In papers and reading passages \'abstract\' often doesn\'t mean \'抽象\'; judge it by context.';
+
+  @override
+  String get discoverForumHint =>
+      'Tap \"Record interaction\" on a community post below to finish the forum interaction task.';
+
+  @override
+  String get discoverCheckinSuccess =>
+      'Checked in! Today\'s check-in points are ready to claim.';
+
+  @override
+  String get discoverCheckinFailed =>
+      'Check-in failed, please try again later.';
+
+  @override
+  String get discoverForumSuccess =>
+      'Forum interaction approved; the point task is ready to claim.';
+
+  @override
+  String get discoverForumFailed =>
+      'Failed to record forum interaction, please try again later.';
+
+  @override
+  String get discoverCheckinLoadingHint =>
+      'You can check in once tasks finish loading.';
+
+  @override
+  String discoverCheckinClaimedDesc(int points) {
+    return 'Checked in today and claimed +$points XP.';
+  }
+
+  @override
+  String discoverCheckinClaimableDesc(int points) {
+    return 'Checked in today; remember to claim +$points XP.';
+  }
+
+  @override
+  String get discoverCheckinPrompt =>
+      'After checking in, the check-in task becomes claimable.';
+
+  @override
+  String get discoverCheckingIn => 'Checking in';
+
+  @override
+  String get discoverCheckedIn => 'Checked in';
+
+  @override
+  String get discoverCheckIn => 'Check in';
+
+  @override
+  String get discoverAlreadyClaimed => 'Claimed';
+
+  @override
+  String get discoverClaimCheckin => 'Claim check-in XP';
+
+  @override
+  String get discoverLoading => 'Loading';
+
+  @override
+  String get discoverReloadTasks => 'Reload tasks';
+
+  @override
+  String get discoverConditionMet =>
+      'Conditions met — tap to claim your reward.';
+
+  @override
+  String get discoverProcessing => 'Processing';
+
+  @override
+  String get discoverRecordInteraction => 'Record interaction';
+
+  @override
   String get quizNoLesson => 'Lesson not found';
 
   @override

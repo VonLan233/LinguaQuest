@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/models/app_notification.dart';
 import '../../data/models/custom_word.dart';
+import '../../data/models/daily_reward_task.dart';
 import '../../data/models/exercise_record.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
@@ -24,8 +25,9 @@ import '../../data/repositories/custom_word_repository.dart';
 import '../../data/repositories/learning_repository.dart';
 import '../../data/repositories/mock_repositories.dart';
 import '../../data/repositories/notification_repository.dart';
-import '../../data/repositories/review_repository.dart';
 import '../../data/repositories/reward_repository.dart';
+import '../../data/repositories/reward_task_repository.dart';
+import '../../data/repositories/review_repository.dart';
 import '../../data/repositories/study_plan_repository.dart';
 import '../../data/repositories/user_word_repository.dart';
 import '../../services/local_notification_service.dart';
@@ -91,6 +93,13 @@ final rewardRepositoryProvider = Provider<RewardRepository>((ref) {
   return MockRewardRepository();
 });
 
+final rewardTaskRepositoryProvider = Provider<RewardTaskRepository>((ref) {
+  if (AppConstants.apiBaseUrl.isNotEmpty) {
+    return ApiRewardTaskRepository(ref.watch(apiClientProvider));
+  }
+  return MockRewardTaskRepository();
+});
+
 final appControllerProvider = NotifierProvider<AppController, AppState>(
   AppController.new,
 );
@@ -117,6 +126,7 @@ class AppController extends Notifier<AppState> {
   late final StudyPlanRepository _studyPlanRepository;
   late final NotificationRepository _notificationRepository;
   late final RewardRepository _rewardRepository;
+  late final RewardTaskRepository _rewardTaskRepository;
   late final LocalNotificationService _localNotificationService;
   var _localNotificationsInitialized = false;
 
@@ -130,6 +140,7 @@ class AppController extends Notifier<AppState> {
     _studyPlanRepository = ref.watch(studyPlanRepositoryProvider);
     _notificationRepository = ref.watch(notificationRepositoryProvider);
     _rewardRepository = ref.watch(rewardRepositoryProvider);
+    _rewardTaskRepository = ref.watch(rewardTaskRepositoryProvider);
     _localNotificationService = ref.watch(localNotificationServiceProvider);
     return AppState.initial();
   }
@@ -228,6 +239,7 @@ class AppController extends Notifier<AppState> {
         todayTrainingXp: localTodayTrainingXp,
         todayClaimedRewardIds: todayClaimedRewardIds,
       );
+      await refreshRewardTasks();
       await refreshNotifications();
       unawaited(_initializeThenScheduleLocalNotifications());
     } catch (error) {
@@ -295,6 +307,7 @@ class AppController extends Notifier<AppState> {
       );
       await _ensureStudyPlan(user);
       await refreshNotifications();
+      await refreshRewardTasks();
       unawaited(_scheduleLocalNotifications());
     });
   }
@@ -312,6 +325,7 @@ class AppController extends Notifier<AppState> {
       );
       await _ensureStudyPlan(user);
       await refreshNotifications();
+      await refreshRewardTasks();
       unawaited(_scheduleLocalNotifications());
     });
   }
@@ -491,6 +505,7 @@ class AppController extends Notifier<AppState> {
         reminderSettings: reminderSettings,
       );
       await refreshNotifications();
+      await refreshRewardTasks();
       unawaited(_scheduleLocalNotifications());
     });
   }
@@ -614,7 +629,10 @@ class AppController extends Notifier<AppState> {
     });
   }
 
-  Future<bool> completeLesson(LessonResult result) async {
+  Future<bool> completeLesson(
+    LessonResult result, {
+    bool isTrainingChallenge = false,
+  }) async {
     final user = state.user;
     if (user == null) return false;
     if (state.isStudyPlanPaused) {
@@ -623,7 +641,7 @@ class AppController extends Notifier<AppState> {
     }
     return _run(() async {
       final now = DateTime.now();
-      final lastStudy = user.lastStudyDate;
+      final lastStudy = user.lastStudyDate?.toLocal();
       final streak = _nextStreak(lastStudy, now, user.streak);
       final completedLessonIds = {...state.completedLessonIds, result.lessonId};
       final lesson = _lessonById(result.lessonId);
@@ -700,6 +718,20 @@ class AppController extends Notifier<AppState> {
         userWords: _mergeUserWords(state.userWords, learnedUserWords),
         lastResult: resolvedResult,
       );
+      try {
+        final isTrainingReward =
+            isTrainingChallenge || _isTrainingLessonId(result.lessonId);
+        await _applyRewardSnapshot(
+          await _rewardTaskRepository.recordEvent(
+            user.uid,
+            isTrainingReward
+                ? RewardEventType.trainingChallenge
+                : RewardEventType.newLearning,
+          ),
+        );
+      } catch (error) {
+        debugPrint('Failed to record lesson reward event: $error');
+      }
       await refreshNotifications();
       unawaited(_scheduleLocalNotifications());
     });
@@ -784,9 +816,190 @@ class AppController extends Notifier<AppState> {
         ],
         todayReviewWordIds: todayReviewWordIds,
       );
+      try {
+        if (isCorrect && word.wrongCount > 0) {
+          await _applyRewardSnapshot(
+            await _rewardTaskRepository.recordEvent(
+              user.uid,
+              RewardEventType.wrongCleanup,
+            ),
+          );
+        } else {
+          await _applyRewardSnapshot(
+            await _rewardTaskRepository.recordEvent(
+              user.uid,
+              RewardEventType.reviewDone,
+            ),
+          );
+        }
+      } catch (error) {
+        debugPrint('Failed to record review reward events: $error');
+      }
       await refreshNotifications();
       unawaited(_scheduleLocalNotifications());
     });
+  }
+
+  Future<bool> checkInToday() async {
+    final user = state.user;
+    if (user == null || state.pendingRewardTaskIds.contains('dailyCheckIn')) {
+      return false;
+    }
+    state = state.copyWith(
+      pendingRewardTaskIds: {...state.pendingRewardTaskIds, 'dailyCheckIn'},
+      clearError: true,
+    );
+    try {
+      final snapshot = await _rewardTaskRepository.checkIn(user.uid);
+      await _applyRewardSnapshot(snapshot);
+      if (snapshot.user == null) {
+        final now = DateTime.now();
+        final updated = await _authRepository.updateProfile(
+          user.copyWith(
+            streak: _nextStreak(user.lastStudyDate?.toLocal(), now, user.streak),
+            lastStudyDate: now,
+            updatedAt: now,
+          ),
+        );
+        state = state.copyWith(user: updated);
+      }
+      state = state.copyWith(
+        pendingRewardTaskIds: state.pendingRewardTaskIds
+            .where((id) => id != 'dailyCheckIn')
+            .toSet(),
+      );
+      await refreshNotifications();
+      return true;
+    } catch (error) {
+      state = state.copyWith(
+        pendingRewardTaskIds: state.pendingRewardTaskIds
+            .where((id) => id != 'dailyCheckIn')
+            .toSet(),
+        errorMessage: _friendlyError(error),
+      );
+      return false;
+    }
+  }
+
+  Future<bool> claimReward(String id) async {
+    final user = state.user;
+    if (user == null || state.pendingRewardTaskIds.contains(id)) return false;
+    final task = _rewardTaskById(id);
+    if (task == null || !task.isClaimable) return false;
+    state = state.copyWith(
+      pendingRewardTaskIds: {...state.pendingRewardTaskIds, id},
+      clearError: true,
+    );
+    try {
+      final snapshot = await _rewardTaskRepository.claimTask(user.uid, id);
+      await _applyRewardSnapshot(snapshot);
+      final credited = snapshot.claimed == true && !snapshot.alreadyClaimed;
+      if (snapshot.user == null) {
+        if (credited) {
+          final updated = await _authRepository.updateProfile(
+            user.copyWith(xp: user.xp + task.points, updatedAt: DateTime.now()),
+          );
+          state = state.copyWith(user: updated);
+        }
+      }
+      state = state.copyWith(
+        pendingRewardTaskIds: state.pendingRewardTaskIds
+            .where((taskId) => taskId != id)
+            .toSet(),
+        errorMessage: snapshot.alreadyClaimed ? '这个任务今天已经领取过。' : null,
+        clearError: !snapshot.alreadyClaimed,
+      );
+      await refreshNotifications();
+      return credited;
+    } catch (error) {
+      state = state.copyWith(
+        pendingRewardTaskIds: state.pendingRewardTaskIds
+            .where((taskId) => taskId != id)
+            .toSet(),
+        errorMessage: _friendlyError(error),
+      );
+      return false;
+    }
+  }
+
+  Future<bool> recordForumInteraction() async {
+    final user = state.user;
+    if (user == null ||
+        state.pendingRewardTaskIds.contains('forumInteraction')) {
+      return false;
+    }
+    state = state.copyWith(
+      pendingRewardTaskIds: {...state.pendingRewardTaskIds, 'forumInteraction'},
+      clearError: true,
+    );
+    try {
+      final snapshot = await _rewardTaskRepository.recordEvent(
+        user.uid,
+        RewardEventType.forumInteraction,
+      );
+      await _applyRewardSnapshot(snapshot);
+      state = state.copyWith(
+        pendingRewardTaskIds: state.pendingRewardTaskIds
+            .where((id) => id != 'forumInteraction')
+            .toSet(),
+      );
+      return true;
+    } catch (error) {
+      state = state.copyWith(
+        pendingRewardTaskIds: state.pendingRewardTaskIds
+            .where((id) => id != 'forumInteraction')
+            .toSet(),
+        errorMessage: _friendlyError(error),
+      );
+      return false;
+    }
+  }
+
+  Future<void> refreshRewardTasks() async {
+    final user = state.user;
+    if (user == null) {
+      state = state.copyWith(
+        rewardTasks: [],
+        pendingRewardTaskIds: {},
+        isRewardLoading: false,
+      );
+      return;
+    }
+    if (state.isRewardLoading) return;
+    state = state.copyWith(isRewardLoading: true, clearError: true);
+    try {
+      await _applyRewardSnapshot(await _rewardTaskRepository.listTasks(user.uid));
+      state = state.copyWith(isRewardLoading: false);
+    } catch (error) {
+      state = state.copyWith(
+        isRewardLoading: false,
+        errorMessage: _friendlyError(error),
+      );
+    }
+  }
+
+  Future<void> _applyRewardSnapshot(RewardTaskSnapshot snapshot) async {
+    final user = snapshot.user;
+    state = state.copyWith(
+      user: user,
+      rewardTasks: snapshot.tasks,
+      todayClaimedRewardIds: {
+        for (final task in snapshot.tasks)
+          if (task.isClaimed) task.id,
+      },
+    );
+    if (user != null) {
+      if (_authRepository is MockAuthRepository) {
+        await _authRepository.updateProfile(user);
+      }
+    }
+  }
+
+  DailyRewardTask? _rewardTaskById(String id) {
+    for (final task in state.rewardTasks) {
+      if (task.id == id) return task;
+    }
+    return null;
   }
 
   Future<bool> completeMixedStudySession({
@@ -916,7 +1129,7 @@ class AppController extends Notifier<AppState> {
     });
   }
 
-  Future<bool> claimReward({
+  Future<bool> claimLocalReward({
     required String id,
     required int points,
     required bool isAvailable,
@@ -1291,6 +1504,9 @@ class AppController extends Notifier<AppState> {
       if (message == 'email already registered') {
         return '该邮箱已经注册，请直接登录。';
       }
+      if (message == 'task_not_complete') {
+        return '该任务尚未完成，无法领取奖励。';
+      }
       if (message != null && message.isNotEmpty) return message;
       return '网络请求失败，请稍后重试。';
     }
@@ -1323,6 +1539,13 @@ class AppController extends Notifier<AppState> {
       if (word.id == id) return word;
     }
     return null;
+  }
+
+  bool _isTrainingLessonId(String lessonId) {
+    for (final lesson in state.lessons) {
+      if (lesson.id == lessonId) return lesson.isTrainingPack;
+    }
+    return lessonId.startsWith('lesson-campus-');
   }
 
   Future<_PointGrantOutcome> _grantPoints({
@@ -1514,8 +1737,10 @@ class AppController extends Notifier<AppState> {
     final hasStudyToday =
         state.todayCompletedFormalLessonIds.isNotEmpty ||
         todayWork >= dailyGoal;
-    final hasCheckedIn =
-        _isSameDay(state.user?.lastStudyDate, now) || todayWork > 0;
+    final hasCheckedIn = state.rewardTasks.any(
+      (task) =>
+          task.id == 'dailyCheckIn' && (task.isClaimable || task.isClaimed),
+    );
 
     if (!state.isStudyPlanPaused && !hasStudyToday) {
       notifications.add(
@@ -1549,7 +1774,7 @@ class AppController extends Notifier<AppState> {
           uid: uid,
           type: AppNotificationType.checkInReminder,
           title: '今天还没有打卡',
-          body: '完成一次学习或复习即可延续连续打卡。',
+          body: '去发现页点击签到，签到任务会进入可领取状态。',
           targetRoute: '/discover',
           sourceKey: 'checkInReminder:$dateKey',
           now: now,
@@ -1898,14 +2123,6 @@ class AppController extends Notifier<AppState> {
     final month = date.month.toString().padLeft(2, '0');
     final day = date.day.toString().padLeft(2, '0');
     return '${date.year}-$month-$day';
-  }
-
-  bool _isSameDay(DateTime? value, DateTime now) {
-    if (value == null) return false;
-    final local = value.toLocal();
-    return local.year == now.year &&
-        local.month == now.month &&
-        local.day == now.day;
   }
 }
 
