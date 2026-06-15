@@ -7,6 +7,8 @@ import '../../core/state/app_state.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/section_header.dart';
+import '../../data/models/lottery.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 int newWordbookCount(AppState state) => state.customWords.length;
@@ -129,6 +131,21 @@ class ProfileScreen extends ConsumerWidget {
               onTap: () => context.push('/about'),
             ),
           ],
+        ),
+        const SizedBox(height: 16),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SectionHeader(
+                title: l10n.profileAssetsTitle,
+                subtitle: l10n.profileAssetsSubtitle,
+              ),
+              const SizedBox(height: 10),
+              _AssetInventory(assets: state.userAssets),
+            ],
+          ),
         ),
         const SizedBox(height: 24),
         Padding(
@@ -613,5 +630,126 @@ String _themeModeLabel(ThemeMode mode, AppLocalizations l10n) {
       return l10n.settingsThemeDark;
     case ThemeMode.system:
       return l10n.settingsThemeSystem;
+  }
+}
+
+class _AssetInventory extends StatelessWidget {
+  const _AssetInventory({required this.assets});
+
+  final List<UserAsset> assets;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    if (assets.isEmpty) {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const IconCueBadge(
+            icon: Icons.inventory_2_outlined,
+            color: AppTheme.mango,
+            size: 38,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              l10n.profileAssetsEmpty,
+              style: TextStyle(
+                color: theme.colorScheme.onSurfaceVariant,
+                height: 1.42,
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+    return Column(
+      children: [
+        for (var index = 0; index < assets.length; index++) ...[
+          _AssetRow(asset: assets[index]),
+          if (index != assets.length - 1)
+            Divider(
+              height: 14,
+              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.7),
+            ),
+        ],
+      ],
+    );
+  }
+}
+
+class _AssetRow extends StatelessWidget {
+  const _AssetRow({required this.asset});
+
+  final UserAsset asset;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        IconCueBadge(
+          icon: _assetIcon(asset.category),
+          color: _assetColor(asset.rarity),
+          size: 38,
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(asset.name, style: theme.textTheme.titleMedium),
+              const SizedBox(height: 2),
+              Text(
+                l10n.profileAssetMeta(
+                  displayLotteryCategory(asset.category, l10n: l10n),
+                  asset.quantity,
+                  asset.totalFragments,
+                ),
+                style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                asset.description,
+                style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  IconData _assetIcon(String category) {
+    switch (category) {
+      case 'avatarFrame':
+        return Icons.account_circle_outlined;
+      case 'profileBackground':
+        return Icons.wallpaper_outlined;
+      case 'badge':
+        return Icons.workspace_premium_outlined;
+      case 'title':
+        return Icons.military_tech_outlined;
+      case 'cardSkin':
+        return Icons.style_outlined;
+      default:
+        return Icons.auto_awesome_outlined;
+    }
+  }
+
+  Color _assetColor(String rarity) {
+    switch (rarity) {
+      case 'rare':
+        return AppTheme.coral;
+      case 'uncommon':
+        return AppTheme.teal;
+      case 'common':
+        return AppTheme.cyan;
+      default:
+        return AppTheme.mango;
+    }
   }
 }

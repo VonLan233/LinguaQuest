@@ -4,6 +4,7 @@ import 'package:postgres/postgres.dart';
 
 import 'auth.dart';
 import 'config.dart';
+import 'lottery_policy.dart';
 
 const resetCustomWordProgressSql = '''
 UPDATE custom_words
@@ -241,6 +242,21 @@ CREATE TABLE IF NOT EXISTS notifications (
 ''');
 
     await connection.execute('''
+CREATE TABLE IF NOT EXISTS lottery_prizes (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  category TEXT NOT NULL,
+  rarity TEXT NOT NULL,
+  description TEXT NOT NULL,
+  probability DOUBLE PRECISION NOT NULL,
+  fragment_value INTEGER NOT NULL DEFAULT 0,
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMPTZ NOT NULL,
+  updated_at TIMESTAMPTZ NOT NULL
+);
+''');
+
+    await connection.execute('''
 CREATE TABLE IF NOT EXISTS daily_checkins (
   uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   date_key TEXT NOT NULL,
@@ -303,6 +319,37 @@ CREATE TABLE IF NOT EXISTS study_plans (
 ''');
 
     await connection.execute('''
+CREATE TABLE IF NOT EXISTS lottery_draws (
+  id TEXT PRIMARY KEY,
+  uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  prize_id TEXT NOT NULL REFERENCES lottery_prizes(id),
+  cost INTEGER NOT NULL,
+  balance_after INTEGER NOT NULL,
+  prize_name TEXT NOT NULL,
+  prize_category TEXT NOT NULL,
+  prize_rarity TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL
+);
+''');
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS user_assets (
+  id TEXT PRIMARY KEY,
+  uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  prize_id TEXT NOT NULL REFERENCES lottery_prizes(id),
+  category TEXT NOT NULL,
+  rarity TEXT NOT NULL,
+  name TEXT NOT NULL,
+  description TEXT NOT NULL,
+  quantity INTEGER NOT NULL DEFAULT 1,
+  fragment_value INTEGER NOT NULL DEFAULT 0,
+  acquired_at TIMESTAMPTZ NOT NULL,
+  updated_at TIMESTAMPTZ NOT NULL,
+  UNIQUE (uid, prize_id)
+);
+''');
+
+    await connection.execute('''
 CREATE INDEX IF NOT EXISTS idx_study_sessions_uid_ended_at
 ON study_sessions (uid, ended_at);
 CREATE INDEX IF NOT EXISTS idx_review_events_uid_reviewed_at
@@ -324,6 +371,35 @@ BEGIN
 END
 \$\$;
 ''');
+
+    await _seedLotteryPrizes();
+  }
+
+  Future<void> _seedLotteryPrizes() async {
+    final now = DateTime.now().toUtc();
+    for (final prize in lotteryPrizeSeed) {
+      await connection.execute(
+        Sql.named('''
+INSERT INTO lottery_prizes (
+  id, name, category, rarity, description, probability, fragment_value,
+  is_active, created_at, updated_at
+) VALUES (
+  @id, @name, @category, @rarity, @description, @probability, @fragmentValue,
+  TRUE, @createdAt, @updatedAt
+)
+ON CONFLICT (id) DO UPDATE SET
+  name=EXCLUDED.name,
+  category=EXCLUDED.category,
+  rarity=EXCLUDED.rarity,
+  description=EXCLUDED.description,
+  probability=EXCLUDED.probability,
+  fragment_value=EXCLUDED.fragment_value,
+  is_active=TRUE,
+  updated_at=EXCLUDED.updated_at
+'''),
+        parameters: {...prize, 'createdAt': now, 'updatedAt': now},
+      );
+    }
   }
 
   Future<Map<String, dynamic>?> userByEmail(String email) async {
@@ -989,15 +1065,21 @@ ORDER BY created_at DESC
     return rows.first.toColumnMap();
   }
 
-  Future<void> upsertNotification(String uid, Map<String, dynamic> data) async {
-    await upsertNotifications(uid, [data]);
+  Future<void> upsertNotification(
+    String uid,
+    Map<String, dynamic> data, {
+    Session? session,
+  }) async {
+    await upsertNotifications(uid, [data], session: session);
   }
 
   Future<void> upsertNotifications(
     String uid,
-    List<Map<String, dynamic>> notifications,
-  ) async {
+    List<Map<String, dynamic>> notifications, {
+    Session? session,
+  }) async {
     if (notifications.isEmpty) return;
+    final executor = session ?? connection;
     final values = <String>[];
     final parameters = <String, dynamic>{'uid': uid};
     for (var index = 0; index < notifications.length; index++) {
@@ -1018,7 +1100,7 @@ ORDER BY created_at DESC
         'createdAt$index': _date(data['createdAt']) ?? DateTime.now().toUtc(),
       });
     }
-    await connection.execute(
+    await executor.execute(
       Sql.named('''
 INSERT INTO notifications (
   id, uid, type, title, body, target_route, is_read, source_key, read_at, created_at
@@ -1068,6 +1150,140 @@ RETURNING id
       parameters: {'uid': uid, 'readAt': DateTime.now().toUtc()},
     );
     return rows.length;
+  }
+
+  Future<List<Map<String, dynamic>>> lotteryPrizes({Session? session}) async {
+    final executor = session ?? connection;
+    final rows = await executor.execute('''
+SELECT * FROM lottery_prizes
+WHERE is_active = TRUE
+ORDER BY probability DESC, rarity, name
+''');
+    return rows.map((row) => row.toColumnMap()).toList();
+  }
+
+  Future<List<Map<String, dynamic>>> userAssets(
+    String uid, {
+    Session? session,
+  }) async {
+    final executor = session ?? connection;
+    final rows = await executor.execute(
+      Sql.named('''
+SELECT * FROM user_assets
+WHERE uid=@uid
+ORDER BY updated_at DESC
+'''),
+      parameters: {'uid': uid},
+    );
+    return rows.map((row) => row.toColumnMap()).toList();
+  }
+
+  Future<Map<String, dynamic>?> drawLottery({
+    required String uid,
+    required String drawId,
+    required String assetId,
+    required String notificationId,
+  }) async {
+    final now = DateTime.now().toUtc();
+    return connection.runTx((tx) async {
+      final userRows = await tx.execute(
+        Sql.named('''
+UPDATE users
+SET xp = xp - @cost,
+    updated_at = @updatedAt
+WHERE id=@uid AND xp >= @cost
+RETURNING xp
+'''),
+        parameters: {'uid': uid, 'cost': lotteryDrawCost, 'updatedAt': now},
+      );
+      if (userRows.isEmpty) {
+        return null;
+      }
+      final prizes = await lotteryPrizes(session: tx);
+      final prize = chooseLotteryPrize(prizes);
+      final balanceAfter = userRows.first.toColumnMap()['xp'] as int;
+
+      await tx.execute(
+        Sql.named('''
+INSERT INTO lottery_draws (
+  id, uid, prize_id, cost, balance_after, prize_name, prize_category,
+  prize_rarity, created_at
+) VALUES (
+  @id, @uid, @prizeId, @cost, @balanceAfter, @prizeName, @prizeCategory,
+  @prizeRarity, @createdAt
+)
+'''),
+        parameters: {
+          'id': drawId,
+          'uid': uid,
+          'prizeId': prize['id'],
+          'cost': lotteryDrawCost,
+          'balanceAfter': balanceAfter,
+          'prizeName': prize['name'],
+          'prizeCategory': prize['category'],
+          'prizeRarity': prize['rarity'],
+          'createdAt': now,
+        },
+      );
+
+      final assetRows = await tx.execute(
+        Sql.named('''
+INSERT INTO user_assets (
+  id, uid, prize_id, category, rarity, name, description, quantity,
+  fragment_value, acquired_at, updated_at
+) VALUES (
+  @id, @uid, @prizeId, @category, @rarity, @name, @description, 1,
+  @fragmentValue, @acquiredAt, @updatedAt
+)
+ON CONFLICT (uid, prize_id) DO UPDATE SET
+  quantity=user_assets.quantity + 1,
+  category=EXCLUDED.category,
+  rarity=EXCLUDED.rarity,
+  name=EXCLUDED.name,
+  description=EXCLUDED.description,
+  fragment_value=EXCLUDED.fragment_value,
+  updated_at=EXCLUDED.updated_at
+RETURNING *
+'''),
+        parameters: {
+          'id': assetId,
+          'uid': uid,
+          'prizeId': prize['id'],
+          'category': prize['category'],
+          'rarity': prize['rarity'],
+          'name': prize['name'],
+          'description': prize['description'],
+          'fragmentValue':
+              prize['fragment_value'] ?? prize['fragmentValue'] ?? 0,
+          'acquiredAt': now,
+          'updatedAt': now,
+        },
+      );
+
+      await upsertNotification(uid, {
+        'id': notificationId,
+        'type': 'activity',
+        'title': '积分抽奖结果',
+        'body': '获得「${prize['name']}」，已放入个人资产。',
+        'targetRoute': '/profile',
+        'isRead': false,
+        'sourceKey': 'lottery:$drawId',
+        'createdAt': now,
+      }, session: tx);
+      return {
+        'draw': {
+          'id': drawId,
+          'uid': uid,
+          'prizeId': prize['id'],
+          'cost': lotteryDrawCost,
+          'balanceAfter': balanceAfter,
+          'createdAt': now.toIso8601String(),
+        },
+        'prize': prize,
+        'asset': assetRows.first.toColumnMap(),
+        'balanceAfter': balanceAfter,
+      };
+    });
   }
 
   Future<bool> hasStudySessionInRange(

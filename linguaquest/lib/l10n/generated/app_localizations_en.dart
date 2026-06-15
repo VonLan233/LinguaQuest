@@ -2302,6 +2302,110 @@ class AppLocalizationsEn extends AppLocalizations {
   String get languageSetting => 'Language';
 
   @override
+  String luckyDrawCostLine(Object cost) {
+    return 'Spend $cost XP per draw';
+  }
+
+  @override
+  String luckyDrawBalanceHint(Object xp) {
+    return 'Current balance $xp XP; prizes include avatar frames, profile backgrounds, badges, titles, card skins, and consolation fragments.';
+  }
+
+  @override
+  String luckyDrawInventoryCount(Object count) {
+    return '$count items in stock';
+  }
+
+  @override
+  String get luckyDrawNoBoost => 'No learning boost';
+
+  @override
+  String get luckyDrawNow => 'Draw now';
+
+  @override
+  String get luckyDrawInsufficient => 'Not enough XP — finish tasks first';
+
+  @override
+  String luckyDrawShortfall(Object shortfall) {
+    return '$shortfall XP to go. Finish new study, review, or mistake cleanup to earn points.';
+  }
+
+  @override
+  String get luckyDrawFailed => 'Draw failed, please try again later';
+
+  @override
+  String get luckyDrawSuccessTitle => 'Draw successful';
+
+  @override
+  String luckyDrawReward(Object name) {
+    return 'You got: $name';
+  }
+
+  @override
+  String luckyDrawDeducted(Object balance, Object cost) {
+    return 'Deducted $cost XP, $balance XP remaining.';
+  }
+
+  @override
+  String get luckyDrawKeepLooking => 'Keep looking';
+
+  @override
+  String get luckyDrawViewAssets => 'View my assets';
+
+  @override
+  String get luckyDrawPoolLoading =>
+      'Prize pool loading: avatar frames, profile backgrounds, learning badges, training titles, card skins, consolation fragments.';
+
+  @override
+  String get profileAssetsTitle => 'My Assets';
+
+  @override
+  String get profileAssetsSubtitle =>
+      'Decorative assets won from draws are for display only and don\'t affect learning scores.';
+
+  @override
+  String get profileAssetsEmpty =>
+      'No decorative assets yet. After spending XP on the Discover page draw, avatar frames, profile backgrounds, badges, titles, card skins, and fragments will appear here.';
+
+  @override
+  String profileAssetMeta(Object category, Object fragments, Object quantity) {
+    return '$category · Qty $quantity · Fragments $fragments';
+  }
+
+  @override
+  String get lotteryCategoryAvatarFrame => 'Avatar Frame';
+
+  @override
+  String get lotteryCategoryProfileBackground => 'Profile Background';
+
+  @override
+  String get lotteryCategoryBadge => 'Learning Badge';
+
+  @override
+  String get lotteryCategoryTitle => 'Training Title';
+
+  @override
+  String get lotteryCategoryCardSkin => 'Card Skin';
+
+  @override
+  String get lotteryCategoryFragment => 'Consolation Fragment';
+
+  @override
+  String get lotteryCategoryDefault => 'Decorative Asset';
+
+  @override
+  String get lotteryRarityRare => 'Rare';
+
+  @override
+  String get lotteryRarityUncommon => 'Advanced';
+
+  @override
+  String get lotteryRarityCommon => 'Common';
+
+  @override
+  String get lotteryRarityComfort => 'Comfort';
+
+  @override
   String get languageChinese => '中文';
 
   @override

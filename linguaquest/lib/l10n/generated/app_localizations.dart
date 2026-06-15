@@ -4190,6 +4190,180 @@ abstract class AppLocalizations {
   /// **'Language'**
   String get languageSetting;
 
+  /// No description provided for @luckyDrawCostLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Spend {cost} XP per draw'**
+  String luckyDrawCostLine(Object cost);
+
+  /// No description provided for @luckyDrawBalanceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Current balance {xp} XP; prizes include avatar frames, profile backgrounds, badges, titles, card skins, and consolation fragments.'**
+  String luckyDrawBalanceHint(Object xp);
+
+  /// No description provided for @luckyDrawInventoryCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} items in stock'**
+  String luckyDrawInventoryCount(Object count);
+
+  /// No description provided for @luckyDrawNoBoost.
+  ///
+  /// In en, this message translates to:
+  /// **'No learning boost'**
+  String get luckyDrawNoBoost;
+
+  /// No description provided for @luckyDrawNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw now'**
+  String get luckyDrawNow;
+
+  /// No description provided for @luckyDrawInsufficient.
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough XP — finish tasks first'**
+  String get luckyDrawInsufficient;
+
+  /// No description provided for @luckyDrawShortfall.
+  ///
+  /// In en, this message translates to:
+  /// **'{shortfall} XP to go. Finish new study, review, or mistake cleanup to earn points.'**
+  String luckyDrawShortfall(Object shortfall);
+
+  /// No description provided for @luckyDrawFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw failed, please try again later'**
+  String get luckyDrawFailed;
+
+  /// No description provided for @luckyDrawSuccessTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw successful'**
+  String get luckyDrawSuccessTitle;
+
+  /// No description provided for @luckyDrawReward.
+  ///
+  /// In en, this message translates to:
+  /// **'You got: {name}'**
+  String luckyDrawReward(Object name);
+
+  /// No description provided for @luckyDrawDeducted.
+  ///
+  /// In en, this message translates to:
+  /// **'Deducted {cost} XP, {balance} XP remaining.'**
+  String luckyDrawDeducted(Object balance, Object cost);
+
+  /// No description provided for @luckyDrawKeepLooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep looking'**
+  String get luckyDrawKeepLooking;
+
+  /// No description provided for @luckyDrawViewAssets.
+  ///
+  /// In en, this message translates to:
+  /// **'View my assets'**
+  String get luckyDrawViewAssets;
+
+  /// No description provided for @luckyDrawPoolLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Prize pool loading: avatar frames, profile backgrounds, learning badges, training titles, card skins, consolation fragments.'**
+  String get luckyDrawPoolLoading;
+
+  /// No description provided for @profileAssetsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My Assets'**
+  String get profileAssetsTitle;
+
+  /// No description provided for @profileAssetsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Decorative assets won from draws are for display only and don\'t affect learning scores.'**
+  String get profileAssetsSubtitle;
+
+  /// No description provided for @profileAssetsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No decorative assets yet. After spending XP on the Discover page draw, avatar frames, profile backgrounds, badges, titles, card skins, and fragments will appear here.'**
+  String get profileAssetsEmpty;
+
+  /// No description provided for @profileAssetMeta.
+  ///
+  /// In en, this message translates to:
+  /// **'{category} · Qty {quantity} · Fragments {fragments}'**
+  String profileAssetMeta(Object category, Object fragments, Object quantity);
+
+  /// No description provided for @lotteryCategoryAvatarFrame.
+  ///
+  /// In en, this message translates to:
+  /// **'Avatar Frame'**
+  String get lotteryCategoryAvatarFrame;
+
+  /// No description provided for @lotteryCategoryProfileBackground.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Background'**
+  String get lotteryCategoryProfileBackground;
+
+  /// No description provided for @lotteryCategoryBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning Badge'**
+  String get lotteryCategoryBadge;
+
+  /// No description provided for @lotteryCategoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Training Title'**
+  String get lotteryCategoryTitle;
+
+  /// No description provided for @lotteryCategoryCardSkin.
+  ///
+  /// In en, this message translates to:
+  /// **'Card Skin'**
+  String get lotteryCategoryCardSkin;
+
+  /// No description provided for @lotteryCategoryFragment.
+  ///
+  /// In en, this message translates to:
+  /// **'Consolation Fragment'**
+  String get lotteryCategoryFragment;
+
+  /// No description provided for @lotteryCategoryDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Decorative Asset'**
+  String get lotteryCategoryDefault;
+
+  /// No description provided for @lotteryRarityRare.
+  ///
+  /// In en, this message translates to:
+  /// **'Rare'**
+  String get lotteryRarityRare;
+
+  /// No description provided for @lotteryRarityUncommon.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get lotteryRarityUncommon;
+
+  /// No description provided for @lotteryRarityCommon.
+  ///
+  /// In en, this message translates to:
+  /// **'Common'**
+  String get lotteryRarityCommon;
+
+  /// No description provided for @lotteryRarityComfort.
+  ///
+  /// In en, this message translates to:
+  /// **'Comfort'**
+  String get lotteryRarityComfort;
+
   /// No description provided for @languageChinese.
   ///
   /// In en, this message translates to:

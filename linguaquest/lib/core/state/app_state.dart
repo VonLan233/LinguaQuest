@@ -5,6 +5,7 @@ import '../../data/models/custom_word.dart';
 import '../../data/models/daily_reward_task.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
+import '../../data/models/lottery.dart';
 import '../../data/models/study_plan.dart';
 import '../../data/models/user_word.dart';
 import '../../data/models/user_profile.dart';
@@ -75,9 +76,12 @@ class AppState {
     required this.pendingRewardTaskIds,
     required this.isRewardLoading,
     required this.notifications,
+    required this.lotteryPrizes,
+    required this.userAssets,
     this.locale,
     this.user,
     this.lastResult,
+    this.lastLotteryResult,
     this.studyPlan,
     this.errorMessage,
     List<CustomWord>? reviewWords,
@@ -108,7 +112,10 @@ class AppState {
   final Set<String> pendingRewardTaskIds;
   final bool isRewardLoading;
   final List<AppNotification> notifications;
+  final List<LotteryPrize> lotteryPrizes;
+  final List<UserAsset> userAssets;
   final LessonResult? lastResult;
+  final LotteryDrawResult? lastLotteryResult;
   final String? errorMessage;
   final List<CustomWord> _reviewWords;
 
@@ -246,7 +253,10 @@ class AppState {
     Set<String>? pendingRewardTaskIds,
     bool? isRewardLoading,
     List<AppNotification>? notifications,
+    List<LotteryPrize>? lotteryPrizes,
+    List<UserAsset>? userAssets,
     LessonResult? lastResult,
+    LotteryDrawResult? lastLotteryResult,
     bool clearLastResult = false,
     String? errorMessage,
     bool clearError = false,
@@ -280,7 +290,10 @@ class AppState {
       pendingRewardTaskIds: pendingRewardTaskIds ?? this.pendingRewardTaskIds,
       isRewardLoading: isRewardLoading ?? this.isRewardLoading,
       notifications: notifications ?? this.notifications,
+      lotteryPrizes: lotteryPrizes ?? this.lotteryPrizes,
+      userAssets: userAssets ?? this.userAssets,
       lastResult: clearLastResult ? null : lastResult ?? this.lastResult,
+      lastLotteryResult: lastLotteryResult ?? this.lastLotteryResult,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
       reviewWords: customWords == null && userWords == null
           ? _reviewWords
@@ -311,6 +324,8 @@ class AppState {
       pendingRewardTaskIds: {},
       isRewardLoading: false,
       notifications: [],
+      lotteryPrizes: [],
+      userAssets: [],
     );
   }
 }

@@ -2184,6 +2184,108 @@ class AppLocalizationsZh extends AppLocalizations {
   String get languageSetting => '语言';
 
   @override
+  String luckyDrawCostLine(Object cost) {
+    return '消耗 $cost XP 抽一次';
+  }
+
+  @override
+  String luckyDrawBalanceHint(Object xp) {
+    return '当前余额 $xp XP；奖品包含头像框、主页背景、徽章、称号、卡片皮肤和安慰碎片。';
+  }
+
+  @override
+  String luckyDrawInventoryCount(Object count) {
+    return '库存 $count 件';
+  }
+
+  @override
+  String get luckyDrawNoBoost => '无学习加成';
+
+  @override
+  String get luckyDrawNow => '立即抽奖';
+
+  @override
+  String get luckyDrawInsufficient => '余额不足，先完成任务';
+
+  @override
+  String luckyDrawShortfall(Object shortfall) {
+    return '还差 $shortfall XP。完成新学、复习或错词清理即可领取积分。';
+  }
+
+  @override
+  String get luckyDrawFailed => '抽奖失败，请稍后重试';
+
+  @override
+  String get luckyDrawSuccessTitle => '抽奖成功';
+
+  @override
+  String luckyDrawReward(Object name) {
+    return '获得：$name';
+  }
+
+  @override
+  String luckyDrawDeducted(Object balance, Object cost) {
+    return '已扣除 $cost XP，剩余 $balance XP。';
+  }
+
+  @override
+  String get luckyDrawKeepLooking => '继续看看';
+
+  @override
+  String get luckyDrawViewAssets => '查看个人资产';
+
+  @override
+  String get luckyDrawPoolLoading => '奖池加载中：头像框、主页背景、学习徽章、训练场称号、卡片皮肤、安慰碎片。';
+
+  @override
+  String get profileAssetsTitle => '个人资产';
+
+  @override
+  String get profileAssetsSubtitle => '抽奖获得的装饰资产只用于展示，不影响学习分数。';
+
+  @override
+  String get profileAssetsEmpty =>
+      '暂无装饰资产。前往发现页使用 XP 抽奖后，头像框、主页背景、徽章、称号、卡片皮肤和碎片会显示在这里。';
+
+  @override
+  String profileAssetMeta(Object category, Object fragments, Object quantity) {
+    return '$category · 数量 $quantity · 碎片值 $fragments';
+  }
+
+  @override
+  String get lotteryCategoryAvatarFrame => '头像框';
+
+  @override
+  String get lotteryCategoryProfileBackground => '主页背景';
+
+  @override
+  String get lotteryCategoryBadge => '学习徽章';
+
+  @override
+  String get lotteryCategoryTitle => '训练称号';
+
+  @override
+  String get lotteryCategoryCardSkin => '卡片皮肤';
+
+  @override
+  String get lotteryCategoryFragment => '安慰碎片';
+
+  @override
+  String get lotteryCategoryDefault => '装饰资产';
+
+  @override
+  String get lotteryRarityRare => '稀有';
+
+  @override
+  String get lotteryRarityUncommon => '进阶';
+
+  @override
+  String get lotteryRarityCommon => '普通';
+
+  @override
+  String get lotteryRarityComfort => '安慰';
+
+  @override
   String get languageChinese => '中文';
 
   @override

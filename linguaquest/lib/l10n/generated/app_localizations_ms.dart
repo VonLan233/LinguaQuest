@@ -2306,6 +2306,111 @@ class AppLocalizationsMs extends AppLocalizations {
   String get languageSetting => 'Bahasa';
 
   @override
+  String luckyDrawCostLine(Object cost) {
+    return 'Belanja $cost XP setiap cabutan';
+  }
+
+  @override
+  String luckyDrawBalanceHint(Object xp) {
+    return 'Baki semasa $xp XP; hadiah termasuk bingkai avatar, latar belakang profil, lencana, gelaran, kulit kad dan serpihan saguhati.';
+  }
+
+  @override
+  String luckyDrawInventoryCount(Object count) {
+    return '$count item dalam stok';
+  }
+
+  @override
+  String get luckyDrawNoBoost => 'Tiada peningkatan pembelajaran';
+
+  @override
+  String get luckyDrawNow => 'Cabut sekarang';
+
+  @override
+  String get luckyDrawInsufficient =>
+      'XP tidak mencukupi — selesaikan tugasan dahulu';
+
+  @override
+  String luckyDrawShortfall(Object shortfall) {
+    return 'Lagi $shortfall XP. Selesaikan pembelajaran baharu, ulang kaji atau pembersihan kesilapan untuk memperoleh mata.';
+  }
+
+  @override
+  String get luckyDrawFailed => 'Cabutan gagal, sila cuba lagi nanti';
+
+  @override
+  String get luckyDrawSuccessTitle => 'Cabutan berjaya';
+
+  @override
+  String luckyDrawReward(Object name) {
+    return 'Anda dapat: $name';
+  }
+
+  @override
+  String luckyDrawDeducted(Object balance, Object cost) {
+    return 'Ditolak $cost XP, $balance XP berbaki.';
+  }
+
+  @override
+  String get luckyDrawKeepLooking => 'Terus lihat';
+
+  @override
+  String get luckyDrawViewAssets => 'Lihat aset saya';
+
+  @override
+  String get luckyDrawPoolLoading =>
+      'Kolam hadiah sedang dimuatkan: bingkai avatar, latar belakang profil, lencana pembelajaran, gelaran latihan, kulit kad, serpihan saguhati.';
+
+  @override
+  String get profileAssetsTitle => 'Aset Saya';
+
+  @override
+  String get profileAssetsSubtitle =>
+      'Aset hiasan yang dimenangi daripada cabutan adalah untuk paparan sahaja dan tidak menjejaskan skor pembelajaran.';
+
+  @override
+  String get profileAssetsEmpty =>
+      'Belum ada aset hiasan. Selepas menggunakan XP untuk cabutan di halaman Discover, bingkai avatar, latar belakang profil, lencana, gelaran, kulit kad dan serpihan akan dipaparkan di sini.';
+
+  @override
+  String profileAssetMeta(Object category, Object fragments, Object quantity) {
+    return '$category · Kuantiti $quantity · Serpihan $fragments';
+  }
+
+  @override
+  String get lotteryCategoryAvatarFrame => 'Bingkai Avatar';
+
+  @override
+  String get lotteryCategoryProfileBackground => 'Latar Belakang Profil';
+
+  @override
+  String get lotteryCategoryBadge => 'Lencana Pembelajaran';
+
+  @override
+  String get lotteryCategoryTitle => 'Gelaran Latihan';
+
+  @override
+  String get lotteryCategoryCardSkin => 'Kulit Kad';
+
+  @override
+  String get lotteryCategoryFragment => 'Serpihan Saguhati';
+
+  @override
+  String get lotteryCategoryDefault => 'Aset Hiasan';
+
+  @override
+  String get lotteryRarityRare => 'Jarang';
+
+  @override
+  String get lotteryRarityUncommon => 'Lanjutan';
+
+  @override
+  String get lotteryRarityCommon => 'Biasa';
+
+  @override
+  String get lotteryRarityComfort => 'Saguhati';
+
+  @override
   String get languageChinese => '中文';
 
   @override

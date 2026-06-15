@@ -12,6 +12,7 @@ import '../../data/models/daily_reward_task.dart';
 import '../../data/models/exercise_record.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
+import '../../data/models/lottery.dart';
 import '../../data/models/point_grant_result.dart';
 import '../../data/models/review_event.dart';
 import '../../data/models/study_session.dart';
@@ -23,6 +24,7 @@ import '../../data/repositories/api_repositories.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../data/repositories/custom_word_repository.dart';
 import '../../data/repositories/learning_repository.dart';
+import '../../data/repositories/lottery_repository.dart';
 import '../../data/repositories/mock_repositories.dart';
 import '../../data/repositories/notification_repository.dart';
 import '../../data/repositories/reward_repository.dart';
@@ -86,6 +88,13 @@ final notificationRepositoryProvider = Provider<NotificationRepository>((ref) {
   return MockNotificationRepository();
 });
 
+final lotteryRepositoryProvider = Provider<LotteryRepository>((ref) {
+  if (AppConstants.apiBaseUrl.isNotEmpty) {
+    return ApiLotteryRepository(ref.watch(apiClientProvider));
+  }
+  return MockLotteryRepository();
+});
+
 final rewardRepositoryProvider = Provider<RewardRepository>((ref) {
   if (AppConstants.apiBaseUrl.isNotEmpty) {
     return ApiRewardRepository(ref.watch(apiClientProvider));
@@ -125,6 +134,7 @@ class AppController extends Notifier<AppState> {
   late final ReviewRepository _reviewRepository;
   late final StudyPlanRepository _studyPlanRepository;
   late final NotificationRepository _notificationRepository;
+  late final LotteryRepository _lotteryRepository;
   late final RewardRepository _rewardRepository;
   late final RewardTaskRepository _rewardTaskRepository;
   late final LocalNotificationService _localNotificationService;
@@ -139,6 +149,7 @@ class AppController extends Notifier<AppState> {
     _reviewRepository = ref.watch(reviewRepositoryProvider);
     _studyPlanRepository = ref.watch(studyPlanRepositoryProvider);
     _notificationRepository = ref.watch(notificationRepositoryProvider);
+    _lotteryRepository = ref.watch(lotteryRepositoryProvider);
     _rewardRepository = ref.watch(rewardRepositoryProvider);
     _rewardTaskRepository = ref.watch(rewardTaskRepositoryProvider);
     _localNotificationService = ref.watch(localNotificationServiceProvider);
@@ -212,6 +223,7 @@ class AppController extends Notifier<AppState> {
       final words = user == null
           ? <CustomWord>[]
           : await _customWordRepository.list(user.uid);
+      final lotteryData = await _loadLotteryData(user);
       final reminderSettings = studyPlan == null
           ? _loadReminderSettings(prefs)
           : _reminderSettingsForPlan(studyPlan);
@@ -226,6 +238,8 @@ class AppController extends Notifier<AppState> {
         currentWordBookId: currentWordBookId,
         lessons: lessons,
         customWords: words,
+        lotteryPrizes: lotteryData.prizes,
+        userAssets: lotteryData.assets,
         userWords: userWords,
         themeMode: _themeModeFromName(prefs.getString(_themeModeKey)),
         locale: _localeFromName(prefs.getString(_localeKey)),
@@ -300,9 +314,12 @@ class AppController extends Notifier<AppState> {
         email: email,
         password: password,
       );
+      final lotteryData = await _loadLotteryData(user);
       state = state.copyWith(
         user: user,
         customWords: await _customWordRepository.list(user.uid),
+        lotteryPrizes: lotteryData.prizes,
+        userAssets: lotteryData.assets,
         userWords: await _userWordRepository.list(user.uid),
       );
       await _ensureStudyPlan(user);
@@ -318,9 +335,12 @@ class AppController extends Notifier<AppState> {
         email: email,
         password: password,
       );
+      final lotteryData = await _loadLotteryData(user);
       state = state.copyWith(
         user: user,
         customWords: await _customWordRepository.list(user.uid),
+        lotteryPrizes: lotteryData.prizes,
+        userAssets: lotteryData.assets,
         userWords: await _userWordRepository.list(user.uid),
       );
       await _ensureStudyPlan(user);
@@ -527,6 +547,8 @@ class AppController extends Notifier<AppState> {
       themeMode: themeMode,
       reminderSettings: reminderSettings,
       notifications: [],
+      lotteryPrizes: [],
+      userAssets: [],
       clearLastResult: true,
     );
     unawaited(_scheduleLocalNotifications());
@@ -1176,6 +1198,60 @@ class AppController extends Notifier<AppState> {
         errorMessage: _friendlyError(error),
       );
       return false;
+    }
+  }
+
+  Future<bool> drawLottery() async {
+    final user = state.user;
+    if (user == null) return false;
+    if (user.xp < lotteryDrawCost) {
+      state = state.copyWith(
+        errorMessage: '当前余额 ${user.xp} XP，不足 $lotteryDrawCost XP。先完成积分任务再抽奖。',
+      );
+      return false;
+    }
+    return _run(() async {
+      final response = await _lotteryRepository.draw(
+        uid: user.uid,
+        currentXp: user.xp,
+      );
+      if (response.notifications.isNotEmpty) {
+        await _notificationRepository.ensureGenerated(
+          user.uid,
+          response.notifications,
+        );
+      }
+      final updatedUser =
+          response.user ??
+          user.copyWith(
+            xp: response.result.balanceAfter,
+            updatedAt: DateTime.now(),
+          );
+      final assets = await _lotteryRepository.assets(user.uid);
+      final notifications = await _notificationRepository.list(user.uid);
+      state = state.copyWith(
+        user: updatedUser,
+        userAssets: assets,
+        lastLotteryResult: response.result,
+        notifications: notifications,
+      );
+    });
+  }
+
+  Future<({List<LotteryPrize> prizes, List<UserAsset> assets})>
+  _loadLotteryData(UserProfile? user) async {
+    if (user == null) {
+      return (prizes: <LotteryPrize>[], assets: <UserAsset>[]);
+    }
+    try {
+      final (prizes, assets) = await (
+        _lotteryRepository.prizePool(),
+        _lotteryRepository.assets(user.uid),
+      ).wait;
+      return (prizes: prizes, assets: assets);
+    } catch (error) {
+      debugPrint('Failed to load lottery data: $error');
+      return (prizes: <LotteryPrize>[], assets: <UserAsset>[]);
     }
   }
 
