@@ -4,10 +4,12 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
 import '../../core/utils/date_formatting.dart';
 import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/quest_panel.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -34,7 +36,12 @@ class ReviewCenterScreen extends ConsumerWidget {
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
+          padding: const EdgeInsets.fromLTRB(
+            AppTokens.s20,
+            AppTokens.s20,
+            AppTokens.s20,
+            88,
+          ),
           children: [
             _ReviewStatusHeader(
               isPaused: state.isStudyPlanPaused,
@@ -43,14 +50,20 @@ class ReviewCenterScreen extends ConsumerWidget {
               dailyReviewLimit: state.dailyReviewLimit,
               l10n: l10n,
             ),
-            const SizedBox(height: 16),
-            _ReviewQueueSignals(
-              dueCount: due.length,
-              weakCount: weak.length,
-              cardCount: state.customWords.length,
-              l10n: l10n,
+            const SizedBox(height: AppTokens.s16),
+            QuestPanel(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppTokens.s16,
+                vertical: AppTokens.s16,
+              ),
+              child: _ReviewQueueSignals(
+                dueCount: due.length,
+                weakCount: weak.length,
+                cardCount: state.customWords.length,
+                l10n: l10n,
+              ),
             ),
-            const SizedBox(height: 22),
+            const SizedBox(height: AppTokens.s24),
             Text(
               l10n.reviewCenterTodayDue,
               style: Theme.of(
