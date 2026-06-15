@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/quest_list_row.dart';
+import '../../core/widgets/quest_panel.dart';
 import '../../core/widgets/section_header.dart';
+import '../../core/widgets/status_badge.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 class AiLearningScreen extends StatelessWidget {
@@ -18,7 +22,12 @@ class AiLearningScreen extends StatelessWidget {
     final translation = query['translation']?.trim() ?? '';
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
+      padding: const EdgeInsets.fromLTRB(
+        AppTokens.s20,
+        AppTokens.s20,
+        AppTokens.s20,
+        88,
+      ),
       children: [
         SectionHeader(
           title: l10n.aiLearningTitle,
@@ -29,18 +38,16 @@ class AiLearningScreen extends StatelessWidget {
             color: AppTheme.cyan,
           ),
         ),
-        const SizedBox(height: 14),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            PillLabel(
-              label: l10n.aiLearningPillError,
-              icon: Icons.psychology_alt_outlined,
-            ),
-          ],
+        const SizedBox(height: AppTokens.s12),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: StatusBadge(
+            label: l10n.aiLearningPillError,
+            tone: StatusTone.info,
+            icon: Icons.psychology_alt_outlined,
+          ),
         ),
-        const SizedBox(height: 22),
+        const SizedBox(height: AppTokens.s24),
         if (word.isNotEmpty) ...[
           _AiWordContextCard(
             word: word,
@@ -48,10 +55,10 @@ class AiLearningScreen extends StatelessWidget {
             translation: translation,
             l10n: l10n,
           ),
-          const SizedBox(height: 22),
+          const SizedBox(height: AppTokens.s24),
         ],
         SectionHeader(title: l10n.aiLearningToolsTitle),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppTokens.s12),
         _AiToolList(
           children: [
             _AiToolLink(
@@ -66,43 +73,50 @@ class AiLearningScreen extends StatelessWidget {
               icon: Icons.account_tree_outlined,
               title: l10n.aiLearningToolAiAnalysis,
               subtitle: l10n.aiLearningToolAiAnalysisDesc,
-              color: AppTheme.teal,
+              color: AppTokens.azure,
               status: l10n.aiLearningStatusSoon,
               onTap: () => context.push('/ai-tutor'),
             ),
           ],
         ),
-        const SizedBox(height: 12),
-        _AiToolLink(
-          icon: Icons.rate_review_outlined,
-          title: l10n.aiLearningToolAiWriting,
-          subtitle: l10n.aiLearningToolAiWritingDesc,
-          color: AppTheme.coral,
-          status: l10n.aiLearningStatusLater,
-        ),
-        const SizedBox(height: 12),
-        _AiToolLink(
-          icon: Icons.auto_stories_outlined,
-          title: l10n.aiLearningToolCloze,
-          subtitle: l10n.aiLearningToolClozeDesc,
-          color: AppTheme.mango,
-          status: l10n.aiLearningStatusPlanning,
-        ),
-        const SizedBox(height: 12),
-        _AiToolLink(
-          icon: Icons.compare_arrows_outlined,
-          title: l10n.aiLearningToolConfusion,
-          subtitle: l10n.aiLearningToolConfusionDesc,
-          color: AppTheme.cyan,
-          status: l10n.aiLearningStatusPlanning,
-        ),
-        const SizedBox(height: 12),
-        _AiToolLink(
-          icon: Icons.tips_and_updates_outlined,
-          title: l10n.aiLearningToolSentence,
-          subtitle: l10n.aiLearningToolSentenceDesc,
-          color: AppTheme.teal,
-          status: l10n.aiLearningStatusPlanning,
+        const SizedBox(height: AppTokens.s12),
+        QuestPanel(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppTokens.s8,
+            vertical: AppTokens.s4,
+          ),
+          child: Column(
+            children: [
+              _AiToolRow(
+                icon: Icons.rate_review_outlined,
+                title: l10n.aiLearningToolAiWriting,
+                subtitle: l10n.aiLearningToolAiWritingDesc,
+                color: AppTokens.coralColor(context),
+                status: l10n.aiLearningStatusLater,
+              ),
+              _AiToolRow(
+                icon: Icons.auto_stories_outlined,
+                title: l10n.aiLearningToolCloze,
+                subtitle: l10n.aiLearningToolClozeDesc,
+                color: AppTokens.mangoColor(context),
+                status: l10n.aiLearningStatusPlanning,
+              ),
+              _AiToolRow(
+                icon: Icons.compare_arrows_outlined,
+                title: l10n.aiLearningToolConfusion,
+                subtitle: l10n.aiLearningToolConfusionDesc,
+                color: AppTheme.cyan,
+                status: l10n.aiLearningStatusPlanning,
+              ),
+              _AiToolRow(
+                icon: Icons.tips_and_updates_outlined,
+                title: l10n.aiLearningToolSentence,
+                subtitle: l10n.aiLearningToolSentenceDesc,
+                color: AppTokens.azure,
+                status: l10n.aiLearningStatusPlanning,
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -117,10 +131,12 @@ class _AiToolList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         for (var index = 0; index < children.length; index++) ...[
           Expanded(child: children[index]),
-          if (index < children.length - 1) const SizedBox(width: 12),
+          if (index < children.length - 1)
+            const SizedBox(width: AppTokens.s12),
         ],
       ],
     );
@@ -143,35 +159,34 @@ class _AiWordContextCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: AppTheme.selectedSurface(context),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: theme.colorScheme.outlineVariant),
-      ),
+    return QuestPanel(
+      padding: const EdgeInsets.all(AppTokens.s16),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const IconCueBadge(icon: Icons.travel_explore, color: AppTheme.cyan),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppTokens.s12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   '${l10n.aiLearningCurrentWord}: $word',
-                  style: theme.textTheme.titleMedium,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 if (example.isNotEmpty) ...[
-                  const SizedBox(height: 6),
+                  const SizedBox(height: AppTokens.s8),
                   Text(example),
                 ],
                 if (translation.isNotEmpty) ...[
-                  const SizedBox(height: 4),
+                  const SizedBox(height: AppTokens.s4),
                   Text(
                     translation,
-                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ],
@@ -203,50 +218,80 @@ class _AiToolLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Material(
-      color: Colors.transparent,
-      borderRadius: BorderRadius.circular(16),
-      clipBehavior: Clip.antiAlias,
-      child: Ink(
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withValues(alpha: 0.24)),
-        ),
-        child: InkWell(
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return QuestPanel(
+      padding: EdgeInsets.zero,
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.all(AppTokens.s16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                Row(
-                  children: [
-                    Icon(icon, color: color, size: 32),
-                    const Spacer(),
-                    PillLabel(
-                      label: status,
-                      color: onTap == null ? Colors.blueGrey : AppTheme.teal,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Text(title, style: theme.textTheme.titleMedium),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: theme.colorScheme.onSurfaceVariant,
-                    fontSize: 13,
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
                   ),
+                  alignment: Alignment.center,
+                  child: Icon(icon, color: color, size: 24),
+                ),
+                const Spacer(),
+                StatusBadge(
+                  label: status,
+                  tone: onTap == null ? StatusTone.neutral : StatusTone.info,
                 ),
               ],
             ),
-          ),
+            const SizedBox(height: AppTokens.s12),
+            Text(
+              title,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: AppTokens.s4),
+            Text(
+              subtitle,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
         ),
       ),
+    );
+  }
+}
+
+class _AiToolRow extends StatelessWidget {
+  const _AiToolRow({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.color,
+    required this.status,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Color color;
+  final String status;
+
+  @override
+  Widget build(BuildContext context) {
+    return QuestListRow(
+      icon: icon,
+      iconColor: color,
+      title: title,
+      subtitle: subtitle,
+      showChevron: false,
+      trailing: StatusBadge(label: status, tone: StatusTone.neutral),
     );
   }
 }
