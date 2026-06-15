@@ -351,10 +351,16 @@ For **every** screen task below, the steps are the same and MUST be followed:
 - Phase 3 — redesigned: shell/bottom-nav, home, training, ai-learning, profile + about + help, wordbook + knowledge sections, custom word detail, target word detail, learning path, lesson preview, review center, mistake book, discover (hub + community + lucky draw + reward rows), quiz session (WordChoiceButton), lesson result, login. **All 10 mockup screens covered.**
 - i18n — migrated word-detail + lesson-preview stray literals to ARB (en/zh/ms) + regenerated.
 
-**Remaining (follow-up, low-risk — all already inherit the global palette refresh):**
-- Component polish on non-mockup screens: settings, study-plan settings, search, notifications, custom-word list/editor, register, goal setup, onboarding, splash, quests/*, study/* (new/review/mixed).
-- Convert study-flow recall options to `RecallButtons` (shares test helpers with quiz — update `_tapOption`/`_tapAnyOptionExcept` accordingly).
-- Phase 4 — dark-mode visual pass (needs running the app); remaining inline-Chinese audit (guard-required literals intentionally kept).
+**Update 2 (2026-06-15) — long tail completed:**
+- i18n migrated across the remaining screens: onboarding, splash, add/edit custom word, full word detail, new study, mixed study, task center hub, all quests sub-pages (ai tutor, class mode, class progress, leaderboard, progress analytics), and lesson preview. All zh values kept identical so interaction tests still pass; guard-pinned inline Chinese left in place.
+- Final i18n audit: every genuinely user-facing UI string is localized. The only remaining inline Chinese is intentional — language display names (`中文`), guard-pinned literals (`任务 XP`, `即时反馈`, `复习负荷`, `不做限时测试`, `自定义`), data/comparison values, and the knowledge-section content/titles.
+- settings/study-plan-settings: no i18n needed (only language display names); palette-refreshed via global theme.
+- **Android release APK rebuilt:** `build/app/outputs/flutter-apk/app-release.apk` (~57 MB).
+- All green: `flutter analyze` clean, 191 tests pass.
+
+**Still optional (not required for completion):**
+- Dark-mode visual pass (needs running the app on a device/emulator).
+- Converting study-flow recall options to the `RecallButtons` component (purely cosmetic; current SegmentedButton/PillLabel works).
 
 **Recovery note:** the initial 5-agent parallel batch was cut off by a session limit and left a buggy half-state; it was stabilized by salvaging the clean screens, fixing the training-screen layout crash, and re-doing home/discover/review-center individually with per-screen test gating.
 
