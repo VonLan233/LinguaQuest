@@ -1317,6 +1317,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get wordDetailUpdateFailed => 'Unable to update this card for now';
 
   @override
+  String wordDetailMasteryLabel(Object level) {
+    return 'Mastery $level/5';
+  }
+
+  @override
+  String wordDetailNextReview(Object when) {
+    return 'Next $when';
+  }
+
+  @override
   String get reviewCenterPostponedMessage =>
       'Marked as remembered; the next review will be delayed';
 

@@ -408,6 +408,8 @@
   "wordDetailStatForgot": "Forgot",
   "wordDetailStatMastery": "Mastery",
   "wordDetailUpdateFailed": "Unable to update this card for now",
+  "wordDetailMasteryLabel": "Mastery {level}/5",
+  "wordDetailNextReview": "Next {when}",
   "reviewCenterPostponedMessage": "Marked as remembered; the next review will be delayed",
   "reviewCenterCloserReviewMessage": "Added to a closer review schedule",
   "reviewCenterUpdateFailed": "Unable to update this card right now",

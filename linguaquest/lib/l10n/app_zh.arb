@@ -406,6 +406,8 @@
   "wordDetailStatForgot": "没记住",
   "wordDetailStatMastery": "掌握度",
   "wordDetailUpdateFailed": "暂时无法更新这张卡片",
+  "wordDetailMasteryLabel": "掌握 {level}/5",
+  "wordDetailNextReview": "下次 {when}",
   "reviewCenterPostponedMessage": "已标记为记住，下次复习会延后",
   "reviewCenterCloserReviewMessage": "已加入更近的复习计划",
   "reviewCenterUpdateFailed": "暂时无法更新这张卡片",

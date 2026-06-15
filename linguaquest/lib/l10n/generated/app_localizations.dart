@@ -2450,6 +2450,18 @@ abstract class AppLocalizations {
   /// **'Unable to update this card for now'**
   String get wordDetailUpdateFailed;
 
+  /// No description provided for @wordDetailMasteryLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Mastery {level}/5'**
+  String wordDetailMasteryLabel(Object level);
+
+  /// No description provided for @wordDetailNextReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Next {when}'**
+  String wordDetailNextReview(Object when);
+
   /// No description provided for @reviewCenterPostponedMessage.
   ///
   /// In en, this message translates to:

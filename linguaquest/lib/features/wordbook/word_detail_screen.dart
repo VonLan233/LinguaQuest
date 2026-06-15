@@ -37,7 +37,7 @@ class WordDetailScreen extends ConsumerWidget {
         title: Text(word.word),
         actions: [
           QuestIconButton(
-            tooltip: '编辑',
+            tooltip: l10n.commonEdit,
             onPressed: () => context.push('/custom-words/${word.id}/edit'),
             icon: Icons.edit_outlined,
           ),
@@ -100,12 +100,13 @@ class WordDetailScreen extends ConsumerWidget {
                   color: AppTheme.coral,
                 ),
                 PillLabel(
-                  label: '掌握 ${word.masteryLevel}/5',
+                  label: l10n.wordDetailMasteryLabel('${word.masteryLevel}'),
                   icon: Icons.psychology_outlined,
                 ),
                 PillLabel(
-                  label:
-                      '下次 ${formatRelativeDue(word.nextReviewAt, DateTime.now())}',
+                  label: l10n.wordDetailNextReview(
+                    formatRelativeDue(word.nextReviewAt, DateTime.now()),
+                  ),
                   icon: Icons.schedule_outlined,
                 ),
               ],

@@ -1253,6 +1253,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get wordDetailUpdateFailed => '暂时无法更新这张卡片';
 
   @override
+  String wordDetailMasteryLabel(Object level) {
+    return '掌握 $level/5';
+  }
+
+  @override
+  String wordDetailNextReview(Object when) {
+    return '下次 $when';
+  }
+
+  @override
   String get reviewCenterPostponedMessage => '已标记为记住，下次复习会延后';
 
   @override

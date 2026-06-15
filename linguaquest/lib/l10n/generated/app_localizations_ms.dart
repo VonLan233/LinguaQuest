@@ -1316,6 +1316,16 @@ class AppLocalizationsMs extends AppLocalizations {
       'Tidak dapat mengemas kini kad ini buat masa ini';
 
   @override
+  String wordDetailMasteryLabel(Object level) {
+    return 'Penguasaan $level/5';
+  }
+
+  @override
+  String wordDetailNextReview(Object when) {
+    return 'Seterusnya $when';
+  }
+
+  @override
   String get reviewCenterPostponedMessage =>
       'Ditandakan sebagai diingat; ulangkaji seterusnya akan ditunda';
 

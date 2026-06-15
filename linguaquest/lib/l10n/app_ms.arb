@@ -406,6 +406,8 @@
   "wordDetailStatForgot": "Tidak diingat",
   "wordDetailStatMastery": "Penguasaan",
   "wordDetailUpdateFailed": "Tidak dapat mengemas kini kad ini buat masa ini",
+  "wordDetailMasteryLabel": "Penguasaan {level}/5",
+  "wordDetailNextReview": "Seterusnya {when}",
   "reviewCenterPostponedMessage": "Ditandakan sebagai diingat; ulangkaji seterusnya akan ditunda",
   "reviewCenterCloserReviewMessage": "Ditambah ke jadual ulangkaji yang lebih awal",
   "reviewCenterUpdateFailed": "Tidak dapat mengemas kini kad ini buat masa ini",
