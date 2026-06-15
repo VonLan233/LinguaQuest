@@ -343,6 +343,21 @@ For **every** screen task below, the steps are the same and MUST be followed:
 
 ---
 
+## Status (2026-06-15)
+
+**Done & committed (all green: `flutter analyze` clean, 191 tests pass):**
+- Phase 1 — design tokens + theme palette (global, affects every screen).
+- Phase 2 — shared component library (10 widgets + tests).
+- Phase 3 — redesigned: shell/bottom-nav, home, training, ai-learning, profile + about + help, wordbook + knowledge sections, custom word detail, target word detail, learning path, lesson preview, review center, mistake book, discover (hub + community + lucky draw + reward rows), quiz session (WordChoiceButton), lesson result, login. **All 10 mockup screens covered.**
+- i18n — migrated word-detail + lesson-preview stray literals to ARB (en/zh/ms) + regenerated.
+
+**Remaining (follow-up, low-risk — all already inherit the global palette refresh):**
+- Component polish on non-mockup screens: settings, study-plan settings, search, notifications, custom-word list/editor, register, goal setup, onboarding, splash, quests/*, study/* (new/review/mixed).
+- Convert study-flow recall options to `RecallButtons` (shares test helpers with quiz — update `_tapOption`/`_tapAnyOptionExcept` accordingly).
+- Phase 4 — dark-mode visual pass (needs running the app); remaining inline-Chinese audit (guard-required literals intentionally kept).
+
+**Recovery note:** the initial 5-agent parallel batch was cut off by a session limit and left a buggy half-state; it was stabilized by salvaging the clean screens, fixing the training-screen layout crash, and re-doing home/discover/review-center individually with per-screen test gating.
+
 ## Self-Review Notes (coverage)
 
 - Spec §"Color/Spacing/Radii/Depth/Type/Motion" → Tasks 1-2.
