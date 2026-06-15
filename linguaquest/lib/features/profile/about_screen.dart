@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/brand_hero_card.dart';
 import '../../core/widgets/fallback_back_button.dart';
+import '../../core/widgets/quest_list_row.dart';
+import '../../core/widgets/quest_panel.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 class AboutScreen extends StatelessWidget {
@@ -9,6 +13,7 @@ class AboutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/profile'),
@@ -16,38 +21,72 @@ class AboutScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(AppTokens.s20),
           children: [
-            Text(
-              'LinguaQuest',
-              style: Theme.of(
-                context,
-              ).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w900),
+            BrandHeroCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'LinguaQuest',
+                    style: theme.textTheme.displaySmall?.copyWith(
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: AppTokens.s8),
+                  Text(
+                    l10n.aboutVersion,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 8),
-            Text(l10n.aboutVersion),
-            const SizedBox(height: 20),
-            Text(l10n.aboutIntro),
-            const SizedBox(height: 20),
-            ListTile(
-              leading: const Icon(Icons.flag_outlined),
-              title: Text(l10n.aboutGoalTitle),
-              subtitle: Text(l10n.aboutGoalSubtitle),
+            const SizedBox(height: AppTokens.s20),
+            QuestPanel(
+              padding: const EdgeInsets.all(AppTokens.s20),
+              child: Text(
+                l10n.aboutIntro,
+                style: theme.textTheme.bodyMedium,
+              ),
             ),
-            ListTile(
-              leading: const Icon(Icons.groups_outlined),
-              title: Text(l10n.aboutTeamTitle),
-              subtitle: Text(l10n.aboutTeamSubtitle),
-            ),
-            ListTile(
-              leading: const Icon(Icons.extension_outlined),
-              title: Text(l10n.aboutCoreTitle),
-              subtitle: Text(l10n.aboutCoreSubtitle),
-            ),
-            ListTile(
-              leading: const Icon(Icons.privacy_tip_outlined),
-              title: Text(l10n.aboutPrivacyTitle),
-              subtitle: Text(l10n.aboutPrivacySubtitle),
+            const SizedBox(height: AppTokens.s16),
+            QuestPanel(
+              padding: const EdgeInsets.all(AppTokens.s8),
+              child: Column(
+                children: [
+                  QuestListRow(
+                    icon: Icons.flag_outlined,
+                    iconColor: AppTokens.azure,
+                    title: l10n.aboutGoalTitle,
+                    subtitle: l10n.aboutGoalSubtitle,
+                    showChevron: false,
+                  ),
+                  QuestListRow(
+                    icon: Icons.groups_outlined,
+                    iconColor: AppTokens.successColor(context),
+                    title: l10n.aboutTeamTitle,
+                    subtitle: l10n.aboutTeamSubtitle,
+                    showChevron: false,
+                  ),
+                  QuestListRow(
+                    icon: Icons.extension_outlined,
+                    iconColor: AppTokens.mangoColor(context),
+                    title: l10n.aboutCoreTitle,
+                    subtitle: l10n.aboutCoreSubtitle,
+                    showChevron: false,
+                  ),
+                  QuestListRow(
+                    icon: Icons.privacy_tip_outlined,
+                    iconColor: AppTokens.coralColor(context),
+                    title: l10n.aboutPrivacyTitle,
+                    subtitle: l10n.aboutPrivacySubtitle,
+                    showChevron: false,
+                  ),
+                ],
+              ),
             ),
           ],
         ),

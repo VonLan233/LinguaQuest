@@ -5,9 +5,14 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
 import '../../core/utils/ui_labels.dart';
+import '../../core/widgets/brand_hero_card.dart';
 import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/progress_ring.dart';
+import '../../core/widgets/quest_panel.dart';
 import '../../core/widgets/section_header.dart';
+import '../../core/widgets/stat_tile.dart';
 import '../../data/models/lottery.dart';
 import '../../l10n/generated/app_localizations.dart';
 
@@ -40,10 +45,10 @@ class ProfileScreen extends ConsumerWidget {
           streak: user?.streak ?? 0,
           l10n: l10n,
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: AppTokens.s24),
         // Key stats in a clean row
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: AppTokens.s20),
           child: _ProfileStatsRow(
             learned: state.completedLearningWords,
             mastered: masteredWords,
@@ -51,11 +56,11 @@ class ProfileScreen extends ConsumerWidget {
             l10n: l10n,
           ),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: AppTokens.s24),
         // Progress card
         if (state.totalLearningWords > 0)
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: AppTokens.s20),
             child: _ProfileProgressCard(
               progress: state.learningPathProgress,
               completedWords: state.completedLearningWords,
@@ -63,7 +68,7 @@ class ProfileScreen extends ConsumerWidget {
               l10n: l10n,
             ),
           ),
-        const SizedBox(height: 24),
+        const SizedBox(height: AppTokens.s24),
         // Settings group
         _SettingsGroup(
           children: [
@@ -93,7 +98,7 @@ class ProfileScreen extends ConsumerWidget {
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppTokens.s16),
         _SettingsGroup(
           children: [
             _SettingsItem(
@@ -117,7 +122,7 @@ class ProfileScreen extends ConsumerWidget {
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppTokens.s16),
         _SettingsGroup(
           children: [
             _SettingsItem(
@@ -132,9 +137,9 @@ class ProfileScreen extends ConsumerWidget {
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppTokens.s16),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: AppTokens.s20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -142,14 +147,14 @@ class ProfileScreen extends ConsumerWidget {
                 title: l10n.profileAssetsTitle,
                 subtitle: l10n.profileAssetsSubtitle,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: AppTokens.s8),
               _AssetInventory(assets: state.userAssets),
             ],
           ),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: AppTokens.s24),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: AppTokens.s20),
           child: OutlinedButton.icon(
             onPressed: () async {
               await ref.read(appControllerProvider.notifier).logout();
@@ -186,65 +191,57 @@ class _ProfileHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        AppTokens.s20,
+        AppTokens.s20,
+        AppTokens.s20,
+        0,
       ),
-      child: Column(
-        children: [
-          CircleAvatar(
-            radius: 48,
-            backgroundColor: theme.colorScheme.primaryContainer,
-            child: Icon(
-              Icons.person_rounded,
-              color: theme.colorScheme.onPrimaryContainer,
-              size: 48,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            name,
-            style: theme.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            email,
-            style: TextStyle(
-              color: theme.colorScheme.onSurfaceVariant,
-              fontSize: 15,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            '$target · $level',
-            style: TextStyle(
-              color: theme.colorScheme.onSurfaceVariant,
-              fontSize: 13,
-            ),
-          ),
-          const SizedBox(height: 14),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            alignment: WrapAlignment.center,
-            children: [
-              PillLabel(
-                label: '$xp ${l10n.commonXP}',
-                icon: Icons.bolt,
-                color: AppTheme.mango,
+      child: BrandHeroCard(
+        child: Column(
+          children: [
+            CircleAvatar(
+              radius: 48,
+              backgroundColor: Colors.white.withValues(alpha: 0.22),
+              child: const Icon(
+                Icons.person_rounded,
+                color: Colors.white,
+                size: 48,
               ),
-              PillLabel(
-                label: '$streak ${l10n.profileStreakDays}',
-                icon: Icons.local_fire_department,
-                color: AppTheme.coral,
+            ),
+            const SizedBox(height: AppTokens.s16),
+            Text(
+              name,
+              style: theme.textTheme.headlineSmall?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w800,
               ),
-            ],
-          ),
-        ],
+            ),
+            const SizedBox(height: AppTokens.s8),
+            Text(email, style: const TextStyle(fontSize: 15)),
+            const SizedBox(height: AppTokens.s4),
+            Text('$target · $level', style: const TextStyle(fontSize: 13)),
+            const SizedBox(height: AppTokens.s12),
+            Wrap(
+              spacing: AppTokens.s8,
+              runSpacing: AppTokens.s8,
+              alignment: WrapAlignment.center,
+              children: [
+                PillLabel(
+                  label: '$xp ${l10n.commonXP}',
+                  icon: Icons.bolt,
+                  color: AppTheme.mango,
+                ),
+                PillLabel(
+                  label: '$streak ${l10n.profileStreakDays}',
+                  icon: Icons.local_fire_department,
+                  color: AppTheme.coral,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -265,76 +262,35 @@ class _ProfileStatsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      decoration: BoxDecoration(
-        color: Theme.of(
-          context,
-        ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
-        borderRadius: BorderRadius.circular(16),
-      ),
+    return QuestPanel(
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: _StatCell(
+            child: StatTile(
               value: '$learned',
               label: l10n.profileLearnedWords,
+              accent: AppTheme.teal,
             ),
           ),
-          Container(
-            width: 1,
-            height: 40,
-            color: Theme.of(context).colorScheme.outlineVariant,
-          ),
+          const SizedBox(width: AppTokens.s8),
           Expanded(
-            child: _StatCell(
+            child: StatTile(
               value: '$mastered',
               label: l10n.profileMasteredWords,
+              accent: AppTheme.success,
             ),
           ),
-          Container(
-            width: 1,
-            height: 40,
-            color: Theme.of(context).colorScheme.outlineVariant,
-          ),
+          const SizedBox(width: AppTokens.s8),
           Expanded(
-            child: _StatCell(
+            child: StatTile(
               value: '$streak',
               label: l10n.onboardingTagPillStreak,
+              accent: AppTheme.coral,
             ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class _StatCell extends StatelessWidget {
-  const _StatCell({required this.value, required this.label});
-
-  final String value;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Column(
-      children: [
-        Text(
-          value,
-          style: theme.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.w900,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            color: theme.colorScheme.onSurfaceVariant,
-            fontSize: 12,
-          ),
-        ),
-      ],
     );
   }
 }
@@ -355,37 +311,35 @@ class _ProfileProgressCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    final percent = (progress.clamp(0.0, 1.0) * 100).round();
+    return QuestPanel(
+      child: Row(
         children: [
-          Text(
-            l10n.profileCurrentBookProgress,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w800,
-            ),
+          ProgressRing(
+            progress: progress,
+            color: AppTheme.success,
+            centerLabel: '$percent%',
           ),
-          const SizedBox(height: 12),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(999),
-            child: LinearProgressIndicator(
-              value: progress,
-              minHeight: 10,
-              backgroundColor: AppTheme.progressTrack(context),
-              valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.leaf),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            '$completedWords / $totalWords ${l10n.commonWords}',
-            style: TextStyle(
-              color: theme.colorScheme.onSurfaceVariant,
-              fontSize: 13,
+          const SizedBox(width: AppTokens.s16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.profileCurrentBookProgress,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: AppTokens.s8),
+                Text(
+                  '$completedWords / $totalWords ${l10n.commonWords}',
+                  style: TextStyle(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    fontSize: 13,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
