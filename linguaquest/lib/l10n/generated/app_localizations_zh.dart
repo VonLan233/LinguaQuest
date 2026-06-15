@@ -406,6 +406,60 @@ class AppLocalizationsZh extends AppLocalizations {
   String get mixedSaveAndHome => '保存并回首页';
 
   @override
+  String get questCenterTitle => '任务中心';
+
+  @override
+  String get questCenterSubtitle => '完成学习动作后领取积分，也可以查看排名、分析和班级学习。';
+
+  @override
+  String get questDailyTask => '每日任务';
+
+  @override
+  String get questDailyTaskBody => '完成一节课程，并复习 5 个到期词。';
+
+  @override
+  String get questAchievements => '成就';
+
+  @override
+  String get questAchievementsBody => '连续 7 天、已学 100 词、首次满分课程等成就。';
+
+  @override
+  String get questAchievementsValue => '3 个';
+
+  @override
+  String get questLeaderboard => '排行榜';
+
+  @override
+  String get questLeaderboardBody => '好友和未来班级的每周 XP 排名。';
+
+  @override
+  String get questWeekly => '每周';
+
+  @override
+  String get questAnalytics => '学习分析';
+
+  @override
+  String get questAnalyticsBody => '正确率、词汇增长和复习完成趋势。';
+
+  @override
+  String get questTrend => '趋势';
+
+  @override
+  String get questClassMode => '课堂模式';
+
+  @override
+  String get questClassModeBody => '通过班级码加入，查看教师进度看板和小组学习情况。';
+
+  @override
+  String get questClassCode => '班级码';
+
+  @override
+  String get questAiTutor => 'AI 助教';
+
+  @override
+  String get questAiTutorBody => '解释错因，并给出例句建议。';
+
+  @override
   String get onboardingFeatureImageCards => '图像词卡';
 
   @override
@@ -2094,15 +2148,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get questDailyQuests => '每日任务';
-
-  @override
-  String get questAchievements => '成就';
-
-  @override
-  String get questLeaderboard => '排行榜';
-
-  @override
-  String get questClassMode => '课堂模式';
 
   @override
   String get questProgress => '进度';

@@ -868,6 +868,114 @@ abstract class AppLocalizations {
   /// **'Save and go home'**
   String get mixedSaveAndHome;
 
+  /// No description provided for @questCenterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Task center'**
+  String get questCenterTitle;
+
+  /// No description provided for @questCenterSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Earn points after study actions; also view rankings, analytics, and class learning.'**
+  String get questCenterSubtitle;
+
+  /// No description provided for @questDailyTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily tasks'**
+  String get questDailyTask;
+
+  /// No description provided for @questDailyTaskBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish a lesson and review 5 due words.'**
+  String get questDailyTaskBody;
+
+  /// No description provided for @questAchievements.
+  ///
+  /// In en, this message translates to:
+  /// **'Achievements'**
+  String get questAchievements;
+
+  /// No description provided for @questAchievementsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Streaks, 100 words learned, first perfect lesson, and more.'**
+  String get questAchievementsBody;
+
+  /// No description provided for @questAchievementsValue.
+  ///
+  /// In en, this message translates to:
+  /// **'3'**
+  String get questAchievementsValue;
+
+  /// No description provided for @questLeaderboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Leaderboard'**
+  String get questLeaderboard;
+
+  /// No description provided for @questLeaderboardBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly XP ranking for friends and future classes.'**
+  String get questLeaderboardBody;
+
+  /// No description provided for @questWeekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly'**
+  String get questWeekly;
+
+  /// No description provided for @questAnalytics.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning analytics'**
+  String get questAnalytics;
+
+  /// No description provided for @questAnalyticsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Accuracy, vocabulary growth, and review completion trends.'**
+  String get questAnalyticsBody;
+
+  /// No description provided for @questTrend.
+  ///
+  /// In en, this message translates to:
+  /// **'Trends'**
+  String get questTrend;
+
+  /// No description provided for @questClassMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Class Mode'**
+  String get questClassMode;
+
+  /// No description provided for @questClassModeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Join with a class code to see the teacher dashboard and group learning.'**
+  String get questClassModeBody;
+
+  /// No description provided for @questClassCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Class code'**
+  String get questClassCode;
+
+  /// No description provided for @questAiTutor.
+  ///
+  /// In en, this message translates to:
+  /// **'AI tutor'**
+  String get questAiTutor;
+
+  /// No description provided for @questAiTutorBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Explain mistakes and suggest example sentences.'**
+  String get questAiTutorBody;
+
   /// No description provided for @onboardingFeatureImageCards.
   ///
   /// In en, this message translates to:
@@ -4027,24 +4135,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Daily Quests'**
   String get questDailyQuests;
-
-  /// No description provided for @questAchievements.
-  ///
-  /// In en, this message translates to:
-  /// **'Achievements'**
-  String get questAchievements;
-
-  /// No description provided for @questLeaderboard.
-  ///
-  /// In en, this message translates to:
-  /// **'Leaderboard'**
-  String get questLeaderboard;
-
-  /// No description provided for @questClassMode.
-  ///
-  /// In en, this message translates to:
-  /// **'Class Mode'**
-  String get questClassMode;
 
   /// No description provided for @questProgress.
   ///

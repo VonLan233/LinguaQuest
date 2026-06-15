@@ -420,6 +420,66 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mixedSaveAndHome => 'Save and go home';
 
   @override
+  String get questCenterTitle => 'Task center';
+
+  @override
+  String get questCenterSubtitle =>
+      'Earn points after study actions; also view rankings, analytics, and class learning.';
+
+  @override
+  String get questDailyTask => 'Daily tasks';
+
+  @override
+  String get questDailyTaskBody => 'Finish a lesson and review 5 due words.';
+
+  @override
+  String get questAchievements => 'Achievements';
+
+  @override
+  String get questAchievementsBody =>
+      'Streaks, 100 words learned, first perfect lesson, and more.';
+
+  @override
+  String get questAchievementsValue => '3';
+
+  @override
+  String get questLeaderboard => 'Leaderboard';
+
+  @override
+  String get questLeaderboardBody =>
+      'Weekly XP ranking for friends and future classes.';
+
+  @override
+  String get questWeekly => 'Weekly';
+
+  @override
+  String get questAnalytics => 'Learning analytics';
+
+  @override
+  String get questAnalyticsBody =>
+      'Accuracy, vocabulary growth, and review completion trends.';
+
+  @override
+  String get questTrend => 'Trends';
+
+  @override
+  String get questClassMode => 'Class Mode';
+
+  @override
+  String get questClassModeBody =>
+      'Join with a class code to see the teacher dashboard and group learning.';
+
+  @override
+  String get questClassCode => 'Class code';
+
+  @override
+  String get questAiTutor => 'AI tutor';
+
+  @override
+  String get questAiTutorBody =>
+      'Explain mistakes and suggest example sentences.';
+
+  @override
   String get onboardingFeatureImageCards => 'Image Word Cards';
 
   @override
@@ -2196,15 +2256,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get questDailyQuests => 'Daily Quests';
-
-  @override
-  String get questAchievements => 'Achievements';
-
-  @override
-  String get questLeaderboard => 'Leaderboard';
-
-  @override
-  String get questClassMode => 'Class Mode';
 
   @override
   String get questProgress => 'Progress';

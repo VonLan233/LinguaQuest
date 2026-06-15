@@ -425,6 +425,67 @@ class AppLocalizationsMs extends AppLocalizations {
   String get mixedSaveAndHome => 'Simpan dan ke laman utama';
 
   @override
+  String get questCenterTitle => 'Pusat tugasan';
+
+  @override
+  String get questCenterSubtitle =>
+      'Dapatkan mata selepas tindakan belajar; lihat juga kedudukan, analitik dan pembelajaran kelas.';
+
+  @override
+  String get questDailyTask => 'Tugasan harian';
+
+  @override
+  String get questDailyTaskBody =>
+      'Selesaikan satu pelajaran dan ulang kaji 5 perkataan tertunggak.';
+
+  @override
+  String get questAchievements => 'Pencapaian';
+
+  @override
+  String get questAchievementsBody =>
+      'Streak, 100 perkataan dipelajari, pelajaran sempurna pertama, dan banyak lagi.';
+
+  @override
+  String get questAchievementsValue => '3';
+
+  @override
+  String get questLeaderboard => 'Papan Pendahulu';
+
+  @override
+  String get questLeaderboardBody =>
+      'Kedudukan XP mingguan untuk rakan dan kelas masa depan.';
+
+  @override
+  String get questWeekly => 'Mingguan';
+
+  @override
+  String get questAnalytics => 'Analitik pembelajaran';
+
+  @override
+  String get questAnalyticsBody =>
+      'Ketepatan, pertumbuhan kosa kata dan trend penyiapan ulang kaji.';
+
+  @override
+  String get questTrend => 'Trend';
+
+  @override
+  String get questClassMode => 'Mod Kelas';
+
+  @override
+  String get questClassModeBody =>
+      'Sertai dengan kod kelas untuk lihat papan pemuka guru dan pembelajaran kumpulan.';
+
+  @override
+  String get questClassCode => 'Kod kelas';
+
+  @override
+  String get questAiTutor => 'Tutor AI';
+
+  @override
+  String get questAiTutorBody =>
+      'Terangkan kesilapan dan cadangkan contoh ayat.';
+
+  @override
   String get onboardingFeatureImageCards => 'Kad Perkataan Bergambar';
 
   @override
@@ -2202,15 +2263,6 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get questDailyQuests => 'Misi Harian';
-
-  @override
-  String get questAchievements => 'Pencapaian';
-
-  @override
-  String get questLeaderboard => 'Papan Pendahulu';
-
-  @override
-  String get questClassMode => 'Mod Kelas';
 
   @override
   String get questProgress => 'Kemajuan';

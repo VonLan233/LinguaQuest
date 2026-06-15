@@ -4,18 +4,20 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class QuestScreen extends StatelessWidget {
   const QuestScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
       children: [
-        const SectionHeader(
-          title: '任务中心',
-          subtitle: '完成学习动作后领取积分，也可以查看排名、分析和班级学习。',
+        SectionHeader(
+          title: l10n.questCenterTitle,
+          subtitle: l10n.questCenterSubtitle,
         ),
         const SizedBox(height: 12),
         const PillLabel(
@@ -24,48 +26,48 @@ class QuestScreen extends StatelessWidget {
           color: AppTheme.mango,
         ),
         const SizedBox(height: 16),
-        const _QuestRow(
+        _QuestRow(
           icon: Icons.flag_outlined,
-          title: '每日任务',
-          body: '完成一节课程，并复习 5 个到期词。',
+          title: l10n.questDailyTask,
+          body: l10n.questDailyTaskBody,
           value: '20 XP',
         ),
         const SizedBox(height: 10),
-        const _QuestRow(
+        _QuestRow(
           icon: Icons.workspace_premium_outlined,
-          title: '成就徽章',
-          body: '连续 7 天、已学 100 词、首次满分课程等成就。',
-          value: '3 个',
+          title: l10n.questAchievements,
+          body: l10n.questAchievementsBody,
+          value: l10n.questAchievementsValue,
         ),
         const SizedBox(height: 10),
         _QuestRow(
           icon: Icons.leaderboard_outlined,
-          title: '排行榜',
-          body: '好友和未来班级的每周 XP 排名。',
-          value: '每周',
+          title: l10n.questLeaderboard,
+          body: l10n.questLeaderboardBody,
+          value: l10n.questWeekly,
           route: '/leaderboard',
         ),
         const SizedBox(height: 10),
         _QuestRow(
           icon: Icons.insights_outlined,
-          title: '学习分析',
-          body: '正确率、词汇增长和复习完成趋势。',
-          value: '趋势',
+          title: l10n.questAnalytics,
+          body: l10n.questAnalyticsBody,
+          value: l10n.questTrend,
           route: '/progress',
         ),
         const SizedBox(height: 10),
         _QuestRow(
           icon: Icons.groups_outlined,
-          title: '班级模式',
-          body: '通过班级码加入，查看教师进度看板和小组学习情况。',
-          value: '班级码',
+          title: l10n.questClassMode,
+          body: l10n.questClassModeBody,
+          value: l10n.questClassCode,
           route: '/class-mode',
         ),
         const SizedBox(height: 10),
         _QuestRow(
           icon: Icons.smart_toy_outlined,
-          title: 'AI 助教',
-          body: '解释错因，并给出例句建议。',
+          title: l10n.questAiTutor,
+          body: l10n.questAiTutorBody,
           value: '暂未开放',
           route: '/ai-tutor',
         ),
