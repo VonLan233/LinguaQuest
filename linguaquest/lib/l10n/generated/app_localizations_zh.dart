@@ -460,6 +460,97 @@ class AppLocalizationsZh extends AppLocalizations {
   String get questAiTutorBody => '解释错因，并给出例句建议。';
 
   @override
+  String get aiTutorSamplePrompt => '解释 affect 和 effect 的区别';
+
+  @override
+  String get aiTutorSubtitle => '输入单词、语法或错题，获得结构化解释和可练习的例句。';
+
+  @override
+  String get aiTutorInputLabel => '询问单词、语法或错题';
+
+  @override
+  String get aiTutorSampleAnswer =>
+      'Affect is usually a verb: \"The weather affects my mood.\" Effect is usually a noun: \"The effect was immediate.\" 你可以分别用两个词各造一个句子。';
+
+  @override
+  String get classModeTitle => '班级学习';
+
+  @override
+  String get classModeSubtitle => '输入班级码加入小组，查看班级进度和弱项摘要。';
+
+  @override
+  String classModeJoined(Object code) {
+    return '已加入班级 $code';
+  }
+
+  @override
+  String get classModeJoin => '加入班级';
+
+  @override
+  String get classModeViewProgress => '查看班级进度';
+
+  @override
+  String get classProgressTitle => '班级进度';
+
+  @override
+  String get classProgressOverview => '班级概览';
+
+  @override
+  String get classProgressSubtitle => '教师端完成度和弱项词摘要。';
+
+  @override
+  String classProgressWeakWord(Object word) {
+    return '弱项词：$word';
+  }
+
+  @override
+  String get classTopicExamSignals => '考试信号词';
+
+  @override
+  String get classTopicTravelBasics => '旅行基础';
+
+  @override
+  String get classTopicWorkplace => '职场表达';
+
+  @override
+  String get leaderboardDefaultName => '学习者';
+
+  @override
+  String get leaderboardTitle => '训练场排行榜';
+
+  @override
+  String get leaderboardSubtitle => '仅统计真实完成的训练 XP，不再展示静态演示榜单。';
+
+  @override
+  String get leaderboardEmptyTitle => '暂无训练成绩';
+
+  @override
+  String get leaderboardEmptyBody => '完成抢词、一站到底或单词拼写后，会用真实训练 XP 生成排名。';
+
+  @override
+  String get leaderboardOnlyValidXp => '仅统计有效学习 XP';
+
+  @override
+  String get analyticsDataTitle => '学习数据';
+
+  @override
+  String get analyticsDataSubtitle => '根据生词卡和复习记录生成的首版分析视图。';
+
+  @override
+  String analyticsAssetsDue(Object due, Object total) {
+    return '$total 个学习资产中有 $due 个到期';
+  }
+
+  @override
+  String get analyticsCards => '生词卡';
+
+  @override
+  String get analyticsTrainingXp => '训练 XP';
+
+  @override
+  String get analyticsAccuracy => '正确率';
+
+  @override
   String get onboardingFeatureImageCards => '图像词卡';
 
   @override

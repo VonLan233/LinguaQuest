@@ -480,6 +480,104 @@ class AppLocalizationsEn extends AppLocalizations {
       'Explain mistakes and suggest example sentences.';
 
   @override
+  String get aiTutorSamplePrompt =>
+      'Explain the difference between affect and effect';
+
+  @override
+  String get aiTutorSubtitle =>
+      'Enter a word, grammar point, or mistake to get a structured explanation and practice sentences.';
+
+  @override
+  String get aiTutorInputLabel => 'Ask about a word, grammar, or mistake';
+
+  @override
+  String get aiTutorSampleAnswer =>
+      'Affect is usually a verb: \"The weather affects my mood.\" Effect is usually a noun: \"The effect was immediate.\" Try writing a sentence with each word.';
+
+  @override
+  String get classModeTitle => 'Class learning';
+
+  @override
+  String get classModeSubtitle =>
+      'Enter a class code to join a group and view class progress and weak-spot summaries.';
+
+  @override
+  String classModeJoined(Object code) {
+    return 'Joined class $code';
+  }
+
+  @override
+  String get classModeJoin => 'Join class';
+
+  @override
+  String get classModeViewProgress => 'View class progress';
+
+  @override
+  String get classProgressTitle => 'Class progress';
+
+  @override
+  String get classProgressOverview => 'Class overview';
+
+  @override
+  String get classProgressSubtitle =>
+      'Teacher-side completion and weak-word summary.';
+
+  @override
+  String classProgressWeakWord(Object word) {
+    return 'Weak word: $word';
+  }
+
+  @override
+  String get classTopicExamSignals => 'Exam signal words';
+
+  @override
+  String get classTopicTravelBasics => 'Travel basics';
+
+  @override
+  String get classTopicWorkplace => 'Workplace expressions';
+
+  @override
+  String get leaderboardDefaultName => 'Learner';
+
+  @override
+  String get leaderboardTitle => 'Training leaderboard';
+
+  @override
+  String get leaderboardSubtitle =>
+      'Counts only real completed training XP; no static demo board.';
+
+  @override
+  String get leaderboardEmptyTitle => 'No training results yet';
+
+  @override
+  String get leaderboardEmptyBody =>
+      'After finishing Word Rush, Survival, or Spelling, real training XP generates the ranking.';
+
+  @override
+  String get leaderboardOnlyValidXp => 'Counts valid learning XP only';
+
+  @override
+  String get analyticsDataTitle => 'Learning data';
+
+  @override
+  String get analyticsDataSubtitle =>
+      'A first analytics view based on word cards and review records.';
+
+  @override
+  String analyticsAssetsDue(Object due, Object total) {
+    return '$due of $total learning assets are due';
+  }
+
+  @override
+  String get analyticsCards => 'Word cards';
+
+  @override
+  String get analyticsTrainingXp => 'Training XP';
+
+  @override
+  String get analyticsAccuracy => 'Accuracy';
+
+  @override
   String get onboardingFeatureImageCards => 'Image Word Cards';
 
   @override

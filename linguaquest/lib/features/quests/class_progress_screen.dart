@@ -4,28 +4,33 @@ import '../../core/theme/app_theme.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class ClassProgressScreen extends StatelessWidget {
   const ClassProgressScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const rows = [
-      ('考试信号词', '92%', 'allocate'),
-      ('旅行基础', '64%', 'itinerary'),
-      ('职场表达', '38%', 'negotiate'),
+    final l10n = AppLocalizations.of(context);
+    final rows = [
+      (l10n.classTopicExamSignals, '92%', 'allocate'),
+      (l10n.classTopicTravelBasics, '64%', 'itinerary'),
+      (l10n.classTopicWorkplace, '38%', 'negotiate'),
     ];
 
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/class-mode'),
-        title: const Text('班级进度'),
+        title: Text(l10n.classProgressTitle),
       ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            const SectionHeader(title: '班级概览', subtitle: '教师端完成度和弱项词摘要。'),
+            SectionHeader(
+              title: l10n.classProgressOverview,
+              subtitle: l10n.classProgressSubtitle,
+            ),
             const SizedBox(height: 16),
             for (final row in rows) _ClassProgressRow(row: row),
           ],
@@ -56,7 +61,7 @@ class _ClassProgressRow extends StatelessWidget {
                 Text(row.$1, style: theme.textTheme.titleMedium),
                 const SizedBox(height: 3),
                 Text(
-                  '弱项词：${row.$3}',
+                  AppLocalizations.of(context).classProgressWeakWord(row.$3),
                   style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                 ),
               ],

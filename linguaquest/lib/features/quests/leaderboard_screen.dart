@@ -6,18 +6,20 @@ import '../../core/theme/app_theme.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class LeaderboardScreen extends ConsumerWidget {
   const LeaderboardScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final user = state.user;
     final entries = state.todayTrainingXp > 0
         ? [
             _Entry(
-              name: user?.name ?? '学习者',
+              name: user?.name ?? l10n.leaderboardDefaultName,
               xp: state.todayTrainingXp,
               rank: 1,
             ),
@@ -27,15 +29,15 @@ class LeaderboardScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/quest'),
-        title: const Text('排行榜'),
+        title: Text(l10n.questLeaderboard),
       ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            const SectionHeader(
-              title: '训练场排行榜',
-              subtitle: '仅统计真实完成的训练 XP，不再展示静态演示榜单。',
+            SectionHeader(
+              title: l10n.leaderboardTitle,
+              subtitle: l10n.leaderboardSubtitle,
             ),
             const SizedBox(height: 16),
             if (entries.isEmpty)
@@ -56,6 +58,7 @@ class _EmptyTrainingLeaderboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -68,10 +71,10 @@ class _EmptyTrainingLeaderboard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('暂无训练成绩', style: theme.textTheme.titleMedium),
+              Text(l10n.leaderboardEmptyTitle, style: theme.textTheme.titleMedium),
               const SizedBox(height: 4),
               Text(
-                '完成抢词、一站到底或单词拼写后，会用真实训练 XP 生成排名。',
+                l10n.leaderboardEmptyBody,
                 style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
               ),
             ],
@@ -116,7 +119,7 @@ class _LeaderboardTile extends StatelessWidget {
                 Text(entry.name, style: theme.textTheme.titleMedium),
                 const SizedBox(height: 3),
                 Text(
-                  '仅统计有效学习 XP',
+                  AppLocalizations.of(context).leaderboardOnlyValidXp,
                   style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                 ),
               ],

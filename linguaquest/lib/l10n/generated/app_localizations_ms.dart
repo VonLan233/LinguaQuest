@@ -486,6 +486,105 @@ class AppLocalizationsMs extends AppLocalizations {
       'Terangkan kesilapan dan cadangkan contoh ayat.';
 
   @override
+  String get aiTutorSamplePrompt =>
+      'Terangkan perbezaan antara affect dan effect';
+
+  @override
+  String get aiTutorSubtitle =>
+      'Masukkan perkataan, tatabahasa atau kesilapan untuk mendapat penjelasan berstruktur dan ayat latihan.';
+
+  @override
+  String get aiTutorInputLabel =>
+      'Tanya tentang perkataan, tatabahasa atau kesilapan';
+
+  @override
+  String get aiTutorSampleAnswer =>
+      'Affect is usually a verb: \"The weather affects my mood.\" Effect is usually a noun: \"The effect was immediate.\" Cuba tulis satu ayat dengan setiap perkataan.';
+
+  @override
+  String get classModeTitle => 'Pembelajaran kelas';
+
+  @override
+  String get classModeSubtitle =>
+      'Masukkan kod kelas untuk menyertai kumpulan dan lihat kemajuan kelas serta ringkasan kelemahan.';
+
+  @override
+  String classModeJoined(Object code) {
+    return 'Menyertai kelas $code';
+  }
+
+  @override
+  String get classModeJoin => 'Sertai kelas';
+
+  @override
+  String get classModeViewProgress => 'Lihat kemajuan kelas';
+
+  @override
+  String get classProgressTitle => 'Kemajuan kelas';
+
+  @override
+  String get classProgressOverview => 'Gambaran kelas';
+
+  @override
+  String get classProgressSubtitle =>
+      'Penyiapan pihak guru dan ringkasan perkataan lemah.';
+
+  @override
+  String classProgressWeakWord(Object word) {
+    return 'Perkataan lemah: $word';
+  }
+
+  @override
+  String get classTopicExamSignals => 'Perkataan isyarat peperiksaan';
+
+  @override
+  String get classTopicTravelBasics => 'Asas perjalanan';
+
+  @override
+  String get classTopicWorkplace => 'Ungkapan tempat kerja';
+
+  @override
+  String get leaderboardDefaultName => 'Pelajar';
+
+  @override
+  String get leaderboardTitle => 'Papan pendahulu arena latihan';
+
+  @override
+  String get leaderboardSubtitle =>
+      'Hanya mengira XP latihan sebenar yang selesai; tiada papan demo statik.';
+
+  @override
+  String get leaderboardEmptyTitle => 'Tiada keputusan latihan lagi';
+
+  @override
+  String get leaderboardEmptyBody =>
+      'Selepas menyelesaikan Word Rush, Survival atau Ejaan, XP latihan sebenar menjana kedudukan.';
+
+  @override
+  String get leaderboardOnlyValidXp => 'Hanya mengira XP pembelajaran sah';
+
+  @override
+  String get analyticsDataTitle => 'Data pembelajaran';
+
+  @override
+  String get analyticsDataSubtitle =>
+      'Pandangan analitik pertama berdasarkan kad perkataan dan rekod ulang kaji.';
+
+  @override
+  String analyticsAssetsDue(Object due, Object total) {
+    return '$due daripada $total aset pembelajaran telah tertunggak';
+  }
+
+  @override
+  String get analyticsCards => 'Kad perkataan';
+
+  @override
+  String get analyticsTrainingXp => 'XP latihan';
+
+  @override
+  String get analyticsAccuracy => 'Ketepatan';
+
+  @override
   String get onboardingFeatureImageCards => 'Kad Perkataan Bergambar';
 
   @override

@@ -976,6 +976,174 @@ abstract class AppLocalizations {
   /// **'Explain mistakes and suggest example sentences.'**
   String get questAiTutorBody;
 
+  /// No description provided for @aiTutorSamplePrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Explain the difference between affect and effect'**
+  String get aiTutorSamplePrompt;
+
+  /// No description provided for @aiTutorSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a word, grammar point, or mistake to get a structured explanation and practice sentences.'**
+  String get aiTutorSubtitle;
+
+  /// No description provided for @aiTutorInputLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask about a word, grammar, or mistake'**
+  String get aiTutorInputLabel;
+
+  /// No description provided for @aiTutorSampleAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Affect is usually a verb: \"The weather affects my mood.\" Effect is usually a noun: \"The effect was immediate.\" Try writing a sentence with each word.'**
+  String get aiTutorSampleAnswer;
+
+  /// No description provided for @classModeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Class learning'**
+  String get classModeTitle;
+
+  /// No description provided for @classModeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a class code to join a group and view class progress and weak-spot summaries.'**
+  String get classModeSubtitle;
+
+  /// No description provided for @classModeJoined.
+  ///
+  /// In en, this message translates to:
+  /// **'Joined class {code}'**
+  String classModeJoined(Object code);
+
+  /// No description provided for @classModeJoin.
+  ///
+  /// In en, this message translates to:
+  /// **'Join class'**
+  String get classModeJoin;
+
+  /// No description provided for @classModeViewProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'View class progress'**
+  String get classModeViewProgress;
+
+  /// No description provided for @classProgressTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Class progress'**
+  String get classProgressTitle;
+
+  /// No description provided for @classProgressOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Class overview'**
+  String get classProgressOverview;
+
+  /// No description provided for @classProgressSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Teacher-side completion and weak-word summary.'**
+  String get classProgressSubtitle;
+
+  /// No description provided for @classProgressWeakWord.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak word: {word}'**
+  String classProgressWeakWord(Object word);
+
+  /// No description provided for @classTopicExamSignals.
+  ///
+  /// In en, this message translates to:
+  /// **'Exam signal words'**
+  String get classTopicExamSignals;
+
+  /// No description provided for @classTopicTravelBasics.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel basics'**
+  String get classTopicTravelBasics;
+
+  /// No description provided for @classTopicWorkplace.
+  ///
+  /// In en, this message translates to:
+  /// **'Workplace expressions'**
+  String get classTopicWorkplace;
+
+  /// No description provided for @leaderboardDefaultName.
+  ///
+  /// In en, this message translates to:
+  /// **'Learner'**
+  String get leaderboardDefaultName;
+
+  /// No description provided for @leaderboardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Training leaderboard'**
+  String get leaderboardTitle;
+
+  /// No description provided for @leaderboardSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Counts only real completed training XP; no static demo board.'**
+  String get leaderboardSubtitle;
+
+  /// No description provided for @leaderboardEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No training results yet'**
+  String get leaderboardEmptyTitle;
+
+  /// No description provided for @leaderboardEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'After finishing Word Rush, Survival, or Spelling, real training XP generates the ranking.'**
+  String get leaderboardEmptyBody;
+
+  /// No description provided for @leaderboardOnlyValidXp.
+  ///
+  /// In en, this message translates to:
+  /// **'Counts valid learning XP only'**
+  String get leaderboardOnlyValidXp;
+
+  /// No description provided for @analyticsDataTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning data'**
+  String get analyticsDataTitle;
+
+  /// No description provided for @analyticsDataSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A first analytics view based on word cards and review records.'**
+  String get analyticsDataSubtitle;
+
+  /// No description provided for @analyticsAssetsDue.
+  ///
+  /// In en, this message translates to:
+  /// **'{due} of {total} learning assets are due'**
+  String analyticsAssetsDue(Object due, Object total);
+
+  /// No description provided for @analyticsCards.
+  ///
+  /// In en, this message translates to:
+  /// **'Word cards'**
+  String get analyticsCards;
+
+  /// No description provided for @analyticsTrainingXp.
+  ///
+  /// In en, this message translates to:
+  /// **'Training XP'**
+  String get analyticsTrainingXp;
+
+  /// No description provided for @analyticsAccuracy.
+  ///
+  /// In en, this message translates to:
+  /// **'Accuracy'**
+  String get analyticsAccuracy;
+
   /// No description provided for @onboardingFeatureImageCards.
   ///
   /// In en, this message translates to:
