@@ -11,6 +11,7 @@ import '../../core/widgets/pronunciation_controls.dart';
 import '../../core/widgets/quest_panel.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class LessonPreviewScreen extends ConsumerStatefulWidget {
   const LessonPreviewScreen({required this.lessonId, super.key});
@@ -38,7 +39,11 @@ class _LessonPreviewScreenState extends ConsumerState<LessonPreviewScreen> {
   Widget build(BuildContext context) {
     final lesson = _findLesson(ref);
     if (lesson == null) {
-      return const Scaffold(body: Center(child: Text('没有找到这节课')));
+      return Scaffold(
+        body: Center(
+          child: Text(AppLocalizations.of(context).lessonPreviewNoLesson),
+        ),
+      );
     }
 
     final words = lesson.words;

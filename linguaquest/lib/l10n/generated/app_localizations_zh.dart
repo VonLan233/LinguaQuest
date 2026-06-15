@@ -1223,6 +1223,36 @@ class AppLocalizationsZh extends AppLocalizations {
   String get reviewCenterRemembered => '记住了';
 
   @override
+  String get wordDetailNotFound => '没有找到这个词';
+
+  @override
+  String get wordDetailReviewStats => '复习统计';
+
+  @override
+  String get wordDetailMarkRemembered => '标记为记住';
+
+  @override
+  String get wordDetailScheduleSoon => '安排近期再练';
+
+  @override
+  String get wordDetailMarkedRemembered => '已标记为记住';
+
+  @override
+  String get wordDetailScheduledSoon => '已安排近期再练';
+
+  @override
+  String get wordDetailStatRemembered => '记住';
+
+  @override
+  String get wordDetailStatForgot => '没记住';
+
+  @override
+  String get wordDetailStatMastery => '掌握度';
+
+  @override
+  String get wordDetailUpdateFailed => '暂时无法更新这张卡片';
+
+  @override
   String get reviewCenterPostponedMessage => '已标记为记住，下次复习会延后';
 
   @override

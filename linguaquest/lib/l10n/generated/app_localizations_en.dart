@@ -1287,6 +1287,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reviewCenterRemembered => 'Remembered';
 
   @override
+  String get wordDetailNotFound => 'Word not found';
+
+  @override
+  String get wordDetailReviewStats => 'Review stats';
+
+  @override
+  String get wordDetailMarkRemembered => 'Mark as remembered';
+
+  @override
+  String get wordDetailScheduleSoon => 'Practice again soon';
+
+  @override
+  String get wordDetailMarkedRemembered => 'Marked as remembered';
+
+  @override
+  String get wordDetailScheduledSoon => 'Scheduled to practice again soon';
+
+  @override
+  String get wordDetailStatRemembered => 'Remembered';
+
+  @override
+  String get wordDetailStatForgot => 'Forgot';
+
+  @override
+  String get wordDetailStatMastery => 'Mastery';
+
+  @override
+  String get wordDetailUpdateFailed => 'Unable to update this card for now';
+
+  @override
   String get reviewCenterPostponedMessage =>
       'Marked as remembered; the next review will be delayed';
 

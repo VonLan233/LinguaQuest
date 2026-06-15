@@ -11,6 +11,7 @@ import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/pronunciation_controls.dart';
 import '../../data/models/custom_word.dart';
+import '../../l10n/generated/app_localizations.dart';
 import 'word_knowledge_sections.dart';
 
 class WordDetailScreen extends ConsumerWidget {
@@ -20,9 +21,10 @@ class WordDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final word = _find(ref);
     if (word == null) {
-      return const Scaffold(body: Center(child: Text('没有找到这个词')));
+      return Scaffold(body: Center(child: Text(l10n.wordDetailNotFound)));
     }
     final state = ref.watch(appControllerProvider);
     final canReview = word.isDue(DateTime.now()) && !state.isLoading;
@@ -116,25 +118,28 @@ class WordDetailScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('复习统计', style: Theme.of(context).textTheme.titleMedium),
+                  Text(
+                    l10n.wordDetailReviewStats,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                   const SizedBox(height: 10),
                   Row(
                     children: [
                       Expanded(
                         child: _StatLine(
-                          label: '记住',
+                          label: l10n.wordDetailStatRemembered,
                           value: '${word.correctCount}',
                         ),
                       ),
                       Expanded(
                         child: _StatLine(
-                          label: '没记住',
+                          label: l10n.wordDetailStatForgot,
                           value: '${word.wrongCount}',
                         ),
                       ),
                       Expanded(
                         child: _StatLine(
-                          label: '掌握度',
+                          label: l10n.wordDetailStatMastery,
                           value: '${word.masteryLevel}/5',
                         ),
                       ),
@@ -149,14 +154,14 @@ class WordDetailScreen extends ConsumerWidget {
                   ? () => _review(context, ref, word.id, isCorrect: true)
                   : null,
               icon: const Icon(Icons.check_circle_outline),
-              label: const Text('标记为记住'),
+              label: Text(l10n.wordDetailMarkRemembered),
             ),
             OutlinedButton.icon(
               onPressed: canReview
                   ? () => _review(context, ref, word.id, isCorrect: false)
                   : null,
               icon: const Icon(Icons.replay),
-              label: const Text('安排近期再练'),
+              label: Text(l10n.wordDetailScheduleSoon),
             ),
           ],
         ),
@@ -181,11 +186,13 @@ class WordDetailScreen extends ConsumerWidget {
         .read(appControllerProvider.notifier)
         .reviewWord(id, isCorrect);
     if (!context.mounted) return;
+    final l10n = AppLocalizations.of(context);
     final message = succeeded
         ? isCorrect
-              ? '已标记为记住'
-              : '已安排近期再练'
-        : ref.read(appControllerProvider).errorMessage ?? '暂时无法更新这张卡片';
+              ? l10n.wordDetailMarkedRemembered
+              : l10n.wordDetailScheduledSoon
+        : ref.read(appControllerProvider).errorMessage ??
+              l10n.wordDetailUpdateFailed;
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));

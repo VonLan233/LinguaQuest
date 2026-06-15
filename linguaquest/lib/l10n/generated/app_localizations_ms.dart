@@ -1285,6 +1285,37 @@ class AppLocalizationsMs extends AppLocalizations {
   String get reviewCenterRemembered => 'Ingat';
 
   @override
+  String get wordDetailNotFound => 'Perkataan tidak ditemui';
+
+  @override
+  String get wordDetailReviewStats => 'Statistik ulang kaji';
+
+  @override
+  String get wordDetailMarkRemembered => 'Tanda sebagai diingat';
+
+  @override
+  String get wordDetailScheduleSoon => 'Jadual latihan semula';
+
+  @override
+  String get wordDetailMarkedRemembered => 'Ditandakan sebagai diingat';
+
+  @override
+  String get wordDetailScheduledSoon => 'Dijadualkan untuk latihan semula';
+
+  @override
+  String get wordDetailStatRemembered => 'Diingat';
+
+  @override
+  String get wordDetailStatForgot => 'Tidak diingat';
+
+  @override
+  String get wordDetailStatMastery => 'Penguasaan';
+
+  @override
+  String get wordDetailUpdateFailed =>
+      'Tidak dapat mengemas kini kad ini buat masa ini';
+
+  @override
   String get reviewCenterPostponedMessage =>
       'Ditandakan sebagai diingat; ulangkaji seterusnya akan ditunda';
 

@@ -2390,6 +2390,66 @@ abstract class AppLocalizations {
   /// **'Remembered'**
   String get reviewCenterRemembered;
 
+  /// No description provided for @wordDetailNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Word not found'**
+  String get wordDetailNotFound;
+
+  /// No description provided for @wordDetailReviewStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Review stats'**
+  String get wordDetailReviewStats;
+
+  /// No description provided for @wordDetailMarkRemembered.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as remembered'**
+  String get wordDetailMarkRemembered;
+
+  /// No description provided for @wordDetailScheduleSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice again soon'**
+  String get wordDetailScheduleSoon;
+
+  /// No description provided for @wordDetailMarkedRemembered.
+  ///
+  /// In en, this message translates to:
+  /// **'Marked as remembered'**
+  String get wordDetailMarkedRemembered;
+
+  /// No description provided for @wordDetailScheduledSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled to practice again soon'**
+  String get wordDetailScheduledSoon;
+
+  /// No description provided for @wordDetailStatRemembered.
+  ///
+  /// In en, this message translates to:
+  /// **'Remembered'**
+  String get wordDetailStatRemembered;
+
+  /// No description provided for @wordDetailStatForgot.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot'**
+  String get wordDetailStatForgot;
+
+  /// No description provided for @wordDetailStatMastery.
+  ///
+  /// In en, this message translates to:
+  /// **'Mastery'**
+  String get wordDetailStatMastery;
+
+  /// No description provided for @wordDetailUpdateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to update this card for now'**
+  String get wordDetailUpdateFailed;
+
   /// No description provided for @reviewCenterPostponedMessage.
   ///
   /// In en, this message translates to:
