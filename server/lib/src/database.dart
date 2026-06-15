@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:postgres/postgres.dart';
 
+import 'auth.dart';
 import 'config.dart';
 import 'lottery_policy.dart';
 
@@ -256,6 +257,52 @@ CREATE TABLE IF NOT EXISTS lottery_prizes (
 ''');
 
     await connection.execute('''
+CREATE TABLE IF NOT EXISTS daily_checkins (
+  uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  date_key TEXT NOT NULL,
+  checked_in_at TIMESTAMPTZ NOT NULL,
+  PRIMARY KEY (uid, date_key)
+);
+''');
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS daily_activity (
+  uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  date_key TEXT NOT NULL,
+  training_challenge_completed BOOLEAN NOT NULL DEFAULT FALSE,
+  wrong_cleanup_completed BOOLEAN NOT NULL DEFAULT FALSE,
+  forum_interaction_completed BOOLEAN NOT NULL DEFAULT FALSE,
+  updated_at TIMESTAMPTZ NOT NULL,
+  PRIMARY KEY (uid, date_key)
+);
+''');
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS reward_claims (
+  id TEXT PRIMARY KEY,
+  uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  date_key TEXT NOT NULL,
+  task_id TEXT NOT NULL,
+  points INTEGER NOT NULL,
+  claimed_at TIMESTAMPTZ NOT NULL,
+  UNIQUE (uid, date_key, task_id)
+);
+''');
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS point_transactions (
+  id TEXT PRIMARY KEY,
+  uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  source_type TEXT NOT NULL,
+  source_id TEXT NOT NULL,
+  points INTEGER NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
+  created_at TIMESTAMPTZ NOT NULL,
+  UNIQUE (uid, source_type, source_id)
+);
+''');
+
+    await connection.execute('''
 CREATE TABLE IF NOT EXISTS study_plans (
   id TEXT PRIMARY KEY,
   uid TEXT UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -303,6 +350,12 @@ CREATE TABLE IF NOT EXISTS user_assets (
 ''');
 
     await connection.execute('''
+CREATE INDEX IF NOT EXISTS idx_study_sessions_uid_ended_at
+ON study_sessions (uid, ended_at);
+CREATE INDEX IF NOT EXISTS idx_review_events_uid_reviewed_at
+ON review_events (uid, reviewed_at);
+CREATE INDEX IF NOT EXISTS idx_custom_words_uid
+ON custom_words (uid);
 CREATE INDEX IF NOT EXISTS idx_custom_words_uid_next_review
 ON custom_words (uid, next_review_at);
 ''');
@@ -383,7 +436,6 @@ UPDATE users SET
   target_exam=@targetExam,
   level=@level,
   daily_goal=@dailyGoal,
-  xp=@xp,
   streak=@streak,
   last_study_date=@lastStudyDate,
   updated_at=@updatedAt
@@ -395,7 +447,6 @@ WHERE id=@uid
         'targetExam': data['targetExam'] ?? existing['target_exam'],
         'level': data['level'] ?? existing['level'],
         'dailyGoal': data['dailyGoal'] ?? existing['daily_goal'],
-        'xp': data['xp'] ?? existing['xp'],
         'streak': data['streak'] ?? existing['streak'],
         'lastStudyDate':
             _date(data['lastStudyDate']) ?? existing['last_study_date'],
@@ -699,6 +750,65 @@ INSERT INTO study_sessions (
         'answerEvents': jsonEncode((data['answerEvents'] as List?) ?? const []),
       },
     );
+  }
+
+  Future<Map<String, dynamic>> grantPoints(
+    String uid, {
+    required String sourceType,
+    required String sourceId,
+    required int points,
+    required String description,
+  }) async {
+    final now = DateTime.now().toUtc();
+    final rows = await connection.execute(
+      Sql.named('''
+WITH inserted AS (
+  INSERT INTO point_transactions (
+    id, uid, source_type, source_id, points, description, created_at
+  ) VALUES (
+    @id, @uid, @sourceType, @sourceId, @points, @description, @createdAt
+  )
+  ON CONFLICT (uid, source_type, source_id) DO NOTHING
+  RETURNING points
+), updated AS (
+  UPDATE users
+  SET xp = xp + COALESCE((SELECT points FROM inserted), 0),
+      updated_at = @createdAt
+  WHERE id = @uid AND EXISTS (SELECT 1 FROM inserted)
+  RETURNING *
+)
+SELECT
+  EXISTS (SELECT 1 FROM inserted) AS awarded,
+  COALESCE((SELECT points FROM inserted), 0) AS points_awarded,
+  COALESCE((SELECT id FROM updated), users.id) AS id,
+  COALESCE((SELECT email FROM updated), users.email) AS email,
+  COALESCE((SELECT password_hash FROM updated), users.password_hash) AS password_hash,
+  COALESCE((SELECT password_salt FROM updated), users.password_salt) AS password_salt,
+  COALESCE((SELECT name FROM updated), users.name) AS name,
+  COALESCE((SELECT target_exam FROM updated), users.target_exam) AS target_exam,
+  COALESCE((SELECT level FROM updated), users.level) AS level,
+  COALESCE((SELECT daily_goal FROM updated), users.daily_goal) AS daily_goal,
+  COALESCE((SELECT xp FROM updated), users.xp) AS xp,
+  COALESCE((SELECT streak FROM updated), users.streak) AS streak,
+  COALESCE((SELECT last_study_date FROM updated), users.last_study_date) AS last_study_date,
+  COALESCE((SELECT created_at FROM updated), users.created_at) AS created_at,
+  COALESCE((SELECT updated_at FROM updated), users.updated_at) AS updated_at
+FROM users
+WHERE id = @uid
+LIMIT 1
+'''),
+      parameters: {
+        'id': newId(),
+        'uid': uid,
+        'sourceType': sourceType,
+        'sourceId': sourceId,
+        'points': points,
+        'description': description,
+        'createdAt': now,
+      },
+    );
+    if (rows.isEmpty) throw StateError('user not found');
+    return rows.first.toColumnMap();
   }
 
   Future<Map<String, dynamic>?> studyPlanByUid(String uid) async {
@@ -1179,17 +1289,224 @@ RETURNING *
   Future<bool> hasStudySessionInRange(
     String uid,
     DateTime startUtc,
-    DateTime endUtc,
-  ) async {
+    DateTime endUtc, {
+    bool? trainingOnly,
+  }) async {
+    final trainingClause = trainingOnly == null
+        ? ''
+        : trainingOnly
+        ? "AND lesson_id LIKE 'lesson-campus-%'"
+        : "AND lesson_id NOT LIKE 'lesson-campus-%'";
     final rows = await connection.execute(
       Sql.named('''
 SELECT id FROM study_sessions
 WHERE uid=@uid AND ended_at >= @startUtc AND ended_at < @endUtc
+$trainingClause
 LIMIT 1
 '''),
       parameters: {'uid': uid, 'startUtc': startUtc, 'endUtc': endUtc},
     );
     return rows.isNotEmpty;
+  }
+
+  Future<bool> hasReviewEventInRange(
+    String uid,
+    DateTime startUtc,
+    DateTime endUtc,
+  ) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT id FROM review_events
+WHERE uid=@uid AND reviewed_at >= @startUtc AND reviewed_at < @endUtc
+LIMIT 1
+'''),
+      parameters: {'uid': uid, 'startUtc': startUtc, 'endUtc': endUtc},
+    );
+    return rows.isNotEmpty;
+  }
+
+  Future<bool> hasCheckIn(String uid, String dateKey) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT uid FROM daily_checkins
+WHERE uid=@uid AND date_key=@dateKey
+LIMIT 1
+'''),
+      parameters: {'uid': uid, 'dateKey': dateKey},
+    );
+    return rows.isNotEmpty;
+  }
+
+  Future<bool> upsertCheckIn(String uid, String dateKey) async {
+    final rows = await connection.execute(
+      Sql.named('''
+INSERT INTO daily_checkins (uid, date_key, checked_in_at)
+VALUES (@uid, @dateKey, @checkedInAt)
+ON CONFLICT (uid, date_key) DO NOTHING
+RETURNING uid
+'''),
+      parameters: {
+        'uid': uid,
+        'dateKey': dateKey,
+        'checkedInAt': DateTime.now().toUtc(),
+      },
+    );
+    return rows.isNotEmpty;
+  }
+
+  Future<Map<String, dynamic>> dailyActivity(String uid, String dateKey) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT * FROM daily_activity
+WHERE uid=@uid AND date_key=@dateKey
+LIMIT 1
+'''),
+      parameters: {'uid': uid, 'dateKey': dateKey},
+    );
+    if (rows.isEmpty) return const <String, dynamic>{};
+    return rows.first.toColumnMap();
+  }
+
+  Future<void> recordDailyActivity(
+    String uid,
+    String dateKey,
+    String type,
+  ) async {
+    final field = switch (type) {
+      'trainingChallenge' => 'training_challenge_completed',
+      'wrongCleanup' => 'wrong_cleanup_completed',
+      'forumInteraction' => 'forum_interaction_completed',
+      _ => throw ArgumentError.value(type, 'type', 'unsupported activity type'),
+    };
+    await connection.execute(
+      Sql.named('''
+INSERT INTO daily_activity (uid, date_key, $field, updated_at)
+VALUES (@uid, @dateKey, TRUE, @updatedAt)
+ON CONFLICT (uid, date_key) DO UPDATE SET
+  $field = TRUE,
+  updated_at = EXCLUDED.updated_at
+'''),
+      parameters: {
+        'uid': uid,
+        'dateKey': dateKey,
+        'updatedAt': DateTime.now().toUtc(),
+      },
+    );
+  }
+
+  Future<Set<String>> rewardClaimsForDate(String uid, String dateKey) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT task_id FROM reward_claims
+WHERE uid=@uid AND date_key=@dateKey
+'''),
+      parameters: {'uid': uid, 'dateKey': dateKey},
+    );
+    return rows
+        .map((row) => row.toColumnMap()['task_id']?.toString())
+        .whereType<String>()
+        .toSet();
+  }
+
+  Future<bool> insertRewardClaim({
+    required String id,
+    required String uid,
+    required String dateKey,
+    required String taskId,
+    required int points,
+  }) async {
+    final rows = await connection.execute(
+      Sql.named('''
+INSERT INTO reward_claims (id, uid, date_key, task_id, points, claimed_at)
+VALUES (@id, @uid, @dateKey, @taskId, @points, @claimedAt)
+ON CONFLICT (uid, date_key, task_id) DO NOTHING
+RETURNING id
+'''),
+      parameters: {
+        'id': id,
+        'uid': uid,
+        'dateKey': dateKey,
+        'taskId': taskId,
+        'points': points,
+        'claimedAt': DateTime.now().toUtc(),
+      },
+    );
+    return rows.isNotEmpty;
+  }
+
+  Future<({bool inserted, Map<String, dynamic>? user})> claimRewardTask({
+    required String id,
+    required String uid,
+    required String dateKey,
+    required String taskId,
+    required int points,
+  }) async {
+    return connection.runTx((tx) async {
+      final insertedRows = await tx.execute(
+        Sql.named('''
+INSERT INTO reward_claims (id, uid, date_key, task_id, points, claimed_at)
+VALUES (@id, @uid, @dateKey, @taskId, @points, @claimedAt)
+ON CONFLICT (uid, date_key, task_id) DO NOTHING
+RETURNING id
+'''),
+        parameters: {
+          'id': id,
+          'uid': uid,
+          'dateKey': dateKey,
+          'taskId': taskId,
+          'points': points,
+          'claimedAt': DateTime.now().toUtc(),
+        },
+      );
+      final inserted = insertedRows.isNotEmpty;
+      if (!inserted) {
+        final rows = await tx.execute(
+          Sql.named('SELECT * FROM users WHERE id=@uid LIMIT 1'),
+          parameters: {'uid': uid},
+        );
+        return (
+          inserted: false,
+          user: rows.isEmpty ? null : rows.first.toColumnMap(),
+        );
+      }
+      final rows = await tx.execute(
+        Sql.named('''
+UPDATE users
+SET xp = xp + @points,
+    updated_at = @updatedAt
+WHERE id=@uid
+RETURNING *
+'''),
+        parameters: {
+          'uid': uid,
+          'points': points,
+          'updatedAt': DateTime.now().toUtc(),
+        },
+      );
+      return (
+        inserted: inserted,
+        user: rows.isEmpty ? null : rows.first.toColumnMap(),
+      );
+    });
+  }
+
+  Future<Map<String, dynamic>?> addUserXp(String uid, int points) async {
+    final rows = await connection.execute(
+      Sql.named('''
+UPDATE users
+SET xp = xp + @points,
+    updated_at = @updatedAt
+WHERE id=@uid
+RETURNING *
+'''),
+      parameters: {
+        'uid': uid,
+        'points': points,
+        'updatedAt': DateTime.now().toUtc(),
+      },
+    );
+    if (rows.isEmpty) return null;
+    return rows.first.toColumnMap();
   }
 
   Future<int> dueReviewCount(String uid) async {

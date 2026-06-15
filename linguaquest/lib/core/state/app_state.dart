@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/models/app_notification.dart';
 import '../../data/models/custom_word.dart';
+import '../../data/models/daily_reward_task.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
 import '../../data/models/lottery.dart';
@@ -67,9 +68,13 @@ class AppState {
     required this.completedLessonIds,
     required this.todayCompletedLessonIds,
     required this.todayReviewWordIds,
+    required this.todayTrainingSessionIds,
     required this.todayTrainingGameIds,
     required this.todayTrainingXp,
     required this.todayClaimedRewardIds,
+    required this.rewardTasks,
+    required this.pendingRewardTaskIds,
+    required this.isRewardLoading,
     required this.notifications,
     required this.lotteryPrizes,
     required this.userAssets,
@@ -99,9 +104,13 @@ class AppState {
   final Set<String> completedLessonIds;
   final Set<String> todayCompletedLessonIds;
   final Set<String> todayReviewWordIds;
+  final Set<String> todayTrainingSessionIds;
   final Set<String> todayTrainingGameIds;
   final int todayTrainingXp;
   final Set<String> todayClaimedRewardIds;
+  final List<DailyRewardTask> rewardTasks;
+  final Set<String> pendingRewardTaskIds;
+  final bool isRewardLoading;
   final List<AppNotification> notifications;
   final List<LotteryPrize> lotteryPrizes;
   final List<UserAsset> userAssets;
@@ -236,9 +245,13 @@ class AppState {
     Set<String>? completedLessonIds,
     Set<String>? todayCompletedLessonIds,
     Set<String>? todayReviewWordIds,
+    Set<String>? todayTrainingSessionIds,
     Set<String>? todayTrainingGameIds,
     int? todayTrainingXp,
     Set<String>? todayClaimedRewardIds,
+    List<DailyRewardTask>? rewardTasks,
+    Set<String>? pendingRewardTaskIds,
+    bool? isRewardLoading,
     List<AppNotification>? notifications,
     List<LotteryPrize>? lotteryPrizes,
     List<UserAsset>? userAssets,
@@ -267,10 +280,15 @@ class AppState {
       todayCompletedLessonIds:
           todayCompletedLessonIds ?? this.todayCompletedLessonIds,
       todayReviewWordIds: todayReviewWordIds ?? this.todayReviewWordIds,
+      todayTrainingSessionIds:
+          todayTrainingSessionIds ?? this.todayTrainingSessionIds,
       todayTrainingGameIds: todayTrainingGameIds ?? this.todayTrainingGameIds,
       todayTrainingXp: todayTrainingXp ?? this.todayTrainingXp,
       todayClaimedRewardIds:
           todayClaimedRewardIds ?? this.todayClaimedRewardIds,
+      rewardTasks: rewardTasks ?? this.rewardTasks,
+      pendingRewardTaskIds: pendingRewardTaskIds ?? this.pendingRewardTaskIds,
+      isRewardLoading: isRewardLoading ?? this.isRewardLoading,
       notifications: notifications ?? this.notifications,
       lotteryPrizes: lotteryPrizes ?? this.lotteryPrizes,
       userAssets: userAssets ?? this.userAssets,
@@ -298,9 +316,13 @@ class AppState {
       completedLessonIds: {},
       todayCompletedLessonIds: {},
       todayReviewWordIds: {},
+      todayTrainingSessionIds: {},
       todayTrainingGameIds: {},
       todayTrainingXp: 0,
       todayClaimedRewardIds: {},
+      rewardTasks: [],
+      pendingRewardTaskIds: {},
+      isRewardLoading: false,
       notifications: [],
       lotteryPrizes: [],
       userAssets: [],

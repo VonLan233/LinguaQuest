@@ -140,7 +140,7 @@ class XpTasksScreen extends ConsumerWidget {
   }) async {
     final succeeded = await ref
         .read(appControllerProvider.notifier)
-        .claimReward(id: id, points: points, isAvailable: isAvailable);
+        .claimLocalReward(id: id, points: points, isAvailable: isAvailable);
     if (!context.mounted) return;
     final l10n = AppLocalizations.of(context);
     final currentXp = ref.read(appControllerProvider).user?.xp ?? 0;

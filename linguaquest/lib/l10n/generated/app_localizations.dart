@@ -1294,6 +1294,162 @@ abstract class AppLocalizations {
   /// **'View Profile'**
   String get discoverViewProfile;
 
+  /// No description provided for @discoverTasksEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s point tasks haven\'t loaded yet.'**
+  String get discoverTasksEmpty;
+
+  /// No description provided for @discoverForumCheckinTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in'**
+  String get discoverForumCheckinTag;
+
+  /// No description provided for @discoverForumMistakeTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Mistake Talk'**
+  String get discoverForumMistakeTag;
+
+  /// No description provided for @discoverForumPost1Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in: reviewed 18 words in 12 minutes'**
+  String get discoverForumPost1Title;
+
+  /// No description provided for @discoverForumPost1Body.
+  ///
+  /// In en, this message translates to:
+  /// **'Mistakes cluster around near-synonyms; tomorrow I\'ll start with the confusable-word challenge in training.'**
+  String get discoverForumPost1Body;
+
+  /// No description provided for @discoverForumPost2Title.
+  ///
+  /// In en, this message translates to:
+  /// **'How do you memorize \'abstract\' in IELTS reading?'**
+  String get discoverForumPost2Title;
+
+  /// No description provided for @discoverForumPost2Body.
+  ///
+  /// In en, this message translates to:
+  /// **'In papers and reading passages \'abstract\' often doesn\'t mean \'抽象\'; judge it by context.'**
+  String get discoverForumPost2Body;
+
+  /// No description provided for @discoverForumHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap \"Record interaction\" on a community post below to finish the forum interaction task.'**
+  String get discoverForumHint;
+
+  /// No description provided for @discoverCheckinSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Checked in! Today\'s check-in points are ready to claim.'**
+  String get discoverCheckinSuccess;
+
+  /// No description provided for @discoverCheckinFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in failed, please try again later.'**
+  String get discoverCheckinFailed;
+
+  /// No description provided for @discoverForumSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Forum interaction approved; the point task is ready to claim.'**
+  String get discoverForumSuccess;
+
+  /// No description provided for @discoverForumFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to record forum interaction, please try again later.'**
+  String get discoverForumFailed;
+
+  /// No description provided for @discoverCheckinLoadingHint.
+  ///
+  /// In en, this message translates to:
+  /// **'You can check in once tasks finish loading.'**
+  String get discoverCheckinLoadingHint;
+
+  /// No description provided for @discoverCheckinClaimedDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Checked in today and claimed +{points} XP.'**
+  String discoverCheckinClaimedDesc(int points);
+
+  /// No description provided for @discoverCheckinClaimableDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Checked in today; remember to claim +{points} XP.'**
+  String discoverCheckinClaimableDesc(int points);
+
+  /// No description provided for @discoverCheckinPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'After checking in, the check-in task becomes claimable.'**
+  String get discoverCheckinPrompt;
+
+  /// No description provided for @discoverCheckingIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking in'**
+  String get discoverCheckingIn;
+
+  /// No description provided for @discoverCheckedIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Checked in'**
+  String get discoverCheckedIn;
+
+  /// No description provided for @discoverCheckIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Check in'**
+  String get discoverCheckIn;
+
+  /// No description provided for @discoverAlreadyClaimed.
+  ///
+  /// In en, this message translates to:
+  /// **'Claimed'**
+  String get discoverAlreadyClaimed;
+
+  /// No description provided for @discoverClaimCheckin.
+  ///
+  /// In en, this message translates to:
+  /// **'Claim check-in XP'**
+  String get discoverClaimCheckin;
+
+  /// No description provided for @discoverLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading'**
+  String get discoverLoading;
+
+  /// No description provided for @discoverReloadTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Reload tasks'**
+  String get discoverReloadTasks;
+
+  /// No description provided for @discoverConditionMet.
+  ///
+  /// In en, this message translates to:
+  /// **'Conditions met — tap to claim your reward.'**
+  String get discoverConditionMet;
+
+  /// No description provided for @discoverProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing'**
+  String get discoverProcessing;
+
+  /// No description provided for @discoverRecordInteraction.
+  ///
+  /// In en, this message translates to:
+  /// **'Record interaction'**
+  String get discoverRecordInteraction;
+
   /// No description provided for @quizNoLesson.
   ///
   /// In en, this message translates to:
@@ -4033,6 +4189,180 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Language'**
   String get languageSetting;
+
+  /// No description provided for @luckyDrawCostLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Spend {cost} XP per draw'**
+  String luckyDrawCostLine(Object cost);
+
+  /// No description provided for @luckyDrawBalanceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Current balance {xp} XP; prizes include avatar frames, profile backgrounds, badges, titles, card skins, and consolation fragments.'**
+  String luckyDrawBalanceHint(Object xp);
+
+  /// No description provided for @luckyDrawInventoryCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} items in stock'**
+  String luckyDrawInventoryCount(Object count);
+
+  /// No description provided for @luckyDrawNoBoost.
+  ///
+  /// In en, this message translates to:
+  /// **'No learning boost'**
+  String get luckyDrawNoBoost;
+
+  /// No description provided for @luckyDrawNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw now'**
+  String get luckyDrawNow;
+
+  /// No description provided for @luckyDrawInsufficient.
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough XP — finish tasks first'**
+  String get luckyDrawInsufficient;
+
+  /// No description provided for @luckyDrawShortfall.
+  ///
+  /// In en, this message translates to:
+  /// **'{shortfall} XP to go. Finish new study, review, or mistake cleanup to earn points.'**
+  String luckyDrawShortfall(Object shortfall);
+
+  /// No description provided for @luckyDrawFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw failed, please try again later'**
+  String get luckyDrawFailed;
+
+  /// No description provided for @luckyDrawSuccessTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw successful'**
+  String get luckyDrawSuccessTitle;
+
+  /// No description provided for @luckyDrawReward.
+  ///
+  /// In en, this message translates to:
+  /// **'You got: {name}'**
+  String luckyDrawReward(Object name);
+
+  /// No description provided for @luckyDrawDeducted.
+  ///
+  /// In en, this message translates to:
+  /// **'Deducted {cost} XP, {balance} XP remaining.'**
+  String luckyDrawDeducted(Object balance, Object cost);
+
+  /// No description provided for @luckyDrawKeepLooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep looking'**
+  String get luckyDrawKeepLooking;
+
+  /// No description provided for @luckyDrawViewAssets.
+  ///
+  /// In en, this message translates to:
+  /// **'View my assets'**
+  String get luckyDrawViewAssets;
+
+  /// No description provided for @luckyDrawPoolLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Prize pool loading: avatar frames, profile backgrounds, learning badges, training titles, card skins, consolation fragments.'**
+  String get luckyDrawPoolLoading;
+
+  /// No description provided for @profileAssetsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My Assets'**
+  String get profileAssetsTitle;
+
+  /// No description provided for @profileAssetsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Decorative assets won from draws are for display only and don\'t affect learning scores.'**
+  String get profileAssetsSubtitle;
+
+  /// No description provided for @profileAssetsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No decorative assets yet. After spending XP on the Discover page draw, avatar frames, profile backgrounds, badges, titles, card skins, and fragments will appear here.'**
+  String get profileAssetsEmpty;
+
+  /// No description provided for @profileAssetMeta.
+  ///
+  /// In en, this message translates to:
+  /// **'{category} · Qty {quantity} · Fragments {fragments}'**
+  String profileAssetMeta(Object category, Object fragments, Object quantity);
+
+  /// No description provided for @lotteryCategoryAvatarFrame.
+  ///
+  /// In en, this message translates to:
+  /// **'Avatar Frame'**
+  String get lotteryCategoryAvatarFrame;
+
+  /// No description provided for @lotteryCategoryProfileBackground.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Background'**
+  String get lotteryCategoryProfileBackground;
+
+  /// No description provided for @lotteryCategoryBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning Badge'**
+  String get lotteryCategoryBadge;
+
+  /// No description provided for @lotteryCategoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Training Title'**
+  String get lotteryCategoryTitle;
+
+  /// No description provided for @lotteryCategoryCardSkin.
+  ///
+  /// In en, this message translates to:
+  /// **'Card Skin'**
+  String get lotteryCategoryCardSkin;
+
+  /// No description provided for @lotteryCategoryFragment.
+  ///
+  /// In en, this message translates to:
+  /// **'Consolation Fragment'**
+  String get lotteryCategoryFragment;
+
+  /// No description provided for @lotteryCategoryDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Decorative Asset'**
+  String get lotteryCategoryDefault;
+
+  /// No description provided for @lotteryRarityRare.
+  ///
+  /// In en, this message translates to:
+  /// **'Rare'**
+  String get lotteryRarityRare;
+
+  /// No description provided for @lotteryRarityUncommon.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get lotteryRarityUncommon;
+
+  /// No description provided for @lotteryRarityCommon.
+  ///
+  /// In en, this message translates to:
+  /// **'Common'**
+  String get lotteryRarityCommon;
+
+  /// No description provided for @lotteryRarityComfort.
+  ///
+  /// In en, this message translates to:
+  /// **'Comfort'**
+  String get lotteryRarityComfort;
 
   /// No description provided for @languageChinese.
   ///

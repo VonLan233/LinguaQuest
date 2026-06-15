@@ -379,3 +379,65 @@ String displayWordbookDescription(String id, {AppLocalizations? l10n}) {
       return '';
   }
 }
+
+String displayLotteryCategory(String value, {AppLocalizations? l10n}) {
+  if (l10n != null) {
+    switch (value) {
+      case 'avatarFrame':
+        return l10n.lotteryCategoryAvatarFrame;
+      case 'profileBackground':
+        return l10n.lotteryCategoryProfileBackground;
+      case 'badge':
+        return l10n.lotteryCategoryBadge;
+      case 'title':
+        return l10n.lotteryCategoryTitle;
+      case 'cardSkin':
+        return l10n.lotteryCategoryCardSkin;
+      case 'fragment':
+        return l10n.lotteryCategoryFragment;
+      default:
+        return l10n.lotteryCategoryDefault;
+    }
+  }
+  switch (value) {
+    case 'avatarFrame':
+      return '头像框';
+    case 'profileBackground':
+      return '主页背景';
+    case 'badge':
+      return '学习徽章';
+    case 'title':
+      return '训练称号';
+    case 'cardSkin':
+      return '卡片皮肤';
+    case 'fragment':
+      return '安慰碎片';
+    default:
+      return '装饰资产';
+  }
+}
+
+String displayLotteryRarity(String value, {AppLocalizations? l10n}) {
+  if (l10n != null) {
+    switch (value) {
+      case 'rare':
+        return l10n.lotteryRarityRare;
+      case 'uncommon':
+        return l10n.lotteryRarityUncommon;
+      case 'common':
+        return l10n.lotteryRarityCommon;
+      default:
+        return l10n.lotteryRarityComfort;
+    }
+  }
+  switch (value) {
+    case 'rare':
+      return '稀有';
+    case 'uncommon':
+      return '进阶';
+    case 'common':
+      return '普通';
+    default:
+      return '安慰';
+  }
+}

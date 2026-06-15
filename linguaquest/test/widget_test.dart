@@ -15,9 +15,11 @@ import 'package:linguaquest/core/widgets/learning_badges.dart';
 import 'package:linguaquest/core/widgets/pronunciation_controls.dart';
 import 'package:linguaquest/l10n/generated/app_localizations.dart';
 import 'package:linguaquest/data/models/custom_word.dart';
+import 'package:linguaquest/data/models/daily_reward_task.dart';
 import 'package:linguaquest/data/models/exercise_record.dart';
 import 'package:linguaquest/data/models/lesson.dart';
 import 'package:linguaquest/data/models/lesson_result.dart';
+import 'package:linguaquest/data/models/point_grant_result.dart';
 import 'package:linguaquest/data/models/study_session.dart';
 import 'package:linguaquest/data/models/study_plan.dart';
 import 'package:linguaquest/data/models/user_word.dart';
@@ -29,6 +31,8 @@ import 'package:linguaquest/data/repositories/api_repositories.dart';
 import 'package:linguaquest/data/repositories/auth_repository.dart';
 import 'package:linguaquest/data/repositories/custom_word_repository.dart';
 import 'package:linguaquest/data/repositories/learning_repository.dart';
+import 'package:linguaquest/data/repositories/reward_repository.dart';
+import 'package:linguaquest/data/repositories/reward_task_repository.dart';
 import 'package:linguaquest/data/repositories/study_plan_repository.dart';
 import 'package:linguaquest/data/seed/seed_lessons.dart';
 import 'package:linguaquest/data/wordbook_asset_loader.dart';
@@ -441,6 +445,56 @@ void main() {
     expect(find.textContaining('已入账'), findsNothing);
   });
 
+  test('lesson completion compares server UTC last study date locally', () async {
+    final now = DateTime.now();
+    final yesterdayEarlyLocal = DateTime(
+      now.year,
+      now.month,
+      now.day,
+    ).subtract(const Duration(days: 1)).add(const Duration(minutes: 30));
+    final serverLastStudyDate = yesterdayEarlyLocal.toUtc();
+    final profile = UserProfile(
+      uid: 'utc-streak-user',
+      name: 'Uma',
+      email: 'uma@lingua.quest',
+      targetExam: 'IELTS',
+      level: 'Intermediate',
+      dailyGoal: 12,
+      xp: 120,
+      streak: 4,
+      lastStudyDate: serverLastStudyDate,
+      createdAt: serverLastStudyDate,
+      updatedAt: serverLastStudyDate,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    final lesson = container
+        .read(appControllerProvider)
+        .lessons
+        .firstWhere((lesson) => !lesson.isTrainingPack);
+
+    expect(
+      await container.read(appControllerProvider.notifier).completeLesson(
+            LessonResult(
+              lessonId: lesson.id,
+              lessonTitle: lesson.title,
+              totalQuestions: lesson.questions.length,
+              correctAnswers: lesson.questions.length,
+              xpEarned: 10,
+              mistakes: const [],
+              completedAt: DateTime.now(),
+            ),
+          ),
+      true,
+    );
+    expect(container.read(appControllerProvider).user?.streak, 5);
+  });
+
   testWidgets(
     'training completion does not unlock formal new-learning reward',
     (tester) async {
@@ -483,7 +537,8 @@ void main() {
           );
 
       final state = container.read(appControllerProvider);
-      expect(state.todayCompletedLessonIds, contains(trainingLesson.id));
+      expect(state.todayCompletedLessonIds, isNot(contains(trainingLesson.id)));
+      expect(state.todayTrainingSessionIds, contains(trainingLesson.id));
       expect(state.todayCompletedFormalLessonIds, isEmpty);
       expect(state.todayLearningWords, 0);
 
@@ -2993,6 +3048,167 @@ void main() {
     expect(afterDuplicate.correctCount, reviewedWord.correctCount);
   });
 
+  test('lesson completion survives reward event failures', () async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'lesson-reward-failure-user',
+      name: 'Lee',
+      email: 'lee@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      createdAt: now,
+      updatedAt: now,
+      xp: 0,
+      streak: 0,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer(
+      overrides: [
+        rewardTaskRepositoryProvider.overrideWithValue(
+          _RecordEventFailingRewardRepository(),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    final lesson = seedLessons().first;
+    final result = LessonResult(
+      lessonId: lesson.id,
+      lessonTitle: lesson.title,
+      totalQuestions: lesson.questions.length,
+      correctAnswers: lesson.questions.length,
+      xpEarned: 10,
+      mistakes: const [],
+      completedAt: DateTime.now(),
+    );
+
+    expect(
+      await container
+          .read(appControllerProvider.notifier)
+          .completeLesson(result),
+      true,
+    );
+    final state = container.read(appControllerProvider);
+    expect(state.completedLessonIds, contains(lesson.id));
+    expect(state.lastResult?.lessonId, result.lessonId);
+    expect(state.lastResult?.xpEarned, 10);
+    expect(state.user?.xp, 10);
+  });
+
+  test('word review survives reward event failures', () async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'review-reward-failure-user',
+      name: 'Rue',
+      email: 'rue@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      createdAt: now,
+      updatedAt: now,
+      xp: 0,
+      streak: 0,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer(
+      overrides: [
+        rewardTaskRepositoryProvider.overrideWithValue(
+          _RecordEventFailingRewardRepository(),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    final dueWord = container.read(appControllerProvider).dueWords.first;
+
+    expect(
+      await container
+          .read(appControllerProvider.notifier)
+          .reviewWord(dueWord.id, true),
+      true,
+    );
+    final reviewedWord = container
+        .read(appControllerProvider)
+        .customWords
+        .firstWhere((word) => word.id == dueWord.id);
+    expect(reviewedWord.correctCount, dueWord.correctCount + 1);
+    expect(container.read(appControllerProvider).todayReviewWordIds, {
+      dueWord.id,
+    });
+  });
+
+  test('wrong cleanup records one combined reward event', () async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'single-cleanup-event-user',
+      name: 'Wyn',
+      email: 'wyn@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      createdAt: now,
+      updatedAt: now,
+      xp: 0,
+      streak: 0,
+    );
+    final customWordRepository = _ConcurrentCustomWordRepository()
+      ..words.add(
+        CustomWord.create(
+          id: 'cleanup-word',
+          uid: profile.uid,
+          word: 'cleanup',
+          meaning: '清理',
+          exampleSentence: 'Cleanup removes repeated reward calls.',
+          now: now,
+        ).copyWith(wrongCount: 2, nextReviewAt: now),
+      );
+    final rewardRepository = _RecordingRewardRepository();
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer(
+      overrides: [
+        customWordRepositoryProvider.overrideWithValue(customWordRepository),
+        rewardTaskRepositoryProvider.overrideWithValue(rewardRepository),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+
+    expect(
+      await container
+          .read(appControllerProvider.notifier)
+          .reviewWord('cleanup-word', true),
+      true,
+    );
+
+    expect(rewardRepository.recordedEvents, [RewardEventType.wrongCleanup]);
+    expect(
+      container
+          .read(appControllerProvider)
+          .rewardTasks
+          .singleWhere((task) => task.id == 'reviewDone')
+          .isClaimable,
+      true,
+    );
+    expect(
+      container
+          .read(appControllerProvider)
+          .rewardTasks
+          .singleWhere((task) => task.id == 'wrongCleanup')
+          .isClaimable,
+      true,
+    );
+  });
+
   test('claiming a discover reward updates XP once per day', () async {
     final now = DateTime(2026, 5, 25);
     final profile = UserProfile(
@@ -3017,7 +3233,7 @@ void main() {
     final controller = container.read(appControllerProvider.notifier);
 
     expect(
-      await controller.claimReward(
+      await controller.claimLocalReward(
         id: 'daily-checkin',
         points: 5,
         isAvailable: true,
@@ -3031,7 +3247,7 @@ void main() {
     );
 
     expect(
-      await controller.claimReward(
+      await controller.claimLocalReward(
         id: 'daily-checkin',
         points: 5,
         isAvailable: true,
@@ -3039,6 +3255,168 @@ void main() {
       false,
     );
     expect(container.read(appControllerProvider).user?.xp, 35);
+  });
+
+  test('discover reward claim requires explicit claimed response', () async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'null-claim-user',
+      name: 'Nia',
+      email: 'nia@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      createdAt: now,
+      updatedAt: now,
+      xp: 30,
+      streak: 1,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer(
+      overrides: [
+        rewardTaskRepositoryProvider.overrideWithValue(
+          _NullClaimRewardRepository(),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+
+    expect(
+      await container
+          .read(appControllerProvider.notifier)
+          .claimReward('dailyCheckIn'),
+      false,
+    );
+    expect(container.read(appControllerProvider).user?.xp, 30);
+  });
+
+  test('claiming a server-granted reward syncs local claimed state', () async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'already-granted-user',
+      name: 'Sync',
+      email: 'sync@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      createdAt: now,
+      updatedAt: now,
+      xp: 30,
+      streak: 1,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer(
+      overrides: [
+        rewardRepositoryProvider.overrideWithValue(_AlreadyGrantedReward()),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+
+    final controller = container.read(appControllerProvider.notifier);
+
+    expect(
+      await controller.claimLocalReward(
+        id: 'daily-checkin',
+        points: 5,
+        isAvailable: true,
+      ),
+      true,
+    );
+
+    final state = container.read(appControllerProvider);
+    expect(state.errorMessage, isNull);
+    expect(state.user?.xp, 30);
+    expect(state.todayClaimedRewardIds, contains('daily-checkin'));
+
+    final prefs = await SharedPreferences.getInstance();
+    expect(
+      prefs.getStringList('linguaquest.today.rewards'),
+      contains('daily-checkin'),
+    );
+  });
+
+  test('incomplete reward claim shows localized error message', () async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'incomplete-claim-user',
+      name: 'Ivy',
+      email: 'ivy@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      createdAt: now,
+      updatedAt: now,
+      xp: 30,
+      streak: 1,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer(
+      overrides: [
+        rewardTaskRepositoryProvider.overrideWithValue(
+          _IncompleteClaimRewardRepository(),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+
+    expect(
+      await container
+          .read(appControllerProvider.notifier)
+          .claimReward('dailyCheckIn'),
+      false,
+    );
+    final state = container.read(appControllerProvider);
+    expect(state.errorMessage, '该任务尚未完成，无法领取奖励。');
+    expect(state.pendingRewardTaskIds, isNot(contains('dailyCheckIn')));
+  });
+
+  test('server reward user snapshot does not patch profile again', () async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'server-snapshot-user',
+      name: 'Sol',
+      email: 'sol@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      createdAt: now,
+      updatedAt: now,
+      xp: 30,
+      streak: 1,
+    );
+    final serverUser = profile.copyWith(xp: 35, updatedAt: now);
+    SharedPreferences.setMockInitialValues({});
+    final authRepository = _SnapshotAuthRepository(profile);
+    final container = ProviderContainer(
+      overrides: [
+        authRepositoryProvider.overrideWithValue(authRepository),
+        rewardTaskRepositoryProvider.overrideWithValue(
+          _ServerUserRewardRepository(serverUser),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+
+    expect(
+      await container.read(appControllerProvider.notifier).checkInToday(),
+      true,
+    );
+    expect(container.read(appControllerProvider).user?.xp, 35);
+    expect(authRepository.updateProfileCalls, 0);
   });
 
   test('custom word review status follows mastery thresholds', () {
@@ -3176,6 +3554,216 @@ void main() {
     };
     expect(learnedWordIds, containsAll(lesson.words.map((word) => word.id)));
   });
+
+  testWidgets('lesson result ignores stale results from another lesson', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'stale-result-user',
+      name: 'Stale',
+      email: 'stale@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      createdAt: now,
+      updatedAt: now,
+      xp: 0,
+      streak: 0,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    final lesson = seedLessons().first;
+    expect(
+      await container
+          .read(appControllerProvider.notifier)
+          .completeLesson(
+            LessonResult(
+              lessonId: lesson.id,
+              lessonTitle: lesson.title,
+              totalQuestions: lesson.questions.length,
+              correctAnswers: lesson.questions.length,
+              xpEarned: lesson.xpReward,
+              mistakes: const [],
+              completedAt: now,
+            ),
+          ),
+      true,
+    );
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('zh'),
+          home: const LessonResultScreen(expectedLessonId: 'different-lesson'),
+        ),
+      ),
+    );
+
+    expect(find.text('还没有课程结果'), findsOneWidget);
+    expect(find.text(lesson.title), findsNothing);
+  });
+
+  test('lesson completion survives reward grant failure', () async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'lesson-reward-fail-user',
+      name: 'Lex',
+      email: 'lex@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      createdAt: now,
+      updatedAt: now,
+      xp: 0,
+      streak: 0,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer(
+      overrides: [
+        rewardRepositoryProvider.overrideWithValue(_ThrowingReward()),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    final lesson = seedLessons().first;
+    final completed = await container
+        .read(appControllerProvider.notifier)
+        .completeLesson(
+          LessonResult(
+            lessonId: lesson.id,
+            lessonTitle: lesson.title,
+            totalQuestions: lesson.questions.length,
+            correctAnswers: lesson.questions.length,
+            xpEarned: lesson.xpReward,
+            mistakes: const [],
+            completedAt: now,
+          ),
+        );
+    final state = container.read(appControllerProvider);
+
+    expect(completed, true);
+    expect(state.completedLessonIds, contains(lesson.id));
+    expect(state.lastResult?.lessonId, lesson.id);
+    expect(state.lastResult?.xpEarned, 0);
+    expect(state.user?.xp, 0);
+  });
+
+  test('review progress survives reward grant failure', () async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'review-reward-fail-user',
+      name: 'Rev',
+      email: 'rev@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      createdAt: now,
+      updatedAt: now,
+      xp: 0,
+      streak: 0,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer(
+      overrides: [
+        rewardRepositoryProvider.overrideWithValue(_ThrowingReward()),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(appControllerProvider.notifier).bootstrap();
+    final dueWord = container.read(appControllerProvider).dueWords.first;
+    final reviewed = await container
+        .read(appControllerProvider.notifier)
+        .reviewWord(dueWord.id, true);
+    final state = container.read(appControllerProvider);
+    final reviewedWord = state.customWords.firstWhere(
+      (word) => word.id == dueWord.id,
+    );
+
+    expect(reviewed, true);
+    expect(reviewedWord.correctCount, dueWord.correctCount + 1);
+    expect(state.todayReviewWordIds, contains(dueWord.id));
+    expect(state.user?.xp, 0);
+  });
+
+  test(
+    'daily rollover clears stale persisted daily keys before saving',
+    () async {
+      final now = DateTime.now();
+      final profile = UserProfile(
+        uid: 'rollover-user',
+        name: 'Rollover',
+        email: 'rollover@lingua.quest',
+        targetExam: 'Daily English',
+        level: 'Elementary',
+        dailyGoal: 10,
+        createdAt: now,
+        updatedAt: now,
+        xp: 0,
+        streak: 0,
+      );
+      SharedPreferences.setMockInitialValues({
+        'linguaquest.profile': jsonEncode(profile.toJson()),
+        'linguaquest.today.date': '2000-01-01',
+        'linguaquest.today.lessons': ['yesterday-lesson'],
+        'linguaquest.today.reviews': ['yesterday-review'],
+        'linguaquest.today.training': ['yesterday-training'],
+        'linguaquest.today.rewards': ['yesterday-reward'],
+      });
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      await container.read(appControllerProvider.notifier).bootstrap();
+      final training = container
+          .read(appControllerProvider)
+          .lessons
+          .firstWhere((lesson) => lesson.isTrainingPack);
+      expect(
+        await container
+            .read(appControllerProvider.notifier)
+            .completeLesson(
+              LessonResult(
+                lessonId: training.id,
+                lessonTitle: training.title,
+                totalQuestions: training.questions.length,
+                correctAnswers: training.questions.length,
+                xpEarned: training.xpReward,
+                mistakes: const [],
+                completedAt: now,
+              ),
+            ),
+        true,
+      );
+      final prefs = await SharedPreferences.getInstance();
+
+      expect(prefs.getString('linguaquest.today.date'), _todayDateKey(now));
+      expect(prefs.getStringList('linguaquest.today.lessons'), isNull);
+      expect(prefs.getStringList('linguaquest.today.reviews'), isNull);
+      expect(prefs.getStringList('linguaquest.today.rewards'), isNull);
+      expect(
+        prefs.getStringList('linguaquest.today.training'),
+        contains(training.id),
+      );
+      expect(
+        prefs.getStringList('linguaquest.today.training'),
+        isNot(contains('yesterday-training')),
+      );
+    },
+  );
 
   test(
     'mistake words can be converted into custom cards in one action',
@@ -3593,6 +4181,39 @@ class _FailingAuth implements AuthRepository {
   Future<void> logout() async {}
 }
 
+class _SnapshotAuthRepository implements AuthRepository {
+  _SnapshotAuthRepository(this._profile);
+
+  final UserProfile _profile;
+  int updateProfileCalls = 0;
+
+  @override
+  Future<UserProfile?> loadSession() async => _profile;
+
+  @override
+  Future<UserProfile> login({required String email, required String password}) {
+    throw Exception('login not expected');
+  }
+
+  @override
+  Future<UserProfile> register({
+    required String name,
+    required String email,
+    required String password,
+  }) {
+    throw Exception('register not expected');
+  }
+
+  @override
+  Future<UserProfile> updateProfile(UserProfile profile) async {
+    updateProfileCalls++;
+    return profile;
+  }
+
+  @override
+  Future<void> logout() async {}
+}
+
 class _ThrowingSessionAuth extends _FailingAuth {
   @override
   Future<UserProfile?> loadSession() {
@@ -3790,6 +4411,227 @@ class _ConcurrentCustomWordRepository implements CustomWordRepository {
     }
     _activeUpdates--;
     return word;
+  }
+}
+
+class _RecordEventFailingRewardRepository implements RewardTaskRepository {
+  @override
+  Future<RewardTaskSnapshot> checkIn(String uid) async => _emptySnapshot();
+
+  @override
+  Future<RewardTaskSnapshot> claimTask(String uid, String taskId) async =>
+      _emptySnapshot();
+
+  @override
+  Future<RewardTaskSnapshot> listTasks(String uid) async => _emptySnapshot();
+
+  @override
+  Future<RewardTaskSnapshot> recordEvent(
+    String uid,
+    RewardEventType type,
+  ) async {
+    throw Exception('reward service unavailable');
+  }
+
+  RewardTaskSnapshot _emptySnapshot() {
+    return RewardTaskSnapshot(
+      dateKey: _todayDateKey(DateTime.now()),
+      tasks: const [],
+    );
+  }
+}
+
+class _RecordingRewardRepository implements RewardTaskRepository {
+  final List<RewardEventType> recordedEvents = [];
+  bool _reviewDone = false;
+  bool _wrongCleanupDone = false;
+
+  @override
+  Future<RewardTaskSnapshot> checkIn(String uid) async => _snapshot();
+
+  @override
+  Future<RewardTaskSnapshot> claimTask(String uid, String taskId) async =>
+      _snapshot();
+
+  @override
+  Future<RewardTaskSnapshot> listTasks(String uid) async => _snapshot();
+
+  @override
+  Future<RewardTaskSnapshot> recordEvent(
+    String uid,
+    RewardEventType type,
+  ) async {
+    recordedEvents.add(type);
+    if (type == RewardEventType.reviewDone) {
+      _reviewDone = true;
+    }
+    if (type == RewardEventType.wrongCleanup) {
+      _reviewDone = true;
+      _wrongCleanupDone = true;
+    }
+    return _snapshot();
+  }
+
+  Future<RewardTaskSnapshot> _snapshot() async {
+    return RewardTaskSnapshot(
+      dateKey: _todayDateKey(DateTime.now()),
+      tasks: [
+        DailyRewardTask(
+          id: 'reviewDone',
+          title: '完成复习',
+          condition: '完成今日到期复习',
+          points: 15,
+          targetRoute: '/study/review',
+          status: _reviewDone
+              ? DailyRewardTaskStatus.claimable
+              : DailyRewardTaskStatus.incomplete,
+        ),
+        DailyRewardTask(
+          id: 'wrongCleanup',
+          title: '错词清理',
+          condition: '今日错词再次答对',
+          points: 10,
+          targetRoute: '/review',
+          status: _wrongCleanupDone
+              ? DailyRewardTaskStatus.claimable
+              : DailyRewardTaskStatus.incomplete,
+        ),
+      ],
+    );
+  }
+}
+
+class _NullClaimRewardRepository implements RewardTaskRepository {
+  static const _task = DailyRewardTask(
+    id: 'dailyCheckIn',
+    title: '每日签到',
+    condition: '当天打开并点击签到',
+    points: 5,
+    targetRoute: '/discover',
+    status: DailyRewardTaskStatus.claimable,
+  );
+
+  @override
+  Future<RewardTaskSnapshot> checkIn(String uid) async => _snapshot();
+
+  @override
+  Future<RewardTaskSnapshot> claimTask(String uid, String taskId) async {
+    return Future.value(
+      const RewardTaskSnapshot(dateKey: '2026-05-25', tasks: [_task]),
+    );
+  }
+
+  @override
+  Future<RewardTaskSnapshot> listTasks(String uid) async => _snapshot();
+
+  @override
+  Future<RewardTaskSnapshot> recordEvent(
+    String uid,
+    RewardEventType type,
+  ) async => _snapshot();
+
+  Future<RewardTaskSnapshot> _snapshot() async {
+    return const RewardTaskSnapshot(dateKey: '2026-05-25', tasks: [_task]);
+  }
+}
+
+class _IncompleteClaimRewardRepository implements RewardTaskRepository {
+  static const _task = DailyRewardTask(
+    id: 'dailyCheckIn',
+    title: '每日签到',
+    condition: '当天打开并点击签到',
+    points: 5,
+    targetRoute: '/discover',
+    status: DailyRewardTaskStatus.claimable,
+  );
+
+  @override
+  Future<RewardTaskSnapshot> checkIn(String uid) async => _snapshot();
+
+  @override
+  Future<RewardTaskSnapshot> claimTask(String uid, String taskId) async {
+    final requestOptions = RequestOptions(
+      path: '/rewards/tasks/$taskId/claim',
+    );
+    throw DioException(
+      requestOptions: requestOptions,
+      response: Response<Map<String, dynamic>>(
+        requestOptions: requestOptions,
+        statusCode: 409,
+        data: const {'error': 'task_not_complete'},
+      ),
+    );
+  }
+
+  @override
+  Future<RewardTaskSnapshot> listTasks(String uid) async => _snapshot();
+
+  @override
+  Future<RewardTaskSnapshot> recordEvent(
+    String uid,
+    RewardEventType type,
+  ) async => _snapshot();
+
+  Future<RewardTaskSnapshot> _snapshot() async {
+    return const RewardTaskSnapshot(dateKey: '2026-05-25', tasks: [_task]);
+  }
+}
+
+class _ServerUserRewardRepository implements RewardTaskRepository {
+  const _ServerUserRewardRepository(this._user);
+
+  final UserProfile _user;
+
+  @override
+  Future<RewardTaskSnapshot> checkIn(String uid) async =>
+      _snapshot(user: _user);
+
+  @override
+  Future<RewardTaskSnapshot> claimTask(String uid, String taskId) async =>
+      _snapshot(user: _user, claimed: true);
+
+  @override
+  Future<RewardTaskSnapshot> listTasks(String uid) async => _snapshot();
+
+  @override
+  Future<RewardTaskSnapshot> recordEvent(
+    String uid,
+    RewardEventType type,
+  ) async => _snapshot();
+
+  RewardTaskSnapshot _snapshot({UserProfile? user, bool? claimed}) {
+    return RewardTaskSnapshot(
+      dateKey: '2026-05-25',
+      tasks: const [],
+      user: user,
+      claimed: claimed,
+    );
+  }
+}
+
+class _ThrowingReward implements RewardRepository {
+  @override
+  Future<PointGrantResult> grantPoints({
+    required String uid,
+    required String sourceType,
+    required String sourceId,
+    required int points,
+    required String description,
+  }) {
+    throw Exception('reward service unavailable');
+  }
+}
+
+class _AlreadyGrantedReward implements RewardRepository {
+  @override
+  Future<PointGrantResult> grantPoints({
+    required String uid,
+    required String sourceType,
+    required String sourceId,
+    required int points,
+    required String description,
+  }) async {
+    return const PointGrantResult(pointsAwarded: 0, alreadyGranted: true);
   }
 }
 

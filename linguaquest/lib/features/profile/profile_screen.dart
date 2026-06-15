@@ -138,9 +138,9 @@ class ProfileScreen extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SectionHeader(
-                title: '个人资产',
-                subtitle: '抽奖获得的装饰资产只用于展示，不影响学习分数。',
+              SectionHeader(
+                title: l10n.profileAssetsTitle,
+                subtitle: l10n.profileAssetsSubtitle,
               ),
               const SizedBox(height: 10),
               _AssetInventory(assets: state.userAssets),
@@ -640,6 +640,7 @@ class _AssetInventory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     if (assets.isEmpty) {
       return Row(
@@ -653,7 +654,7 @@ class _AssetInventory extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              '暂无装饰资产。前往发现页使用 XP 抽奖后，头像框、主页背景、徽章、称号、卡片皮肤和碎片会显示在这里。',
+              l10n.profileAssetsEmpty,
               style: TextStyle(
                 color: theme.colorScheme.onSurfaceVariant,
                 height: 1.42,
@@ -685,6 +686,7 @@ class _AssetRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -702,7 +704,11 @@ class _AssetRow extends StatelessWidget {
               Text(asset.name, style: theme.textTheme.titleMedium),
               const SizedBox(height: 2),
               Text(
-                '${asset.categoryLabel} · 数量 ${asset.quantity} · 碎片值 ${asset.totalFragments}',
+                l10n.profileAssetMeta(
+                  displayLotteryCategory(asset.category, l10n: l10n),
+                  asset.quantity,
+                  asset.totalFragments,
+                ),
                 style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
               ),
               const SizedBox(height: 2),

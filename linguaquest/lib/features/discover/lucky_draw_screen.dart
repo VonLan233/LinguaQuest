@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../data/models/lottery.dart';
@@ -36,11 +37,16 @@ class _LotteryPanel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final state = ref.watch(appControllerProvider);
     final user = state.user;
     final canDraw =
         user != null && user.xp >= lotteryDrawCost && !state.isLoading;
+    final inventoryCount = state.userAssets.fold<int>(
+      0,
+      (sum, asset) => sum + asset.quantity,
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -54,12 +60,12 @@ class _LotteryPanel extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '消耗 $lotteryDrawCost XP 抽一次',
+                    l10n.luckyDrawCostLine(lotteryDrawCost),
                     style: theme.textTheme.titleMedium,
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '当前余额 ${user?.xp ?? 0} XP；奖品包含头像框、主页背景、徽章、称号、卡片皮肤和安慰碎片。',
+                    l10n.luckyDrawBalanceHint(user?.xp ?? 0),
                     style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                   ),
                 ],
@@ -73,13 +79,12 @@ class _LotteryPanel extends ConsumerWidget {
           runSpacing: 8,
           children: [
             PillLabel(
-              label:
-                  '库存 ${state.userAssets.fold<int>(0, (sum, asset) => sum + asset.quantity)} 件',
+              label: l10n.luckyDrawInventoryCount(inventoryCount),
               icon: Icons.inventory_2_outlined,
               color: AppTheme.teal,
             ),
-            const PillLabel(
-              label: '无学习加成',
+            PillLabel(
+              label: l10n.luckyDrawNoBoost,
               icon: Icons.balance_outlined,
               color: AppTheme.coral,
             ),
@@ -97,12 +102,12 @@ class _LotteryPanel extends ConsumerWidget {
                   child: CircularProgressIndicator(strokeWidth: 2),
                 )
               : const Icon(Icons.casino_outlined),
-          label: Text(canDraw ? '立即抽奖' : '余额不足，先完成任务'),
+          label: Text(canDraw ? l10n.luckyDrawNow : l10n.luckyDrawInsufficient),
         ),
         if ((user?.xp ?? 0) < lotteryDrawCost) ...[
           const SizedBox(height: 8),
           Text(
-            '还差 ${lotteryDrawCost - (user?.xp ?? 0)} XP。完成新学、复习或错词清理即可领取积分。',
+            l10n.luckyDrawShortfall(lotteryDrawCost - (user?.xp ?? 0)),
             style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
           ),
         ],
@@ -111,6 +116,7 @@ class _LotteryPanel extends ConsumerWidget {
   }
 
   Future<void> _draw(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context);
     final succeeded = await ref
         .read(appControllerProvider.notifier)
         .drawLottery();
@@ -119,31 +125,34 @@ class _LotteryPanel extends ConsumerWidget {
     final result = state.lastLotteryResult;
     if (!succeeded || result == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(state.errorMessage ?? '抽奖失败，请稍后重试')),
+        SnackBar(content: Text(state.errorMessage ?? l10n.luckyDrawFailed)),
       );
       return;
     }
     await showDialog<void>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('抽奖成功'),
+        title: Text(l10n.luckyDrawSuccessTitle),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('获得：${result.prize.name}'),
+            Text(l10n.luckyDrawReward(result.prize.name)),
             const SizedBox(height: 6),
-            Text('${result.prize.categoryLabel} · ${result.prize.rarityLabel}'),
+            Text(
+              '${displayLotteryCategory(result.prize.category, l10n: l10n)} · '
+              '${displayLotteryRarity(result.prize.rarity, l10n: l10n)}',
+            ),
             const SizedBox(height: 6),
             Text(result.prize.description),
             const SizedBox(height: 10),
-            Text('已扣除 ${result.cost} XP，剩余 ${result.balanceAfter} XP。'),
+            Text(l10n.luckyDrawDeducted(result.cost, result.balanceAfter)),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('继续看看'),
+            child: Text(l10n.luckyDrawKeepLooking),
           ),
           FilledButton(
             onPressed: () {
@@ -152,7 +161,7 @@ class _LotteryPanel extends ConsumerWidget {
                 context.go('/profile');
               }
             },
-            child: const Text('查看个人资产'),
+            child: Text(l10n.luckyDrawViewAssets),
           ),
         ],
       ),
@@ -167,10 +176,11 @@ class _ProbabilityList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     if (prizes.isEmpty) {
       return Text(
-        '奖池加载中：头像框、主页背景、学习徽章、训练场称号、卡片皮肤、安慰碎片。',
+        l10n.luckyDrawPoolLoading,
         style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
       );
     }
@@ -183,13 +193,15 @@ class _ProbabilityList extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    '${prize.name} · ${prize.categoryLabel}',
+                    '${prize.name} · '
+                    '${displayLotteryCategory(prize.category, l10n: l10n)}',
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  '${prize.rarityLabel} ${_formatProbability(prize.probability)}%',
+                  '${displayLotteryRarity(prize.rarity, l10n: l10n)} '
+                  '${_formatProbability(prize.probability)}%',
                   style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                 ),
               ],

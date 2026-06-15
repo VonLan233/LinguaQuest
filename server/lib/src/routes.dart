@@ -14,6 +14,8 @@ import 'json_response.dart';
 import 'lesson_catalog.dart';
 import 'lottery_policy.dart';
 import 'notification_policy.dart';
+import 'reward_policy.dart';
+import 'reward_task_policy.dart';
 import 'study_plan_policy.dart';
 
 final _httpClient = http.Client();
@@ -427,6 +429,39 @@ Router buildRouter(
     });
   });
 
+  router.post('/rewards/points', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      final sourceType = (body['sourceType'] as String? ?? '').trim();
+      final sourceId = (body['sourceId'] as String? ?? '').trim();
+      final requestedPoints = body['points'] as int? ?? 0;
+      final description = (body['description'] as String? ?? '').trim();
+      final reward = validatedRewardPoints(
+        sourceType: sourceType,
+        sourceId: sourceId,
+        requestedPoints: requestedPoints,
+      );
+      if (sourceType.isEmpty || sourceId.isEmpty || reward == null) {
+        return jsonResponse({
+          'error': 'invalid reward source or point rule',
+        }, status: 400);
+      }
+      final result = await database.grantPoints(
+        uid,
+        sourceType: sourceType,
+        sourceId: reward.canonicalSourceId,
+        points: reward.points,
+        description: description,
+      );
+      final awarded = result['awarded'] == true;
+      return jsonResponse({
+        'pointsAwarded': result['points_awarded'] ?? 0,
+        'alreadyGranted': !awarded,
+        'user': userDto(result),
+      }, status: awarded ? 201 : 200);
+    });
+  });
+
   router.post('/exercise-records', (Request request) async {
     return _protected(config, request, (uid) async {
       final body = await readJsonMap(request);
@@ -555,6 +590,160 @@ Router buildRouter(
         return jsonResponse({'error': 'notification not found'}, status: 404);
       }
       return jsonResponse({'notification': notificationDto(notification)});
+    });
+  });
+
+  router.get('/rewards/tasks', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final dayWindow = _dayWindowFromQuery(request);
+      if (dayWindow == null) {
+        return jsonResponse({
+          'error': 'valid localDate and timezoneOffsetMinutes are required',
+        }, status: 400);
+      }
+      final tasks = await _dailyRewardTasks(database, uid, dayWindow);
+      return jsonResponse({'dateKey': dayWindow.dateKey, 'tasks': tasks});
+    });
+  });
+
+  router.post('/rewards/check-in', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      final dayWindow = _dayWindowFromBody(body);
+      if (dayWindow == null) {
+        return jsonResponse({
+          'error': 'valid localDate and timezoneOffsetMinutes are required',
+        }, status: 400);
+      }
+      final user = await database.userById(uid);
+      if (user == null) {
+        return jsonResponse({'error': 'user not found'}, status: 404);
+      }
+      final inserted = await database.upsertCheckIn(uid, dayWindow.dateKey);
+      final hadCheckedInToday = !inserted;
+      var updatedUser = user;
+      if (!hadCheckedInToday) {
+        final now = DateTime.now().toUtc();
+        final currentStreak = user['streak'] is int ? user['streak'] as int : 0;
+        final hasStudyToday = await database.hasStudySessionInRange(
+          uid,
+          dayWindow.startUtc,
+          dayWindow.endUtc,
+        );
+        var newStreak = currentStreak;
+        if (!hasStudyToday) {
+          final hasPreviousDayCheckIn = await database.hasCheckIn(
+            uid,
+            _previousDateKey(dayWindow.dateKey),
+          );
+          final hasPreviousDayStudy = await database.hasStudySessionInRange(
+            uid,
+            dayWindow.startUtc.subtract(const Duration(days: 1)),
+            dayWindow.endUtc.subtract(const Duration(days: 1)),
+          );
+          newStreak = hasPreviousDayCheckIn || hasPreviousDayStudy
+              ? currentStreak + 1
+              : 1;
+        }
+        updatedUser = await database.updateUser(uid, {
+          'streak': newStreak,
+          'lastStudyDate': now,
+        });
+      }
+      final tasks = await _dailyRewardTasks(database, uid, dayWindow);
+      return jsonResponse({
+        'checkedIn': true,
+        'dateKey': dayWindow.dateKey,
+        'tasks': tasks,
+        'user': userDto(updatedUser),
+      });
+    });
+  });
+
+  router.post('/reward-events', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      final type = body['type']?.toString() ?? '';
+      if (!{
+        'trainingChallenge',
+        'wrongCleanup',
+        'forumInteraction',
+      }.contains(type)) {
+        return jsonResponse({
+          'error': 'invalid reward event type',
+        }, status: 400);
+      }
+      final dayWindow = _dayWindowFromBody(body);
+      if (dayWindow == null) {
+        return jsonResponse({
+          'error': 'valid localDate and timezoneOffsetMinutes are required',
+        }, status: 400);
+      }
+      await database.recordDailyActivity(uid, dayWindow.dateKey, type);
+      final tasks = await _dailyRewardTasks(database, uid, dayWindow);
+      return jsonResponse({
+        'recorded': true,
+        'dateKey': dayWindow.dateKey,
+        'tasks': tasks,
+      }, status: 201);
+    });
+  });
+
+  router.post('/rewards/tasks/<id>/claim', (Request request, String id) async {
+    return _protected(config, request, (uid) async {
+      final definition = rewardTaskDefinitionById(id);
+      if (definition == null) {
+        return jsonResponse({'error': 'reward task not found'}, status: 404);
+      }
+      final body = await readJsonMap(request);
+      final dayWindow = _dayWindowFromBody(body);
+      if (dayWindow == null) {
+        return jsonResponse({
+          'error': 'valid localDate and timezoneOffsetMinutes are required',
+        }, status: 400);
+      }
+      final user = await database.userById(uid);
+      if (user == null) {
+        return jsonResponse({'error': 'user not found'}, status: 404);
+      }
+      final claimed = await database.rewardClaimsForDate(
+        uid,
+        dayWindow.dateKey,
+      );
+      if (claimed.contains(id)) {
+        final tasks = await _dailyRewardTasks(database, uid, dayWindow);
+        return jsonResponse({
+          'claimed': false,
+          'alreadyClaimed': true,
+          'dateKey': dayWindow.dateKey,
+          'tasks': tasks,
+          'user': userDto(user),
+        });
+      }
+      final behavior = await _dailyRewardBehavior(database, uid, dayWindow);
+      if (!isRewardTaskDone(id, behavior)) {
+        return jsonResponse({
+          'error': 'task_not_complete',
+          'tasks': dailyRewardTaskDtos(
+            behavior: behavior,
+            claimedTaskIds: claimed,
+          ),
+        }, status: 409);
+      }
+      final claim = await database.claimRewardTask(
+        id: newId(),
+        uid: uid,
+        dateKey: dayWindow.dateKey,
+        taskId: id,
+        points: definition.points,
+      );
+      final tasks = await _dailyRewardTasks(database, uid, dayWindow);
+      return jsonResponse({
+        'claimed': claim.inserted,
+        'dateKey': dayWindow.dateKey,
+        'tasks': tasks,
+        'user': userDto(claim.user ?? user),
+      });
     });
   });
 
@@ -915,11 +1104,7 @@ Future<void> _ensureNotificationsForToday(
   final dueReviewCount = planPaused
       ? 0
       : math.min(await database.dueReviewCount(uid), reviewLimit);
-  final lastStudyDate = user['last_study_date'];
-  final hasCheckedIn =
-      lastStudyDate is DateTime &&
-      !lastStudyDate.toUtc().isBefore(dayWindow.startUtc) &&
-      lastStudyDate.toUtc().isBefore(dayWindow.endUtc);
+  final hasCheckedIn = await database.hasCheckIn(uid, dayWindow.dateKey);
   final dailyGoal = studyPlan?['daily_new_target'] ?? user['daily_goal'] ?? 10;
   final generated = generatedNotificationsForToday(
     dateKey: dayWindow.dateKey,
@@ -941,6 +1126,58 @@ Future<void> _ensureNotificationsForToday(
         'createdAt': now,
       },
   ]);
+}
+
+Future<List<Map<String, dynamic>>> _dailyRewardTasks(
+  AppDatabase database,
+  String uid,
+  NotificationDayWindow dayWindow,
+) async {
+  final behavior = await _dailyRewardBehavior(database, uid, dayWindow);
+  final claimed = await database.rewardClaimsForDate(uid, dayWindow.dateKey);
+  return dailyRewardTaskDtos(behavior: behavior, claimedTaskIds: claimed);
+}
+
+Future<DailyRewardBehavior> _dailyRewardBehavior(
+  AppDatabase database,
+  String uid,
+  NotificationDayWindow dayWindow,
+) async {
+  final activity = await database.dailyActivity(uid, dayWindow.dateKey);
+  return DailyRewardBehavior(
+    checkedIn: await database.hasCheckIn(uid, dayWindow.dateKey),
+    newLearningDone: await database.hasStudySessionInRange(
+      uid,
+      dayWindow.startUtc,
+      dayWindow.endUtc,
+      trainingOnly: false,
+    ),
+    reviewDone: await database.hasReviewEventInRange(
+      uid,
+      dayWindow.startUtc,
+      dayWindow.endUtc,
+    ),
+    trainingChallengeDone:
+        activity['training_challenge_completed'] == true ||
+        await database.hasStudySessionInRange(
+          uid,
+          dayWindow.startUtc,
+          dayWindow.endUtc,
+          trainingOnly: true,
+        ),
+    wrongCleanupDone: activity['wrong_cleanup_completed'] == true,
+    forumInteractionDone: activity['forum_interaction_completed'] == true,
+  );
+}
+
+String _previousDateKey(String dateKey) {
+  final parts = dateKey.split('-').map(int.parse).toList();
+  final previous = DateTime.utc(
+    parts[0],
+    parts[1],
+    parts[2],
+  ).subtract(const Duration(days: 1));
+  return notificationDateKey(previous);
 }
 
 String _dateValue(Object? value) {

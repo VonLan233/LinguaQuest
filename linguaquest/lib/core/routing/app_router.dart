@@ -237,10 +237,12 @@ final routerProvider = Provider<GoRouter>((ref) {
             return LessonResultScreen(
               result: extra.result,
               source: extra.source,
+              expectedLessonId: state.pathParameters['id'],
             );
           }
           return LessonResultScreen(
             result: extra is LessonResult ? extra : null,
+            expectedLessonId: state.pathParameters['id'],
           );
         },
       ),

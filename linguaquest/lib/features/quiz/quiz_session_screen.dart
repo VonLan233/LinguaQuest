@@ -287,7 +287,10 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
       setState(() => _isSubmitting = true);
       final succeeded = await ref
           .read(appControllerProvider.notifier)
-          .completeLesson(result);
+          .completeLesson(
+            result,
+            isTrainingChallenge: widget.mode == QuizSessionMode.timed,
+          );
       if (!mounted) return;
       if (!succeeded) {
         setState(() => _isSubmitting = false);

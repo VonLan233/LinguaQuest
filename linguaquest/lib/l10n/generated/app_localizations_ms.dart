@@ -658,6 +658,88 @@ class AppLocalizationsMs extends AppLocalizations {
   String get discoverViewProfile => 'Lihat Profil';
 
   @override
+  String get discoverTasksEmpty => '今天的积分任务暂时没有加载出来。';
+
+  @override
+  String get discoverForumCheckinTag => '今日打卡';
+
+  @override
+  String get discoverForumMistakeTag => '错题讨论';
+
+  @override
+  String get discoverForumPost1Title => '今日打卡：用 12 分钟复习了 18 个词';
+
+  @override
+  String get discoverForumPost1Body => '错词集中在近义辨析，明天准备从训练场的易混词挑战开始。';
+
+  @override
+  String get discoverForumPost2Title => '雅思阅读里怎么记 abstract?';
+
+  @override
+  String get discoverForumPost2Body => 'abstract 在论文和阅读文章里经常不是“抽象”的意思，要结合语境判断。';
+
+  @override
+  String get discoverForumHint => '在下方社区帖子点击“记录互动”，即可完成论坛互动任务。';
+
+  @override
+  String get discoverCheckinSuccess => '签到成功，今天的签到积分可以领取了。';
+
+  @override
+  String get discoverCheckinFailed => '签到失败，请稍后重试。';
+
+  @override
+  String get discoverForumSuccess => '论坛互动已通过，积分任务可领取。';
+
+  @override
+  String get discoverForumFailed => '论坛互动记录失败，请稍后重试。';
+
+  @override
+  String get discoverCheckinLoadingHint => '任务加载后即可签到。';
+
+  @override
+  String discoverCheckinClaimedDesc(int points) {
+    return '今天已签到，并已领取 +$points XP。';
+  }
+
+  @override
+  String discoverCheckinClaimableDesc(int points) {
+    return '今天已签到，记得领取 +$points XP。';
+  }
+
+  @override
+  String get discoverCheckinPrompt => '点击签到后，签到任务会进入可领取状态。';
+
+  @override
+  String get discoverCheckingIn => '签到中';
+
+  @override
+  String get discoverCheckedIn => '已签到';
+
+  @override
+  String get discoverCheckIn => '签到';
+
+  @override
+  String get discoverAlreadyClaimed => '已领取';
+
+  @override
+  String get discoverClaimCheckin => '领取签到积分';
+
+  @override
+  String get discoverLoading => '加载中';
+
+  @override
+  String get discoverReloadTasks => '重新加载任务';
+
+  @override
+  String get discoverConditionMet => '已完成条件，点击领取奖励。';
+
+  @override
+  String get discoverProcessing => '处理中';
+
+  @override
+  String get discoverRecordInteraction => '记录互动';
+
+  @override
   String get quizNoLesson => 'Pelajaran tidak ditemui';
 
   @override
@@ -2222,6 +2304,111 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get languageSetting => 'Bahasa';
+
+  @override
+  String luckyDrawCostLine(Object cost) {
+    return 'Belanja $cost XP setiap cabutan';
+  }
+
+  @override
+  String luckyDrawBalanceHint(Object xp) {
+    return 'Baki semasa $xp XP; hadiah termasuk bingkai avatar, latar belakang profil, lencana, gelaran, kulit kad dan serpihan saguhati.';
+  }
+
+  @override
+  String luckyDrawInventoryCount(Object count) {
+    return '$count item dalam stok';
+  }
+
+  @override
+  String get luckyDrawNoBoost => 'Tiada peningkatan pembelajaran';
+
+  @override
+  String get luckyDrawNow => 'Cabut sekarang';
+
+  @override
+  String get luckyDrawInsufficient =>
+      'XP tidak mencukupi — selesaikan tugasan dahulu';
+
+  @override
+  String luckyDrawShortfall(Object shortfall) {
+    return 'Lagi $shortfall XP. Selesaikan pembelajaran baharu, ulang kaji atau pembersihan kesilapan untuk memperoleh mata.';
+  }
+
+  @override
+  String get luckyDrawFailed => 'Cabutan gagal, sila cuba lagi nanti';
+
+  @override
+  String get luckyDrawSuccessTitle => 'Cabutan berjaya';
+
+  @override
+  String luckyDrawReward(Object name) {
+    return 'Anda dapat: $name';
+  }
+
+  @override
+  String luckyDrawDeducted(Object balance, Object cost) {
+    return 'Ditolak $cost XP, $balance XP berbaki.';
+  }
+
+  @override
+  String get luckyDrawKeepLooking => 'Terus lihat';
+
+  @override
+  String get luckyDrawViewAssets => 'Lihat aset saya';
+
+  @override
+  String get luckyDrawPoolLoading =>
+      'Kolam hadiah sedang dimuatkan: bingkai avatar, latar belakang profil, lencana pembelajaran, gelaran latihan, kulit kad, serpihan saguhati.';
+
+  @override
+  String get profileAssetsTitle => 'Aset Saya';
+
+  @override
+  String get profileAssetsSubtitle =>
+      'Aset hiasan yang dimenangi daripada cabutan adalah untuk paparan sahaja dan tidak menjejaskan skor pembelajaran.';
+
+  @override
+  String get profileAssetsEmpty =>
+      'Belum ada aset hiasan. Selepas menggunakan XP untuk cabutan di halaman Discover, bingkai avatar, latar belakang profil, lencana, gelaran, kulit kad dan serpihan akan dipaparkan di sini.';
+
+  @override
+  String profileAssetMeta(Object category, Object fragments, Object quantity) {
+    return '$category · Kuantiti $quantity · Serpihan $fragments';
+  }
+
+  @override
+  String get lotteryCategoryAvatarFrame => 'Bingkai Avatar';
+
+  @override
+  String get lotteryCategoryProfileBackground => 'Latar Belakang Profil';
+
+  @override
+  String get lotteryCategoryBadge => 'Lencana Pembelajaran';
+
+  @override
+  String get lotteryCategoryTitle => 'Gelaran Latihan';
+
+  @override
+  String get lotteryCategoryCardSkin => 'Kulit Kad';
+
+  @override
+  String get lotteryCategoryFragment => 'Serpihan Saguhati';
+
+  @override
+  String get lotteryCategoryDefault => 'Aset Hiasan';
+
+  @override
+  String get lotteryRarityRare => 'Jarang';
+
+  @override
+  String get lotteryRarityUncommon => 'Lanjutan';
+
+  @override
+  String get lotteryRarityCommon => 'Biasa';
+
+  @override
+  String get lotteryRarityComfort => 'Saguhati';
 
   @override
   String get languageChinese => '中文';

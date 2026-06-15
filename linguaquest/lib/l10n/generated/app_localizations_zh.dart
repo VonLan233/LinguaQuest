@@ -620,6 +620,88 @@ class AppLocalizationsZh extends AppLocalizations {
   String get discoverViewProfile => '查看主页';
 
   @override
+  String get discoverTasksEmpty => '今天的积分任务暂时没有加载出来。';
+
+  @override
+  String get discoverForumCheckinTag => '今日打卡';
+
+  @override
+  String get discoverForumMistakeTag => '错题讨论';
+
+  @override
+  String get discoverForumPost1Title => '今日打卡：用 12 分钟复习了 18 个词';
+
+  @override
+  String get discoverForumPost1Body => '错词集中在近义辨析，明天准备从训练场的易混词挑战开始。';
+
+  @override
+  String get discoverForumPost2Title => '雅思阅读里怎么记 abstract?';
+
+  @override
+  String get discoverForumPost2Body => 'abstract 在论文和阅读文章里经常不是“抽象”的意思，要结合语境判断。';
+
+  @override
+  String get discoverForumHint => '在下方社区帖子点击“记录互动”，即可完成论坛互动任务。';
+
+  @override
+  String get discoverCheckinSuccess => '签到成功，今天的签到积分可以领取了。';
+
+  @override
+  String get discoverCheckinFailed => '签到失败，请稍后重试。';
+
+  @override
+  String get discoverForumSuccess => '论坛互动已通过，积分任务可领取。';
+
+  @override
+  String get discoverForumFailed => '论坛互动记录失败，请稍后重试。';
+
+  @override
+  String get discoverCheckinLoadingHint => '任务加载后即可签到。';
+
+  @override
+  String discoverCheckinClaimedDesc(int points) {
+    return '今天已签到，并已领取 +$points XP。';
+  }
+
+  @override
+  String discoverCheckinClaimableDesc(int points) {
+    return '今天已签到，记得领取 +$points XP。';
+  }
+
+  @override
+  String get discoverCheckinPrompt => '点击签到后，签到任务会进入可领取状态。';
+
+  @override
+  String get discoverCheckingIn => '签到中';
+
+  @override
+  String get discoverCheckedIn => '已签到';
+
+  @override
+  String get discoverCheckIn => '签到';
+
+  @override
+  String get discoverAlreadyClaimed => '已领取';
+
+  @override
+  String get discoverClaimCheckin => '领取签到积分';
+
+  @override
+  String get discoverLoading => '加载中';
+
+  @override
+  String get discoverReloadTasks => '重新加载任务';
+
+  @override
+  String get discoverConditionMet => '已完成条件，点击领取奖励。';
+
+  @override
+  String get discoverProcessing => '处理中';
+
+  @override
+  String get discoverRecordInteraction => '记录互动';
+
+  @override
   String get quizNoLesson => '没有找到这节课';
 
   @override
@@ -2100,6 +2182,108 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get languageSetting => '语言';
+
+  @override
+  String luckyDrawCostLine(Object cost) {
+    return '消耗 $cost XP 抽一次';
+  }
+
+  @override
+  String luckyDrawBalanceHint(Object xp) {
+    return '当前余额 $xp XP；奖品包含头像框、主页背景、徽章、称号、卡片皮肤和安慰碎片。';
+  }
+
+  @override
+  String luckyDrawInventoryCount(Object count) {
+    return '库存 $count 件';
+  }
+
+  @override
+  String get luckyDrawNoBoost => '无学习加成';
+
+  @override
+  String get luckyDrawNow => '立即抽奖';
+
+  @override
+  String get luckyDrawInsufficient => '余额不足，先完成任务';
+
+  @override
+  String luckyDrawShortfall(Object shortfall) {
+    return '还差 $shortfall XP。完成新学、复习或错词清理即可领取积分。';
+  }
+
+  @override
+  String get luckyDrawFailed => '抽奖失败，请稍后重试';
+
+  @override
+  String get luckyDrawSuccessTitle => '抽奖成功';
+
+  @override
+  String luckyDrawReward(Object name) {
+    return '获得：$name';
+  }
+
+  @override
+  String luckyDrawDeducted(Object balance, Object cost) {
+    return '已扣除 $cost XP，剩余 $balance XP。';
+  }
+
+  @override
+  String get luckyDrawKeepLooking => '继续看看';
+
+  @override
+  String get luckyDrawViewAssets => '查看个人资产';
+
+  @override
+  String get luckyDrawPoolLoading => '奖池加载中：头像框、主页背景、学习徽章、训练场称号、卡片皮肤、安慰碎片。';
+
+  @override
+  String get profileAssetsTitle => '个人资产';
+
+  @override
+  String get profileAssetsSubtitle => '抽奖获得的装饰资产只用于展示，不影响学习分数。';
+
+  @override
+  String get profileAssetsEmpty =>
+      '暂无装饰资产。前往发现页使用 XP 抽奖后，头像框、主页背景、徽章、称号、卡片皮肤和碎片会显示在这里。';
+
+  @override
+  String profileAssetMeta(Object category, Object fragments, Object quantity) {
+    return '$category · 数量 $quantity · 碎片值 $fragments';
+  }
+
+  @override
+  String get lotteryCategoryAvatarFrame => '头像框';
+
+  @override
+  String get lotteryCategoryProfileBackground => '主页背景';
+
+  @override
+  String get lotteryCategoryBadge => '学习徽章';
+
+  @override
+  String get lotteryCategoryTitle => '训练称号';
+
+  @override
+  String get lotteryCategoryCardSkin => '卡片皮肤';
+
+  @override
+  String get lotteryCategoryFragment => '安慰碎片';
+
+  @override
+  String get lotteryCategoryDefault => '装饰资产';
+
+  @override
+  String get lotteryRarityRare => '稀有';
+
+  @override
+  String get lotteryRarityUncommon => '进阶';
+
+  @override
+  String get lotteryRarityCommon => '普通';
+
+  @override
+  String get lotteryRarityComfort => '安慰';
 
   @override
   String get languageChinese => '中文';

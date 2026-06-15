@@ -2,9 +2,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/app_notification.dart';
 import '../models/custom_word.dart';
+import '../models/daily_reward_task.dart';
 import '../models/exercise_record.dart';
 import '../models/lesson.dart';
 import '../models/lottery.dart';
+import '../models/point_grant_result.dart';
 import '../models/review_event.dart';
 import '../models/study_session.dart';
 import '../models/study_plan.dart';
@@ -18,6 +20,8 @@ import 'custom_word_repository.dart';
 import 'learning_repository.dart';
 import 'lottery_repository.dart';
 import 'notification_repository.dart';
+import 'reward_repository.dart';
+import 'reward_task_repository.dart';
 import 'review_repository.dart';
 import 'study_plan_repository.dart';
 import 'user_word_repository.dart';
@@ -76,7 +80,6 @@ class ApiAuthRepository implements AuthRepository {
         'targetExam': profile.targetExam,
         'level': profile.level,
         'dailyGoal': profile.dailyGoal,
-        'xp': profile.xp,
         'streak': profile.streak,
         'lastStudyDate': profile.lastStudyDate?.toIso8601String(),
       },
@@ -434,6 +437,113 @@ class ApiLotteryRepository implements LotteryRepository {
             (item) => AppNotification.fromJson(Map<String, dynamic>.from(item)),
           )
           .toList(),
+    );
+  }
+}
+
+class ApiRewardTaskRepository implements RewardTaskRepository {
+  ApiRewardTaskRepository(this._client);
+
+  final ApiClient _client;
+
+  @override
+  Future<RewardTaskSnapshot> listTasks(String uid) async {
+    final now = DateTime.now();
+    final response = await _client.dio.get<Map<String, dynamic>>(
+      '/rewards/tasks',
+      queryParameters: _dayParameters(now),
+    );
+    return _snapshotFromJson(response.data!);
+  }
+
+  @override
+  Future<RewardTaskSnapshot> checkIn(String uid) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/rewards/check-in',
+      data: _dayParameters(DateTime.now()),
+    );
+    return _snapshotFromJson(response.data!);
+  }
+
+  @override
+  Future<RewardTaskSnapshot> claimTask(String uid, String taskId) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/rewards/tasks/$taskId/claim',
+      data: _dayParameters(DateTime.now()),
+    );
+    return _snapshotFromJson(response.data!);
+  }
+
+  @override
+  Future<RewardTaskSnapshot> recordEvent(
+    String uid,
+    RewardEventType type,
+  ) async {
+    if (type == RewardEventType.newLearning ||
+        type == RewardEventType.reviewDone) {
+      return listTasks(uid);
+    }
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/reward-events',
+      data: {..._dayParameters(DateTime.now()), 'type': type.name},
+    );
+    return _snapshotFromJson(response.data!);
+  }
+}
+
+RewardTaskSnapshot _snapshotFromJson(Map<String, dynamic> json) {
+  final tasks = (json['tasks'] as List<dynamic>? ?? const <dynamic>[])
+      .whereType<Map>()
+      .map((item) => DailyRewardTask.fromJson(Map<String, dynamic>.from(item)))
+      .toList();
+  final userJson = json['user'];
+  return RewardTaskSnapshot(
+    dateKey: json['dateKey'] as String? ?? _localDateKey(DateTime.now()),
+    tasks: tasks,
+    claimed: json['claimed'] as bool?,
+    alreadyClaimed: json['alreadyClaimed'] == true,
+    user: userJson is Map
+        ? UserProfile.fromJson(Map<String, dynamic>.from(userJson))
+        : null,
+  );
+}
+
+Map<String, dynamic> _dayParameters(DateTime date) {
+  return {
+    'localDate': _localDateKey(date),
+    'timezoneOffsetMinutes': date.timeZoneOffset.inMinutes,
+  };
+}
+
+class ApiRewardRepository implements RewardRepository {
+  ApiRewardRepository(this._client);
+
+  final ApiClient _client;
+
+  @override
+  Future<PointGrantResult> grantPoints({
+    required String uid,
+    required String sourceType,
+    required String sourceId,
+    required int points,
+    required String description,
+  }) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/rewards/points',
+      data: {
+        'sourceType': sourceType,
+        'sourceId': sourceId,
+        'points': points,
+        'description': description,
+      },
+    );
+    final data = response.data!;
+    return PointGrantResult(
+      pointsAwarded: data['pointsAwarded'] as int? ?? 0,
+      alreadyGranted: data['alreadyGranted'] as bool? ?? false,
+      user: data['user'] != null
+          ? UserProfile.fromJson(data['user'] as Map<String, dynamic>)
+          : null,
     );
   }
 }
