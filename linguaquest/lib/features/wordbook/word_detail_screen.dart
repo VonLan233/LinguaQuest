@@ -4,12 +4,14 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
 import '../../core/utils/date_formatting.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/ai_word_support_link.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/pronunciation_controls.dart';
+import '../../core/widgets/quest_panel.dart';
 import '../../data/models/custom_word.dart';
 import '../../l10n/generated/app_localizations.dart';
 import 'word_knowledge_sections.dart';
@@ -44,10 +46,10 @@ class WordDetailScreen extends ConsumerWidget {
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(AppTokens.s20),
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
+            QuestPanel(
+              padding: const EdgeInsets.all(AppTokens.s20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -113,8 +115,7 @@ class WordDetailScreen extends ConsumerWidget {
             const SizedBox(height: 20),
             AiWordSupportLink(word: word.word),
             const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
+            QuestPanel(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
