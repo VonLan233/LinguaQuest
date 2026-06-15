@@ -4,11 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/ai_word_support_link.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/pronunciation_controls.dart';
+import '../../core/widgets/quest_panel.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/user_word.dart';
@@ -99,18 +101,29 @@ class TargetWordDetailScreen extends ConsumerWidget {
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 112),
+          padding: const EdgeInsets.fromLTRB(
+            AppTokens.s20,
+            AppTokens.s20,
+            AppTokens.s20,
+            112,
+          ),
           children: [
-            _WordHero(word: word, bookTitle: detail.book.title, l10n: l10n),
-            const SizedBox(height: 18),
-            _DefinitionSections(word: word, l10n: l10n),
-            const SizedBox(height: 18),
-            _ExampleSections(word: word, l10n: l10n),
-            const SizedBox(height: 18),
+            QuestPanel(
+              child: _WordHero(
+                word: word,
+                bookTitle: detail.book.title,
+                l10n: l10n,
+              ),
+            ),
+            const SizedBox(height: AppTokens.s16),
+            QuestPanel(child: _DefinitionSections(word: word, l10n: l10n)),
+            const SizedBox(height: AppTokens.s16),
+            QuestPanel(child: _ExampleSections(word: word, l10n: l10n)),
+            const SizedBox(height: AppTokens.s16),
             WordKnowledgeSections(word: word),
-            const SizedBox(height: 22),
+            const SizedBox(height: AppTokens.s24),
             _WordTags(word: word, progress: progress, l10n: l10n),
-            const SizedBox(height: 22),
+            const SizedBox(height: AppTokens.s24),
             OutlinedButton.icon(
               onPressed: () => _toggleIgnored(
                 context,
