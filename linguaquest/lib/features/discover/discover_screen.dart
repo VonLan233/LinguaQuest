@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../l10n/generated/app_localizations.dart';
 
@@ -17,11 +18,16 @@ class DiscoverScreen extends ConsumerWidget {
     final user = state.user;
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
+      padding: const EdgeInsets.fromLTRB(
+        AppTokens.s20,
+        AppTokens.s20,
+        AppTokens.s20,
+        88,
+      ),
       children: [
         Wrap(
-          spacing: 8,
-          runSpacing: 8,
+          spacing: AppTokens.s8,
+          runSpacing: AppTokens.s8,
           children: [
             PillLabel(
               label: '${user?.xp ?? 0} ${l10n.commonXP}',
@@ -35,7 +41,7 @@ class DiscoverScreen extends ConsumerWidget {
             ),
           ],
         ),
-        const SizedBox(height: 22),
+        const SizedBox(height: AppTokens.s24),
         Row(
           children: [
             Expanded(
@@ -47,7 +53,7 @@ class DiscoverScreen extends ConsumerWidget {
                 onTap: () => context.push('/discover/xp-tasks'),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppTokens.s12),
             Expanded(
               child: _DiscoverNavCard(
                 icon: Icons.card_giftcard_outlined,
@@ -59,7 +65,7 @@ class DiscoverScreen extends ConsumerWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppTokens.s12),
         _DiscoverNavCard(
           icon: Icons.forum_outlined,
           title: l10n.discoverCommunityPosts,
@@ -92,25 +98,25 @@ class _DiscoverNavCard extends StatelessWidget {
     final theme = Theme.of(context);
     return Material(
       color: Colors.transparent,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(AppTokens.radiusCard),
       clipBehavior: Clip.antiAlias,
       child: Ink(
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppTokens.radiusCard),
           border: Border.all(color: color.withValues(alpha: 0.24)),
         ),
         child: InkWell(
           onTap: onTap,
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(AppTokens.s20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Icon(icon, color: color, size: 32),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppTokens.s12),
                 Text(title, style: theme.textTheme.titleMedium),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppTokens.s4),
                 Text(
                   subtitle,
                   maxLines: 2,
