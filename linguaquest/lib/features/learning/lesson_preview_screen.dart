@@ -4,9 +4,11 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/pronunciation_controls.dart';
+import '../../core/widgets/quest_panel.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson.dart';
 
@@ -222,8 +224,8 @@ class _WordStudyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+    return QuestPanel(
+      padding: const EdgeInsets.all(AppTokens.s20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -231,7 +233,7 @@ class _WordStudyCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ImageCueBadge(cue: word.imageCue, size: 72),
-              const SizedBox(width: 16),
+              const SizedBox(width: AppTokens.s16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -269,9 +271,14 @@ class _WordStudyCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 18),
-          Text(word.meaning, style: theme.textTheme.titleLarge),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppTokens.s20),
+          Text(
+            word.meaning,
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(height: AppTokens.s8),
           Text(word.definition),
         ],
       ),
@@ -361,8 +368,8 @@ class _ContextSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+    return QuestPanel(
+      padding: const EdgeInsets.all(AppTokens.s16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -372,13 +379,18 @@ class _ContextSection extends StatelessWidget {
                 Icons.format_quote_rounded,
                 color: theme.colorScheme.primary,
               ),
-              const SizedBox(width: 8),
-              Text('语境例句', style: theme.textTheme.titleMedium),
+              const SizedBox(width: AppTokens.s8),
+              Text(
+                '语境例句',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppTokens.s8),
           Text(word.exampleSentence),
-          const SizedBox(height: 6),
+          const SizedBox(height: AppTokens.s4),
           Text(
             word.exampleTranslation,
             style: TextStyle(color: theme.colorScheme.onSurfaceVariant),

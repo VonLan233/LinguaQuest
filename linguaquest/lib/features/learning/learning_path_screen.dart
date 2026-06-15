@@ -4,8 +4,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/status_badge.dart';
 import '../../data/models/lesson.dart';
 import '../../l10n/generated/app_localizations.dart';
 
@@ -67,12 +69,12 @@ class _PausedBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppTokens.s16),
       decoration: BoxDecoration(
         color: Theme.of(
           context,
         ).colorScheme.primaryContainer.withValues(alpha: 0.35),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
       ),
       child: Row(
         children: [
@@ -80,7 +82,7 @@ class _PausedBanner extends StatelessWidget {
             Icons.pause_circle_outlined,
             color: Theme.of(context).colorScheme.primary,
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppTokens.s12),
           Expanded(child: Text(l10n.reviewCenterPlanPaused)),
         ],
       ),
@@ -117,12 +119,15 @@ class _PathNode extends StatelessWidget {
     }
     return Material(
       color: Colors.transparent,
-      borderRadius: BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(AppTokens.radiusButton),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: locked ? null : () => _showPreview(context),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+          padding: const EdgeInsets.symmetric(
+            horizontal: _pathNodeHorizontalPadding,
+            vertical: AppTokens.s12,
+          ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -148,7 +153,7 @@ class _PathNode extends StatelessWidget {
                           : completed
                           ? Icons.check_rounded
                           : Icons.star_rounded,
-                      color: current ? AppTheme.ink : Colors.white,
+                      color: current ? AppTheme.ink : theme.colorScheme.onPrimary,
                       size: current ? 38 : 30,
                     ),
                   ),
@@ -170,16 +175,21 @@ class _PathNode extends StatelessWidget {
                             ),
                           ),
                         ),
-                        PillLabel(
+                        StatusBadge(
                           label: _statusLabel(lesson.status, l10n),
+                          tone: _statusTone(lesson.status),
                           icon: locked ? Icons.lock_outline : Icons.bolt,
-                          color: color,
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
-                    Text(lesson.title, style: theme.textTheme.titleLarge),
-                    const SizedBox(height: 5),
+                    const SizedBox(height: AppTokens.s8),
+                    Text(
+                      lesson.title,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: AppTokens.s4),
                     Text(
                       lesson.description,
                       style: TextStyle(
@@ -273,6 +283,19 @@ String _statusLabel(String status, AppLocalizations l10n) {
       return l10n.learningPathLessonLocked;
     default:
       return status;
+  }
+}
+
+StatusTone _statusTone(String status) {
+  switch (status) {
+    case 'completed':
+      return StatusTone.success;
+    case 'current':
+      return StatusTone.info;
+    case 'locked':
+      return StatusTone.neutral;
+    default:
+      return StatusTone.info;
   }
 }
 
