@@ -316,6 +316,115 @@ class AppLocalizationsMs extends AppLocalizations {
   String get studyStepContextDesc => 'Ingat semula aktif';
 
   @override
+  String get mixedManageReviewQueue => 'Urus baris gilir ulang kaji';
+
+  @override
+  String mixedReviewRatio(Object percent) {
+    return 'Ulang kaji $percent%';
+  }
+
+  @override
+  String get mixedTitleNew => 'Pek perkataan baharu hari ini';
+
+  @override
+  String get mixedTitleReview => 'Ulang kaji pantas';
+
+  @override
+  String get mixedTitleMixed => 'Pek campuran hari ini';
+
+  @override
+  String get mixedSaveReviewFailed =>
+      'Tidak dapat menyimpan rekod ulang kaji buat masa ini';
+
+  @override
+  String mixedUnsureOption(Object index) {
+    return 'Tidak pasti $index';
+  }
+
+  @override
+  String get mixedSaveProgressTitle => 'Simpan kemajuan ini?';
+
+  @override
+  String get mixedSaveProgressBody =>
+      'Rekod ulang kaji yang disimpan dikekalkan; menyimpan akan merekod soalan yang selesai kali ini, dan perkataan yang belum selesai akan kembali ke pek pada masa berikutnya.';
+
+  @override
+  String get mixedContinueStudy => 'Teruskan belajar';
+
+  @override
+  String get mixedLeaveWithoutSaving => 'Keluar tanpa simpan';
+
+  @override
+  String get mixedSaveAndLeave => 'Simpan dan keluar';
+
+  @override
+  String get mixedSaveStudyFailed =>
+      'Tidak dapat menyimpan kemajuan belajar buat masa ini';
+
+  @override
+  String get mixedSelfAssessHint =>
+      'Nilai sendiri dahulu; apl akan melaraskan ulangan hari ini';
+
+  @override
+  String get mixedEnterRecognition => 'Mula pengecaman';
+
+  @override
+  String get mixedAddLaterRecall => 'Tambah ke ingatan kemudian';
+
+  @override
+  String get mixedReviewQuickAnswer => 'Jawapan pantas ulang kaji';
+
+  @override
+  String get mixedFeedbackCorrect => 'Betul, teruskan ke seterusnya.';
+
+  @override
+  String get mixedFeedbackWrong =>
+      'Salah; lihat kad pengetahuan, ia akan muncul semula nanti.';
+
+  @override
+  String get mixedFeedbackRetry =>
+      'Belum lagi. Pilih jawapan yang betul sebelum meneruskan.';
+
+  @override
+  String mixedShortRecallPrompt(Object word) {
+    return 'Ingat semula pantas: apakah maksud $word?';
+  }
+
+  @override
+  String mixedMeaningPrompt(Object word) {
+    return 'Apakah maksud $word?';
+  }
+
+  @override
+  String get mixedStepRecognition => 'Pengecaman';
+
+  @override
+  String get mixedStepShortRecall => 'Ingat semula pantas';
+
+  @override
+  String get mixedStepDueReview => 'Ulang kaji tertunggak';
+
+  @override
+  String get mixedStepKnowledge => 'Kad pengetahuan';
+
+  @override
+  String get mixedCompleteTitle => 'Pek hari ini selesai';
+
+  @override
+  String get mixedNoContentTitle => 'Tiada apa untuk dipelajari hari ini';
+
+  @override
+  String get mixedCompleteBody =>
+      'Kesilapan telah dikitar semula pusingan ini; jawapan dan masa anda disimpan ke log belajar.';
+
+  @override
+  String get mixedNoContentBody =>
+      'Tiada perkataan baharu atau ulang kaji tertunggak sekarang.';
+
+  @override
+  String get mixedSaveAndHome => 'Simpan dan ke laman utama';
+
+  @override
   String get onboardingFeatureImageCards => 'Kad Perkataan Bergambar';
 
   @override

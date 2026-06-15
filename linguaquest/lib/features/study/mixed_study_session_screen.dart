@@ -11,6 +11,7 @@ import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
+import '../../l10n/generated/app_localizations.dart';
 import 'session/session_queue_builder.dart';
 
 class MixedStudySessionScreen extends ConsumerStatefulWidget {
@@ -53,6 +54,7 @@ class _MixedStudySessionScreenState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final current = _queue.isEmpty ? null : _queue.first;
     final total = _completedItems + _queue.length;
     final progress = total == 0
@@ -68,19 +70,21 @@ class _MixedStudySessionScreenState
       child: Scaffold(
         appBar: AppBar(
           leading: BackButton(onPressed: () => _handleExit(context)),
-          title: Text(_title),
+          title: Text(_titleFor(l10n)),
           actions: [
             if (widget.mode == StudySessionEntryMode.reviewOnly)
               TextButton(
                 onPressed: _isSubmitting ? null : () => context.push('/review'),
-                child: const Text('管理复习队列'),
+                child: Text(l10n.mixedManageReviewQueue),
               ),
             if (_plan != null)
               Padding(
                 padding: const EdgeInsets.only(right: 12),
                 child: Center(
                   child: PillLabel(
-                    label: '复习 ${(_plan!.reviewTargetRatio * 100).round()}%',
+                    label: l10n.mixedReviewRatio(
+                      '${(_plan!.reviewTargetRatio * 100).round()}',
+                    ),
                     icon: Icons.shuffle_rounded,
                     color: AppTheme.cyan,
                   ),
@@ -156,14 +160,14 @@ class _MixedStudySessionScreenState
     );
   }
 
-  String get _title {
+  String _titleFor(AppLocalizations l10n) {
     switch (widget.mode) {
       case StudySessionEntryMode.newOnly:
-        return '今日新学包';
+        return l10n.mixedTitleNew;
       case StudySessionEntryMode.reviewOnly:
-        return '快速复习';
+        return l10n.mixedTitleReview;
       case StudySessionEntryMode.mixed:
-        return '今日混排学习包';
+        return l10n.mixedTitleMixed;
     }
   }
 
@@ -277,10 +281,12 @@ class _MixedStudySessionScreenState
           );
       if (!mounted) return;
       if (!succeeded) {
-        _showSubmitError('暂时无法保存复习记录');
+        _showSubmitError(AppLocalizations.of(context).mixedSaveReviewFailed);
       }
     } catch (_) {
-      if (mounted) _showSubmitError('暂时无法保存复习记录');
+      if (mounted) {
+        _showSubmitError(AppLocalizations.of(context).mixedSaveReviewFailed);
+      }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
     }
@@ -367,7 +373,7 @@ class _MixedStudySessionScreenState
       options.add(distractorPool[index]);
     }
     while (options.length < 4) {
-      options.add('还不确定 ${options.length}');
+      options.add(AppLocalizations.of(context).mixedUnsureOption(options.length));
     }
     options.shuffle(_random);
     return List.unmodifiable(options);
@@ -378,24 +384,25 @@ class _MixedStudySessionScreenState
       _leave(activeContext);
       return;
     }
+    final dialogL10n = AppLocalizations.of(activeContext);
     final action = await showDialog<_ExitAction>(
       context: activeContext,
       builder: (context) => AlertDialog(
-        title: const Text('保存本次进度？'),
-        content: const Text('已保存的复习记录会保留；保存后会记录本次已完成题目，未完成词下次仍会进入学习包。'),
+        title: Text(dialogL10n.mixedSaveProgressTitle),
+        content: Text(dialogL10n.mixedSaveProgressBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, _ExitAction.continueStudy),
-            child: const Text('继续学习'),
+            child: Text(dialogL10n.mixedContinueStudy),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, _ExitAction.discard),
-            child: const Text('不保存离开'),
+            child: Text(dialogL10n.mixedLeaveWithoutSaving),
           ),
           FilledButton.icon(
             onPressed: () => Navigator.pop(context, _ExitAction.save),
             icon: const Icon(Icons.save_outlined),
-            label: const Text('保存并离开'),
+            label: Text(dialogL10n.mixedSaveAndLeave),
           ),
         ],
       ),
@@ -444,11 +451,13 @@ class _MixedStudySessionScreenState
             xpEarned: xp,
           );
       if (mounted && !succeeded) {
-        _showSubmitError('暂时无法保存学习进度');
+        _showSubmitError(AppLocalizations.of(context).mixedSaveStudyFailed);
       }
       return succeeded;
     } catch (_) {
-      if (mounted) _showSubmitError('暂时无法保存学习进度');
+      if (mounted) {
+        _showSubmitError(AppLocalizations.of(context).mixedSaveStudyFailed);
+      }
       return false;
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
@@ -493,6 +502,7 @@ class _KnowledgeCardStep extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     return ListView(
       children: [
         ImageCueBadge(cue: item.imageCue, size: 92),
@@ -516,13 +526,13 @@ class _KnowledgeCardStep extends StatelessWidget {
         Text(item.exampleSentence, textAlign: TextAlign.center),
         const SizedBox(height: 24),
         if (showAssessment) ...[
-          Text('先自评，系统会调整今天的重复次数', style: theme.textTheme.titleMedium),
+          Text(l10n.mixedSelfAssessHint, style: theme.textTheme.titleMedium),
           const SizedBox(height: 10),
           SegmentedButton<int>(
-            segments: const [
-              ButtonSegment(value: 5, label: Text('认识')),
-              ButtonSegment(value: 3, label: Text('模糊')),
-              ButtonSegment(value: 1, label: Text('不认识')),
+            segments: [
+              ButtonSegment(value: 5, label: Text(l10n.studyRecallKnown)),
+              ButtonSegment(value: 3, label: Text(l10n.studyRecallFuzzy)),
+              ButtonSegment(value: 1, label: Text(l10n.studyRecallUnknown)),
             ],
             selected: {selectedConfidence},
             onSelectionChanged: (values) => onConfidenceChanged(values.first),
@@ -532,7 +542,11 @@ class _KnowledgeCardStep extends StatelessWidget {
         FilledButton.icon(
           onPressed: isSubmitting ? null : onContinue,
           icon: const Icon(Icons.arrow_forward_rounded),
-          label: Text(showAssessment ? '进入识别题' : '加入稍后复现'),
+          label: Text(
+            showAssessment
+                ? l10n.mixedEnterRecognition
+                : l10n.mixedAddLaterRecall,
+          ),
         ),
       ],
     );
@@ -563,11 +577,12 @@ class _QuestionStep extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          _prompt,
+          _promptFor(l10n),
           textAlign: TextAlign.center,
           style: theme.textTheme.headlineSmall,
         ),
@@ -577,9 +592,15 @@ class _QuestionStep extends StatelessWidget {
           runSpacing: 8,
           alignment: WrapAlignment.center,
           children: [
-            PillLabel(label: _stepLabel, icon: Icons.psychology_alt_outlined),
+            PillLabel(
+              label: _stepLabelFor(l10n),
+              icon: Icons.psychology_alt_outlined,
+            ),
             if (item.isReview)
-              const PillLabel(label: '复习快答', icon: Icons.flash_on_outlined),
+              PillLabel(
+                label: l10n.mixedReviewQuickAnswer,
+                icon: Icons.flash_on_outlined,
+              ),
           ],
         ),
         const SizedBox(height: 18),
@@ -613,10 +634,10 @@ class _QuestionStep extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   lastCorrect
-                      ? '答对了，继续下一题。'
+                      ? l10n.mixedFeedbackCorrect
                       : item.isReview
-                      ? '答错了，先看知识卡，稍后会再次出现。'
-                      : '还不对。请选择到正确答案后再进入下一题。',
+                      ? l10n.mixedFeedbackWrong
+                      : l10n.mixedFeedbackRetry,
                   style: TextStyle(
                     color: lastCorrect
                         ? AppTheme.success
@@ -634,35 +655,39 @@ class _QuestionStep extends StatelessWidget {
             checked ? Icons.arrow_forward_rounded : Icons.check_rounded,
           ),
           label: Text(
-            checked ? (lastCorrect || item.isReview ? '继续' : '再试一次') : '检查',
+            checked
+                ? (lastCorrect || item.isReview
+                      ? l10n.commonContinue
+                      : l10n.commonRetry)
+                : l10n.commonCheck,
           ),
         ),
       ],
     );
   }
 
-  String get _prompt {
+  String _promptFor(AppLocalizations l10n) {
     if (item.step == StudySessionStep.shortRecall) {
-      return '短间隔回忆：${item.displayWord} 的意思是？';
+      return l10n.mixedShortRecallPrompt(item.displayWord);
     }
     if (item.step == StudySessionStep.recognition &&
         item.exampleSentence.isNotEmpty) {
       return item.exampleSentence;
     }
-    return '${item.displayWord} 的中文释义是？';
+    return l10n.mixedMeaningPrompt(item.displayWord);
   }
 
-  String get _stepLabel {
+  String _stepLabelFor(AppLocalizations l10n) {
     switch (item.step) {
       case StudySessionStep.recognition:
-        return '识别';
+        return l10n.mixedStepRecognition;
       case StudySessionStep.shortRecall:
-        return '短间隔回忆';
+        return l10n.mixedStepShortRecall;
       case StudySessionStep.reviewRecall:
-        return '到期复习';
+        return l10n.mixedStepDueReview;
       case StudySessionStep.understanding:
       case StudySessionStep.knowledgeCard:
-        return '知识卡';
+        return l10n.mixedStepKnowledge;
     }
   }
 
@@ -711,14 +736,15 @@ class _CompleteView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return EmptyState(
       icon: Icons.check_circle_outline,
-      title: hasProgress ? '今日学习包完成' : '今日没有待学习内容',
-      message: hasProgress ? '错题已经在本轮回收，答题记录和用时会保存到学习日志。' : '当前没有新词或到期复习词。',
+      title: hasProgress ? l10n.mixedCompleteTitle : l10n.mixedNoContentTitle,
+      message: hasProgress ? l10n.mixedCompleteBody : l10n.mixedNoContentBody,
       action: FilledButton.icon(
         onPressed: isSubmitting ? null : onFinish,
         icon: const Icon(Icons.home_outlined),
-        label: const Text('保存并回首页'),
+        label: Text(l10n.mixedSaveAndHome),
       ),
     );
   }

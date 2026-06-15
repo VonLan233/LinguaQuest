@@ -682,6 +682,192 @@ abstract class AppLocalizations {
   /// **'Active recall'**
   String get studyStepContextDesc;
 
+  /// No description provided for @mixedManageReviewQueue.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage review queue'**
+  String get mixedManageReviewQueue;
+
+  /// No description provided for @mixedReviewRatio.
+  ///
+  /// In en, this message translates to:
+  /// **'Review {percent}%'**
+  String mixedReviewRatio(Object percent);
+
+  /// No description provided for @mixedTitleNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s new word pack'**
+  String get mixedTitleNew;
+
+  /// No description provided for @mixedTitleReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick review'**
+  String get mixedTitleReview;
+
+  /// No description provided for @mixedTitleMixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s mixed pack'**
+  String get mixedTitleMixed;
+
+  /// No description provided for @mixedSaveReviewFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to save the review record for now'**
+  String get mixedSaveReviewFailed;
+
+  /// No description provided for @mixedUnsureOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsure {index}'**
+  String mixedUnsureOption(Object index);
+
+  /// No description provided for @mixedSaveProgressTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Save this progress?'**
+  String get mixedSaveProgressTitle;
+
+  /// No description provided for @mixedSaveProgressBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved review records are kept; saving records the questions completed this time, and unfinished words return to the pack next time.'**
+  String get mixedSaveProgressBody;
+
+  /// No description provided for @mixedContinueStudy.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep studying'**
+  String get mixedContinueStudy;
+
+  /// No description provided for @mixedLeaveWithoutSaving.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave without saving'**
+  String get mixedLeaveWithoutSaving;
+
+  /// No description provided for @mixedSaveAndLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save and leave'**
+  String get mixedSaveAndLeave;
+
+  /// No description provided for @mixedSaveStudyFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to save study progress for now'**
+  String get mixedSaveStudyFailed;
+
+  /// No description provided for @mixedSelfAssessHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Self-assess first; the app adjusts today\'s repetitions'**
+  String get mixedSelfAssessHint;
+
+  /// No description provided for @mixedEnterRecognition.
+  ///
+  /// In en, this message translates to:
+  /// **'Start recognition'**
+  String get mixedEnterRecognition;
+
+  /// No description provided for @mixedAddLaterRecall.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to later recall'**
+  String get mixedAddLaterRecall;
+
+  /// No description provided for @mixedReviewQuickAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Review quick answer'**
+  String get mixedReviewQuickAnswer;
+
+  /// No description provided for @mixedFeedbackCorrect.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct, on to the next one.'**
+  String get mixedFeedbackCorrect;
+
+  /// No description provided for @mixedFeedbackWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong; check the knowledge card, it will appear again later.'**
+  String get mixedFeedbackWrong;
+
+  /// No description provided for @mixedFeedbackRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Not yet. Pick the correct answer before continuing.'**
+  String get mixedFeedbackRetry;
+
+  /// No description provided for @mixedShortRecallPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Short recall: what does {word} mean?'**
+  String mixedShortRecallPrompt(Object word);
+
+  /// No description provided for @mixedMeaningPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'What is the meaning of {word}?'**
+  String mixedMeaningPrompt(Object word);
+
+  /// No description provided for @mixedStepRecognition.
+  ///
+  /// In en, this message translates to:
+  /// **'Recognition'**
+  String get mixedStepRecognition;
+
+  /// No description provided for @mixedStepShortRecall.
+  ///
+  /// In en, this message translates to:
+  /// **'Short recall'**
+  String get mixedStepShortRecall;
+
+  /// No description provided for @mixedStepDueReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Due review'**
+  String get mixedStepDueReview;
+
+  /// No description provided for @mixedStepKnowledge.
+  ///
+  /// In en, this message translates to:
+  /// **'Knowledge card'**
+  String get mixedStepKnowledge;
+
+  /// No description provided for @mixedCompleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s pack complete'**
+  String get mixedCompleteTitle;
+
+  /// No description provided for @mixedNoContentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to study today'**
+  String get mixedNoContentTitle;
+
+  /// No description provided for @mixedCompleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Mistakes have been recycled this round; your answers and time are saved to the study log.'**
+  String get mixedCompleteBody;
+
+  /// No description provided for @mixedNoContentBody.
+  ///
+  /// In en, this message translates to:
+  /// **'No new words or due reviews right now.'**
+  String get mixedNoContentBody;
+
+  /// No description provided for @mixedSaveAndHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Save and go home'**
+  String get mixedSaveAndHome;
+
   /// No description provided for @onboardingFeatureImageCards.
   ///
   /// In en, this message translates to:

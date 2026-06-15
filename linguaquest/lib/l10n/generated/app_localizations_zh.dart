@@ -304,6 +304,108 @@ class AppLocalizationsZh extends AppLocalizations {
   String get studyStepContextDesc => '主动回忆';
 
   @override
+  String get mixedManageReviewQueue => '管理复习队列';
+
+  @override
+  String mixedReviewRatio(Object percent) {
+    return '复习 $percent%';
+  }
+
+  @override
+  String get mixedTitleNew => '今日新学包';
+
+  @override
+  String get mixedTitleReview => '快速复习';
+
+  @override
+  String get mixedTitleMixed => '今日混排学习包';
+
+  @override
+  String get mixedSaveReviewFailed => '暂时无法保存复习记录';
+
+  @override
+  String mixedUnsureOption(Object index) {
+    return '还不确定 $index';
+  }
+
+  @override
+  String get mixedSaveProgressTitle => '保存本次进度？';
+
+  @override
+  String get mixedSaveProgressBody =>
+      '已保存的复习记录会保留；保存后会记录本次已完成题目，未完成词下次仍会进入学习包。';
+
+  @override
+  String get mixedContinueStudy => '继续学习';
+
+  @override
+  String get mixedLeaveWithoutSaving => '不保存离开';
+
+  @override
+  String get mixedSaveAndLeave => '保存并离开';
+
+  @override
+  String get mixedSaveStudyFailed => '暂时无法保存学习进度';
+
+  @override
+  String get mixedSelfAssessHint => '先自评，系统会调整今天的重复次数';
+
+  @override
+  String get mixedEnterRecognition => '进入识别题';
+
+  @override
+  String get mixedAddLaterRecall => '加入稍后复现';
+
+  @override
+  String get mixedReviewQuickAnswer => '复习快答';
+
+  @override
+  String get mixedFeedbackCorrect => '答对了，继续下一题。';
+
+  @override
+  String get mixedFeedbackWrong => '答错了，先看知识卡，稍后会再次出现。';
+
+  @override
+  String get mixedFeedbackRetry => '还不对。请选择到正确答案后再进入下一题。';
+
+  @override
+  String mixedShortRecallPrompt(Object word) {
+    return '短间隔回忆：$word 的意思是？';
+  }
+
+  @override
+  String mixedMeaningPrompt(Object word) {
+    return '$word 的中文释义是？';
+  }
+
+  @override
+  String get mixedStepRecognition => '识别';
+
+  @override
+  String get mixedStepShortRecall => '短间隔回忆';
+
+  @override
+  String get mixedStepDueReview => '到期复习';
+
+  @override
+  String get mixedStepKnowledge => '知识卡';
+
+  @override
+  String get mixedCompleteTitle => '今日学习包完成';
+
+  @override
+  String get mixedNoContentTitle => '今日没有待学习内容';
+
+  @override
+  String get mixedCompleteBody => '错题已经在本轮回收，答题记录和用时会保存到学习日志。';
+
+  @override
+  String get mixedNoContentBody => '当前没有新词或到期复习词。';
+
+  @override
+  String get mixedSaveAndHome => '保存并回首页';
+
+  @override
   String get onboardingFeatureImageCards => '图像词卡';
 
   @override

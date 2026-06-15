@@ -313,6 +313,113 @@ class AppLocalizationsEn extends AppLocalizations {
   String get studyStepContextDesc => 'Active recall';
 
   @override
+  String get mixedManageReviewQueue => 'Manage review queue';
+
+  @override
+  String mixedReviewRatio(Object percent) {
+    return 'Review $percent%';
+  }
+
+  @override
+  String get mixedTitleNew => 'Today\'s new word pack';
+
+  @override
+  String get mixedTitleReview => 'Quick review';
+
+  @override
+  String get mixedTitleMixed => 'Today\'s mixed pack';
+
+  @override
+  String get mixedSaveReviewFailed =>
+      'Unable to save the review record for now';
+
+  @override
+  String mixedUnsureOption(Object index) {
+    return 'Unsure $index';
+  }
+
+  @override
+  String get mixedSaveProgressTitle => 'Save this progress?';
+
+  @override
+  String get mixedSaveProgressBody =>
+      'Saved review records are kept; saving records the questions completed this time, and unfinished words return to the pack next time.';
+
+  @override
+  String get mixedContinueStudy => 'Keep studying';
+
+  @override
+  String get mixedLeaveWithoutSaving => 'Leave without saving';
+
+  @override
+  String get mixedSaveAndLeave => 'Save and leave';
+
+  @override
+  String get mixedSaveStudyFailed => 'Unable to save study progress for now';
+
+  @override
+  String get mixedSelfAssessHint =>
+      'Self-assess first; the app adjusts today\'s repetitions';
+
+  @override
+  String get mixedEnterRecognition => 'Start recognition';
+
+  @override
+  String get mixedAddLaterRecall => 'Add to later recall';
+
+  @override
+  String get mixedReviewQuickAnswer => 'Review quick answer';
+
+  @override
+  String get mixedFeedbackCorrect => 'Correct, on to the next one.';
+
+  @override
+  String get mixedFeedbackWrong =>
+      'Wrong; check the knowledge card, it will appear again later.';
+
+  @override
+  String get mixedFeedbackRetry =>
+      'Not yet. Pick the correct answer before continuing.';
+
+  @override
+  String mixedShortRecallPrompt(Object word) {
+    return 'Short recall: what does $word mean?';
+  }
+
+  @override
+  String mixedMeaningPrompt(Object word) {
+    return 'What is the meaning of $word?';
+  }
+
+  @override
+  String get mixedStepRecognition => 'Recognition';
+
+  @override
+  String get mixedStepShortRecall => 'Short recall';
+
+  @override
+  String get mixedStepDueReview => 'Due review';
+
+  @override
+  String get mixedStepKnowledge => 'Knowledge card';
+
+  @override
+  String get mixedCompleteTitle => 'Today\'s pack complete';
+
+  @override
+  String get mixedNoContentTitle => 'Nothing to study today';
+
+  @override
+  String get mixedCompleteBody =>
+      'Mistakes have been recycled this round; your answers and time are saved to the study log.';
+
+  @override
+  String get mixedNoContentBody => 'No new words or due reviews right now.';
+
+  @override
+  String get mixedSaveAndHome => 'Save and go home';
+
+  @override
   String get onboardingFeatureImageCards => 'Image Word Cards';
 
   @override
