@@ -228,6 +228,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingTagline => '像游戏闯关一样完成每日学习';
 
   @override
+  String get onboardingTagWorld => '词境星球';
+
+  @override
+  String get onboardingTagStreak => '连续打卡';
+
+  @override
+  String get splashTagline => '图像词卡、清晰路径、智能复习。';
+
+  @override
   String get onboardingFeatureImageCards => '图像词卡';
 
   @override

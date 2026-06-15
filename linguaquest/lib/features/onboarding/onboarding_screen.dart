@@ -44,23 +44,30 @@ class OnboardingScreen extends StatelessWidget {
               children: [
                 const BrandMark(size: 62),
                 const SizedBox(width: 14),
-                const Expanded(
+                Expanded(
                   child: SectionHeader(
                     title: 'LinguaQuest',
-                    subtitle: '短课节、视觉记忆卡和智能复习，帮你稳定积累英语词汇。',
+                    subtitle: l10n.onboardingSubtitle,
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 14),
-            const Wrap(
+            Wrap(
               spacing: 8,
               runSpacing: 8,
               children: [
-                PillLabel(label: '词境星球', icon: Icons.auto_stories_outlined),
-                PillLabel(label: 'XP', icon: Icons.bolt, color: AppTheme.mango),
                 PillLabel(
-                  label: '连续打卡',
+                  label: l10n.onboardingTagWorld,
+                  icon: Icons.auto_stories_outlined,
+                ),
+                const PillLabel(
+                  label: 'XP',
+                  icon: Icons.bolt,
+                  color: AppTheme.mango,
+                ),
+                PillLabel(
+                  label: l10n.onboardingTagStreak,
                   icon: Icons.local_fire_department,
                   color: AppTheme.coral,
                 ),

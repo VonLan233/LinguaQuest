@@ -786,9 +786,9 @@ void main() {
 
     expect(learningRepository.listAttempts, 1);
     expect(find.textContaining('LinguaQuest 启动失败'), findsOneWidget);
-    expect(find.text('重试'), findsOneWidget);
+    expect(find.text('再试一次'), findsOneWidget);
 
-    await tester.tap(find.text('重试'));
+    await tester.tap(find.text('再试一次'));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     expect(learningRepository.listAttempts, 2);

@@ -529,7 +529,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Short lessons, visual memory cards, and smart review help you steadily build English vocabulary.'**
+  /// **'Short lessons, visual memory cards, and smart review help you build vocabulary steadily.'**
   String get onboardingSubtitle;
 
   /// No description provided for @onboardingTagline.
@@ -537,6 +537,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Level up daily like a game'**
   String get onboardingTagline;
+
+  /// No description provided for @onboardingTagWorld.
+  ///
+  /// In en, this message translates to:
+  /// **'Word Quest World'**
+  String get onboardingTagWorld;
+
+  /// No description provided for @onboardingTagStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily streak'**
+  String get onboardingTagStreak;
+
+  /// No description provided for @splashTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Image word cards, clear paths, smart review.'**
+  String get splashTagline;
 
   /// No description provided for @onboardingFeatureImageCards.
   ///

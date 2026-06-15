@@ -228,11 +228,21 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get onboardingSubtitle =>
-      'Pelajaran pendek, kad memori visual, dan ulangkaji pintar membantu anda membina perbendaharaan kata bahasa Inggeris.';
+      'Pelajaran ringkas, kad memori visual dan ulang kaji pintar membantu anda membina kosa kata secara berterusan.';
 
   @override
   String get onboardingTagline =>
       'Belajar seperti bermain permainan setiap hari';
+
+  @override
+  String get onboardingTagWorld => 'Dunia Word Quest';
+
+  @override
+  String get onboardingTagStreak => 'Streak harian';
+
+  @override
+  String get splashTagline =>
+      'Kad perkataan bergambar, laluan jelas, ulang kaji pintar.';
 
   @override
   String get onboardingFeatureImageCards => 'Kad Perkataan Bergambar';

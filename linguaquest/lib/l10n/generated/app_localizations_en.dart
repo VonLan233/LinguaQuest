@@ -227,10 +227,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingSubtitle =>
-      'Short lessons, visual memory cards, and smart review help you steadily build English vocabulary.';
+      'Short lessons, visual memory cards, and smart review help you build vocabulary steadily.';
 
   @override
   String get onboardingTagline => 'Level up daily like a game';
+
+  @override
+  String get onboardingTagWorld => 'Word Quest World';
+
+  @override
+  String get onboardingTagStreak => 'Daily streak';
+
+  @override
+  String get splashTagline => 'Image word cards, clear paths, smart review.';
 
   @override
   String get onboardingFeatureImageCards => 'Image Word Cards';
