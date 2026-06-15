@@ -3,9 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/fallback_back_button.dart';
-import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/quest_list_row.dart';
+import '../../core/widgets/status_badge.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -27,7 +30,12 @@ class MistakeBookScreen extends ConsumerWidget {
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
+          padding: const EdgeInsets.fromLTRB(
+            AppTokens.s20,
+            AppTokens.s12,
+            AppTokens.s20,
+            AppTokens.s24,
+          ),
           children: [
             if (lessonMistakes.isEmpty && weakWords.isEmpty)
               EmptyState(
@@ -48,10 +56,10 @@ class MistakeBookScreen extends ConsumerWidget {
                     fontWeight: FontWeight.w800,
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: AppTokens.s12),
                 for (final mistake in lessonMistakes)
                   _MistakeWordRow(mistake: mistake, l10n: l10n),
-                const SizedBox(height: 18),
+                const SizedBox(height: AppTokens.s20),
               ],
               if (weakWords.isNotEmpty) ...[
                 Text(
@@ -60,7 +68,7 @@ class MistakeBookScreen extends ConsumerWidget {
                     fontWeight: FontWeight.w800,
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: AppTokens.s12),
                 for (final word in weakWords)
                   _WeakCustomWordRow(word: word, l10n: l10n),
               ],
@@ -80,29 +88,18 @@ class _MistakeWordRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.only(bottom: 14),
-      child: Row(
-        children: [
-          ImageCueBadge(cue: mistake.word.imageCue, size: 56),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(mistake.word.word, style: theme.textTheme.titleMedium),
-                const SizedBox(height: 3),
-                Text(
-                  mistake.explanation,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
-                ),
-              ],
-            ),
-          ),
-        ],
+      padding: const EdgeInsets.only(bottom: AppTokens.s8),
+      child: QuestListRow(
+        icon: Icons.school_outlined,
+        iconColor: AppTokens.coralColor(context),
+        title: mistake.word.word,
+        subtitle: mistake.explanation,
+        showChevron: false,
+        trailing: StatusBadge(
+          label: l10n.mistakeBookLessonMistakes,
+          tone: StatusTone.danger,
+        ),
       ),
     );
   }
@@ -116,45 +113,20 @@ class _WeakCustomWordRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: () => word.source == 'target'
-              ? context.push('/wordbook/${word.sourceWordId ?? word.id}')
-              : context.push('/custom-words/${word.id}'),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6),
-            child: Row(
-              children: [
-                ImageCueBadge(cue: wordInitialCue(word.word), size: 56),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(word.word, style: theme.textTheme.titleMedium),
-                      const SizedBox(height: 3),
-                      Text(
-                        word.meaning,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const Icon(Icons.chevron_right_rounded),
-              ],
-            ),
-          ),
+      padding: const EdgeInsets.only(bottom: AppTokens.s8),
+      child: QuestListRow(
+        icon: Icons.bolt_outlined,
+        iconColor: AppTheme.mango,
+        title: word.word,
+        subtitle: word.meaning,
+        trailing: StatusBadge(
+          label: l10n.mistakeBookWeakWords,
+          tone: StatusTone.warning,
         ),
+        onTap: () => word.source == 'target'
+            ? context.push('/wordbook/${word.sourceWordId ?? word.id}')
+            : context.push('/custom-words/${word.id}'),
       ),
     );
   }
