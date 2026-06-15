@@ -4,8 +4,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/quest_panel.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
@@ -92,13 +94,15 @@ class LessonResultScreen extends ConsumerWidget {
                   : Icons.workspace_premium_outlined,
               color: isTimed || isTraining ? AppTheme.coral : AppTheme.cyan,
             ),
-            const SizedBox(height: 12),
-            _ResultScoreSummary(
-              result: resolved,
-              accuracy: accuracy,
-              currentXp: currentXp,
+            const SizedBox(height: AppTokens.s12),
+            QuestPanel(
+              child: _ResultScoreSummary(
+                result: resolved,
+                accuracy: accuracy,
+                currentXp: currentXp,
+              ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppTokens.s16),
             _XpImpactNotice(
               xpEarned: resolved.xpEarned,
               currentXp: currentXp,
