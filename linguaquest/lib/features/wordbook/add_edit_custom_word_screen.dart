@@ -8,6 +8,7 @@ import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../data/models/custom_word.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class AddEditCustomWordScreen extends ConsumerStatefulWidget {
   const AddEditCustomWordScreen({this.wordId, super.key});
@@ -42,6 +43,7 @@ class _AddEditCustomWordScreenState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final existing = _existingWord();
     if (!_hydrated && existing != null) {
       _hydrate(existing);
@@ -51,7 +53,9 @@ class _AddEditCustomWordScreenState
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/custom-words'),
-        title: Text(isEditing ? '编辑单词' : '添加单词'),
+        title: Text(
+          isEditing ? l10n.customWordsEditTitle : l10n.customWordsAddTitle,
+        ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -63,38 +67,38 @@ class _AddEditCustomWordScreenState
               children: [
                 TextFormField(
                   controller: _wordController,
-                  decoration: const InputDecoration(
-                    labelText: '单词',
-                    prefixIcon: Icon(Icons.abc),
+                  decoration: InputDecoration(
+                    labelText: l10n.customWordsFieldWord,
+                    prefixIcon: const Icon(Icons.abc),
                   ),
-                  validator: _required,
+                  validator: (value) => _required(value, l10n),
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _meaningController,
-                  decoration: const InputDecoration(
-                    labelText: '释义',
-                    prefixIcon: Icon(Icons.translate),
+                  decoration: InputDecoration(
+                    labelText: l10n.customWordsFieldMeaning,
+                    prefixIcon: const Icon(Icons.translate),
                   ),
-                  validator: _required,
+                  validator: (value) => _required(value, l10n),
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _exampleController,
-                  decoration: const InputDecoration(
-                    labelText: '例句',
-                    prefixIcon: Icon(Icons.notes_outlined),
+                  decoration: InputDecoration(
+                    labelText: l10n.customWordsFieldExample,
+                    prefixIcon: const Icon(Icons.notes_outlined),
                   ),
                   minLines: 2,
                   maxLines: 4,
-                  validator: _required,
+                  validator: (value) => _required(value, l10n),
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _noteController,
-                  decoration: const InputDecoration(
-                    labelText: '笔记',
-                    prefixIcon: Icon(Icons.edit_note),
+                  decoration: InputDecoration(
+                    labelText: l10n.customWordsFieldNote,
+                    prefixIcon: const Icon(Icons.edit_note),
                   ),
                   minLines: 2,
                   maxLines: 4,
@@ -102,9 +106,9 @@ class _AddEditCustomWordScreenState
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _tagController,
-                  decoration: const InputDecoration(
-                    labelText: '标签',
-                    prefixIcon: Icon(Icons.sell_outlined),
+                  decoration: InputDecoration(
+                    labelText: l10n.customWordsFieldTag,
+                    prefixIcon: const Icon(Icons.sell_outlined),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -116,7 +120,11 @@ class _AddEditCustomWordScreenState
                 FilledButton.icon(
                   onPressed: () => _save(existing),
                   icon: const Icon(Icons.save_outlined),
-                  label: Text(isEditing ? '保存修改' : '创建单词'),
+                  label: Text(
+                    isEditing
+                        ? l10n.customWordsSaveEdit
+                        : l10n.customWordsCreate,
+                  ),
                 ),
               ],
             ),
@@ -173,16 +181,17 @@ class _AddEditCustomWordScreenState
       );
     }
     if (!mounted) return;
+    final l10n = AppLocalizations.of(context);
     if (!succeeded) {
       final message = ref.read(appControllerProvider).errorMessage;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message ?? '暂时无法保存这个单词')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message ?? l10n.customWordsSaveFailed)),
+      );
       return;
     }
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('单词已保存')));
+    ).showSnackBar(SnackBar(content: Text(l10n.customWordsSaved)));
     context.go('/custom-words');
   }
 }
@@ -195,22 +204,26 @@ class _DifficultySelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final choices = const [
-      (value: 'Easy', label: '简单', color: AppTheme.teal),
-      (value: 'Medium', label: '中等', color: AppTheme.mango),
-      (value: 'Hard', label: '困难', color: AppTheme.coral),
+      (value: 'Easy', color: AppTheme.teal),
+      (value: 'Medium', color: AppTheme.mango),
+      (value: 'Hard', color: AppTheme.coral),
     ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('难度', style: Theme.of(context).textTheme.titleMedium),
+        Text(
+          l10n.customWordsDifficulty,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
         const SizedBox(height: 8),
         Row(
           children: [
             for (var index = 0; index < choices.length; index++) ...[
               Expanded(
                 child: FilterPillButton(
-                  label: choices[index].label,
+                  label: displayDifficulty(choices[index].value, l10n: l10n),
                   selected: selected == choices[index].value,
                   onSelected: () => onSelected(choices[index].value),
                   color: choices[index].color,
@@ -225,7 +238,7 @@ class _DifficultySelector extends StatelessWidget {
   }
 }
 
-String? _required(String? value) {
-  if (value == null || value.trim().isEmpty) return '必填';
+String? _required(String? value, AppLocalizations l10n) {
+  if (value == null || value.trim().isEmpty) return l10n.commonRequired;
   return null;
 }

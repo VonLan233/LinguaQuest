@@ -1992,6 +1992,45 @@ class AppLocalizationsZh extends AppLocalizations {
   String get customWordsDeleteContent => '这会同时删除这张个人词卡和它的复习计划。';
 
   @override
+  String get customWordsEditTitle => '编辑单词';
+
+  @override
+  String get customWordsAddTitle => '添加单词';
+
+  @override
+  String get customWordsFieldWord => '单词';
+
+  @override
+  String get customWordsFieldMeaning => '释义';
+
+  @override
+  String get customWordsFieldExample => '例句';
+
+  @override
+  String get customWordsFieldNote => '笔记';
+
+  @override
+  String get customWordsFieldTag => '标签';
+
+  @override
+  String get customWordsSaveEdit => '保存修改';
+
+  @override
+  String get customWordsCreate => '创建单词';
+
+  @override
+  String get customWordsSaveFailed => '暂时无法保存这个单词';
+
+  @override
+  String get customWordsSaved => '单词已保存';
+
+  @override
+  String get customWordsDifficulty => '难度';
+
+  @override
+  String get commonRequired => '必填';
+
+  @override
   String customWordsDeleteFailed(Object word) {
     return '暂时无法删除 $word';
   }

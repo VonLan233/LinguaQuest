@@ -2091,6 +2091,45 @@ class AppLocalizationsEn extends AppLocalizations {
       'This also deletes this personal word card and its review plan.';
 
   @override
+  String get customWordsEditTitle => 'Edit word';
+
+  @override
+  String get customWordsAddTitle => 'Add word';
+
+  @override
+  String get customWordsFieldWord => 'Word';
+
+  @override
+  String get customWordsFieldMeaning => 'Meaning';
+
+  @override
+  String get customWordsFieldExample => 'Example';
+
+  @override
+  String get customWordsFieldNote => 'Note';
+
+  @override
+  String get customWordsFieldTag => 'Tag';
+
+  @override
+  String get customWordsSaveEdit => 'Save changes';
+
+  @override
+  String get customWordsCreate => 'Create word';
+
+  @override
+  String get customWordsSaveFailed => 'Unable to save this word for now';
+
+  @override
+  String get customWordsSaved => 'Word saved';
+
+  @override
+  String get customWordsDifficulty => 'Difficulty';
+
+  @override
+  String get commonRequired => 'Required';
+
+  @override
   String customWordsDeleteFailed(Object word) {
     return 'Unable to delete $word right now';
   }

@@ -3842,6 +3842,84 @@ abstract class AppLocalizations {
   /// **'This also deletes this personal word card and its review plan.'**
   String get customWordsDeleteContent;
 
+  /// No description provided for @customWordsEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit word'**
+  String get customWordsEditTitle;
+
+  /// No description provided for @customWordsAddTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add word'**
+  String get customWordsAddTitle;
+
+  /// No description provided for @customWordsFieldWord.
+  ///
+  /// In en, this message translates to:
+  /// **'Word'**
+  String get customWordsFieldWord;
+
+  /// No description provided for @customWordsFieldMeaning.
+  ///
+  /// In en, this message translates to:
+  /// **'Meaning'**
+  String get customWordsFieldMeaning;
+
+  /// No description provided for @customWordsFieldExample.
+  ///
+  /// In en, this message translates to:
+  /// **'Example'**
+  String get customWordsFieldExample;
+
+  /// No description provided for @customWordsFieldNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Note'**
+  String get customWordsFieldNote;
+
+  /// No description provided for @customWordsFieldTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Tag'**
+  String get customWordsFieldTag;
+
+  /// No description provided for @customWordsSaveEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get customWordsSaveEdit;
+
+  /// No description provided for @customWordsCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create word'**
+  String get customWordsCreate;
+
+  /// No description provided for @customWordsSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to save this word for now'**
+  String get customWordsSaveFailed;
+
+  /// No description provided for @customWordsSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Word saved'**
+  String get customWordsSaved;
+
+  /// No description provided for @customWordsDifficulty.
+  ///
+  /// In en, this message translates to:
+  /// **'Difficulty'**
+  String get customWordsDifficulty;
+
+  /// No description provided for @commonRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get commonRequired;
+
   /// No description provided for @customWordsDeleteFailed.
   ///
   /// In en, this message translates to:

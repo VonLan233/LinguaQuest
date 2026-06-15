@@ -2094,6 +2094,46 @@ class AppLocalizationsMs extends AppLocalizations {
       'Ini juga memadam kad perkataan peribadi ini dan pelan ulangkajinya.';
 
   @override
+  String get customWordsEditTitle => 'Edit perkataan';
+
+  @override
+  String get customWordsAddTitle => 'Tambah perkataan';
+
+  @override
+  String get customWordsFieldWord => 'Perkataan';
+
+  @override
+  String get customWordsFieldMeaning => 'Maksud';
+
+  @override
+  String get customWordsFieldExample => 'Contoh ayat';
+
+  @override
+  String get customWordsFieldNote => 'Nota';
+
+  @override
+  String get customWordsFieldTag => 'Tag';
+
+  @override
+  String get customWordsSaveEdit => 'Simpan perubahan';
+
+  @override
+  String get customWordsCreate => 'Cipta perkataan';
+
+  @override
+  String get customWordsSaveFailed =>
+      'Tidak dapat menyimpan perkataan ini buat masa ini';
+
+  @override
+  String get customWordsSaved => 'Perkataan disimpan';
+
+  @override
+  String get customWordsDifficulty => 'Kesukaran';
+
+  @override
+  String get commonRequired => 'Wajib diisi';
+
+  @override
   String customWordsDeleteFailed(Object word) {
     return 'Tidak dapat memadam $word sekarang';
   }
