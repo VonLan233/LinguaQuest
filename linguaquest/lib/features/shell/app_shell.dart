@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 class AppShell extends StatefulWidget {
@@ -161,17 +162,20 @@ class _QuestBottomNav extends StatelessWidget {
           ),
           child: SizedBox(
             height: 76,
-            child: Row(
-              children: [
-                for (var index = 0; index < tabs.length; index++)
-                  Expanded(
-                    child: _QuestTabButton(
-                      data: tabs[index],
-                      selected: selectedIndex == index,
-                      onTap: () => onSelected(index),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppTokens.s8),
+              child: Row(
+                children: [
+                  for (var index = 0; index < tabs.length; index++)
+                    Expanded(
+                      child: _QuestTabButton(
+                        data: tabs[index],
+                        selected: selectedIndex == index,
+                        onTap: () => onSelected(index),
+                      ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -195,29 +199,34 @@ class _QuestTabButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final tabColor = selected ? data.color : colorScheme.onSurfaceVariant;
-    final labelColor = selected ? colorScheme.onSurface : tabColor;
+    final tabColor = selected ? colorScheme.primary : colorScheme.onSurfaceVariant;
     return Semantics(
       selected: selected,
       button: true,
       label: data.label,
       child: Material(
         color: Colors.transparent,
+        borderRadius: BorderRadius.circular(AppTokens.radiusButton),
+        clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onTap,
+          borderRadius: BorderRadius.circular(AppTokens.radiusButton),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 8),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppTokens.s4,
+              vertical: AppTokens.s8,
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _QuestTabIcon(data: data, selected: selected, color: tabColor),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppTokens.s4),
                 Text(
                   data.label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.labelSmall?.copyWith(
-                    color: labelColor,
+                    color: tabColor,
                     fontWeight: selected ? FontWeight.w900 : FontWeight.w800,
                   ),
                 ),
@@ -244,23 +253,16 @@ class _QuestTabIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final isDark = colorScheme.brightness == Brightness.dark;
-    final selectedSurface = isDark
-        ? colorScheme.primaryContainer
-        : AppTheme.selectedSurface(context);
+    final indicatorColor = colorScheme.primary.withValues(alpha: 0.12);
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 180),
+      duration: AppTokens.fast,
       curve: Curves.easeOutCubic,
-      width: 38,
+      width: 44,
       height: 34,
+      alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: selected ? selectedSurface : Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: selected
-              ? color.withValues(alpha: 0.24)
-              : Colors.transparent,
-        ),
+        color: selected ? indicatorColor : Colors.transparent,
+        borderRadius: BorderRadius.circular(AppTokens.radiusPill),
       ),
       child: Icon(
         selected ? data.selectedIcon : data.icon,
