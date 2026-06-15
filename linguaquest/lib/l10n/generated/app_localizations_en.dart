@@ -242,6 +242,77 @@ class AppLocalizationsEn extends AppLocalizations {
   String get splashTagline => 'Image word cards, clear paths, smart review.';
 
   @override
+  String get studyNewScreenTitle => 'New words';
+
+  @override
+  String get studyWordbookPath => 'Wordbook path';
+
+  @override
+  String get studyEnterCards => 'Start word cards';
+
+  @override
+  String get studyNewPackTitle => 'Today\'s new word pack';
+
+  @override
+  String get studyNewPackDesc =>
+      'Self-assess first, then view cards, then context questions. Formal review is queued separately.';
+
+  @override
+  String get studyNoNewWords => 'No new words';
+
+  @override
+  String get studyNewPausedHint =>
+      'Study plan paused. Resume to continue today\'s new words.';
+
+  @override
+  String get studyNewEmptyHint =>
+      'The current wordbook is finished, or the plan isn\'t generated yet. Check the wordbook path for the next set.';
+
+  @override
+  String get studyOpenWordbookPath => 'Open wordbook path';
+
+  @override
+  String studyTodayLearnCount(Object count) {
+    return 'Learn $count new words today';
+  }
+
+  @override
+  String get studyNewNoLessonHint =>
+      'Finish review before adding new words; keeping a rhythm beats piling on tasks.';
+
+  @override
+  String studyNewPausedResume(Object section) {
+    return 'Study plan paused; resume to continue from $section.';
+  }
+
+  @override
+  String get studyRecallKnown => 'Know it';
+
+  @override
+  String get studyRecallFuzzy => 'Unsure';
+
+  @override
+  String get studyRecallUnknown => 'Don\'t know';
+
+  @override
+  String get studyStepSelfAssess => 'Self-assess';
+
+  @override
+  String get studyStepSelfAssessDesc => 'Reduce wasted repetition';
+
+  @override
+  String get studyStepCards => 'Word cards';
+
+  @override
+  String get studyStepCardsDesc => 'Fill in meaning and examples';
+
+  @override
+  String get studyStepContext => 'Context';
+
+  @override
+  String get studyStepContextDesc => 'Active recall';
+
+  @override
   String get onboardingFeatureImageCards => 'Image Word Cards';
 
   @override

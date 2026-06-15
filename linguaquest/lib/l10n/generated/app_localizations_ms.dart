@@ -245,6 +245,77 @@ class AppLocalizationsMs extends AppLocalizations {
       'Kad perkataan bergambar, laluan jelas, ulang kaji pintar.';
 
   @override
+  String get studyNewScreenTitle => 'Perkataan baharu';
+
+  @override
+  String get studyWordbookPath => 'Laluan buku perkataan';
+
+  @override
+  String get studyEnterCards => 'Mula kad perkataan';
+
+  @override
+  String get studyNewPackTitle => 'Pek perkataan baharu hari ini';
+
+  @override
+  String get studyNewPackDesc =>
+      'Nilai sendiri dahulu, lihat kad, kemudian soalan konteks. Ulang kaji formal beratur berasingan.';
+
+  @override
+  String get studyNoNewWords => 'Tiada perkataan baharu';
+
+  @override
+  String get studyNewPausedHint =>
+      'Pelan belajar dijeda. Sambung semula untuk meneruskan perkataan baharu hari ini.';
+
+  @override
+  String get studyNewEmptyHint =>
+      'Buku perkataan semasa telah habis, atau pelan belum dijana. Semak laluan buku perkataan untuk set seterusnya.';
+
+  @override
+  String get studyOpenWordbookPath => 'Buka laluan buku perkataan';
+
+  @override
+  String studyTodayLearnCount(Object count) {
+    return 'Belajar $count perkataan baharu hari ini';
+  }
+
+  @override
+  String get studyNewNoLessonHint =>
+      'Selesaikan ulang kaji sebelum menambah perkataan baharu; mengekalkan rentak lebih baik daripada menimbun tugasan.';
+
+  @override
+  String studyNewPausedResume(Object section) {
+    return 'Pelan belajar dijeda; sambung semula dari $section.';
+  }
+
+  @override
+  String get studyRecallKnown => 'Kenal';
+
+  @override
+  String get studyRecallFuzzy => 'Kabur';
+
+  @override
+  String get studyRecallUnknown => 'Tak kenal';
+
+  @override
+  String get studyStepSelfAssess => 'Nilai sendiri';
+
+  @override
+  String get studyStepSelfAssessDesc => 'Kurangkan ulangan sia-sia';
+
+  @override
+  String get studyStepCards => 'Kad perkataan';
+
+  @override
+  String get studyStepCardsDesc => 'Lengkapkan maksud dan contoh';
+
+  @override
+  String get studyStepContext => 'Konteks';
+
+  @override
+  String get studyStepContextDesc => 'Ingat semula aktif';
+
+  @override
   String get onboardingFeatureImageCards => 'Kad Perkataan Bergambar';
 
   @override

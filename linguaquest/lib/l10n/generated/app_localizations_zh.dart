@@ -237,6 +237,73 @@ class AppLocalizationsZh extends AppLocalizations {
   String get splashTagline => '图像词卡、清晰路径、智能复习。';
 
   @override
+  String get studyNewScreenTitle => '新学';
+
+  @override
+  String get studyWordbookPath => '词书路径';
+
+  @override
+  String get studyEnterCards => '进入词卡学习';
+
+  @override
+  String get studyNewPackTitle => '今日新词包';
+
+  @override
+  String get studyNewPackDesc => '先自评，再看词卡，最后进入语境题。正式复习会单独排队。';
+
+  @override
+  String get studyNoNewWords => '暂无新学词';
+
+  @override
+  String get studyNewPausedHint => '学习计划已暂停。恢复计划后，系统会继续安排今日新词。';
+
+  @override
+  String get studyNewEmptyHint => '当前词书已经学完，或学习计划还没有生成。可以去词书路径检查下一组内容。';
+
+  @override
+  String get studyOpenWordbookPath => '打开词书路径';
+
+  @override
+  String studyTodayLearnCount(Object count) {
+    return '今天先学 $count 个新词';
+  }
+
+  @override
+  String get studyNewNoLessonHint => '完成复习后再补新词，保持节奏比堆任务更重要。';
+
+  @override
+  String studyNewPausedResume(Object section) {
+    return '学习计划已暂停，恢复后继续从 $section 开始。';
+  }
+
+  @override
+  String get studyRecallKnown => '认识';
+
+  @override
+  String get studyRecallFuzzy => '模糊';
+
+  @override
+  String get studyRecallUnknown => '不认识';
+
+  @override
+  String get studyStepSelfAssess => '自评';
+
+  @override
+  String get studyStepSelfAssessDesc => '降低无效重复';
+
+  @override
+  String get studyStepCards => '词卡';
+
+  @override
+  String get studyStepCardsDesc => '补全释义和例句';
+
+  @override
+  String get studyStepContext => '语境题';
+
+  @override
+  String get studyStepContextDesc => '主动回忆';
+
+  @override
   String get onboardingFeatureImageCards => '图像词卡';
 
   @override

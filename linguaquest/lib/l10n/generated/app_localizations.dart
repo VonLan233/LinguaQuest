@@ -556,6 +556,132 @@ abstract class AppLocalizations {
   /// **'Image word cards, clear paths, smart review.'**
   String get splashTagline;
 
+  /// No description provided for @studyNewScreenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New words'**
+  String get studyNewScreenTitle;
+
+  /// No description provided for @studyWordbookPath.
+  ///
+  /// In en, this message translates to:
+  /// **'Wordbook path'**
+  String get studyWordbookPath;
+
+  /// No description provided for @studyEnterCards.
+  ///
+  /// In en, this message translates to:
+  /// **'Start word cards'**
+  String get studyEnterCards;
+
+  /// No description provided for @studyNewPackTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s new word pack'**
+  String get studyNewPackTitle;
+
+  /// No description provided for @studyNewPackDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Self-assess first, then view cards, then context questions. Formal review is queued separately.'**
+  String get studyNewPackDesc;
+
+  /// No description provided for @studyNoNewWords.
+  ///
+  /// In en, this message translates to:
+  /// **'No new words'**
+  String get studyNoNewWords;
+
+  /// No description provided for @studyNewPausedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Study plan paused. Resume to continue today\'s new words.'**
+  String get studyNewPausedHint;
+
+  /// No description provided for @studyNewEmptyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'The current wordbook is finished, or the plan isn\'t generated yet. Check the wordbook path for the next set.'**
+  String get studyNewEmptyHint;
+
+  /// No description provided for @studyOpenWordbookPath.
+  ///
+  /// In en, this message translates to:
+  /// **'Open wordbook path'**
+  String get studyOpenWordbookPath;
+
+  /// No description provided for @studyTodayLearnCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn {count} new words today'**
+  String studyTodayLearnCount(Object count);
+
+  /// No description provided for @studyNewNoLessonHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish review before adding new words; keeping a rhythm beats piling on tasks.'**
+  String get studyNewNoLessonHint;
+
+  /// No description provided for @studyNewPausedResume.
+  ///
+  /// In en, this message translates to:
+  /// **'Study plan paused; resume to continue from {section}.'**
+  String studyNewPausedResume(Object section);
+
+  /// No description provided for @studyRecallKnown.
+  ///
+  /// In en, this message translates to:
+  /// **'Know it'**
+  String get studyRecallKnown;
+
+  /// No description provided for @studyRecallFuzzy.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsure'**
+  String get studyRecallFuzzy;
+
+  /// No description provided for @studyRecallUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t know'**
+  String get studyRecallUnknown;
+
+  /// No description provided for @studyStepSelfAssess.
+  ///
+  /// In en, this message translates to:
+  /// **'Self-assess'**
+  String get studyStepSelfAssess;
+
+  /// No description provided for @studyStepSelfAssessDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce wasted repetition'**
+  String get studyStepSelfAssessDesc;
+
+  /// No description provided for @studyStepCards.
+  ///
+  /// In en, this message translates to:
+  /// **'Word cards'**
+  String get studyStepCards;
+
+  /// No description provided for @studyStepCardsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in meaning and examples'**
+  String get studyStepCardsDesc;
+
+  /// No description provided for @studyStepContext.
+  ///
+  /// In en, this message translates to:
+  /// **'Context'**
+  String get studyStepContext;
+
+  /// No description provided for @studyStepContextDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Active recall'**
+  String get studyStepContextDesc;
+
   /// No description provided for @onboardingFeatureImageCards.
   ///
   /// In en, this message translates to:
