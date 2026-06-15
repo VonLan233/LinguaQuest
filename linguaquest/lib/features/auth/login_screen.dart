@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/brand_hero_card.dart';
+import '../../core/widgets/quest_panel.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -27,69 +30,97 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
     final state = ref.watch(appControllerProvider);
     return Scaffold(
       appBar: AppBar(title: Text(l10n.authLoginTitle)),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+          padding: const EdgeInsets.fromLTRB(
+            AppTokens.s20,
+            AppTokens.s8,
+            AppTokens.s20,
+            AppTokens.s20,
+          ),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(l10n.authWelcomeBack,
-                    style: Theme.of(context).textTheme.headlineMedium),
-                const SizedBox(height: 6),
-                Text(
-                  l10n.authWelcomeBackSubtitle,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                BrandHeroCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.authWelcomeBack,
+                        style: theme.textTheme.headlineMedium?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      const SizedBox(height: AppTokens.s8),
+                      Text(
+                        l10n.authWelcomeBackSubtitle,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: Colors.white.withValues(alpha: 0.9),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    labelText: l10n.authEmail,
-                    hintText: l10n.authEmailHint,
-                    prefixIcon: const Icon(Icons.mail_outline),
+                const SizedBox(height: AppTokens.s20),
+                QuestPanel(
+                  padding: const EdgeInsets.all(AppTokens.s20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      TextFormField(
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                          labelText: l10n.authEmail,
+                          hintText: l10n.authEmailHint,
+                          prefixIcon: const Icon(Icons.mail_outline),
+                        ),
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (value) => _emailValidator(value, l10n),
+                      ),
+                      const SizedBox(height: AppTokens.s12),
+                      TextFormField(
+                        controller: _passwordController,
+                        decoration: InputDecoration(
+                          labelText: l10n.authPassword,
+                          hintText: l10n.authPasswordHint,
+                          prefixIcon: const Icon(Icons.lock_outline),
+                        ),
+                        obscureText: true,
+                        validator: (value) => _passwordValidator(value, l10n),
+                      ),
+                      if (state.errorMessage != null) ...[
+                        const SizedBox(height: AppTokens.s12),
+                        Text(
+                          state.errorMessage!,
+                          style: TextStyle(
+                            color: theme.colorScheme.error,
+                          ),
+                        ),
+                      ],
+                      const SizedBox(height: AppTokens.s20),
+                      FilledButton.icon(
+                        onPressed: state.isLoading ? null : _submit,
+                        icon: state.isLoading
+                            ? const SizedBox(
+                                width: 18,
+                                height: 18,
+                                child:
+                                    CircularProgressIndicator(strokeWidth: 2),
+                              )
+                            : const Icon(Icons.login),
+                        label: Text(l10n.commonLogin),
+                      ),
+                    ],
                   ),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) => _emailValidator(value, l10n),
                 ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                    labelText: l10n.authPassword,
-                    hintText: l10n.authPasswordHint,
-                    prefixIcon: const Icon(Icons.lock_outline),
-                  ),
-                  obscureText: true,
-                  validator: (value) => _passwordValidator(value, l10n),
-                ),
-                if (state.errorMessage != null) ...[
-                  const SizedBox(height: 12),
-                  Text(
-                    state.errorMessage!,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
-                    ),
-                  ),
-                ],
-                const SizedBox(height: 20),
-                FilledButton.icon(
-                  onPressed: state.isLoading ? null : _submit,
-                  icon: state.isLoading
-                      ? const SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Icon(Icons.login),
-                  label: Text(l10n.commonLogin),
-                ),
+                const SizedBox(height: AppTokens.s4),
                 TextButton(
                   onPressed: () => context.go('/register'),
                   child: Text(l10n.authRegisterNew),
