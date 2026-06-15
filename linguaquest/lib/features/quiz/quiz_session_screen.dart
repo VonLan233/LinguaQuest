@@ -4,8 +4,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/word_choice_button.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -421,50 +423,16 @@ class _QuestionInput extends StatelessWidget {
 
     return Column(
       children: [
-        for (final option in question.options)
+        for (var i = 0; i < question.options.length; i++)
           Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: SizedBox(
-              width: double.infinity,
-              height: 66,
-              child: OutlinedButton(
-                onPressed: checked ? () {} : () => onSelected(option),
-                style: OutlinedButton.styleFrom(
-                  splashFactory: checked ? NoSplash.splashFactory : null,
-                  overlayColor: checked ? Colors.transparent : null,
-                  enabledMouseCursor: checked ? SystemMouseCursors.basic : null,
-                  backgroundColor: _optionBackground(context, option),
-                  foregroundColor: _optionForeground(context, option),
-                  side: BorderSide(
-                    color: _optionBorder(context, option),
-                    width: selected == option || _isCorrectOption(option)
-                        ? 2
-                        : 1,
-                  ),
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.all(18),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        option,
-                        style: const TextStyle(fontWeight: FontWeight.w900),
-                      ),
-                    ),
-                    if (checked && selected == option)
-                      Icon(
-                        _isCorrectOption(option)
-                            ? Icons.check_circle_outline
-                            : Icons.cancel_outlined,
-                      ),
-                    if (checked &&
-                        selected != option &&
-                        _isCorrectOption(option))
-                      const Icon(Icons.check_circle_outline),
-                  ],
-                ),
-              ),
+            padding: const EdgeInsets.only(bottom: AppTokens.s12),
+            child: WordChoiceButton(
+              letter: String.fromCharCode(65 + i),
+              text: question.options[i],
+              state: _optionState(question.options[i]),
+              onTap: checked
+                  ? null
+                  : () => onSelected(question.options[i]),
             ),
           ),
       ],
@@ -475,43 +443,13 @@ class _QuestionInput extends StatelessWidget {
     return option.toLowerCase() == question.answer.toLowerCase();
   }
 
-  Color _optionBackground(BuildContext context, String option) {
+  ChoiceState _optionState(String option) {
     if (!checked) {
-      return selected == option
-          ? AppTheme.selectedSurface(context)
-          : Theme.of(context).colorScheme.surface;
+      return selected == option ? ChoiceState.selected : ChoiceState.idle;
     }
-    if (_isCorrectOption(option)) {
-      return _successColor(context).withValues(alpha: 0.12);
-    }
-    if (selected == option) {
-      return Theme.of(context).colorScheme.error.withValues(alpha: 0.12);
-    }
-    return Theme.of(context).colorScheme.surface;
-  }
-
-  Color _optionForeground(BuildContext context, String option) {
-    if (!checked) return Theme.of(context).colorScheme.onSurface;
-    if (_isCorrectOption(option)) return _successColor(context);
-    if (selected == option) return Theme.of(context).colorScheme.error;
-    return Theme.of(context).colorScheme.onSurface;
-  }
-
-  Color _optionBorder(BuildContext context, String option) {
-    if (!checked) {
-      return selected == option
-          ? Theme.of(context).colorScheme.primary
-          : Theme.of(context).colorScheme.outlineVariant;
-    }
-    if (_isCorrectOption(option)) return _successColor(context);
-    if (selected == option) return Theme.of(context).colorScheme.error;
-    return Theme.of(context).colorScheme.outlineVariant;
-  }
-
-  Color _successColor(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.dark
-        ? Theme.of(context).colorScheme.primary
-        : AppTheme.success;
+    if (_isCorrectOption(option)) return ChoiceState.correct;
+    if (selected == option) return ChoiceState.wrong;
+    return ChoiceState.idle;
   }
 }
 

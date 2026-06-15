@@ -13,6 +13,7 @@ import 'package:linguaquest/core/state/app_state.dart';
 import 'package:linguaquest/core/theme/app_theme.dart';
 import 'package:linguaquest/core/widgets/learning_badges.dart';
 import 'package:linguaquest/core/widgets/pronunciation_controls.dart';
+import 'package:linguaquest/core/widgets/word_choice_button.dart';
 import 'package:linguaquest/l10n/generated/app_localizations.dart';
 import 'package:linguaquest/data/models/custom_word.dart';
 import 'package:linguaquest/data/models/daily_reward_task.dart';
@@ -4069,7 +4070,11 @@ Future<void> _openCurrentLessonCards(WidgetTester tester) async {
 }
 
 Future<void> _tapOption(WidgetTester tester, String label) async {
-  final option = find.widgetWithText(OutlinedButton, label).first;
+  var finder = find.widgetWithText(WordChoiceButton, label);
+  if (finder.evaluate().isEmpty) {
+    finder = find.widgetWithText(OutlinedButton, label);
+  }
+  final option = finder.first;
   expect(option, findsOneWidget);
   await tester.ensureVisible(option);
   await tester.pumpAndSettle();
@@ -4079,7 +4084,11 @@ Future<void> _tapOption(WidgetTester tester, String label) async {
 }
 
 Future<void> _tapAnyOptionExcept(WidgetTester tester, String label) async {
-  for (final element in find.byType(OutlinedButton).evaluate()) {
+  final candidates = [
+    ...find.byType(WordChoiceButton).evaluate(),
+    ...find.byType(OutlinedButton).evaluate(),
+  ];
+  for (final element in candidates) {
     final option = find.byElementPredicate((candidate) {
       return identical(candidate, element);
     });
