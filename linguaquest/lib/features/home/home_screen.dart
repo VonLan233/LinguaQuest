@@ -4,8 +4,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/quest_panel.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/custom_word.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -85,43 +87,39 @@ class HomeScreen extends ConsumerWidget {
             ),
           ],
         ),
-        const SizedBox(height: 14),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: _DailyFocusHeader(
-              streak: user?.streak ?? 0,
-              target:
-                  currentBook?.title ??
-                  displayTarget(user?.targetExam, l10n: l10n),
-              level: state.isStudyPlanPaused
-                  ? l10n.homePlanPaused
-                  : displayLevel(user?.level, l10n: l10n),
-              todayWork: todayWork,
-              totalWork: totalWork,
-              progress: dailyProgress,
-              isPaused: state.isStudyPlanPaused,
-              l10n: l10n,
-            ),
+        const SizedBox(height: AppTokens.s16),
+        QuestPanel(
+          child: _DailyFocusHeader(
+            streak: user?.streak ?? 0,
+            target:
+                currentBook?.title ??
+                displayTarget(user?.targetExam, l10n: l10n),
+            level: state.isStudyPlanPaused
+                ? l10n.homePlanPaused
+                : displayLevel(user?.level, l10n: l10n),
+            todayWork: todayWork,
+            totalWork: totalWork,
+            progress: dailyProgress,
+            isPaused: state.isStudyPlanPaused,
+            l10n: l10n,
           ),
         ),
-        const SizedBox(height: 12),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            child: _HomeLearningSignals(
-              completedWords: state.completedLearningWords,
-              masteredWords: state.masteredReviewWords,
-              dueWords: state.dueWords.length,
-              l10n: l10n,
-            ),
+        const SizedBox(height: AppTokens.s12),
+        QuestPanel(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppTokens.s16,
+            vertical: AppTokens.s12,
+          ),
+          child: _HomeLearningSignals(
+            completedWords: state.completedLearningWords,
+            masteredWords: state.masteredReviewWords,
+            dueWords: state.dueWords.length,
+            l10n: l10n,
           ),
         ),
-        const SizedBox(height: 12),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: _DailyTaskPanel(
+        const SizedBox(height: AppTokens.s12),
+        QuestPanel(
+          child: _DailyTaskPanel(
               currentSection:
                   currentLesson?.section ??
                   currentBook?.title ??
@@ -138,13 +136,14 @@ class HomeScreen extends ConsumerWidget {
               onReview: () => context.push('/study/review'),
             ),
           ),
-        ),
-        const SizedBox(height: 12),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: _HomeShortcutList(
-              actions: [
+        const SizedBox(height: AppTokens.s12),
+        QuestPanel(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppTokens.s16,
+            vertical: AppTokens.s8,
+          ),
+          child: _HomeShortcutList(
+            actions: [
                 _HomeShortcutData(
                   icon: Icons.menu_book_outlined,
                   title: l10n.homeWordbookShortcut,
@@ -168,30 +167,28 @@ class HomeScreen extends ConsumerWidget {
               ],
             ),
           ),
-        ),
-        const SizedBox(height: 12),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: _HomeInfoLink(
-              cue: wordOfDay?.imageCue ?? '🌟',
-              title: l10n.homeWordOfDay,
-              body: wordOfDay == null
-                  ? l10n.homeOpenWordCard
-                  : '${wordOfDay.word} · ${wordOfDay.meaning}',
-              onTap: () => wordOfDay == null
-                  ? context.push('/wordbook')
-                  : context.push('/wordbook/${wordOfDay.id}'),
-            ),
+        const SizedBox(height: AppTokens.s12),
+        QuestPanel(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppTokens.s16,
+            vertical: AppTokens.s8,
+          ),
+          child: _HomeInfoLink(
+            cue: wordOfDay?.imageCue ?? '🌟',
+            title: l10n.homeWordOfDay,
+            body: wordOfDay == null
+                ? l10n.homeOpenWordCard
+                : '${wordOfDay.word} · ${wordOfDay.meaning}',
+            onTap: () => wordOfDay == null
+                ? context.push('/wordbook')
+                : context.push('/wordbook/${wordOfDay.id}'),
           ),
         ),
-        const SizedBox(height: 16),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+        const SizedBox(height: AppTokens.s16),
+        QuestPanel(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
                 SectionHeader(
                   title: l10n.homeWeakWords,
                   subtitle: state.weakWords.isEmpty
@@ -216,8 +213,7 @@ class HomeScreen extends ConsumerWidget {
               ],
             ),
           ),
-        ),
-      ],
+        ],
     );
   }
 }
