@@ -1570,6 +1570,57 @@ class AppLocalizationsEn extends AppLocalizations {
       'Current preview progress will be discarded.';
 
   @override
+  String get lessonPreviewBuildUnderstanding =>
+      'Build understanding first, then context questions';
+
+  @override
+  String lessonPreviewProgressMeta(
+    Object current,
+    Object minutes,
+    Object section,
+    Object total,
+  ) {
+    return '$section · $minutes min · $current/$total';
+  }
+
+  @override
+  String get lessonPreviewLessonCards => 'Lesson cards';
+
+  @override
+  String lessonPreviewCardMeta(Object count, Object xp) {
+    return '$xp XP · $count context questions';
+  }
+
+  @override
+  String get lessonPreviewEnterContext => 'Start context practice';
+
+  @override
+  String get lessonPreviewNextCard => 'Next card';
+
+  @override
+  String get lessonPreviewNoCards => 'No cards';
+
+  @override
+  String get lessonPreviewNoCardsBody =>
+      'This lesson has no words to study yet.';
+
+  @override
+  String get lessonPreviewLeaveCardTitle => 'Leave cards?';
+
+  @override
+  String get lessonPreviewLeaveCardContent =>
+      'Your current new-word card progress will be discarded.';
+
+  @override
+  String get lessonPreviewLeave => 'Leave';
+
+  @override
+  String get lessonPreviewAssessFirst => 'Judge your familiarity first';
+
+  @override
+  String get lessonPreviewContextExample => 'Context example';
+
+  @override
   String get reviewCenterTitle => 'Review';
 
   @override

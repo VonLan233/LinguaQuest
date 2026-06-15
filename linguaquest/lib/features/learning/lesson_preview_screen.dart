@@ -37,12 +37,11 @@ class _LessonPreviewScreenState extends ConsumerState<LessonPreviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final lesson = _findLesson(ref);
     if (lesson == null) {
       return Scaffold(
-        body: Center(
-          child: Text(AppLocalizations.of(context).lessonPreviewNoLesson),
-        ),
+        body: Center(child: Text(l10n.lessonPreviewNoLesson)),
       );
     }
 
@@ -66,7 +65,7 @@ class _LessonPreviewScreenState extends ConsumerState<LessonPreviewScreen> {
       child: Scaffold(
         appBar: AppBar(
           leading: BackButton(onPressed: () => _handleBack(context)),
-          title: const Text('新学词卡'),
+          title: Text(l10n.lessonPreviewTitle),
         ),
         bottomNavigationBar: word == null
             ? null
@@ -81,7 +80,7 @@ class _LessonPreviewScreenState extends ConsumerState<LessonPreviewScreen> {
                               ? null
                               : () => setState(() => _wordIndex--),
                           icon: const Icon(Icons.arrow_back_rounded),
-                          label: const Text('上一张'),
+                          label: Text(l10n.lessonPreviewPrevious),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -104,7 +103,11 @@ class _LessonPreviewScreenState extends ConsumerState<LessonPreviewScreen> {
                                 ? Icons.play_arrow_rounded
                                 : Icons.arrow_forward_rounded,
                           ),
-                          label: Text(isLastWord ? '进入语境练习' : '下一张词卡'),
+                          label: Text(
+                            isLastWord
+                                ? l10n.lessonPreviewEnterContext
+                                : l10n.lessonPreviewNextCard,
+                          ),
                         ),
                       ),
                     ],
@@ -116,9 +119,13 @@ class _LessonPreviewScreenState extends ConsumerState<LessonPreviewScreen> {
             padding: const EdgeInsets.fromLTRB(20, 12, 20, 112),
             children: [
               SectionHeader(
-                title: '先建立理解，再做语境题',
-                subtitle:
-                    '${lesson.section} · ${lesson.estimatedMinutes} 分钟 · 第 ${words.isEmpty ? 0 : currentIndex + 1}/${words.length} 张',
+                title: l10n.lessonPreviewBuildUnderstanding,
+                subtitle: l10n.lessonPreviewProgressMeta(
+                  lesson.section,
+                  '${lesson.estimatedMinutes}',
+                  '${words.isEmpty ? 0 : currentIndex + 1}',
+                  '${words.length}',
+                ),
               ),
               const SizedBox(height: 12),
               ClipRRect(
@@ -140,11 +147,11 @@ class _LessonPreviewScreenState extends ConsumerState<LessonPreviewScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '暂无词卡',
+                        l10n.lessonPreviewNoCards,
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                       const SizedBox(height: 8),
-                      const Text('这节课还没有可学习的词。'),
+                      Text(l10n.lessonPreviewNoCardsBody),
                     ],
                   ),
                 )
@@ -161,9 +168,11 @@ class _LessonPreviewScreenState extends ConsumerState<LessonPreviewScreen> {
                 _ContextSection(word: word),
                 const SizedBox(height: 24),
                 SectionHeader(
-                  title: '本课词卡',
-                  subtitle:
-                      '${lesson.xpReward} XP · ${lesson.questions.length} 道语境题',
+                  title: l10n.lessonPreviewLessonCards,
+                  subtitle: l10n.lessonPreviewCardMeta(
+                    '${lesson.xpReward}',
+                    '${lesson.questions.length}',
+                  ),
                 ),
                 const SizedBox(height: 10),
                 for (var index = 0; index < words.length; index++)
@@ -185,20 +194,21 @@ class _LessonPreviewScreenState extends ConsumerState<LessonPreviewScreen> {
 
   Future<void> _handleBack(BuildContext activeContext) async {
     if (_hasStarted) {
+      final dialogL10n = AppLocalizations.of(activeContext);
       final confirmed = await showDialog<bool>(
         context: activeContext,
         builder: (context) => AlertDialog(
-          title: const Text('离开词卡？'),
-          content: const Text('当前新学词卡进度将被放弃。'),
+          title: Text(dialogL10n.lessonPreviewLeaveCardTitle),
+          content: Text(dialogL10n.lessonPreviewLeaveCardContent),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('继续学习'),
+              child: Text(dialogL10n.mixedContinueStudy),
             ),
             FilledButton.icon(
               onPressed: () => Navigator.pop(context, true),
               icon: const Icon(Icons.exit_to_app_rounded),
-              label: const Text('离开'),
+              label: Text(dialogL10n.lessonPreviewLeave),
             ),
           ],
         ),
@@ -299,15 +309,16 @@ class _ConfidenceSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final items = [
-      ('认识', Icons.sentiment_satisfied_alt_outlined, AppTheme.teal),
-      ('模糊', Icons.visibility_outlined, AppTheme.mango),
-      ('不认识', Icons.help_outline, AppTheme.coral),
+      (l10n.studyRecallKnown, Icons.sentiment_satisfied_alt_outlined, AppTheme.teal),
+      (l10n.studyRecallFuzzy, Icons.visibility_outlined, AppTheme.mango),
+      (l10n.studyRecallUnknown, Icons.help_outline, AppTheme.coral),
     ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('先判断熟悉度', style: Theme.of(context).textTheme.titleMedium),
+        Text(l10n.lessonPreviewAssessFirst, style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 10),
         Row(
           children: [
@@ -386,7 +397,7 @@ class _ContextSection extends StatelessWidget {
               ),
               const SizedBox(width: AppTokens.s8),
               Text(
-                '语境例句',
+                AppLocalizations.of(context).lessonPreviewContextExample,
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w700,
                 ),

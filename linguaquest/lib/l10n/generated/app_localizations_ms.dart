@@ -1571,6 +1571,57 @@ class AppLocalizationsMs extends AppLocalizations {
       'Kemajuan pratonton semasa akan dibuang.';
 
   @override
+  String get lessonPreviewBuildUnderstanding =>
+      'Bina kefahaman dahulu, kemudian soalan konteks';
+
+  @override
+  String lessonPreviewProgressMeta(
+    Object current,
+    Object minutes,
+    Object section,
+    Object total,
+  ) {
+    return '$section · $minutes min · $current/$total';
+  }
+
+  @override
+  String get lessonPreviewLessonCards => 'Kad pelajaran';
+
+  @override
+  String lessonPreviewCardMeta(Object count, Object xp) {
+    return '$xp XP · $count soalan konteks';
+  }
+
+  @override
+  String get lessonPreviewEnterContext => 'Mula latihan konteks';
+
+  @override
+  String get lessonPreviewNextCard => 'Kad seterusnya';
+
+  @override
+  String get lessonPreviewNoCards => 'Tiada kad';
+
+  @override
+  String get lessonPreviewNoCardsBody =>
+      'Pelajaran ini belum ada perkataan untuk dipelajari.';
+
+  @override
+  String get lessonPreviewLeaveCardTitle => 'Tinggalkan kad?';
+
+  @override
+  String get lessonPreviewLeaveCardContent =>
+      'Kemajuan kad perkataan baharu semasa akan dibuang.';
+
+  @override
+  String get lessonPreviewLeave => 'Keluar';
+
+  @override
+  String get lessonPreviewAssessFirst => 'Nilai kebiasaan anda dahulu';
+
+  @override
+  String get lessonPreviewContextExample => 'Contoh konteks';
+
+  @override
   String get reviewCenterTitle => 'Ulangkaji';
 
   @override

@@ -2882,6 +2882,89 @@ abstract class AppLocalizations {
   /// **'Current preview progress will be discarded.'**
   String get lessonPreviewLeaveContent;
 
+  /// No description provided for @lessonPreviewBuildUnderstanding.
+  ///
+  /// In en, this message translates to:
+  /// **'Build understanding first, then context questions'**
+  String get lessonPreviewBuildUnderstanding;
+
+  /// No description provided for @lessonPreviewProgressMeta.
+  ///
+  /// In en, this message translates to:
+  /// **'{section} · {minutes} min · {current}/{total}'**
+  String lessonPreviewProgressMeta(
+    Object current,
+    Object minutes,
+    Object section,
+    Object total,
+  );
+
+  /// No description provided for @lessonPreviewLessonCards.
+  ///
+  /// In en, this message translates to:
+  /// **'Lesson cards'**
+  String get lessonPreviewLessonCards;
+
+  /// No description provided for @lessonPreviewCardMeta.
+  ///
+  /// In en, this message translates to:
+  /// **'{xp} XP · {count} context questions'**
+  String lessonPreviewCardMeta(Object count, Object xp);
+
+  /// No description provided for @lessonPreviewEnterContext.
+  ///
+  /// In en, this message translates to:
+  /// **'Start context practice'**
+  String get lessonPreviewEnterContext;
+
+  /// No description provided for @lessonPreviewNextCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Next card'**
+  String get lessonPreviewNextCard;
+
+  /// No description provided for @lessonPreviewNoCards.
+  ///
+  /// In en, this message translates to:
+  /// **'No cards'**
+  String get lessonPreviewNoCards;
+
+  /// No description provided for @lessonPreviewNoCardsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This lesson has no words to study yet.'**
+  String get lessonPreviewNoCardsBody;
+
+  /// No description provided for @lessonPreviewLeaveCardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave cards?'**
+  String get lessonPreviewLeaveCardTitle;
+
+  /// No description provided for @lessonPreviewLeaveCardContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Your current new-word card progress will be discarded.'**
+  String get lessonPreviewLeaveCardContent;
+
+  /// No description provided for @lessonPreviewLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave'**
+  String get lessonPreviewLeave;
+
+  /// No description provided for @lessonPreviewAssessFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Judge your familiarity first'**
+  String get lessonPreviewAssessFirst;
+
+  /// No description provided for @lessonPreviewContextExample.
+  ///
+  /// In en, this message translates to:
+  /// **'Context example'**
+  String get lessonPreviewContextExample;
+
   /// No description provided for @reviewCenterTitle.
   ///
   /// In en, this message translates to:

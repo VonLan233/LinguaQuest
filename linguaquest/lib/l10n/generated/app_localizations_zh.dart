@@ -1487,6 +1487,54 @@ class AppLocalizationsZh extends AppLocalizations {
   String get lessonPreviewLeaveContent => '当前预览进度将被放弃。';
 
   @override
+  String get lessonPreviewBuildUnderstanding => '先建立理解，再做语境题';
+
+  @override
+  String lessonPreviewProgressMeta(
+    Object current,
+    Object minutes,
+    Object section,
+    Object total,
+  ) {
+    return '$section · $minutes 分钟 · 第 $current/$total 张';
+  }
+
+  @override
+  String get lessonPreviewLessonCards => '本课词卡';
+
+  @override
+  String lessonPreviewCardMeta(Object count, Object xp) {
+    return '$xp XP · $count 道语境题';
+  }
+
+  @override
+  String get lessonPreviewEnterContext => '进入语境练习';
+
+  @override
+  String get lessonPreviewNextCard => '下一张词卡';
+
+  @override
+  String get lessonPreviewNoCards => '暂无词卡';
+
+  @override
+  String get lessonPreviewNoCardsBody => '这节课还没有可学习的词。';
+
+  @override
+  String get lessonPreviewLeaveCardTitle => '离开词卡？';
+
+  @override
+  String get lessonPreviewLeaveCardContent => '当前新学词卡进度将被放弃。';
+
+  @override
+  String get lessonPreviewLeave => '离开';
+
+  @override
+  String get lessonPreviewAssessFirst => '先判断熟悉度';
+
+  @override
+  String get lessonPreviewContextExample => '语境例句';
+
+  @override
   String get reviewCenterTitle => '复习';
 
   @override
