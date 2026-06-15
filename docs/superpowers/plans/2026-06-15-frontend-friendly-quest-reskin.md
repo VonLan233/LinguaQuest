@@ -10,7 +10,18 @@
 
 **Working agreements:** Branch `feat/ui-friendly-quest-reskin`. Atomic commits. **No `Co-Authored-By` trailer.** Do not modify `.DS_Store`. Reference spec: `docs/superpowers/specs/2026-06-15-frontend-friendly-quest-reskin-design.md`.
 
-**Verification baseline (run before starting):** `cd linguaquest && flutter analyze && flutter test` — note the current pass/fail state so regressions are attributable.
+**Verification baseline (run before starting):** `cd linguaquest && flutter analyze && flutter test` — note the current pass/fail state so regressions are attributable. Baseline: analyze clean, 169 tests pass.
+
+---
+
+## AMENDMENT (2026-06-15) — Guardrail reconciliation
+
+`test/ui_style_guard_test.dart` enforces a flat/list-based aesthetic that conflicts with the card-rich design. User decisions:
+
+- **Adopt the richer look and rewrite the *visual* guard assertions** to enforce the new system. **Preserve** all behavioral/routing/i18n-boundary/async-safety guards (route paths, `formalLessons` usage, `displayWordTag`/`displayCustomTag`, no legacy English labels, etc.).
+- **Rename `QuestCard` → `QuestPanel`** (file `quest_panel.dart`). The strings `QuestCard`/`quest_card.dart`/`MetricTile`/`metric_tile.dart` must not appear anywhere — update Task 4 and all references accordingly.
+- **i18n = pragmatic:** new components receive strings from callers (no new hardcoded literals); migrate genuinely-stray literals; **leave guard-required inline Chinese** (`词汇全解`, `词组搭配`, `复习负荷`, `即时反馈`, `暂未开放`, `任务 XP`, etc.) as-is so those content guards stay valid.
+- When a screen task introduces cards/shadows/gradients/rings, update the corresponding assertion in `ui_style_guard_test.dart` in the **same commit**, and keep `flutter test` green.
 
 ---
 
