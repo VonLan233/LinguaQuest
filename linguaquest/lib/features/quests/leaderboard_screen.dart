@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
-import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/mascot_empty_state.dart';
 import '../../core/widgets/section_header.dart';
 import '../../l10n/generated/app_localizations.dart';
 
@@ -41,46 +43,16 @@ class LeaderboardScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             if (entries.isEmpty)
-              const _EmptyTrainingLeaderboard()
+              MascotEmptyState(
+                title: l10n.leaderboardEmptyTitle,
+                message: l10n.leaderboardEmptyBody,
+              )
             else
               for (var index = 0; index < entries.length; index++)
                 _LeaderboardTile(entry: entries[index], rank: index + 1),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _EmptyTrainingLeaderboard extends StatelessWidget {
-  const _EmptyTrainingLeaderboard();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const IconCueBadge(
-          icon: Icons.leaderboard_outlined,
-          color: AppTheme.mango,
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(l10n.leaderboardEmptyTitle, style: theme.textTheme.titleMedium),
-              const SizedBox(height: 4),
-              Text(
-                l10n.leaderboardEmptyBody,
-                style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 }
@@ -104,29 +76,31 @@ class _LeaderboardTile extends StatelessWidget {
     final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: AppTheme.iconBadgeSurface(context),
-            foregroundColor: theme.colorScheme.primary,
-            child: Text('$rank'),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(entry.name, style: theme.textTheme.titleMedium),
-                const SizedBox(height: 3),
-                Text(
-                  AppLocalizations.of(context).leaderboardOnlyValidXp,
-                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
-                ),
-              ],
+      child: AppCard(
+        child: Row(
+          children: [
+            CircleAvatar(
+              backgroundColor: AppTheme.iconBadgeSurface(context),
+              foregroundColor: theme.colorScheme.primary,
+              child: Text('$rank'),
             ),
-          ),
-          PillLabel(label: '${entry.xp} XP', color: AppTheme.mango),
-        ],
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(entry.name, style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 3),
+                  Text(
+                    AppLocalizations.of(context).leaderboardOnlyValidXp,
+                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                  ),
+                ],
+              ),
+            ),
+            AppPill(label: '${entry.xp} XP', variant: PillVariant.xp),
+          ],
+        ),
       ),
     );
   }

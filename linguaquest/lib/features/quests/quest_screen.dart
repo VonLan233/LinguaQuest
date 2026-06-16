@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../core/theme/app_theme.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -20,10 +21,10 @@ class QuestScreen extends StatelessWidget {
           subtitle: l10n.questCenterSubtitle,
         ),
         const SizedBox(height: 12),
-        const PillLabel(
+        const AppPill(
           label: '任务 XP',
           icon: Icons.bolt,
-          color: AppTheme.mango,
+          variant: PillVariant.xp,
         ),
         const SizedBox(height: 16),
         _QuestRow(
@@ -94,8 +95,8 @@ class _QuestRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final content = Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
+    return AppCard(
+      onTap: route == null ? null : () => context.push(route!),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -120,18 +121,8 @@ class _QuestRow extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 10),
-          PillLabel(label: value, color: AppTheme.coral),
+          AppPill(label: value, variant: PillVariant.primary),
         ],
-      ),
-    );
-
-    if (route == null) return content;
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(8),
-        onTap: () => context.push(route!),
-        child: content,
       ),
     );
   }

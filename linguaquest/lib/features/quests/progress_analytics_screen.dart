@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_progress_bar.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/section_header.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -54,7 +56,7 @@ class ProgressAnalyticsScreen extends ConsumerWidget {
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 10),
-            LinearProgressIndicator(
+            AppProgressBar(
               value: reviewWords.isEmpty
                   ? 0
                   : (state.dueWords.length / reviewWords.length).clamp(
@@ -92,44 +94,46 @@ class _ProgressSignals extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return Row(
-      children: [
-        Expanded(
-          child: _ProgressSignal(
-            label: l10n.analyticsCards,
-            value: '$cardCount',
-            icon: Icons.style_outlined,
-            color: AppTheme.cyan,
+    return AppCard(
+      child: Row(
+        children: [
+          Expanded(
+            child: _ProgressSignal(
+              label: l10n.analyticsCards,
+              value: '$cardCount',
+              icon: Icons.style_outlined,
+              color: AppTheme.cyan,
+            ),
           ),
-        ),
-        const _ProgressSignalDivider(),
-        Expanded(
-          child: _ProgressSignal(
-            label: l10n.homeMastered,
-            value: '$masteredCount',
-            icon: Icons.verified_outlined,
-            color: AppTheme.success,
+          const _ProgressSignalDivider(),
+          Expanded(
+            child: _ProgressSignal(
+              label: l10n.homeMastered,
+              value: '$masteredCount',
+              icon: Icons.verified_outlined,
+              color: AppTheme.success,
+            ),
           ),
-        ),
-        const _ProgressSignalDivider(),
-        Expanded(
-          child: _ProgressSignal(
-            label: l10n.analyticsTrainingXp,
-            value: '$trainingXp',
-            icon: Icons.sports_esports_outlined,
-            color: AppTheme.mango,
+          const _ProgressSignalDivider(),
+          Expanded(
+            child: _ProgressSignal(
+              label: l10n.analyticsTrainingXp,
+              value: '$trainingXp',
+              icon: Icons.sports_esports_outlined,
+              color: AppTheme.mango,
+            ),
           ),
-        ),
-        const _ProgressSignalDivider(),
-        Expanded(
-          child: _ProgressSignal(
-            label: l10n.analyticsAccuracy,
-            value: '$accuracy%',
-            icon: Icons.insights_outlined,
-            color: AppTheme.coral,
+          const _ProgressSignalDivider(),
+          Expanded(
+            child: _ProgressSignal(
+              label: l10n.analyticsAccuracy,
+              value: '$accuracy%',
+              icon: Icons.insights_outlined,
+              color: AppTheme.coral,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
