@@ -37,6 +37,8 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
     with SingleTickerProviderStateMixin {
   static const _autoAdvanceDelay = Duration(milliseconds: 1500);
 
+  // Times the 1500ms pause before auto-advancing after a correct answer;
+  // it drives no visual property, only the delay.
   late final AnimationController _autoAdvanceController;
   final _textController = TextEditingController();
   final List<QuizQuestion> _mistakes = [];
@@ -282,7 +284,8 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
       if (isCorrect) {
         _lockedCorrect = true;
       } else {
-        // Re-enable the field for another attempt.
+        // Hide the feedback panel so the still-enabled field invites an
+        // immediate retry (the field stays enabled via !_lockedCorrect).
         _checked = false;
       }
     });
