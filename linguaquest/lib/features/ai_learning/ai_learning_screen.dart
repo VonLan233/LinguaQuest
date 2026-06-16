@@ -3,11 +3,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/learning_badges.dart';
-import '../../core/widgets/quest_list_row.dart';
-import '../../core/widgets/quest_panel.dart';
 import '../../core/widgets/section_header.dart';
-import '../../core/widgets/status_badge.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 class AiLearningScreen extends StatelessWidget {
@@ -41,9 +40,9 @@ class AiLearningScreen extends StatelessWidget {
         const SizedBox(height: AppTokens.s12),
         Align(
           alignment: Alignment.centerLeft,
-          child: StatusBadge(
+          child: AppPill(
             label: l10n.aiLearningPillError,
-            tone: StatusTone.info,
+            variant: PillVariant.streak,
             icon: Icons.psychology_alt_outlined,
           ),
         ),
@@ -80,7 +79,7 @@ class AiLearningScreen extends StatelessWidget {
           ],
         ),
         const SizedBox(height: AppTokens.s12),
-        QuestPanel(
+        AppCard(
           padding: const EdgeInsets.symmetric(
             horizontal: AppTokens.s8,
             vertical: AppTokens.s4,
@@ -135,8 +134,7 @@ class _AiToolList extends StatelessWidget {
       children: [
         for (var index = 0; index < children.length; index++) ...[
           Expanded(child: children[index]),
-          if (index < children.length - 1)
-            const SizedBox(width: AppTokens.s12),
+          if (index < children.length - 1) const SizedBox(width: AppTokens.s12),
         ],
       ],
     );
@@ -159,7 +157,7 @@ class _AiWordContextCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return QuestPanel(
+    return AppCard(
       padding: const EdgeInsets.all(AppTokens.s16),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -218,7 +216,7 @@ class _AiToolLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return QuestPanel(
+    return AppCard(
       padding: EdgeInsets.zero,
       onTap: onTap,
       child: Padding(
@@ -239,9 +237,11 @@ class _AiToolLink extends StatelessWidget {
                   child: Icon(icon, color: color, size: 24),
                 ),
                 const Spacer(),
-                StatusBadge(
+                AppPill(
                   label: status,
-                  tone: onTap == null ? StatusTone.neutral : StatusTone.info,
+                  variant: onTap == null
+                      ? PillVariant.neutral
+                      : PillVariant.primary,
                 ),
               ],
             ),
@@ -285,13 +285,41 @@ class _AiToolRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return QuestListRow(
-      icon: icon,
-      iconColor: color,
-      title: title,
-      subtitle: subtitle,
-      showChevron: false,
-      trailing: StatusBadge(label: status, tone: StatusTone.neutral),
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppTokens.s8,
+        vertical: AppTokens.s12,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          IconCueBadge(icon: icon, color: color),
+          const SizedBox(width: AppTokens.s12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: AppTokens.s4),
+                Text(
+                  subtitle,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: AppTokens.s12),
+          AppPill(label: status, variant: PillVariant.neutral),
+        ],
+      ),
     );
   }
 }
