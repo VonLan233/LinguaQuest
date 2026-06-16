@@ -340,7 +340,8 @@ void main() {
 
     expect(find.text('快速复习'), findsOneWidget);
     expect(find.textContaining('ambiguous'), findsWidgets);
-    expect(find.text('检查'), findsOneWidget);
+    // Instant judgment: question steps no longer carry a check button.
+    expect(find.text('检查'), findsNothing);
     expect(find.text('管理复习队列'), findsOneWidget);
     // Cozy Quest cards landed on the mixed study session screen.
     expect(find.byType(AppCard), findsWidgets);
@@ -349,13 +350,14 @@ void main() {
     expect(find.text('显示释义'), findsNothing);
     expect(find.text('加入错词卡'), findsNothing);
 
-    await _tapAnyOptionExcept(tester, '含糊的');
-    await tester.tap(find.text('检查'));
-    await tester.pumpAndSettle();
-
+    // A review item is recorded on the first attempt: a wrong tap shows the
+    // feedback, then auto-advances after the 1500ms timer (no retry).
+    await _tapAnyOptionExceptNoSettle(tester, '含糊的');
+    await tester.pump();
     expect(find.textContaining('答错了'), findsOneWidget);
+    expect(find.text('继续'), findsNothing);
 
-    await tester.tap(find.text('继续'));
+    await tester.pump(const Duration(milliseconds: 1500));
     await tester.pumpAndSettle();
 
     expect(find.text('加入稍后复现'), findsOneWidget);
@@ -397,9 +399,10 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.textContaining('仅复习'));
     await tester.pumpAndSettle();
-    await _tapAnyOptionExcept(tester, '含糊的');
-    await tester.tap(find.text('检查'));
-    await tester.pumpAndSettle();
+    // Instant judgment records the attempt on tap (no check button); the wrong
+    // review answer would auto-advance after 1500ms, but we leave before then.
+    await _tapAnyOptionExceptNoSettle(tester, '含糊的');
+    await tester.pump();
 
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
@@ -3574,23 +3577,98 @@ void main() {
     await tester.tap(find.text('进入识别题'));
     await tester.pumpAndSettle();
 
-    await _tapAnyOptionExcept(tester, firstWord.meaning);
-    await tester.tap(find.text('检查'));
-    await tester.pumpAndSettle();
+    // Instant judgment: a wrong tap marks the option red but keeps the same
+    // question open for re-selection (no auto-advance, no check button).
+    await _tapAnyOptionExceptNoSettle(tester, firstWord.meaning);
+    await tester.pump();
+    expect(find.text('检查'), findsNothing);
     expect(find.textContaining(firstWord.word), findsWidgets);
 
-    if (find.text('再试一次').evaluate().isNotEmpty) {
-      await tester.tap(find.text('再试一次'));
-      await tester.pumpAndSettle();
-    }
-    await _tapOption(tester, firstWord.meaning);
-    await tester.tap(find.text('检查'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('继续'));
+    // Selecting the correct answer settles the step and auto-advances after the
+    // 1500ms timer.
+    await _tapOptionNoSettle(tester, firstWord.meaning);
+    await tester.pump(const Duration(milliseconds: 1500));
     await tester.pumpAndSettle();
 
     expect(find.text('加入稍后复现'), findsOneWidget);
+
+    // Drain the top-notice auto-dismiss timer so no timer outlives the test.
+    await tester.pump(const Duration(milliseconds: 1800));
+    await tester.pumpAndSettle();
   });
+
+  testWidgets(
+    'mixed study question step instant-judges: wrong stays, correct auto-advances',
+    (tester) async {
+      final now = DateTime(2026, 5, 25);
+      final profile = UserProfile(
+        uid: 'instant-judge-user',
+        name: 'Ivy',
+        email: 'ivy@lingua.quest',
+        targetExam: 'IELTS',
+        level: 'Elementary',
+        dailyGoal: 10,
+        xp: 0,
+        streak: 0,
+        createdAt: now,
+        updatedAt: now,
+      );
+      SharedPreferences.setMockInitialValues({
+        'linguaquest.profile': jsonEncode(profile.toJson()),
+      });
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            customWordRepositoryProvider.overrideWithValue(
+              _EmptyCustomWordRepository(),
+            ),
+          ],
+          child: const LinguaQuestApp(),
+        ),
+      );
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+      final container = ProviderScope.containerOf(
+        tester.element(find.byType(LinguaQuestApp)),
+      );
+      final firstWord = container
+          .read(appControllerProvider)
+          .currentLesson!
+          .words
+          .first;
+      await tester.tap(find.textContaining('开始今日学习'));
+      await tester.pumpAndSettle();
+
+      // Enter the recognition question for the first new word.
+      await tester.tap(find.text('不认识'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('进入识别题'));
+      await tester.pumpAndSettle();
+      // No check button: question steps judge on tap.
+      expect(find.text('检查'), findsNothing);
+      // The recall card that follows the question is not on screen yet.
+      expect(find.text('加入稍后复现'), findsNothing);
+
+      // A wrong tap does NOT advance: even after the auto-advance window would
+      // have elapsed, the follow-up recall card has not appeared.
+      await _tapAnyOptionExceptNoSettle(tester, firstWord.meaning);
+      await tester.pump(const Duration(milliseconds: 1500));
+      await tester.pump();
+      expect(find.text('加入稍后复现'), findsNothing);
+
+      // A correct tap settles the step. Before the 1500ms timer fires we have
+      // not advanced; after it fires the follow-up recall card appears.
+      await _tapOptionNoSettle(tester, firstWord.meaning);
+      expect(find.text('加入稍后复现'), findsNothing);
+      await tester.pump(const Duration(milliseconds: 1500));
+      await tester.pumpAndSettle();
+      expect(find.text('加入稍后复现'), findsOneWidget);
+
+      // Drain the top-notice auto-dismiss timer.
+      await tester.pump(const Duration(milliseconds: 1800));
+      await tester.pumpAndSettle();
+    },
+  );
 
   test('mixed study completion records learned target words', () async {
     final now = DateTime(2026, 5, 25);
@@ -4144,44 +4222,6 @@ Future<void> _openCurrentLessonCards(WidgetTester tester) async {
   await tester.pumpAndSettle();
   await tester.tap(find.widgetWithText(AppPrimaryButton, '开始学习'));
   await tester.pumpAndSettle();
-}
-
-Future<void> _tapOption(WidgetTester tester, String label) async {
-  var finder = find.widgetWithText(WordChoiceButton, label);
-  if (finder.evaluate().isEmpty) {
-    finder = find.widgetWithText(OutlinedButton, label);
-  }
-  final option = finder.first;
-  expect(option, findsOneWidget);
-  await tester.ensureVisible(option);
-  await tester.pumpAndSettle();
-  final rect = tester.getRect(option);
-  await tester.tapAt(Offset(rect.left + 24, rect.top + 24));
-  await tester.pumpAndSettle();
-}
-
-Future<void> _tapAnyOptionExcept(WidgetTester tester, String label) async {
-  final candidates = [
-    ...find.byType(WordChoiceButton).evaluate(),
-    ...find.byType(OutlinedButton).evaluate(),
-  ];
-  for (final element in candidates) {
-    final option = find.byElementPredicate((candidate) {
-      return identical(candidate, element);
-    });
-    final hasExcludedLabel = find
-        .descendant(of: option, matching: find.text(label))
-        .evaluate()
-        .isNotEmpty;
-    if (hasExcludedLabel) continue;
-    await tester.ensureVisible(option);
-    await tester.pumpAndSettle();
-    final rect = tester.getRect(option);
-    await tester.tapAt(Offset(rect.left + 24, rect.top + 24));
-    await tester.pumpAndSettle();
-    return;
-  }
-  fail('No option found except $label');
 }
 
 Lesson _currentLesson(WidgetTester tester) {

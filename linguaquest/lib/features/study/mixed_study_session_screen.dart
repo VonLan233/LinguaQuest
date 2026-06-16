@@ -30,20 +30,26 @@ class MixedStudySessionScreen extends ConsumerStatefulWidget {
 }
 
 class _MixedStudySessionScreenState
-    extends ConsumerState<MixedStudySessionScreen> {
+    extends ConsumerState<MixedStudySessionScreen>
+    with SingleTickerProviderStateMixin {
   static const _builder = StudySessionQueueBuilder();
+  static const _autoAdvanceDelay = Duration(milliseconds: 1500);
 
   final Random _random = Random();
   final List<StudySessionQueueItem> _queue = [];
   final List<StudyAnswerLog> _answerLogs = [];
   final Set<String> _wrongItemIds = {};
   final Set<String> _scheduledWrongIds = {};
+  final Set<String> _wrongTries = {};
   late final DateTime _sessionStartedAt;
+  // Times the 1500ms pause before auto-advancing once a question step is
+  // settled; it drives no visual property, only the delay.
+  late final AnimationController _autoAdvanceController;
   DateTime _itemStartedAt = DateTime.now();
   StudySessionQueuePlan? _plan;
-  String? _selected;
   bool _checked = false;
   bool _lastCorrect = false;
+  bool _lockedCorrect = false;
   bool _isSubmitting = false;
   int _completedItems = 0;
   int _correctAnswers = 0;
@@ -54,7 +60,17 @@ class _MixedStudySessionScreenState
   void initState() {
     super.initState();
     _sessionStartedAt = DateTime.now();
+    _autoAdvanceController = AnimationController(
+      vsync: this,
+      duration: _autoAdvanceDelay,
+    );
     WidgetsBinding.instance.addPostFrameCallback((_) => _initializeQueue());
+  }
+
+  @override
+  void dispose() {
+    _autoAdvanceController.dispose();
+    super.dispose();
   }
 
   @override
@@ -140,14 +156,12 @@ class _MixedStudySessionScreenState
                             : _QuestionStep(
                                 item: current,
                                 options: _currentOptions,
-                                selected: _selected,
                                 checked: _checked,
                                 lastCorrect: _lastCorrect,
-                                isSubmitting: _isSubmitting,
+                                lockedCorrect: _lockedCorrect,
+                                wrongTries: _wrongTries,
                                 onSelected: (value) =>
-                                    setState(() => _selected = value),
-                                onPrimary: () =>
-                                    _handleQuestionPrimary(current),
+                                    _judgeQuestion(current, value),
                               ),
                       ),
                     ],
@@ -206,57 +220,79 @@ class _MixedStudySessionScreenState
     _advanceCurrent();
   }
 
-  Future<void> _handleQuestionPrimary(StudySessionQueueItem item) async {
-    if (_isSubmitting) return;
-    if (!_checked) {
-      final answer = _selected;
-      if (answer == null) return;
-      final isCorrect =
-          answer.trim().toLowerCase() == item.meaning.trim().toLowerCase();
-      final responseTime = DateTime.now()
-          .difference(_itemStartedAt)
-          .inMilliseconds;
-      _answerLogs.add(
-        StudyAnswerLog(
-          itemId: item.id,
-          wordId: item.wordId,
-          source: item.source,
-          step: item.step,
-          isCorrect: isCorrect,
-          responseTimeMs: responseTime,
-          confidence: _confidence,
-          selectedAnswer: answer,
-          wrongOption: isCorrect ? null : answer,
-          answeredAt: DateTime.now(),
-        ),
-      );
-      if (!isCorrect) {
-        _wrongItemIds.add(item.wordId);
-        _scheduleWrongRecycle(item);
+  /// Immediate judgment for a tapped choice [answer] on a question step.
+  ///
+  /// Mirrors the legacy two-press evaluation/logging/scheduling, but moves the
+  /// trigger from a check button to the option tap:
+  /// - Correct: lock, count, then auto-advance after [_autoAdvanceDelay].
+  /// - Wrong + review item: recorded/persisted once, then auto-advance.
+  /// - Wrong + non-review item: marked red, stays tappable for re-select.
+  Future<void> _judgeQuestion(
+    StudySessionQueueItem item,
+    String answer,
+  ) async {
+    // Ignore taps while a settle/persist is in flight, or once a correct (or
+    // settled review) answer has locked the step.
+    if (_isSubmitting || _lockedCorrect || (_checked && item.isReview)) return;
+    final isCorrect =
+        answer.trim().toLowerCase() == item.meaning.trim().toLowerCase();
+    final responseTime = DateTime.now()
+        .difference(_itemStartedAt)
+        .inMilliseconds;
+    _answerLogs.add(
+      StudyAnswerLog(
+        itemId: item.id,
+        wordId: item.wordId,
+        source: item.source,
+        step: item.step,
+        isCorrect: isCorrect,
+        responseTimeMs: responseTime,
+        confidence: _confidence,
+        selectedAnswer: answer,
+        wrongOption: isCorrect ? null : answer,
+        answeredAt: DateTime.now(),
+      ),
+    );
+    if (!isCorrect) {
+      _wrongItemIds.add(item.wordId);
+      _scheduleWrongRecycle(item);
+    }
+    setState(() {
+      _checked = true;
+      _lastCorrect = isCorrect;
+      if (isCorrect) {
+        _lockedCorrect = true;
+      } else {
+        _wrongTries.add(answer);
       }
-      setState(() {
-        _checked = true;
-        _lastCorrect = isCorrect;
-      });
-      if (item.isReview && item.affectsSchedule) {
-        await _persistReviewAttempt(item, isCorrect, responseTime, answer);
+    });
+
+    if (isCorrect) {
+      if (!_wrongItemIds.contains(item.wordId)) {
+        _correctAnswers += 1;
       }
-      return;
     }
 
-    if (!_lastCorrect && !item.isReview) {
-      setState(() {
-        _checked = false;
-        _selected = null;
-        _itemStartedAt = DateTime.now();
-      });
-      return;
+    if (item.isReview && item.affectsSchedule) {
+      // Review items are recorded on the first attempt (no retry). Persist now;
+      // _persistReviewAttempt toggles _isSubmitting so taps stay ignored while
+      // the write is in flight.
+      await _persistReviewAttempt(item, isCorrect, responseTime, answer);
+      if (!mounted) return;
     }
 
-    if (_lastCorrect && !_wrongItemIds.contains(item.wordId)) {
-      _correctAnswers += 1;
+    // Auto-advance whenever the item is settled: a correct answer, or a review
+    // item that has now been answered. Non-review wrong answers stay for
+    // re-selection.
+    final settled = isCorrect || item.isReview;
+    if (settled) {
+      _autoAdvanceController
+        ..reset()
+        ..forward().whenComplete(() {
+          if (!mounted || _isSubmitting) return;
+          _advanceCurrent();
+        });
     }
-    _advanceCurrent();
   }
 
   Future<void> _persistReviewAttempt(
@@ -331,9 +367,10 @@ class _MixedStudySessionScreenState
         : const <String>[];
     setState(() {
       _completedItems += 1;
-      _selected = null;
       _checked = false;
       _lastCorrect = false;
+      _lockedCorrect = false;
+      _wrongTries.clear();
       _confidence = 3;
       _currentOptions = options;
       _itemStartedAt = DateTime.now();
@@ -574,22 +611,23 @@ class _QuestionStep extends StatelessWidget {
   const _QuestionStep({
     required this.item,
     required this.options,
-    required this.selected,
     required this.checked,
     required this.lastCorrect,
-    required this.isSubmitting,
+    required this.lockedCorrect,
+    required this.wrongTries,
     required this.onSelected,
-    required this.onPrimary,
   });
 
   final StudySessionQueueItem item;
   final List<String> options;
-  final String? selected;
   final bool checked;
   final bool lastCorrect;
-  final bool isSubmitting;
+  final bool lockedCorrect;
+  final Set<String> wrongTries;
   final ValueChanged<String> onSelected;
-  final VoidCallback onPrimary;
+
+  /// Whether a non-review wrong answer is still open for re-selection.
+  bool get _retryable => checked && !lastCorrect && !item.isReview;
 
   @override
   Widget build(BuildContext context) {
@@ -633,7 +671,11 @@ class _QuestionStep extends StatelessWidget {
                       letter: String.fromCharCode(65 + i),
                       text: options[i],
                       state: _optionState(options[i]),
-                      onTap: checked ? null : () => onSelected(options[i]),
+                      // Locked-correct or settled-review steps ignore taps; a
+                      // non-review wrong answer stays tappable for re-select.
+                      onTap: (lockedCorrect || (checked && !_retryable))
+                          ? null
+                          : () => onSelected(options[i]),
                     ),
                   ),
                 if (checked) ...[
@@ -656,26 +698,22 @@ class _QuestionStep extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 14),
-        AppPrimaryButton(
-          onPressed: selected == null || isSubmitting ? null : onPrimary,
-          icon: checked ? Icons.arrow_forward_rounded : Icons.check_rounded,
-          label: checked
-              ? (lastCorrect || item.isReview
-                    ? l10n.commonContinue
-                    : l10n.commonRetry)
-              : l10n.commonCheck,
-        ),
       ],
     );
   }
 
+  bool _isCorrectOption(String option) {
+    return option.trim().toLowerCase() == item.meaning.trim().toLowerCase();
+  }
+
   ChoiceState _optionState(String option) {
-    if (!checked) {
-      return selected == option ? ChoiceState.selected : ChoiceState.idle;
+    // Reveal the correct answer once the step is locked (correct) or a review
+    // item has been answered; otherwise only mark tried-wrong options red.
+    if ((lockedCorrect || (checked && item.isReview)) &&
+        _isCorrectOption(option)) {
+      return ChoiceState.correct;
     }
-    if (option == item.meaning) return ChoiceState.correct;
-    if (option == selected) return ChoiceState.wrong;
+    if (wrongTries.contains(option)) return ChoiceState.wrong;
     return ChoiceState.idle;
   }
 
