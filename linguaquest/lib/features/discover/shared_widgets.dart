@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_tokens.dart';
-import '../../core/widgets/quest_list_row.dart';
-import '../../core/widgets/quest_panel.dart';
-import '../../core/widgets/status_badge.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 class RewardTaskList extends StatelessWidget {
@@ -13,26 +12,13 @@ class RewardTaskList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return QuestPanel(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppTokens.s8,
-        vertical: AppTokens.s4,
-      ),
-      child: Column(
-        children: [
-          for (var index = 0; index < tasks.length; index++) ...[
-            RewardTaskRow(task: tasks[index]),
-            if (index != tasks.length - 1)
-              Divider(
-                height: AppTokens.s8,
-                color: Theme.of(context)
-                    .colorScheme
-                    .outlineVariant
-                    .withValues(alpha: 0.7),
-              ),
-          ],
+    return Column(
+      children: [
+        for (var index = 0; index < tasks.length; index++) ...[
+          RewardTaskRow(task: tasks[index]),
+          if (index != tasks.length - 1) const SizedBox(height: AppTokens.s12),
         ],
-      ),
+      ],
     );
   }
 }
@@ -44,6 +30,8 @@ class RewardTaskRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final l10n = AppLocalizations.of(context);
     final canClaim = task.isDone && !task.isClaimed;
     final accent = canClaim
@@ -53,43 +41,79 @@ class RewardTaskRow extends StatelessWidget {
         : AppTokens.mangoColor(context);
 
     final String badgeLabel;
-    final StatusTone badgeTone;
+    final PillVariant badgeVariant;
     final IconData badgeIcon;
     if (task.isClaimed) {
       badgeLabel = l10n.discoverClaimed(task.points.toString());
-      badgeTone = StatusTone.success;
+      badgeVariant = PillVariant.success;
       badgeIcon = Icons.check_circle_outline;
     } else if (canClaim) {
       badgeLabel = l10n.discoverClaim(task.points.toString());
-      badgeTone = StatusTone.info;
+      badgeVariant = PillVariant.primary;
       badgeIcon = Icons.add_circle_outline;
     } else {
       badgeLabel = l10n.discoverGoComplete(task.points.toString());
-      badgeTone = StatusTone.warning;
+      badgeVariant = PillVariant.streak;
       badgeIcon = Icons.add_circle_outline;
     }
 
-    return QuestListRow(
-      icon: task.icon,
-      iconColor: accent,
-      title: task.title,
-      subtitle: task.condition,
-      showChevron: false,
+    return AppCard(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppTokens.s12,
+        vertical: AppTokens.s12,
+      ),
       onTap: canClaim
           ? task.onClaim
           : task.isDone
           ? null
           : task.onTap,
-      trailing: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 132),
-        child: FittedBox(
-          fit: BoxFit.scaleDown,
-          child: StatusBadge(
-            label: badgeLabel,
-            tone: badgeTone,
-            icon: badgeIcon,
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: accent.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
+            ),
+            alignment: Alignment.center,
+            child: Icon(task.icon, size: 22, color: accent),
           ),
-        ),
+          const SizedBox(width: AppTokens.s12),
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  task.title,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: AppTokens.s2),
+                Text(
+                  task.condition,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: AppTokens.s8),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 132),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: AppPill(
+                label: badgeLabel,
+                variant: badgeVariant,
+                icon: badgeIcon,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

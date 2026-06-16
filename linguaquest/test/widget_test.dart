@@ -448,6 +448,7 @@ void main() {
     await tester.tap(find.text('积分任务'));
     await tester.pumpAndSettle();
 
+    expect(find.byType(AppCard), findsWidgets);
     expect(find.text('每日签到'), findsOneWidget);
     expect(find.text('去完成 +5 XP'), findsOneWidget);
     expect(find.textContaining('已入账'), findsNothing);
