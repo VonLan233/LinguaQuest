@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
-import '../../core/widgets/quest_panel.dart';
-import '../../core/widgets/status_badge.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 class CommunityScreen extends StatelessWidget {
@@ -53,14 +53,14 @@ class _ForumPost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return QuestPanel(
+    return AppCard(
       padding: const EdgeInsets.all(AppTokens.s16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          StatusBadge(
+          AppPill(
             label: post.tag,
-            tone: StatusTone.danger,
+            variant: PillVariant.streak,
             icon: Icons.tag_outlined,
           ),
           const SizedBox(height: AppTokens.s12),
