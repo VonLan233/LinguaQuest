@@ -63,9 +63,9 @@ Three locales: English (`app_en.arb`, the template), Chinese (`app_zh.arb`, the 
 
 ### Design system & UI guardrails
 
-`core/theme/app_tokens.dart` is the single source of truth for spacing, radii, durations, and the "Friendly Quest" brand palette. Use `AppTokens.*` rather than hard-coded values; `app_theme.dart` builds the Material 3 light/dark themes from them.
+`core/theme/app_tokens.dart` is the single source of truth for spacing, radii, durations, and the brand palette. The app is mid-migration to the **"Cozy Quest"** design system (warm-porcelain `bgLight` `#FAF8F5`, azure primary, semantic-soft accents, single soft `cardShadow`). Use `AppTokens.*` rather than hard-coded values; `app_theme.dart` builds the Material 3 light/dark themes from them. Token values are locked by `test/core/theme/app_tokens_test.dart`.
 
-`test/ui_style_guard_test.dart` enforces the flat visual style: feature screens must **not** use `BoxShadow`, `LinearGradient`/`RadialGradient`, `BackdropFilter`/blur, positive `elevation:`, `Chip`/`ChoiceChip`/`SegmentedButton`/`CheckboxListTile`, or the removed `QuestCard`/`MetricTile` abstractions (`home_screen.dart` is the only `Card` exception). This test will fail CI-style checks if you reintroduce heavy UI treatments — prefer the shared primitives in `core/widgets/` (e.g. `QuestPanel`, `SegmentedTabs`, `StatTile`, `ProgressRing`).
+Reskin feature screens with the Cozy Quest primitives in `core/widgets/`: `AppCard` (the universal content card — single soft shadow), `AppPrimaryButton`/`AppSecondaryButton`, `AppPill` (semantic badge: `PillVariant.{xp,success,streak,primary}`), `AppProgressBar` (mango→success gradient), `MascotImage`/`MascotEmptyState` (the blue-cat mascot pervades), plus the existing `StatTile`/`ProgressRing`/`SegmentedTabs`/`WordChoiceButton`. The Cozy Quest style **intentionally uses** soft shadows (via `AppCard`) and the progress gradient — the old `test/ui_style_guard_test.dart` flat-style guard that forbade these was **retired** (do not reintroduce it). The old `QuestPanel` primitive is being replaced by `AppCard` screen-by-screen. Plans/specs for the redesign live under `docs/superpowers/`.
 
 ### Backend
 
