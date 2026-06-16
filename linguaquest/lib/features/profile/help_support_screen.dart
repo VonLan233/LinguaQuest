@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_card.dart';
 import '../../core/widgets/fallback_back_button.dart';
-import '../../core/widgets/quest_list_row.dart';
-import '../../core/widgets/quest_panel.dart';
 import '../../core/widgets/section_header.dart';
 import '../../l10n/generated/app_localizations.dart';
 
@@ -29,7 +28,7 @@ class HelpSupportScreen extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(AppTokens.s20),
           children: [
-            QuestPanel(
+            AppCard(
               padding: const EdgeInsets.symmetric(
                 horizontal: AppTokens.s8,
                 vertical: AppTokens.s4,
@@ -72,14 +71,33 @@ class HelpSupportScreen extends StatelessWidget {
             const SizedBox(height: AppTokens.s20),
             SectionHeader(title: l10n.helpContactSupport),
             const SizedBox(height: AppTokens.s12),
-            QuestPanel(
-              padding: const EdgeInsets.all(AppTokens.s8),
-              child: QuestListRow(
-                icon: Icons.mail_outline,
-                iconColor: AppTokens.azure,
-                title: l10n.helpContactSupport,
-                subtitle: 'support@lingua.quest',
-                showChevron: false,
+            AppCard(
+              padding: const EdgeInsets.all(AppTokens.s16),
+              child: Row(
+                children: [
+                  Icon(Icons.mail_outline, color: AppTokens.azure),
+                  const SizedBox(width: AppTokens.s12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.helpContactSupport,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: AppTokens.s4),
+                        Text(
+                          'support@lingua.quest',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

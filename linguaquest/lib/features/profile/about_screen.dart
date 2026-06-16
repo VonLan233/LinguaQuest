@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_tokens.dart';
-import '../../core/widgets/brand_hero_card.dart';
+import '../../core/widgets/app_card.dart';
 import '../../core/widgets/fallback_back_button.dart';
-import '../../core/widgets/quest_list_row.dart';
-import '../../core/widgets/quest_panel.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 class AboutScreen extends StatelessWidget {
@@ -14,6 +12,33 @@ class AboutScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
+    final infos = <(IconData, Color, String, String)>[
+      (
+        Icons.flag_outlined,
+        AppTokens.azure,
+        l10n.aboutGoalTitle,
+        l10n.aboutGoalSubtitle,
+      ),
+      (
+        Icons.groups_outlined,
+        AppTokens.successColor(context),
+        l10n.aboutTeamTitle,
+        l10n.aboutTeamSubtitle,
+      ),
+      (
+        Icons.extension_outlined,
+        AppTokens.mangoColor(context),
+        l10n.aboutCoreTitle,
+        l10n.aboutCoreSubtitle,
+      ),
+      (
+        Icons.privacy_tip_outlined,
+        AppTokens.coralColor(context),
+        l10n.aboutPrivacyTitle,
+        l10n.aboutPrivacySubtitle,
+      ),
+    ];
+
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/profile'),
@@ -23,68 +48,76 @@ class AboutScreen extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(AppTokens.s20),
           children: [
-            BrandHeroCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'LinguaQuest',
-                    style: theme.textTheme.displaySmall?.copyWith(
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
+            AppCard(
+              padding: EdgeInsets.zero,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(AppTokens.s20),
+                decoration: BoxDecoration(
+                  color: AppTokens.brandNavy,
+                  borderRadius: BorderRadius.circular(AppTokens.radiusCard),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'LinguaQuest',
+                      style: theme.textTheme.displaySmall?.copyWith(
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: AppTokens.s8),
-                  Text(
-                    l10n.aboutVersion,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: Colors.white,
+                    const SizedBox(height: AppTokens.s8),
+                    Text(
+                      l10n.aboutVersion,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: AppTokens.s20),
-            QuestPanel(
+            AppCard(
               padding: const EdgeInsets.all(AppTokens.s20),
-              child: Text(
-                l10n.aboutIntro,
-                style: theme.textTheme.bodyMedium,
-              ),
+              child: Text(l10n.aboutIntro, style: theme.textTheme.bodyMedium),
             ),
             const SizedBox(height: AppTokens.s16),
-            QuestPanel(
-              padding: const EdgeInsets.all(AppTokens.s8),
+            AppCard(
+              padding: const EdgeInsets.all(AppTokens.s16),
               child: Column(
                 children: [
-                  QuestListRow(
-                    icon: Icons.flag_outlined,
-                    iconColor: AppTokens.azure,
-                    title: l10n.aboutGoalTitle,
-                    subtitle: l10n.aboutGoalSubtitle,
-                    showChevron: false,
-                  ),
-                  QuestListRow(
-                    icon: Icons.groups_outlined,
-                    iconColor: AppTokens.successColor(context),
-                    title: l10n.aboutTeamTitle,
-                    subtitle: l10n.aboutTeamSubtitle,
-                    showChevron: false,
-                  ),
-                  QuestListRow(
-                    icon: Icons.extension_outlined,
-                    iconColor: AppTokens.mangoColor(context),
-                    title: l10n.aboutCoreTitle,
-                    subtitle: l10n.aboutCoreSubtitle,
-                    showChevron: false,
-                  ),
-                  QuestListRow(
-                    icon: Icons.privacy_tip_outlined,
-                    iconColor: AppTokens.coralColor(context),
-                    title: l10n.aboutPrivacyTitle,
-                    subtitle: l10n.aboutPrivacySubtitle,
-                    showChevron: false,
-                  ),
+                  for (var i = 0; i < infos.length; i++) ...[
+                    if (i > 0) const SizedBox(height: AppTokens.s16),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(infos[i].$1, color: infos[i].$2),
+                        const SizedBox(width: AppTokens.s12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                infos[i].$3,
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(height: AppTokens.s4),
+                              Text(
+                                infos[i].$4,
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ],
               ),
             ),
