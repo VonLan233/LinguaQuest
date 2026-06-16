@@ -1863,6 +1863,8 @@ void main() {
 
     await _openCurrentLessonCards(tester);
 
+    expect(find.byType(AppCard), findsWidgets);
+
     await tester.tap(find.widgetWithText(OutlinedButton, '认识'));
     await tester.pumpAndSettle();
     await tester.tap(find.byType(BackButtonIcon));

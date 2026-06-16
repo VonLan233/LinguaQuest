@@ -3,12 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
-import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/utils/ui_labels.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
+import '../../core/widgets/app_progress_bar.dart';
 import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/mascot_empty_state.dart';
 import '../../core/widgets/pronunciation_controls.dart';
-import '../../core/widgets/quest_panel.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -40,9 +43,7 @@ class _LessonPreviewScreenState extends ConsumerState<LessonPreviewScreen> {
     final l10n = AppLocalizations.of(context);
     final lesson = _findLesson(ref);
     if (lesson == null) {
-      return Scaffold(
-        body: Center(child: Text(l10n.lessonPreviewNoLesson)),
-      );
+      return Scaffold(body: Center(child: Text(l10n.lessonPreviewNoLesson)));
     }
 
     final words = lesson.words;
@@ -72,45 +73,42 @@ class _LessonPreviewScreenState extends ConsumerState<LessonPreviewScreen> {
             : SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: _wordIndex == 0
-                              ? null
-                              : () => setState(() => _wordIndex--),
-                          icon: const Icon(Icons.arrow_back_rounded),
-                          label: Text(l10n.lessonPreviewPrevious),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        flex: 2,
-                        child: FilledButton.icon(
-                          onPressed: selectedConfidence == null
-                              ? null
-                              : () {
-                                  if (isLastWord) {
-                                    context.push(
-                                      '/lesson/${widget.lessonId}/quiz',
-                                    );
-                                    return;
-                                  }
-                                  setState(() => _wordIndex++);
-                                },
-                          icon: Icon(
-                            isLastWord
-                                ? Icons.play_arrow_rounded
-                                : Icons.arrow_forward_rounded,
+                  child: IntrinsicHeight(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: AppSecondaryButton(
+                            label: l10n.lessonPreviewPrevious,
+                            onPressed: _wordIndex == 0
+                                ? null
+                                : () => setState(() => _wordIndex--),
                           ),
-                          label: Text(
-                            isLastWord
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          flex: 2,
+                          child: AppPrimaryButton(
+                            label: isLastWord
                                 ? l10n.lessonPreviewEnterContext
                                 : l10n.lessonPreviewNextCard,
+                            icon: isLastWord
+                                ? Icons.play_arrow_rounded
+                                : Icons.arrow_forward_rounded,
+                            onPressed: selectedConfidence == null
+                                ? null
+                                : () {
+                                    if (isLastWord) {
+                                      context.push(
+                                        '/lesson/${widget.lessonId}/quiz',
+                                      );
+                                      return;
+                                    }
+                                    setState(() => _wordIndex++);
+                                  },
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -128,32 +126,12 @@ class _LessonPreviewScreenState extends ConsumerState<LessonPreviewScreen> {
                 ),
               ),
               const SizedBox(height: 12),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(999),
-                child: LinearProgressIndicator(
-                  value: progress,
-                  minHeight: 10,
-                  backgroundColor: AppTheme.progressTrack(context),
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    AppTheme.teal,
-                  ),
-                ),
-              ),
+              AppProgressBar(value: progress, height: 10),
               const SizedBox(height: 18),
               if (word == null)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.lessonPreviewNoCards,
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(l10n.lessonPreviewNoCardsBody),
-                    ],
-                  ),
+                MascotEmptyState(
+                  title: l10n.lessonPreviewNoCards,
+                  message: l10n.lessonPreviewNoCardsBody,
                 )
               else ...[
                 _WordStudyCard(word: word),
@@ -239,7 +217,7 @@ class _WordStudyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return QuestPanel(
+    return AppCard(
       padding: const EdgeInsets.all(AppTokens.s20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -274,10 +252,10 @@ class _WordStudyCard extends StatelessWidget {
                       spacing: 8,
                       runSpacing: 8,
                       children: [
-                        PillLabel(label: word.partOfSpeech),
-                        PillLabel(
+                        AppPill(label: word.partOfSpeech),
+                        AppPill(
                           label: displayDifficulty(word.difficulty),
-                          color: AppTheme.coral,
+                          variant: PillVariant.streak,
                         ),
                       ],
                     ),
@@ -311,14 +289,21 @@ class _ConfidenceSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final items = [
-      (l10n.studyRecallKnown, Icons.sentiment_satisfied_alt_outlined, AppTheme.teal),
-      (l10n.studyRecallFuzzy, Icons.visibility_outlined, AppTheme.mango),
-      (l10n.studyRecallUnknown, Icons.help_outline, AppTheme.coral),
+      (
+        l10n.studyRecallKnown,
+        Icons.sentiment_satisfied_alt_outlined,
+        AppTokens.azure,
+      ),
+      (l10n.studyRecallFuzzy, Icons.visibility_outlined, AppTokens.mango),
+      (l10n.studyRecallUnknown, Icons.help_outline, AppTokens.coral),
     ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(l10n.lessonPreviewAssessFirst, style: Theme.of(context).textTheme.titleMedium),
+        Text(
+          l10n.lessonPreviewAssessFirst,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
         const SizedBox(height: 10),
         Row(
           children: [
@@ -362,11 +347,9 @@ class _ConfidenceOption extends StatelessWidget {
       onPressed: onTap,
       style: OutlinedButton.styleFrom(
         minimumSize: const Size.fromHeight(50),
-        backgroundColor: selected ? color.withValues(alpha: 0.12) : null,
+        backgroundColor: selected ? AppTokens.primarySoft : null,
         side: BorderSide(
-          color: selected
-              ? color
-              : Theme.of(context).colorScheme.outlineVariant,
+          color: selected ? color : AppTokens.hairline,
           width: selected ? 2 : 1,
         ),
       ),
@@ -384,7 +367,7 @@ class _ContextSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return QuestPanel(
+    return AppCard(
       padding: const EdgeInsets.all(AppTokens.s16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -436,7 +419,7 @@ class _MiniWordRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Material(
-        color: isCurrent ? AppTheme.accentSurface(context) : Colors.transparent,
+        color: isCurrent ? AppTokens.primarySoft : Colors.transparent,
         borderRadius: BorderRadius.circular(12),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
@@ -453,7 +436,7 @@ class _MiniWordRow extends StatelessWidget {
                 Icon(
                   isChecked ? Icons.check_circle : Icons.radio_button_unchecked,
                   color: isChecked
-                      ? AppTheme.success
+                      ? AppTokens.azure
                       : theme.colorScheme.onSurfaceVariant,
                 ),
               ],
