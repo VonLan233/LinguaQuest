@@ -7,10 +7,13 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
 import '../../core/utils/ui_labels.dart';
-import '../../core/widgets/empty_state.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/mascot_empty_state.dart';
 import '../../data/dictionary_search.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
@@ -132,14 +135,12 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 ),
               )
             else if (!hasQuery)
-              EmptyState(
-                icon: Icons.search,
+              MascotEmptyState(
                 title: l10n.searchStartTitle,
                 message: l10n.searchStartMessage,
               )
             else if (!hasResults)
-              EmptyState(
-                icon: Icons.manage_search_outlined,
+              MascotEmptyState(
                 title: l10n.searchNoResultsTitle,
                 message: l10n.searchNoResultsMessage,
                 action: OutlinedButton.icon(
@@ -327,7 +328,7 @@ class _SearchSectionTitle extends StatelessWidget {
         children: [
           Text(title, style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(width: 8),
-          PillLabel(label: '$count', color: AppTheme.cyan),
+          AppPill(label: '$count', variant: PillVariant.neutral),
         ],
       ),
     );
@@ -345,66 +346,56 @@ class _TargetWordTile extends StatelessWidget {
     final theme = Theme.of(context);
     final word = result.word;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: () => context.push('/wordbook/${word.id}'),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ImageCueBadge(cue: word.imageCue, size: 54),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(word.word, style: theme.textTheme.titleMedium),
-                      const SizedBox(height: 2),
-                      Text(word.meaning),
-                      const SizedBox(height: 4),
-                      Text(
-                        '${result.matchedBy} · ${result.preview}',
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        result.book.title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodySmall,
-                      ),
-                    ],
+      padding: const EdgeInsets.only(bottom: AppTokens.s12),
+      child: AppCard(
+        onTap: () => context.push('/wordbook/${word.id}'),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ImageCueBadge(cue: word.imageCue, size: 54),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(word.word, style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 2),
+                  Text(word.meaning),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${result.matchedBy} · ${result.preview}',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                   ),
+                  const SizedBox(height: 4),
+                  Text(
+                    result.book.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                AppPill(
+                  label: displayDifficulty(word.difficulty),
+                  variant: PillVariant.neutral,
                 ),
-                const SizedBox(width: 8),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    PillLabel(
-                      label: displayDifficulty(word.difficulty),
-                      color: AppTheme.coral,
-                    ),
-                    if (result.inCurrentWordBook) ...[
-                      const SizedBox(height: 6),
-                      PillLabel(
-                        label: l10n.searchCurrentPlan,
-                        color: AppTheme.cyan,
-                      ),
-                    ],
-                  ],
-                ),
+                if (result.inCurrentWordBook) ...[
+                  const SizedBox(height: 6),
+                  AppPill(
+                    label: l10n.searchCurrentPlan,
+                    variant: PillVariant.success,
+                  ),
+                ],
               ],
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -421,50 +412,40 @@ class _CustomWordTile extends StatelessWidget {
     final theme = Theme.of(context);
     final word = result.word;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: () => context.push('/custom-words/${word.id}'),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ImageCueBadge(cue: wordInitialCue(word.word), size: 54),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(word.word, style: theme.textTheme.titleMedium),
-                      const SizedBox(height: 2),
-                      Text(word.meaning),
-                      const SizedBox(height: 4),
-                      Text(
-                        '${result.matchedBy} · ${result.preview}',
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '${displayDifficulty(word.difficulty)} · ${displayCustomTag(word.tag)}',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodySmall,
-                      ),
-                    ],
+      padding: const EdgeInsets.only(bottom: AppTokens.s12),
+      child: AppCard(
+        onTap: () => context.push('/custom-words/${word.id}'),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ImageCueBadge(cue: wordInitialCue(word.word), size: 54),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(word.word, style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 2),
+                  Text(word.meaning),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${result.matchedBy} · ${result.preview}',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                   ),
-                ),
-                const Icon(Icons.chevron_right_rounded),
-              ],
+                  const SizedBox(height: 4),
+                  Text(
+                    '${displayDifficulty(word.difficulty)} · ${displayCustomTag(word.tag)}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ],
+              ),
             ),
-          ),
+            const Icon(Icons.chevron_right_rounded),
+          ],
         ),
       ),
     );
