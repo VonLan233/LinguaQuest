@@ -857,6 +857,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('限时测试'), findsOneWidget);
+    expect(find.byType(AppCard), findsWidgets);
   });
 
   testWidgets('main shell fling direction matches drag direction', (

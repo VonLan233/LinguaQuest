@@ -5,11 +5,11 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/learning_badges.dart';
-import '../../core/widgets/quest_panel.dart';
 import '../../core/widgets/section_header.dart';
 import '../../core/widgets/stat_tile.dart';
-import '../../core/widgets/status_badge.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 class TrainingScreen extends ConsumerWidget {
@@ -81,43 +81,37 @@ class TrainingScreen extends ConsumerWidget {
           subtitle: l10n.trainingSpecialDrillsSubtitle,
         ),
         const SizedBox(height: AppTokens.s12),
-        QuestPanel(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppTokens.s8,
-            vertical: AppTokens.s4,
-          ),
-          child: Column(
-            children: [
-              _TrainingGameRow(
-                icon: Icons.stairs_outlined,
-                title: l10n.trainingSurvivor,
-                subtitle: l10n.trainingSurvivorDesc,
-                color: AppTokens.coralColor(context),
-                onTap: () => context.push('/training/survival'),
-              ),
-              _TrainingGameRow(
-                icon: Icons.edit_note_outlined,
-                title: l10n.trainingSpelling,
-                subtitle: l10n.trainingSpellingDesc,
-                color: AppTheme.cyan,
-                onTap: () => context.push('/training/spelling'),
-              ),
-              _TrainingGameRow(
-                icon: Icons.article_outlined,
-                title: l10n.trainingPassageCloze,
-                subtitle: l10n.trainingPassageClozeDesc,
-                color: AppTokens.successColor(context),
-                onTap: null,
-              ),
-              _TrainingGameRow(
-                icon: Icons.hearing_outlined,
-                title: l10n.trainingListening,
-                subtitle: l10n.trainingListeningDesc,
-                color: AppTokens.mangoColor(context),
-                onTap: null,
-              ),
-            ],
-          ),
+        _TrainingGameList(
+          children: [
+            _TrainingGameRow(
+              icon: Icons.stairs_outlined,
+              title: l10n.trainingSurvivor,
+              subtitle: l10n.trainingSurvivorDesc,
+              color: AppTokens.coralColor(context),
+              onTap: () => context.push('/training/survival'),
+            ),
+            _TrainingGameRow(
+              icon: Icons.edit_note_outlined,
+              title: l10n.trainingSpelling,
+              subtitle: l10n.trainingSpellingDesc,
+              color: AppTheme.cyan,
+              onTap: () => context.push('/training/spelling'),
+            ),
+            _TrainingGameRow(
+              icon: Icons.article_outlined,
+              title: l10n.trainingPassageCloze,
+              subtitle: l10n.trainingPassageClozeDesc,
+              color: AppTokens.successColor(context),
+              onTap: null,
+            ),
+            _TrainingGameRow(
+              icon: Icons.hearing_outlined,
+              title: l10n.trainingListening,
+              subtitle: l10n.trainingListeningDesc,
+              color: AppTokens.mangoColor(context),
+              onTap: null,
+            ),
+          ],
         ),
         const SizedBox(height: AppTokens.s24),
         _TrainingReadinessLine(
@@ -149,7 +143,7 @@ class _TrainingGoalHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return QuestPanel(
+    return AppCard(
       padding: const EdgeInsets.all(AppTokens.s20),
       child: Row(
         children: [
@@ -176,9 +170,9 @@ class _TrainingGoalHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(width: AppTokens.s12),
-          StatusBadge(
+          AppPill(
             label: '$streak $streakLabel',
-            tone: StatusTone.danger,
+            variant: PillVariant.streak,
             icon: Icons.local_fire_department_outlined,
           ),
         ],
@@ -226,8 +220,9 @@ class _TrainingGameRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final locked = onTap == null;
-    final content = Padding(
+    return AppCard(
       padding: const EdgeInsets.all(AppTokens.s16),
+      onTap: onTap,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -245,8 +240,9 @@ class _TrainingGameRow extends StatelessWidget {
               ),
               const Spacer(),
               if (locked)
-                StatusBadge(
+                AppPill(
                   label: AppLocalizations.of(context).trainingComingSoon,
+                  variant: PillVariant.primary,
                   icon: Icons.lock_clock_outlined,
                 ),
             ],
@@ -270,12 +266,6 @@ class _TrainingGameRow extends StatelessWidget {
         ],
       ),
     );
-
-    return QuestPanel(
-      padding: EdgeInsets.zero,
-      onTap: onTap,
-      child: content,
-    );
   }
 }
 
@@ -294,7 +284,7 @@ class _TrainingReadinessLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return QuestPanel(
+    return AppCard(
       child: Row(
         children: [
           Expanded(
