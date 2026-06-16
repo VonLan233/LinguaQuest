@@ -762,7 +762,7 @@ void main() {
 
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -500));
     await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(OutlinedButton, '登录'));
+    await tester.tap(find.widgetWithText(AppSecondaryButton, '登录'));
     await tester.pumpAndSettle();
 
     expect(find.text('learner@lingua.quest'), findsNothing);

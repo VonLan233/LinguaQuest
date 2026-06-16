@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/app_button.dart';
 import '../../core/widgets/brand_mark.dart';
 import '../../l10n/generated/app_localizations.dart';
 
@@ -105,10 +106,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                       ),
                     ),
                     const SizedBox(height: 14),
-                    FilledButton.icon(
+                    AppPrimaryButton(
                       onPressed: _start,
-                      icon: const Icon(Icons.refresh_rounded),
-                      label: Text(l10n.commonRetry),
+                      icon: Icons.refresh_rounded,
+                      label: l10n.commonRetry,
                     ),
                   ],
                 ),

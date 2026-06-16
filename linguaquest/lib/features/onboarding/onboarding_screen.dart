@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../core/theme/app_theme.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/brand_mark.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
@@ -57,37 +59,38 @@ class OnboardingScreen extends StatelessWidget {
               spacing: 8,
               runSpacing: 8,
               children: [
-                PillLabel(
+                AppPill(
                   label: l10n.onboardingTagWorld,
+                  variant: PillVariant.primary,
                   icon: Icons.auto_stories_outlined,
                 ),
-                const PillLabel(
+                const AppPill(
                   label: 'XP',
+                  variant: PillVariant.xp,
                   icon: Icons.bolt,
-                  color: AppTheme.mango,
                 ),
-                PillLabel(
+                AppPill(
                   label: l10n.onboardingTagStreak,
+                  variant: PillVariant.streak,
                   icon: Icons.local_fire_department,
-                  color: AppTheme.coral,
                 ),
               ],
             ),
             const SizedBox(height: 22),
             Text(l10n.onboardingTagline, style: theme.textTheme.titleLarge),
             const SizedBox(height: 12),
-            _OnboardingStepList(steps: steps),
+            AppCard(child: _OnboardingStepList(steps: steps)),
             const SizedBox(height: 18),
-            FilledButton.icon(
+            AppPrimaryButton(
               onPressed: () => context.go('/register'),
-              icon: const Icon(Icons.person_add_alt_1),
-              label: Text(l10n.onboardingRegisterButton),
+              icon: Icons.person_add_alt_1,
+              label: l10n.onboardingRegisterButton,
             ),
             const SizedBox(height: 10),
-            OutlinedButton.icon(
+            AppSecondaryButton(
               onPressed: () => context.go('/login'),
-              icon: const Icon(Icons.login),
-              label: Text(l10n.commonLogin),
+              icon: Icons.login,
+              label: l10n.commonLogin,
             ),
           ],
         ),
