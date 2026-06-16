@@ -2842,6 +2842,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('context'), findsWidgets);
+    expect(find.byType(AppCard), findsWidgets);
     await tester.scrollUntilVisible(
       find.text('词汇全解'),
       300,

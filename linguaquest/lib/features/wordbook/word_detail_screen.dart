@@ -3,15 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
-import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/utils/date_formatting.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/ai_word_support_link.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/pronunciation_controls.dart';
-import '../../core/widgets/quest_panel.dart';
 import '../../data/models/custom_word.dart';
 import '../../l10n/generated/app_localizations.dart';
 import 'word_knowledge_sections.dart';
@@ -36,10 +37,10 @@ class WordDetailScreen extends ConsumerWidget {
         leading: const FallbackBackButton(fallbackLocation: '/custom-words'),
         title: Text(word.word),
         actions: [
-          QuestIconButton(
+          IconButton(
             tooltip: l10n.commonEdit,
             onPressed: () => context.push('/custom-words/${word.id}/edit'),
-            icon: Icons.edit_outlined,
+            icon: const Icon(Icons.edit_outlined),
           ),
           const SizedBox(width: 12),
         ],
@@ -48,7 +49,7 @@ class WordDetailScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.all(AppTokens.s20),
           children: [
-            QuestPanel(
+            AppCard(
               padding: const EdgeInsets.all(AppTokens.s20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -94,19 +95,26 @@ class WordDetailScreen extends ConsumerWidget {
               spacing: 8,
               runSpacing: 8,
               children: [
-                PillLabel(label: displayCustomTag(word.tag)),
-                PillLabel(
-                  label: displayDifficulty(word.difficulty),
-                  color: AppTheme.coral,
+                AppPill(
+                  label: displayCustomTag(word.tag),
+                  variant: PillVariant.neutral,
                 ),
-                PillLabel(
+                AppPill(
+                  label: displayDifficulty(word.difficulty),
+                  variant: _difficultyVariant(word.difficulty),
+                ),
+                AppPill(
                   label: l10n.wordDetailMasteryLabel('${word.masteryLevel}'),
+                  variant: word.masteryLevel > 0
+                      ? PillVariant.success
+                      : PillVariant.neutral,
                   icon: Icons.psychology_outlined,
                 ),
-                PillLabel(
+                AppPill(
                   label: l10n.wordDetailNextReview(
                     formatRelativeDue(word.nextReviewAt, DateTime.now()),
                   ),
+                  variant: PillVariant.neutral,
                   icon: Icons.schedule_outlined,
                 ),
               ],
@@ -116,7 +124,7 @@ class WordDetailScreen extends ConsumerWidget {
             const SizedBox(height: 20),
             AiWordSupportLink(word: word.word),
             const SizedBox(height: 20),
-            QuestPanel(
+            AppCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -151,24 +159,38 @@ class WordDetailScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 20),
-            FilledButton.icon(
+            AppPrimaryButton(
               onPressed: canReview
                   ? () => _review(context, ref, word.id, isCorrect: true)
                   : null,
-              icon: const Icon(Icons.check_circle_outline),
-              label: Text(l10n.wordDetailMarkRemembered),
+              icon: Icons.check_circle_outline,
+              label: l10n.wordDetailMarkRemembered,
             ),
-            OutlinedButton.icon(
+            const SizedBox(height: 12),
+            AppSecondaryButton(
               onPressed: canReview
                   ? () => _review(context, ref, word.id, isCorrect: false)
                   : null,
-              icon: const Icon(Icons.replay),
-              label: Text(l10n.wordDetailScheduleSoon),
+              icon: Icons.replay,
+              label: l10n.wordDetailScheduleSoon,
             ),
           ],
         ),
       ),
     );
+  }
+
+  PillVariant _difficultyVariant(String difficulty) {
+    switch (difficulty) {
+      case 'Hard':
+        return PillVariant.streak;
+      case 'Medium':
+        return PillVariant.primary;
+      case 'Easy':
+        return PillVariant.success;
+      default:
+        return PillVariant.neutral;
+    }
   }
 
   CustomWord? _find(WidgetRef ref) {
