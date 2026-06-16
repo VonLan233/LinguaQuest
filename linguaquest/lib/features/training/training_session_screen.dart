@@ -6,10 +6,15 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
-import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_progress_bar.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/pronunciation_controls.dart';
 import '../../core/widgets/section_header.dart';
+import '../../core/widgets/word_choice_button.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/exercise_record.dart';
 import '../../data/models/lesson.dart';
@@ -226,20 +231,16 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
                   ),
                 ),
                 if (game == TrainingGameType.spelling)
-                  FilledButton.icon(
+                  AppPrimaryButton(
                     onPressed: _canSubmitSpelling
                         ? () => _submitAnswer(_textController.text.trim())
                         : null,
-                    icon: Icon(
-                      _checked
-                          ? Icons.arrow_forward_rounded
-                          : Icons.check_rounded,
-                    ),
-                    label: Text(
-                      _checked
-                          ? l10n.trainingNextQuestion
-                          : l10n.trainingSubmitSpelling,
-                    ),
+                    icon: _checked
+                        ? Icons.arrow_forward_rounded
+                        : Icons.check_rounded,
+                    label: _checked
+                        ? l10n.trainingNextQuestion
+                        : l10n.trainingSubmitSpelling,
                   ),
               ],
             ),
@@ -728,61 +729,52 @@ class _TrainingStatusLine extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(999),
-          child: LinearProgressIndicator(
-            value: progress,
-            minHeight: 12,
-            backgroundColor: AppTheme.progressTrack(context),
-            valueColor: AlwaysStoppedAnimation<Color>(
-              game == TrainingGameType.survival
-                  ? AppTheme.coral
-                  : AppTheme.teal,
-            ),
-          ),
-        ),
-        const SizedBox(height: 10),
+        AppProgressBar(value: progress, height: 12),
+        const SizedBox(height: AppTokens.s12),
         Wrap(
-          spacing: 8,
-          runSpacing: 8,
+          spacing: AppTokens.s8,
+          runSpacing: AppTokens.s8,
           children: [
             if (game == TrainingGameType.wordRush)
-              PillLabel(
+              AppPill(
                 label: '${remainingSeconds}s',
                 icon: Icons.timer_outlined,
-                color: AppTheme.coral,
+                variant: PillVariant.streak,
               ),
-            PillLabel(
+            AppPill(
               label: AppLocalizations.of(
                 context,
               ).trainingCorrectAttempts(correct, attempts),
               icon: Icons.check_rounded,
+              variant: PillVariant.success,
             ),
-            PillLabel(
+            AppPill(
               label: AppLocalizations.of(context).trainingStreak(streak),
               icon: Icons.bolt,
-              color: AppTheme.mango,
+              variant: PillVariant.xp,
             ),
-            PillLabel(
+            AppPill(
               label: AppLocalizations.of(
                 context,
               ).trainingAccuracyValue(accuracy),
               icon: Icons.insights_outlined,
+              variant: PillVariant.primary,
             ),
             if (game == TrainingGameType.survival)
-              PillLabel(
+              AppPill(
                 label: AppLocalizations.of(
                   context,
                 ).trainingSurvivalResources(revives, nodeRewards),
                 icon: Icons.favorite_border_rounded,
-                color: AppTheme.coral,
+                variant: PillVariant.streak,
               ),
             if (game == TrainingGameType.wordRush)
-              PillLabel(
+              AppPill(
                 label: AppLocalizations.of(
                   context,
                 ).trainingBestStreak(bestStreak),
                 icon: Icons.local_fire_department_outlined,
+                variant: PillVariant.xp,
               ),
           ],
         ),
@@ -810,44 +802,50 @@ class _TrainingPromptPanel extends StatelessWidget {
     final isAudioSpelling =
         game == TrainingGameType.spelling &&
         (int.tryParse(promptType) ?? 0) % 3 == 1;
-    return Column(
-      children: [
-        ImageCueBadge(cue: question.word.imageCue, size: 104),
-        const SizedBox(height: 14),
-        Text(
-          question.prompt,
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
-        if (isAudioSpelling) ...[
-          const SizedBox(height: 10),
-          Center(
-            child: PronunciationControls(
-              word: question.word.word,
-              compact: true,
+    return AppCard(
+      child: Column(
+        children: [
+          ImageCueBadge(cue: question.word.imageCue, size: 104),
+          const SizedBox(height: 14),
+          Text(
+            question.prompt,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          if (isAudioSpelling) ...[
+            const SizedBox(height: 10),
+            Center(
+              child: PronunciationControls(
+                word: question.word.word,
+                compact: true,
+              ),
             ),
+          ],
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: AppTokens.s8,
+            runSpacing: AppTokens.s8,
+            alignment: WrapAlignment.center,
+            children: [
+              AppPill(
+                label: game.title(AppLocalizations.of(context)),
+                icon: game.icon,
+                variant: PillVariant.primary,
+              ),
+              AppPill(
+                label: mistakesOnly
+                    ? AppLocalizations.of(context).trainingMistakesOnly
+                    : AppLocalizations.of(context).trainingRealSource,
+                variant: PillVariant.success,
+              ),
+              AppPill(
+                label: question.word.difficulty,
+                variant: PillVariant.streak,
+              ),
+            ],
           ),
         ],
-        const SizedBox(height: 12),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          alignment: WrapAlignment.center,
-          children: [
-            PillLabel(
-              label: game.title(AppLocalizations.of(context)),
-              icon: game.icon,
-              color: AppTheme.cyan,
-            ),
-            PillLabel(
-              label: mistakesOnly
-                  ? AppLocalizations.of(context).trainingMistakesOnly
-                  : AppLocalizations.of(context).trainingRealSource,
-            ),
-            PillLabel(label: question.word.difficulty, color: AppTheme.coral),
-          ],
-        ),
-      ],
+      ),
     );
   }
 }
@@ -865,98 +863,34 @@ class _ChoiceInput extends StatelessWidget {
   final bool checked;
   final ValueChanged<String> onSelected;
 
+  bool _isCorrectOption(String option) {
+    return option.toLowerCase() == question.answer.toLowerCase();
+  }
+
+  ChoiceState _optionState(String option) {
+    if (!checked) {
+      return selected == option ? ChoiceState.selected : ChoiceState.idle;
+    }
+    if (_isCorrectOption(option)) return ChoiceState.correct;
+    if (selected == option) return ChoiceState.wrong;
+    return ChoiceState.idle;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        for (final option in question.options)
-          _ChoiceAnswerButton(
-            option: option,
-            answer: question.answer,
-            selected: selected,
-            checked: checked,
-            onSelected: onSelected,
+        for (var i = 0; i < question.options.length; i++)
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppTokens.s12),
+            child: WordChoiceButton(
+              letter: String.fromCharCode(65 + i),
+              text: question.options[i],
+              state: _optionState(question.options[i]),
+              onTap: checked ? null : () => onSelected(question.options[i]),
+            ),
           ),
       ],
-    );
-  }
-}
-
-class _ChoiceAnswerButton extends StatelessWidget {
-  const _ChoiceAnswerButton({
-    required this.option,
-    required this.answer,
-    required this.selected,
-    required this.checked,
-    required this.onSelected,
-  });
-
-  final String option;
-  final String answer;
-  final String? selected;
-  final bool checked;
-  final ValueChanged<String> onSelected;
-
-  bool get _isCorrect => option.toLowerCase() == answer.toLowerCase();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isSelected = selected == option;
-    final background = !checked
-        ? Colors.transparent
-        : _isCorrect
-        ? AppTheme.mint
-        : isSelected
-        ? theme.colorScheme.errorContainer
-        : Colors.transparent;
-    final borderColor = !checked
-        ? theme.colorScheme.outlineVariant
-        : _isCorrect
-        ? AppTheme.teal
-        : isSelected
-        ? theme.colorScheme.error
-        : theme.colorScheme.outlineVariant;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: SizedBox(
-        width: double.infinity,
-        height: 66,
-        child: OutlinedButton(
-          onPressed: checked ? null : () => onSelected(option),
-          style: OutlinedButton.styleFrom(
-            splashFactory: checked ? NoSplash.splashFactory : null,
-            backgroundColor: background,
-            disabledBackgroundColor: background,
-            foregroundColor: theme.colorScheme.onSurface,
-            disabledForegroundColor: theme.colorScheme.onSurface,
-            side: BorderSide(
-              color: borderColor,
-              width: isSelected || _isCorrect ? 2 : 1,
-            ),
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.all(18),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  option,
-                  style: const TextStyle(fontWeight: FontWeight.w900),
-                ),
-              ),
-              if (checked && isSelected)
-                Icon(
-                  _isCorrect
-                      ? Icons.check_circle_outline
-                      : Icons.cancel_outlined,
-                ),
-              if (checked && !isSelected && _isCorrect)
-                const Icon(Icons.check_circle_outline),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
@@ -987,7 +921,7 @@ class _SpellingInput extends StatelessWidget {
             ? Icon(
                 isCorrect ? Icons.check_circle_outline : Icons.cancel_outlined,
                 color: isCorrect
-                    ? AppTheme.success
+                    ? AppTokens.successColor(context)
                     : Theme.of(context).colorScheme.error,
               )
             : null,
@@ -1015,38 +949,46 @@ class _TrainingFeedback extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final color = isCorrect ? AppTheme.success : theme.colorScheme.error;
+    final background = isCorrect ? AppTokens.successSoft : AppTokens.streakSoft;
+    final foreground = isCorrect
+        ? AppTokens.successSoftText
+        : AppTokens.streakSoftText;
     final survivalMessage = game == TrainingGameType.survival && !isCorrect
         ? (reviveConsumed
               ? AppLocalizations.of(context).trainingReviveConsumed
               : AppLocalizations.of(context).trainingReviveExhausted)
         : question.explanation;
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: color.withValues(alpha: 0.30)),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(
-            isCorrect ? Icons.check_circle_outline : Icons.cancel_outlined,
-            color: color,
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              isCorrect
-                  ? AppLocalizations.of(context).trainingCorrectFeedback
-                  : survivalMessage,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w800,
+    return AppCard(
+      padding: EdgeInsets.zero,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: background,
+          borderRadius: BorderRadius.circular(AppTokens.radiusCard),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(AppTokens.s16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(
+                isCorrect ? Icons.check_circle_outline : Icons.cancel_outlined,
+                color: foreground,
               ),
-            ),
+              const SizedBox(width: AppTokens.s8),
+              Expanded(
+                child: Text(
+                  isCorrect
+                      ? AppLocalizations.of(context).trainingCorrectFeedback
+                      : survivalMessage,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: foreground,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
