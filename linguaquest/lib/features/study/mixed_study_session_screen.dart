@@ -6,9 +6,14 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
-import '../../core/theme/app_theme.dart';
-import '../../core/widgets/empty_state.dart';
+import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
+import '../../core/widgets/app_progress_bar.dart';
 import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/mascot_empty_state.dart';
+import '../../core/widgets/word_choice_button.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -81,12 +86,12 @@ class _MixedStudySessionScreenState
               Padding(
                 padding: const EdgeInsets.only(right: 12),
                 child: Center(
-                  child: PillLabel(
+                  child: AppPill(
                     label: l10n.mixedReviewRatio(
                       '${(_plan!.reviewTargetRatio * 100).round()}',
                     ),
                     icon: Icons.shuffle_rounded,
-                    color: AppTheme.cyan,
+                    variant: PillVariant.primary,
                   ),
                 ),
               ),
@@ -107,19 +112,10 @@ class _MixedStudySessionScreenState
                       Row(
                         children: [
                           Expanded(
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(999),
-                              child: LinearProgressIndicator(
-                                value: progress,
-                                minHeight: 11,
-                                backgroundColor: AppTheme.progressTrack(
-                                  context,
-                                ),
-                              ),
-                            ),
+                            child: AppProgressBar(value: progress, height: 11),
                           ),
                           const SizedBox(width: 12),
-                          PillLabel(
+                          AppPill(
                             label: '${_completedItems + 1}/$total',
                             icon: Icons.auto_awesome_motion_outlined,
                           ),
@@ -127,11 +123,13 @@ class _MixedStudySessionScreenState
                       ),
                       const SizedBox(height: 14),
                       Expanded(
-                        child: current.step == StudySessionStep.understanding ||
+                        child:
+                            current.step == StudySessionStep.understanding ||
                                 current.isKnowledgeCard
                             ? _KnowledgeCardStep(
                                 item: current,
-                                showAssessment: current.step ==
+                                showAssessment:
+                                    current.step ==
                                     StudySessionStep.understanding,
                                 selectedConfidence: _confidence,
                                 isSubmitting: _isSubmitting,
@@ -373,7 +371,9 @@ class _MixedStudySessionScreenState
       options.add(distractorPool[index]);
     }
     while (options.length < 4) {
-      options.add(AppLocalizations.of(context).mixedUnsureOption(options.length));
+      options.add(
+        AppLocalizations.of(context).mixedUnsureOption(options.length),
+      );
     }
     options.shuffle(_random);
     return List.unmodifiable(options);
@@ -505,47 +505,64 @@ class _KnowledgeCardStep extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     return ListView(
       children: [
-        ImageCueBadge(cue: item.imageCue, size: 92),
-        const SizedBox(height: 16),
-        Text(
-          item.displayWord,
-          textAlign: TextAlign.center,
-          style: theme.textTheme.headlineMedium?.copyWith(
-            fontWeight: FontWeight.w900,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          item.meaning,
-          textAlign: TextAlign.center,
-          style: theme.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-        const SizedBox(height: 14),
-        Text(item.exampleSentence, textAlign: TextAlign.center),
-        const SizedBox(height: 24),
-        if (showAssessment) ...[
-          Text(l10n.mixedSelfAssessHint, style: theme.textTheme.titleMedium),
-          const SizedBox(height: 10),
-          SegmentedButton<int>(
-            segments: [
-              ButtonSegment(value: 5, label: Text(l10n.studyRecallKnown)),
-              ButtonSegment(value: 3, label: Text(l10n.studyRecallFuzzy)),
-              ButtonSegment(value: 1, label: Text(l10n.studyRecallUnknown)),
+        AppCard(
+          padding: const EdgeInsets.all(AppTokens.s20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(child: ImageCueBadge(cue: item.imageCue, size: 92)),
+              const SizedBox(height: 16),
+              Text(
+                item.displayWord,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                item.meaning,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              const SizedBox(height: 14),
+              Text(item.exampleSentence, textAlign: TextAlign.center),
+              const SizedBox(height: 24),
+              if (showAssessment) ...[
+                Text(
+                  l10n.mixedSelfAssessHint,
+                  style: theme.textTheme.titleMedium,
+                ),
+                const SizedBox(height: 10),
+                SegmentedButton<int>(
+                  style: SegmentedButton.styleFrom(
+                    selectedBackgroundColor: AppTokens.primarySoft,
+                    selectedForegroundColor: AppTokens.primarySoftText,
+                  ),
+                  segments: [
+                    ButtonSegment(value: 5, label: Text(l10n.studyRecallKnown)),
+                    ButtonSegment(value: 3, label: Text(l10n.studyRecallFuzzy)),
+                    ButtonSegment(
+                      value: 1,
+                      label: Text(l10n.studyRecallUnknown),
+                    ),
+                  ],
+                  selected: {selectedConfidence},
+                  onSelectionChanged: (values) =>
+                      onConfidenceChanged(values.first),
+                ),
+                const SizedBox(height: 20),
+              ],
+              AppPrimaryButton(
+                onPressed: isSubmitting ? null : onContinue,
+                icon: Icons.arrow_forward_rounded,
+                label: showAssessment
+                    ? l10n.mixedEnterRecognition
+                    : l10n.mixedAddLaterRecall,
+              ),
             ],
-            selected: {selectedConfidence},
-            onSelectionChanged: (values) => onConfidenceChanged(values.first),
-          ),
-          const SizedBox(height: 20),
-        ],
-        FilledButton.icon(
-          onPressed: isSubmitting ? null : onContinue,
-          icon: const Icon(Icons.arrow_forward_rounded),
-          label: Text(
-            showAssessment
-                ? l10n.mixedEnterRecognition
-                : l10n.mixedAddLaterRecall,
           ),
         ),
       ],
@@ -592,78 +609,74 @@ class _QuestionStep extends StatelessWidget {
           runSpacing: 8,
           alignment: WrapAlignment.center,
           children: [
-            PillLabel(
+            AppPill(
               label: _stepLabelFor(l10n),
               icon: Icons.psychology_alt_outlined,
             ),
             if (item.isReview)
-              PillLabel(
+              AppPill(
                 label: l10n.mixedReviewQuickAnswer,
                 icon: Icons.flash_on_outlined,
+                variant: PillVariant.xp,
               ),
           ],
         ),
         const SizedBox(height: 18),
         Expanded(
-          child: ListView(
-            children: [
-              for (final option in options)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: SizedBox(
-                    height: 64,
-                    child: OutlinedButton(
-                      onPressed: checked ? null : () => onSelected(option),
-                      style: OutlinedButton.styleFrom(
-                        alignment: Alignment.centerLeft,
-                        backgroundColor: _optionBackground(context, option),
-                        foregroundColor: _optionForeground(context, option),
-                        side: BorderSide(
-                          color: _optionBorder(context, option),
-                          width: 2,
-                        ),
-                      ),
-                      child: Text(
-                        option,
-                        style: const TextStyle(fontWeight: FontWeight.w900),
-                      ),
+          child: AppCard(
+            child: ListView(
+              children: [
+                for (var i = 0; i < options.length; i++)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: WordChoiceButton(
+                      letter: String.fromCharCode(65 + i),
+                      text: options[i],
+                      state: _optionState(options[i]),
+                      onTap: checked ? null : () => onSelected(options[i]),
                     ),
                   ),
-                ),
-              if (checked) ...[
-                const SizedBox(height: 8),
-                Text(
-                  lastCorrect
-                      ? l10n.mixedFeedbackCorrect
-                      : item.isReview
-                      ? l10n.mixedFeedbackWrong
-                      : l10n.mixedFeedbackRetry,
-                  style: TextStyle(
-                    color: lastCorrect
-                        ? AppTheme.success
-                        : theme.colorScheme.error,
-                    fontWeight: FontWeight.w800,
+                if (checked) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    lastCorrect
+                        ? l10n.mixedFeedbackCorrect
+                        : item.isReview
+                        ? l10n.mixedFeedbackWrong
+                        : l10n.mixedFeedbackRetry,
+                    style: TextStyle(
+                      color: lastCorrect
+                          ? AppTokens.successColor(context)
+                          : AppTokens.coralColor(context),
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
-                ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
-        FilledButton.icon(
+        const SizedBox(height: 14),
+        AppPrimaryButton(
           onPressed: selected == null || isSubmitting ? null : onPrimary,
-          icon: Icon(
-            checked ? Icons.arrow_forward_rounded : Icons.check_rounded,
-          ),
-          label: Text(
-            checked
-                ? (lastCorrect || item.isReview
-                      ? l10n.commonContinue
-                      : l10n.commonRetry)
-                : l10n.commonCheck,
-          ),
+          icon: checked ? Icons.arrow_forward_rounded : Icons.check_rounded,
+          label: checked
+              ? (lastCorrect || item.isReview
+                    ? l10n.commonContinue
+                    : l10n.commonRetry)
+              : l10n.commonCheck,
         ),
       ],
     );
+  }
+
+  ChoiceState _optionState(String option) {
+    if (!checked) {
+      return selected == option ? ChoiceState.selected : ChoiceState.idle;
+    }
+    if (option == item.meaning) return ChoiceState.correct;
+    if (option == selected) return ChoiceState.wrong;
+    return ChoiceState.idle;
   }
 
   String _promptFor(AppLocalizations l10n) {
@@ -690,37 +703,6 @@ class _QuestionStep extends StatelessWidget {
         return l10n.mixedStepKnowledge;
     }
   }
-
-  Color _optionBackground(BuildContext context, String option) {
-    if (!checked) {
-      return selected == option
-          ? AppTheme.selectedSurface(context)
-          : Theme.of(context).colorScheme.surface;
-    }
-    if (option == item.meaning) return AppTheme.success.withValues(alpha: 0.12);
-    if (option == selected) {
-      return Theme.of(context).colorScheme.error.withValues(alpha: 0.12);
-    }
-    return Theme.of(context).colorScheme.surface;
-  }
-
-  Color _optionForeground(BuildContext context, String option) {
-    if (!checked) return Theme.of(context).colorScheme.onSurface;
-    if (option == item.meaning) return AppTheme.success;
-    if (option == selected) return Theme.of(context).colorScheme.error;
-    return Theme.of(context).colorScheme.onSurface;
-  }
-
-  Color _optionBorder(BuildContext context, String option) {
-    if (!checked) {
-      return selected == option
-          ? Theme.of(context).colorScheme.primary
-          : Theme.of(context).colorScheme.outlineVariant;
-    }
-    if (option == item.meaning) return AppTheme.success;
-    if (option == selected) return Theme.of(context).colorScheme.error;
-    return Theme.of(context).colorScheme.outlineVariant;
-  }
 }
 
 class _CompleteView extends StatelessWidget {
@@ -737,14 +719,13 @@ class _CompleteView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return EmptyState(
-      icon: Icons.check_circle_outline,
+    return MascotEmptyState(
       title: hasProgress ? l10n.mixedCompleteTitle : l10n.mixedNoContentTitle,
       message: hasProgress ? l10n.mixedCompleteBody : l10n.mixedNoContentBody,
-      action: FilledButton.icon(
+      action: AppPrimaryButton(
         onPressed: isSubmitting ? null : onFinish,
-        icon: const Icon(Icons.home_outlined),
-        label: Text(l10n.mixedSaveAndHome),
+        icon: Icons.home_outlined,
+        label: l10n.mixedSaveAndHome,
       ),
     );
   }

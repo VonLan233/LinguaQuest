@@ -342,6 +342,8 @@ void main() {
     expect(find.textContaining('ambiguous'), findsWidgets);
     expect(find.text('检查'), findsOneWidget);
     expect(find.text('管理复习队列'), findsOneWidget);
+    // Cozy Quest cards landed on the mixed study session screen.
+    expect(find.byType(AppCard), findsWidgets);
     expect(find.text('记住了'), findsNothing);
     expect(find.text('没记住'), findsNothing);
     expect(find.text('显示释义'), findsNothing);
@@ -3527,8 +3529,7 @@ void main() {
       await tester.tap(find.text('再试一次'));
       await tester.pumpAndSettle();
     }
-    await tester.tap(find.widgetWithText(OutlinedButton, firstWord.meaning));
-    await tester.pumpAndSettle();
+    await _tapOption(tester, firstWord.meaning);
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('继续'));
