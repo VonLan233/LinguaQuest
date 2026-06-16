@@ -5,10 +5,11 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/utils/ui_labels.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
-import '../../core/widgets/quest_panel.dart';
-import '../../core/widgets/status_badge.dart';
 import '../../data/models/lottery.dart';
 import '../../data/repositories/lottery_repository.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -52,7 +53,7 @@ class _LotteryPanel extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        QuestPanel(
+        AppCard(
           padding: const EdgeInsets.all(AppTokens.s20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -89,14 +90,14 @@ class _LotteryPanel extends ConsumerWidget {
                 spacing: AppTokens.s8,
                 runSpacing: AppTokens.s8,
                 children: [
-                  StatusBadge(
+                  AppPill(
                     label: l10n.luckyDrawInventoryCount(inventoryCount),
-                    tone: StatusTone.info,
+                    variant: PillVariant.primary,
                     icon: Icons.inventory_2_outlined,
                   ),
-                  StatusBadge(
+                  AppPill(
                     label: l10n.luckyDrawNoBoost,
-                    tone: StatusTone.danger,
+                    variant: PillVariant.neutral,
                     icon: Icons.balance_outlined,
                   ),
                 ],
@@ -105,20 +106,23 @@ class _LotteryPanel extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: AppTokens.s12),
-        QuestPanel(
-          child: _ProbabilityList(prizes: state.lotteryPrizes),
-        ),
+        AppCard(child: _ProbabilityList(prizes: state.lotteryPrizes)),
         const SizedBox(height: AppTokens.s16),
-        FilledButton.icon(
-          onPressed: canDraw ? () => _draw(context, ref) : null,
-          icon: state.isLoading
-              ? const SizedBox(
-                  width: 18,
-                  height: 18,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const Icon(Icons.casino_outlined),
-          label: Text(canDraw ? l10n.luckyDrawNow : l10n.luckyDrawInsufficient),
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            AppPrimaryButton(
+              onPressed: canDraw ? () => _draw(context, ref) : null,
+              icon: state.isLoading ? null : Icons.casino_outlined,
+              label: canDraw ? l10n.luckyDrawNow : l10n.luckyDrawInsufficient,
+            ),
+            if (state.isLoading)
+              const SizedBox(
+                width: 18,
+                height: 18,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+          ],
         ),
         if ((user?.xp ?? 0) < lotteryDrawCost) ...[
           const SizedBox(height: AppTokens.s8),
