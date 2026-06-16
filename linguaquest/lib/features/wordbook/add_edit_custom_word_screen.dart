@@ -4,7 +4,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
 import '../../core/utils/ui_labels.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../data/models/custom_word.dart';
@@ -59,72 +62,78 @@ class _AddEditCustomWordScreenState
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(AppTokens.s20),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                TextFormField(
-                  controller: _wordController,
-                  decoration: InputDecoration(
-                    labelText: l10n.customWordsFieldWord,
-                    prefixIcon: const Icon(Icons.abc),
+                AppCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      TextFormField(
+                        controller: _wordController,
+                        decoration: InputDecoration(
+                          labelText: l10n.customWordsFieldWord,
+                          prefixIcon: const Icon(Icons.abc),
+                        ),
+                        validator: (value) => _required(value, l10n),
+                      ),
+                      const SizedBox(height: AppTokens.s12),
+                      TextFormField(
+                        controller: _meaningController,
+                        decoration: InputDecoration(
+                          labelText: l10n.customWordsFieldMeaning,
+                          prefixIcon: const Icon(Icons.translate),
+                        ),
+                        validator: (value) => _required(value, l10n),
+                      ),
+                      const SizedBox(height: AppTokens.s12),
+                      TextFormField(
+                        controller: _exampleController,
+                        decoration: InputDecoration(
+                          labelText: l10n.customWordsFieldExample,
+                          prefixIcon: const Icon(Icons.notes_outlined),
+                        ),
+                        minLines: 2,
+                        maxLines: 4,
+                        validator: (value) => _required(value, l10n),
+                      ),
+                      const SizedBox(height: AppTokens.s12),
+                      TextFormField(
+                        controller: _noteController,
+                        decoration: InputDecoration(
+                          labelText: l10n.customWordsFieldNote,
+                          prefixIcon: const Icon(Icons.edit_note),
+                        ),
+                        minLines: 2,
+                        maxLines: 4,
+                      ),
+                      const SizedBox(height: AppTokens.s12),
+                      TextFormField(
+                        controller: _tagController,
+                        decoration: InputDecoration(
+                          labelText: l10n.customWordsFieldTag,
+                          prefixIcon: const Icon(Icons.sell_outlined),
+                        ),
+                      ),
+                      const SizedBox(height: AppTokens.s16),
+                      _DifficultySelector(
+                        selected: _difficulty,
+                        onSelected: (value) =>
+                            setState(() => _difficulty = value),
+                      ),
+                    ],
                   ),
-                  validator: (value) => _required(value, l10n),
                 ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _meaningController,
-                  decoration: InputDecoration(
-                    labelText: l10n.customWordsFieldMeaning,
-                    prefixIcon: const Icon(Icons.translate),
-                  ),
-                  validator: (value) => _required(value, l10n),
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _exampleController,
-                  decoration: InputDecoration(
-                    labelText: l10n.customWordsFieldExample,
-                    prefixIcon: const Icon(Icons.notes_outlined),
-                  ),
-                  minLines: 2,
-                  maxLines: 4,
-                  validator: (value) => _required(value, l10n),
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _noteController,
-                  decoration: InputDecoration(
-                    labelText: l10n.customWordsFieldNote,
-                    prefixIcon: const Icon(Icons.edit_note),
-                  ),
-                  minLines: 2,
-                  maxLines: 4,
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _tagController,
-                  decoration: InputDecoration(
-                    labelText: l10n.customWordsFieldTag,
-                    prefixIcon: const Icon(Icons.sell_outlined),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                _DifficultySelector(
-                  selected: _difficulty,
-                  onSelected: (value) => setState(() => _difficulty = value),
-                ),
-                const SizedBox(height: 22),
-                FilledButton.icon(
+                const SizedBox(height: AppTokens.s24),
+                AppPrimaryButton(
+                  icon: Icons.save_outlined,
+                  label: isEditing
+                      ? l10n.customWordsSaveEdit
+                      : l10n.customWordsCreate,
                   onPressed: () => _save(existing),
-                  icon: const Icon(Icons.save_outlined),
-                  label: Text(
-                    isEditing
-                        ? l10n.customWordsSaveEdit
-                        : l10n.customWordsCreate,
-                  ),
                 ),
               ],
             ),
