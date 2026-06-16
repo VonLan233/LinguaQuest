@@ -11,6 +11,7 @@ import 'package:linguaquest/core/routing/app_router.dart';
 import 'package:linguaquest/core/state/app_controller.dart';
 import 'package:linguaquest/core/state/app_state.dart';
 import 'package:linguaquest/core/theme/app_theme.dart';
+import 'package:linguaquest/core/widgets/app_card.dart';
 import 'package:linguaquest/core/widgets/learning_badges.dart';
 import 'package:linguaquest/core/widgets/pronunciation_controls.dart';
 import 'package:linguaquest/core/widgets/word_choice_button.dart';
@@ -101,6 +102,9 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('今日词条'), findsOneWidget);
+
+    // Cozy Quest cards landed on home.
+    expect(find.byType(AppCard), findsWidgets);
   });
 
   testWidgets('home progress uses the combined new and review target', (
