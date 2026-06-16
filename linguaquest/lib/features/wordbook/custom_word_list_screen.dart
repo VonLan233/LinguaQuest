@@ -5,9 +5,13 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/ui_labels.dart';
-import '../../core/widgets/empty_state.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
+import '../../core/widgets/app_progress_bar.dart';
+import '../../core/widgets/app_button.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/mascot_empty_state.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/custom_word.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -47,8 +51,9 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
               child: SectionHeader(
                 title: l10n.customWordsMyCards,
                 subtitle: l10n.customWordsMyCardsSubtitle,
-                trailing: PillLabel(
+                trailing: AppPill(
                   label: l10n.customWordsCardCount(state.customWords.length),
+                  variant: PillVariant.neutral,
                   icon: Icons.add_card_outlined,
                 ),
               ),
@@ -92,14 +97,13 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
             ),
             Expanded(
               child: words.isEmpty
-                  ? EmptyState(
-                      icon: Icons.style_outlined,
+                  ? MascotEmptyState(
                       title: l10n.customWordsNoMatchTitle,
                       message: l10n.customWordsNoMatchMessage,
-                      action: FilledButton.icon(
+                      action: AppPrimaryButton(
                         onPressed: () => context.push('/custom-words/new'),
-                        icon: const Icon(Icons.add),
-                        label: Text(l10n.customWordsAddCard),
+                        icon: Icons.add,
+                        label: l10n.customWordsAddCard,
                       ),
                     )
                   : ListView.separated(
@@ -186,65 +190,57 @@ class _CustomWordTile extends StatelessWidget {
     final mastery = word.masteryLevel / 5;
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
-    return Material(
-      color: Colors.transparent,
-      borderRadius: BorderRadius.circular(12),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () => context.push('/custom-words/${word.id}'),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6),
-          child: Row(
-            children: [
-              ImageCueBadge(cue: wordInitialCue(word.word), size: 58),
-              const SizedBox(width: 13),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    return AppCard(
+      onTap: () => context.push('/custom-words/${word.id}'),
+      child: Row(
+        children: [
+          ImageCueBadge(cue: wordInitialCue(word.word), size: 58),
+          const SizedBox(width: 13),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            word.word,
-                            style: theme.textTheme.titleMedium,
-                          ),
-                        ),
-                        PillLabel(
-                          label: displayDifficulty(word.difficulty),
-                          color: AppTheme.coral,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      '${word.meaning} · ${displayCustomTag(word.tag)}',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: theme.colorScheme.onSurface),
-                    ),
-                    const SizedBox(height: 9),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(999),
-                      child: LinearProgressIndicator(
-                        value: mastery,
-                        minHeight: 8,
-                        backgroundColor: AppTheme.progressTrack(context),
+                    Expanded(
+                      child: Text(
+                        word.word,
+                        style: theme.textTheme.titleMedium,
                       ),
+                    ),
+                    AppPill(
+                      label: displayDifficulty(word.difficulty),
+                      variant: _difficultyVariant(word.difficulty),
                     ),
                   ],
                 ),
-              ),
-              QuestIconButton(
-                tooltip: l10n.commonDelete,
-                icon: Icons.delete_outline,
-                color: AppTheme.coral,
-                onPressed: onDelete,
-              ),
-            ],
+                const SizedBox(height: 3),
+                Text(
+                  '${word.meaning} · ${displayCustomTag(word.tag)}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: theme.colorScheme.onSurface),
+                ),
+                const SizedBox(height: 9),
+                AppProgressBar(value: mastery),
+              ],
+            ),
           ),
-        ),
+          QuestIconButton(
+            tooltip: l10n.commonDelete,
+            icon: Icons.delete_outline,
+            color: AppTheme.coral,
+            onPressed: onDelete,
+          ),
+        ],
       ),
     );
   }
+
+  PillVariant _difficultyVariant(String difficulty) => switch (difficulty) {
+    'Hard' => PillVariant.streak,
+    'Medium' => PillVariant.primary,
+    'Easy' => PillVariant.success,
+    _ => PillVariant.neutral,
+  };
 }
