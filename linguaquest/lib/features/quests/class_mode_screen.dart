@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/section_header.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -37,29 +40,37 @@ class _ClassModeScreenState extends State<ClassModeScreen> {
               title: l10n.classModeTitle,
               subtitle: l10n.classModeSubtitle,
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _codeController,
-              decoration: InputDecoration(
-                labelText: l10n.questClassCode,
-                prefixIcon: const Icon(Icons.key_outlined),
+            const SizedBox(height: AppTokens.s16),
+            AppCard(
+              child: Column(
+                children: [
+                  TextField(
+                    controller: _codeController,
+                    decoration: InputDecoration(
+                      labelText: l10n.questClassCode,
+                      prefixIcon: const Icon(Icons.key_outlined),
+                    ),
+                  ),
+                  const SizedBox(height: AppTokens.s12),
+                  AppPrimaryButton(
+                    onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          l10n.classModeJoined(_codeController.text),
+                        ),
+                      ),
+                    ),
+                    icon: Icons.group_add_outlined,
+                    label: l10n.classModeJoin,
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 12),
-            FilledButton.icon(
-              onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(l10n.classModeJoined(_codeController.text)),
-                ),
-              ),
-              icon: const Icon(Icons.group_add_outlined),
-              label: Text(l10n.classModeJoin),
-            ),
-            const SizedBox(height: 16),
-            OutlinedButton.icon(
+            const SizedBox(height: AppTokens.s16),
+            AppSecondaryButton(
               onPressed: () => context.push('/class-progress'),
-              icon: const Icon(Icons.query_stats_outlined),
-              label: Text(l10n.classModeViewProgress),
+              icon: Icons.query_stats_outlined,
+              label: l10n.classModeViewProgress,
             ),
           ],
         ),

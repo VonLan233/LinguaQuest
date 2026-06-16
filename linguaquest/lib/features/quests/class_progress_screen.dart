@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
+import '../../core/widgets/app_progress_bar.dart';
 import '../../core/widgets/fallback_back_button.dart';
-import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../l10n/generated/app_localizations.dart';
 
@@ -48,27 +50,44 @@ class _ClassProgressRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final percent = (int.tryParse(row.$2.replaceAll('%', '')) ?? 0) / 100;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        children: [
-          Icon(Icons.assignment_outlined, color: theme.colorScheme.primary),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      padding: const EdgeInsets.only(bottom: AppTokens.s12),
+      child: AppCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                Text(row.$1, style: theme.textTheme.titleMedium),
-                const SizedBox(height: 3),
-                Text(
-                  AppLocalizations.of(context).classProgressWeakWord(row.$3),
-                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                Icon(
+                  Icons.assignment_outlined,
+                  color: theme.colorScheme.primary,
                 ),
+                const SizedBox(width: AppTokens.s12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(row.$1, style: theme.textTheme.titleMedium),
+                      const SizedBox(height: 3),
+                      Text(
+                        AppLocalizations.of(
+                          context,
+                        ).classProgressWeakWord(row.$3),
+                        style: TextStyle(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                AppPill(label: row.$2, variant: PillVariant.primary),
               ],
             ),
-          ),
-          PillLabel(label: row.$2, color: AppTheme.cyan),
-        ],
+            const SizedBox(height: AppTokens.s12),
+            AppProgressBar(value: percent),
+          ],
+        ),
       ),
     );
   }

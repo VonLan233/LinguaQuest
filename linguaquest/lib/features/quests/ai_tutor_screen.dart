@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_card.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/section_header.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -37,10 +39,7 @@ class _AiTutorScreenState extends State<AiTutorScreen> {
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            SectionHeader(
-              title: '即时反馈',
-              subtitle: l10n.aiTutorSubtitle,
-            ),
+            SectionHeader(title: '即时反馈', subtitle: l10n.aiTutorSubtitle),
             const SizedBox(height: 16),
             TextField(
               controller: _promptController,
@@ -51,22 +50,24 @@ class _AiTutorScreenState extends State<AiTutorScreen> {
                 prefixIcon: const Icon(Icons.smart_toy_outlined),
               ),
             ),
-            const SizedBox(height: 16),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(
-                  Icons.psychology_alt_outlined,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    l10n.aiTutorSampleAnswer,
-                    style: Theme.of(context).textTheme.bodyLarge,
+            const SizedBox(height: AppTokens.s16),
+            AppCard(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.psychology_alt_outlined,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
-                ),
-              ],
+                  const SizedBox(width: AppTokens.s12),
+                  Expanded(
+                    child: Text(
+                      l10n.aiTutorSampleAnswer,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
