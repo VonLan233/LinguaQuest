@@ -84,4 +84,21 @@ void main() {
     );
     expect(find.text('稍后'), findsOneWidget);
   });
+
+  testWidgets('AppSecondaryButton renders optional leading icon',
+      (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: AppSecondaryButton(
+            label: '收藏',
+            icon: Icons.star_border_rounded,
+            onPressed: () {},
+          ),
+        ),
+      ),
+    );
+    expect(find.text('收藏'), findsOneWidget);
+    expect(find.byIcon(Icons.star_border_rounded), findsOneWidget);
+  });
 }

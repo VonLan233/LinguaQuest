@@ -82,30 +82,46 @@ class _AppPrimaryButtonState extends State<AppPrimaryButton> {
   }
 }
 
-/// Secondary action: white fill, azure label, soft outline.
+/// Secondary action: white fill, azure label, soft outline. Optional leading
+/// [icon] (mirrors [AppPrimaryButton]).
 class AppSecondaryButton extends StatelessWidget {
   const AppSecondaryButton({
     required this.label,
     required this.onPressed,
+    this.icon,
     super.key,
   });
 
   final String label;
   final VoidCallback? onPressed;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
-      onPressed: onPressed,
-      style: OutlinedButton.styleFrom(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        foregroundColor: AppTokens.azure,
-        side: const BorderSide(color: AppTokens.primarySoftText, width: 2),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppTokens.radiusButton),
-        ),
+    final style = OutlinedButton.styleFrom(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      foregroundColor: AppTokens.azure,
+      side: const BorderSide(color: AppTokens.primarySoftText, width: 2),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppTokens.radiusButton),
       ),
-      child: Text(label, style: const TextStyle(fontWeight: FontWeight.w800)),
+    );
+    final labelWidget = Text(
+      label,
+      style: const TextStyle(fontWeight: FontWeight.w800),
+    );
+    if (icon == null) {
+      return OutlinedButton(
+        onPressed: onPressed,
+        style: style,
+        child: labelWidget,
+      );
+    }
+    return OutlinedButton.icon(
+      onPressed: onPressed,
+      style: style,
+      icon: Icon(icon, size: 18),
+      label: labelWidget,
     );
   }
 }
