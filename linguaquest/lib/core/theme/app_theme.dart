@@ -157,7 +157,7 @@ class AppTheme {
       navigationBarTheme: NavigationBarThemeData(
         height: 76,
         elevation: 0,
-        backgroundColor: isDark ? scheme.surfaceContainer : Colors.white,
+        backgroundColor: isDark ? scheme.surfaceContainer : lightSurface,
         indicatorColor: isDark ? scheme.primaryContainer : mint,
         labelTextStyle: WidgetStateProperty.resolveWith(
           (states) => TextStyle(
