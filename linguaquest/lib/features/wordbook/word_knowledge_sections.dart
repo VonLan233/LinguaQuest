@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/learning_badges.dart';
-import '../../core/widgets/status_badge.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 
@@ -224,10 +224,10 @@ class _DisclosureBody extends StatelessWidget {
       children: [
         if (synonyms != null)
           for (final value in synonyms)
-            StatusBadge(label: value, tone: StatusTone.success),
+            AppPill(label: value, variant: PillVariant.success),
         if (antonyms != null)
           for (final value in antonyms)
-            StatusBadge(label: value, tone: StatusTone.danger),
+            AppPill(label: value, variant: PillVariant.streak),
       ],
     );
   }
