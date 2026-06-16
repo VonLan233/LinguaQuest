@@ -6,15 +6,14 @@ import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/utils/ui_labels.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/brand_hero_card.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/progress_ring.dart';
-import '../../core/widgets/quest_list_row.dart';
-import '../../core/widgets/quest_panel.dart';
 import '../../core/widgets/section_header.dart';
 import '../../core/widgets/segmented_tabs.dart';
-import '../../core/widgets/status_badge.dart';
 import '../../data/models/lesson.dart';
 import '../../l10n/generated/app_localizations.dart';
 
@@ -66,22 +65,24 @@ class WordbookScreen extends ConsumerWidget {
               spacing: AppTokens.s8,
               runSpacing: AppTokens.s8,
               children: [
-                PillLabel(
+                AppPill(
                   label: l10n.wordbookTargetWords(
                     currentBook?.totalWords ?? words.length,
                   ),
                   icon: Icons.style_outlined,
-                  color: AppTheme.cyan,
+                  variant: PillVariant.primary,
                 ),
-                PillLabel(
+                AppPill(
                   label: l10n.wordbookBookCount(state.wordBooks.length),
                   icon: Icons.library_books_outlined,
+                  variant: PillVariant.primary,
                 ),
-                PillLabel(
+                AppPill(
                   label: l10n.wordbookCompletion(
                     (state.learningPathProgress * 100).round(),
                   ),
                   icon: Icons.route_outlined,
+                  variant: PillVariant.success,
                 ),
               ],
             ),
@@ -230,8 +231,7 @@ class _WordBookSwitcher extends StatelessWidget {
       children: [
         SegmentedTabs(
           labels: [
-            for (final book in books)
-              displayWordbookTitle(book.id, l10n: l10n),
+            for (final book in books) displayWordbookTitle(book.id, l10n: l10n),
           ],
           selectedIndex: activeIndex,
           onChanged: (index) {
@@ -241,7 +241,7 @@ class _WordBookSwitcher extends StatelessWidget {
           },
         ),
         const SizedBox(height: AppTokens.s12),
-        QuestPanel(
+        AppCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -254,9 +254,13 @@ class _WordBookSwitcher extends StatelessWidget {
                 spacing: AppTokens.s8,
                 runSpacing: AppTokens.s8,
                 children: [
-                  PillLabel(label: selectedBook.examType),
-                  PillLabel(
+                  AppPill(
+                    label: selectedBook.examType,
+                    variant: PillVariant.primary,
+                  ),
+                  AppPill(
                     label: l10n.wordbookTotalWords(selectedBook.totalWords),
+                    variant: PillVariant.primary,
                   ),
                 ],
               ),
@@ -276,32 +280,67 @@ class _TargetWordRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final isHard = word.difficulty == 'Hard';
+    final accent = isHard ? AppTokens.coralColor(context) : AppTheme.cyan;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppTokens.s8),
-      child: QuestListRow(
-        icon: Icons.menu_book_outlined,
-        iconColor: isHard ? AppTokens.coralColor(context) : AppTheme.cyan,
-        title: word.word.toLowerCase(),
-        subtitle:
-            '${word.meaning}\n${word.phonetic} · ${word.partOfSpeech}',
+      child: AppCard(
+        padding: const EdgeInsets.all(AppTokens.s12),
         onTap: () => context.push('/wordbook/${word.id}'),
-        showChevron: false,
-        trailing: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.end,
+        child: Row(
           children: [
-            StatusBadge(
-              label: displayDifficulty(word.difficulty),
-              tone: isHard ? StatusTone.danger : StatusTone.info,
-            ),
-            if (word.tags.isNotEmpty) ...[
-              const SizedBox(height: AppTokens.s4),
-              StatusBadge(
-                label: displayWordTag(word.tags.first),
-                tone: StatusTone.neutral,
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: accent.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
               ),
-            ],
+              alignment: Alignment.center,
+              child: Icon(Icons.menu_book_outlined, size: 22, color: accent),
+            ),
+            const SizedBox(width: AppTokens.s12),
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    word.word.toLowerCase(),
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: AppTokens.s2),
+                  Text(
+                    '${word.meaning}\n${word.phonetic} · ${word.partOfSpeech}',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: AppTokens.s8),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                AppPill(
+                  label: displayDifficulty(word.difficulty),
+                  variant: isHard ? PillVariant.streak : PillVariant.primary,
+                ),
+                if (word.tags.isNotEmpty) ...[
+                  const SizedBox(height: AppTokens.s4),
+                  AppPill(
+                    label: displayWordTag(word.tags.first),
+                    variant: PillVariant.primary,
+                  ),
+                ],
+              ],
+            ),
           ],
         ),
       ),

@@ -2942,6 +2942,7 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(find.text('context'), findsOneWidget);
     expect(find.text('简单'), findsOneWidget);
+    expect(find.byType(AppCard), findsWidgets);
   });
 
   test('deadline planning saves daily words into the profile', () async {
