@@ -10,6 +10,7 @@ import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
+import '../../core/widgets/top_notice.dart';
 import '../../data/models/custom_word.dart';
 import '../../l10n/generated/app_localizations.dart';
 
@@ -175,10 +176,10 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
     if (isReinforcementPass) {
       _completeCurrentReview(word, requeue: false);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context).reviewStudyReinforced),
-        ),
+      showTopNotice(
+        context,
+        AppLocalizations.of(context).reviewStudyReinforced,
+        icon: Icons.check_circle_outline,
       );
       return;
     }
@@ -202,9 +203,11 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
     final message = isCorrect
         ? l10n.reviewStudyRememberedMessage
         : l10n.reviewStudyNeedsReinforcementMessage;
-    ScaffoldMessenger.of(
+    showTopNotice(
       context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+      message,
+      icon: isCorrect ? Icons.check_circle_outline : Icons.replay_rounded,
+    );
     _completeCurrentReview(word, requeue: !isCorrect);
   }
 
