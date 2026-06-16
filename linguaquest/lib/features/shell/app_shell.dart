@@ -49,6 +49,7 @@ class _AppShellState extends State<AppShell> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.paper,
       body: SafeArea(
         bottom: false,
         child: GestureDetector(
@@ -58,12 +59,15 @@ class _AppShellState extends State<AppShell> {
             _dragDeltaX += details.primaryDelta ?? 0;
           },
           onHorizontalDragEnd: _handleHorizontalDrag,
-          child: ClipRect(
-            child: AnimatedSlide(
-              offset: _pageOffset,
-              duration: const Duration(milliseconds: 260),
-              curve: Curves.easeOutCubic,
-              child: widget.child,
+          child: ColoredBox(
+            color: AppTheme.paper,
+            child: ClipRect(
+              child: AnimatedSlide(
+                offset: _pageOffset,
+                duration: const Duration(milliseconds: 260),
+                curve: Curves.easeOutCubic,
+                child: widget.child,
+              ),
             ),
           ),
         ),
