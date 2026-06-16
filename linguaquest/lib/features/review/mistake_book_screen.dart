@@ -3,12 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
-import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
-import '../../core/widgets/empty_state.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
-import '../../core/widgets/quest_list_row.dart';
-import '../../core/widgets/status_badge.dart';
+import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/mascot_empty_state.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -38,14 +39,13 @@ class MistakeBookScreen extends ConsumerWidget {
           ),
           children: [
             if (lessonMistakes.isEmpty && weakWords.isEmpty)
-              EmptyState(
-                icon: Icons.check_circle_outline,
+              MascotEmptyState(
                 title: l10n.mistakeBookCleared,
                 message: l10n.mistakeBookClearedMsg,
-                action: OutlinedButton.icon(
+                action: AppSecondaryButton(
                   onPressed: () => context.go('/learn'),
-                  icon: const Icon(Icons.play_arrow_rounded),
-                  label: Text(l10n.commonContinue),
+                  icon: Icons.play_arrow_rounded,
+                  label: l10n.commonContinue,
                 ),
               )
             else ...[
@@ -88,17 +88,35 @@ class _MistakeWordRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: AppTokens.s8),
-      child: QuestListRow(
-        icon: Icons.school_outlined,
-        iconColor: AppTokens.coralColor(context),
-        title: mistake.word.word,
-        subtitle: mistake.explanation,
-        showChevron: false,
-        trailing: StatusBadge(
-          label: l10n.mistakeBookLessonMistakes,
-          tone: StatusTone.danger,
+      child: AppCard(
+        child: Row(
+          children: [
+            ImageCueBadge(cue: mistake.word.imageCue, size: 52),
+            const SizedBox(width: AppTokens.s12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(mistake.word.word, style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 3),
+                  Text(
+                    mistake.explanation,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: AppTokens.s8),
+            AppPill(
+              label: l10n.mistakeBookLessonMistakes,
+              variant: PillVariant.streak,
+            ),
+          ],
         ),
       ),
     );
@@ -113,20 +131,39 @@ class _WeakCustomWordRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: AppTokens.s8),
-      child: QuestListRow(
-        icon: Icons.bolt_outlined,
-        iconColor: AppTheme.mango,
-        title: word.word,
-        subtitle: word.meaning,
-        trailing: StatusBadge(
-          label: l10n.mistakeBookWeakWords,
-          tone: StatusTone.warning,
-        ),
+      child: AppCard(
         onTap: () => word.source == 'target'
             ? context.push('/wordbook/${word.sourceWordId ?? word.id}')
             : context.push('/custom-words/${word.id}'),
+        child: Row(
+          children: [
+            ImageCueBadge(cue: wordInitialCue(word.word), size: 52),
+            const SizedBox(width: AppTokens.s12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(word.word, style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 3),
+                  Text(
+                    word.meaning,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: AppTokens.s8),
+            AppPill(
+              label: l10n.mistakeBookWeakWords,
+              variant: PillVariant.neutral,
+            ),
+          ],
+        ),
       ),
     );
   }
