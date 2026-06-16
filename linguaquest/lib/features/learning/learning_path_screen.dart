@@ -5,17 +5,20 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
-import '../../core/widgets/status_badge.dart';
 import '../../data/models/lesson.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 const _pathRailWidth = 74.0;
-const _pathNodeHorizontalPadding = 8.0;
 const _pathConnectorWidth = 6.0;
+// Align the connector under the rail circle: the node content sits inside the
+// card's s12 horizontal padding, so add it to the rail-centering offset.
 const _pathConnectorLeft =
-    _pathNodeHorizontalPadding + (_pathRailWidth - _pathConnectorWidth) / 2;
+    AppTokens.s12 + (_pathRailWidth - _pathConnectorWidth) / 2;
 
 class LearningPathScreen extends ConsumerWidget {
   const LearningPathScreen({super.key});
@@ -43,10 +46,9 @@ class LearningPathScreen extends ConsumerWidget {
               if (index != lessons.length - 1) const _PathConnector(),
             ],
             const SizedBox(height: 10),
-            OutlinedButton.icon(
+            AppSecondaryButton(
+              label: l10n.learningPathOpenWordbook,
               onPressed: () => context.push('/wordbook'),
-              icon: const Icon(Icons.style_outlined),
-              label: Text(l10n.learningPathOpenWordbook),
             ),
             const SizedBox(height: 10),
             TextButton.icon(
@@ -68,14 +70,7 @@ class _PausedBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(AppTokens.s16),
-      decoration: BoxDecoration(
-        color: Theme.of(
-          context,
-        ).colorScheme.primaryContainer.withValues(alpha: 0.35),
-        borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
-      ),
+    return AppCard(
       child: Row(
         children: [
           Icon(
@@ -117,112 +112,108 @@ class _PathNode extends StatelessWidget {
     } else {
       color = AppTheme.cyan;
     }
-    return Material(
-      color: Colors.transparent,
-      borderRadius: BorderRadius.circular(AppTokens.radiusButton),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: locked ? null : () => _showPreview(context),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: _pathNodeHorizontalPadding,
-            vertical: AppTokens.s12,
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: _pathRailWidth,
-                child: Center(
-                  child: Container(
-                    width: current ? _pathRailWidth : 62,
-                    height: current ? _pathRailWidth : 62,
-                    decoration: BoxDecoration(
-                      color: color,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: theme.colorScheme.surface,
-                        width: 4,
-                      ),
+    return AppCard(
+      padding: EdgeInsets.zero,
+      onTap: locked ? null : () => _showPreview(context),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppTokens.s12,
+          vertical: AppTokens.s16,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: _pathRailWidth,
+              child: Center(
+                child: Container(
+                  width: current ? _pathRailWidth : 62,
+                  height: current ? _pathRailWidth : 62,
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: theme.colorScheme.surface,
+                      width: 4,
                     ),
-                    child: Icon(
-                      locked
-                          ? Icons.lock_rounded
-                          : current
-                          ? Icons.play_arrow_rounded
-                          : completed
-                          ? Icons.check_rounded
-                          : Icons.star_rounded,
-                      color: current ? AppTheme.ink : theme.colorScheme.onPrimary,
-                      size: current ? 38 : 30,
-                    ),
+                  ),
+                  child: Icon(
+                    locked
+                        ? Icons.lock_rounded
+                        : current
+                        ? Icons.play_arrow_rounded
+                        : completed
+                        ? Icons.check_rounded
+                        : Icons.star_rounded,
+                    color: current ? AppTheme.ink : theme.colorScheme.onPrimary,
+                    size: current ? 38 : 30,
                   ),
                 ),
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            lesson.section,
-                            style: theme.textTheme.labelLarge?.copyWith(
-                              color: color,
-                              fontWeight: FontWeight.w900,
-                            ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          lesson.section,
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            color: color,
+                            fontWeight: FontWeight.w900,
                           ),
                         ),
-                        StatusBadge(
-                          label: _statusLabel(lesson.status, l10n),
-                          tone: _statusTone(lesson.status),
-                          icon: locked ? Icons.lock_outline : Icons.bolt,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: AppTokens.s8),
-                    Text(
-                      lesson.title,
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w800,
                       ),
-                    ),
-                    const SizedBox(height: AppTokens.s4),
-                    Text(
-                      lesson.description,
-                      style: TextStyle(
-                        color: theme.colorScheme.onSurfaceVariant,
+                      AppPill(
+                        label: _statusLabel(lesson.status, l10n),
+                        variant: _statusVariant(lesson.status),
+                        icon: locked ? Icons.lock_outline : Icons.bolt,
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                    ],
+                  ),
+                  const SizedBox(height: AppTokens.s8),
+                  Text(
+                    lesson.title,
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w800,
                     ),
-                    const SizedBox(height: 14),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: [
-                        PillLabel(
-                          label: '${lesson.xpReward} ${l10n.commonXP}',
-                          icon: Icons.bolt,
-                          color: AppTheme.mango,
-                        ),
-                        PillLabel(
-                          label: '${lesson.estimatedMinutes} min',
-                          icon: Icons.timer_outlined,
-                        ),
-                        PillLabel(
-                          label: '${lesson.words.length} ${l10n.commonWords}',
-                          icon: Icons.style_outlined,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: AppTokens.s4),
+                  Text(
+                    lesson.description,
+                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 14),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      AppPill(
+                        label: '${lesson.xpReward} ${l10n.commonXP}',
+                        variant: PillVariant.xp,
+                        icon: Icons.bolt,
+                      ),
+                      AppPill(
+                        label: '${lesson.estimatedMinutes} min',
+                        variant: PillVariant.primary,
+                        icon: Icons.timer_outlined,
+                      ),
+                      AppPill(
+                        label: '${lesson.words.length} ${l10n.commonWords}',
+                        variant: PillVariant.primary,
+                        icon: Icons.style_outlined,
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -255,13 +246,13 @@ class _PathNode extends StatelessWidget {
                   const SizedBox(height: 6),
                   Text(lesson.description),
                   const SizedBox(height: 16),
-                  FilledButton.icon(
+                  AppPrimaryButton(
+                    label: l10n.learningPathStartLearning,
+                    icon: Icons.play_arrow_rounded,
                     onPressed: () {
                       Navigator.pop(sheetContext);
                       parentContext.push('/lesson/${lesson.id}');
                     },
-                    icon: const Icon(Icons.play_arrow_rounded),
-                    label: Text(l10n.learningPathStartLearning),
                   ),
                 ],
               ),
@@ -286,16 +277,16 @@ String _statusLabel(String status, AppLocalizations l10n) {
   }
 }
 
-StatusTone _statusTone(String status) {
+PillVariant _statusVariant(String status) {
   switch (status) {
     case 'completed':
-      return StatusTone.success;
+      return PillVariant.success;
     case 'current':
-      return StatusTone.info;
+      return PillVariant.primary;
     case 'locked':
-      return StatusTone.neutral;
+      return PillVariant.primary;
     default:
-      return StatusTone.info;
+      return PillVariant.primary;
   }
 }
 
@@ -313,7 +304,7 @@ class _PathConnector extends StatelessWidget {
           height: 28,
           margin: const EdgeInsets.symmetric(vertical: 4),
           decoration: BoxDecoration(
-            color: AppTheme.teal.withValues(alpha: 0.22),
+            color: AppTokens.hairline,
             borderRadius: BorderRadius.circular(99),
           ),
         ),

@@ -11,6 +11,7 @@ import 'package:linguaquest/core/routing/app_router.dart';
 import 'package:linguaquest/core/state/app_controller.dart';
 import 'package:linguaquest/core/state/app_state.dart';
 import 'package:linguaquest/core/theme/app_theme.dart';
+import 'package:linguaquest/core/widgets/app_button.dart';
 import 'package:linguaquest/core/widgets/app_card.dart';
 import 'package:linguaquest/core/widgets/learning_badges.dart';
 import 'package:linguaquest/core/widgets/pronunciation_controls.dart';
@@ -1798,6 +1799,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('学习路径'), findsOneWidget);
+    // Cozy Quest cards landed on the learning path.
+    expect(find.byType(AppCard), findsWidgets);
 
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
@@ -4069,7 +4072,7 @@ Future<void> _openCurrentLessonCards(WidgetTester tester) async {
   await tester.pumpAndSettle();
   await tester.tap(find.byIcon(Icons.play_arrow_rounded).first);
   await tester.pumpAndSettle();
-  await tester.tap(find.widgetWithText(FilledButton, '开始学习'));
+  await tester.tap(find.widgetWithText(AppPrimaryButton, '开始学习'));
   await tester.pumpAndSettle();
 }
 
