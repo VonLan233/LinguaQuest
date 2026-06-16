@@ -35,33 +35,33 @@ class QuizSessionScreen extends ConsumerStatefulWidget {
 
 class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
     with SingleTickerProviderStateMixin {
-  static const _feedbackHoldDuration = Duration(milliseconds: 500);
+  static const _autoAdvanceDelay = Duration(milliseconds: 1500);
 
-  late final AnimationController _feedbackHoldController;
+  late final AnimationController _autoAdvanceController;
   final _textController = TextEditingController();
   final List<QuizQuestion> _mistakes = [];
   final Set<String> _mistakeQuestionIds = {};
+  final Set<String> _wrongTries = {};
   int _index = 0;
   int _correct = 0;
   String? _selected;
   bool _checked = false;
   bool _lastCorrect = false;
   bool _isSubmitting = false;
-  bool _feedbackReady = true;
-  int _feedbackHoldToken = 0;
+  bool _lockedCorrect = false;
 
   @override
   void initState() {
     super.initState();
-    _feedbackHoldController = AnimationController(
+    _autoAdvanceController = AnimationController(
       vsync: this,
-      duration: _feedbackHoldDuration,
+      duration: _autoAdvanceDelay,
     );
   }
 
   @override
   void dispose() {
-    _feedbackHoldController.dispose();
+    _autoAdvanceController.dispose();
     _textController.dispose();
     super.dispose();
   }
@@ -134,16 +134,17 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
                         _QuestionInput(
                           question: question,
                           selected: _selected,
-                          checked: _checked,
+                          lockedCorrect: _lockedCorrect,
+                          wrongTries: _wrongTries,
                           controller: _textController,
-                          onSelected: (value) =>
-                              setState(() => _selected = value),
+                          onSelected: (value) => _judge(lesson, question, value),
                           onInputChanged: () => setState(() {}),
                         ),
                         if (_checked) ...[
                           const SizedBox(height: 14),
                           _FeedbackPanel(
                             isCorrect: _lastCorrect,
+                            revealAnswer: _lastCorrect,
                             question: question,
                           ),
                         ],
@@ -151,17 +152,17 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
                     ),
                   ),
                 ),
-                AppPrimaryButton(
-                  label: _checked
-                      ? (_lastCorrect ? l10n.quizContinue : l10n.quizRetry)
-                      : l10n.quizCheck,
-                  icon: _checked
-                      ? Icons.arrow_forward_rounded
-                      : Icons.check_rounded,
-                  onPressed: _canUsePrimaryAction(question) && !_isSubmitting
-                      ? () => _handlePrimary(lesson, question)
-                      : null,
-                ),
+                if (question.type == QuizQuestionType.spelling)
+                  AppPrimaryButton(
+                    label: l10n.quizCheck,
+                    icon: Icons.check_rounded,
+                    onPressed:
+                        _hasAnswer(question) &&
+                            !_lockedCorrect &&
+                            !_isSubmitting
+                        ? () => _submitSpelling(lesson, question)
+                        : null,
+                  ),
               ],
             ),
           ),
@@ -224,11 +225,6 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
     return null;
   }
 
-  bool _canUsePrimaryAction(QuizQuestion question) {
-    if (_checked) return _feedbackReady;
-    return _hasAnswer(question);
-  }
-
   bool _hasAnswer(QuizQuestion question) {
     if (question.type == QuizQuestionType.spelling) {
       return _textController.text.trim().isNotEmpty;
@@ -236,38 +232,71 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
     return _selected != null;
   }
 
-  Future<void> _handlePrimary(Lesson lesson, QuizQuestion question) async {
-    if (!_checked) {
-      final answer = question.type == QuizQuestionType.spelling
-          ? _textController.text.trim()
-          : _selected;
-      final isCorrect = answer?.toLowerCase() == question.answer.toLowerCase();
-      setState(() {
-        _checked = true;
-        _lastCorrect = isCorrect;
-        _feedbackReady = false;
-        if (isCorrect) {
-          if (!_mistakeQuestionIds.contains(question.id)) {
-            _correct++;
-          }
-        } else if (_mistakeQuestionIds.add(question.id)) {
-          _mistakes.add(question);
-        }
-      });
-      _holdFeedback();
-      return;
+  /// Records the first-attempt scoring/mistake semantics for [question] given
+  /// whether this attempt was [isCorrect]. Must mirror the legacy logic exactly.
+  void _recordAttempt(QuizQuestion question, bool isCorrect) {
+    if (isCorrect) {
+      if (!_mistakeQuestionIds.contains(question.id)) {
+        _correct++;
+      }
+    } else if (_mistakeQuestionIds.add(question.id)) {
+      _mistakes.add(question);
     }
+  }
 
-    if (!_lastCorrect) {
-      setState(() {
+  /// Instant judgment for a tapped choice [option].
+  void _judge(Lesson lesson, QuizQuestion question, String option) {
+    if (_lockedCorrect) return;
+    final isCorrect = option.toLowerCase() == question.answer.toLowerCase();
+    setState(() {
+      _recordAttempt(question, isCorrect);
+      _selected = option;
+      _checked = true;
+      _lastCorrect = isCorrect;
+      if (isCorrect) {
+        _lockedCorrect = true;
+      } else {
+        _wrongTries.add(option);
+      }
+    });
+    if (isCorrect) {
+      _autoAdvanceController
+        ..reset()
+        ..forward().whenComplete(() {
+          if (!mounted) return;
+          _advance(lesson, question);
+        });
+    }
+  }
+
+  /// Submit handler for spelling questions (keeps the explicit check button).
+  void _submitSpelling(Lesson lesson, QuizQuestion question) {
+    if (_lockedCorrect) return;
+    final answer = _textController.text.trim();
+    if (answer.isEmpty) return;
+    final isCorrect = answer.toLowerCase() == question.answer.toLowerCase();
+    setState(() {
+      _recordAttempt(question, isCorrect);
+      _checked = true;
+      _lastCorrect = isCorrect;
+      if (isCorrect) {
+        _lockedCorrect = true;
+      } else {
+        // Re-enable the field for another attempt.
         _checked = false;
-        _selected = null;
-        _feedbackReady = true;
-        _feedbackHoldToken++;
-      });
-      return;
+      }
+    });
+    if (isCorrect) {
+      _autoAdvanceController
+        ..reset()
+        ..forward().whenComplete(() {
+          if (!mounted) return;
+          _advance(lesson, question);
+        });
     }
+  }
 
+  Future<void> _advance(Lesson lesson, QuizQuestion question) async {
     if (_index == lesson.questions.length - 1) {
       if (_isSubmitting) return;
       final result = LessonResult(
@@ -309,20 +338,9 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
       _selected = null;
       _checked = false;
       _lastCorrect = false;
-      _feedbackReady = true;
-      _feedbackHoldToken++;
+      _lockedCorrect = false;
+      _wrongTries.clear();
       _textController.clear();
-    });
-  }
-
-  void _holdFeedback() {
-    final token = ++_feedbackHoldToken;
-    _feedbackHoldController
-      ..stop()
-      ..reset();
-    _feedbackHoldController.forward().whenComplete(() {
-      if (!mounted || token != _feedbackHoldToken) return;
-      setState(() => _feedbackReady = true);
     });
   }
 }
@@ -390,7 +408,8 @@ class _QuestionInput extends StatelessWidget {
   const _QuestionInput({
     required this.question,
     required this.selected,
-    required this.checked,
+    required this.lockedCorrect,
+    required this.wrongTries,
     required this.controller,
     required this.onSelected,
     required this.onInputChanged,
@@ -398,7 +417,8 @@ class _QuestionInput extends StatelessWidget {
 
   final QuizQuestion question;
   final String? selected;
-  final bool checked;
+  final bool lockedCorrect;
+  final Set<String> wrongTries;
   final TextEditingController controller;
   final ValueChanged<String> onSelected;
   final VoidCallback onInputChanged;
@@ -408,7 +428,7 @@ class _QuestionInput extends StatelessWidget {
     if (question.type == QuizQuestionType.spelling) {
       return TextField(
         controller: controller,
-        enabled: !checked,
+        enabled: !lockedCorrect,
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context).quizInputWord,
           prefixIcon: const Icon(Icons.edit_outlined),
@@ -426,7 +446,7 @@ class _QuestionInput extends StatelessWidget {
               letter: String.fromCharCode(65 + i),
               text: question.options[i],
               state: _optionState(question.options[i]),
-              onTap: checked ? null : () => onSelected(question.options[i]),
+              onTap: lockedCorrect ? null : () => onSelected(question.options[i]),
             ),
           ),
       ],
@@ -438,19 +458,24 @@ class _QuestionInput extends StatelessWidget {
   }
 
   ChoiceState _optionState(String option) {
-    if (!checked) {
-      return selected == option ? ChoiceState.selected : ChoiceState.idle;
-    }
-    if (_isCorrectOption(option)) return ChoiceState.correct;
-    if (selected == option) return ChoiceState.wrong;
+    if (lockedCorrect && _isCorrectOption(option)) return ChoiceState.correct;
+    if (wrongTries.contains(option)) return ChoiceState.wrong;
     return ChoiceState.idle;
   }
 }
 
 class _FeedbackPanel extends StatelessWidget {
-  const _FeedbackPanel({required this.isCorrect, required this.question});
+  const _FeedbackPanel({
+    required this.isCorrect,
+    required this.revealAnswer,
+    required this.question,
+  });
 
   final bool isCorrect;
+
+  /// When false (wrong attempt) the panel only shows a retry hint and hides the
+  /// explanation, correct word and example so retrying stays meaningful.
+  final bool revealAnswer;
   final QuizQuestion question;
 
   @override
@@ -484,12 +509,12 @@ class _FeedbackPanel extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isCorrect
+                  revealAnswer
                       ? '${l10n.quizCorrect}${question.explanation}'
-                      : '${l10n.quizWrong}${question.explanation}',
+                      : '${l10n.quizWrong}${l10n.quizRetry}',
                   style: TextStyle(color: color),
                 ),
-                if (isCorrect) ...[
+                if (revealAnswer) ...[
                   const SizedBox(height: 8),
                   Text(
                     '${l10n.quizReinforce}${question.word.word} · ${question.word.meaning}',
