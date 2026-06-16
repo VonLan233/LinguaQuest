@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
-import '../../core/widgets/learning_badges.dart';
+import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/section_header.dart';
 import '../../l10n/generated/app_localizations.dart';
 
@@ -46,12 +48,16 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   title: l10n.authCreateProfile,
                   subtitle: l10n.authCreateProfileSubtitle,
                 ),
-                const SizedBox(height: 12),
-                PillLabel(
-                  label: l10n.authStep1of2,
-                  icon: Icons.person_add_alt_1,
+                const SizedBox(height: AppTokens.s12),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: AppPill(
+                    label: l10n.authStep1of2,
+                    variant: PillVariant.primary,
+                    icon: Icons.person_add_alt_1,
+                  ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: AppTokens.s20),
                 TextFormField(
                   controller: _nameController,
                   decoration: InputDecoration(
@@ -59,10 +65,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     hintText: l10n.authNicknameHint,
                     prefixIcon: const Icon(Icons.badge_outlined),
                   ),
-                  validator: (value) =>
-                      value == null || value.trim().isEmpty
-                          ? l10n.authNameRequired
-                          : null,
+                  validator: (value) => value == null || value.trim().isEmpty
+                      ? l10n.authNameRequired
+                      : null,
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
@@ -95,17 +100,28 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     ),
                   ),
                 ],
-                const SizedBox(height: 20),
-                FilledButton.icon(
-                  onPressed: state.isLoading ? null : _submit,
-                  icon: state.isLoading
-                      ? const SizedBox(
+                const SizedBox(height: AppTokens.s20),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    AppPrimaryButton(
+                      label: l10n.authContinueToGoal,
+                      icon: Icons.arrow_forward_rounded,
+                      onPressed: state.isLoading ? null : _submit,
+                    ),
+                    if (state.isLoading)
+                      const Positioned(
+                        right: AppTokens.s20,
+                        child: SizedBox(
                           width: 18,
                           height: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Icon(Icons.arrow_forward_rounded),
-                  label: Text(l10n.authContinueToGoal),
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppTokens.textHintLight,
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
                 TextButton(
                   onPressed: () => context.go('/login'),

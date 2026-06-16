@@ -4,8 +4,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
 import '../../core/widgets/brand_hero_card.dart';
-import '../../core/widgets/quest_panel.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -69,7 +70,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: AppTokens.s20),
-                QuestPanel(
+                AppCard(
                   padding: const EdgeInsets.all(AppTokens.s20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -99,23 +100,31 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         const SizedBox(height: AppTokens.s12),
                         Text(
                           state.errorMessage!,
-                          style: TextStyle(
-                            color: theme.colorScheme.error,
-                          ),
+                          style: TextStyle(color: theme.colorScheme.error),
                         ),
                       ],
                       const SizedBox(height: AppTokens.s20),
-                      FilledButton.icon(
-                        onPressed: state.isLoading ? null : _submit,
-                        icon: state.isLoading
-                            ? const SizedBox(
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          AppPrimaryButton(
+                            label: l10n.commonLogin,
+                            icon: Icons.login,
+                            onPressed: state.isLoading ? null : _submit,
+                          ),
+                          if (state.isLoading)
+                            const Positioned(
+                              right: AppTokens.s20,
+                              child: SizedBox(
                                 width: 18,
                                 height: 18,
-                                child:
-                                    CircularProgressIndicator(strokeWidth: 2),
-                              )
-                            : const Icon(Icons.login),
-                        label: Text(l10n.commonLogin),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: AppTokens.textHintLight,
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                     ],
                   ),

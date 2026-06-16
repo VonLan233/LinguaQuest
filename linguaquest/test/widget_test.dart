@@ -773,7 +773,7 @@ void main() {
     await tester.enterText(find.byType(TextFormField).at(1), 'password123');
     await tester.pumpAndSettle();
 
-    await tester.tap(find.widgetWithText(FilledButton, '登录'));
+    await tester.tap(find.widgetWithText(AppPrimaryButton, '登录'));
     await tester.pumpAndSettle();
 
     expect(find.text('欢迎回来'), findsOneWidget);
