@@ -1707,6 +1707,7 @@ void main() {
 
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -900));
     await tester.pumpAndSettle();
+    expect(find.byType(AppCard), findsWidgets);
     expect(find.text(lesson.questions[0].word.word), findsWidgets);
     expect(find.text('课程'), findsWidgets);
     expect(find.byType(BackButtonIcon), findsOneWidget);
