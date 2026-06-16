@@ -451,55 +451,60 @@ void main() {
     expect(find.textContaining('已入账'), findsNothing);
   });
 
-  test('lesson completion compares server UTC last study date locally', () async {
-    final now = DateTime.now();
-    final yesterdayEarlyLocal = DateTime(
-      now.year,
-      now.month,
-      now.day,
-    ).subtract(const Duration(days: 1)).add(const Duration(minutes: 30));
-    final serverLastStudyDate = yesterdayEarlyLocal.toUtc();
-    final profile = UserProfile(
-      uid: 'utc-streak-user',
-      name: 'Uma',
-      email: 'uma@lingua.quest',
-      targetExam: 'IELTS',
-      level: 'Intermediate',
-      dailyGoal: 12,
-      xp: 120,
-      streak: 4,
-      lastStudyDate: serverLastStudyDate,
-      createdAt: serverLastStudyDate,
-      updatedAt: serverLastStudyDate,
-    );
-    SharedPreferences.setMockInitialValues({
-      'linguaquest.profile': jsonEncode(profile.toJson()),
-    });
-    final container = ProviderContainer();
-    addTearDown(container.dispose);
+  test(
+    'lesson completion compares server UTC last study date locally',
+    () async {
+      final now = DateTime.now();
+      final yesterdayEarlyLocal = DateTime(
+        now.year,
+        now.month,
+        now.day,
+      ).subtract(const Duration(days: 1)).add(const Duration(minutes: 30));
+      final serverLastStudyDate = yesterdayEarlyLocal.toUtc();
+      final profile = UserProfile(
+        uid: 'utc-streak-user',
+        name: 'Uma',
+        email: 'uma@lingua.quest',
+        targetExam: 'IELTS',
+        level: 'Intermediate',
+        dailyGoal: 12,
+        xp: 120,
+        streak: 4,
+        lastStudyDate: serverLastStudyDate,
+        createdAt: serverLastStudyDate,
+        updatedAt: serverLastStudyDate,
+      );
+      SharedPreferences.setMockInitialValues({
+        'linguaquest.profile': jsonEncode(profile.toJson()),
+      });
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
 
-    await container.read(appControllerProvider.notifier).bootstrap();
-    final lesson = container
-        .read(appControllerProvider)
-        .lessons
-        .firstWhere((lesson) => !lesson.isTrainingPack);
+      await container.read(appControllerProvider.notifier).bootstrap();
+      final lesson = container
+          .read(appControllerProvider)
+          .lessons
+          .firstWhere((lesson) => !lesson.isTrainingPack);
 
-    expect(
-      await container.read(appControllerProvider.notifier).completeLesson(
-            LessonResult(
-              lessonId: lesson.id,
-              lessonTitle: lesson.title,
-              totalQuestions: lesson.questions.length,
-              correctAnswers: lesson.questions.length,
-              xpEarned: 10,
-              mistakes: const [],
-              completedAt: DateTime.now(),
+      expect(
+        await container
+            .read(appControllerProvider.notifier)
+            .completeLesson(
+              LessonResult(
+                lessonId: lesson.id,
+                lessonTitle: lesson.title,
+                totalQuestions: lesson.questions.length,
+                correctAnswers: lesson.questions.length,
+                xpEarned: 10,
+                mistakes: const [],
+                completedAt: DateTime.now(),
+              ),
             ),
-          ),
-      true,
-    );
-    expect(container.read(appControllerProvider).user?.streak, 5);
-  });
+        true,
+      );
+      expect(container.read(appControllerProvider).user?.streak, 5);
+    },
+  );
 
   testWidgets(
     'training completion does not unlock formal new-learning reward',
@@ -1748,7 +1753,9 @@ void main() {
     await tester.tap(find.text('检查'));
     await tester.pump();
 
-    Finder continueButton() => find.widgetWithText(FilledButton, '继续');
+    expect(find.byType(AppCard), findsWidgets);
+
+    Finder continueButton() => find.widgetWithText(AppPrimaryButton, '继续');
 
     expect(find.textContaining('答对了'), findsOneWidget);
     expect(
@@ -1758,13 +1765,16 @@ void main() {
       findsOneWidget,
     );
     expect(continueButton(), findsOneWidget);
-    expect(tester.widget<FilledButton>(continueButton()).onPressed, isNull);
+    expect(tester.widget<AppPrimaryButton>(continueButton()).onPressed, isNull);
 
     await tester.pump(const Duration(milliseconds: 499));
-    expect(tester.widget<FilledButton>(continueButton()).onPressed, isNull);
+    expect(tester.widget<AppPrimaryButton>(continueButton()).onPressed, isNull);
 
     await tester.pump(const Duration(milliseconds: 2));
-    expect(tester.widget<FilledButton>(continueButton()).onPressed, isNotNull);
+    expect(
+      tester.widget<AppPrimaryButton>(continueButton()).onPressed,
+      isNotNull,
+    );
   });
 
   testWidgets('lesson and quiz screens expose a working back path', (
@@ -1827,7 +1837,7 @@ void main() {
     await tester.tap(find.text('检查'));
     await tester.pumpAndSettle();
 
-    expect(find.widgetWithText(FilledButton, '继续'), findsOneWidget);
+    expect(find.widgetWithText(AppPrimaryButton, '继续'), findsOneWidget);
 
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
@@ -4572,9 +4582,7 @@ class _IncompleteClaimRewardRepository implements RewardTaskRepository {
 
   @override
   Future<RewardTaskSnapshot> claimTask(String uid, String taskId) async {
-    final requestOptions = RequestOptions(
-      path: '/rewards/tasks/$taskId/claim',
-    );
+    final requestOptions = RequestOptions(path: '/rewards/tasks/$taskId/claim');
     throw DioException(
       requestOptions: requestOptions,
       response: Response<Map<String, dynamic>>(

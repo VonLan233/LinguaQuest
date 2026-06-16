@@ -6,6 +6,10 @@ import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/utils/ui_labels.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
+import '../../core/widgets/app_progress_bar.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/word_choice_button.dart';
 import '../../data/models/lesson.dart';
@@ -29,9 +33,11 @@ class QuizSessionScreen extends ConsumerStatefulWidget {
   ConsumerState<QuizSessionScreen> createState() => _QuizSessionScreenState();
 }
 
-class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
+class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
+    with SingleTickerProviderStateMixin {
   static const _feedbackHoldDuration = Duration(milliseconds: 500);
 
+  late final AnimationController _feedbackHoldController;
   final _textController = TextEditingController();
   final List<QuizQuestion> _mistakes = [];
   final Set<String> _mistakeQuestionIds = {};
@@ -45,7 +51,17 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
   int _feedbackHoldToken = 0;
 
   @override
+  void initState() {
+    super.initState();
+    _feedbackHoldController = AnimationController(
+      vsync: this,
+      duration: _feedbackHoldDuration,
+    );
+  }
+
+  @override
   void dispose() {
+    _feedbackHoldController.dispose();
     _textController.dispose();
     super.dispose();
   }
@@ -91,30 +107,18 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
               children: [
                 Row(
                   children: [
-                    Expanded(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(999),
-                        child: LinearProgressIndicator(
-                          value: progress,
-                          minHeight: 12,
-                          backgroundColor: AppTheme.progressTrack(context),
-                          valueColor: const AlwaysStoppedAnimation<Color>(
-                            AppTheme.teal,
-                          ),
-                        ),
-                      ),
-                    ),
+                    Expanded(child: AppProgressBar(value: progress)),
                     const SizedBox(width: 12),
-                    PillLabel(
+                    AppPill(
                       label: '${_index + 1}/${lesson.questions.length}',
                       icon: Icons.flag_outlined,
                     ),
                     if (isTimed) ...[
                       const SizedBox(width: 8),
-                      PillLabel(
+                      AppPill(
                         label: l10n.quizCampusSpeed,
                         icon: Icons.timer_outlined,
-                        color: AppTheme.coral,
+                        variant: PillVariant.streak,
                       ),
                     ],
                   ],
@@ -147,26 +151,16 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
                     ),
                   ),
                 ),
-                FilledButton.icon(
+                AppPrimaryButton(
+                  label: _checked
+                      ? (_lastCorrect ? l10n.quizContinue : l10n.quizRetry)
+                      : l10n.quizCheck,
+                  icon: _checked
+                      ? Icons.arrow_forward_rounded
+                      : Icons.check_rounded,
                   onPressed: _canUsePrimaryAction(question) && !_isSubmitting
                       ? () => _handlePrimary(lesson, question)
                       : null,
-                  style: FilledButton.styleFrom(
-                    backgroundColor: _checked && !_lastCorrect
-                        ? Theme.of(context).colorScheme.error
-                        : null,
-                    foregroundColor: _checked && !_lastCorrect
-                        ? Theme.of(context).colorScheme.onError
-                        : null,
-                  ),
-                  icon: Icon(
-                    _checked
-                        ? Icons.arrow_forward_rounded
-                        : Icons.check_rounded,
-                  ),
-                  label: Text(_checked
-                      ? (_lastCorrect ? l10n.quizContinue : l10n.quizRetry)
-                      : l10n.quizCheck),
                 ),
               ],
             ),
@@ -323,7 +317,10 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
 
   void _holdFeedback() {
     final token = ++_feedbackHoldToken;
-    Future<void>.delayed(_feedbackHoldDuration, () {
+    _feedbackHoldController
+      ..stop()
+      ..reset();
+    _feedbackHoldController.forward().whenComplete(() {
       if (!mounted || token != _feedbackHoldToken) return;
       setState(() => _feedbackReady = true);
     });
@@ -337,8 +334,7 @@ class _QuestionPromptPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+    return AppCard(
       child: Column(
         children: [
           ImageCueBadge(cue: question.word.imageCue, size: 104),
@@ -354,15 +350,15 @@ class _QuestionPromptPanel extends StatelessWidget {
             runSpacing: 8,
             alignment: WrapAlignment.center,
             children: [
-              PillLabel(
+              AppPill(
                 label: displayQuestionType(question.type),
                 icon: _questionTypeIcon(question.type),
-                color: AppTheme.cyan,
+                variant: PillVariant.primary,
               ),
-              PillLabel(label: question.word.partOfSpeech),
-              PillLabel(
+              AppPill(label: question.word.partOfSpeech),
+              AppPill(
                 label: displayDifficulty(question.word.difficulty),
-                color: AppTheme.coral,
+                variant: PillVariant.streak,
               ),
             ],
           ),
@@ -430,9 +426,7 @@ class _QuestionInput extends StatelessWidget {
               letter: String.fromCharCode(65 + i),
               text: question.options[i],
               state: _optionState(question.options[i]),
-              onTap: checked
-                  ? null
-                  : () => onSelected(question.options[i]),
+              onTap: checked ? null : () => onSelected(question.options[i]),
             ),
           ),
       ],
@@ -468,8 +462,7 @@ class _FeedbackPanel extends StatelessWidget {
               ? theme.colorScheme.primary
               : AppTheme.success)
         : theme.colorScheme.error;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+    return AppCard(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
