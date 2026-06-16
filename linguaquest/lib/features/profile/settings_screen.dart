@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
+import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_card.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../l10n/generated/app_localizations.dart';
 
@@ -21,7 +23,7 @@ class SettingsScreen extends ConsumerWidget {
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(AppTokens.s20),
           children: [
             _SettingsAction(
               icon: Icons.flag_outlined,
@@ -30,6 +32,7 @@ class SettingsScreen extends ConsumerWidget {
                   '${state.currentStudyBook.name} · ${l10n.commonNew} ${state.dailyNewTarget} · ${l10n.commonReview} ${state.dailyReviewLimit}',
               route: '/settings/study-plan',
             ),
+            const SizedBox(height: AppTokens.s12),
             _SettingsAction(
               icon: Icons.notifications_outlined,
               title: l10n.commonDailyReminder,
@@ -38,18 +41,20 @@ class SettingsScreen extends ConsumerWidget {
                   : l10n.settingsReminderOff,
               route: '/settings/reminder',
             ),
+            const SizedBox(height: AppTokens.s12),
             _SettingsAction(
               icon: Icons.dark_mode_outlined,
               title: l10n.commonTheme,
               subtitle: _themeModeLabel(state.themeMode, l10n),
               route: '/settings/theme',
             ),
+            const SizedBox(height: AppTokens.s12),
             _LanguageSetting(
               currentLocale: state.locale,
               onChanged: (locale) =>
                   ref.read(appControllerProvider.notifier).updateLocale(locale),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppTokens.s12),
             _SettingsInfoLine(
               icon: Icons.volume_up_outlined,
               title: l10n.settingsSoundFeedback,
@@ -78,7 +83,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(AppTokens.s20),
           children: [
             _ThemeOption(
               value: ThemeMode.system,
@@ -87,6 +92,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
               title: l10n.settingsThemeSystem,
               subtitle: l10n.settingsThemeSystemSubtitle,
             ),
+            const SizedBox(height: AppTokens.s12),
             _ThemeOption(
               value: ThemeMode.light,
               groupValue: themeMode,
@@ -94,6 +100,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
               title: l10n.settingsThemeLight,
               subtitle: l10n.settingsThemeLightSubtitle,
             ),
+            const SizedBox(height: AppTokens.s12),
             _ThemeOption(
               value: ThemeMode.dark,
               groupValue: themeMode,
@@ -124,36 +131,44 @@ class ReminderSettingsScreen extends ConsumerWidget {
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(AppTokens.s20),
           children: [
-            SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              value: settings.enabled,
-              onChanged: (value) {
-                ref
-                    .read(appControllerProvider.notifier)
-                    .updateReminderSettings(settings.copyWith(enabled: value));
-              },
-              title: Text(l10n.settingsReminderTitle),
-              subtitle: Text(
-                settings.enabled
-                    ? '${l10n.settingsReminderTime}${l10n.localeName == 'zh' ? '：' : ': '}${settings.formattedTime}'
-                    : l10n.settingsReminderDisabled,
+            AppCard(
+              child: Column(
+                children: [
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    value: settings.enabled,
+                    onChanged: (value) {
+                      ref
+                          .read(appControllerProvider.notifier)
+                          .updateReminderSettings(
+                            settings.copyWith(enabled: value),
+                          );
+                    },
+                    title: Text(l10n.settingsReminderTitle),
+                    subtitle: Text(
+                      settings.enabled
+                          ? '${l10n.settingsReminderTime}${l10n.localeName == 'zh' ? '：' : ': '}${settings.formattedTime}'
+                          : l10n.settingsReminderDisabled,
+                    ),
+                  ),
+                  const Divider(height: AppTokens.s20),
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    enabled: settings.enabled,
+                    leading: const Icon(Icons.schedule_outlined),
+                    title: Text(l10n.settingsReminderTime),
+                    subtitle: Text(settings.formattedTime),
+                    trailing: const Icon(Icons.chevron_right_rounded),
+                    onTap: settings.enabled
+                        ? () => _pickTime(context, ref, settings)
+                        : null,
+                  ),
+                ],
               ),
             ),
-            const Divider(height: 20),
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              enabled: settings.enabled,
-              leading: const Icon(Icons.schedule_outlined),
-              title: Text(l10n.settingsReminderTime),
-              subtitle: Text(settings.formattedTime),
-              trailing: const Icon(Icons.chevron_right_rounded),
-              onTap: settings.enabled
-                  ? () => _pickTime(context, ref, settings)
-                  : null,
-            ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppTokens.s16),
             Text(
               l10n.settingsReminderDescription,
               style: Theme.of(context).textTheme.bodySmall,
@@ -197,30 +212,26 @@ class _LanguageSetting extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final langCode = currentLocale?.languageCode ?? 'zh';
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(8),
-        onTap: () => _showLanguageSheet(context, langCode),
-        child: Row(
-          children: [
-            Icon(Icons.language_outlined, color: theme.colorScheme.primary),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(l10n.languageSetting, style: theme.textTheme.titleMedium),
-                  Text(
-                    _localeLabel(langCode),
-                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
-                  ),
-                ],
-              ),
+    return AppCard(
+      onTap: () => _showLanguageSheet(context, langCode),
+      child: Row(
+        children: [
+          Icon(Icons.language_outlined, color: theme.colorScheme.primary),
+          const SizedBox(width: AppTokens.s12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(l10n.languageSetting, style: theme.textTheme.titleMedium),
+                Text(
+                  _localeLabel(langCode),
+                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                ),
+              ],
             ),
-            const Icon(Icons.chevron_right_rounded),
-          ],
-        ),
+          ),
+          const Icon(Icons.chevron_right_rounded),
+        ],
       ),
     );
   }
@@ -323,35 +334,26 @@ class _SettingsAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(8),
-        onTap: () => context.push(route),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Row(
-            children: [
-              Icon(icon, color: theme.colorScheme.primary),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title, style: theme.textTheme.titleMedium),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
+    return AppCard(
+      onTap: () => context.push(route),
+      child: Row(
+        children: [
+          Icon(icon, color: theme.colorScheme.primary),
+          const SizedBox(width: AppTokens.s12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: theme.textTheme.titleMedium),
+                Text(
+                  subtitle,
+                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                 ),
-              ),
-              const Icon(Icons.chevron_right_rounded),
-            ],
+              ],
+            ),
           ),
-        ),
+          const Icon(Icons.chevron_right_rounded),
+        ],
       ),
     );
   }
@@ -371,12 +373,11 @@ class _SettingsInfoLine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
+    return AppCard(
       child: Row(
         children: [
           Icon(icon, color: theme.colorScheme.onSurfaceVariant),
-          const SizedBox(width: 14),
+          const SizedBox(width: AppTokens.s12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -414,46 +415,37 @@ class _ThemeOption extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final selected = value == groupValue;
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(8),
-        onTap: () =>
-            ref.read(appControllerProvider.notifier).updateThemeMode(value),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Row(
-            children: [
-              Icon(
-                icon,
-                color: selected
-                    ? theme.colorScheme.primary
-                    : theme.colorScheme.onSurfaceVariant,
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title, style: theme.textTheme.titleMedium),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Icon(
-                selected
-                    ? Icons.radio_button_checked
-                    : Icons.radio_button_unchecked,
-                color: theme.colorScheme.primary,
-              ),
-            ],
+    return AppCard(
+      onTap: () =>
+          ref.read(appControllerProvider.notifier).updateThemeMode(value),
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            color: selected
+                ? theme.colorScheme.primary
+                : theme.colorScheme.onSurfaceVariant,
           ),
-        ),
+          const SizedBox(width: AppTokens.s12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: theme.textTheme.titleMedium),
+                Text(
+                  subtitle,
+                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                ),
+              ],
+            ),
+          ),
+          Icon(
+            selected
+                ? Icons.radio_button_checked
+                : Icons.radio_button_unchecked,
+            color: theme.colorScheme.primary,
+          ),
+        ],
       ),
     );
   }
