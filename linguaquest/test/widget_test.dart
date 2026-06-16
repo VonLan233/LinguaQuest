@@ -2197,6 +2197,7 @@ void main() {
     await tester.tap(find.text('调整计划'));
     await tester.pumpAndSettle();
 
+    expect(find.byType(AppCard), findsWidgets);
     expect(find.byType(LinearProgressIndicator), findsOneWidget);
     await tester.tap(find.text('保存学习计划'));
     await tester.pump();
