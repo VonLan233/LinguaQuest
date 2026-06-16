@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_tokens.dart';
 
-enum PillVariant { xp, success, streak, primary }
+enum PillVariant { xp, success, streak, primary, neutral }
 
 /// Small semantic capsule badge (XP / streak / status).
 class AppPill extends StatelessWidget {
@@ -25,6 +25,8 @@ class AppPill extends StatelessWidget {
           (bg: AppTokens.streakSoft, fg: AppTokens.streakSoftText),
         PillVariant.primary =>
           (bg: AppTokens.primarySoft, fg: AppTokens.primarySoftText),
+        PillVariant.neutral =>
+          (bg: AppTokens.surfaceSunken, fg: AppTokens.textSecondaryLight),
       };
 
   @override

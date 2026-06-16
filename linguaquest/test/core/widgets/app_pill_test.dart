@@ -40,6 +40,11 @@ void main() {
       (PillVariant.success, AppTokens.successSoft, AppTokens.successSoftText),
       (PillVariant.streak, AppTokens.streakSoft, AppTokens.streakSoftText),
       (PillVariant.primary, AppTokens.primarySoft, AppTokens.primarySoftText),
+      (
+        PillVariant.neutral,
+        AppTokens.surfaceSunken,
+        AppTokens.textSecondaryLight,
+      ),
     ];
 
     for (final (variant, bg, fg) in cases) {
