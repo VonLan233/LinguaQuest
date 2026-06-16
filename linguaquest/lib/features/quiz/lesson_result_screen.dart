@@ -5,9 +5,13 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
+import '../../core/widgets/app_progress_bar.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
-import '../../core/widgets/quest_panel.dart';
+import '../../core/widgets/mascot_image.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
@@ -85,17 +89,22 @@ class LessonResultScreen extends ConsumerWidget {
                   : '${resolved.correctAnswers}/${resolved.totalQuestions} · +${resolved.xpEarned} ${l10n.commonXP} · ${l10n.quizMistakeReview}',
             ),
             const SizedBox(height: 12),
-            PillLabel(
-              label: resolved.lessonTitle,
-              icon: isTimed
-                  ? Icons.timer_outlined
-                  : isTraining
-                  ? Icons.sports_esports_outlined
-                  : Icons.workspace_premium_outlined,
-              color: isTimed || isTraining ? AppTheme.coral : AppTheme.cyan,
+            Align(
+              alignment: Alignment.centerLeft,
+              child: AppPill(
+                label: resolved.lessonTitle,
+                variant: isTimed || isTraining
+                    ? PillVariant.streak
+                    : PillVariant.primary,
+                icon: isTimed
+                    ? Icons.timer_outlined
+                    : isTraining
+                    ? Icons.sports_esports_outlined
+                    : Icons.workspace_premium_outlined,
+              ),
             ),
             const SizedBox(height: AppTokens.s12),
-            QuestPanel(
+            AppCard(
               child: _ResultScoreSummary(
                 result: resolved,
                 accuracy: accuracy,
@@ -153,30 +162,25 @@ class _ResultActions extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             if (isTraining && hasMistakes) ...[
-              FilledButton.icon(
+              AppPrimaryButton(
                 onPressed: () =>
                     context.go('/training/spelling?source=mistakes'),
-                icon: const Icon(Icons.replay_circle_filled_outlined),
-                label: Text(l10n.quizRetryMistakes),
+                icon: Icons.replay_circle_filled_outlined,
+                label: l10n.quizRetryMistakes,
               ),
               const SizedBox(height: 8),
             ],
-            FilledButton.icon(
+            AppPrimaryButton(
               onPressed: () => context.go('/review'),
-              icon: const Icon(Icons.replay),
-              label: Text(l10n.quizGoReviewCenter),
+              icon: Icons.replay,
+              label: l10n.quizGoReviewCenter,
             ),
             const SizedBox(height: 8),
-            OutlinedButton.icon(
+            AppSecondaryButton(
               onPressed: () => context.go(isTraining ? '/training' : '/learn'),
-              icon: Icon(
-                isTraining
-                    ? Icons.sports_esports_outlined
-                    : Icons.route_outlined,
-              ),
-              label: Text(
-                isTraining ? l10n.quizBackTraining : l10n.quizBackLearningPath,
-              ),
+              label: isTraining
+                  ? l10n.quizBackTraining
+                  : l10n.quizBackLearningPath,
             ),
           ],
         ),
@@ -203,13 +207,7 @@ class _XpImpactNotice extends StatelessWidget {
     final balanceText = currentXp == null
         ? l10n.quizXpBalanceUpdated
         : l10n.quizCurrentXp(currentXp!);
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: AppTheme.mango.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppTheme.mango.withValues(alpha: 0.30)),
-      ),
+    return AppCard(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -236,19 +234,18 @@ class _XpImpactNotice extends StatelessWidget {
                   runSpacing: 8,
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    PillLabel(
+                    AppPill(
                       label: isTimed
                           ? l10n.quizTimedReward
                           : l10n.quizLessonReward,
+                      variant: isTimed ? PillVariant.streak : PillVariant.xp,
                       icon: isTimed
                           ? Icons.timer_outlined
                           : Icons.workspace_premium_outlined,
-                      color: isTimed ? AppTheme.coral : AppTheme.cyan,
                     ),
-                    OutlinedButton.icon(
+                    AppSecondaryButton(
                       onPressed: () => context.go('/discover'),
-                      icon: const Icon(Icons.help_outline_rounded),
-                      label: Text(l10n.quizViewXpUses),
+                      label: l10n.quizViewXpUses,
                     ),
                   ],
                 ),
@@ -272,7 +269,7 @@ class _PerfectResultRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         children: [
-          const ImageCueBadge(cue: '🏆', size: 58),
+          const MascotImage(size: 58),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
@@ -303,26 +300,28 @@ class _MistakeResultRow extends StatelessWidget {
     final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
-      child: Row(
-        children: [
-          ImageCueBadge(cue: mistake.word.imageCue, size: 54),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(mistake.word.word, style: theme.textTheme.titleMedium),
-                const SizedBox(height: 3),
-                Text(
-                  mistake.explanation,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
-                ),
-              ],
+      child: AppCard(
+        child: Row(
+          children: [
+            ImageCueBadge(cue: mistake.word.imageCue, size: 54),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(mistake.word.word, style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 3),
+                  Text(
+                    mistake.explanation,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -343,67 +342,57 @@ class _ResultScoreSummary extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                '$accuracy%',
-                style: theme.textTheme.displayMedium?.copyWith(
-                  fontWeight: FontWeight.w900,
-                  height: 0.95,
-                ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              '$accuracy%',
+              style: theme.textTheme.displayMedium?.copyWith(
+                fontWeight: FontWeight.w900,
+                height: 0.95,
               ),
-              const SizedBox(width: 10),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 6),
-                child: Text(
-                  l10n.quizAccuracy,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(999),
-            child: LinearProgressIndicator(
-              value: result.accuracy,
-              minHeight: 12,
-              backgroundColor: AppTheme.progressTrack(context),
             ),
-          ),
-          const SizedBox(height: 14),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              PillLabel(
-                label: l10n.quizXpEarned(result.xpEarned),
-                icon: Icons.bolt,
-                color: AppTheme.mango,
-              ),
-              if (currentXp != null)
-                PillLabel(
-                  label: l10n.quizTotalXp(currentXp!),
-                  icon: Icons.account_balance_wallet_outlined,
-                  color: AppTheme.cyan,
+            const SizedBox(width: 10),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: Text(
+                l10n.quizAccuracy,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
-              PillLabel(
-                label: l10n.quizMistakeCount(result.mistakes.length),
-                icon: Icons.replay_rounded,
-                color: AppTheme.coral,
               ),
-            ],
-          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        AppProgressBar(value: result.accuracy, height: 12),
+        const SizedBox(height: 14),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            AppPill(
+              label: l10n.quizXpEarned(result.xpEarned),
+              variant: PillVariant.xp,
+              icon: Icons.bolt,
+            ),
+            if (currentXp != null)
+              AppPill(
+                label: l10n.quizTotalXp(currentXp!),
+                variant: PillVariant.primary,
+                icon: Icons.account_balance_wallet_outlined,
+              ),
+            AppPill(
+              label: l10n.quizMistakeCount(result.mistakes.length),
+              variant: PillVariant.streak,
+              icon: Icons.replay_rounded,
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

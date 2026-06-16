@@ -1700,6 +1700,8 @@ void main() {
     expect(find.text('总积分 15 XP'), findsOneWidget);
     expect(find.text('当前总积分 15 XP。XP 会同步到个人主页、排行榜和发现页抽奖余额。'), findsOneWidget);
     expect(find.text('查看 XP 用途'), findsOneWidget);
+    // Cozy Quest cards landed on the lesson result screen.
+    expect(find.byType(AppCard), findsWidgets);
 
     await tester.scrollUntilVisible(
       find.text('去复习中心'),
