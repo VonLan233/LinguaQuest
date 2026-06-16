@@ -3,14 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
-import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/ai_word_support_link.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/pronunciation_controls.dart';
-import '../../core/widgets/quest_panel.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/user_word.dart';
@@ -51,7 +52,7 @@ class TargetWordDetailScreen extends ConsumerWidget {
           child: Row(
             children: [
               Expanded(
-                child: OutlinedButton.icon(
+                child: AppSecondaryButton(
                   onPressed: () => _toggleFavorite(
                     context,
                     ref,
@@ -60,21 +61,23 @@ class TargetWordDetailScreen extends ConsumerWidget {
                     progress?.isFavorite ?? false,
                     l10n,
                   ),
-                  icon: Icon(
-                    progress?.isFavorite == true
-                        ? Icons.star_rounded
-                        : Icons.star_outline_rounded,
-                  ),
-                  label: Text(
-                    progress?.isFavorite == true
-                        ? l10n.wordbookFavorited
-                        : l10n.wordbookFavorite,
-                  ),
+                  label: progress?.isFavorite == true
+                      ? l10n.wordbookFavorited
+                      : l10n.wordbookFavorite,
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: FilledButton.icon(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: AppTokens.azure,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        AppTokens.radiusButton,
+                      ),
+                    ),
+                  ),
                   onPressed: () => _toggleNewWordbook(
                     context,
                     ref,
@@ -108,7 +111,7 @@ class TargetWordDetailScreen extends ConsumerWidget {
             112,
           ),
           children: [
-            QuestPanel(
+            AppCard(
               child: _WordHero(
                 word: word,
                 bookTitle: detail.book.title,
@@ -116,15 +119,19 @@ class TargetWordDetailScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: AppTokens.s16),
-            QuestPanel(child: _DefinitionSections(word: word, l10n: l10n)),
+            AppCard(
+              child: _DefinitionSections(word: word, l10n: l10n),
+            ),
             const SizedBox(height: AppTokens.s16),
-            QuestPanel(child: _ExampleSections(word: word, l10n: l10n)),
+            AppCard(
+              child: _ExampleSections(word: word, l10n: l10n),
+            ),
             const SizedBox(height: AppTokens.s16),
             WordKnowledgeSections(word: word),
             const SizedBox(height: AppTokens.s24),
             _WordTags(word: word, progress: progress, l10n: l10n),
             const SizedBox(height: AppTokens.s24),
-            OutlinedButton.icon(
+            AppSecondaryButton(
               onPressed: () => _toggleIgnored(
                 context,
                 ref,
@@ -133,16 +140,9 @@ class TargetWordDetailScreen extends ConsumerWidget {
                 progress?.isIgnored ?? false,
                 l10n,
               ),
-              icon: Icon(
-                progress?.isIgnored == true
-                    ? Icons.undo_rounded
-                    : Icons.block_outlined,
-              ),
-              label: Text(
-                progress?.isIgnored == true
-                    ? l10n.wordbookResumeLearning
-                    : l10n.wordbookIgnoreEasy,
-              ),
+              label: progress?.isIgnored == true
+                  ? l10n.wordbookResumeLearning
+                  : l10n.wordbookIgnoreEasy,
             ),
             const SizedBox(height: 12),
             _AiWordSupportLink(word: word),
@@ -389,17 +389,17 @@ class _WordHero extends StatelessWidget {
             spacing: 8,
             runSpacing: 8,
             children: [
-              PillLabel(label: word.partOfSpeech),
-              PillLabel(label: bookTitle, color: AppTheme.cyan),
-              PillLabel(
+              AppPill(label: word.partOfSpeech, variant: PillVariant.neutral),
+              AppPill(label: bookTitle, variant: PillVariant.neutral),
+              AppPill(
                 label: l10n.wordbookCurrentPlan,
                 icon: Icons.playlist_add_check_rounded,
-                color: AppTheme.cyan,
+                variant: PillVariant.primary,
               ),
               if (word.tags.isNotEmpty)
-                PillLabel(
+                AppPill(
                   label: l10n.wordbookHighFrequencyDefinition,
-                  color: AppTheme.coral,
+                  variant: PillVariant.primary,
                 ),
             ],
           ),
@@ -515,9 +515,9 @@ class _DefinitionList extends StatelessWidget {
             Text(title, style: theme.textTheme.titleMedium),
             if (highFrequency) ...[
               const SizedBox(width: 8),
-              PillLabel(
+              AppPill(
                 label: l10n.wordbookHighFrequency,
-                color: AppTheme.coral,
+                variant: PillVariant.primary,
               ),
             ],
           ],
@@ -562,7 +562,7 @@ class _ExampleSections extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.format_quote, color: AppTheme.coral),
+                const Icon(Icons.format_quote, color: AppTokens.coral),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -609,19 +609,23 @@ class _WordTags extends StatelessWidget {
       runSpacing: 8,
       children: [
         if (progress != null) ...[
-          PillLabel(
+          AppPill(
             label: displayWordStatus(progress!.status),
             icon: Icons.psychology_outlined,
-            color: AppTheme.mango,
+            variant: PillVariant.success,
           ),
-          PillLabel(label: l10n.wordbookMasteryLevel(progress!.masteryLevel)),
+          AppPill(
+            label: l10n.wordbookMasteryLevel(progress!.masteryLevel),
+            variant: PillVariant.neutral,
+          ),
         ],
-        PillLabel(label: word.partOfSpeech),
-        PillLabel(
+        AppPill(label: word.partOfSpeech, variant: PillVariant.neutral),
+        AppPill(
           label: displayDifficulty(word.difficulty),
-          color: AppTheme.coral,
+          variant: PillVariant.primary,
         ),
-        for (final tag in word.tags) PillLabel(label: displayWordTag(tag)),
+        for (final tag in word.tags)
+          AppPill(label: displayWordTag(tag), variant: PillVariant.neutral),
       ],
     );
   }

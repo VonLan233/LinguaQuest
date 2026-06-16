@@ -2701,6 +2701,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('加入生词本'), findsOneWidget);
+    expect(find.byType(AppCard), findsWidgets);
 
     await tester.tap(find.widgetWithText(FilledButton, '加入生词本'));
     await tester.pumpAndSettle();
