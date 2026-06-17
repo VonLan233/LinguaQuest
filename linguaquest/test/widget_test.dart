@@ -750,6 +750,25 @@ void main() {
     );
   });
 
+  testWidgets('login quick-enter goes straight into the app', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+
+    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -500));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(AppSecondaryButton, '登录'));
+    await tester.pumpAndSettle();
+
+    // The quick-enter (demo/guest) button on the login screen.
+    await tester.tap(find.widgetWithText(AppSecondaryButton, '进入 LinguaQuest'));
+    await tester.pumpAndSettle();
+
+    // Landed inside the authenticated home experience.
+    expect(find.text('今日任务控制台'), findsOneWidget);
+  });
+
   testWidgets('failed login stays on login screen and shows error', (
     tester,
   ) async {
