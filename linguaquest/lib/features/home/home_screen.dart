@@ -59,7 +59,7 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: AppTokens.s8),
             Expanded(
               child: SizedBox(
                 height: 48,
@@ -71,14 +71,16 @@ class HomeScreen extends ConsumerWidget {
                       isDense: true,
                       prefixIcon: const Icon(Icons.search),
                       hintText: l10n.homeSearchHint,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 8),
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: AppTokens.s8,
+                      ),
                     ),
                     child: const SizedBox.shrink(),
                   ),
                 ),
               ),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: AppTokens.s8),
             _NotificationBellButton(
               unreadCount: state.unreadNotificationCount,
               onPressed: () => context.push('/notifications'),
@@ -88,7 +90,7 @@ class HomeScreen extends ConsumerWidget {
         ),
         const SizedBox(height: AppTokens.s16),
         AppCard(
-          padding: const EdgeInsets.all(AppTokens.s20),
+          padding: const EdgeInsets.all(AppTokens.s24),
           child: _DailyFocusHeader(
             streak: user?.streak ?? 0,
             target:
@@ -104,7 +106,7 @@ class HomeScreen extends ConsumerWidget {
             l10n: l10n,
           ),
         ),
-        const SizedBox(height: AppTokens.s12),
+        const SizedBox(height: AppTokens.s24),
         AppCard(
           padding: const EdgeInsets.symmetric(
             horizontal: AppTokens.s16,
@@ -136,7 +138,7 @@ class HomeScreen extends ConsumerWidget {
             onReview: () => context.push('/study/review'),
           ),
         ),
-        const SizedBox(height: AppTokens.s12),
+        const SizedBox(height: AppTokens.s20),
         AppCard(
           padding: const EdgeInsets.symmetric(
             horizontal: AppTokens.s16,
@@ -167,7 +169,7 @@ class HomeScreen extends ConsumerWidget {
             ],
           ),
         ),
-        const SizedBox(height: AppTokens.s12),
+        const SizedBox(height: AppTokens.s20),
         AppCard(
           padding: const EdgeInsets.symmetric(
             horizontal: AppTokens.s16,
@@ -184,7 +186,7 @@ class HomeScreen extends ConsumerWidget {
                 : context.push('/wordbook/${wordOfDay.id}'),
           ),
         ),
-        const SizedBox(height: AppTokens.s16),
+        const SizedBox(height: AppTokens.s24),
         AppCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -357,7 +359,7 @@ class _HomeInfoLink extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: AppTokens.s8),
           child: Row(
             children: [
               ImageCueBadge(cue: cue, size: 52),
@@ -413,7 +415,7 @@ class _DailyTaskPanel extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final hasReview = dueCount > 0;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+      padding: const EdgeInsets.symmetric(vertical: AppTokens.s4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -493,8 +495,8 @@ class _DailyFocusHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Wrap(
-          spacing: 8,
-          runSpacing: 8,
+          spacing: AppTokens.s8,
+          runSpacing: AppTokens.s8,
           children: [
             AppPill(
               label: '$target · $level',
@@ -546,7 +548,7 @@ class _DailyProgressRing extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           SizedBox.square(
-            dimension: 82,
+            dimension: 96,
             child: CircularProgressIndicator(
               value: progress.clamp(0.0, 1.0),
               strokeWidth: 8,
@@ -591,12 +593,7 @@ class _HomeShortcutList extends StatelessWidget {
         for (var index = 0; index < actions.length; index++) ...[
           _HomeShortcutLink(data: actions[index]),
           if (index != actions.length - 1)
-            Divider(
-              height: 10,
-              color: Theme.of(
-                context,
-              ).colorScheme.outlineVariant.withValues(alpha: 0.7),
-            ),
+            const SizedBox(height: AppTokens.s12),
         ],
       ],
     );
@@ -618,7 +615,7 @@ class _HomeShortcutLink extends StatelessWidget {
       child: InkWell(
         onTap: data.onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 7),
+          padding: const EdgeInsets.symmetric(vertical: AppTokens.s8),
           child: Row(
             children: [
               Icon(data.icon, color: theme.colorScheme.primary),
@@ -628,7 +625,7 @@ class _HomeShortcutLink extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(data.title, style: theme.textTheme.titleMedium),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: AppTokens.s4),
                     Text(
                       data.subtitle,
                       maxLines: 1,
