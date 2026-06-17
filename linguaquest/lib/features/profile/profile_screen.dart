@@ -52,7 +52,7 @@ class ProfileScreen extends ConsumerWidget {
           streak: user?.streak ?? 0,
           l10n: l10n,
         ),
-        const SizedBox(height: AppTokens.s24),
+        const SizedBox(height: AppTokens.s32),
         // Key stats in a clean row.
         _ProfileStatsRow(
           learned: state.completedLearningWords,
@@ -60,7 +60,7 @@ class ProfileScreen extends ConsumerWidget {
           streak: user?.streak ?? 0,
           l10n: l10n,
         ),
-        const SizedBox(height: AppTokens.s24),
+        const SizedBox(height: AppTokens.s32),
         // Progress card.
         if (state.totalLearningWords > 0) ...[
           _ProfileProgressCard(
@@ -69,7 +69,7 @@ class ProfileScreen extends ConsumerWidget {
             totalWords: state.totalLearningWords,
             l10n: l10n,
           ),
-          const SizedBox(height: AppTokens.s24),
+          const SizedBox(height: AppTokens.s32),
         ],
         // Settings group: study plan / wordbook / custom words / mistake book.
         _SettingsGroup(
@@ -139,14 +139,14 @@ class ProfileScreen extends ConsumerWidget {
             ),
           ],
         ),
-        const SizedBox(height: AppTokens.s24),
+        const SizedBox(height: AppTokens.s32),
         SectionHeader(
           title: l10n.profileAssetsTitle,
           subtitle: l10n.profileAssetsSubtitle,
         ),
         const SizedBox(height: AppTokens.s12),
         _AssetInventory(assets: state.userAssets),
-        const SizedBox(height: AppTokens.s24),
+        const SizedBox(height: AppTokens.s32),
         AppSecondaryButton(
           label: l10n.profileLogout,
           onPressed: () async {
@@ -182,9 +182,9 @@ class _ProfileHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AppCard(
-      padding: const EdgeInsets.all(AppTokens.s24),
+      padding: EdgeInsets.zero,
       child: Container(
-        padding: const EdgeInsets.all(AppTokens.s20),
+        padding: const EdgeInsets.all(AppTokens.s24),
         decoration: BoxDecoration(
           color: AppTokens.brandNavy,
           borderRadius: BorderRadius.circular(AppTokens.radiusCard),
@@ -212,8 +212,8 @@ class _ProfileHeader extends StatelessWidget {
             ),
             const SizedBox(height: AppTokens.s12),
             Wrap(
-              spacing: AppTokens.s8,
-              runSpacing: AppTokens.s8,
+              spacing: AppTokens.s12,
+              runSpacing: AppTokens.s12,
               alignment: WrapAlignment.center,
               children: [
                 AppPill(
@@ -351,8 +351,8 @@ class _SettingsGroup extends StatelessWidget {
             children[i],
             if (i < children.length - 1)
               const Divider(
-                height: 1,
-                thickness: 1,
+                height: 0.5,
+                thickness: 0.5,
                 indent: 56,
                 color: AppTokens.hairline,
               ),
@@ -381,31 +381,33 @@ class _SettingsItem extends StatelessWidget {
     final theme = Theme.of(context);
     return Material(
       color: Colors.transparent,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppTokens.s16,
+            vertical: AppTokens.s12,
+          ),
           child: Row(
             children: [
               Icon(icon, color: theme.colorScheme.primary, size: 22),
-              const SizedBox(width: 16),
+              const SizedBox(width: AppTokens.s16),
               Expanded(
                 child: Text(
                   title,
-                  style: theme.textTheme.titleMedium?.copyWith(fontSize: 15),
+                  style: theme.textTheme.bodyMedium,
                 ),
               ),
               if (value != null)
                 Text(
                   value!,
-                  style: TextStyle(
+                  style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
-                    fontSize: 14,
                   ),
                 ),
-              const SizedBox(width: 4),
+              const SizedBox(width: AppTokens.s4),
               Icon(
                 Icons.chevron_right_rounded,
                 color: theme.colorScheme.onSurfaceVariant,
@@ -435,12 +437,15 @@ class _LanguageSettingsItem extends StatelessWidget {
     final langCode = currentLocale?.languageCode ?? 'zh';
     return Material(
       color: Colors.transparent,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () => _showLanguageSheet(context, langCode),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppTokens.s16,
+            vertical: AppTokens.s12,
+          ),
           child: Row(
             children: [
               Icon(
@@ -448,21 +453,20 @@ class _LanguageSettingsItem extends StatelessWidget {
                 color: theme.colorScheme.primary,
                 size: 22,
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: AppTokens.s16),
               Expanded(
                 child: Text(
                   l10n.languageSetting,
-                  style: theme.textTheme.titleMedium?.copyWith(fontSize: 15),
+                  style: theme.textTheme.bodyMedium,
                 ),
               ),
               Text(
                 _localeLabel(langCode),
-                style: TextStyle(
+                style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
-                  fontSize: 14,
                 ),
               ),
-              const SizedBox(width: 4),
+              const SizedBox(width: AppTokens.s4),
               Icon(
                 Icons.chevron_right_rounded,
                 color: theme.colorScheme.onSurfaceVariant,
@@ -576,7 +580,6 @@ class _AssetInventory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final theme = Theme.of(context);
     if (assets.isEmpty) {
       return AppCard(
         child: MascotEmptyState(
@@ -591,9 +594,10 @@ class _AssetInventory extends StatelessWidget {
           for (var index = 0; index < assets.length; index++) ...[
             _AssetRow(asset: assets[index]),
             if (index != assets.length - 1)
-              Divider(
-                height: 14,
-                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.7),
+              const Divider(
+                height: AppTokens.s16,
+                thickness: 0.5,
+                color: AppTokens.hairline,
               ),
           ],
         ],
@@ -628,7 +632,7 @@ class _AssetRow extends StatelessWidget {
             size: 20,
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: AppTokens.s12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
