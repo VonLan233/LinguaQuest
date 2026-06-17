@@ -5,8 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_button.dart';
-import '../../core/widgets/app_card.dart';
-import '../../core/widgets/brand_hero_card.dart';
+import '../../core/widgets/mascot_image.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -34,105 +33,111 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final theme = Theme.of(context);
     final state = ref.watch(appControllerProvider);
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.authLoginTitle)),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(
-            AppTokens.s20,
-            AppTokens.s8,
-            AppTokens.s20,
-            AppTokens.s20,
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppTokens.s24,
+            vertical: AppTokens.s32,
           ),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                BrandHeroCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.authWelcomeBack,
-                        style: theme.textTheme.headlineMedium?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                      const SizedBox(height: AppTokens.s8),
-                      Text(
-                        l10n.authWelcomeBackSubtitle,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: Colors.white.withValues(alpha: 0.9),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                const SizedBox(height: AppTokens.s24),
+                const Center(child: MascotImage(size: 96)),
                 const SizedBox(height: AppTokens.s20),
-                AppCard(
-                  padding: const EdgeInsets.all(AppTokens.s20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      TextFormField(
-                        controller: _emailController,
-                        decoration: InputDecoration(
-                          labelText: l10n.authEmail,
-                          hintText: l10n.authEmailHint,
-                          prefixIcon: const Icon(Icons.mail_outline),
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (value) => _emailValidator(value, l10n),
-                      ),
-                      const SizedBox(height: AppTokens.s12),
-                      TextFormField(
-                        controller: _passwordController,
-                        decoration: InputDecoration(
-                          labelText: l10n.authPassword,
-                          hintText: l10n.authPasswordHint,
-                          prefixIcon: const Icon(Icons.lock_outline),
-                        ),
-                        obscureText: true,
-                        validator: (value) => _passwordValidator(value, l10n),
-                      ),
-                      if (state.errorMessage != null) ...[
-                        const SizedBox(height: AppTokens.s12),
-                        Text(
-                          state.errorMessage!,
-                          style: TextStyle(color: theme.colorScheme.error),
-                        ),
-                      ],
-                      const SizedBox(height: AppTokens.s20),
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          AppPrimaryButton(
-                            label: l10n.commonLogin,
-                            icon: Icons.login,
-                            onPressed: state.isLoading ? null : _submit,
-                          ),
-                          if (state.isLoading)
-                            const Positioned(
-                              right: AppTokens.s20,
-                              child: SizedBox(
-                                width: 18,
-                                height: 18,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: AppTokens.textHintLight,
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                    ],
+                Text(
+                  l10n.authWelcomeBack,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.5,
                   ),
                 ),
-                const SizedBox(height: AppTokens.s4),
-                TextButton(
-                  onPressed: () => context.go('/register'),
-                  child: Text(l10n.authRegisterNew),
+                const SizedBox(height: AppTokens.s8),
+                Text(
+                  'LinguaQuest',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.headlineMedium?.copyWith(
+                    color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: AppTokens.s8),
+                Text(
+                  l10n.authWelcomeBackSubtitle,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: AppTokens.textSecondaryLight,
+                  ),
+                ),
+                const SizedBox(height: AppTokens.s32),
+                TextFormField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    labelText: l10n.authEmail,
+                    hintText: l10n.authEmailHint,
+                    prefixIcon: const Icon(Icons.mail_outline),
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) => _emailValidator(value, l10n),
+                ),
+                const SizedBox(height: AppTokens.s16),
+                TextFormField(
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    labelText: l10n.authPassword,
+                    hintText: l10n.authPasswordHint,
+                    prefixIcon: const Icon(Icons.lock_outline),
+                  ),
+                  obscureText: true,
+                  validator: (value) => _passwordValidator(value, l10n),
+                ),
+                if (state.errorMessage != null) ...[
+                  const SizedBox(height: AppTokens.s12),
+                  Text(
+                    state.errorMessage!,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: theme.colorScheme.error),
+                  ),
+                ],
+                const SizedBox(height: AppTokens.s24),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    AppPrimaryButton(
+                      label: l10n.commonLogin,
+                      icon: Icons.login,
+                      onPressed: state.isLoading ? null : _submit,
+                    ),
+                    if (state.isLoading)
+                      const Positioned(
+                        right: AppTokens.s20,
+                        child: SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppTokens.textHintLight,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: AppTokens.s12),
+                AppSecondaryButton(
+                  label: l10n.goalSetupEnterApp,
+                  icon: Icons.bolt,
+                  onPressed: state.isLoading ? null : _enterDemo,
+                ),
+                const SizedBox(height: AppTokens.s8),
+                Center(
+                  child: TextButton(
+                    onPressed: () => context.go('/register'),
+                    child: Text(l10n.authRegisterNew),
+                  ),
                 ),
               ],
             ),
@@ -149,6 +154,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         .login(_emailController.text, _passwordController.text);
     if (!mounted) return;
     if (!succeeded) return;
+    context.go('/home');
+  }
+
+  Future<void> _enterDemo() async {
+    final ok = await ref.read(appControllerProvider.notifier).enterDemo();
+    if (!mounted || !ok) return;
     context.go('/home');
   }
 }
