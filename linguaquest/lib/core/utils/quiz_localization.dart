@@ -101,6 +101,24 @@ String localizedQuizPrompt(QuizQuestion question, AppLocalizations l10n) {
   };
 }
 
+String localizedQuizExplanation(QuizQuestion question, AppLocalizations l10n) {
+  final localeName = l10n.localeName;
+  final meaning = question.word.primaryDefinitionFor(localeName);
+  return switch (question.type) {
+    QuizQuestionType.chineseChoice || QuizQuestionType.listeningWordChoice =>
+      l10n.trainingExplanationChineseChoice(meaning, question.word.word),
+    QuizQuestionType.spelling => l10n.trainingExplanationSpelling(
+      question.word.word,
+      question.word.exampleSentence,
+    ),
+    QuizQuestionType.meaningChoice ||
+    QuizQuestionType.contextChoice ||
+    QuizQuestionType.imageChoice ||
+    QuizQuestionType.listeningMeaningChoice =>
+      l10n.trainingExplanationMeaningChoice(question.word.word, meaning),
+  };
+}
+
 String _promptDetail(String prompt) {
   final colonIndex = prompt.lastIndexOf('：');
   if (colonIndex >= 0 && colonIndex < prompt.length - 1) {

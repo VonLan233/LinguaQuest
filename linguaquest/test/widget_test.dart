@@ -336,6 +336,36 @@ void main() {
     },
   );
 
+  test('localized quiz question resolves baked Chinese answer options', () {
+    final lessons = seedLessons();
+    final lesson = lessons.first;
+    final question = lesson.questions.first;
+    final localized = localizeQuizQuestion(
+      question,
+      lessons.expand((lesson) => lesson.words),
+      'en',
+    );
+    final chineseText = RegExp(r'[\u4e00-\u9fff]');
+
+    expect(localized.answer, question.word.primaryDefinitionFor('en'));
+    expect(localized.answer, isNot(contains(chineseText)));
+    expect(localized.options, isNot(contains(question.word.meaning)));
+    for (final option in localized.options) {
+      expect(option, isNot(contains(chineseText)));
+    }
+  });
+
+  test('localized quiz explanation rewrites baked Chinese feedback', () async {
+    final en = await AppLocalizations.delegate.load(const Locale('en'));
+    final question = seedLessons().first.questions.first;
+    final explanation = localizedQuizExplanation(question, en);
+
+    expect(explanation, contains(question.word.word));
+    expect(explanation, contains(question.word.primaryDefinitionFor('en')));
+    expect(explanation, isNot(contains(RegExp(r'[\u4e00-\u9fff]'))));
+    expect(explanation, isNot(question.explanation));
+  });
+
   test('study session draft round trips queue and progress', () {
     final now = DateTime(2026, 5, 25);
     final word = seedLessons().first.words.first;
@@ -1850,6 +1880,119 @@ void main() {
     expect(find.text('限时测试'), findsOneWidget);
     expect(find.text('没有找到这节课'), findsNothing);
   });
+
+  testWidgets(
+    'quiz answer options localize distractors from the full lesson pool',
+    (tester) async {
+      final now = DateTime(2026, 5, 25);
+      final profile = UserProfile(
+        uid: 'quiz-option-locale-user',
+        name: 'Olive',
+        email: 'olive@lingua.quest',
+        targetExam: 'Daily English',
+        level: 'Elementary',
+        dailyGoal: 10,
+        xp: 0,
+        streak: 0,
+        createdAt: now,
+        updatedAt: now,
+      );
+      SharedPreferences.setMockInitialValues({
+        'linguaquest.profile': jsonEncode(profile.toJson()),
+      });
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      await container.read(appControllerProvider.notifier).bootstrap();
+
+      final lessons = container.read(appControllerProvider).lessons;
+      final lesson = lessons.firstWhere(
+        (item) =>
+            !item.isTrainingPack &&
+            item.questions.any(
+              (question) => quizOptionsAreMeanings(question.type),
+            ),
+      );
+      final externalWord = Word(
+        id: 'external-training-meaning',
+        word: 'outside',
+        phonetic: '',
+        meaning: '外部干扰项',
+        definition: 'an item outside the current formal lesson',
+        partOfSpeech: 'n',
+        exampleSentence: 'This option comes from another pool.',
+        exampleTranslation: '这个选项来自另一个词池。',
+        imageCue: 'O',
+        difficulty: 'Easy',
+        tags: const ['training'],
+        definitions: const ['外部干扰项'],
+        englishDefinitions: const ['an item outside the current formal lesson'],
+      );
+      final externalLesson = Lesson(
+        id: 'lesson-training-external',
+        title: 'External training options',
+        section: '训练场',
+        description: 'Only used as a translation pool source.',
+        status: 'locked',
+        xpReward: 0,
+        estimatedMinutes: 1,
+        words: [externalWord],
+        questions: const [],
+      );
+      final originalQuestion = lesson.questions.firstWhere(
+        (question) => quizOptionsAreMeanings(question.type),
+      );
+      final patchedQuestion = QuizQuestion(
+        id: originalQuestion.id,
+        type: originalQuestion.type,
+        prompt: originalQuestion.prompt,
+        answer: originalQuestion.answer,
+        options: [
+          originalQuestion.answer,
+          externalWord.meaning,
+          ...originalQuestion.options.where(
+            (option) =>
+                option != originalQuestion.answer &&
+                option != externalWord.meaning,
+          ),
+        ].take(4).toList(growable: false),
+        explanation: originalQuestion.explanation,
+        word: originalQuestion.word,
+      );
+      final patchedLessons = [
+        for (final item in lessons)
+          if (item.id == lesson.id)
+            item.copyWith(
+              questions: [patchedQuestion, ...item.questions.skip(1)],
+            )
+          else
+            item,
+        externalLesson,
+      ];
+      container.read(appControllerProvider.notifier).state = container
+          .read(appControllerProvider)
+          .copyWith(lessons: patchedLessons);
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            locale: const Locale('en'),
+            theme: AppTheme.light(),
+            home: QuizSessionScreen(lessonId: lesson.id),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text(externalWord.primaryDefinitionFor('en')),
+        findsOneWidget,
+      );
+      expect(find.text(externalWord.meaning), findsNothing);
+    },
+  );
 
   testWidgets(
     'timed test result returns to training instead of learning path',

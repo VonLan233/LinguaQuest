@@ -79,6 +79,9 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
         (state) => isTimed ? state.lessons : state.formalLessons,
       ),
     );
+    final allLessons = ref.watch(
+      appControllerProvider.select((state) => state.lessons),
+    );
     final lesson = _findLesson(lessons);
     if (lesson == null) {
       return Scaffold(body: Center(child: Text(l10n.quizNoLesson)));
@@ -92,7 +95,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
     final localeCode = Localizations.localeOf(context).languageCode;
     final question = localizeQuizQuestion(
       lesson.questions[_index],
-      _meaningPool(lessons),
+      _meaningPool(allLessons),
       localeCode,
     );
     final progress = (_index + 1) / lesson.questions.length;
@@ -531,7 +534,7 @@ class _FeedbackPanel extends StatelessWidget {
               children: [
                 Text(
                   revealAnswer
-                      ? '${l10n.quizCorrect}${question.explanation}'
+                      ? '${l10n.quizCorrect}${localizedQuizExplanation(question, l10n)}'
                       : '${l10n.quizWrong}${l10n.quizRetry}',
                   style: TextStyle(color: color),
                 ),
