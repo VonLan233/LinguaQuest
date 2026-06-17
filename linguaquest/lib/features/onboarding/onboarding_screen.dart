@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_card.dart';
-import '../../core/widgets/app_pill.dart';
-import '../../core/widgets/brand_mark.dart';
 import '../../core/widgets/learning_badges.dart';
-import '../../core/widgets/section_header.dart';
+import '../../core/widgets/mascot_image.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 class OnboardingScreen extends StatelessWidget {
@@ -39,60 +38,55 @@ class OnboardingScreen extends StatelessWidget {
 
     return Scaffold(
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 28),
-          children: [
-            Row(
-              children: [
-                const BrandMark(size: 62),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: SectionHeader(
-                    title: 'LinguaQuest',
-                    subtitle: l10n.onboardingSubtitle,
-                  ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppTokens.s24,
+            vertical: AppTokens.s32,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: AppTokens.s24),
+              const Center(child: MascotImage(size: 96)),
+              const SizedBox(height: AppTokens.s20),
+              Text(
+                l10n.onboardingTitle,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.headlineMedium?.copyWith(
+                  color: theme.colorScheme.primary,
+                  fontWeight: FontWeight.w900,
                 ),
-              ],
-            ),
-            const SizedBox(height: 14),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                AppPill(
-                  label: l10n.onboardingTagWorld,
-                  variant: PillVariant.primary,
-                  icon: Icons.auto_stories_outlined,
+              ),
+              const SizedBox(height: AppTokens.s8),
+              Text(
+                l10n.onboardingTagline,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: AppTokens.textSecondaryLight,
                 ),
-                const AppPill(
-                  label: 'XP',
-                  variant: PillVariant.xp,
-                  icon: Icons.bolt,
+              ),
+              const SizedBox(height: AppTokens.s32),
+              AppCard(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppTokens.s20,
+                  vertical: AppTokens.s8,
                 ),
-                AppPill(
-                  label: l10n.onboardingTagStreak,
-                  variant: PillVariant.streak,
-                  icon: Icons.local_fire_department,
-                ),
-              ],
-            ),
-            const SizedBox(height: 22),
-            Text(l10n.onboardingTagline, style: theme.textTheme.titleLarge),
-            const SizedBox(height: 12),
-            AppCard(child: _OnboardingStepList(steps: steps)),
-            const SizedBox(height: 18),
-            AppPrimaryButton(
-              onPressed: () => context.go('/register'),
-              icon: Icons.person_add_alt_1,
-              label: l10n.onboardingRegisterButton,
-            ),
-            const SizedBox(height: 10),
-            AppSecondaryButton(
-              onPressed: () => context.go('/login'),
-              icon: Icons.login,
-              label: l10n.commonLogin,
-            ),
-          ],
+                child: _OnboardingStepList(steps: steps),
+              ),
+              const SizedBox(height: AppTokens.s32),
+              AppPrimaryButton(
+                onPressed: () => context.go('/register'),
+                icon: Icons.person_add_alt_1,
+                label: l10n.onboardingRegisterButton,
+              ),
+              const SizedBox(height: AppTokens.s12),
+              AppSecondaryButton(
+                onPressed: () => context.go('/login'),
+                icon: Icons.login,
+                label: l10n.commonLogin,
+              ),
+            ],
+          ),
         ),
       ),
     );
