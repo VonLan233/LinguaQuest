@@ -1132,9 +1132,9 @@ void main() {
     expect(find.text('学习计划设置'), findsOneWidget);
     expect(find.text('雅思核心词汇'), findsWidgets);
     expect(find.text('切换词书'), findsOneWidget);
-    expect(find.text('每日新学词数'), findsOneWidget);
     await tester.drag(find.byType(Scrollable).last, const Offset(0, -320));
     await tester.pumpAndSettle();
+    expect(find.text('每日新学词数'), findsOneWidget);
     expect(find.text('每日复习上限'), findsOneWidget);
     await tester.drag(find.byType(Scrollable).last, const Offset(0, -520));
     await tester.pumpAndSettle();
@@ -1913,6 +1913,9 @@ void main() {
 
     final choiceQuestion = lesson.questions[choiceIndex];
     final nextQuestion = lesson.questions[choiceIndex + 1];
+    final l10n = await AppLocalizations.delegate.load(const Locale('zh'));
+    final choicePrompt = localizedQuizPrompt(choiceQuestion, l10n);
+    final nextPrompt = localizedQuizPrompt(nextQuestion, l10n);
 
     // Tapping the correct choice judges instantly — no check/continue buttons.
     await _tapOptionNoSettle(tester, choiceQuestion.answer);
@@ -1927,17 +1930,17 @@ void main() {
       findsOneWidget,
     );
     // Still on the choice question prompt before the auto-advance delay.
-    expect(find.text(choiceQuestion.prompt), findsOneWidget);
+    expect(find.text(choicePrompt), findsOneWidget);
 
     await tester.pump(const Duration(milliseconds: 1499));
-    expect(find.text(choiceQuestion.prompt), findsOneWidget);
-    expect(find.text(nextQuestion.prompt), findsNothing);
+    expect(find.text(choicePrompt), findsOneWidget);
+    expect(find.text(nextPrompt), findsNothing);
 
     await tester.pump(const Duration(milliseconds: 2));
     await tester.pumpAndSettle();
     // Advanced to the next question.
-    expect(find.text(choiceQuestion.prompt), findsNothing);
-    expect(find.text(nextQuestion.prompt), findsOneWidget);
+    expect(find.text(choicePrompt), findsNothing);
+    expect(find.text(nextPrompt), findsOneWidget);
   });
 
   testWidgets('quiz lets you re-select after a wrong choice', (tester) async {
@@ -1972,6 +1975,9 @@ void main() {
 
     final choiceQuestion = lesson.questions[choiceIndex];
     final nextQuestion = lesson.questions[choiceIndex + 1];
+    final l10n = await AppLocalizations.delegate.load(const Locale('zh'));
+    final choicePrompt = localizedQuizPrompt(choiceQuestion, l10n);
+    final nextPrompt = localizedQuizPrompt(nextQuestion, l10n);
 
     // A wrong tap shows the retry feedback and does NOT advance or reveal.
     await _tapAnyOptionExceptNoSettle(tester, choiceQuestion.answer);
@@ -1985,15 +1991,15 @@ void main() {
     );
     // Still on the same question (no auto-advance on wrong).
     await tester.pump(const Duration(milliseconds: 1600));
-    expect(find.text(choiceQuestion.prompt), findsOneWidget);
-    expect(find.text(nextQuestion.prompt), findsNothing);
+    expect(find.text(choicePrompt), findsOneWidget);
+    expect(find.text(nextPrompt), findsNothing);
 
     // Re-selecting the correct option now judges correct and advances.
     await _tapOptionNoSettle(tester, choiceQuestion.answer);
     expect(find.textContaining('答对了'), findsOneWidget);
     await tester.pump(const Duration(milliseconds: 1500));
     await tester.pumpAndSettle();
-    expect(find.text(nextQuestion.prompt), findsOneWidget);
+    expect(find.text(nextPrompt), findsOneWidget);
   });
 
   testWidgets('lesson and quiz screens expose a working back path', (
@@ -2042,8 +2048,10 @@ void main() {
 
     final quizLesson = _currentLesson(tester);
     final firstQuestion = quizLesson.questions.first;
+    final l10n = await AppLocalizations.delegate.load(const Locale('zh'));
+    final firstPrompt = localizedQuizPrompt(firstQuestion, l10n);
     // The question prompt marks that we are on the quiz screen.
-    expect(find.text(firstQuestion.prompt), findsOneWidget);
+    expect(find.text(firstPrompt), findsOneWidget);
     expect(find.byType(BackButtonIcon), findsOneWidget);
 
     // A wrong answer registers progress but does not advance.
@@ -2057,7 +2065,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Still on the same quiz question after choosing to keep answering.
-    expect(find.text(firstQuestion.prompt), findsOneWidget);
+    expect(find.text(firstPrompt), findsOneWidget);
 
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
@@ -2065,7 +2073,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('离开测验？'), findsNothing);
-    expect(find.text(firstQuestion.prompt), findsNothing);
+    expect(find.text(firstPrompt), findsNothing);
   });
 
   testWidgets('new word cards confirm before leaving after progress', (
@@ -2698,6 +2706,8 @@ void main() {
         .whereType<String>()
         .toList();
 
+    await tester.drag(find.byType(Scrollable).last, const Offset(0, -360));
+    await tester.pumpAndSettle();
     expect(visibleNumberFieldValues(), contains('10'));
     final updatedPlan = initialPlan.copyWith(
       dailyNewTarget: 33,
@@ -2714,7 +2724,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(visibleNumberFieldValues(), contains('33'));
-    await tester.drag(find.byType(Scrollable).last, const Offset(0, -360));
+    await tester.drag(find.byType(Scrollable).last, const Offset(0, -180));
     await tester.pumpAndSettle();
     expect(visibleNumberFieldValues(), contains('44'));
     expect(
@@ -2823,6 +2833,8 @@ void main() {
     await tester.tap(find.text('调整计划'));
     await tester.pumpAndSettle();
 
+    await tester.drag(find.byType(Scrollable).last, const Offset(0, -360));
+    await tester.pumpAndSettle();
     final field = tester.widget<TextFormField>(
       find.byType(TextFormField).first,
     );
