@@ -467,13 +467,14 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
+    final reviewButton = find.widgetWithText(AppSecondaryButton, '复习');
     await tester.scrollUntilVisible(
-      find.textContaining('复习'),
+      reviewButton,
       300,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.textContaining('复习'));
+    await tester.tap(reviewButton);
     await tester.pumpAndSettle();
 
     expect(find.text('快速复习'), findsOneWidget);
@@ -529,13 +530,14 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
+    final reviewButton = find.widgetWithText(AppSecondaryButton, '复习');
     await tester.scrollUntilVisible(
-      find.textContaining('复习'),
+      reviewButton,
       300,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.textContaining('复习'));
+    await tester.tap(reviewButton);
     await tester.pumpAndSettle();
     // Instant judgment records the attempt on tap (no check button); the wrong
     // review answer would auto-advance after 1500ms, but we leave before then.
@@ -4240,13 +4242,14 @@ void main() {
     );
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
+    final reviewButton = find.widgetWithText(AppSecondaryButton, '复习');
     await tester.scrollUntilVisible(
-      find.textContaining('复习'),
+      reviewButton,
       300,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.textContaining('复习'));
+    await tester.tap(reviewButton);
     await tester.pumpAndSettle();
     await tester.tap(find.text('管理复习队列'));
     await tester.pumpAndSettle();
@@ -4323,13 +4326,14 @@ void main() {
       );
       await tester.pumpAndSettle(const Duration(seconds: 1));
 
+      final reviewButton = find.widgetWithText(AppSecondaryButton, '复习');
       await tester.scrollUntilVisible(
-        find.textContaining('复习'),
+        reviewButton,
         300,
         scrollable: find.byType(Scrollable).first,
       );
       await tester.pumpAndSettle();
-      await tester.tap(find.textContaining('复习'));
+      await tester.tap(reviewButton);
       await tester.pumpAndSettle();
       await tester.tap(find.text('管理复习队列'));
       await tester.pumpAndSettle();
