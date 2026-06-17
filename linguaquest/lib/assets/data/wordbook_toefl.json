@@ -1,6 +1,8 @@
 {
   "id": "toefl",
   "title": "托福高频词汇",
+  "titleEn": "TOEFL Core Words",
+  "titleMs": "Perkataan Teras TOEFL",
   "category": "exam",
   "examType": "TOEFL",
   "coverUrl": "https://source.unsplash.com/featured/800x480/?english,vocabulary,toefl",
@@ -195,7 +197,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,cancel",
-      "sceneCue": "TOEFL · 取消， 废除"
+      "sceneCue": "TOEFL · 取消， 废除",
+      "malayDefinitions": [
+        "membatalkan",
+        "menghapuskan",
+        "memansuhkan"
+      ]
     },
     {
       "id": "toefl_002_explosive",
@@ -264,7 +271,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,explosive",
-      "sceneCue": "TOEFL · 爆炸的，爆发的"
+      "sceneCue": "TOEFL · 爆炸的，爆发的",
+      "malayDefinitions": [
+        "bahan letupan",
+        "meledak",
+        "meletup"
+      ]
     },
     {
       "id": "toefl_003_spontaneous",
@@ -330,7 +342,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,spontaneous",
-      "sceneCue": "TOEFL · 自发的， 自然产生的"
+      "sceneCue": "TOEFL · 自发的， 自然产生的",
+      "malayDefinitions": [
+        "spontan",
+        "semula jadi",
+        "tanpa dirancang"
+      ]
     },
     {
       "id": "toefl_004_wreck",
@@ -392,7 +409,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,wreck",
-      "sceneCue": "TOEFL · 使失事"
+      "sceneCue": "TOEFL · 使失事",
+      "malayDefinitions": [
+        "merosakkan",
+        "memusnahkan",
+        "bangkai kapal"
+      ]
     },
     {
       "id": "toefl_005_twinkling",
@@ -449,7 +471,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,twinkling",
-      "sceneCue": "TOEFL · 闪光的"
+      "sceneCue": "TOEFL · 闪光的",
+      "malayDefinitions": [
+        "berkilauan",
+        "sekelip mata",
+        "seketika"
+      ]
     },
     {
       "id": "toefl_006_conceal",
@@ -510,7 +537,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,conceal",
-      "sceneCue": "TOEFL · 隐蔽"
+      "sceneCue": "TOEFL · 隐蔽",
+      "malayDefinitions": [
+        "menyembunyikan",
+        "merahsia",
+        "menutup"
+      ]
     },
     {
       "id": "toefl_007_solid",
@@ -584,7 +616,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,solid",
-      "sceneCue": "TOEFL · 固体的"
+      "sceneCue": "TOEFL · 固体的",
+      "malayDefinitions": [
+        "pepejal",
+        "padu",
+        "kukuh"
+      ]
     },
     {
       "id": "toefl_008_narrative",
@@ -643,7 +680,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,narrative",
-      "sceneCue": "TOEFL · 叙述性的"
+      "sceneCue": "TOEFL · 叙述性的",
+      "malayDefinitions": [
+        "penceritaan",
+        "naratif",
+        "kisah"
+      ]
     },
     {
       "id": "toefl_009_scratch",
@@ -711,7 +753,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,scratch",
-      "sceneCue": "TOEFL · 刮擦，划"
+      "sceneCue": "TOEFL · 刮擦，划",
+      "malayDefinitions": [
+        "mencakar",
+        "menggaru",
+        "calar"
+      ]
     },
     {
       "id": "toefl_010_require",
@@ -772,7 +819,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,require",
-      "sceneCue": "TOEFL · 需要"
+      "sceneCue": "TOEFL · 需要",
+      "malayDefinitions": [
+        "memerlukan",
+        "mewajibkan"
+      ]
     },
     {
       "id": "toefl_011_cooperative",
@@ -841,7 +892,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,cooperative",
-      "sceneCue": "TOEFL · 合作的，协作的"
+      "sceneCue": "TOEFL · 合作的，协作的",
+      "malayDefinitions": [
+        "bekerjasama",
+        "koperasi",
+        "kolaboratif"
+      ]
     },
     {
       "id": "toefl_012_triple",
@@ -909,7 +965,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,triple",
-      "sceneCue": "TOEFL · 增至三倍"
+      "sceneCue": "TOEFL · 增至三倍",
+      "malayDefinitions": [
+        "tiga kali ganda",
+        "tiga bahagian",
+        "tiga pihak"
+      ]
     },
     {
       "id": "toefl_013_temper",
@@ -981,7 +1042,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,temper",
-      "sceneCue": "TOEFL · 脾气，性情"
+      "sceneCue": "TOEFL · 脾气，性情",
+      "malayDefinitions": [
+        "perangai",
+        "meredakan",
+        "mengawal"
+      ]
     },
     {
       "id": "toefl_014_tickle",
@@ -1042,7 +1108,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,tickle",
-      "sceneCue": "TOEFL · 发痒"
+      "sceneCue": "TOEFL · 发痒",
+      "malayDefinitions": [
+        "menggelitik",
+        "menghiburkan",
+        "geletek"
+      ]
     },
     {
       "id": "toefl_015_accessible",
@@ -1099,7 +1170,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accessible",
-      "sceneCue": "TOEFL · 易接近的"
+      "sceneCue": "TOEFL · 易接近的",
+      "malayDefinitions": [
+        "mudah diakses",
+        "boleh didapati",
+        "boleh dimasuki"
+      ]
     },
     {
       "id": "toefl_016_ageism",
@@ -1154,7 +1230,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ageism",
-      "sceneCue": "TOEFL · 年龄歧视"
+      "sceneCue": "TOEFL · 年龄歧视",
+      "malayDefinitions": [
+        "diskriminasi umur",
+        "ageisme"
+      ]
     },
     {
       "id": "toefl_017_evaporate",
@@ -1212,7 +1292,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,evaporate",
-      "sceneCue": "TOEFL · 蒸发"
+      "sceneCue": "TOEFL · 蒸发",
+      "malayDefinitions": [
+        "menyejat",
+        "hilang",
+        "lenyap"
+      ]
     },
     {
       "id": "toefl_018_resume",
@@ -1268,7 +1353,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,resume",
-      "sceneCue": "TOEFL · 重新开始， 继续"
+      "sceneCue": "TOEFL · 重新开始， 继续",
+      "malayDefinitions": [
+        "menyambung semula",
+        "meneruskan"
+      ]
     },
     {
       "id": "toefl_019_provocative",
@@ -1326,7 +1415,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,provocative",
-      "sceneCue": "TOEFL · 挑衅的， 煽动性的"
+      "sceneCue": "TOEFL · 挑衅的， 煽动性的",
+      "malayDefinitions": [
+        "provokatif",
+        "menghasut",
+        "menggoda"
+      ]
     },
     {
       "id": "toefl_020_spiral",
@@ -1397,7 +1491,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,spiral",
-      "sceneCue": "TOEFL · 盘旋"
+      "sceneCue": "TOEFL · 盘旋",
+      "malayDefinitions": [
+        "berpusing",
+        "meningkat secara mendadak",
+        "lingkaran"
+      ]
     },
     {
       "id": "toefl_021_artistic",
@@ -1461,7 +1560,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,artistic",
-      "sceneCue": "TOEFL · 艺术的"
+      "sceneCue": "TOEFL · 艺术的",
+      "malayDefinitions": [
+        "berseni",
+        "indah",
+        "berbakat seni"
+      ]
     },
     {
       "id": "toefl_022_plasma",
@@ -1527,7 +1631,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,plasma",
-      "sceneCue": "TOEFL · 血浆"
+      "sceneCue": "TOEFL · 血浆",
+      "malayDefinitions": [
+        "plasma darah",
+        "plasma"
+      ]
     },
     {
       "id": "toefl_023_violent",
@@ -1595,7 +1703,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,violent",
-      "sceneCue": "TOEFL · 暴力的"
+      "sceneCue": "TOEFL · 暴力的",
+      "malayDefinitions": [
+        "ganas",
+        "bersemangat",
+        "kuat"
+      ]
     },
     {
       "id": "toefl_024_erratic",
@@ -1653,7 +1766,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,erratic",
-      "sceneCue": "TOEFL · 古怪的， 反复无常的"
+      "sceneCue": "TOEFL · 古怪的， 反复无常的",
+      "malayDefinitions": [
+        "tidak menentu",
+        "tidak tetap",
+        "tidak stabil"
+      ]
     },
     {
       "id": "toefl_025_fantasy",
@@ -1715,7 +1833,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,fantasy",
-      "sceneCue": "TOEFL · 想象， 幻想"
+      "sceneCue": "TOEFL · 想象， 幻想",
+      "malayDefinitions": [
+        "fantasi",
+        "khayalan"
+      ]
     },
     {
       "id": "toefl_026_capillary",
@@ -1783,7 +1905,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,capillary",
-      "sceneCue": "TOEFL · 毛状的"
+      "sceneCue": "TOEFL · 毛状的",
+      "malayDefinitions": [
+        "seperti rambut",
+        "kapilari",
+        "pembuluh darah halus"
+      ]
     },
     {
       "id": "toefl_027_erode",
@@ -1840,7 +1967,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,erode",
-      "sceneCue": "TOEFL · 侵蚀， 腐蚀"
+      "sceneCue": "TOEFL · 侵蚀， 腐蚀",
+      "malayDefinitions": [
+        "menghakis",
+        "mengikis"
+      ]
     },
     {
       "id": "toefl_028_check",
@@ -1897,7 +2028,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,check",
-      "sceneCue": "TOEFL · 支票"
+      "sceneCue": "TOEFL · 支票",
+      "malayDefinitions": [
+        "cek",
+        "bil"
+      ]
     },
     {
       "id": "toefl_029_sparse",
@@ -1953,7 +2088,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,sparse",
-      "sceneCue": "TOEFL · 稀疏的， 稀少的"
+      "sceneCue": "TOEFL · 稀疏的， 稀少的",
+      "malayDefinitions": [
+        "jarang",
+        "sedikit",
+        "terhad"
+      ]
     },
     {
       "id": "toefl_030_gorgeous",
@@ -2011,7 +2151,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,gorgeous",
-      "sceneCue": "TOEFL · 漂亮的"
+      "sceneCue": "TOEFL · 漂亮的",
+      "malayDefinitions": [
+        "cantik",
+        "menyeronokkan",
+        "indah"
+      ]
     },
     {
       "id": "toefl_031_erosion",
@@ -2076,7 +2221,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,erosion",
-      "sceneCue": "TOEFL · 腐蚀， 侵蚀"
+      "sceneCue": "TOEFL · 腐蚀， 侵蚀",
+      "malayDefinitions": [
+        "hakisan",
+        "pengurangan"
+      ]
     },
     {
       "id": "toefl_032_spoil",
@@ -2135,7 +2284,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,spoil",
-      "sceneCue": "TOEFL · 破坏"
+      "sceneCue": "TOEFL · 破坏",
+      "malayDefinitions": [
+        "merosakkan",
+        "memanjakan",
+        "menjadi busuk"
+      ]
     },
     {
       "id": "toefl_033_pasture",
@@ -2195,7 +2349,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,pasture",
-      "sceneCue": "TOEFL · 牧场，草原"
+      "sceneCue": "TOEFL · 牧场，草原",
+      "malayDefinitions": [
+        "padang rumput",
+        "ladang ragut"
+      ]
     },
     {
       "id": "toefl_034_multiple",
@@ -2268,7 +2426,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,multiple",
-      "sceneCue": "TOEFL · 多样的"
+      "sceneCue": "TOEFL · 多样的",
+      "malayDefinitions": [
+        "pelbagai",
+        "berbilang",
+        "gandaan"
+      ]
     },
     {
       "id": "toefl_035_versatile",
@@ -2324,7 +2487,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,versatile",
-      "sceneCue": "TOEFL · 多才多艺的"
+      "sceneCue": "TOEFL · 多才多艺的",
+      "malayDefinitions": [
+        "serba boleh",
+        "pelbagai guna"
+      ]
     },
     {
       "id": "toefl_036_concentrate",
@@ -2390,7 +2557,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,concentrate",
-      "sceneCue": "TOEFL · 集中，专心"
+      "sceneCue": "TOEFL · 集中，专心",
+      "malayDefinitions": [
+        "menumpukan perhatian",
+        "memfokuskan"
+      ]
     },
     {
       "id": "toefl_037_versus",
@@ -2444,7 +2615,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,versus",
-      "sceneCue": "TOEFL · 对， 对抗"
+      "sceneCue": "TOEFL · 对， 对抗",
+      "malayDefinitions": [
+        "lawan",
+        "berbanding",
+        "bertentangan"
+      ]
     },
     {
       "id": "toefl_038_permit",
@@ -2512,7 +2688,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,permit",
-      "sceneCue": "TOEFL · 允许， 许可"
+      "sceneCue": "TOEFL · 允许， 许可",
+      "malayDefinitions": [
+        "membenarkan",
+        "lesen"
+      ]
     },
     {
       "id": "toefl_039_translation",
@@ -2581,7 +2761,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,translation",
-      "sceneCue": "TOEFL · 翻译"
+      "sceneCue": "TOEFL · 翻译",
+      "malayDefinitions": [
+        "terjemahan",
+        "hasil terjemahan"
+      ]
     },
     {
       "id": "toefl_040_catalog",
@@ -2642,7 +2826,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,catalog",
-      "sceneCue": "TOEFL · 目录"
+      "sceneCue": "TOEFL · 目录",
+      "malayDefinitions": [
+        "katalog",
+        "senarai"
+      ]
     },
     {
       "id": "toefl_041_part-time",
@@ -2696,7 +2884,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,part-time",
-      "sceneCue": "TOEFL · 兼职的"
+      "sceneCue": "TOEFL · 兼职的",
+      "malayDefinitions": [
+        "sambilan",
+        "separuh masa"
+      ]
     },
     {
       "id": "toefl_042_chilly",
@@ -2753,7 +2945,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,chilly",
-      "sceneCue": "TOEFL · 寒冷的"
+      "sceneCue": "TOEFL · 寒冷的",
+      "malayDefinitions": [
+        "sejuk",
+        "dingin",
+        "tidak mesra"
+      ]
     },
     {
       "id": "toefl_043_reservation",
@@ -2819,7 +3016,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,reservation",
-      "sceneCue": "TOEFL · 预约， 预订"
+      "sceneCue": "TOEFL · 预约， 预订",
+      "malayDefinitions": [
+        "tempahan",
+        "keraguan",
+        "kawasan penempatan"
+      ]
     },
     {
       "id": "toefl_044_block",
@@ -2889,7 +3091,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,block",
-      "sceneCue": "TOEFL · 阻塞"
+      "sceneCue": "TOEFL · 阻塞",
+      "malayDefinitions": [
+        "menyekat",
+        "menghalang",
+        "blok"
+      ]
     },
     {
       "id": "toefl_045_morphology",
@@ -2953,7 +3160,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,morphology",
-      "sceneCue": "TOEFL · 形态学， 形态论"
+      "sceneCue": "TOEFL · 形态学， 形态论",
+      "malayDefinitions": [
+        "morfologi",
+        "kajian bentuk"
+      ]
     },
     {
       "id": "toefl_046_distant",
@@ -3022,7 +3233,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,distant",
-      "sceneCue": "TOEFL · 远离的， 遥远的"
+      "sceneCue": "TOEFL · 远离的， 遥远的",
+      "malayDefinitions": [
+        "jauh",
+        "renggang",
+        "lama dahulu"
+      ]
     },
     {
       "id": "toefl_047_resonance",
@@ -3087,7 +3303,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,resonance",
-      "sceneCue": "TOEFL · 共振， 共鸣"
+      "sceneCue": "TOEFL · 共振， 共鸣",
+      "malayDefinitions": [
+        "resonans",
+        "gema"
+      ]
     },
     {
       "id": "toefl_048_propose",
@@ -3156,7 +3376,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,propose",
-      "sceneCue": "TOEFL · 建议， 提议"
+      "sceneCue": "TOEFL · 建议， 提议",
+      "malayDefinitions": [
+        "mencadangkan",
+        "menamakan",
+        "merancang"
+      ]
     },
     {
       "id": "toefl_049_seismograph",
@@ -3211,7 +3436,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,seismograph",
-      "sceneCue": "TOEFL · 地震仪， 测震仪"
+      "sceneCue": "TOEFL · 地震仪， 测震仪",
+      "malayDefinitions": [
+        "seismograf",
+        "alat pengukur gempa"
+      ]
     },
     {
       "id": "toefl_050_daylight",
@@ -3276,7 +3505,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,daylight",
-      "sceneCue": "TOEFL · 日光"
+      "sceneCue": "TOEFL · 日光",
+      "malayDefinitions": [
+        "cahaya matahari",
+        "siang"
+      ]
     },
     {
       "id": "toefl_051_crazy",
@@ -3348,7 +3581,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,crazy",
-      "sceneCue": "TOEFL · 疯狂的， 不理智的"
+      "sceneCue": "TOEFL · 疯狂的， 不理智的",
+      "malayDefinitions": [
+        "gila",
+        "terlalu minat",
+        "tidak siuman"
+      ]
     },
     {
       "id": "toefl_052_microscopic",
@@ -3412,7 +3650,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,microscopic",
-      "sceneCue": "TOEFL · 用显微镜可见的"
+      "sceneCue": "TOEFL · 用显微镜可见的",
+      "malayDefinitions": [
+        "boleh dilihat dengan mikroskop",
+        "sangat kecil"
+      ]
     },
     {
       "id": "toefl_053_caterpillar",
@@ -3470,7 +3712,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,caterpillar",
-      "sceneCue": "TOEFL · 毛毛虫"
+      "sceneCue": "TOEFL · 毛毛虫",
+      "malayDefinitions": [
+        "ulat bulu",
+        "beluncas"
+      ]
     },
     {
       "id": "toefl_054_haul",
@@ -3538,7 +3784,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,haul",
-      "sceneCue": "TOEFL · 拖，拖运"
+      "sceneCue": "TOEFL · 拖，拖运",
+      "malayDefinitions": [
+        "mengangkut",
+        "menarik",
+        "jumlah tangkapan"
+      ]
     },
     {
       "id": "toefl_055_energetic",
@@ -3595,7 +3846,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,energetic",
-      "sceneCue": "TOEFL · 精力充沛的， 积极的"
+      "sceneCue": "TOEFL · 精力充沛的， 积极的",
+      "malayDefinitions": [
+        "bertenaga",
+        "aktif"
+      ]
     },
     {
       "id": "toefl_056_quilt",
@@ -3652,7 +3907,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,quilt",
-      "sceneCue": "TOEFL · 缝被"
+      "sceneCue": "TOEFL · 缝被",
+      "malayDefinitions": [
+        "menjahit selimut",
+        "menjahit",
+        "selimut"
+      ]
     },
     {
       "id": "toefl_057_hostile",
@@ -3713,7 +3973,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,hostile",
-      "sceneCue": "TOEFL · 不友好的， 敌意的"
+      "sceneCue": "TOEFL · 不友好的， 敌意的",
+      "malayDefinitions": [
+        "bermusuhan",
+        "tidak mesra",
+        "pihak lawan"
+      ]
     },
     {
       "id": "toefl_058_crawl",
@@ -3770,7 +4035,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,crawl",
-      "sceneCue": "TOEFL · 缓慢行进"
+      "sceneCue": "TOEFL · 缓慢行进",
+      "malayDefinitions": [
+        "bergerak perlahan",
+        "merangkak",
+        "kelajuan perlahan"
+      ]
     },
     {
       "id": "toefl_059_academic",
@@ -3840,7 +4110,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,academic",
-      "sceneCue": "TOEFL · 学术的"
+      "sceneCue": "TOEFL · 学术的",
+      "malayDefinitions": [
+        "akademik",
+        "ilmiah",
+        "bersifat teori"
+      ]
     },
     {
       "id": "toefl_060_coral",
@@ -3895,7 +4170,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,coral",
-      "sceneCue": "TOEFL · 珊瑚色的， 红色的"
+      "sceneCue": "TOEFL · 珊瑚色的， 红色的",
+      "malayDefinitions": [
+        "warna batu karang",
+        "batu karang"
+      ]
     },
     {
       "id": "toefl_061_function",
@@ -3965,7 +4244,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,function",
-      "sceneCue": "TOEFL · 运行"
+      "sceneCue": "TOEFL · 运行",
+      "malayDefinitions": [
+        "berfungsi",
+        "beroperasi",
+        "fungsi"
+      ]
     },
     {
       "id": "toefl_062_raise",
@@ -4037,7 +4321,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,raise",
-      "sceneCue": "TOEFL · 举起，提升"
+      "sceneCue": "TOEFL · 举起，提升",
+      "malayDefinitions": [
+        "mengangkat",
+        "berdiri tegak",
+        "meningkatkan"
+      ]
     },
     {
       "id": "toefl_063_pliant",
@@ -4095,7 +4384,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,pliant",
-      "sceneCue": "TOEFL · 柔软的"
+      "sceneCue": "TOEFL · 柔软的",
+      "malayDefinitions": [
+        "lembut",
+        "patuh",
+        "mudah dipengaruhi"
+      ]
     },
     {
       "id": "toefl_064_pigeon",
@@ -4157,7 +4451,10 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,pigeon",
-      "sceneCue": "TOEFL · 鸽子"
+      "sceneCue": "TOEFL · 鸽子",
+      "malayDefinitions": [
+        "burung merpati"
+      ]
     },
     {
       "id": "toefl_065_lay",
@@ -4230,7 +4527,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,lay",
-      "sceneCue": "TOEFL · 产"
+      "sceneCue": "TOEFL · 产",
+      "malayDefinitions": [
+        "bertelur",
+        "meletakkan",
+        "membentang"
+      ]
     },
     {
       "id": "toefl_066_pernicious",
@@ -4286,7 +4588,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,pernicious",
-      "sceneCue": "TOEFL · 有害的， 恶性的"
+      "sceneCue": "TOEFL · 有害的， 恶性的",
+      "malayDefinitions": [
+        "berbahaya",
+        "memudaratkan"
+      ]
     },
     {
       "id": "toefl_067_cohabitation",
@@ -4344,7 +4650,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,cohabitation",
-      "sceneCue": "TOEFL · 同居， 同住"
+      "sceneCue": "TOEFL · 同居， 同住",
+      "malayDefinitions": [
+        "bersekedudukan",
+        "tinggal bersama"
+      ]
     },
     {
       "id": "toefl_068_herbivore",
@@ -4402,7 +4712,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,herbivore",
-      "sceneCue": "TOEFL · 食草动物"
+      "sceneCue": "TOEFL · 食草动物",
+      "malayDefinitions": [
+        "haiwan herbivor",
+        "pemakan tumbuhan"
+      ]
     },
     {
       "id": "toefl_069_successive",
@@ -4461,7 +4775,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,successive",
-      "sceneCue": "TOEFL · 接替的， 继承的"
+      "sceneCue": "TOEFL · 接替的， 继承的",
+      "malayDefinitions": [
+        "berturut-turut",
+        "berterusan"
+      ]
     },
     {
       "id": "toefl_070_adventure",
@@ -4524,7 +4842,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adventure",
-      "sceneCue": "TOEFL · 奇遇"
+      "sceneCue": "TOEFL · 奇遇",
+      "malayDefinitions": [
+        "pengembaraan",
+        "aktiviti mencabar"
+      ]
     },
     {
       "id": "toefl_071_ceremony",
@@ -4589,7 +4911,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ceremony",
-      "sceneCue": "TOEFL · 典礼， 仪式"
+      "sceneCue": "TOEFL · 典礼， 仪式",
+      "malayDefinitions": [
+        "upacara",
+        "majlis",
+        "adat"
+      ]
     },
     {
       "id": "toefl_072_improve",
@@ -4660,7 +4987,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,improve",
-      "sceneCue": "TOEFL · 改善， 改进， 增进"
+      "sceneCue": "TOEFL · 改善， 改进， 增进",
+      "malayDefinitions": [
+        "memperbaiki",
+        "meningkatkan",
+        "bertambah baik"
+      ]
     },
     {
       "id": "toefl_073_idyllic",
@@ -4717,7 +5049,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,idyllic",
-      "sceneCue": "TOEFL · 田园诗般的， 田园风光的， 牧歌的"
+      "sceneCue": "TOEFL · 田园诗般的， 田园风光的， 牧歌的",
+      "malayDefinitions": [
+        "seperti di desa",
+        "tenteram",
+        "damai"
+      ]
     },
     {
       "id": "toefl_074_effective",
@@ -4789,7 +5126,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,effective",
-      "sceneCue": "TOEFL · 有效的， 生效的"
+      "sceneCue": "TOEFL · 有效的， 生效的",
+      "malayDefinitions": [
+        "berkesan",
+        "ketara",
+        "sebenar"
+      ]
     },
     {
       "id": "toefl_075_muscle",
@@ -4860,7 +5202,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,muscle",
-      "sceneCue": "TOEFL · 肌肉"
+      "sceneCue": "TOEFL · 肌肉",
+      "malayDefinitions": [
+        "otot",
+        "kekuatan",
+        "pengaruh"
+      ]
     },
     {
       "id": "toefl_076_flux",
@@ -4924,7 +5271,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,flux",
-      "sceneCue": "TOEFL · 变迁， 不断的变动"
+      "sceneCue": "TOEFL · 变迁， 不断的变动",
+      "malayDefinitions": [
+        "perubahan",
+        "ketidaktentuan"
+      ]
     },
     {
       "id": "toefl_077_crescent",
@@ -4982,7 +5333,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,crescent",
-      "sceneCue": "TOEFL · 新月形的"
+      "sceneCue": "TOEFL · 新月形的",
+      "malayDefinitions": [
+        "berbentuk bulan sabit",
+        "semakin meningkat",
+        "bulan sabit"
+      ]
     },
     {
       "id": "toefl_078_inflate",
@@ -5041,7 +5397,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,inflate",
-      "sceneCue": "TOEFL · 充气， 膨胀"
+      "sceneCue": "TOEFL · 充气， 膨胀",
+      "malayDefinitions": [
+        "mengembung",
+        "membesar-besarkan",
+        "menaikkan harga"
+      ]
     },
     {
       "id": "toefl_079_stable",
@@ -5111,7 +5472,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,stable",
-      "sceneCue": "TOEFL · 稳定的，安定的"
+      "sceneCue": "TOEFL · 稳定的，安定的",
+      "malayDefinitions": [
+        "stabil",
+        "kukuh",
+        "tenang"
+      ]
     },
     {
       "id": "toefl_080_incident",
@@ -5177,7 +5543,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,incident",
-      "sceneCue": "TOEFL · 事情， 事件"
+      "sceneCue": "TOEFL · 事情， 事件",
+      "malayDefinitions": [
+        "kejadian",
+        "peristiwa",
+        "konflik"
+      ]
     },
     {
       "id": "toefl_081_prey",
@@ -5244,7 +5615,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,prey",
-      "sceneCue": "TOEFL · 捕食，捕获"
+      "sceneCue": "TOEFL · 捕食，捕获",
+      "malayDefinitions": [
+        "memburu",
+        "mangsa",
+        "korban"
+      ]
     },
     {
       "id": "toefl_082_vertebrate",
@@ -5300,7 +5676,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,vertebrate",
-      "sceneCue": "TOEFL · 有脊椎的"
+      "sceneCue": "TOEFL · 有脊椎的",
+      "malayDefinitions": [
+        "bertulang belakang",
+        "haiwan vertebrata"
+      ]
     },
     {
       "id": "toefl_083_expedition",
@@ -5357,7 +5737,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,expedition",
-      "sceneCue": "TOEFL · 远征"
+      "sceneCue": "TOEFL · 远征",
+      "malayDefinitions": [
+        "ekspedisi",
+        "penerokaan"
+      ]
     },
     {
       "id": "toefl_084_concert",
@@ -5426,7 +5810,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,concert",
-      "sceneCue": "TOEFL · 音乐会， 演奏会"
+      "sceneCue": "TOEFL · 音乐会， 演奏会",
+      "malayDefinitions": [
+        "konsert",
+        "persetujuan"
+      ]
     },
     {
       "id": "toefl_085_supply",
@@ -5496,7 +5884,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,supply",
-      "sceneCue": "TOEFL · 供应"
+      "sceneCue": "TOEFL · 供应",
+      "malayDefinitions": [
+        "membekalkan",
+        "stok",
+        "bekalan"
+      ]
     },
     {
       "id": "toefl_086_circulate",
@@ -5555,7 +5948,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,circulate",
-      "sceneCue": "TOEFL · 循环"
+      "sceneCue": "TOEFL · 循环",
+      "malayDefinitions": [
+        "beredar",
+        "mengedarkan",
+        "tersebar"
+      ]
     },
     {
       "id": "toefl_087_state",
@@ -5629,7 +6027,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,state",
-      "sceneCue": "TOEFL · 陈述， 说明， 声明"
+      "sceneCue": "TOEFL · 陈述， 说明， 声明",
+      "malayDefinitions": [
+        "menyatakan",
+        "menetapkan",
+        "keadaan"
+      ]
     },
     {
       "id": "toefl_088_press",
@@ -5703,7 +6106,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,press",
-      "sceneCue": "TOEFL · 压， 按， 挤"
+      "sceneCue": "TOEFL · 压， 按， 挤",
+      "malayDefinitions": [
+        "menekan",
+        "memerah",
+        "mendesak"
+      ]
     },
     {
       "id": "toefl_089_jumble",
@@ -5761,7 +6169,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,jumble",
-      "sceneCue": "TOEFL · 混杂，掺杂"
+      "sceneCue": "TOEFL · 混杂，掺杂",
+      "malayDefinitions": [
+        "mencampur aduk",
+        "campuran",
+        "kucar-kacir"
+      ]
     },
     {
       "id": "toefl_090_environmental",
@@ -5830,7 +6243,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,environmental",
-      "sceneCue": "TOEFL · 有关环境的， 自然环境的， 生态环境的"
+      "sceneCue": "TOEFL · 有关环境的， 自然环境的， 生态环境的",
+      "malayDefinitions": [
+        "berkaitan alam sekitar",
+        "persekitaran"
+      ]
     },
     {
       "id": "toefl_091_crustacean",
@@ -5884,7 +6301,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,crustacean",
-      "sceneCue": "TOEFL · 甲壳类的"
+      "sceneCue": "TOEFL · 甲壳类的",
+      "malayDefinitions": [
+        "berkrustasea",
+        "haiwan krustasea"
+      ]
     },
     {
       "id": "toefl_092_opposite",
@@ -5959,7 +6380,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,opposite",
-      "sceneCue": "TOEFL · 对面的"
+      "sceneCue": "TOEFL · 对面的",
+      "malayDefinitions": [
+        "bertentangan",
+        "berlawanan",
+        "sebaliknya"
+      ]
     },
     {
       "id": "toefl_093_pack",
@@ -6029,7 +6455,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,pack",
-      "sceneCue": "TOEFL · 收拾，打包"
+      "sceneCue": "TOEFL · 收拾，打包",
+      "malayDefinitions": [
+        "mengemas",
+        "membungkus",
+        "memenuhi"
+      ]
     },
     {
       "id": "toefl_094_untapped",
@@ -6083,7 +6514,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,untapped",
-      "sceneCue": "TOEFL · 未开发的， 未使用的"
+      "sceneCue": "TOEFL · 未开发的， 未使用的",
+      "malayDefinitions": [
+        "belum diterokai",
+        "belum digunakan"
+      ]
     },
     {
       "id": "toefl_095_battery",
@@ -6151,7 +6586,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,battery",
-      "sceneCue": "TOEFL · 电池"
+      "sceneCue": "TOEFL · 电池",
+      "malayDefinitions": [
+        "bateri",
+        "pasukan artileri",
+        "siri"
+      ]
     },
     {
       "id": "toefl_096_irreverent",
@@ -6205,7 +6645,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,irreverent",
-      "sceneCue": "TOEFL · 不敬的"
+      "sceneCue": "TOEFL · 不敬的",
+      "malayDefinitions": [
+        "tidak hormat",
+        "biadab"
+      ]
     },
     {
       "id": "toefl_097_fa-ade",
@@ -6263,7 +6707,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,fa-ade",
-      "sceneCue": "TOEFL · 正面"
+      "sceneCue": "TOEFL · 正面",
+      "malayDefinitions": [
+        "muka hadapan",
+        "permukaan luaran"
+      ]
     },
     {
       "id": "toefl_098_divorce",
@@ -6327,7 +6775,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,divorce",
-      "sceneCue": "TOEFL · 与…离婚"
+      "sceneCue": "TOEFL · 与…离婚",
+      "malayDefinitions": [
+        "bercerai dengan",
+        "memisahkan",
+        "perceraian"
+      ]
     },
     {
       "id": "toefl_099_quiz",
@@ -6387,7 +6840,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,quiz",
-      "sceneCue": "TOEFL · 小测验"
+      "sceneCue": "TOEFL · 小测验",
+      "malayDefinitions": [
+        "kuiz",
+        "pertandingan minda",
+        "ujian"
+      ]
     },
     {
       "id": "toefl_100_ingredient",
@@ -6448,7 +6906,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ingredient",
-      "sceneCue": "TOEFL · 成分， 要素"
+      "sceneCue": "TOEFL · 成分， 要素",
+      "malayDefinitions": [
+        "ramuan",
+        "bahan"
+      ]
     },
     {
       "id": "toefl_101_consolidate",
@@ -6506,7 +6968,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,consolidate",
-      "sceneCue": "TOEFL · 巩固"
+      "sceneCue": "TOEFL · 巩固",
+      "malayDefinitions": [
+        "mengukuhkan",
+        "menggabungkan"
+      ]
     },
     {
       "id": "toefl_102_contour",
@@ -6565,7 +7031,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,contour",
-      "sceneCue": "TOEFL · 等高线"
+      "sceneCue": "TOEFL · 等高线",
+      "malayDefinitions": [
+        "garis kontur",
+        "bentuk luar"
+      ]
     },
     {
       "id": "toefl_103_clan",
@@ -6621,7 +7091,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,clan",
-      "sceneCue": "TOEFL · 家族， 宗族， 氏族"
+      "sceneCue": "TOEFL · 家族， 宗族， 氏族",
+      "malayDefinitions": [
+        "kaum",
+        "puak",
+        "kumpulan"
+      ]
     },
     {
       "id": "toefl_104_economical",
@@ -6688,7 +7163,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,economical",
-      "sceneCue": "TOEFL · 经济的， 实惠的"
+      "sceneCue": "TOEFL · 经济的， 实惠的",
+      "malayDefinitions": [
+        "ekonomi",
+        "jimat",
+        "berhemat"
+      ]
     },
     {
       "id": "toefl_105_cabinet",
@@ -6753,7 +7233,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,cabinet",
-      "sceneCue": "TOEFL · 内阁"
+      "sceneCue": "TOEFL · 内阁",
+      "malayDefinitions": [
+        "kabinet",
+        "almari"
+      ]
     },
     {
       "id": "toefl_106_principle",
@@ -6824,7 +7308,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,principle",
-      "sceneCue": "TOEFL · 原则"
+      "sceneCue": "TOEFL · 原则",
+      "malayDefinitions": [
+        "prinsip",
+        "asas",
+        "peraturan moral"
+      ]
     },
     {
       "id": "toefl_107_telecommunication",
@@ -6885,7 +7374,10 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,telecommunication",
-      "sceneCue": "TOEFL · 电信"
+      "sceneCue": "TOEFL · 电信",
+      "malayDefinitions": [
+        "telekomunikasi"
+      ]
     },
     {
       "id": "toefl_108_initiate",
@@ -6944,7 +7436,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,initiate",
-      "sceneCue": "TOEFL · 发起， 开始， 创始"
+      "sceneCue": "TOEFL · 发起， 开始， 创始",
+      "malayDefinitions": [
+        "memulakan",
+        "menerima masuk",
+        "ahli baru"
+      ]
     },
     {
       "id": "toefl_109_deception",
@@ -7001,7 +7498,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,deception",
-      "sceneCue": "TOEFL · 骗局"
+      "sceneCue": "TOEFL · 骗局",
+      "malayDefinitions": [
+        "penipuan",
+        "helah",
+        "muslihat"
+      ]
     },
     {
       "id": "toefl_110_budget",
@@ -7073,7 +7575,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,budget",
-      "sceneCue": "TOEFL · 做预算"
+      "sceneCue": "TOEFL · 做预算",
+      "malayDefinitions": [
+        "membajet",
+        "murah",
+        "bajet"
+      ]
     },
     {
       "id": "toefl_111_tenuous",
@@ -7131,7 +7638,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,tenuous",
-      "sceneCue": "TOEFL · 纤细的"
+      "sceneCue": "TOEFL · 纤细的",
+      "malayDefinitions": [
+        "halus",
+        "rapuh",
+        "lemah"
+      ]
     },
     {
       "id": "toefl_112_overall",
@@ -7198,7 +7710,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,overall",
-      "sceneCue": "TOEFL · 总共"
+      "sceneCue": "TOEFL · 总共",
+      "malayDefinitions": [
+        "secara keseluruhan",
+        "menyeluruh",
+        "pakaian kerja"
+      ]
     },
     {
       "id": "toefl_113_assume",
@@ -7261,7 +7778,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,assume",
-      "sceneCue": "TOEFL · 假定"
+      "sceneCue": "TOEFL · 假定",
+      "malayDefinitions": [
+        "menganggap",
+        "memikul tanggungjawab"
+      ]
     },
     {
       "id": "toefl_114_concept",
@@ -7332,7 +7853,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,concept",
-      "sceneCue": "TOEFL · 概念， 观念"
+      "sceneCue": "TOEFL · 概念， 观念",
+      "malayDefinitions": [
+        "konsep",
+        "gagasan",
+        "idea"
+      ]
     },
     {
       "id": "toefl_115_impersonal",
@@ -7386,7 +7912,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,impersonal",
-      "sceneCue": "TOEFL · 没有人情味的， 冷淡的"
+      "sceneCue": "TOEFL · 没有人情味的， 冷淡的",
+      "malayDefinitions": [
+        "tidak peribadi",
+        "dingin",
+        "objektif"
+      ]
     },
     {
       "id": "toefl_116_disaster",
@@ -7455,7 +7986,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,disaster",
-      "sceneCue": "TOEFL · 灾难"
+      "sceneCue": "TOEFL · 灾难",
+      "malayDefinitions": [
+        "bencana",
+        "malapetaka",
+        "kegagalan total"
+      ]
     },
     {
       "id": "toefl_117_stark",
@@ -7519,7 +8055,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,stark",
-      "sceneCue": "TOEFL · 十足"
+      "sceneCue": "TOEFL · 十足",
+      "malayDefinitions": [
+        "benar-benar",
+        "telanjang",
+        "keras"
+      ]
     },
     {
       "id": "toefl_118_furry",
@@ -7580,7 +8121,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,furry",
-      "sceneCue": "TOEFL · 毛皮似的"
+      "sceneCue": "TOEFL · 毛皮似的",
+      "malayDefinitions": [
+        "berbulu",
+        "seperti bulu",
+        "ditutupi bulu"
+      ]
     },
     {
       "id": "toefl_119_enhance",
@@ -7639,7 +8185,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,enhance",
-      "sceneCue": "TOEFL · 提高"
+      "sceneCue": "TOEFL · 提高",
+      "malayDefinitions": [
+        "meningkatkan",
+        "memperkuatkan"
+      ]
     },
     {
       "id": "toefl_120_purchase",
@@ -7708,7 +8258,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,purchase",
-      "sceneCue": "TOEFL · 购买"
+      "sceneCue": "TOEFL · 购买",
+      "malayDefinitions": [
+        "membeli",
+        "pembelian",
+        "barang dibeli"
+      ]
     }
   ]
 }

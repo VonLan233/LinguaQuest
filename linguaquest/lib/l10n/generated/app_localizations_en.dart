@@ -227,10 +227,355 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingSubtitle =>
-      'Short lessons, visual memory cards, and smart review help you steadily build English vocabulary.';
+      'Short lessons, visual memory cards, and smart review help you build vocabulary steadily.';
 
   @override
   String get onboardingTagline => 'Level up daily like a game';
+
+  @override
+  String get onboardingTagWorld => 'Word Quest World';
+
+  @override
+  String get onboardingTagStreak => 'Daily streak';
+
+  @override
+  String get splashTagline => 'Image word cards, clear paths, smart review.';
+
+  @override
+  String get studyNewScreenTitle => 'New words';
+
+  @override
+  String get studyWordbookPath => 'Wordbook path';
+
+  @override
+  String get studyEnterCards => 'Start word cards';
+
+  @override
+  String get studyNewPackTitle => 'Today\'s new word pack';
+
+  @override
+  String get studyNewPackDesc =>
+      'Self-assess first, then view cards, then context questions. Formal review is queued separately.';
+
+  @override
+  String get studyNoNewWords => 'No new words';
+
+  @override
+  String get studyNewPausedHint =>
+      'Study plan paused. Resume to continue today\'s new words.';
+
+  @override
+  String get studyNewEmptyHint =>
+      'The current wordbook is finished, or the plan isn\'t generated yet. Check the wordbook path for the next set.';
+
+  @override
+  String get studyOpenWordbookPath => 'Open wordbook path';
+
+  @override
+  String studyTodayLearnCount(Object count) {
+    return 'Learn $count new words today';
+  }
+
+  @override
+  String get studyNewNoLessonHint =>
+      'Finish review before adding new words; keeping a rhythm beats piling on tasks.';
+
+  @override
+  String studyNewPausedResume(Object section) {
+    return 'Study plan paused; resume to continue from $section.';
+  }
+
+  @override
+  String get studyRecallKnown => 'Know it';
+
+  @override
+  String get studyRecallFuzzy => 'Unsure';
+
+  @override
+  String get studyRecallUnknown => 'Don\'t know';
+
+  @override
+  String get studyStepSelfAssess => 'Self-assess';
+
+  @override
+  String get studyStepSelfAssessDesc => 'Reduce wasted repetition';
+
+  @override
+  String get studyStepCards => 'Word cards';
+
+  @override
+  String get studyStepCardsDesc => 'Fill in meaning and examples';
+
+  @override
+  String get studyStepContext => 'Context';
+
+  @override
+  String get studyStepContextDesc => 'Active recall';
+
+  @override
+  String get mixedManageReviewQueue => 'Manage review queue';
+
+  @override
+  String mixedReviewRatio(Object percent) {
+    return 'Review $percent%';
+  }
+
+  @override
+  String get mixedTitleNew => 'Today\'s new word pack';
+
+  @override
+  String get mixedTitleReview => 'Quick review';
+
+  @override
+  String get mixedTitleMixed => 'Today\'s mixed pack';
+
+  @override
+  String get mixedSaveReviewFailed =>
+      'Unable to save the review record for now';
+
+  @override
+  String mixedUnsureOption(Object index) {
+    return 'Unsure $index';
+  }
+
+  @override
+  String get mixedSaveProgressTitle => 'Save this progress?';
+
+  @override
+  String get mixedSaveProgressBody =>
+      'Saved review records are kept; saving records the questions completed this time, and unfinished words return to the pack next time.';
+
+  @override
+  String get mixedContinueStudy => 'Keep studying';
+
+  @override
+  String get mixedLeaveWithoutSaving => 'Leave without saving';
+
+  @override
+  String get mixedSaveAndLeave => 'Save and leave';
+
+  @override
+  String get mixedSaveStudyFailed => 'Unable to save study progress for now';
+
+  @override
+  String get mixedSelfAssessHint =>
+      'Self-assess first; the app adjusts today\'s repetitions';
+
+  @override
+  String get mixedEnterRecognition => 'Start recognition';
+
+  @override
+  String get mixedAddLaterRecall => 'Add to later recall';
+
+  @override
+  String get mixedReviewQuickAnswer => 'Review quick answer';
+
+  @override
+  String get mixedFeedbackCorrect => 'Correct, on to the next one.';
+
+  @override
+  String get mixedFeedbackWrong =>
+      'Wrong; check the knowledge card, it will appear again later.';
+
+  @override
+  String get mixedFeedbackRetry =>
+      'Not yet. Pick the correct answer before continuing.';
+
+  @override
+  String mixedShortRecallPrompt(Object word) {
+    return 'Short recall: what does $word mean?';
+  }
+
+  @override
+  String mixedMeaningPrompt(Object word) {
+    return 'What is the meaning of $word?';
+  }
+
+  @override
+  String get mixedStepRecognition => 'Recognition';
+
+  @override
+  String get mixedStepShortRecall => 'Short recall';
+
+  @override
+  String get mixedStepDueReview => 'Due review';
+
+  @override
+  String get mixedStepKnowledge => 'Knowledge card';
+
+  @override
+  String get mixedCompleteTitle => 'Today\'s pack complete';
+
+  @override
+  String get mixedNoContentTitle => 'Nothing to study today';
+
+  @override
+  String get mixedCompleteBody =>
+      'Mistakes have been recycled this round; your answers and time are saved to the study log.';
+
+  @override
+  String get mixedNoContentBody => 'No new words or due reviews right now.';
+
+  @override
+  String get mixedSaveAndHome => 'Save and go home';
+
+  @override
+  String get questCenterTitle => 'Task center';
+
+  @override
+  String get questCenterSubtitle =>
+      'Earn points after study actions; also view rankings, analytics, and class learning.';
+
+  @override
+  String get questDailyTask => 'Daily tasks';
+
+  @override
+  String get questDailyTaskBody => 'Finish a lesson and review 5 due words.';
+
+  @override
+  String get questAchievements => 'Achievements';
+
+  @override
+  String get questAchievementsBody =>
+      'Streaks, 100 words learned, first perfect lesson, and more.';
+
+  @override
+  String get questAchievementsValue => '3';
+
+  @override
+  String get questLeaderboard => 'Leaderboard';
+
+  @override
+  String get questLeaderboardBody =>
+      'Weekly XP ranking for friends and future classes.';
+
+  @override
+  String get questWeekly => 'Weekly';
+
+  @override
+  String get questAnalytics => 'Learning analytics';
+
+  @override
+  String get questAnalyticsBody =>
+      'Accuracy, vocabulary growth, and review completion trends.';
+
+  @override
+  String get questTrend => 'Trends';
+
+  @override
+  String get questClassMode => 'Class Mode';
+
+  @override
+  String get questClassModeBody =>
+      'Join with a class code to see the teacher dashboard and group learning.';
+
+  @override
+  String get questClassCode => 'Class code';
+
+  @override
+  String get questAiTutor => 'AI tutor';
+
+  @override
+  String get questAiTutorBody =>
+      'Explain mistakes and suggest example sentences.';
+
+  @override
+  String get aiTutorSamplePrompt =>
+      'Explain the difference between affect and effect';
+
+  @override
+  String get aiTutorSubtitle =>
+      'Enter a word, grammar point, or mistake to get a structured explanation and practice sentences.';
+
+  @override
+  String get aiTutorInputLabel => 'Ask about a word, grammar, or mistake';
+
+  @override
+  String get aiTutorSampleAnswer =>
+      'Affect is usually a verb: \"The weather affects my mood.\" Effect is usually a noun: \"The effect was immediate.\" Try writing a sentence with each word.';
+
+  @override
+  String get classModeTitle => 'Class learning';
+
+  @override
+  String get classModeSubtitle =>
+      'Enter a class code to join a group and view class progress and weak-spot summaries.';
+
+  @override
+  String classModeJoined(Object code) {
+    return 'Joined class $code';
+  }
+
+  @override
+  String get classModeJoin => 'Join class';
+
+  @override
+  String get classModeViewProgress => 'View class progress';
+
+  @override
+  String get classProgressTitle => 'Class progress';
+
+  @override
+  String get classProgressOverview => 'Class overview';
+
+  @override
+  String get classProgressSubtitle =>
+      'Teacher-side completion and weak-word summary.';
+
+  @override
+  String classProgressWeakWord(Object word) {
+    return 'Weak word: $word';
+  }
+
+  @override
+  String get classTopicExamSignals => 'Exam signal words';
+
+  @override
+  String get classTopicTravelBasics => 'Travel basics';
+
+  @override
+  String get classTopicWorkplace => 'Workplace expressions';
+
+  @override
+  String get leaderboardDefaultName => 'Learner';
+
+  @override
+  String get leaderboardTitle => 'Training leaderboard';
+
+  @override
+  String get leaderboardSubtitle =>
+      'Counts only real completed training XP; no static demo board.';
+
+  @override
+  String get leaderboardEmptyTitle => 'No training results yet';
+
+  @override
+  String get leaderboardEmptyBody =>
+      'After finishing Word Rush, Survival, or Spelling, real training XP generates the ranking.';
+
+  @override
+  String get leaderboardOnlyValidXp => 'Counts valid learning XP only';
+
+  @override
+  String get analyticsDataTitle => 'Learning data';
+
+  @override
+  String get analyticsDataSubtitle =>
+      'A first analytics view based on word cards and review records.';
+
+  @override
+  String analyticsAssetsDue(Object due, Object total) {
+    return '$due of $total learning assets are due';
+  }
+
+  @override
+  String get analyticsCards => 'Word cards';
+
+  @override
+  String get analyticsTrainingXp => 'Training XP';
+
+  @override
+  String get analyticsAccuracy => 'Accuracy';
 
   @override
   String get onboardingFeatureImageCards => 'Image Word Cards';
@@ -1225,6 +1570,57 @@ class AppLocalizationsEn extends AppLocalizations {
       'Current preview progress will be discarded.';
 
   @override
+  String get lessonPreviewBuildUnderstanding =>
+      'Build understanding first, then context questions';
+
+  @override
+  String lessonPreviewProgressMeta(
+    Object current,
+    Object minutes,
+    Object section,
+    Object total,
+  ) {
+    return '$section · $minutes min · $current/$total';
+  }
+
+  @override
+  String get lessonPreviewLessonCards => 'Lesson cards';
+
+  @override
+  String lessonPreviewCardMeta(Object count, Object xp) {
+    return '$xp XP · $count context questions';
+  }
+
+  @override
+  String get lessonPreviewEnterContext => 'Start context practice';
+
+  @override
+  String get lessonPreviewNextCard => 'Next card';
+
+  @override
+  String get lessonPreviewNoCards => 'No cards';
+
+  @override
+  String get lessonPreviewNoCardsBody =>
+      'This lesson has no words to study yet.';
+
+  @override
+  String get lessonPreviewLeaveCardTitle => 'Leave cards?';
+
+  @override
+  String get lessonPreviewLeaveCardContent =>
+      'Your current new-word card progress will be discarded.';
+
+  @override
+  String get lessonPreviewLeave => 'Leave';
+
+  @override
+  String get lessonPreviewAssessFirst => 'Judge your familiarity first';
+
+  @override
+  String get lessonPreviewContextExample => 'Context example';
+
+  @override
   String get reviewCenterTitle => 'Review';
 
   @override
@@ -1285,6 +1681,46 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reviewCenterRemembered => 'Remembered';
+
+  @override
+  String get wordDetailNotFound => 'Word not found';
+
+  @override
+  String get wordDetailReviewStats => 'Review stats';
+
+  @override
+  String get wordDetailMarkRemembered => 'Mark as remembered';
+
+  @override
+  String get wordDetailScheduleSoon => 'Practice again soon';
+
+  @override
+  String get wordDetailMarkedRemembered => 'Marked as remembered';
+
+  @override
+  String get wordDetailScheduledSoon => 'Scheduled to practice again soon';
+
+  @override
+  String get wordDetailStatRemembered => 'Remembered';
+
+  @override
+  String get wordDetailStatForgot => 'Forgot';
+
+  @override
+  String get wordDetailStatMastery => 'Mastery';
+
+  @override
+  String get wordDetailUpdateFailed => 'Unable to update this card for now';
+
+  @override
+  String wordDetailMasteryLabel(Object level) {
+    return 'Mastery $level/5';
+  }
+
+  @override
+  String wordDetailNextReview(Object when) {
+    return 'Next $when';
+  }
 
   @override
   String get reviewCenterPostponedMessage =>
@@ -1762,6 +2198,64 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notificationTypeActivity => 'Activity Message';
 
   @override
+  String get notificationLearningReminderTitle =>
+      'Today\'s study plan is waiting';
+
+  @override
+  String notificationLearningReminderBody(int dailyGoal) {
+    return 'Today\'s goal: $dailyGoal new words. Start with your current wordbook.';
+  }
+
+  @override
+  String notificationReviewDueTitle(int dueCount) {
+    return '$dueCount words due for review';
+  }
+
+  @override
+  String get notificationReviewDueBody =>
+      'Clear your review queue first — missed words move to the reinforcement stage.';
+
+  @override
+  String get notificationCheckInTitle => 'You haven\'t checked in today';
+
+  @override
+  String get notificationCheckInBody =>
+      'Tap check-in on the Discover page to unlock the claimable task.';
+
+  @override
+  String get notificationActivityTitle => 'Discover point tasks refreshed';
+
+  @override
+  String get notificationActivityBody =>
+      'Earn XP after finishing new words, reviews, and clearing missed words.';
+
+  @override
+  String get notificationLotteryTitle => 'Lottery result';
+
+  @override
+  String notificationLotteryBody(String prizeName) {
+    return 'You won \"$prizeName\" — added to your assets.';
+  }
+
+  @override
+  String get osNotificationStudyReminderTitle => 'Your study tasks are ready';
+
+  @override
+  String get osNotificationStudyReminderBody =>
+      'Finish new words, reviews and check-in to keep your streak going.';
+
+  @override
+  String get osNotificationReviewDueBody =>
+      'Clear your review queue, then start today\'s new words.';
+
+  @override
+  String get osNotificationChannelName => 'Study reminders';
+
+  @override
+  String get osNotificationChannelDescription =>
+      'Study reminders, review-due and check-in alerts';
+
+  @override
   String get studyNewStudy => 'New Study';
 
   @override
@@ -1971,15 +2465,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get questDailyQuests => 'Daily Quests';
 
   @override
-  String get questAchievements => 'Achievements';
-
-  @override
-  String get questLeaderboard => 'Leaderboard';
-
-  @override
-  String get questClassMode => 'Class Mode';
-
-  @override
   String get questProgress => 'Progress';
 
   @override
@@ -2061,6 +2546,45 @@ class AppLocalizationsEn extends AppLocalizations {
       'This also deletes this personal word card and its review plan.';
 
   @override
+  String get customWordsEditTitle => 'Edit word';
+
+  @override
+  String get customWordsAddTitle => 'Add word';
+
+  @override
+  String get customWordsFieldWord => 'Word';
+
+  @override
+  String get customWordsFieldMeaning => 'Meaning';
+
+  @override
+  String get customWordsFieldExample => 'Example';
+
+  @override
+  String get customWordsFieldNote => 'Note';
+
+  @override
+  String get customWordsFieldTag => 'Tag';
+
+  @override
+  String get customWordsSaveEdit => 'Save changes';
+
+  @override
+  String get customWordsCreate => 'Create word';
+
+  @override
+  String get customWordsSaveFailed => 'Unable to save this word for now';
+
+  @override
+  String get customWordsSaved => 'Word saved';
+
+  @override
+  String get customWordsDifficulty => 'Difficulty';
+
+  @override
+  String get commonRequired => 'Required';
+
+  @override
   String customWordsDeleteFailed(Object word) {
     return 'Unable to delete $word right now';
   }
@@ -2135,6 +2659,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get wordbookEnglishDefinitions => 'English definitions';
+
+  @override
+  String get wordbookMalayDefinitions => 'Malay definitions';
 
   @override
   String get wordbookHighFrequency => 'High frequency';

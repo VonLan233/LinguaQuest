@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -6,8 +7,12 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
 import '../../core/utils/date_formatting.dart';
 import '../../core/utils/ui_labels.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
@@ -85,10 +90,16 @@ class _StudyPlanSettingsScreenState
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-          child: FilledButton.icon(
-            onPressed: state.isLoading ? null : _save,
-            icon: const Icon(Icons.save_outlined),
-            label: Text(l10n.studyPlanSave),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              AppPrimaryButton(
+                label: l10n.studyPlanSave,
+                icon: AppIcons.save,
+                onPressed: state.isLoading ? null : _save,
+              ),
+            ],
           ),
         ),
       ),
@@ -109,7 +120,7 @@ class _StudyPlanSettingsScreenState
                 trailing: QuestIconButton(
                   tooltip: l10n.studyPlanViewWords,
                   onPressed: () => context.push('/wordbook'),
-                  icon: Icons.style_outlined,
+                  icon: AppIcons.style,
                   color: AppTheme.cyan,
                 ),
               ),
@@ -131,12 +142,12 @@ class _StudyPlanSettingsScreenState
                 onSelected: (value) => setState(() => _wordBookId = value),
                 l10n: l10n,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 40),
               _NumberField(
                 controller: _dailyNewController,
                 label: l10n.studyPlanDailyNew,
                 helperText: l10n.studyPlanDailyNewHint,
-                icon: Icons.add_task_outlined,
+                icon: AppIcons.addTask,
                 min: 1,
                 max: 200,
                 l10n: l10n,
@@ -146,7 +157,7 @@ class _StudyPlanSettingsScreenState
                 controller: _dailyReviewController,
                 label: l10n.studyPlanDailyReview,
                 helperText: l10n.studyPlanDailyReviewHint,
-                icon: Icons.replay_outlined,
+                icon: AppIcons.replay,
                 min: 0,
                 max: 500,
                 l10n: l10n,
@@ -247,7 +258,8 @@ class _StudyPlanSettingsScreenState
     _showMessage(
       succeeded
           ? AppLocalizations.of(context).studyPlanSaved
-          : latestState.errorMessage ?? AppLocalizations.of(context).studyPlanSaveFailed,
+          : latestState.errorMessage ??
+                AppLocalizations.of(context).studyPlanSaveFailed,
     );
   }
 
@@ -437,13 +449,7 @@ class _PlanHeroCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.primaryContainer.withValues(alpha: 0.42),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: theme.colorScheme.outlineVariant),
-      ),
+    return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -476,9 +482,9 @@ class _PlanHeroCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppTokens.s16),
           ClipRRect(
-            borderRadius: BorderRadius.circular(999),
+            borderRadius: BorderRadius.circular(AppTokens.radiusPill),
             child: LinearProgressIndicator(
               value: progress,
               minHeight: 11,
@@ -486,29 +492,31 @@ class _PlanHeroCard extends StatelessWidget {
               valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.teal),
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppTokens.s12),
           Wrap(
-            spacing: 8,
-            runSpacing: 8,
+            spacing: AppTokens.s8,
+            runSpacing: AppTokens.s8,
             children: [
-              PillLabel(
+              AppPill(
                 label: l10n.wordbookWordsLearned(completedWords, totalWords),
-                icon: Icons.school_outlined,
-                color: AppTheme.teal,
+                icon: AppIcons.school,
+                variant: PillVariant.primary,
               ),
-              PillLabel(
+              AppPill(
                 label: l10n.studyPlanDaysLeft(daysLeft),
-                icon: Icons.event_outlined,
-                color: AppTheme.mango,
+                icon: AppIcons.event,
+                variant: PillVariant.streak,
               ),
-              PillLabel(
+              AppPill(
                 label: status == 'paused'
                     ? l10n.studyPlanPausedLabel
                     : l10n.studyPlanActive,
                 icon: status == 'paused'
-                    ? Icons.pause_circle_outline
-                    : Icons.play_circle_outline,
-                color: status == 'paused' ? AppTheme.coral : AppTheme.success,
+                    ? AppIcons.pauseCircle
+                    : AppIcons.playCircle,
+                variant: status == 'paused'
+                    ? PillVariant.neutral
+                    : PillVariant.success,
               ),
             ],
           ),
@@ -534,7 +542,10 @@ class _StudyBookSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(l10n.wordbookSwitch, style: Theme.of(context).textTheme.titleMedium),
+        Text(
+          l10n.wordbookSwitch,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
         const SizedBox(height: 10),
         Wrap(
           spacing: 8,
@@ -569,21 +580,21 @@ class _StudyBookPill extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     return Material(
-      color: selected
-          ? theme.colorScheme.secondaryContainer
-          : Colors.transparent,
-      borderRadius: BorderRadius.circular(999),
+      color: selected ? AppTokens.primarySoft : theme.colorScheme.surface,
+      borderRadius: BorderRadius.circular(AppTokens.radiusPill),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppTokens.s12,
+            vertical: 9,
+          ),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(999),
+            borderRadius: BorderRadius.circular(AppTokens.radiusPill),
             border: Border.all(
-              color: selected
-                  ? theme.colorScheme.secondary
-                  : theme.colorScheme.outlineVariant,
+              color: selected ? AppTokens.primarySoftText : AppTokens.hairline,
+              width: selected ? 2 : 1,
             ),
           ),
           child: Row(
@@ -595,8 +606,9 @@ class _StudyBookPill extends StatelessWidget {
                 displayWordbookTitle(book.id, l10n: l10n),
                 style: theme.textTheme.labelLarge?.copyWith(
                   color: selected
-                      ? theme.colorScheme.onSecondaryContainer
+                      ? AppTokens.primarySoftText
                       : theme.colorScheme.onSurface,
+                  fontWeight: selected ? FontWeight.w800 : null,
                 ),
               ),
             ],
@@ -666,22 +678,28 @@ class _PlanDateTimeSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _PlanActionRow(
-          icon: Icons.event_outlined,
-          title: l10n.studyPlanTargetDate,
-          subtitle: formatShortDate(targetFinishDate),
-          onTap: onPickDate,
-        ),
-        const Divider(height: 18),
-        _PlanActionRow(
-          icon: Icons.schedule_outlined,
-          title: l10n.studyPlanReminderTime,
-          subtitle: reminderTimeLabel,
-          onTap: onPickTime,
-        ),
-      ],
+    return AppCard(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppTokens.s16,
+        vertical: AppTokens.s8,
+      ),
+      child: Column(
+        children: [
+          _PlanActionRow(
+            icon: AppIcons.event,
+            title: l10n.studyPlanTargetDate,
+            subtitle: formatShortDate(targetFinishDate),
+            onTap: onPickDate,
+          ),
+          const Divider(height: 18),
+          _PlanActionRow(
+            icon: AppIcons.schedule,
+            title: l10n.studyPlanReminderTime,
+            subtitle: reminderTimeLabel,
+            onTap: onPickTime,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -708,24 +726,24 @@ class _PlanActions extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        OutlinedButton.icon(
+        AppSecondaryButton(
+          label: l10n.studyPlanViewWords,
+          icon: AppIcons.style,
           onPressed: onOpenWords,
-          icon: const Icon(Icons.style_outlined),
-          label: Text(l10n.studyPlanViewWords),
         ),
-        const SizedBox(height: 10),
-        OutlinedButton.icon(
+        const SizedBox(height: AppTokens.s12),
+        AppSecondaryButton(
+          label: isPaused ? l10n.studyPlanResume : l10n.studyPlanPause,
+          icon: isPaused
+              ? AppIcons.playCircle
+              : AppIcons.pauseCircle,
           onPressed: isLoading ? null : onTogglePause,
-          icon: Icon(
-            isPaused ? Icons.play_circle_outline : Icons.pause_circle_outline,
-          ),
-          label: Text(isPaused ? l10n.studyPlanResume : l10n.studyPlanPause),
         ),
-        const SizedBox(height: 10),
-        FilledButton.tonalIcon(
+        const SizedBox(height: AppTokens.s12),
+        AppPrimaryButton(
+          label: l10n.studyPlanReset,
+          icon: AppIcons.restartAlt,
           onPressed: isLoading ? null : onReset,
-          icon: const Icon(Icons.restart_alt_outlined),
-          label: Text(l10n.studyPlanReset),
         ),
       ],
     );
@@ -775,7 +793,7 @@ class _PlanActionRow extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right_rounded),
+              const Icon(AppIcons.chevronRight),
             ],
           ),
         ),

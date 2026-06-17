@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:linguaquest/core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
@@ -56,26 +59,28 @@ class _WordKnowledgeSectionsState extends State<WordKnowledgeSections> {
     );
     final items = [
       _KnowledgePanelData(
-        icon: Icons.hub_outlined,
+        icon: AppIcons.hub,
         color: AppTheme.cyan,
         title: '词组搭配',
         body: knowledge.collocations.join(' · '),
       ),
       _KnowledgePanelData(
-        icon: Icons.compare_arrows_rounded,
+        icon: AppIcons.compareArrows,
         color: AppTheme.teal,
         title: '近义 / 反义',
         body:
             '近义：${knowledge.synonyms.join('、')}；反义：${knowledge.antonyms.join('、')}',
+        synonyms: knowledge.synonyms,
+        antonyms: knowledge.antonyms,
       ),
       _KnowledgePanelData(
-        icon: Icons.account_tree_outlined,
+        icon: AppIcons.accountTree,
         color: AppTheme.mango,
         title: '派生词族',
         body: knowledge.family.join(' · '),
       ),
       _KnowledgePanelData(
-        icon: Icons.psychology_outlined,
+        icon: AppIcons.psychology,
         color: AppTheme.coral,
         title: '词根拆词',
         body: knowledge.rootNote,
@@ -85,8 +90,13 @@ class _WordKnowledgeSectionsState extends State<WordKnowledgeSections> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('词汇全解', style: Theme.of(context).textTheme.titleLarge),
-        const SizedBox(height: 12),
+        Text(
+          '词汇全解',
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+        ),
+        const SizedBox(height: AppTokens.s12),
         for (var index = 0; index < items.length; index++) ...[
           _KnowledgeDisclosure(
             data: items[index],
@@ -128,17 +138,17 @@ class _KnowledgeDisclosure extends StatelessWidget {
       label: data.title,
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onTap,
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 2),
+            padding: const EdgeInsets.symmetric(vertical: AppTokens.s2),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 IconCueBadge(icon: data.icon, color: data.color, size: 38),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppTokens.s12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,34 +158,30 @@ class _KnowledgeDisclosure extends StatelessWidget {
                           Expanded(
                             child: Text(
                               data.title,
-                              style: theme.textTheme.titleMedium,
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
                           ),
                           Icon(
                             expanded
-                                ? Icons.keyboard_arrow_up_rounded
-                                : Icons.keyboard_arrow_down_rounded,
+                                ? AppIcons.keyboardArrowUp
+                                : AppIcons.keyboardArrowDown,
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
                         ],
                       ),
                       AnimatedSize(
-                        duration: const Duration(milliseconds: 180),
+                        duration: AppTokens.fast,
                         curve: Curves.easeOutCubic,
                         alignment: Alignment.topCenter,
                         child: expanded
                             ? Padding(
                                 padding: const EdgeInsets.only(
-                                  top: 4,
-                                  right: 4,
+                                  top: AppTokens.s4,
+                                  right: AppTokens.s4,
                                 ),
-                                child: Text(
-                                  data.body,
-                                  style: TextStyle(
-                                    color: theme.colorScheme.onSurfaceVariant,
-                                    height: 1.42,
-                                  ),
-                                ),
+                                child: _DisclosureBody(data: data),
                               )
                             : const SizedBox(width: double.infinity, height: 0),
                       ),
@@ -191,18 +197,59 @@ class _KnowledgeDisclosure extends StatelessWidget {
   }
 }
 
+class _DisclosureBody extends StatelessWidget {
+  const _DisclosureBody({required this.data});
+
+  final _KnowledgePanelData data;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final synonyms = data.synonyms;
+    final antonyms = data.antonyms;
+    final hasBadges =
+        (synonyms != null && synonyms.isNotEmpty) ||
+        (antonyms != null && antonyms.isNotEmpty);
+    if (!hasBadges) {
+      return Text(
+        data.body,
+        style: TextStyle(
+          color: theme.colorScheme.onSurfaceVariant,
+          height: 1.42,
+        ),
+      );
+    }
+    return Wrap(
+      spacing: AppTokens.s8,
+      runSpacing: AppTokens.s8,
+      children: [
+        if (synonyms != null)
+          for (final value in synonyms)
+            AppPill(label: value, variant: PillVariant.success),
+        if (antonyms != null)
+          for (final value in antonyms)
+            AppPill(label: value, variant: PillVariant.streak),
+      ],
+    );
+  }
+}
+
 class _KnowledgePanelData {
   const _KnowledgePanelData({
     required this.icon,
     required this.color,
     required this.title,
     required this.body,
+    this.synonyms,
+    this.antonyms,
   });
 
   final IconData icon;
   final Color color;
   final String title;
   final String body;
+  final List<String>? synonyms;
+  final List<String>? antonyms;
 }
 
 class _KnowledgeDivider extends StatelessWidget {

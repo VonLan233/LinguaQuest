@@ -46,6 +46,15 @@ class StudySessionQueueItem {
 
   String get meaning => lessonWord?.meaning ?? customWord!.meaning;
 
+  /// The item's meaning localized for [languageCode]. Lesson words carry the
+  /// trilingual definition lists; custom words only have a single (Chinese)
+  /// meaning, so they fall back to it gracefully.
+  String meaningFor(String languageCode) {
+    final lesson = lessonWord;
+    if (lesson != null) return lesson.primaryDefinitionFor(languageCode);
+    return customWord!.meaning;
+  }
+
   String get exampleSentence =>
       lessonWord?.exampleSentence ?? customWord!.exampleSentence;
 

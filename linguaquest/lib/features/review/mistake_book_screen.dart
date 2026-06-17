@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
-import '../../core/widgets/empty_state.dart';
+import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/mascot_empty_state.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -27,17 +32,21 @@ class MistakeBookScreen extends ConsumerWidget {
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
+          padding: const EdgeInsets.fromLTRB(
+            AppTokens.s20,
+            AppTokens.s12,
+            AppTokens.s20,
+            AppTokens.s24,
+          ),
           children: [
             if (lessonMistakes.isEmpty && weakWords.isEmpty)
-              EmptyState(
-                icon: Icons.check_circle_outline,
+              MascotEmptyState(
                 title: l10n.mistakeBookCleared,
                 message: l10n.mistakeBookClearedMsg,
-                action: OutlinedButton.icon(
+                action: AppSecondaryButton(
                   onPressed: () => context.go('/learn'),
-                  icon: const Icon(Icons.play_arrow_rounded),
-                  label: Text(l10n.commonContinue),
+                  icon: AppIcons.playArrow,
+                  label: l10n.commonContinue,
                 ),
               )
             else ...[
@@ -48,10 +57,10 @@ class MistakeBookScreen extends ConsumerWidget {
                     fontWeight: FontWeight.w800,
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: AppTokens.s12),
                 for (final mistake in lessonMistakes)
                   _MistakeWordRow(mistake: mistake, l10n: l10n),
-                const SizedBox(height: 18),
+                const SizedBox(height: AppTokens.s20),
               ],
               if (weakWords.isNotEmpty) ...[
                 Text(
@@ -60,7 +69,7 @@ class MistakeBookScreen extends ConsumerWidget {
                     fontWeight: FontWeight.w800,
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: AppTokens.s12),
                 for (final word in weakWords)
                   _WeakCustomWordRow(word: word, l10n: l10n),
               ],
@@ -82,27 +91,34 @@ class _MistakeWordRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.only(bottom: 14),
-      child: Row(
-        children: [
-          ImageCueBadge(cue: mistake.word.imageCue, size: 56),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(mistake.word.word, style: theme.textTheme.titleMedium),
-                const SizedBox(height: 3),
-                Text(
-                  mistake.explanation,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
-                ),
-              ],
+      padding: const EdgeInsets.only(bottom: AppTokens.s8),
+      child: AppCard(
+        child: Row(
+          children: [
+            ImageCueBadge(cue: mistake.word.imageCue, size: 52),
+            const SizedBox(width: AppTokens.s12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(mistake.word.word, style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 3),
+                  Text(
+                    mistake.explanation,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+            const SizedBox(width: AppTokens.s8),
+            AppPill(
+              label: l10n.mistakeBookLessonMistakes,
+              variant: PillVariant.streak,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -118,42 +134,36 @@ class _WeakCustomWordRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: () => word.source == 'target'
-              ? context.push('/wordbook/${word.sourceWordId ?? word.id}')
-              : context.push('/custom-words/${word.id}'),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6),
-            child: Row(
-              children: [
-                ImageCueBadge(cue: wordInitialCue(word.word), size: 56),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(word.word, style: theme.textTheme.titleMedium),
-                      const SizedBox(height: 3),
-                      Text(
-                        word.meaning,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
+      padding: const EdgeInsets.only(bottom: AppTokens.s8),
+      child: AppCard(
+        onTap: () => word.source == 'target'
+            ? context.push('/wordbook/${word.sourceWordId ?? word.id}')
+            : context.push('/custom-words/${word.id}'),
+        child: Row(
+          children: [
+            ImageCueBadge(cue: wordInitialCue(word.word), size: 52),
+            const SizedBox(width: AppTokens.s12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(word.word, style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 3),
+                  Text(
+                    word.meaning,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                   ),
-                ),
-                const Icon(Icons.chevron_right_rounded),
-              ],
+                ],
+              ),
             ),
-          ),
+            const SizedBox(width: AppTokens.s8),
+            AppPill(
+              label: l10n.mistakeBookWeakWords,
+              variant: PillVariant.neutral,
+            ),
+          ],
         ),
       ),
     );

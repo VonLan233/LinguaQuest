@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
 import '../../core/utils/ui_labels.dart';
-import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
+import '../../core/widgets/mascot_empty_state.dart';
+import '../../core/widgets/mascot_image.dart';
+import '../../core/widgets/progress_ring.dart';
 import '../../core/widgets/section_header.dart';
+import '../../core/widgets/stat_tile.dart';
 import '../../data/models/lottery.dart';
 import '../../l10n/generated/app_localizations.dart';
 
@@ -28,9 +36,14 @@ class ProfileScreen extends ConsumerWidget {
 
     return ListView(
       key: const ValueKey('profileDashboard'),
-      padding: const EdgeInsets.fromLTRB(0, 0, 0, 88),
+      padding: const EdgeInsets.fromLTRB(
+        AppTokens.s20,
+        AppTokens.s20,
+        AppTokens.s20,
+        88,
+      ),
       children: [
-        // Telegram-style header: large centered avatar + name
+        // Hero: mascot avatar + name/email/target·level + XP/streak pills.
         _ProfileHeader(
           name: user?.name ?? l10n.profileLearner,
           email: user?.email ?? l10n.profileNoEmail,
@@ -40,70 +53,68 @@ class ProfileScreen extends ConsumerWidget {
           streak: user?.streak ?? 0,
           l10n: l10n,
         ),
-        const SizedBox(height: 24),
-        // Key stats in a clean row
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: _ProfileStatsRow(
-            learned: state.completedLearningWords,
-            mastered: masteredWords,
-            streak: user?.streak ?? 0,
+        const SizedBox(height: AppTokens.s32),
+        // Key stats in a clean row.
+        _ProfileStatsRow(
+          learned: state.completedLearningWords,
+          mastered: masteredWords,
+          streak: user?.streak ?? 0,
+          l10n: l10n,
+        ),
+        const SizedBox(height: AppTokens.s32),
+        // Progress card.
+        if (state.totalLearningWords > 0) ...[
+          _ProfileProgressCard(
+            progress: state.learningPathProgress,
+            completedWords: state.completedLearningWords,
+            totalWords: state.totalLearningWords,
             l10n: l10n,
           ),
-        ),
-        const SizedBox(height: 24),
-        // Progress card
-        if (state.totalLearningWords > 0)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: _ProfileProgressCard(
-              progress: state.learningPathProgress,
-              completedWords: state.completedLearningWords,
-              totalWords: state.totalLearningWords,
-              l10n: l10n,
-            ),
-          ),
-        const SizedBox(height: 24),
-        // Settings group
+          const SizedBox(height: AppTokens.s32),
+        ],
+        // Settings group: study plan / wordbook / custom words / mistake book.
         _SettingsGroup(
           children: [
             _SettingsItem(
-              icon: Icons.flag_outlined,
+              icon: AppIcons.flag,
               title: l10n.profilePlanLabel,
-              value: state.currentStudyBook.name,
+              value: displayWordbookTitle(
+                state.currentStudyBook.id,
+                l10n: l10n,
+              ),
               onTap: () => context.push('/settings/study-plan'),
             ),
             _SettingsItem(
-              icon: Icons.menu_book_outlined,
+              icon: AppIcons.menuBook,
               title: l10n.commonWordbook,
               value: '${state.totalLearningWords} ${l10n.commonWords}',
               onTap: () => context.push('/wordbook'),
             ),
             _SettingsItem(
-              icon: Icons.style_outlined,
+              icon: AppIcons.style,
               title: l10n.commonCustomWords,
               value: '${newWordbookCount(state)}',
               onTap: () => context.push('/custom-words'),
             ),
             _SettingsItem(
-              icon: Icons.warning_amber_outlined,
+              icon: AppIcons.warningAmber,
               title: l10n.commonMistakeBook,
               value: '${state.weakWords.length}',
               onTap: () => context.push('/mistake-book'),
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppTokens.s16),
         _SettingsGroup(
           children: [
             _SettingsItem(
-              icon: Icons.dark_mode_outlined,
+              icon: AppIcons.darkMode,
               title: l10n.commonTheme,
               value: _themeModeLabel(state.themeMode, l10n),
               onTap: () => context.push('/settings/theme'),
             ),
             _SettingsItem(
-              icon: Icons.notifications_outlined,
+              icon: AppIcons.notifications,
               title: l10n.commonDailyReminder,
               value: state.reminderSettings.enabled
                   ? state.reminderSettings.formattedTime
@@ -117,47 +128,35 @@ class ProfileScreen extends ConsumerWidget {
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppTokens.s16),
         _SettingsGroup(
           children: [
             _SettingsItem(
-              icon: Icons.help_outline,
+              icon: AppIcons.help,
               title: l10n.profileHelpTitle,
               onTap: () => context.push('/help'),
             ),
             _SettingsItem(
-              icon: Icons.info_outline,
+              icon: AppIcons.info,
               title: l10n.profileAboutTitle,
               onTap: () => context.push('/about'),
             ),
           ],
         ),
-        const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SectionHeader(
-                title: l10n.profileAssetsTitle,
-                subtitle: l10n.profileAssetsSubtitle,
-              ),
-              const SizedBox(height: 10),
-              _AssetInventory(assets: state.userAssets),
-            ],
-          ),
+        const SizedBox(height: AppTokens.s32),
+        SectionHeader(
+          title: l10n.profileAssetsTitle,
+          subtitle: l10n.profileAssetsSubtitle,
         ),
-        const SizedBox(height: 24),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: OutlinedButton.icon(
-            onPressed: () async {
-              await ref.read(appControllerProvider.notifier).logout();
-              if (context.mounted) context.go('/onboarding');
-            },
-            icon: const Icon(Icons.logout),
-            label: Text(l10n.profileLogout),
-          ),
+        const SizedBox(height: AppTokens.s12),
+        _AssetInventory(assets: state.userAssets),
+        const SizedBox(height: AppTokens.s32),
+        AppSecondaryButton(
+          label: l10n.profileLogout,
+          onPressed: () async {
+            await ref.read(appControllerProvider.notifier).logout();
+            if (context.mounted) context.go('/onboarding');
+          },
         ),
       ],
     );
@@ -186,65 +185,55 @@ class _ProfileHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
-      ),
-      child: Column(
-        children: [
-          CircleAvatar(
-            radius: 48,
-            backgroundColor: theme.colorScheme.primaryContainer,
-            child: Icon(
-              Icons.person_rounded,
-              color: theme.colorScheme.onPrimaryContainer,
-              size: 48,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            name,
-            style: theme.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            email,
-            style: TextStyle(
-              color: theme.colorScheme.onSurfaceVariant,
-              fontSize: 15,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            '$target · $level',
-            style: TextStyle(
-              color: theme.colorScheme.onSurfaceVariant,
-              fontSize: 13,
-            ),
-          ),
-          const SizedBox(height: 14),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            alignment: WrapAlignment.center,
-            children: [
-              PillLabel(
-                label: '$xp ${l10n.commonXP}',
-                icon: Icons.bolt,
-                color: AppTheme.mango,
+    return AppCard(
+      padding: EdgeInsets.zero,
+      child: Container(
+        padding: const EdgeInsets.all(AppTokens.s24),
+        decoration: BoxDecoration(
+          color: AppTokens.brandNavy,
+          borderRadius: BorderRadius.circular(AppTokens.radiusCard),
+        ),
+        child: Column(
+          children: [
+            const MascotImage(size: 72),
+            const SizedBox(height: AppTokens.s16),
+            Text(
+              name,
+              style: theme.textTheme.headlineSmall?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w800,
               ),
-              PillLabel(
-                label: '$streak ${l10n.profileStreakDays}',
-                icon: Icons.local_fire_department,
-                color: AppTheme.coral,
-              ),
-            ],
-          ),
-        ],
+            ),
+            const SizedBox(height: AppTokens.s8),
+            Text(
+              email,
+              style: const TextStyle(color: Colors.white70, fontSize: 15),
+            ),
+            const SizedBox(height: AppTokens.s4),
+            Text(
+              '$target · $level',
+              style: const TextStyle(color: Colors.white70, fontSize: 13),
+            ),
+            const SizedBox(height: AppTokens.s12),
+            Wrap(
+              spacing: AppTokens.s12,
+              runSpacing: AppTokens.s12,
+              alignment: WrapAlignment.center,
+              children: [
+                AppPill(
+                  label: '$xp ${l10n.commonXP}',
+                  variant: PillVariant.xp,
+                  icon: AppIcons.bolt,
+                ),
+                AppPill(
+                  label: '$streak ${l10n.profileStreakDays}',
+                  variant: PillVariant.streak,
+                  icon: AppIcons.localFireDepartment,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -265,76 +254,35 @@ class _ProfileStatsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      decoration: BoxDecoration(
-        color: Theme.of(
-          context,
-        ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
-        borderRadius: BorderRadius.circular(16),
-      ),
+    return AppCard(
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: _StatCell(
+            child: StatTile(
               value: '$learned',
               label: l10n.profileLearnedWords,
+              accent: AppTheme.teal,
             ),
           ),
-          Container(
-            width: 1,
-            height: 40,
-            color: Theme.of(context).colorScheme.outlineVariant,
-          ),
+          const SizedBox(width: AppTokens.s8),
           Expanded(
-            child: _StatCell(
+            child: StatTile(
               value: '$mastered',
               label: l10n.profileMasteredWords,
+              accent: AppTheme.success,
             ),
           ),
-          Container(
-            width: 1,
-            height: 40,
-            color: Theme.of(context).colorScheme.outlineVariant,
-          ),
+          const SizedBox(width: AppTokens.s8),
           Expanded(
-            child: _StatCell(
+            child: StatTile(
               value: '$streak',
               label: l10n.onboardingTagPillStreak,
+              accent: AppTheme.coral,
             ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class _StatCell extends StatelessWidget {
-  const _StatCell({required this.value, required this.label});
-
-  final String value;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Column(
-      children: [
-        Text(
-          value,
-          style: theme.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.w900,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            color: theme.colorScheme.onSurfaceVariant,
-            fontSize: 12,
-          ),
-        ),
-      ],
     );
   }
 }
@@ -355,37 +303,35 @@ class _ProfileProgressCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    final percent = (progress.clamp(0.0, 1.0) * 100).round();
+    return AppCard(
+      child: Row(
         children: [
-          Text(
-            l10n.profileCurrentBookProgress,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w800,
-            ),
+          ProgressRing(
+            progress: progress,
+            color: AppTheme.success,
+            centerLabel: '$percent%',
           ),
-          const SizedBox(height: 12),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(999),
-            child: LinearProgressIndicator(
-              value: progress,
-              minHeight: 10,
-              backgroundColor: AppTheme.progressTrack(context),
-              valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.leaf),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            '$completedWords / $totalWords ${l10n.commonWords}',
-            style: TextStyle(
-              color: theme.colorScheme.onSurfaceVariant,
-              fontSize: 13,
+          const SizedBox(width: AppTokens.s16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.profileCurrentBookProgress,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: AppTokens.s8),
+                Text(
+                  '$completedWords / $totalWords ${l10n.commonWords}',
+                  style: TextStyle(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    fontSize: 13,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -401,25 +347,18 @@ class _SettingsGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      decoration: BoxDecoration(
-        color: Theme.of(
-          context,
-        ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
-        borderRadius: BorderRadius.circular(16),
-      ),
+    return AppCard(
+      padding: EdgeInsets.zero,
       child: Column(
         children: [
           for (var i = 0; i < children.length; i++) ...[
             children[i],
             if (i < children.length - 1)
-              Divider(
-                height: 1,
+              const Divider(
+                height: 0.5,
+                thickness: 0.5,
                 indent: 56,
-                color: Theme.of(
-                  context,
-                ).colorScheme.outlineVariant.withValues(alpha: 0.5),
+                color: AppTokens.hairline,
               ),
           ],
         ],
@@ -446,33 +385,35 @@ class _SettingsItem extends StatelessWidget {
     final theme = Theme.of(context);
     return Material(
       color: Colors.transparent,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppTokens.s16,
+            vertical: AppTokens.s12,
+          ),
           child: Row(
             children: [
               Icon(icon, color: theme.colorScheme.primary, size: 22),
-              const SizedBox(width: 16),
+              const SizedBox(width: AppTokens.s16),
               Expanded(
                 child: Text(
                   title,
-                  style: theme.textTheme.titleMedium?.copyWith(fontSize: 15),
+                  style: theme.textTheme.bodyMedium,
                 ),
               ),
               if (value != null)
                 Text(
                   value!,
-                  style: TextStyle(
+                  style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
-                    fontSize: 14,
                   ),
                 ),
-              const SizedBox(width: 4),
+              const SizedBox(width: AppTokens.s4),
               Icon(
-                Icons.chevron_right_rounded,
+                AppIcons.chevronRight,
                 color: theme.colorScheme.onSurfaceVariant,
                 size: 20,
               ),
@@ -500,36 +441,38 @@ class _LanguageSettingsItem extends StatelessWidget {
     final langCode = currentLocale?.languageCode ?? 'zh';
     return Material(
       color: Colors.transparent,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () => _showLanguageSheet(context, langCode),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppTokens.s16,
+            vertical: AppTokens.s12,
+          ),
           child: Row(
             children: [
               Icon(
-                Icons.language_rounded,
+                AppIcons.language,
                 color: theme.colorScheme.primary,
                 size: 22,
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: AppTokens.s16),
               Expanded(
                 child: Text(
                   l10n.languageSetting,
-                  style: theme.textTheme.titleMedium?.copyWith(fontSize: 15),
+                  style: theme.textTheme.bodyMedium,
                 ),
               ),
               Text(
                 _localeLabel(langCode),
-                style: TextStyle(
+                style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
-                  fontSize: 14,
                 ),
               ),
-              const SizedBox(width: 4),
+              const SizedBox(width: AppTokens.s4),
               Icon(
-                Icons.chevron_right_rounded,
+                AppIcons.chevronRight,
                 color: theme.colorScheme.onSurfaceVariant,
                 size: 20,
               ),
@@ -612,7 +555,7 @@ class _LanguageOption extends StatelessWidget {
     final theme = Theme.of(context);
     return ListTile(
       leading: Icon(
-        selected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+        selected ? AppIcons.radioButtonChecked : AppIcons.radioButtonUnchecked,
         color: selected ? theme.colorScheme.primary : null,
       ),
       title: Text(label),
@@ -641,40 +584,28 @@ class _AssetInventory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final theme = Theme.of(context);
     if (assets.isEmpty) {
-      return Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const IconCueBadge(
-            icon: Icons.inventory_2_outlined,
-            color: AppTheme.mango,
-            size: 38,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              l10n.profileAssetsEmpty,
-              style: TextStyle(
-                color: theme.colorScheme.onSurfaceVariant,
-                height: 1.42,
-              ),
-            ),
-          ),
-        ],
+      return AppCard(
+        child: MascotEmptyState(
+          title: l10n.profileAssetsEmpty,
+          message: l10n.profileAssetsSubtitle,
+        ),
       );
     }
-    return Column(
-      children: [
-        for (var index = 0; index < assets.length; index++) ...[
-          _AssetRow(asset: assets[index]),
-          if (index != assets.length - 1)
-            Divider(
-              height: 14,
-              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.7),
-            ),
+    return AppCard(
+      child: Column(
+        children: [
+          for (var index = 0; index < assets.length; index++) ...[
+            _AssetRow(asset: assets[index]),
+            if (index != assets.length - 1)
+              const Divider(
+                height: AppTokens.s16,
+                thickness: 0.5,
+                color: AppTokens.hairline,
+              ),
+          ],
         ],
-      ],
+      ),
     );
   }
 }
@@ -691,12 +622,21 @@ class _AssetRow extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        IconCueBadge(
-          icon: _assetIcon(asset.category),
-          color: _assetColor(asset.rarity),
-          size: 38,
+        Container(
+          width: 38,
+          height: 38,
+          decoration: BoxDecoration(
+            color: _assetColor(asset.rarity).withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
+          ),
+          alignment: Alignment.center,
+          child: Icon(
+            _assetIcon(asset.category),
+            color: _assetColor(asset.rarity),
+            size: 20,
+          ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: AppTokens.s12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -726,17 +666,17 @@ class _AssetRow extends StatelessWidget {
   IconData _assetIcon(String category) {
     switch (category) {
       case 'avatarFrame':
-        return Icons.account_circle_outlined;
+        return AppIcons.accountCircle;
       case 'profileBackground':
-        return Icons.wallpaper_outlined;
+        return AppIcons.wallpaper;
       case 'badge':
-        return Icons.workspace_premium_outlined;
+        return AppIcons.workspacePremium;
       case 'title':
-        return Icons.military_tech_outlined;
+        return AppIcons.militaryTech;
       case 'cardSkin':
-        return Icons.style_outlined;
+        return AppIcons.style;
       default:
-        return Icons.auto_awesome_outlined;
+        return AppIcons.autoAwesome;
     }
   }
 

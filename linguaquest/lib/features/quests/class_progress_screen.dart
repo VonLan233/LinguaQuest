@@ -1,31 +1,40 @@
 import 'package:flutter/material.dart';
 
-import '../../core/theme/app_theme.dart';
+import 'package:linguaquest/core/theme/app_icons.dart';
+
+import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
+import '../../core/widgets/app_progress_bar.dart';
 import '../../core/widgets/fallback_back_button.dart';
-import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class ClassProgressScreen extends StatelessWidget {
   const ClassProgressScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const rows = [
-      ('考试信号词', '92%', 'allocate'),
-      ('旅行基础', '64%', 'itinerary'),
-      ('职场表达', '38%', 'negotiate'),
+    final l10n = AppLocalizations.of(context);
+    final rows = [
+      (l10n.classTopicExamSignals, '92%', 'allocate'),
+      (l10n.classTopicTravelBasics, '64%', 'itinerary'),
+      (l10n.classTopicWorkplace, '38%', 'negotiate'),
     ];
 
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/class-mode'),
-        title: const Text('班级进度'),
+        title: Text(l10n.classProgressTitle),
       ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            const SectionHeader(title: '班级概览', subtitle: '教师端完成度和弱项词摘要。'),
+            SectionHeader(
+              title: l10n.classProgressOverview,
+              subtitle: l10n.classProgressSubtitle,
+            ),
             const SizedBox(height: 16),
             for (final row in rows) _ClassProgressRow(row: row),
           ],
@@ -43,27 +52,44 @@ class _ClassProgressRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final percent = (int.tryParse(row.$2.replaceAll('%', '')) ?? 0) / 100;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        children: [
-          Icon(Icons.assignment_outlined, color: theme.colorScheme.primary),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      padding: const EdgeInsets.only(bottom: AppTokens.s12),
+      child: AppCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                Text(row.$1, style: theme.textTheme.titleMedium),
-                const SizedBox(height: 3),
-                Text(
-                  '弱项词：${row.$3}',
-                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                Icon(
+                  AppIcons.assignment,
+                  color: theme.colorScheme.primary,
                 ),
+                const SizedBox(width: AppTokens.s12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(row.$1, style: theme.textTheme.titleMedium),
+                      const SizedBox(height: 3),
+                      Text(
+                        AppLocalizations.of(
+                          context,
+                        ).classProgressWeakWord(row.$3),
+                        style: TextStyle(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                AppPill(label: row.$2, variant: PillVariant.primary),
               ],
             ),
-          ),
-          PillLabel(label: row.$2, color: AppTheme.cyan),
-        ],
+            const SizedBox(height: AppTokens.s12),
+            AppProgressBar(value: percent),
+          ],
+        ),
       ),
     );
   }

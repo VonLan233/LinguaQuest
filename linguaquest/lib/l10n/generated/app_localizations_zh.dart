@@ -228,6 +228,329 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingTagline => '像游戏闯关一样完成每日学习';
 
   @override
+  String get onboardingTagWorld => '词境星球';
+
+  @override
+  String get onboardingTagStreak => '连续打卡';
+
+  @override
+  String get splashTagline => '图像词卡、清晰路径、智能复习。';
+
+  @override
+  String get studyNewScreenTitle => '新学';
+
+  @override
+  String get studyWordbookPath => '词书路径';
+
+  @override
+  String get studyEnterCards => '进入词卡学习';
+
+  @override
+  String get studyNewPackTitle => '今日新词包';
+
+  @override
+  String get studyNewPackDesc => '先自评，再看词卡，最后进入语境题。正式复习会单独排队。';
+
+  @override
+  String get studyNoNewWords => '暂无新学词';
+
+  @override
+  String get studyNewPausedHint => '学习计划已暂停。恢复计划后，系统会继续安排今日新词。';
+
+  @override
+  String get studyNewEmptyHint => '当前词书已经学完，或学习计划还没有生成。可以去词书路径检查下一组内容。';
+
+  @override
+  String get studyOpenWordbookPath => '打开词书路径';
+
+  @override
+  String studyTodayLearnCount(Object count) {
+    return '今天先学 $count 个新词';
+  }
+
+  @override
+  String get studyNewNoLessonHint => '完成复习后再补新词，保持节奏比堆任务更重要。';
+
+  @override
+  String studyNewPausedResume(Object section) {
+    return '学习计划已暂停，恢复后继续从 $section 开始。';
+  }
+
+  @override
+  String get studyRecallKnown => '认识';
+
+  @override
+  String get studyRecallFuzzy => '模糊';
+
+  @override
+  String get studyRecallUnknown => '不认识';
+
+  @override
+  String get studyStepSelfAssess => '自评';
+
+  @override
+  String get studyStepSelfAssessDesc => '降低无效重复';
+
+  @override
+  String get studyStepCards => '词卡';
+
+  @override
+  String get studyStepCardsDesc => '补全释义和例句';
+
+  @override
+  String get studyStepContext => '语境题';
+
+  @override
+  String get studyStepContextDesc => '主动回忆';
+
+  @override
+  String get mixedManageReviewQueue => '管理复习队列';
+
+  @override
+  String mixedReviewRatio(Object percent) {
+    return '复习 $percent%';
+  }
+
+  @override
+  String get mixedTitleNew => '今日新学包';
+
+  @override
+  String get mixedTitleReview => '快速复习';
+
+  @override
+  String get mixedTitleMixed => '今日混排学习包';
+
+  @override
+  String get mixedSaveReviewFailed => '暂时无法保存复习记录';
+
+  @override
+  String mixedUnsureOption(Object index) {
+    return '还不确定 $index';
+  }
+
+  @override
+  String get mixedSaveProgressTitle => '保存本次进度？';
+
+  @override
+  String get mixedSaveProgressBody =>
+      '已保存的复习记录会保留；保存后会记录本次已完成题目，未完成词下次仍会进入学习包。';
+
+  @override
+  String get mixedContinueStudy => '继续学习';
+
+  @override
+  String get mixedLeaveWithoutSaving => '不保存离开';
+
+  @override
+  String get mixedSaveAndLeave => '保存并离开';
+
+  @override
+  String get mixedSaveStudyFailed => '暂时无法保存学习进度';
+
+  @override
+  String get mixedSelfAssessHint => '先自评，系统会调整今天的重复次数';
+
+  @override
+  String get mixedEnterRecognition => '进入识别题';
+
+  @override
+  String get mixedAddLaterRecall => '加入稍后复现';
+
+  @override
+  String get mixedReviewQuickAnswer => '复习快答';
+
+  @override
+  String get mixedFeedbackCorrect => '答对了，继续下一题。';
+
+  @override
+  String get mixedFeedbackWrong => '答错了，先看知识卡，稍后会再次出现。';
+
+  @override
+  String get mixedFeedbackRetry => '还不对。请选择到正确答案后再进入下一题。';
+
+  @override
+  String mixedShortRecallPrompt(Object word) {
+    return '短间隔回忆：$word 的意思是？';
+  }
+
+  @override
+  String mixedMeaningPrompt(Object word) {
+    return '$word 的中文释义是？';
+  }
+
+  @override
+  String get mixedStepRecognition => '识别';
+
+  @override
+  String get mixedStepShortRecall => '短间隔回忆';
+
+  @override
+  String get mixedStepDueReview => '到期复习';
+
+  @override
+  String get mixedStepKnowledge => '知识卡';
+
+  @override
+  String get mixedCompleteTitle => '今日学习包完成';
+
+  @override
+  String get mixedNoContentTitle => '今日没有待学习内容';
+
+  @override
+  String get mixedCompleteBody => '错题已经在本轮回收，答题记录和用时会保存到学习日志。';
+
+  @override
+  String get mixedNoContentBody => '当前没有新词或到期复习词。';
+
+  @override
+  String get mixedSaveAndHome => '保存并回首页';
+
+  @override
+  String get questCenterTitle => '任务中心';
+
+  @override
+  String get questCenterSubtitle => '完成学习动作后领取积分，也可以查看排名、分析和班级学习。';
+
+  @override
+  String get questDailyTask => '每日任务';
+
+  @override
+  String get questDailyTaskBody => '完成一节课程，并复习 5 个到期词。';
+
+  @override
+  String get questAchievements => '成就';
+
+  @override
+  String get questAchievementsBody => '连续 7 天、已学 100 词、首次满分课程等成就。';
+
+  @override
+  String get questAchievementsValue => '3 个';
+
+  @override
+  String get questLeaderboard => '排行榜';
+
+  @override
+  String get questLeaderboardBody => '好友和未来班级的每周 XP 排名。';
+
+  @override
+  String get questWeekly => '每周';
+
+  @override
+  String get questAnalytics => '学习分析';
+
+  @override
+  String get questAnalyticsBody => '正确率、词汇增长和复习完成趋势。';
+
+  @override
+  String get questTrend => '趋势';
+
+  @override
+  String get questClassMode => '课堂模式';
+
+  @override
+  String get questClassModeBody => '通过班级码加入，查看教师进度看板和小组学习情况。';
+
+  @override
+  String get questClassCode => '班级码';
+
+  @override
+  String get questAiTutor => 'AI 助教';
+
+  @override
+  String get questAiTutorBody => '解释错因，并给出例句建议。';
+
+  @override
+  String get aiTutorSamplePrompt => '解释 affect 和 effect 的区别';
+
+  @override
+  String get aiTutorSubtitle => '输入单词、语法或错题，获得结构化解释和可练习的例句。';
+
+  @override
+  String get aiTutorInputLabel => '询问单词、语法或错题';
+
+  @override
+  String get aiTutorSampleAnswer =>
+      'Affect is usually a verb: \"The weather affects my mood.\" Effect is usually a noun: \"The effect was immediate.\" 你可以分别用两个词各造一个句子。';
+
+  @override
+  String get classModeTitle => '班级学习';
+
+  @override
+  String get classModeSubtitle => '输入班级码加入小组，查看班级进度和弱项摘要。';
+
+  @override
+  String classModeJoined(Object code) {
+    return '已加入班级 $code';
+  }
+
+  @override
+  String get classModeJoin => '加入班级';
+
+  @override
+  String get classModeViewProgress => '查看班级进度';
+
+  @override
+  String get classProgressTitle => '班级进度';
+
+  @override
+  String get classProgressOverview => '班级概览';
+
+  @override
+  String get classProgressSubtitle => '教师端完成度和弱项词摘要。';
+
+  @override
+  String classProgressWeakWord(Object word) {
+    return '弱项词：$word';
+  }
+
+  @override
+  String get classTopicExamSignals => '考试信号词';
+
+  @override
+  String get classTopicTravelBasics => '旅行基础';
+
+  @override
+  String get classTopicWorkplace => '职场表达';
+
+  @override
+  String get leaderboardDefaultName => '学习者';
+
+  @override
+  String get leaderboardTitle => '训练场排行榜';
+
+  @override
+  String get leaderboardSubtitle => '仅统计真实完成的训练 XP，不再展示静态演示榜单。';
+
+  @override
+  String get leaderboardEmptyTitle => '暂无训练成绩';
+
+  @override
+  String get leaderboardEmptyBody => '完成抢词、一站到底或单词拼写后，会用真实训练 XP 生成排名。';
+
+  @override
+  String get leaderboardOnlyValidXp => '仅统计有效学习 XP';
+
+  @override
+  String get analyticsDataTitle => '学习数据';
+
+  @override
+  String get analyticsDataSubtitle => '根据生词卡和复习记录生成的首版分析视图。';
+
+  @override
+  String analyticsAssetsDue(Object due, Object total) {
+    return '$total 个学习资产中有 $due 个到期';
+  }
+
+  @override
+  String get analyticsCards => '生词卡';
+
+  @override
+  String get analyticsTrainingXp => '训练 XP';
+
+  @override
+  String get analyticsAccuracy => '正确率';
+
+  @override
   String get onboardingFeatureImageCards => '图像词卡';
 
   @override
@@ -1164,6 +1487,54 @@ class AppLocalizationsZh extends AppLocalizations {
   String get lessonPreviewLeaveContent => '当前预览进度将被放弃。';
 
   @override
+  String get lessonPreviewBuildUnderstanding => '先建立理解，再做语境题';
+
+  @override
+  String lessonPreviewProgressMeta(
+    Object current,
+    Object minutes,
+    Object section,
+    Object total,
+  ) {
+    return '$section · $minutes 分钟 · 第 $current/$total 张';
+  }
+
+  @override
+  String get lessonPreviewLessonCards => '本课词卡';
+
+  @override
+  String lessonPreviewCardMeta(Object count, Object xp) {
+    return '$xp XP · $count 道语境题';
+  }
+
+  @override
+  String get lessonPreviewEnterContext => '进入语境练习';
+
+  @override
+  String get lessonPreviewNextCard => '下一张词卡';
+
+  @override
+  String get lessonPreviewNoCards => '暂无词卡';
+
+  @override
+  String get lessonPreviewNoCardsBody => '这节课还没有可学习的词。';
+
+  @override
+  String get lessonPreviewLeaveCardTitle => '离开词卡？';
+
+  @override
+  String get lessonPreviewLeaveCardContent => '当前新学词卡进度将被放弃。';
+
+  @override
+  String get lessonPreviewLeave => '离开';
+
+  @override
+  String get lessonPreviewAssessFirst => '先判断熟悉度';
+
+  @override
+  String get lessonPreviewContextExample => '语境例句';
+
+  @override
   String get reviewCenterTitle => '复习';
 
   @override
@@ -1221,6 +1592,46 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get reviewCenterRemembered => '记住了';
+
+  @override
+  String get wordDetailNotFound => '没有找到这个词';
+
+  @override
+  String get wordDetailReviewStats => '复习统计';
+
+  @override
+  String get wordDetailMarkRemembered => '标记为记住';
+
+  @override
+  String get wordDetailScheduleSoon => '安排近期再练';
+
+  @override
+  String get wordDetailMarkedRemembered => '已标记为记住';
+
+  @override
+  String get wordDetailScheduledSoon => '已安排近期再练';
+
+  @override
+  String get wordDetailStatRemembered => '记住';
+
+  @override
+  String get wordDetailStatForgot => '没记住';
+
+  @override
+  String get wordDetailStatMastery => '掌握度';
+
+  @override
+  String get wordDetailUpdateFailed => '暂时无法更新这张卡片';
+
+  @override
+  String wordDetailMasteryLabel(Object level) {
+    return '掌握 $level/5';
+  }
+
+  @override
+  String wordDetailNextReview(Object when) {
+    return '下次 $when';
+  }
 
   @override
   String get reviewCenterPostponedMessage => '已标记为记住，下次复习会延后';
@@ -1681,6 +2092,57 @@ class AppLocalizationsZh extends AppLocalizations {
   String get notificationTypeActivity => '活动消息';
 
   @override
+  String get notificationLearningReminderTitle => '今日学习计划待完成';
+
+  @override
+  String notificationLearningReminderBody(int dailyGoal) {
+    return '今天目标新学 $dailyGoal 词，先从当前词书开始。';
+  }
+
+  @override
+  String notificationReviewDueTitle(int dueCount) {
+    return '$dueCount 个词到期复习';
+  }
+
+  @override
+  String get notificationReviewDueBody => '先清理复习队列，答错词会自动进入强化阶段。';
+
+  @override
+  String get notificationCheckInTitle => '今天还没有打卡';
+
+  @override
+  String get notificationCheckInBody => '去发现页点击签到，签到任务会进入可领取状态。';
+
+  @override
+  String get notificationActivityTitle => '发现页积分任务已刷新';
+
+  @override
+  String get notificationActivityBody => '完成新学、复习和错词清理后可领取 XP。';
+
+  @override
+  String get notificationLotteryTitle => '积分抽奖结果';
+
+  @override
+  String notificationLotteryBody(String prizeName) {
+    return '获得「$prizeName」，已放入个人资产。';
+  }
+
+  @override
+  String get osNotificationStudyReminderTitle => '今天的学习任务等你开始';
+
+  @override
+  String get osNotificationStudyReminderBody => '完成新学、复习和打卡，保持你的连续学习节奏。';
+
+  @override
+  String get osNotificationReviewDueBody => '先清掉复习队列，再开始今天的新词。';
+
+  @override
+  String get osNotificationChannelName => '学习提醒';
+
+  @override
+  String get osNotificationChannelDescription => '学习提醒、复习到期和打卡提醒';
+
+  @override
   String get studyNewStudy => '新学';
 
   @override
@@ -1878,15 +2340,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get questDailyQuests => '每日任务';
 
   @override
-  String get questAchievements => '成就';
-
-  @override
-  String get questLeaderboard => '排行榜';
-
-  @override
-  String get questClassMode => '课堂模式';
-
-  @override
   String get questProgress => '进度';
 
   @override
@@ -1962,6 +2415,45 @@ class AppLocalizationsZh extends AppLocalizations {
   String get customWordsDeleteContent => '这会同时删除这张个人词卡和它的复习计划。';
 
   @override
+  String get customWordsEditTitle => '编辑单词';
+
+  @override
+  String get customWordsAddTitle => '添加单词';
+
+  @override
+  String get customWordsFieldWord => '单词';
+
+  @override
+  String get customWordsFieldMeaning => '释义';
+
+  @override
+  String get customWordsFieldExample => '例句';
+
+  @override
+  String get customWordsFieldNote => '笔记';
+
+  @override
+  String get customWordsFieldTag => '标签';
+
+  @override
+  String get customWordsSaveEdit => '保存修改';
+
+  @override
+  String get customWordsCreate => '创建单词';
+
+  @override
+  String get customWordsSaveFailed => '暂时无法保存这个单词';
+
+  @override
+  String get customWordsSaved => '单词已保存';
+
+  @override
+  String get customWordsDifficulty => '难度';
+
+  @override
+  String get commonRequired => '必填';
+
+  @override
   String customWordsDeleteFailed(Object word) {
     return '暂时无法删除 $word';
   }
@@ -2034,6 +2526,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get wordbookEnglishDefinitions => '英文释义';
+
+  @override
+  String get wordbookMalayDefinitions => '马来语释义';
 
   @override
   String get wordbookHighFrequency => '高频';

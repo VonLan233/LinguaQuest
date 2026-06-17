@@ -4,12 +4,14 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:linguaquest/app.dart';
 import 'package:linguaquest/core/state/app_controller.dart';
 import 'package:linguaquest/core/state/app_state.dart';
 import 'package:linguaquest/data/models/app_notification.dart';
 import 'package:linguaquest/data/models/user_profile.dart';
+import 'package:linguaquest/l10n/generated/app_localizations.dart';
 import 'package:linguaquest/data/remote/api_client.dart';
 import 'package:linguaquest/data/repositories/api_repositories.dart';
 import 'package:linguaquest/data/repositories/mock_repositories.dart';
@@ -43,6 +45,92 @@ void main() {
     );
     expect(read.isRead, isTrue);
     expect(read.readAt, createdAt.add(const Duration(minutes: 4)));
+  });
+
+  test('localized notification helpers render English from type + params',
+      () async {
+    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+    final now = DateTime.utc(2026, 6, 2, 9, 30);
+
+    final reviewDue = AppNotification(
+      id: 'r1',
+      uid: 'u1',
+      type: AppNotificationType.reviewDue,
+      title: '复习到期',
+      body: '中文正文',
+      targetRoute: '/study/review',
+      isRead: false,
+      createdAt: now,
+      params: const {'dueCount': 3},
+    );
+    expect(localizedNotificationTitle(reviewDue, l10n), '3 words due for review');
+
+    final learning = AppNotification(
+      id: 'l1',
+      uid: 'u1',
+      type: AppNotificationType.learningReminder,
+      title: '今日学习计划待完成',
+      body: '中文正文',
+      targetRoute: '/study/new',
+      isRead: false,
+      createdAt: now,
+      params: const {'dailyGoal': 12},
+    );
+    expect(
+      localizedNotificationTitle(learning, l10n),
+      "Today's study plan is waiting",
+    );
+    expect(
+      localizedNotificationBody(learning, l10n),
+      'Today\'s goal: 12 new words. Start with your current wordbook.',
+    );
+
+    final lottery = AppNotification(
+      id: 'lot1',
+      uid: 'u1',
+      type: AppNotificationType.activity,
+      title: '积分抽奖结果',
+      body: '中文正文',
+      targetRoute: '/profile',
+      isRead: false,
+      createdAt: now,
+      params: const {'kind': 'lottery', 'prizeName': 'Gold Frame'},
+    );
+    expect(localizedNotificationTitle(lottery, l10n), 'Lottery result');
+    expect(
+      localizedNotificationBody(lottery, l10n),
+      'You won "Gold Frame" — added to your assets.',
+    );
+
+    final activity = AppNotification(
+      id: 'act1',
+      uid: 'u1',
+      type: AppNotificationType.activity,
+      title: '发现页积分任务已刷新',
+      body: '中文正文',
+      targetRoute: '/discover',
+      isRead: false,
+      createdAt: now,
+      params: const {'kind': 'activity'},
+    );
+    expect(
+      localizedNotificationTitle(activity, l10n),
+      'Discover point tasks refreshed',
+    );
+
+    // Legacy notification without params falls back to stored strings.
+    final legacy = AppNotification(
+      id: 'leg1',
+      uid: 'u1',
+      type: AppNotificationType.reviewDue,
+      title: '复习到期',
+      body: '中文正文',
+      targetRoute: '/study/review',
+      isRead: false,
+      createdAt: now,
+    );
+    expect(localizedNotificationTitle(legacy, l10n), '复习到期');
+    expect(localizedNotificationBody(legacy, l10n), '中文正文');
   });
 
   test('app notification parser defaults unknown types to activity', () {
@@ -407,12 +495,17 @@ class _CountingLocalNotificationService implements LocalNotificationService {
     required bool enabled,
     required int hour,
     required int minute,
+    required LocalNotificationStrings strings,
   }) async {
     dailyScheduleCalls += 1;
   }
 
   @override
-  Future<void> scheduleReviewDueReminder({required int dueCount}) async {}
+  Future<void> scheduleReviewDueReminder({
+    required int dueCount,
+    required String title,
+    required LocalNotificationStrings strings,
+  }) async {}
 }
 
 class _FailingNotificationRepository implements NotificationRepository {

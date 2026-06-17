@@ -3,8 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
+import '../../core/utils/ui_labels.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/section_header.dart';
+import '../../core/widgets/stat_tile.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 class TrainingScreen extends ConsumerWidget {
@@ -15,8 +22,12 @@ class TrainingScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final user = state.user;
+    final localeCode = Localizations.localeOf(context).languageCode;
     final currentBook = state.currentWordBook;
-    final studyBookName = state.currentStudyBook.name;
+    final studyBookName = displayWordbookTitle(
+      state.currentStudyBook.id,
+      l10n: l10n,
+    );
     final studyBookTitle = studyBookName.isNotEmpty
         ? studyBookName
         : l10n.searchCurrentPlan;
@@ -26,106 +37,89 @@ class TrainingScreen extends ConsumerWidget {
     final speedLesson = trainingLessons.isEmpty ? null : trainingLessons.first;
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
+      padding: const EdgeInsets.fromLTRB(
+        AppTokens.s16,
+        AppTokens.s20,
+        AppTokens.s16,
+        88,
+      ),
       children: [
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            PillLabel(
-              label: '${l10n.trainingWeeklyXpPrefix} ${user?.xp ?? 0} XP',
-              icon: Icons.bolt,
-              color: AppTheme.mango,
-            ),
-            PillLabel(
-              label: l10n.trainingDailyXpAvailable,
-              icon: Icons.add_task_outlined,
-              color: AppTheme.leaf,
-            ),
-            PillLabel(
-              label: '${user?.streak ?? 0} ${l10n.homeStreakLabel}',
-              icon: Icons.local_fire_department_outlined,
-              color: AppTheme.coral,
-            ),
-          ],
+        _TrainingGoalHeader(
+          weeklyXp: user?.xp ?? 0,
+          dailyAvailable: l10n.trainingDailyXpAvailable,
+          weeklyPrefix: l10n.trainingWeeklyXpPrefix,
+          streak: user?.streak ?? 0,
+          streakLabel: l10n.homeStreakLabel,
         ),
-        const SizedBox(height: 22),
+        const SizedBox(height: AppTokens.s32),
         Text(
           l10n.trainingTimedTests,
           style: Theme.of(
             context,
           ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppTokens.s12),
         _TrainingGameList(
           children: [
             _TrainingGameRow(
-              icon: Icons.school_outlined,
+              icon: AppIcons.school,
               title: l10n.trainingCampusSpeed,
               subtitle: currentBook == null
                   ? '$studyBookTitle · ${l10n.trainingTimedTests}'
-                  : '${currentBook.title} · ${l10n.trainingTimedTests}',
-              color: AppTheme.leaf,
+                  : '${currentBook.nameFor(localeCode)} · ${l10n.trainingTimedTests}',
+              color: AppTokens.successColor(context),
               onTap: speedLesson == null
                   ? null
                   : () => context.push('/timed-test/${speedLesson.id}'),
             ),
             _TrainingGameRow(
-              icon: Icons.timer_outlined,
+              icon: AppIcons.timer,
               title: l10n.trainingSpeedGame,
               subtitle: l10n.trainingSpeedGameDesc,
-              color: AppTheme.mango,
+              color: AppTokens.mangoColor(context),
               onTap: () => context.push('/training/word-rush'),
             ),
           ],
         ),
-        const SizedBox(height: 22),
-        Text(
-          l10n.trainingSpecialDrills,
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
+        const SizedBox(height: AppTokens.s24),
+        SectionHeader(
+          title: l10n.trainingSpecialDrills,
+          subtitle: l10n.trainingSpecialDrillsSubtitle,
         ),
-        const SizedBox(height: 4),
-        Text(
-          l10n.trainingSpecialDrillsSubtitle,
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
+        const SizedBox(height: AppTokens.s12),
+        _TrainingGameList(
+          children: [
+            _TrainingGameRow(
+              icon: AppIcons.stairs,
+              title: l10n.trainingSurvivor,
+              subtitle: l10n.trainingSurvivorDesc,
+              color: AppTokens.coralColor(context),
+              onTap: () => context.push('/training/survival'),
+            ),
+            _TrainingGameRow(
+              icon: AppIcons.editNote,
+              title: l10n.trainingSpelling,
+              subtitle: l10n.trainingSpellingDesc,
+              color: AppTheme.cyan,
+              onTap: () => context.push('/training/spelling'),
+            ),
+            _TrainingGameRow(
+              icon: AppIcons.article,
+              title: l10n.trainingPassageCloze,
+              subtitle: l10n.trainingPassageClozeDesc,
+              color: AppTokens.successColor(context),
+              onTap: null,
+            ),
+            _TrainingGameRow(
+              icon: AppIcons.hearing,
+              title: l10n.trainingListening,
+              subtitle: l10n.trainingListeningDesc,
+              color: AppTokens.mangoColor(context),
+              onTap: null,
+            ),
+          ],
         ),
-        const SizedBox(height: 12),
-        _TrainingGameRow(
-          icon: Icons.stairs_outlined,
-          title: l10n.trainingSurvivor,
-          subtitle: l10n.trainingSurvivorDesc,
-          color: AppTheme.coral,
-          onTap: () => context.push('/training/survival'),
-        ),
-        const SizedBox(height: 12),
-        _TrainingGameRow(
-          icon: Icons.edit_note_outlined,
-          title: l10n.trainingSpelling,
-          subtitle: l10n.trainingSpellingDesc,
-          color: AppTheme.cyan,
-          onTap: () => context.push('/training/spelling'),
-        ),
-        const SizedBox(height: 12),
-        _TrainingGameRow(
-          icon: Icons.article_outlined,
-          title: l10n.trainingPassageCloze,
-          subtitle: l10n.trainingPassageClozeDesc,
-          color: AppTheme.leaf,
-          onTap: null,
-        ),
-        const SizedBox(height: 12),
-        _TrainingGameRow(
-          icon: Icons.hearing_outlined,
-          title: l10n.trainingListening,
-          subtitle: l10n.trainingListeningDesc,
-          color: AppTheme.mango,
-          onTap: null,
-        ),
-        const SizedBox(height: 22),
+        const SizedBox(height: AppTokens.s32),
         _TrainingReadinessLine(
           dueWords: state.dueWords.length,
           weakWords: state.weakWords.length,
@@ -137,6 +131,67 @@ class TrainingScreen extends ConsumerWidget {
   }
 }
 
+class _TrainingGoalHeader extends StatelessWidget {
+  const _TrainingGoalHeader({
+    required this.weeklyXp,
+    required this.dailyAvailable,
+    required this.weeklyPrefix,
+    required this.streak,
+    required this.streakLabel,
+  });
+
+  final int weeklyXp;
+  final String dailyAvailable;
+  final String weeklyPrefix;
+  final int streak;
+  final String streakLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return AppCard(
+      padding: const EdgeInsets.fromLTRB(
+        AppTokens.s20,
+        AppTokens.s16,
+        AppTokens.s20,
+        AppTokens.s20,
+      ),
+      child: Row(
+        children: [
+          const IconCueBadge(icon: AppIcons.bolt, color: AppTokens.mango),
+          const SizedBox(width: AppTokens.s16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '$weeklyPrefix $weeklyXp XP',
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: AppTokens.s8),
+                Text(
+                  dailyAvailable,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: AppTokens.s12),
+          AppPill(
+            label: '$streak $streakLabel',
+            variant: PillVariant.streak,
+            icon: AppIcons.localFireDepartment,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _TrainingGameList extends StatelessWidget {
   const _TrainingGameList({required this.children});
 
@@ -144,11 +199,13 @@ class _TrainingGameList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         for (var index = 0; index < children.length; index++) ...[
-          Expanded(child: children[index]),
-          if (index < children.length - 1) const SizedBox(width: 12),
+          children[index],
+          if (index < children.length - 1)
+            const SizedBox(height: AppTokens.s12),
         ],
       ],
     );
@@ -173,49 +230,53 @@ class _TrainingGameRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Material(
-      color: Colors.transparent,
-      borderRadius: BorderRadius.circular(16),
-      clipBehavior: Clip.antiAlias,
-      child: Ink(
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withValues(alpha: 0.24)),
-        ),
-        child: InkWell(
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(icon, color: color, size: 32),
-                const SizedBox(height: 12),
-                Text(title, style: theme.textTheme.titleMedium),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: theme.colorScheme.onSurfaceVariant,
-                    fontSize: 13,
-                  ),
+    final locked = onTap == null;
+    final content = Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
                 ),
-                if (onTap == null) ...[
-                  const SizedBox(height: 10),
-                  PillLabel(
-                    label: AppLocalizations.of(context).trainingComingSoon,
-                    icon: Icons.lock_clock_outlined,
-                    color: Colors.blueGrey,
-                  ),
-                ],
-              ],
+                alignment: Alignment.center,
+                child: Icon(icon, color: color, size: 24),
+              ),
+              const Spacer(),
+              if (locked)
+                AppPill(
+                  label: AppLocalizations.of(context).trainingComingSoon,
+                  variant: PillVariant.primary,
+                  icon: AppIcons.lockClock,
+                ),
+            ],
+          ),
+          const SizedBox(height: AppTokens.s12),
+          Text(
+            title,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w700,
             ),
           ),
-        ),
-      ),
+          const SizedBox(height: AppTokens.s4),
+          Text(
+            subtitle,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      );
+    return AppCard(
+      padding: const EdgeInsets.all(AppTokens.s16),
+      onTap: onTap,
+      child: locked ? Opacity(opacity: 0.6, child: content) : content,
     );
   }
 }
@@ -235,98 +296,36 @@ class _TrainingReadinessLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: _TrainingSignal(
-            label: l10n.trainingDueWords,
-            value: '$dueWords',
-            icon: Icons.today_outlined,
-            color: AppTheme.teal,
+    return AppCard(
+      child: Row(
+        children: [
+          Flexible(
+            child: StatTile(
+              value: '$dueWords',
+              label: l10n.trainingDueWords,
+              icon: AppIcons.today,
+              accent: AppTokens.azure,
+            ),
           ),
-        ),
-        const _TrainingSignalDivider(),
-        Expanded(
-          child: _TrainingSignal(
-            label: l10n.trainingWeakWords,
-            value: '$weakWords',
-            icon: Icons.warning_amber_outlined,
-            color: AppTheme.coral,
+          const SizedBox(width: AppTokens.s12),
+          Flexible(
+            child: StatTile(
+              value: '$weakWords',
+              label: l10n.trainingWeakWords,
+              icon: AppIcons.warningAmber,
+              accent: AppTokens.coralColor(context),
+            ),
           ),
-        ),
-        const _TrainingSignalDivider(),
-        Expanded(
-          child: _TrainingSignal(
-            label: l10n.trainingComboTarget,
-            value: '$comboTarget',
-            icon: Icons.bolt,
-            color: AppTheme.mango,
+          const SizedBox(width: AppTokens.s12),
+          Flexible(
+            child: StatTile(
+              value: '$comboTarget',
+              label: l10n.trainingComboTarget,
+              icon: AppIcons.bolt,
+              accent: AppTokens.mangoColor(context),
+            ),
           ),
-        ),
-      ],
-    );
-  }
-}
-
-class _TrainingSignal extends StatelessWidget {
-  const _TrainingSignal({
-    required this.label,
-    required this.value,
-    required this.icon,
-    required this.color,
-  });
-
-  final String label;
-  final String value;
-  final IconData icon;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, color: color, size: 20),
-        const SizedBox(width: 6),
-        Flexible(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                value,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.titleMedium,
-              ),
-              Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _TrainingSignalDivider extends StatelessWidget {
-  const _TrainingSignalDivider();
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 34,
-      child: VerticalDivider(
-        width: 16,
-        thickness: 1,
-        color: Theme.of(context).colorScheme.outlineVariant,
+        ],
       ),
     );
   }

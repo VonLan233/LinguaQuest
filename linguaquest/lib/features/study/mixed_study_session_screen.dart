@@ -1,16 +1,23 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
-import '../../core/theme/app_theme.dart';
-import '../../core/widgets/empty_state.dart';
+import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
+import '../../core/widgets/app_progress_bar.dart';
 import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/mascot_empty_state.dart';
+import '../../core/widgets/word_choice_button.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
+import '../../l10n/generated/app_localizations.dart';
 import 'session/session_queue_builder.dart';
 
 class MixedStudySessionScreen extends ConsumerStatefulWidget {
@@ -24,20 +31,26 @@ class MixedStudySessionScreen extends ConsumerStatefulWidget {
 }
 
 class _MixedStudySessionScreenState
-    extends ConsumerState<MixedStudySessionScreen> {
+    extends ConsumerState<MixedStudySessionScreen>
+    with SingleTickerProviderStateMixin {
   static const _builder = StudySessionQueueBuilder();
+  static const _autoAdvanceDelay = Duration(milliseconds: 1500);
 
   final Random _random = Random();
   final List<StudySessionQueueItem> _queue = [];
   final List<StudyAnswerLog> _answerLogs = [];
   final Set<String> _wrongItemIds = {};
   final Set<String> _scheduledWrongIds = {};
+  final Set<String> _wrongTries = {};
   late final DateTime _sessionStartedAt;
+  // Times the 1500ms pause before auto-advancing once a question step is
+  // settled; it drives no visual property, only the delay.
+  late final AnimationController _autoAdvanceController;
   DateTime _itemStartedAt = DateTime.now();
   StudySessionQueuePlan? _plan;
-  String? _selected;
   bool _checked = false;
   bool _lastCorrect = false;
+  bool _lockedCorrect = false;
   bool _isSubmitting = false;
   int _completedItems = 0;
   int _correctAnswers = 0;
@@ -48,11 +61,22 @@ class _MixedStudySessionScreenState
   void initState() {
     super.initState();
     _sessionStartedAt = DateTime.now();
+    _autoAdvanceController = AnimationController(
+      vsync: this,
+      duration: _autoAdvanceDelay,
+    );
     WidgetsBinding.instance.addPostFrameCallback((_) => _initializeQueue());
   }
 
   @override
+  void dispose() {
+    _autoAdvanceController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final current = _queue.isEmpty ? null : _queue.first;
     final total = _completedItems + _queue.length;
     final progress = total == 0
@@ -68,21 +92,23 @@ class _MixedStudySessionScreenState
       child: Scaffold(
         appBar: AppBar(
           leading: BackButton(onPressed: () => _handleExit(context)),
-          title: Text(_title),
+          title: Text(_titleFor(l10n)),
           actions: [
             if (widget.mode == StudySessionEntryMode.reviewOnly)
               TextButton(
                 onPressed: _isSubmitting ? null : () => context.push('/review'),
-                child: const Text('管理复习队列'),
+                child: Text(l10n.mixedManageReviewQueue),
               ),
             if (_plan != null)
               Padding(
                 padding: const EdgeInsets.only(right: 12),
                 child: Center(
-                  child: PillLabel(
-                    label: '复习 ${(_plan!.reviewTargetRatio * 100).round()}%',
-                    icon: Icons.shuffle_rounded,
-                    color: AppTheme.cyan,
+                  child: AppPill(
+                    label: l10n.mixedReviewRatio(
+                      '${(_plan!.reviewTargetRatio * 100).round()}',
+                    ),
+                    icon: AppIcons.shuffle,
+                    variant: PillVariant.primary,
                   ),
                 ),
               ),
@@ -103,31 +129,24 @@ class _MixedStudySessionScreenState
                       Row(
                         children: [
                           Expanded(
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(999),
-                              child: LinearProgressIndicator(
-                                value: progress,
-                                minHeight: 11,
-                                backgroundColor: AppTheme.progressTrack(
-                                  context,
-                                ),
-                              ),
-                            ),
+                            child: AppProgressBar(value: progress, height: 11),
                           ),
                           const SizedBox(width: 12),
-                          PillLabel(
+                          AppPill(
                             label: '${_completedItems + 1}/$total',
-                            icon: Icons.auto_awesome_motion_outlined,
+                            icon: AppIcons.autoAwesomeMotion,
                           ),
                         ],
                       ),
                       const SizedBox(height: 14),
                       Expanded(
-                        child: current.step == StudySessionStep.understanding ||
+                        child:
+                            current.step == StudySessionStep.understanding ||
                                 current.isKnowledgeCard
                             ? _KnowledgeCardStep(
                                 item: current,
-                                showAssessment: current.step ==
+                                showAssessment:
+                                    current.step ==
                                     StudySessionStep.understanding,
                                 selectedConfidence: _confidence,
                                 isSubmitting: _isSubmitting,
@@ -137,15 +156,16 @@ class _MixedStudySessionScreenState
                               )
                             : _QuestionStep(
                                 item: current,
+                                localeCode: Localizations.localeOf(
+                                  context,
+                                ).languageCode,
                                 options: _currentOptions,
-                                selected: _selected,
                                 checked: _checked,
                                 lastCorrect: _lastCorrect,
-                                isSubmitting: _isSubmitting,
+                                lockedCorrect: _lockedCorrect,
+                                wrongTries: _wrongTries,
                                 onSelected: (value) =>
-                                    setState(() => _selected = value),
-                                onPrimary: () =>
-                                    _handleQuestionPrimary(current),
+                                    _judgeQuestion(current, value),
                               ),
                       ),
                     ],
@@ -156,14 +176,14 @@ class _MixedStudySessionScreenState
     );
   }
 
-  String get _title {
+  String _titleFor(AppLocalizations l10n) {
     switch (widget.mode) {
       case StudySessionEntryMode.newOnly:
-        return '今日新学包';
+        return l10n.mixedTitleNew;
       case StudySessionEntryMode.reviewOnly:
-        return '快速复习';
+        return l10n.mixedTitleReview;
       case StudySessionEntryMode.mixed:
-        return '今日混排学习包';
+        return l10n.mixedTitleMixed;
     }
   }
 
@@ -204,57 +224,81 @@ class _MixedStudySessionScreenState
     _advanceCurrent();
   }
 
-  Future<void> _handleQuestionPrimary(StudySessionQueueItem item) async {
-    if (_isSubmitting) return;
-    if (!_checked) {
-      final answer = _selected;
-      if (answer == null) return;
-      final isCorrect =
-          answer.trim().toLowerCase() == item.meaning.trim().toLowerCase();
-      final responseTime = DateTime.now()
-          .difference(_itemStartedAt)
-          .inMilliseconds;
-      _answerLogs.add(
-        StudyAnswerLog(
-          itemId: item.id,
-          wordId: item.wordId,
-          source: item.source,
-          step: item.step,
-          isCorrect: isCorrect,
-          responseTimeMs: responseTime,
-          confidence: _confidence,
-          selectedAnswer: answer,
-          wrongOption: isCorrect ? null : answer,
-          answeredAt: DateTime.now(),
-        ),
-      );
-      if (!isCorrect) {
-        _wrongItemIds.add(item.wordId);
-        _scheduleWrongRecycle(item);
+  /// Immediate judgment for a tapped choice [answer] on a question step.
+  ///
+  /// Mirrors the legacy two-press evaluation/logging/scheduling, but moves the
+  /// trigger from a check button to the option tap:
+  /// - Correct: lock, count, then auto-advance after [_autoAdvanceDelay].
+  /// - Wrong + review item: recorded/persisted once, then auto-advance.
+  /// - Wrong + non-review item: marked red, stays tappable for re-select.
+  Future<void> _judgeQuestion(
+    StudySessionQueueItem item,
+    String answer,
+  ) async {
+    // Ignore taps while a settle/persist is in flight, or once a correct (or
+    // settled review) answer has locked the step.
+    if (_isSubmitting || _lockedCorrect || (_checked && item.isReview)) return;
+    final localeCode = Localizations.localeOf(context).languageCode;
+    final isCorrect =
+        answer.trim().toLowerCase() ==
+        item.meaningFor(localeCode).trim().toLowerCase();
+    final responseTime = DateTime.now()
+        .difference(_itemStartedAt)
+        .inMilliseconds;
+    _answerLogs.add(
+      StudyAnswerLog(
+        itemId: item.id,
+        wordId: item.wordId,
+        source: item.source,
+        step: item.step,
+        isCorrect: isCorrect,
+        responseTimeMs: responseTime,
+        confidence: _confidence,
+        selectedAnswer: answer,
+        wrongOption: isCorrect ? null : answer,
+        answeredAt: DateTime.now(),
+      ),
+    );
+    if (!isCorrect) {
+      _wrongItemIds.add(item.wordId);
+      _scheduleWrongRecycle(item);
+    }
+    setState(() {
+      _checked = true;
+      _lastCorrect = isCorrect;
+      if (isCorrect) {
+        _lockedCorrect = true;
+      } else {
+        _wrongTries.add(answer);
       }
-      setState(() {
-        _checked = true;
-        _lastCorrect = isCorrect;
-      });
-      if (item.isReview && item.affectsSchedule) {
-        await _persistReviewAttempt(item, isCorrect, responseTime, answer);
+    });
+
+    if (isCorrect) {
+      if (!_wrongItemIds.contains(item.wordId)) {
+        _correctAnswers += 1;
       }
-      return;
     }
 
-    if (!_lastCorrect && !item.isReview) {
-      setState(() {
-        _checked = false;
-        _selected = null;
-        _itemStartedAt = DateTime.now();
-      });
-      return;
+    if (item.isReview && item.affectsSchedule) {
+      // Review items are recorded on the first attempt (no retry). Persist now;
+      // _persistReviewAttempt toggles _isSubmitting so taps stay ignored while
+      // the write is in flight.
+      await _persistReviewAttempt(item, isCorrect, responseTime, answer);
+      if (!mounted) return;
     }
 
-    if (_lastCorrect && !_wrongItemIds.contains(item.wordId)) {
-      _correctAnswers += 1;
+    // Auto-advance whenever the item is settled: a correct answer, or a review
+    // item that has now been answered. Non-review wrong answers stay for
+    // re-selection.
+    final settled = isCorrect || item.isReview;
+    if (settled) {
+      _autoAdvanceController
+        ..reset()
+        ..forward().whenComplete(() {
+          if (!mounted || _isSubmitting) return;
+          _advanceCurrent();
+        });
     }
-    _advanceCurrent();
   }
 
   Future<void> _persistReviewAttempt(
@@ -277,10 +321,12 @@ class _MixedStudySessionScreenState
           );
       if (!mounted) return;
       if (!succeeded) {
-        _showSubmitError('暂时无法保存复习记录');
+        _showSubmitError(AppLocalizations.of(context).mixedSaveReviewFailed);
       }
     } catch (_) {
-      if (mounted) _showSubmitError('暂时无法保存复习记录');
+      if (mounted) {
+        _showSubmitError(AppLocalizations.of(context).mixedSaveReviewFailed);
+      }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
     }
@@ -327,9 +373,10 @@ class _MixedStudySessionScreenState
         : const <String>[];
     setState(() {
       _completedItems += 1;
-      _selected = null;
       _checked = false;
       _lastCorrect = false;
+      _lockedCorrect = false;
+      _wrongTries.clear();
       _confidence = 3;
       _currentOptions = options;
       _itemStartedAt = DateTime.now();
@@ -337,7 +384,9 @@ class _MixedStudySessionScreenState
   }
 
   List<String> _buildOptionsFor(StudySessionQueueItem item, AppState state) {
-    final answerKey = item.meaning.trim().toLowerCase();
+    final localeCode = Localizations.localeOf(context).languageCode;
+    final answer = item.meaningFor(localeCode);
+    final answerKey = answer.trim().toLowerCase();
     final seen = <String>{answerKey};
     final distractorPool = <String>[];
 
@@ -350,14 +399,16 @@ class _MixedStudySessionScreenState
 
     for (final lesson in state.formalLessons) {
       for (final word in lesson.words) {
-        if (word.id != item.wordId) addDistractor(word.meaning);
+        if (word.id != item.wordId) {
+          addDistractor(word.primaryDefinitionFor(localeCode));
+        }
       }
     }
     for (final word in state.customWords) {
       if (word.id != item.wordId) addDistractor(word.meaning);
     }
 
-    final options = <String>[item.meaning];
+    final options = <String>[answer];
     final randomIndices = <int>{};
     final targetCount = min(3, distractorPool.length);
     while (randomIndices.length < targetCount) {
@@ -367,7 +418,9 @@ class _MixedStudySessionScreenState
       options.add(distractorPool[index]);
     }
     while (options.length < 4) {
-      options.add('还不确定 ${options.length}');
+      options.add(
+        AppLocalizations.of(context).mixedUnsureOption(options.length),
+      );
     }
     options.shuffle(_random);
     return List.unmodifiable(options);
@@ -378,24 +431,25 @@ class _MixedStudySessionScreenState
       _leave(activeContext);
       return;
     }
+    final dialogL10n = AppLocalizations.of(activeContext);
     final action = await showDialog<_ExitAction>(
       context: activeContext,
       builder: (context) => AlertDialog(
-        title: const Text('保存本次进度？'),
-        content: const Text('已保存的复习记录会保留；保存后会记录本次已完成题目，未完成词下次仍会进入学习包。'),
+        title: Text(dialogL10n.mixedSaveProgressTitle),
+        content: Text(dialogL10n.mixedSaveProgressBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, _ExitAction.continueStudy),
-            child: const Text('继续学习'),
+            child: Text(dialogL10n.mixedContinueStudy),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, _ExitAction.discard),
-            child: const Text('不保存离开'),
+            child: Text(dialogL10n.mixedLeaveWithoutSaving),
           ),
           FilledButton.icon(
             onPressed: () => Navigator.pop(context, _ExitAction.save),
-            icon: const Icon(Icons.save_outlined),
-            label: const Text('保存并离开'),
+            icon: const Icon(AppIcons.save),
+            label: Text(dialogL10n.mixedSaveAndLeave),
           ),
         ],
       ),
@@ -444,11 +498,13 @@ class _MixedStudySessionScreenState
             xpEarned: xp,
           );
       if (mounted && !succeeded) {
-        _showSubmitError('暂时无法保存学习进度');
+        _showSubmitError(AppLocalizations.of(context).mixedSaveStudyFailed);
       }
       return succeeded;
     } catch (_) {
-      if (mounted) _showSubmitError('暂时无法保存学习进度');
+      if (mounted) {
+        _showSubmitError(AppLocalizations.of(context).mixedSaveStudyFailed);
+      }
       return false;
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
@@ -493,46 +549,68 @@ class _KnowledgeCardStep extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     return ListView(
       children: [
-        ImageCueBadge(cue: item.imageCue, size: 92),
-        const SizedBox(height: 16),
-        Text(
-          item.displayWord,
-          textAlign: TextAlign.center,
-          style: theme.textTheme.headlineMedium?.copyWith(
-            fontWeight: FontWeight.w900,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          item.meaning,
-          textAlign: TextAlign.center,
-          style: theme.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-        const SizedBox(height: 14),
-        Text(item.exampleSentence, textAlign: TextAlign.center),
-        const SizedBox(height: 24),
-        if (showAssessment) ...[
-          Text('先自评，系统会调整今天的重复次数', style: theme.textTheme.titleMedium),
-          const SizedBox(height: 10),
-          SegmentedButton<int>(
-            segments: const [
-              ButtonSegment(value: 5, label: Text('认识')),
-              ButtonSegment(value: 3, label: Text('模糊')),
-              ButtonSegment(value: 1, label: Text('不认识')),
+        AppCard(
+          padding: const EdgeInsets.all(AppTokens.s20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(child: ImageCueBadge(cue: item.imageCue, size: 92)),
+              const SizedBox(height: 16),
+              Text(
+                item.displayWord,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                item.meaningFor(Localizations.localeOf(context).languageCode),
+                textAlign: TextAlign.center,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              const SizedBox(height: 14),
+              Text(item.exampleSentence, textAlign: TextAlign.center),
+              const SizedBox(height: 24),
+              if (showAssessment) ...[
+                Text(
+                  l10n.mixedSelfAssessHint,
+                  style: theme.textTheme.titleMedium,
+                ),
+                const SizedBox(height: 10),
+                SegmentedButton<int>(
+                  style: SegmentedButton.styleFrom(
+                    selectedBackgroundColor: AppTokens.primarySoft,
+                    selectedForegroundColor: AppTokens.primarySoftText,
+                  ),
+                  segments: [
+                    ButtonSegment(value: 5, label: Text(l10n.studyRecallKnown)),
+                    ButtonSegment(value: 3, label: Text(l10n.studyRecallFuzzy)),
+                    ButtonSegment(
+                      value: 1,
+                      label: Text(l10n.studyRecallUnknown),
+                    ),
+                  ],
+                  selected: {selectedConfidence},
+                  onSelectionChanged: (values) =>
+                      onConfidenceChanged(values.first),
+                ),
+                const SizedBox(height: 20),
+              ],
+              AppPrimaryButton(
+                onPressed: isSubmitting ? null : onContinue,
+                icon: AppIcons.arrowForward,
+                label: showAssessment
+                    ? l10n.mixedEnterRecognition
+                    : l10n.mixedAddLaterRecall,
+              ),
             ],
-            selected: {selectedConfidence},
-            onSelectionChanged: (values) => onConfidenceChanged(values.first),
           ),
-          const SizedBox(height: 20),
-        ],
-        FilledButton.icon(
-          onPressed: isSubmitting ? null : onContinue,
-          icon: const Icon(Icons.arrow_forward_rounded),
-          label: Text(showAssessment ? '进入识别题' : '加入稍后复现'),
         ),
       ],
     );
@@ -543,31 +621,35 @@ class _QuestionStep extends StatelessWidget {
   const _QuestionStep({
     required this.item,
     required this.options,
-    required this.selected,
     required this.checked,
     required this.lastCorrect,
-    required this.isSubmitting,
+    required this.lockedCorrect,
+    required this.wrongTries,
     required this.onSelected,
-    required this.onPrimary,
+    required this.localeCode,
   });
 
   final StudySessionQueueItem item;
+  final String localeCode;
   final List<String> options;
-  final String? selected;
   final bool checked;
   final bool lastCorrect;
-  final bool isSubmitting;
+  final bool lockedCorrect;
+  final Set<String> wrongTries;
   final ValueChanged<String> onSelected;
-  final VoidCallback onPrimary;
+
+  /// Whether a non-review wrong answer is still open for re-selection.
+  bool get _retryable => checked && !lastCorrect && !item.isReview;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          _prompt,
+          _promptFor(l10n),
           textAlign: TextAlign.center,
           style: theme.textTheme.headlineSmall,
         ),
@@ -577,124 +659,100 @@ class _QuestionStep extends StatelessWidget {
           runSpacing: 8,
           alignment: WrapAlignment.center,
           children: [
-            PillLabel(label: _stepLabel, icon: Icons.psychology_alt_outlined),
+            AppPill(
+              label: _stepLabelFor(l10n),
+              icon: AppIcons.psychologyAlt,
+            ),
             if (item.isReview)
-              const PillLabel(label: '复习快答', icon: Icons.flash_on_outlined),
+              AppPill(
+                label: l10n.mixedReviewQuickAnswer,
+                icon: AppIcons.flashOn,
+                variant: PillVariant.xp,
+              ),
           ],
         ),
         const SizedBox(height: 18),
         Expanded(
-          child: ListView(
-            children: [
-              for (final option in options)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: SizedBox(
-                    height: 64,
-                    child: OutlinedButton(
-                      onPressed: checked ? null : () => onSelected(option),
-                      style: OutlinedButton.styleFrom(
-                        alignment: Alignment.centerLeft,
-                        backgroundColor: _optionBackground(context, option),
-                        foregroundColor: _optionForeground(context, option),
-                        side: BorderSide(
-                          color: _optionBorder(context, option),
-                          width: 2,
-                        ),
-                      ),
-                      child: Text(
-                        option,
-                        style: const TextStyle(fontWeight: FontWeight.w900),
-                      ),
+          child: AppCard(
+            child: ListView(
+              children: [
+                for (var i = 0; i < options.length; i++)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: WordChoiceButton(
+                      letter: String.fromCharCode(65 + i),
+                      text: options[i],
+                      state: _optionState(options[i]),
+                      // Locked-correct or settled-review steps ignore taps; a
+                      // non-review wrong answer stays tappable for re-select.
+                      onTap: (lockedCorrect || (checked && !_retryable))
+                          ? null
+                          : () => onSelected(options[i]),
                     ),
                   ),
-                ),
-              if (checked) ...[
-                const SizedBox(height: 8),
-                Text(
-                  lastCorrect
-                      ? '答对了，继续下一题。'
-                      : item.isReview
-                      ? '答错了，先看知识卡，稍后会再次出现。'
-                      : '还不对。请选择到正确答案后再进入下一题。',
-                  style: TextStyle(
-                    color: lastCorrect
-                        ? AppTheme.success
-                        : theme.colorScheme.error,
-                    fontWeight: FontWeight.w800,
+                if (checked) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    lastCorrect
+                        ? l10n.mixedFeedbackCorrect
+                        : item.isReview
+                        ? l10n.mixedFeedbackWrong
+                        : l10n.mixedFeedbackRetry,
+                    style: TextStyle(
+                      color: lastCorrect
+                          ? AppTokens.successColor(context)
+                          : AppTokens.coralColor(context),
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
-                ),
+                ],
               ],
-            ],
-          ),
-        ),
-        FilledButton.icon(
-          onPressed: selected == null || isSubmitting ? null : onPrimary,
-          icon: Icon(
-            checked ? Icons.arrow_forward_rounded : Icons.check_rounded,
-          ),
-          label: Text(
-            checked ? (lastCorrect || item.isReview ? '继续' : '再试一次') : '检查',
+            ),
           ),
         ),
       ],
     );
   }
 
-  String get _prompt {
+  bool _isCorrectOption(String option) {
+    return option.trim().toLowerCase() ==
+        item.meaningFor(localeCode).trim().toLowerCase();
+  }
+
+  ChoiceState _optionState(String option) {
+    // Reveal the correct answer once the step is locked (correct) or a review
+    // item has been answered; otherwise only mark tried-wrong options red.
+    if ((lockedCorrect || (checked && item.isReview)) &&
+        _isCorrectOption(option)) {
+      return ChoiceState.correct;
+    }
+    if (wrongTries.contains(option)) return ChoiceState.wrong;
+    return ChoiceState.idle;
+  }
+
+  String _promptFor(AppLocalizations l10n) {
     if (item.step == StudySessionStep.shortRecall) {
-      return '短间隔回忆：${item.displayWord} 的意思是？';
+      return l10n.mixedShortRecallPrompt(item.displayWord);
     }
     if (item.step == StudySessionStep.recognition &&
         item.exampleSentence.isNotEmpty) {
       return item.exampleSentence;
     }
-    return '${item.displayWord} 的中文释义是？';
+    return l10n.mixedMeaningPrompt(item.displayWord);
   }
 
-  String get _stepLabel {
+  String _stepLabelFor(AppLocalizations l10n) {
     switch (item.step) {
       case StudySessionStep.recognition:
-        return '识别';
+        return l10n.mixedStepRecognition;
       case StudySessionStep.shortRecall:
-        return '短间隔回忆';
+        return l10n.mixedStepShortRecall;
       case StudySessionStep.reviewRecall:
-        return '到期复习';
+        return l10n.mixedStepDueReview;
       case StudySessionStep.understanding:
       case StudySessionStep.knowledgeCard:
-        return '知识卡';
+        return l10n.mixedStepKnowledge;
     }
-  }
-
-  Color _optionBackground(BuildContext context, String option) {
-    if (!checked) {
-      return selected == option
-          ? AppTheme.selectedSurface(context)
-          : Theme.of(context).colorScheme.surface;
-    }
-    if (option == item.meaning) return AppTheme.success.withValues(alpha: 0.12);
-    if (option == selected) {
-      return Theme.of(context).colorScheme.error.withValues(alpha: 0.12);
-    }
-    return Theme.of(context).colorScheme.surface;
-  }
-
-  Color _optionForeground(BuildContext context, String option) {
-    if (!checked) return Theme.of(context).colorScheme.onSurface;
-    if (option == item.meaning) return AppTheme.success;
-    if (option == selected) return Theme.of(context).colorScheme.error;
-    return Theme.of(context).colorScheme.onSurface;
-  }
-
-  Color _optionBorder(BuildContext context, String option) {
-    if (!checked) {
-      return selected == option
-          ? Theme.of(context).colorScheme.primary
-          : Theme.of(context).colorScheme.outlineVariant;
-    }
-    if (option == item.meaning) return AppTheme.success;
-    if (option == selected) return Theme.of(context).colorScheme.error;
-    return Theme.of(context).colorScheme.outlineVariant;
   }
 }
 
@@ -711,14 +769,14 @@ class _CompleteView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return EmptyState(
-      icon: Icons.check_circle_outline,
-      title: hasProgress ? '今日学习包完成' : '今日没有待学习内容',
-      message: hasProgress ? '错题已经在本轮回收，答题记录和用时会保存到学习日志。' : '当前没有新词或到期复习词。',
-      action: FilledButton.icon(
+    final l10n = AppLocalizations.of(context);
+    return MascotEmptyState(
+      title: hasProgress ? l10n.mixedCompleteTitle : l10n.mixedNoContentTitle,
+      message: hasProgress ? l10n.mixedCompleteBody : l10n.mixedNoContentBody,
+      action: AppPrimaryButton(
         onPressed: isSubmitting ? null : onFinish,
-        icon: const Icon(Icons.home_outlined),
-        label: const Text('保存并回首页'),
+        icon: AppIcons.home,
+        label: l10n.mixedSaveAndHome,
       ),
     );
   }

@@ -4,9 +4,13 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/date_formatting.dart';
 import '../../core/utils/ui_labels.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
@@ -29,13 +33,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
   var _initializedFromState = false;
   late final ProviderSubscription<AppState> _stateSubscription;
 
-  static const targets = [
-    'IELTS',
-    'TOEFL',
-    'GRE',
-    'Beginner',
-    'Daily English',
-  ];
+  static const targets = ['IELTS', 'TOEFL', 'GRE', 'Beginner', 'Daily English'];
   static const goals = [5, 10, 15, 20];
 
   @override
@@ -86,26 +84,28 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
           children: [
             SectionHeader(
-                title: l10n.goalSetupSelectPlan,
-                subtitle: l10n.goalSetupSelectPlanSubtitle),
+              title: l10n.goalSetupSelectPlan,
+              subtitle: l10n.goalSetupSelectPlanSubtitle,
+            ),
             const SizedBox(height: 12),
             Wrap(
               spacing: 8,
               runSpacing: 8,
               children: [
-                PillLabel(
+                AppPill(
                   label: l10n.authStep2of2,
-                  icon: Icons.track_changes_rounded,
-                  color: AppTheme.cyan,
+                  icon: AppIcons.trackChanges,
+                  variant: PillVariant.primary,
                 ),
-                PillLabel(
+                AppPill(
                   label: displayTarget(_target, l10n: l10n),
-                  icon: Icons.flag_outlined,
+                  icon: AppIcons.flag,
+                  variant: PillVariant.neutral,
                 ),
-                PillLabel(
+                AppPill(
                   label: '$dailyWords${l10n.commonWords}/${l10n.commonDay}',
-                  icon: Icons.today_outlined,
-                  color: AppTheme.mango,
+                  icon: AppIcons.today,
+                  variant: PillVariant.xp,
                 ),
               ],
             ),
@@ -130,8 +130,10 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(l10n.goalSetupDailyGoal,
-                    style: Theme.of(context).textTheme.titleMedium),
+                Text(
+                  l10n.goalSetupDailyGoal,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
                 const SizedBox(height: 8),
                 _ChoiceList<int>(
                   values: goals,
@@ -145,8 +147,10 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(l10n.goalSetupDeadlinePlan,
-                    style: Theme.of(context).textTheme.titleMedium),
+                Text(
+                  l10n.goalSetupDeadlinePlan,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
                 const SizedBox(height: 8),
                 Text(
                   _deadline == null
@@ -157,14 +161,12 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
                 Row(
                   children: [
                     Expanded(
-                      child: OutlinedButton.icon(
+                      child: AppSecondaryButton(
                         onPressed: _pickDeadline,
-                        icon: const Icon(Icons.event_outlined),
-                        label: Text(
-                          _deadline == null
-                              ? l10n.goalSetupPickDate
-                              : l10n.goalSetupChangeDate,
-                        ),
+                        icon: AppIcons.event,
+                        label: _deadline == null
+                            ? l10n.goalSetupPickDate
+                            : l10n.goalSetupChangeDate,
                       ),
                     ),
                     if (_deadline != null) ...[
@@ -172,7 +174,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
                       QuestIconButton(
                         tooltip: l10n.goalSetupClearDate,
                         onPressed: () => setState(() => _deadline = null),
-                        icon: Icons.close_rounded,
+                        icon: AppIcons.close,
                         color: AppTheme.coral,
                       ),
                     ],
@@ -181,10 +183,10 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
               ],
             ),
             const SizedBox(height: 28),
-            FilledButton.icon(
+            AppPrimaryButton(
               onPressed: _save,
-              icon: const Icon(Icons.check_circle_outline),
-              label: Text(l10n.goalSetupEnterApp),
+              icon: AppIcons.checkCircle,
+              label: l10n.goalSetupEnterApp,
             ),
           ],
         ),
@@ -309,68 +311,74 @@ class _PlanSnapshotLine extends StatelessWidget {
     final progress = totalWords == 0
         ? 0.0
         : (completedWords / totalWords).clamp(0.0, 1.0);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            IconCueBadge(
-              icon: Icons.menu_book_outlined,
-              color: AppTheme.cyan,
-              size: 44,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(l10n.goalSetupCurrentBook,
-                      style: theme.textTheme.titleMedium),
-                  const SizedBox(height: 3),
-                  Text(
-                    '$target · ${l10n.goalSetupLearned} $completedWords/$totalWords ${l10n.commonWords}',
-                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
-                  ),
-                ],
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              IconCueBadge(
+                icon: AppIcons.menuBook,
+                color: AppTheme.cyan,
+                size: 44,
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(999),
-          child: LinearProgressIndicator(
-            value: progress,
-            minHeight: 10,
-            backgroundColor: AppTheme.progressTrack(context),
-            valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.teal),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.goalSetupCurrentBook,
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      '$target · ${l10n.goalSetupLearned} $completedWords/$totalWords ${l10n.commonWords}',
+                      style: TextStyle(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ),
-        const SizedBox(height: 10),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            PillLabel(
-              label: l10n.goalSetupNewWordsCount(dailyWords),
-              icon: Icons.add_task_rounded,
-              color: AppTheme.teal,
+          const SizedBox(height: 12),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(999),
+            child: LinearProgressIndicator(
+              value: progress,
+              minHeight: 10,
+              backgroundColor: AppTheme.progressTrack(context),
+              valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.teal),
             ),
-            PillLabel(
-              label: l10n.goalSetupReviewLimitCount(reviewLimit),
-              icon: Icons.replay_rounded,
-              color: AppTheme.mango,
-            ),
-            TextButton.icon(
-              onPressed: onOpenWordbook,
-              icon: const Icon(Icons.style_outlined),
-              label: Text(l10n.goalSetupViewWordbook),
-            ),
-          ],
-        ),
-      ],
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              AppPill(
+                label: l10n.goalSetupNewWordsCount(dailyWords),
+                icon: AppIcons.addTask,
+                variant: PillVariant.success,
+              ),
+              AppPill(
+                label: l10n.goalSetupReviewLimitCount(reviewLimit),
+                icon: AppIcons.replay,
+                variant: PillVariant.xp,
+              ),
+              TextButton.icon(
+                onPressed: onOpenWordbook,
+                icon: const Icon(AppIcons.style),
+                label: Text(l10n.goalSetupViewWordbook),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -493,8 +501,8 @@ class _StableChoiceButton extends StatelessWidget {
               children: [
                 Icon(
                   selected
-                      ? Icons.check_circle_rounded
-                      : Icons.radio_button_unchecked_rounded,
+                      ? AppIcons.checkCircle
+                      : AppIcons.radioButtonUnchecked,
                   color: selected
                       ? theme.colorScheme.primary
                       : theme.colorScheme.outline,

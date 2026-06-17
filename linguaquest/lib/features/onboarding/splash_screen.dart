@@ -3,8 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/app_button.dart';
 import '../../core/widgets/brand_mark.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -55,6 +58,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final failed =
         !state.isLoading && !state.isBootstrapped && state.errorMessage != null;
@@ -80,7 +84,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '图像词卡、清晰路径、智能复习。',
+                    l10n.splashTagline,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                       fontWeight: FontWeight.w700,
@@ -103,10 +107,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                       ),
                     ),
                     const SizedBox(height: 14),
-                    FilledButton.icon(
+                    AppPrimaryButton(
                       onPressed: _start,
-                      icon: const Icon(Icons.refresh_rounded),
-                      label: const Text('重试'),
+                      icon: AppIcons.refresh,
+                      label: l10n.commonRetry,
                     ),
                   ],
                 ),

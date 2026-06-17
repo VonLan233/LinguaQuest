@@ -1,6 +1,8 @@
 {
   "id": "cet6",
   "title": "六级核心词汇",
+  "titleEn": "CET-6 High-Frequency Words",
+  "titleMs": "Perkataan Kerap CET-6",
   "category": "exam",
   "examType": "CET-6",
   "coverUrl": "https://source.unsplash.com/featured/800x480/?english,vocabulary,cet6",
@@ -164,7 +166,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,artistic",
-      "sceneCue": "CET-6 · 艺术的"
+      "sceneCue": "CET-6 · 艺术的",
+      "malayDefinitions": [
+        "berseni",
+        "indah",
+        "berbakat seni"
+      ]
     },
     {
       "id": "cet6_002_plasma",
@@ -231,7 +238,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,plasma",
-      "sceneCue": "CET-6 · 血浆"
+      "sceneCue": "CET-6 · 血浆",
+      "malayDefinitions": [
+        "plasma darah",
+        "plasma"
+      ]
     },
     {
       "id": "cet6_003_violent",
@@ -300,7 +311,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,violent",
-      "sceneCue": "CET-6 · 暴力的"
+      "sceneCue": "CET-6 · 暴力的",
+      "malayDefinitions": [
+        "ganas",
+        "bersemangat",
+        "kuat"
+      ]
     },
     {
       "id": "cet6_004_erratic",
@@ -359,7 +375,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,erratic",
-      "sceneCue": "CET-6 · 古怪的， 反复无常的"
+      "sceneCue": "CET-6 · 古怪的， 反复无常的",
+      "malayDefinitions": [
+        "tidak menentu",
+        "tidak tetap",
+        "tidak stabil"
+      ]
     },
     {
       "id": "cet6_005_fantasy",
@@ -422,7 +443,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,fantasy",
-      "sceneCue": "CET-6 · 想象， 幻想"
+      "sceneCue": "CET-6 · 想象， 幻想",
+      "malayDefinitions": [
+        "fantasi",
+        "khayalan"
+      ]
     },
     {
       "id": "cet6_006_capillary",
@@ -491,7 +516,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,capillary",
-      "sceneCue": "CET-6 · 毛状的"
+      "sceneCue": "CET-6 · 毛状的",
+      "malayDefinitions": [
+        "seperti rambut",
+        "kapilari",
+        "pembuluh darah halus"
+      ]
     },
     {
       "id": "cet6_007_erode",
@@ -549,7 +579,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,erode",
-      "sceneCue": "CET-6 · 侵蚀， 腐蚀"
+      "sceneCue": "CET-6 · 侵蚀， 腐蚀",
+      "malayDefinitions": [
+        "menghakis",
+        "mengikis"
+      ]
     },
     {
       "id": "cet6_008_check",
@@ -607,7 +641,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,check",
-      "sceneCue": "CET-6 · 支票"
+      "sceneCue": "CET-6 · 支票",
+      "malayDefinitions": [
+        "cek",
+        "bil"
+      ]
     },
     {
       "id": "cet6_009_sparse",
@@ -664,7 +702,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,sparse",
-      "sceneCue": "CET-6 · 稀疏的， 稀少的"
+      "sceneCue": "CET-6 · 稀疏的， 稀少的",
+      "malayDefinitions": [
+        "jarang",
+        "sedikit",
+        "terhad"
+      ]
     },
     {
       "id": "cet6_010_gorgeous",
@@ -723,7 +766,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,gorgeous",
-      "sceneCue": "CET-6 · 漂亮的"
+      "sceneCue": "CET-6 · 漂亮的",
+      "malayDefinitions": [
+        "cantik",
+        "menyeronokkan",
+        "indah"
+      ]
     },
     {
       "id": "cet6_011_erosion",
@@ -789,7 +837,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,erosion",
-      "sceneCue": "CET-6 · 腐蚀， 侵蚀"
+      "sceneCue": "CET-6 · 腐蚀， 侵蚀",
+      "malayDefinitions": [
+        "hakisan",
+        "pengurangan"
+      ]
     },
     {
       "id": "cet6_012_spoil",
@@ -849,7 +901,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,spoil",
-      "sceneCue": "CET-6 · 破坏"
+      "sceneCue": "CET-6 · 破坏",
+      "malayDefinitions": [
+        "merosakkan",
+        "memanjakan",
+        "menjadi busuk"
+      ]
     },
     {
       "id": "cet6_013_pasture",
@@ -910,7 +967,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,pasture",
-      "sceneCue": "CET-6 · 牧场，草原"
+      "sceneCue": "CET-6 · 牧场，草原",
+      "malayDefinitions": [
+        "padang rumput",
+        "ladang ragut"
+      ]
     },
     {
       "id": "cet6_014_multiple",
@@ -984,7 +1045,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,multiple",
-      "sceneCue": "CET-6 · 多样的"
+      "sceneCue": "CET-6 · 多样的",
+      "malayDefinitions": [
+        "pelbagai",
+        "berbilang",
+        "gandaan"
+      ]
     },
     {
       "id": "cet6_015_versatile",
@@ -1041,7 +1107,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,versatile",
-      "sceneCue": "CET-6 · 多才多艺的"
+      "sceneCue": "CET-6 · 多才多艺的",
+      "malayDefinitions": [
+        "serba boleh",
+        "pelbagai guna"
+      ]
     },
     {
       "id": "cet6_016_concentrate",
@@ -1108,7 +1178,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,concentrate",
-      "sceneCue": "CET-6 · 集中，专心"
+      "sceneCue": "CET-6 · 集中，专心",
+      "malayDefinitions": [
+        "menumpukan perhatian",
+        "memfokuskan"
+      ]
     },
     {
       "id": "cet6_017_versus",
@@ -1163,7 +1237,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,versus",
-      "sceneCue": "CET-6 · 对， 对抗"
+      "sceneCue": "CET-6 · 对， 对抗",
+      "malayDefinitions": [
+        "lawan",
+        "berbanding",
+        "bertentangan"
+      ]
     },
     {
       "id": "cet6_018_permit",
@@ -1232,7 +1311,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,permit",
-      "sceneCue": "CET-6 · 允许， 许可"
+      "sceneCue": "CET-6 · 允许， 许可",
+      "malayDefinitions": [
+        "membenarkan",
+        "lesen"
+      ]
     },
     {
       "id": "cet6_019_translation",
@@ -1302,7 +1385,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,translation",
-      "sceneCue": "CET-6 · 翻译"
+      "sceneCue": "CET-6 · 翻译",
+      "malayDefinitions": [
+        "terjemahan",
+        "hasil terjemahan"
+      ]
     },
     {
       "id": "cet6_020_catalog",
@@ -1364,7 +1451,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,catalog",
-      "sceneCue": "CET-6 · 目录"
+      "sceneCue": "CET-6 · 目录",
+      "malayDefinitions": [
+        "katalog",
+        "senarai"
+      ]
     },
     {
       "id": "cet6_021_part-time",
@@ -1419,7 +1510,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,part-time",
-      "sceneCue": "CET-6 · 兼职的"
+      "sceneCue": "CET-6 · 兼职的",
+      "malayDefinitions": [
+        "sambilan",
+        "separuh masa"
+      ]
     },
     {
       "id": "cet6_022_chilly",
@@ -1477,7 +1572,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,chilly",
-      "sceneCue": "CET-6 · 寒冷的"
+      "sceneCue": "CET-6 · 寒冷的",
+      "malayDefinitions": [
+        "sejuk",
+        "dingin",
+        "tidak mesra"
+      ]
     },
     {
       "id": "cet6_023_reservation",
@@ -1544,7 +1644,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,reservation",
-      "sceneCue": "CET-6 · 预约， 预订"
+      "sceneCue": "CET-6 · 预约， 预订",
+      "malayDefinitions": [
+        "tempahan",
+        "keraguan",
+        "kawasan penempatan"
+      ]
     },
     {
       "id": "cet6_024_block",
@@ -1615,7 +1720,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,block",
-      "sceneCue": "CET-6 · 阻塞"
+      "sceneCue": "CET-6 · 阻塞",
+      "malayDefinitions": [
+        "menyekat",
+        "menghalang",
+        "blok"
+      ]
     },
     {
       "id": "cet6_025_morphology",
@@ -1680,7 +1790,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,morphology",
-      "sceneCue": "CET-6 · 形态学， 形态论"
+      "sceneCue": "CET-6 · 形态学， 形态论",
+      "malayDefinitions": [
+        "morfologi",
+        "kajian bentuk"
+      ]
     },
     {
       "id": "cet6_026_distant",
@@ -1750,7 +1864,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,distant",
-      "sceneCue": "CET-6 · 远离的， 遥远的"
+      "sceneCue": "CET-6 · 远离的， 遥远的",
+      "malayDefinitions": [
+        "jauh",
+        "renggang",
+        "lama dahulu"
+      ]
     },
     {
       "id": "cet6_027_resonance",
@@ -1816,7 +1935,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,resonance",
-      "sceneCue": "CET-6 · 共振， 共鸣"
+      "sceneCue": "CET-6 · 共振， 共鸣",
+      "malayDefinitions": [
+        "resonans",
+        "gema"
+      ]
     },
     {
       "id": "cet6_028_propose",
@@ -1886,7 +2009,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,propose",
-      "sceneCue": "CET-6 · 建议， 提议"
+      "sceneCue": "CET-6 · 建议， 提议",
+      "malayDefinitions": [
+        "mencadangkan",
+        "menamakan",
+        "merancang"
+      ]
     },
     {
       "id": "cet6_029_seismograph",
@@ -1942,7 +2070,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,seismograph",
-      "sceneCue": "CET-6 · 地震仪， 测震仪"
+      "sceneCue": "CET-6 · 地震仪， 测震仪",
+      "malayDefinitions": [
+        "seismograf",
+        "alat pengukur gempa"
+      ]
     },
     {
       "id": "cet6_030_daylight",
@@ -2008,7 +2140,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,daylight",
-      "sceneCue": "CET-6 · 日光"
+      "sceneCue": "CET-6 · 日光",
+      "malayDefinitions": [
+        "cahaya matahari",
+        "siang"
+      ]
     },
     {
       "id": "cet6_031_crazy",
@@ -2081,7 +2217,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,crazy",
-      "sceneCue": "CET-6 · 疯狂的， 不理智的"
+      "sceneCue": "CET-6 · 疯狂的， 不理智的",
+      "malayDefinitions": [
+        "gila",
+        "terlalu minat",
+        "tidak siuman"
+      ]
     },
     {
       "id": "cet6_032_microscopic",
@@ -2146,7 +2287,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,microscopic",
-      "sceneCue": "CET-6 · 用显微镜可见的"
+      "sceneCue": "CET-6 · 用显微镜可见的",
+      "malayDefinitions": [
+        "boleh dilihat dengan mikroskop",
+        "sangat kecil"
+      ]
     },
     {
       "id": "cet6_033_caterpillar",
@@ -2205,7 +2350,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,caterpillar",
-      "sceneCue": "CET-6 · 毛毛虫"
+      "sceneCue": "CET-6 · 毛毛虫",
+      "malayDefinitions": [
+        "ulat bulu",
+        "beluncas"
+      ]
     },
     {
       "id": "cet6_034_haul",
@@ -2274,7 +2423,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,haul",
-      "sceneCue": "CET-6 · 拖，拖运"
+      "sceneCue": "CET-6 · 拖，拖运",
+      "malayDefinitions": [
+        "mengangkut",
+        "menarik",
+        "jumlah tangkapan"
+      ]
     },
     {
       "id": "cet6_035_energetic",
@@ -2332,7 +2486,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,energetic",
-      "sceneCue": "CET-6 · 精力充沛的， 积极的"
+      "sceneCue": "CET-6 · 精力充沛的， 积极的",
+      "malayDefinitions": [
+        "bertenaga",
+        "aktif"
+      ]
     },
     {
       "id": "cet6_036_quilt",
@@ -2390,7 +2548,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,quilt",
-      "sceneCue": "CET-6 · 缝被"
+      "sceneCue": "CET-6 · 缝被",
+      "malayDefinitions": [
+        "menjahit selimut",
+        "menjahit",
+        "selimut"
+      ]
     },
     {
       "id": "cet6_037_hostile",
@@ -2452,7 +2615,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,hostile",
-      "sceneCue": "CET-6 · 不友好的， 敌意的"
+      "sceneCue": "CET-6 · 不友好的， 敌意的",
+      "malayDefinitions": [
+        "bermusuhan",
+        "tidak mesra",
+        "pihak lawan"
+      ]
     },
     {
       "id": "cet6_038_crawl",
@@ -2510,7 +2678,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,crawl",
-      "sceneCue": "CET-6 · 缓慢行进"
+      "sceneCue": "CET-6 · 缓慢行进",
+      "malayDefinitions": [
+        "bergerak perlahan",
+        "merangkak",
+        "kelajuan perlahan"
+      ]
     },
     {
       "id": "cet6_039_academic",
@@ -2581,7 +2754,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,academic",
-      "sceneCue": "CET-6 · 学术的"
+      "sceneCue": "CET-6 · 学术的",
+      "malayDefinitions": [
+        "akademik",
+        "ilmiah",
+        "bersifat teori"
+      ]
     },
     {
       "id": "cet6_040_coral",
@@ -2637,7 +2815,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,coral",
-      "sceneCue": "CET-6 · 珊瑚色的， 红色的"
+      "sceneCue": "CET-6 · 珊瑚色的， 红色的",
+      "malayDefinitions": [
+        "warna batu karang",
+        "batu karang"
+      ]
     },
     {
       "id": "cet6_041_function",
@@ -2708,7 +2890,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,function",
-      "sceneCue": "CET-6 · 运行"
+      "sceneCue": "CET-6 · 运行",
+      "malayDefinitions": [
+        "berfungsi",
+        "beroperasi",
+        "fungsi"
+      ]
     },
     {
       "id": "cet6_042_raise",
@@ -2781,7 +2968,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,raise",
-      "sceneCue": "CET-6 · 举起，提升"
+      "sceneCue": "CET-6 · 举起，提升",
+      "malayDefinitions": [
+        "mengangkat",
+        "berdiri tegak",
+        "meningkatkan"
+      ]
     },
     {
       "id": "cet6_043_pliant",
@@ -2840,7 +3032,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,pliant",
-      "sceneCue": "CET-6 · 柔软的"
+      "sceneCue": "CET-6 · 柔软的",
+      "malayDefinitions": [
+        "lembut",
+        "patuh",
+        "mudah dipengaruhi"
+      ]
     },
     {
       "id": "cet6_044_pigeon",
@@ -2903,7 +3100,10 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,pigeon",
-      "sceneCue": "CET-6 · 鸽子"
+      "sceneCue": "CET-6 · 鸽子",
+      "malayDefinitions": [
+        "burung merpati"
+      ]
     },
     {
       "id": "cet6_045_lay",
@@ -2977,7 +3177,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,lay",
-      "sceneCue": "CET-6 · 产"
+      "sceneCue": "CET-6 · 产",
+      "malayDefinitions": [
+        "bertelur",
+        "meletakkan",
+        "membentang"
+      ]
     },
     {
       "id": "cet6_046_pernicious",
@@ -3034,7 +3239,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,pernicious",
-      "sceneCue": "CET-6 · 有害的， 恶性的"
+      "sceneCue": "CET-6 · 有害的， 恶性的",
+      "malayDefinitions": [
+        "berbahaya",
+        "memudaratkan"
+      ]
     },
     {
       "id": "cet6_047_cohabitation",
@@ -3093,7 +3302,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,cohabitation",
-      "sceneCue": "CET-6 · 同居， 同住"
+      "sceneCue": "CET-6 · 同居， 同住",
+      "malayDefinitions": [
+        "bersekedudukan",
+        "tinggal bersama"
+      ]
     },
     {
       "id": "cet6_048_herbivore",
@@ -3152,7 +3365,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,herbivore",
-      "sceneCue": "CET-6 · 食草动物"
+      "sceneCue": "CET-6 · 食草动物",
+      "malayDefinitions": [
+        "haiwan herbivor",
+        "pemakan tumbuhan"
+      ]
     },
     {
       "id": "cet6_049_successive",
@@ -3212,7 +3429,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,successive",
-      "sceneCue": "CET-6 · 接替的， 继承的"
+      "sceneCue": "CET-6 · 接替的， 继承的",
+      "malayDefinitions": [
+        "berturut-turut",
+        "berterusan"
+      ]
     },
     {
       "id": "cet6_050_adventure",
@@ -3276,7 +3497,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adventure",
-      "sceneCue": "CET-6 · 奇遇"
+      "sceneCue": "CET-6 · 奇遇",
+      "malayDefinitions": [
+        "pengembaraan",
+        "aktiviti mencabar"
+      ]
     },
     {
       "id": "cet6_051_ceremony",
@@ -3342,7 +3567,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ceremony",
-      "sceneCue": "CET-6 · 典礼， 仪式"
+      "sceneCue": "CET-6 · 典礼， 仪式",
+      "malayDefinitions": [
+        "upacara",
+        "majlis",
+        "adat"
+      ]
     },
     {
       "id": "cet6_052_improve",
@@ -3414,7 +3644,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,improve",
-      "sceneCue": "CET-6 · 改善， 改进， 增进"
+      "sceneCue": "CET-6 · 改善， 改进， 增进",
+      "malayDefinitions": [
+        "memperbaiki",
+        "meningkatkan",
+        "bertambah baik"
+      ]
     },
     {
       "id": "cet6_053_idyllic",
@@ -3472,7 +3707,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,idyllic",
-      "sceneCue": "CET-6 · 田园诗般的， 田园风光的， 牧歌的"
+      "sceneCue": "CET-6 · 田园诗般的， 田园风光的， 牧歌的",
+      "malayDefinitions": [
+        "seperti di desa",
+        "tenteram",
+        "damai"
+      ]
     },
     {
       "id": "cet6_054_effective",
@@ -3545,7 +3785,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,effective",
-      "sceneCue": "CET-6 · 有效的， 生效的"
+      "sceneCue": "CET-6 · 有效的， 生效的",
+      "malayDefinitions": [
+        "berkesan",
+        "ketara",
+        "sebenar"
+      ]
     },
     {
       "id": "cet6_055_muscle",
@@ -3617,7 +3862,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,muscle",
-      "sceneCue": "CET-6 · 肌肉"
+      "sceneCue": "CET-6 · 肌肉",
+      "malayDefinitions": [
+        "otot",
+        "kekuatan",
+        "pengaruh"
+      ]
     },
     {
       "id": "cet6_056_flux",
@@ -3682,7 +3932,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,flux",
-      "sceneCue": "CET-6 · 变迁， 不断的变动"
+      "sceneCue": "CET-6 · 变迁， 不断的变动",
+      "malayDefinitions": [
+        "perubahan",
+        "ketidaktentuan"
+      ]
     },
     {
       "id": "cet6_057_crescent",
@@ -3741,7 +3995,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,crescent",
-      "sceneCue": "CET-6 · 新月形的"
+      "sceneCue": "CET-6 · 新月形的",
+      "malayDefinitions": [
+        "berbentuk bulan sabit",
+        "semakin meningkat",
+        "bulan sabit"
+      ]
     },
     {
       "id": "cet6_058_inflate",
@@ -3801,7 +4060,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,inflate",
-      "sceneCue": "CET-6 · 充气， 膨胀"
+      "sceneCue": "CET-6 · 充气， 膨胀",
+      "malayDefinitions": [
+        "mengembung",
+        "membesar-besarkan",
+        "menaikkan harga"
+      ]
     },
     {
       "id": "cet6_059_stable",
@@ -3872,7 +4136,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,stable",
-      "sceneCue": "CET-6 · 稳定的，安定的"
+      "sceneCue": "CET-6 · 稳定的，安定的",
+      "malayDefinitions": [
+        "stabil",
+        "kukuh",
+        "tenang"
+      ]
     },
     {
       "id": "cet6_060_incident",
@@ -3939,7 +4208,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,incident",
-      "sceneCue": "CET-6 · 事情， 事件"
+      "sceneCue": "CET-6 · 事情， 事件",
+      "malayDefinitions": [
+        "kejadian",
+        "peristiwa",
+        "konflik"
+      ]
     },
     {
       "id": "cet6_061_prey",
@@ -4007,7 +4281,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,prey",
-      "sceneCue": "CET-6 · 捕食，捕获"
+      "sceneCue": "CET-6 · 捕食，捕获",
+      "malayDefinitions": [
+        "memburu",
+        "mangsa",
+        "korban"
+      ]
     },
     {
       "id": "cet6_062_vertebrate",
@@ -4064,7 +4343,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,vertebrate",
-      "sceneCue": "CET-6 · 有脊椎的"
+      "sceneCue": "CET-6 · 有脊椎的",
+      "malayDefinitions": [
+        "bertulang belakang",
+        "haiwan vertebrata"
+      ]
     },
     {
       "id": "cet6_063_expedition",
@@ -4122,7 +4405,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,expedition",
-      "sceneCue": "CET-6 · 远征"
+      "sceneCue": "CET-6 · 远征",
+      "malayDefinitions": [
+        "ekspedisi",
+        "penerokaan"
+      ]
     },
     {
       "id": "cet6_064_concert",
@@ -4192,7 +4479,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,concert",
-      "sceneCue": "CET-6 · 音乐会， 演奏会"
+      "sceneCue": "CET-6 · 音乐会， 演奏会",
+      "malayDefinitions": [
+        "konsert",
+        "persetujuan"
+      ]
     },
     {
       "id": "cet6_065_supply",
@@ -4263,7 +4554,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,supply",
-      "sceneCue": "CET-6 · 供应"
+      "sceneCue": "CET-6 · 供应",
+      "malayDefinitions": [
+        "membekalkan",
+        "stok",
+        "bekalan"
+      ]
     },
     {
       "id": "cet6_066_circulate",
@@ -4323,7 +4619,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,circulate",
-      "sceneCue": "CET-6 · 循环"
+      "sceneCue": "CET-6 · 循环",
+      "malayDefinitions": [
+        "beredar",
+        "mengedarkan",
+        "tersebar"
+      ]
     },
     {
       "id": "cet6_067_state",
@@ -4398,7 +4699,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,state",
-      "sceneCue": "CET-6 · 陈述， 说明， 声明"
+      "sceneCue": "CET-6 · 陈述， 说明， 声明",
+      "malayDefinitions": [
+        "menyatakan",
+        "menetapkan",
+        "keadaan"
+      ]
     },
     {
       "id": "cet6_068_press",
@@ -4473,7 +4779,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,press",
-      "sceneCue": "CET-6 · 压， 按， 挤"
+      "sceneCue": "CET-6 · 压， 按， 挤",
+      "malayDefinitions": [
+        "menekan",
+        "memerah",
+        "mendesak"
+      ]
     },
     {
       "id": "cet6_069_jumble",
@@ -4532,7 +4843,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,jumble",
-      "sceneCue": "CET-6 · 混杂，掺杂"
+      "sceneCue": "CET-6 · 混杂，掺杂",
+      "malayDefinitions": [
+        "mencampur aduk",
+        "campuran",
+        "kucar-kacir"
+      ]
     },
     {
       "id": "cet6_070_environmental",
@@ -4602,7 +4918,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,environmental",
-      "sceneCue": "CET-6 · 有关环境的， 自然环境的， 生态环境的"
+      "sceneCue": "CET-6 · 有关环境的， 自然环境的， 生态环境的",
+      "malayDefinitions": [
+        "berkaitan alam sekitar",
+        "persekitaran"
+      ]
     },
     {
       "id": "cet6_071_crustacean",
@@ -4657,7 +4977,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,crustacean",
-      "sceneCue": "CET-6 · 甲壳类的"
+      "sceneCue": "CET-6 · 甲壳类的",
+      "malayDefinitions": [
+        "berkrustasea",
+        "haiwan krustasea"
+      ]
     },
     {
       "id": "cet6_072_opposite",
@@ -4733,7 +5057,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,opposite",
-      "sceneCue": "CET-6 · 对面的"
+      "sceneCue": "CET-6 · 对面的",
+      "malayDefinitions": [
+        "bertentangan",
+        "berlawanan",
+        "sebaliknya"
+      ]
     },
     {
       "id": "cet6_073_pack",
@@ -4804,7 +5133,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,pack",
-      "sceneCue": "CET-6 · 收拾，打包"
+      "sceneCue": "CET-6 · 收拾，打包",
+      "malayDefinitions": [
+        "mengemas",
+        "membungkus",
+        "memenuhi"
+      ]
     },
     {
       "id": "cet6_074_untapped",
@@ -4859,7 +5193,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,untapped",
-      "sceneCue": "CET-6 · 未开发的， 未使用的"
+      "sceneCue": "CET-6 · 未开发的， 未使用的",
+      "malayDefinitions": [
+        "belum diterokai",
+        "belum digunakan"
+      ]
     },
     {
       "id": "cet6_075_battery",
@@ -4928,7 +5266,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,battery",
-      "sceneCue": "CET-6 · 电池"
+      "sceneCue": "CET-6 · 电池",
+      "malayDefinitions": [
+        "bateri",
+        "pasukan artileri",
+        "siri"
+      ]
     },
     {
       "id": "cet6_076_irreverent",
@@ -4983,7 +5326,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,irreverent",
-      "sceneCue": "CET-6 · 不敬的"
+      "sceneCue": "CET-6 · 不敬的",
+      "malayDefinitions": [
+        "tidak hormat",
+        "biadab"
+      ]
     },
     {
       "id": "cet6_077_fa-ade",
@@ -5042,7 +5389,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,fa-ade",
-      "sceneCue": "CET-6 · 正面"
+      "sceneCue": "CET-6 · 正面",
+      "malayDefinitions": [
+        "muka hadapan",
+        "permukaan luaran"
+      ]
     },
     {
       "id": "cet6_078_divorce",
@@ -5107,7 +5458,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,divorce",
-      "sceneCue": "CET-6 · 与…离婚"
+      "sceneCue": "CET-6 · 与…离婚",
+      "malayDefinitions": [
+        "bercerai dengan",
+        "memisahkan",
+        "perceraian"
+      ]
     },
     {
       "id": "cet6_079_quiz",
@@ -5168,7 +5524,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,quiz",
-      "sceneCue": "CET-6 · 小测验"
+      "sceneCue": "CET-6 · 小测验",
+      "malayDefinitions": [
+        "kuiz",
+        "pertandingan minda",
+        "ujian"
+      ]
     },
     {
       "id": "cet6_080_ingredient",
@@ -5230,7 +5591,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ingredient",
-      "sceneCue": "CET-6 · 成分， 要素"
+      "sceneCue": "CET-6 · 成分， 要素",
+      "malayDefinitions": [
+        "ramuan",
+        "bahan"
+      ]
     },
     {
       "id": "cet6_081_consolidate",
@@ -5289,7 +5654,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,consolidate",
-      "sceneCue": "CET-6 · 巩固"
+      "sceneCue": "CET-6 · 巩固",
+      "malayDefinitions": [
+        "mengukuhkan",
+        "menggabungkan"
+      ]
     },
     {
       "id": "cet6_082_contour",
@@ -5349,7 +5718,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,contour",
-      "sceneCue": "CET-6 · 等高线"
+      "sceneCue": "CET-6 · 等高线",
+      "malayDefinitions": [
+        "garis kontur",
+        "bentuk luar"
+      ]
     },
     {
       "id": "cet6_083_clan",
@@ -5406,7 +5779,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,clan",
-      "sceneCue": "CET-6 · 家族， 宗族， 氏族"
+      "sceneCue": "CET-6 · 家族， 宗族， 氏族",
+      "malayDefinitions": [
+        "kaum",
+        "puak",
+        "kumpulan"
+      ]
     },
     {
       "id": "cet6_084_economical",
@@ -5474,7 +5852,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,economical",
-      "sceneCue": "CET-6 · 经济的， 实惠的"
+      "sceneCue": "CET-6 · 经济的， 实惠的",
+      "malayDefinitions": [
+        "ekonomi",
+        "jimat",
+        "berhemat"
+      ]
     },
     {
       "id": "cet6_085_cabinet",
@@ -5540,7 +5923,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,cabinet",
-      "sceneCue": "CET-6 · 内阁"
+      "sceneCue": "CET-6 · 内阁",
+      "malayDefinitions": [
+        "kabinet",
+        "almari"
+      ]
     },
     {
       "id": "cet6_086_principle",
@@ -5612,7 +5999,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,principle",
-      "sceneCue": "CET-6 · 原则"
+      "sceneCue": "CET-6 · 原则",
+      "malayDefinitions": [
+        "prinsip",
+        "asas",
+        "peraturan moral"
+      ]
     },
     {
       "id": "cet6_087_telecommunication",
@@ -5674,7 +6066,10 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,telecommunication",
-      "sceneCue": "CET-6 · 电信"
+      "sceneCue": "CET-6 · 电信",
+      "malayDefinitions": [
+        "telekomunikasi"
+      ]
     },
     {
       "id": "cet6_088_initiate",
@@ -5734,7 +6129,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,initiate",
-      "sceneCue": "CET-6 · 发起， 开始， 创始"
+      "sceneCue": "CET-6 · 发起， 开始， 创始",
+      "malayDefinitions": [
+        "memulakan",
+        "menerima masuk",
+        "ahli baru"
+      ]
     },
     {
       "id": "cet6_089_deception",
@@ -5792,7 +6192,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,deception",
-      "sceneCue": "CET-6 · 骗局"
+      "sceneCue": "CET-6 · 骗局",
+      "malayDefinitions": [
+        "penipuan",
+        "helah",
+        "muslihat"
+      ]
     },
     {
       "id": "cet6_090_budget",
@@ -5865,7 +6270,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,budget",
-      "sceneCue": "CET-6 · 做预算"
+      "sceneCue": "CET-6 · 做预算",
+      "malayDefinitions": [
+        "membajet",
+        "murah",
+        "bajet"
+      ]
     }
   ]
 }

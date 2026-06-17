@@ -8,6 +8,8 @@ import 'models/lesson.dart';
 class WordBookAssetLoader {
   WordBookAssetLoader({AssetBundle? bundle}) : _bundle = bundle ?? rootBundle;
 
+  // Selection is intentionally limited to four books; long English/Malay names
+  // make a 7-book switcher feel cramped.
   static const _bookIds = [
     'beginner',
     'ielts',

@@ -228,11 +228,361 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get onboardingSubtitle =>
-      'Pelajaran pendek, kad memori visual, dan ulangkaji pintar membantu anda membina perbendaharaan kata bahasa Inggeris.';
+      'Pelajaran ringkas, kad memori visual dan ulang kaji pintar membantu anda membina kosa kata secara berterusan.';
 
   @override
   String get onboardingTagline =>
       'Belajar seperti bermain permainan setiap hari';
+
+  @override
+  String get onboardingTagWorld => 'Dunia Word Quest';
+
+  @override
+  String get onboardingTagStreak => 'Streak harian';
+
+  @override
+  String get splashTagline =>
+      'Kad perkataan bergambar, laluan jelas, ulang kaji pintar.';
+
+  @override
+  String get studyNewScreenTitle => 'Perkataan baharu';
+
+  @override
+  String get studyWordbookPath => 'Laluan buku perkataan';
+
+  @override
+  String get studyEnterCards => 'Mula kad perkataan';
+
+  @override
+  String get studyNewPackTitle => 'Pek perkataan baharu hari ini';
+
+  @override
+  String get studyNewPackDesc =>
+      'Nilai sendiri dahulu, lihat kad, kemudian soalan konteks. Ulang kaji formal beratur berasingan.';
+
+  @override
+  String get studyNoNewWords => 'Tiada perkataan baharu';
+
+  @override
+  String get studyNewPausedHint =>
+      'Pelan belajar dijeda. Sambung semula untuk meneruskan perkataan baharu hari ini.';
+
+  @override
+  String get studyNewEmptyHint =>
+      'Buku perkataan semasa telah habis, atau pelan belum dijana. Semak laluan buku perkataan untuk set seterusnya.';
+
+  @override
+  String get studyOpenWordbookPath => 'Buka laluan buku perkataan';
+
+  @override
+  String studyTodayLearnCount(Object count) {
+    return 'Belajar $count perkataan baharu hari ini';
+  }
+
+  @override
+  String get studyNewNoLessonHint =>
+      'Selesaikan ulang kaji sebelum menambah perkataan baharu; mengekalkan rentak lebih baik daripada menimbun tugasan.';
+
+  @override
+  String studyNewPausedResume(Object section) {
+    return 'Pelan belajar dijeda; sambung semula dari $section.';
+  }
+
+  @override
+  String get studyRecallKnown => 'Kenal';
+
+  @override
+  String get studyRecallFuzzy => 'Kabur';
+
+  @override
+  String get studyRecallUnknown => 'Tak kenal';
+
+  @override
+  String get studyStepSelfAssess => 'Nilai sendiri';
+
+  @override
+  String get studyStepSelfAssessDesc => 'Kurangkan ulangan sia-sia';
+
+  @override
+  String get studyStepCards => 'Kad perkataan';
+
+  @override
+  String get studyStepCardsDesc => 'Lengkapkan maksud dan contoh';
+
+  @override
+  String get studyStepContext => 'Konteks';
+
+  @override
+  String get studyStepContextDesc => 'Ingat semula aktif';
+
+  @override
+  String get mixedManageReviewQueue => 'Urus baris gilir ulang kaji';
+
+  @override
+  String mixedReviewRatio(Object percent) {
+    return 'Ulang kaji $percent%';
+  }
+
+  @override
+  String get mixedTitleNew => 'Pek perkataan baharu hari ini';
+
+  @override
+  String get mixedTitleReview => 'Ulang kaji pantas';
+
+  @override
+  String get mixedTitleMixed => 'Pek campuran hari ini';
+
+  @override
+  String get mixedSaveReviewFailed =>
+      'Tidak dapat menyimpan rekod ulang kaji buat masa ini';
+
+  @override
+  String mixedUnsureOption(Object index) {
+    return 'Tidak pasti $index';
+  }
+
+  @override
+  String get mixedSaveProgressTitle => 'Simpan kemajuan ini?';
+
+  @override
+  String get mixedSaveProgressBody =>
+      'Rekod ulang kaji yang disimpan dikekalkan; menyimpan akan merekod soalan yang selesai kali ini, dan perkataan yang belum selesai akan kembali ke pek pada masa berikutnya.';
+
+  @override
+  String get mixedContinueStudy => 'Teruskan belajar';
+
+  @override
+  String get mixedLeaveWithoutSaving => 'Keluar tanpa simpan';
+
+  @override
+  String get mixedSaveAndLeave => 'Simpan dan keluar';
+
+  @override
+  String get mixedSaveStudyFailed =>
+      'Tidak dapat menyimpan kemajuan belajar buat masa ini';
+
+  @override
+  String get mixedSelfAssessHint =>
+      'Nilai sendiri dahulu; apl akan melaraskan ulangan hari ini';
+
+  @override
+  String get mixedEnterRecognition => 'Mula pengecaman';
+
+  @override
+  String get mixedAddLaterRecall => 'Tambah ke ingatan kemudian';
+
+  @override
+  String get mixedReviewQuickAnswer => 'Jawapan pantas ulang kaji';
+
+  @override
+  String get mixedFeedbackCorrect => 'Betul, teruskan ke seterusnya.';
+
+  @override
+  String get mixedFeedbackWrong =>
+      'Salah; lihat kad pengetahuan, ia akan muncul semula nanti.';
+
+  @override
+  String get mixedFeedbackRetry =>
+      'Belum lagi. Pilih jawapan yang betul sebelum meneruskan.';
+
+  @override
+  String mixedShortRecallPrompt(Object word) {
+    return 'Ingat semula pantas: apakah maksud $word?';
+  }
+
+  @override
+  String mixedMeaningPrompt(Object word) {
+    return 'Apakah maksud $word?';
+  }
+
+  @override
+  String get mixedStepRecognition => 'Pengecaman';
+
+  @override
+  String get mixedStepShortRecall => 'Ingat semula pantas';
+
+  @override
+  String get mixedStepDueReview => 'Ulang kaji tertunggak';
+
+  @override
+  String get mixedStepKnowledge => 'Kad pengetahuan';
+
+  @override
+  String get mixedCompleteTitle => 'Pek hari ini selesai';
+
+  @override
+  String get mixedNoContentTitle => 'Tiada apa untuk dipelajari hari ini';
+
+  @override
+  String get mixedCompleteBody =>
+      'Kesilapan telah dikitar semula pusingan ini; jawapan dan masa anda disimpan ke log belajar.';
+
+  @override
+  String get mixedNoContentBody =>
+      'Tiada perkataan baharu atau ulang kaji tertunggak sekarang.';
+
+  @override
+  String get mixedSaveAndHome => 'Simpan dan ke laman utama';
+
+  @override
+  String get questCenterTitle => 'Pusat tugasan';
+
+  @override
+  String get questCenterSubtitle =>
+      'Dapatkan mata selepas tindakan belajar; lihat juga kedudukan, analitik dan pembelajaran kelas.';
+
+  @override
+  String get questDailyTask => 'Tugasan harian';
+
+  @override
+  String get questDailyTaskBody =>
+      'Selesaikan satu pelajaran dan ulang kaji 5 perkataan tertunggak.';
+
+  @override
+  String get questAchievements => 'Pencapaian';
+
+  @override
+  String get questAchievementsBody =>
+      'Streak, 100 perkataan dipelajari, pelajaran sempurna pertama, dan banyak lagi.';
+
+  @override
+  String get questAchievementsValue => '3';
+
+  @override
+  String get questLeaderboard => 'Papan Pendahulu';
+
+  @override
+  String get questLeaderboardBody =>
+      'Kedudukan XP mingguan untuk rakan dan kelas masa depan.';
+
+  @override
+  String get questWeekly => 'Mingguan';
+
+  @override
+  String get questAnalytics => 'Analitik pembelajaran';
+
+  @override
+  String get questAnalyticsBody =>
+      'Ketepatan, pertumbuhan kosa kata dan trend penyiapan ulang kaji.';
+
+  @override
+  String get questTrend => 'Trend';
+
+  @override
+  String get questClassMode => 'Mod Kelas';
+
+  @override
+  String get questClassModeBody =>
+      'Sertai dengan kod kelas untuk lihat papan pemuka guru dan pembelajaran kumpulan.';
+
+  @override
+  String get questClassCode => 'Kod kelas';
+
+  @override
+  String get questAiTutor => 'Tutor AI';
+
+  @override
+  String get questAiTutorBody =>
+      'Terangkan kesilapan dan cadangkan contoh ayat.';
+
+  @override
+  String get aiTutorSamplePrompt =>
+      'Terangkan perbezaan antara affect dan effect';
+
+  @override
+  String get aiTutorSubtitle =>
+      'Masukkan perkataan, tatabahasa atau kesilapan untuk mendapat penjelasan berstruktur dan ayat latihan.';
+
+  @override
+  String get aiTutorInputLabel =>
+      'Tanya tentang perkataan, tatabahasa atau kesilapan';
+
+  @override
+  String get aiTutorSampleAnswer =>
+      'Affect is usually a verb: \"The weather affects my mood.\" Effect is usually a noun: \"The effect was immediate.\" Cuba tulis satu ayat dengan setiap perkataan.';
+
+  @override
+  String get classModeTitle => 'Pembelajaran kelas';
+
+  @override
+  String get classModeSubtitle =>
+      'Masukkan kod kelas untuk menyertai kumpulan dan lihat kemajuan kelas serta ringkasan kelemahan.';
+
+  @override
+  String classModeJoined(Object code) {
+    return 'Menyertai kelas $code';
+  }
+
+  @override
+  String get classModeJoin => 'Sertai kelas';
+
+  @override
+  String get classModeViewProgress => 'Lihat kemajuan kelas';
+
+  @override
+  String get classProgressTitle => 'Kemajuan kelas';
+
+  @override
+  String get classProgressOverview => 'Gambaran kelas';
+
+  @override
+  String get classProgressSubtitle =>
+      'Penyiapan pihak guru dan ringkasan perkataan lemah.';
+
+  @override
+  String classProgressWeakWord(Object word) {
+    return 'Perkataan lemah: $word';
+  }
+
+  @override
+  String get classTopicExamSignals => 'Perkataan isyarat peperiksaan';
+
+  @override
+  String get classTopicTravelBasics => 'Asas perjalanan';
+
+  @override
+  String get classTopicWorkplace => 'Ungkapan tempat kerja';
+
+  @override
+  String get leaderboardDefaultName => 'Pelajar';
+
+  @override
+  String get leaderboardTitle => 'Papan pendahulu arena latihan';
+
+  @override
+  String get leaderboardSubtitle =>
+      'Hanya mengira XP latihan sebenar yang selesai; tiada papan demo statik.';
+
+  @override
+  String get leaderboardEmptyTitle => 'Tiada keputusan latihan lagi';
+
+  @override
+  String get leaderboardEmptyBody =>
+      'Selepas menyelesaikan Word Rush, Survival atau Ejaan, XP latihan sebenar menjana kedudukan.';
+
+  @override
+  String get leaderboardOnlyValidXp => 'Hanya mengira XP pembelajaran sah';
+
+  @override
+  String get analyticsDataTitle => 'Data pembelajaran';
+
+  @override
+  String get analyticsDataSubtitle =>
+      'Pandangan analitik pertama berdasarkan kad perkataan dan rekod ulang kaji.';
+
+  @override
+  String analyticsAssetsDue(Object due, Object total) {
+    return '$due daripada $total aset pembelajaran telah tertunggak';
+  }
+
+  @override
+  String get analyticsCards => 'Kad perkataan';
+
+  @override
+  String get analyticsTrainingXp => 'XP latihan';
+
+  @override
+  String get analyticsAccuracy => 'Ketepatan';
 
   @override
   String get onboardingFeatureImageCards => 'Kad Perkataan Bergambar';
@@ -1221,6 +1571,57 @@ class AppLocalizationsMs extends AppLocalizations {
       'Kemajuan pratonton semasa akan dibuang.';
 
   @override
+  String get lessonPreviewBuildUnderstanding =>
+      'Bina kefahaman dahulu, kemudian soalan konteks';
+
+  @override
+  String lessonPreviewProgressMeta(
+    Object current,
+    Object minutes,
+    Object section,
+    Object total,
+  ) {
+    return '$section · $minutes min · $current/$total';
+  }
+
+  @override
+  String get lessonPreviewLessonCards => 'Kad pelajaran';
+
+  @override
+  String lessonPreviewCardMeta(Object count, Object xp) {
+    return '$xp XP · $count soalan konteks';
+  }
+
+  @override
+  String get lessonPreviewEnterContext => 'Mula latihan konteks';
+
+  @override
+  String get lessonPreviewNextCard => 'Kad seterusnya';
+
+  @override
+  String get lessonPreviewNoCards => 'Tiada kad';
+
+  @override
+  String get lessonPreviewNoCardsBody =>
+      'Pelajaran ini belum ada perkataan untuk dipelajari.';
+
+  @override
+  String get lessonPreviewLeaveCardTitle => 'Tinggalkan kad?';
+
+  @override
+  String get lessonPreviewLeaveCardContent =>
+      'Kemajuan kad perkataan baharu semasa akan dibuang.';
+
+  @override
+  String get lessonPreviewLeave => 'Keluar';
+
+  @override
+  String get lessonPreviewAssessFirst => 'Nilai kebiasaan anda dahulu';
+
+  @override
+  String get lessonPreviewContextExample => 'Contoh konteks';
+
+  @override
   String get reviewCenterTitle => 'Ulangkaji';
 
   @override
@@ -1283,6 +1684,47 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get reviewCenterRemembered => 'Ingat';
+
+  @override
+  String get wordDetailNotFound => 'Perkataan tidak ditemui';
+
+  @override
+  String get wordDetailReviewStats => 'Statistik ulang kaji';
+
+  @override
+  String get wordDetailMarkRemembered => 'Tanda sebagai diingat';
+
+  @override
+  String get wordDetailScheduleSoon => 'Jadual latihan semula';
+
+  @override
+  String get wordDetailMarkedRemembered => 'Ditandakan sebagai diingat';
+
+  @override
+  String get wordDetailScheduledSoon => 'Dijadualkan untuk latihan semula';
+
+  @override
+  String get wordDetailStatRemembered => 'Diingat';
+
+  @override
+  String get wordDetailStatForgot => 'Tidak diingat';
+
+  @override
+  String get wordDetailStatMastery => 'Penguasaan';
+
+  @override
+  String get wordDetailUpdateFailed =>
+      'Tidak dapat mengemas kini kad ini buat masa ini';
+
+  @override
+  String wordDetailMasteryLabel(Object level) {
+    return 'Penguasaan $level/5';
+  }
+
+  @override
+  String wordDetailNextReview(Object when) {
+    return 'Seterusnya $when';
+  }
 
   @override
   String get reviewCenterPostponedMessage =>
@@ -1763,6 +2205,65 @@ class AppLocalizationsMs extends AppLocalizations {
   String get notificationTypeActivity => 'Mesej Aktiviti';
 
   @override
+  String get notificationLearningReminderTitle =>
+      'Pelan belajar hari ini menanti';
+
+  @override
+  String notificationLearningReminderBody(int dailyGoal) {
+    return 'Matlamat hari ini: $dailyGoal perkataan baharu. Mula dengan buku perkataan semasa anda.';
+  }
+
+  @override
+  String notificationReviewDueTitle(int dueCount) {
+    return '$dueCount perkataan perlu diulang kaji';
+  }
+
+  @override
+  String get notificationReviewDueBody =>
+      'Bersihkan baris ulang kaji dahulu — perkataan yang salah akan masuk ke peringkat pengukuhan.';
+
+  @override
+  String get notificationCheckInTitle => 'Anda belum daftar masuk hari ini';
+
+  @override
+  String get notificationCheckInBody =>
+      'Ketik daftar masuk di halaman Terokai untuk membuka tugasan daftar masuk.';
+
+  @override
+  String get notificationActivityTitle =>
+      'Tugasan mata Terokai telah disegarkan';
+
+  @override
+  String get notificationActivityBody =>
+      'Dapatkan XP selepas belajar perkataan baharu, ulang kaji dan membersihkan perkataan salah.';
+
+  @override
+  String get notificationLotteryTitle => 'Keputusan cabutan';
+
+  @override
+  String notificationLotteryBody(String prizeName) {
+    return 'Anda memenangi \"$prizeName\" — ditambah ke aset anda.';
+  }
+
+  @override
+  String get osNotificationStudyReminderTitle => 'Tugasan belajar anda sedia';
+
+  @override
+  String get osNotificationStudyReminderBody =>
+      'Selesaikan perkataan baharu, ulang kaji dan daftar masuk untuk mengekalkan momentum anda.';
+
+  @override
+  String get osNotificationReviewDueBody =>
+      'Bersihkan baris ulang kaji, kemudian mula perkataan baharu hari ini.';
+
+  @override
+  String get osNotificationChannelName => 'Peringatan belajar';
+
+  @override
+  String get osNotificationChannelDescription =>
+      'Peringatan belajar, ulang kaji dan daftar masuk';
+
+  @override
   String get studyNewStudy => 'Pembelajaran Baru';
 
   @override
@@ -1973,15 +2474,6 @@ class AppLocalizationsMs extends AppLocalizations {
   String get questDailyQuests => 'Misi Harian';
 
   @override
-  String get questAchievements => 'Pencapaian';
-
-  @override
-  String get questLeaderboard => 'Papan Pendahulu';
-
-  @override
-  String get questClassMode => 'Mod Kelas';
-
-  @override
   String get questProgress => 'Kemajuan';
 
   @override
@@ -2063,6 +2555,46 @@ class AppLocalizationsMs extends AppLocalizations {
       'Ini juga memadam kad perkataan peribadi ini dan pelan ulangkajinya.';
 
   @override
+  String get customWordsEditTitle => 'Edit perkataan';
+
+  @override
+  String get customWordsAddTitle => 'Tambah perkataan';
+
+  @override
+  String get customWordsFieldWord => 'Perkataan';
+
+  @override
+  String get customWordsFieldMeaning => 'Maksud';
+
+  @override
+  String get customWordsFieldExample => 'Contoh ayat';
+
+  @override
+  String get customWordsFieldNote => 'Nota';
+
+  @override
+  String get customWordsFieldTag => 'Tag';
+
+  @override
+  String get customWordsSaveEdit => 'Simpan perubahan';
+
+  @override
+  String get customWordsCreate => 'Cipta perkataan';
+
+  @override
+  String get customWordsSaveFailed =>
+      'Tidak dapat menyimpan perkataan ini buat masa ini';
+
+  @override
+  String get customWordsSaved => 'Perkataan disimpan';
+
+  @override
+  String get customWordsDifficulty => 'Kesukaran';
+
+  @override
+  String get commonRequired => 'Wajib diisi';
+
+  @override
   String customWordsDeleteFailed(Object word) {
     return 'Tidak dapat memadam $word sekarang';
   }
@@ -2139,6 +2671,9 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get wordbookEnglishDefinitions => 'Definisi Inggeris';
+
+  @override
+  String get wordbookMalayDefinitions => 'Definisi Melayu';
 
   @override
   String get wordbookHighFrequency => 'Frekuensi tinggi';

@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 
+import 'app_tokens.dart';
+
 class AppTheme {
   const AppTheme._();
 
-  // Brand palette derived from the LinguaQuest cat mascot icon:
-  // deep navy cat, sky-blue tile, grass-green wordmark accent.
-  static const Color teal = Color(0xFF2F55A4);
-  static const Color deepTeal = Color(0xFF1E3A7A);
-  static const Color cyan = Color(0xFF3D9BE9);
-  static const Color coral = Color(0xFFFF7A59);
-  static const Color mango = Color(0xFFFFC83D);
-  static const Color mint = Color(0xFFD8EBFB);
-  static const Color leaf = Color(0xFF6CBF3F);
-  static const Color ink = Color(0xFF16315F);
-  static const Color paper = Color(0xFFF2F8FE);
-  static const Color lightSurface = Color(0xFFEAF3FC);
-  static const Color success = Color(0xFF5CB531);
-  static const Color darkPaper = Color(0xFF0A1426);
-  static const Color darkSurface = Color(0xFF0F1B33);
-  static const Color darkSurfaceHigh = Color(0xFF172A4A);
-  static const Color darkSurfaceHighest = Color(0xFF1F3458);
+  // Brand palette — "Friendly Quest", anchored to the LinguaQuest cat mascot
+  // (navy cat, sky-blue tile, leaf-green wordmark). Values live in AppTokens;
+  // the names below are kept so existing screen references inherit the refresh.
+  static const Color teal = AppTokens.azure;
+  static const Color deepTeal = AppTokens.brandNavy;
+  static const Color cyan = AppTokens.sky;
+  static const Color coral = AppTokens.coral;
+  static const Color mango = AppTokens.mango;
+  static const Color mint = AppTokens.chipLight;
+  static const Color leaf = AppTokens.success;
+  static const Color ink = AppTokens.textPrimaryLight;
+  static const Color paper = AppTokens.bgLight;
+  static const Color lightSurface = AppTokens.surfaceLight;
+  static const Color success = AppTokens.success;
+  static const Color darkPaper = AppTokens.bgDark;
+  static const Color darkSurface = AppTokens.surfaceDark;
+  static const Color darkSurfaceHigh = AppTokens.surfaceDarkHigh;
+  static const Color darkSurfaceHighest = AppTokens.surfaceDarkHigh;
 
   static ThemeData light() {
     final scheme =
@@ -38,16 +41,16 @@ class AppTheme {
           onSecondaryContainer: ink,
           tertiaryContainer: const Color(0xFFFFF0C2),
           onTertiaryContainer: const Color(0xFF4A3A00),
-          surfaceContainerLowest: Colors.white,
-          surfaceContainerLow: lightSurface,
-          surfaceContainer: const Color(0xFFE0ECF8),
-          surfaceContainerHigh: const Color(0xFFD5E4F3),
-          surfaceContainerHighest: const Color(0xFFC7D9EB),
-          onSurface: ink,
-          onSurfaceVariant: const Color(0xFF4F6480),
-          outline: const Color(0xFF93AECC),
-          outlineVariant: const Color(0xFFD7E4F2),
-          error: const Color(0xFFE04F3A),
+          surfaceContainerLowest: AppTokens.surfaceLight,
+          surfaceContainerLow: AppTokens.bgLight,
+          surfaceContainer: AppTokens.chipLight,
+          surfaceContainerHigh: AppTokens.surfaceSunken,
+          surfaceContainerHighest: const Color(0xFFE8E2D9),
+          onSurface: AppTokens.textPrimaryLight,
+          onSurfaceVariant: AppTokens.textSecondaryLight,
+          outline: AppTokens.hairline,
+          outlineVariant: AppTokens.outlineLight,
+          error: AppTokens.coral,
         );
 
     return _base(scheme).copyWith(scaffoldBackgroundColor: paper);
@@ -58,22 +61,22 @@ class AppTheme {
         ColorScheme.fromSeed(
           seedColor: cyan,
           brightness: Brightness.dark,
-          primary: const Color(0xFF7FBCF2),
+          primary: AppTokens.azureDark,
           secondary: const Color(0xFFA3CFF5),
           tertiary: const Color(0xFFFFD767),
           surface: darkSurface,
           error: const Color(0xFFFFB4A8),
         ).copyWith(
           onPrimary: const Color(0xFF10254B),
-          surfaceContainerLowest: const Color(0xFF0A1426),
-          surfaceContainerLow: const Color(0xFF0D1A30),
+          surfaceContainerLowest: AppTokens.bgDark,
+          surfaceContainerLow: const Color(0xFF121E33),
           surfaceContainer: darkSurfaceHigh,
-          surfaceContainerHigh: const Color(0xFF1C3050),
+          surfaceContainerHigh: const Color(0xFF24365A),
           surfaceContainerHighest: darkSurfaceHighest,
-          onSurface: const Color(0xFFE3ECF6),
-          onSurfaceVariant: const Color(0xFFBDD0E5),
+          onSurface: AppTokens.textPrimaryDark,
+          onSurfaceVariant: AppTokens.textSecondaryDark,
           outline: const Color(0xFF7E97B8),
-          outlineVariant: const Color(0xFF2D4263),
+          outlineVariant: AppTokens.outlineDark,
           primaryContainer: deepTeal,
           onPrimaryContainer: mint,
           secondaryContainer: ink,
@@ -124,24 +127,25 @@ class AppTheme {
       useMaterial3: true,
       colorScheme: scheme,
       fontFamily: 'Avenir',
+      iconTheme: const IconThemeData(weight: 400, grade: 0, opticalSize: 24, fill: 0),
       textTheme: baseTextTheme.copyWith(
         displayMedium: baseTextTheme.displayMedium?.copyWith(
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w800,
           letterSpacing: 0,
         ),
         headlineMedium: baseTextTheme.headlineMedium?.copyWith(
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w800,
           letterSpacing: 0,
         ),
         headlineSmall: baseTextTheme.headlineSmall?.copyWith(
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w800,
           letterSpacing: 0,
         ),
         titleLarge: baseTextTheme.titleLarge?.copyWith(
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w800,
         ),
         titleMedium: baseTextTheme.titleMedium?.copyWith(
-          fontWeight: FontWeight.w800,
+          fontWeight: FontWeight.w700,
         ),
       ),
       appBarTheme: AppBarTheme(
@@ -154,7 +158,7 @@ class AppTheme {
       navigationBarTheme: NavigationBarThemeData(
         height: 76,
         elevation: 0,
-        backgroundColor: isDark ? scheme.surfaceContainer : Colors.white,
+        backgroundColor: isDark ? scheme.surfaceContainer : lightSurface,
         indicatorColor: isDark ? scheme.primaryContainer : mint,
         labelTextStyle: WidgetStateProperty.resolveWith(
           (states) => TextStyle(
@@ -179,19 +183,27 @@ class AppTheme {
         color: scheme.surface,
         elevation: 0,
         margin: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppTokens.radiusCard),
+        ),
       ),
       dialogTheme: DialogThemeData(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppTokens.radiusSheet),
+        ),
       ),
       bottomSheetTheme: const BottomSheetThemeData(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppTokens.radiusSheet),
+          ),
         ),
       ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
+        ),
       ),
       chipTheme: ChipThemeData(
         backgroundColor: isDark ? scheme.surfaceContainerHigh : null,
@@ -201,48 +213,50 @@ class AppTheme {
         secondaryLabelStyle: chipLabelStyle,
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
         side: BorderSide(color: scheme.outlineVariant),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppTokens.radiusPill),
+        ),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
-          minimumSize: const Size(48, 56),
+          minimumSize: const Size(48, 54),
           backgroundColor: scheme.primary,
           foregroundColor: scheme.onPrimary,
-          textStyle: const TextStyle(fontWeight: FontWeight.w900),
+          textStyle: const TextStyle(fontWeight: FontWeight.w800),
           elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(AppTokens.radiusButton),
           ),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          minimumSize: const Size(48, 56),
-          textStyle: const TextStyle(fontWeight: FontWeight.w900),
+          minimumSize: const Size(48, 54),
+          textStyle: const TextStyle(fontWeight: FontWeight.w800),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(AppTokens.radiusButton),
           ),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppTokens.radiusCard),
           borderSide: BorderSide(color: scheme.outlineVariant),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppTokens.radiusCard),
           borderSide: BorderSide(color: scheme.outlineVariant),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppTokens.radiusCard),
           borderSide: BorderSide(color: scheme.error, width: 1.5),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppTokens.radiusCard),
           borderSide: BorderSide(color: scheme.primary, width: 2),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppTokens.radiusCard),
           borderSide: BorderSide(color: scheme.error, width: 2),
         ),
         filled: true,

@@ -1,6 +1,8 @@
 {
   "id": "kaoyan",
   "title": "考研英语核心词汇",
+  "titleEn": "Postgraduate Core Words",
+  "titleMs": "Perkataan Teras Pascasiswazah",
   "category": "exam",
   "examType": "考研",
   "coverUrl": "https://source.unsplash.com/featured/800x480/?english,vocabulary,kaoyan",
@@ -149,7 +151,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abstain",
-      "sceneCue": "考研 · 禁绝, 放弃"
+      "sceneCue": "考研 · 禁绝, 放弃",
+      "malayDefinitions": [
+        "berpantang",
+        "menahan diri"
+      ]
     },
     {
       "id": "kaoyan_002_abstemious",
@@ -201,7 +207,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abstemious",
-      "sceneCue": "考研 · 有节制的, 节约的"
+      "sceneCue": "考研 · 有节制的, 节约的",
+      "malayDefinitions": [
+        "bersederhana",
+        "berjimat"
+      ]
     },
     {
       "id": "kaoyan_003_abstract",
@@ -264,7 +274,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abstract",
-      "sceneCue": "考研 · 摘要, 概要, 抽象"
+      "sceneCue": "考研 · 摘要, 概要, 抽象",
+      "malayDefinitions": [
+        "abstrak",
+        "ringkasan",
+        "konsep"
+      ]
     },
     {
       "id": "kaoyan_004_abstruse",
@@ -316,7 +331,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abstruse",
-      "sceneCue": "考研 · 奥妙的, 深奥的"
+      "sceneCue": "考研 · 奥妙的, 深奥的",
+      "malayDefinitions": [
+        "mendalam",
+        "sukar difahami"
+      ]
     },
     {
       "id": "kaoyan_005_absurd",
@@ -364,7 +383,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,absurd",
-      "sceneCue": "考研 · 荒谬的, 可笑的"
+      "sceneCue": "考研 · 荒谬的, 可笑的",
+      "malayDefinitions": [
+        "tidak masuk akal",
+        "melucukan"
+      ]
     },
     {
       "id": "kaoyan_006_abundant",
@@ -423,7 +446,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abundant",
-      "sceneCue": "考研 · 丰富的"
+      "sceneCue": "考研 · 丰富的",
+      "malayDefinitions": [
+        "melimpah",
+        "banyak",
+        "berleluasa"
+      ]
     },
     {
       "id": "kaoyan_007_abuse",
@@ -489,7 +517,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abuse",
-      "sceneCue": "考研 · 滥用, 虐待, 辱骂, 陋习, 弊端"
+      "sceneCue": "考研 · 滥用, 虐待, 辱骂, 陋习, 弊端",
+      "malayDefinitions": [
+        "menyalahgunakan",
+        "mendera",
+        "mencaci"
+      ]
     },
     {
       "id": "kaoyan_008_abysmal",
@@ -541,7 +574,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abysmal",
-      "sceneCue": "考研 · 深不可测的, 无底的"
+      "sceneCue": "考研 · 深不可测的, 无底的",
+      "malayDefinitions": [
+        "sangat dalam",
+        "tidak terduga"
+      ]
     },
     {
       "id": "kaoyan_009_accelerate",
@@ -594,7 +631,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accelerate",
-      "sceneCue": "考研 · 加速, 促进"
+      "sceneCue": "考研 · 加速, 促进",
+      "malayDefinitions": [
+        "memecut",
+        "mempercepatkan"
+      ]
     },
     {
       "id": "kaoyan_010_accessible",
@@ -646,7 +687,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accessible",
-      "sceneCue": "考研 · 易接近的, 可到达的, 易受影响的, 可理解的"
+      "sceneCue": "考研 · 易接近的, 可到达的, 易受影响的, 可理解的",
+      "malayDefinitions": [
+        "mudah diakses",
+        "boleh difahami"
+      ]
     },
     {
       "id": "kaoyan_011_accidental",
@@ -711,7 +756,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accidental",
-      "sceneCue": "考研 · 意外的, 非主要的, 附属的"
+      "sceneCue": "考研 · 意外的, 非主要的, 附属的",
+      "malayDefinitions": [
+        "tidak sengaja",
+        "sampingan"
+      ]
     },
     {
       "id": "kaoyan_012_acclaim",
@@ -764,7 +813,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acclaim",
-      "sceneCue": "考研 · 欢呼， 称赞"
+      "sceneCue": "考研 · 欢呼， 称赞",
+      "malayDefinitions": [
+        "sorakan",
+        "pujian"
+      ]
     },
     {
       "id": "kaoyan_013_accommodate",
@@ -817,7 +870,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accommodate",
-      "sceneCue": "考研 · 与…一致"
+      "sceneCue": "考研 · 与…一致",
+      "malayDefinitions": [
+        "menyesuaikan",
+        "menyediakan penginapan",
+        "memenuhi"
+      ]
     },
     {
       "id": "kaoyan_014_accomplish",
@@ -871,7 +929,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accomplish",
-      "sceneCue": "考研 · 完成， 做成功"
+      "sceneCue": "考研 · 完成， 做成功",
+      "malayDefinitions": [
+        "menyelesaikan",
+        "mencapai"
+      ]
     },
     {
       "id": "kaoyan_015_accord",
@@ -933,7 +995,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accord",
-      "sceneCue": "考研 · 一致, 符合, 调和, 协定"
+      "sceneCue": "考研 · 一致, 符合, 调和, 协定",
+      "malayDefinitions": [
+        "persetujuan",
+        "selaras",
+        "perjanjian"
+      ]
     },
     {
       "id": "kaoyan_016_accost",
@@ -984,7 +1051,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accost",
-      "sceneCue": "考研 · 搭话"
+      "sceneCue": "考研 · 搭话",
+      "malayDefinitions": [
+        "menegur",
+        "mendekati"
+      ]
     },
     {
       "id": "kaoyan_017_accumulate",
@@ -1037,7 +1108,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accumulate",
-      "sceneCue": "考研 · 积聚, 堆积"
+      "sceneCue": "考研 · 积聚, 堆积",
+      "malayDefinitions": [
+        "mengumpul",
+        "menimbun"
+      ]
     },
     {
       "id": "kaoyan_018_acerbic",
@@ -1088,7 +1163,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acerbic",
-      "sceneCue": "考研 · 尖酸的"
+      "sceneCue": "考研 · 尖酸的",
+      "malayDefinitions": [
+        "tajam",
+        "pedas"
+      ]
     },
     {
       "id": "kaoyan_019_acknowledge",
@@ -1151,7 +1230,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acknowledge",
-      "sceneCue": "考研 · 承认"
+      "sceneCue": "考研 · 承认",
+      "malayDefinitions": [
+        "mengakui",
+        "menghargai"
+      ]
     },
     {
       "id": "kaoyan_020_acme",
@@ -1204,7 +1287,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acme",
-      "sceneCue": "考研 · 顶点, 极致"
+      "sceneCue": "考研 · 顶点, 极致",
+      "malayDefinitions": [
+        "kemuncak",
+        "puncak"
+      ]
     },
     {
       "id": "kaoyan_021_acquiesce",
@@ -1250,7 +1337,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acquiesce",
-      "sceneCue": "考研 · 默许, 勉强同意"
+      "sceneCue": "考研 · 默许, 勉强同意",
+      "malayDefinitions": [
+        "mengakur",
+        "bersetuju dengan berat hati"
+      ]
     },
     {
       "id": "kaoyan_022_acquire",
@@ -1311,7 +1402,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acquire",
-      "sceneCue": "考研 · 获得"
+      "sceneCue": "考研 · 获得",
+      "malayDefinitions": [
+        "memperoleh",
+        "mendapatkan"
+      ]
     },
     {
       "id": "kaoyan_023_acquisitive",
@@ -1361,7 +1456,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acquisitive",
-      "sceneCue": "考研 · 想获得的, 有获得可能性的, 可学到的"
+      "sceneCue": "考研 · 想获得的, 有获得可能性的, 可学到的",
+      "malayDefinitions": [
+        "ingin memiliki",
+        "tamak"
+      ]
     },
     {
       "id": "kaoyan_024_acrid",
@@ -1413,7 +1512,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acrid",
-      "sceneCue": "考研 · 辛辣的， 刻薄的"
+      "sceneCue": "考研 · 辛辣的， 刻薄的",
+      "malayDefinitions": [
+        "pedas",
+        "tajam"
+      ]
     },
     {
       "id": "kaoyan_025_acrimonious",
@@ -1465,7 +1568,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acrimonious",
-      "sceneCue": "考研 · 严厉的, 辛辣的"
+      "sceneCue": "考研 · 严厉的, 辛辣的",
+      "malayDefinitions": [
+        "keras",
+        "pedas"
+      ]
     },
     {
       "id": "kaoyan_026_acute",
@@ -1533,7 +1640,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acute",
-      "sceneCue": "考研 · 敏锐的, [医]急性的, 剧烈"
+      "sceneCue": "考研 · 敏锐的, [医]急性的, 剧烈",
+      "malayDefinitions": [
+        "tajam",
+        "akut",
+        "teruk"
+      ]
     },
     {
       "id": "kaoyan_027_adamant",
@@ -1586,7 +1698,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adamant",
-      "sceneCue": "考研 · 坚硬的"
+      "sceneCue": "考研 · 坚硬的",
+      "malayDefinitions": [
+        "keras",
+        "tegar"
+      ]
     },
     {
       "id": "kaoyan_028_adapt",
@@ -1642,7 +1758,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adapt",
-      "sceneCue": "考研 · 使适应"
+      "sceneCue": "考研 · 使适应",
+      "malayDefinitions": [
+        "menyesuaikan diri",
+        "mengubah suai"
+      ]
     },
     {
       "id": "kaoyan_029_addict",
@@ -1694,7 +1814,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,addict",
-      "sceneCue": "考研 · 沉溺"
+      "sceneCue": "考研 · 沉溺",
+      "malayDefinitions": [
+        "ketagih",
+        "penagih"
+      ]
     },
     {
       "id": "kaoyan_030_adhere",
@@ -1745,7 +1869,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adhere",
-      "sceneCue": "考研 · 粘附, 胶着, 坚持"
+      "sceneCue": "考研 · 粘附, 胶着, 坚持",
+      "malayDefinitions": [
+        "melekat",
+        "berpegang teguh"
+      ]
     },
     {
       "id": "kaoyan_031_adjourn",
@@ -1798,7 +1926,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adjourn",
-      "sceneCue": "考研 · 延期， 推迟"
+      "sceneCue": "考研 · 延期， 推迟",
+      "malayDefinitions": [
+        "menangguhkan",
+        "menunda"
+      ]
     },
     {
       "id": "kaoyan_032_adjudicate",
@@ -1851,7 +1983,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adjudicate",
-      "sceneCue": "考研 · 判决, 宣判, 裁定"
+      "sceneCue": "考研 · 判决, 宣判, 裁定",
+      "malayDefinitions": [
+        "menghakimi",
+        "memutuskan"
+      ]
     },
     {
       "id": "kaoyan_033_admonish",
@@ -1902,7 +2038,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,admonish",
-      "sceneCue": "考研 · 劝告, 训诫, 警告"
+      "sceneCue": "考研 · 劝告, 训诫, 警告",
+      "malayDefinitions": [
+        "menasihati",
+        "menegur",
+        "memberi amaran"
+      ]
     },
     {
       "id": "kaoyan_034_adore",
@@ -1957,7 +2098,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adore",
-      "sceneCue": "考研 · 崇拜, 爱慕, (口语)喜爱"
+      "sceneCue": "考研 · 崇拜, 爱慕, (口语)喜爱",
+      "malayDefinitions": [
+        "memuja",
+        "mengasihi",
+        "sangat suka"
+      ]
     },
     {
       "id": "kaoyan_035_adulterate",
@@ -2009,7 +2155,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adulterate",
-      "sceneCue": "考研 · 掺杂"
+      "sceneCue": "考研 · 掺杂",
+      "malayDefinitions": [
+        "mencampurkan",
+        "memalsukan"
+      ]
     },
     {
       "id": "kaoyan_036_adventitious",
@@ -2065,7 +2215,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adventitious",
-      "sceneCue": "考研 · 偶然的, 外来的"
+      "sceneCue": "考研 · 偶然的, 外来的",
+      "malayDefinitions": [
+        "kebetulan",
+        "luaran"
+      ]
     },
     {
       "id": "kaoyan_037_adversary",
@@ -2114,7 +2268,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adversary",
-      "sceneCue": "考研 · 敌手, 对手"
+      "sceneCue": "考研 · 敌手, 对手",
+      "malayDefinitions": [
+        "lawan",
+        "musuh"
+      ]
     },
     {
       "id": "kaoyan_038_adversity",
@@ -2167,7 +2325,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adversity",
-      "sceneCue": "考研 · 不幸, 灾祸, 逆境"
+      "sceneCue": "考研 · 不幸, 灾祸, 逆境",
+      "malayDefinitions": [
+        "kesengsaraan",
+        "bencana",
+        "kesusahan"
+      ]
     },
     {
       "id": "kaoyan_039_advocate",
@@ -2218,7 +2381,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,advocate",
-      "sceneCue": "考研 · 提倡， 主张， 拥护"
+      "sceneCue": "考研 · 提倡， 主张， 拥护",
+      "malayDefinitions": [
+        "menyokong",
+        "peguam bela",
+        "penyokong"
+      ]
     },
     {
       "id": "kaoyan_040_affable",
@@ -2269,7 +2437,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,affable",
-      "sceneCue": "考研 · 和蔼可亲的"
+      "sceneCue": "考研 · 和蔼可亲的",
+      "malayDefinitions": [
+        "ramah",
+        "mesra"
+      ]
     },
     {
       "id": "kaoyan_041_affectation",
@@ -2321,7 +2493,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,affectation",
-      "sceneCue": "考研 · 假装, 虚饰, 做作"
+      "sceneCue": "考研 · 假装, 虚饰, 做作",
+      "malayDefinitions": [
+        "kepura-puraan",
+        "buatan"
+      ]
     },
     {
       "id": "kaoyan_042_affinity",
@@ -2373,7 +2549,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,affinity",
-      "sceneCue": "考研 · 密切关系, 吸引力, 姻亲关系, 亲合力"
+      "sceneCue": "考研 · 密切关系, 吸引力, 姻亲关系, 亲合力",
+      "malayDefinitions": [
+        "hubungan rapat",
+        "tarikan",
+        "persamaan"
+      ]
     },
     {
       "id": "kaoyan_043_affirm",
@@ -2429,7 +2610,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,affirm",
-      "sceneCue": "考研 · 断言， 坚持声称"
+      "sceneCue": "考研 · 断言， 坚持声称",
+      "malayDefinitions": [
+        "menegaskan",
+        "mengesahkan"
+      ]
     },
     {
       "id": "kaoyan_044_affix",
@@ -2487,7 +2672,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,affix",
-      "sceneCue": "考研 · 黏上， 贴上"
+      "sceneCue": "考研 · 黏上， 贴上",
+      "malayDefinitions": [
+        "melekatkan",
+        "menambah",
+        "imbuhan"
+      ]
     },
     {
       "id": "kaoyan_045_affliction",
@@ -2538,7 +2728,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,affliction",
-      "sceneCue": "考研 · 痛苦, 苦恼"
+      "sceneCue": "考研 · 痛苦, 苦恼",
+      "malayDefinitions": [
+        "kesengsaraan",
+        "penderitaan"
+      ]
     },
     {
       "id": "kaoyan_046_affluent",
@@ -2586,7 +2780,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,affluent",
-      "sceneCue": "考研 · 富有的， 丰富的"
+      "sceneCue": "考研 · 富有的， 丰富的",
+      "malayDefinitions": [
+        "kaya",
+        "mewah"
+      ]
     },
     {
       "id": "kaoyan_047_agape",
@@ -2636,7 +2834,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,agape",
-      "sceneCue": "考研 · 大张着的"
+      "sceneCue": "考研 · 大张着的",
+      "malayDefinitions": [
+        "ternganga",
+        "terbuka luas"
+      ]
     },
     {
       "id": "kaoyan_048_aggrandize",
@@ -2692,7 +2894,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aggrandize",
-      "sceneCue": "考研 · 增加, 夸大"
+      "sceneCue": "考研 · 增加, 夸大",
+      "malayDefinitions": [
+        "membesarkan",
+        "meninggikan"
+      ]
     },
     {
       "id": "kaoyan_049_aggravate",
@@ -2748,7 +2954,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aggravate",
-      "sceneCue": "考研 · 使恶化, 加重"
+      "sceneCue": "考研 · 使恶化, 加重",
+      "malayDefinitions": [
+        "memburukkan",
+        "mengeruhkan"
+      ]
     },
     {
       "id": "kaoyan_050_aggregate",
@@ -2811,7 +3021,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aggregate",
-      "sceneCue": "考研 · 合计, 总计, 集合体"
+      "sceneCue": "考研 · 合计, 总计, 集合体",
+      "malayDefinitions": [
+        "jumlah",
+        "keseluruhan",
+        "agregat"
+      ]
     },
     {
       "id": "kaoyan_051_aggressive",
@@ -2876,7 +3091,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aggressive",
-      "sceneCue": "考研 · 好斗的, 敢作敢为的, 有闯劲的, 侵略性的"
+      "sceneCue": "考研 · 好斗的, 敢作敢为的, 有闯劲的, 侵略性的",
+      "malayDefinitions": [
+        "agresif",
+        "berani",
+        "bercita-cita tinggi"
+      ]
     },
     {
       "id": "kaoyan_052_aggrieve",
@@ -2929,7 +3149,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aggrieve",
-      "sceneCue": "考研 · 使受委屈， 使痛苦"
+      "sceneCue": "考研 · 使受委屈， 使痛苦",
+      "malayDefinitions": [
+        "menyusahkan",
+        "menyakiti"
+      ]
     },
     {
       "id": "kaoyan_053_agility",
@@ -2980,7 +3204,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,agility",
-      "sceneCue": "考研 · 敏捷"
+      "sceneCue": "考研 · 敏捷",
+      "malayDefinitions": [
+        "ketangkasan",
+        "kepantasan"
+      ]
     },
     {
       "id": "kaoyan_054_agitate",
@@ -3032,7 +3260,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,agitate",
-      "sceneCue": "考研 · 鼓动， 煽动"
+      "sceneCue": "考研 · 鼓动， 煽动",
+      "malayDefinitions": [
+        "menghasut",
+        "menggelisahkan"
+      ]
     },
     {
       "id": "kaoyan_055_agog",
@@ -3089,7 +3321,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,agog",
-      "sceneCue": "考研 · 兴奋的, 热切的"
+      "sceneCue": "考研 · 兴奋的, 热切的",
+      "malayDefinitions": [
+        "teruja",
+        "tidak sabar"
+      ]
     },
     {
       "id": "kaoyan_056_agreeable",
@@ -3147,7 +3383,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,agreeable",
-      "sceneCue": "考研 · 令人愉快的"
+      "sceneCue": "考研 · 令人愉快的",
+      "malayDefinitions": [
+        "menyenangkan",
+        "bersetuju"
+      ]
     },
     {
       "id": "kaoyan_057_airtight",
@@ -3194,7 +3434,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,airtight",
-      "sceneCue": "考研 · 密封的, 无懈可击的"
+      "sceneCue": "考研 · 密封的, 无懈可击的",
+      "malayDefinitions": [
+        "kedap udara",
+        "tidak boleh disangkal"
+      ]
     },
     {
       "id": "kaoyan_058_alacrity",
@@ -3247,7 +3491,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alacrity",
-      "sceneCue": "考研 · 敏捷"
+      "sceneCue": "考研 · 敏捷",
+      "malayDefinitions": [
+        "ketangkasan",
+        "kerelaan",
+        "kesediaan"
+      ]
     },
     {
       "id": "kaoyan_059_alienate",
@@ -3300,7 +3549,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alienate",
-      "sceneCue": "考研 · 使疏远， 离间"
+      "sceneCue": "考研 · 使疏远， 离间",
+      "malayDefinitions": [
+        "menjauhkan",
+        "memisahkan"
+      ]
     },
     {
       "id": "kaoyan_060_align",
@@ -3350,7 +3603,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,align",
-      "sceneCue": "考研 · 结盟"
+      "sceneCue": "考研 · 结盟",
+      "malayDefinitions": [
+        "menjajarkan",
+        "menyelaraskan",
+        "bersekutu"
+      ]
     },
     {
       "id": "kaoyan_061_allay",
@@ -3403,7 +3661,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,allay",
-      "sceneCue": "考研 · 减轻， 缓和"
+      "sceneCue": "考研 · 减轻， 缓和",
+      "malayDefinitions": [
+        "meredakan",
+        "menenangkan"
+      ]
     },
     {
       "id": "kaoyan_062_allegiance",
@@ -3453,7 +3715,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,allegiance",
-      "sceneCue": "考研 · 忠贞, 效忠"
+      "sceneCue": "考研 · 忠贞, 效忠",
+      "malayDefinitions": [
+        "kesetiaan",
+        "ketaatan"
+      ]
     },
     {
       "id": "kaoyan_063_alleviate",
@@ -3505,7 +3771,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alleviate",
-      "sceneCue": "考研 · 使(痛苦等)易于忍受, 减轻"
+      "sceneCue": "考研 · 使(痛苦等)易于忍受, 减轻",
+      "malayDefinitions": [
+        "meringankan",
+        "mengurangkan"
+      ]
     },
     {
       "id": "kaoyan_064_alloy",
@@ -3563,7 +3833,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alloy",
-      "sceneCue": "考研 · 合金"
+      "sceneCue": "考研 · 合金",
+      "malayDefinitions": [
+        "aloi",
+        "campuran logam"
+      ]
     },
     {
       "id": "kaoyan_065_allude",
@@ -3613,7 +3887,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,allude",
-      "sceneCue": "考研 · 暗指, 影射, 间接提到"
+      "sceneCue": "考研 · 暗指, 影射, 间接提到",
+      "malayDefinitions": [
+        "mengkiaskan",
+        "menyindir"
+      ]
     },
     {
       "id": "kaoyan_066_allure",
@@ -3670,7 +3948,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,allure",
-      "sceneCue": "考研 · 吸引"
+      "sceneCue": "考研 · 吸引",
+      "malayDefinitions": [
+        "memikat",
+        "menarik"
+      ]
     },
     {
       "id": "kaoyan_067_ally",
@@ -3720,7 +4002,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ally",
-      "sceneCue": "考研 · 结盟， 联合"
+      "sceneCue": "考研 · 结盟， 联合",
+      "malayDefinitions": [
+        "bersekutu",
+        "rakan",
+        "sekutu"
+      ]
     },
     {
       "id": "kaoyan_068_aloft",
@@ -3774,7 +4061,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aloft",
-      "sceneCue": "考研 · 在高处"
+      "sceneCue": "考研 · 在高处",
+      "malayDefinitions": [
+        "di atas",
+        "di udara"
+      ]
     },
     {
       "id": "kaoyan_069_aloof",
@@ -3823,7 +4114,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aloof",
-      "sceneCue": "考研 · 远离的"
+      "sceneCue": "考研 · 远离的",
+      "malayDefinitions": [
+        "menjauhkan diri",
+        "dingin",
+        "tidak mesra"
+      ]
     },
     {
       "id": "kaoyan_070_altruism",
@@ -3874,7 +4170,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,altruism",
-      "sceneCue": "考研 · 利他主义, 利他"
+      "sceneCue": "考研 · 利他主义, 利他",
+      "malayDefinitions": [
+        "altruisme",
+        "sifat mementingkan orang lain"
+      ]
     },
     {
       "id": "kaoyan_071_amalgamate",
@@ -3928,7 +4228,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,amalgamate",
-      "sceneCue": "考研 · 使与汞混合, 合并"
+      "sceneCue": "考研 · 使与汞混合, 合并",
+      "malayDefinitions": [
+        "menggabungkan",
+        "bercantum"
+      ]
     },
     {
       "id": "kaoyan_072_ambiguous",
@@ -3981,7 +4285,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ambiguous",
-      "sceneCue": "考研 · 暧昧的, 不明确的"
+      "sceneCue": "考研 · 暧昧的, 不明确的",
+      "malayDefinitions": [
+        "samar-samar",
+        "tidak jelas"
+      ]
     },
     {
       "id": "kaoyan_073_ambivalent",
@@ -4035,7 +4343,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ambivalent",
-      "sceneCue": "考研 · 矛盾的, 好恶相克的"
+      "sceneCue": "考研 · 矛盾的, 好恶相克的",
+      "malayDefinitions": [
+        "bercampur perasaan",
+        "bertentangan"
+      ]
     },
     {
       "id": "kaoyan_074_ambrosial",
@@ -4090,7 +4402,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ambrosial",
-      "sceneCue": "考研 · 特别美味的"
+      "sceneCue": "考研 · 特别美味的",
+      "malayDefinitions": [
+        "sangat lazat",
+        "harum"
+      ]
     },
     {
       "id": "kaoyan_075_ameliorate",
@@ -4142,7 +4458,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ameliorate",
-      "sceneCue": "考研 · 改善， 改良"
+      "sceneCue": "考研 · 改善， 改良",
+      "malayDefinitions": [
+        "memperbaiki",
+        "meningkatkan"
+      ]
     },
     {
       "id": "kaoyan_076_amenable",
@@ -4194,7 +4514,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,amenable",
-      "sceneCue": "考研 · 应服从的, 有服从义务的, 有责任的"
+      "sceneCue": "考研 · 应服从的, 有服从义务的, 有责任的",
+      "malayDefinitions": [
+        "patuh",
+        "bertanggungjawab"
+      ]
     },
     {
       "id": "kaoyan_077_amiable",
@@ -4252,7 +4576,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,amiable",
-      "sceneCue": "考研 · 亲切的, 和蔼可亲的"
+      "sceneCue": "考研 · 亲切的, 和蔼可亲的",
+      "malayDefinitions": [
+        "ramah",
+        "mesra"
+      ]
     },
     {
       "id": "kaoyan_078_amicable",
@@ -4299,7 +4627,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,amicable",
-      "sceneCue": "考研 · 友善的, 和平的"
+      "sceneCue": "考研 · 友善的, 和平的",
+      "malayDefinitions": [
+        "mesra",
+        "damai"
+      ]
     },
     {
       "id": "kaoyan_079_amity",
@@ -4350,7 +4682,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,amity",
-      "sceneCue": "考研 · 友好关系"
+      "sceneCue": "考研 · 友好关系",
+      "malayDefinitions": [
+        "persahabatan",
+        "hubungan baik"
+      ]
     },
     {
       "id": "kaoyan_080_amorphous",
@@ -4409,7 +4745,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,amorphous",
-      "sceneCue": "考研 · 无定形的, 无组织的"
+      "sceneCue": "考研 · 无定形的, 无组织的",
+      "malayDefinitions": [
+        "tidak berbentuk",
+        "tidak teratur"
+      ]
     },
     {
       "id": "kaoyan_081_anachronistic",
@@ -4460,7 +4800,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,anachronistic",
-      "sceneCue": "考研 · 时代错误的"
+      "sceneCue": "考研 · 时代错误的",
+      "malayDefinitions": [
+        "lapuk",
+        "ketinggalan zaman"
+      ]
     },
     {
       "id": "kaoyan_082_analgesic",
@@ -4521,7 +4865,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,analgesic",
-      "sceneCue": "考研 · 止痛的, 不痛的"
+      "sceneCue": "考研 · 止痛的, 不痛的",
+      "malayDefinitions": [
+        "penahan sakit",
+        "melegakan sakit"
+      ]
     },
     {
       "id": "kaoyan_083_analogous",
@@ -4574,7 +4922,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,analogous",
-      "sceneCue": "考研 · 类似的, 相似的, 可比拟的"
+      "sceneCue": "考研 · 类似的, 相似的, 可比拟的",
+      "malayDefinitions": [
+        "serupa",
+        "sebanding"
+      ]
     },
     {
       "id": "kaoyan_084_anarchist",
@@ -4626,7 +4978,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,anarchist",
-      "sceneCue": "考研 · 无政府主义者"
+      "sceneCue": "考研 · 无政府主义者",
+      "malayDefinitions": [
+        "anarkis",
+        "penentang kerajaan"
+      ]
     },
     {
       "id": "kaoyan_085_anathema",
@@ -4677,7 +5033,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,anathema",
-      "sceneCue": "考研 · 诅咒, 咒逐, [宗]革出教门, 被咒逐的人(物)"
+      "sceneCue": "考研 · 诅咒, 咒逐, [宗]革出教门, 被咒逐的人(物)",
+      "malayDefinitions": [
+        "sumpahan",
+        "laknat",
+        "dikutuk"
+      ]
     },
     {
       "id": "kaoyan_086_ancillary",
@@ -4734,7 +5095,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ancillary",
-      "sceneCue": "考研 · 补助的, 副的"
+      "sceneCue": "考研 · 补助的, 副的",
+      "malayDefinitions": [
+        "sampingan",
+        "tambahan"
+      ]
     },
     {
       "id": "kaoyan_087_anecdote",
@@ -4786,7 +5151,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,anecdote",
-      "sceneCue": "考研 · 轶事, 奇闻"
+      "sceneCue": "考研 · 轶事, 奇闻",
+      "malayDefinitions": [
+        "anekdot",
+        "cerita pendek"
+      ]
     },
     {
       "id": "kaoyan_088_anesthetic",
@@ -4845,7 +5214,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,anesthetic",
-      "sceneCue": "考研 · 麻醉剂, 麻药"
+      "sceneCue": "考研 · 麻醉剂, 麻药",
+      "malayDefinitions": [
+        "ubat bius",
+        "anestetik"
+      ]
     },
     {
       "id": "kaoyan_089_animate",
@@ -4902,7 +5275,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,animate",
-      "sceneCue": "考研 · 活的， 有生命的"
+      "sceneCue": "考研 · 活的， 有生命的",
+      "malayDefinitions": [
+        "hidup",
+        "bernyawa",
+        "menghidupkan"
+      ]
     },
     {
       "id": "kaoyan_090_animus",
@@ -4954,7 +5332,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,animus",
-      "sceneCue": "考研 · 敌意, 意图"
+      "sceneCue": "考研 · 敌意, 意图",
+      "malayDefinitions": [
+        "permusuhan",
+        "niat jahat"
+      ]
     }
   ]
 }

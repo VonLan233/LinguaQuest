@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:linguaquest/core/theme/app_icons.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
-import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/ai_word_support_link.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/pronunciation_controls.dart';
@@ -49,7 +53,7 @@ class TargetWordDetailScreen extends ConsumerWidget {
           child: Row(
             children: [
               Expanded(
-                child: OutlinedButton.icon(
+                child: AppSecondaryButton(
                   onPressed: () => _toggleFavorite(
                     context,
                     ref,
@@ -58,21 +62,23 @@ class TargetWordDetailScreen extends ConsumerWidget {
                     progress?.isFavorite ?? false,
                     l10n,
                   ),
-                  icon: Icon(
-                    progress?.isFavorite == true
-                        ? Icons.star_rounded
-                        : Icons.star_outline_rounded,
-                  ),
-                  label: Text(
-                    progress?.isFavorite == true
-                        ? l10n.wordbookFavorited
-                        : l10n.wordbookFavorite,
-                  ),
+                  label: progress?.isFavorite == true
+                      ? l10n.wordbookFavorited
+                      : l10n.wordbookFavorite,
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: FilledButton.icon(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: AppTokens.azure,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        AppTokens.radiusButton,
+                      ),
+                    ),
+                  ),
                   onPressed: () => _toggleNewWordbook(
                     context,
                     ref,
@@ -83,8 +89,8 @@ class TargetWordDetailScreen extends ConsumerWidget {
                   ),
                   icon: Icon(
                     isInNewWordbook
-                        ? Icons.check_circle_outline
-                        : Icons.add_circle_outline,
+                        ? AppIcons.checkCircle
+                        : AppIcons.addCircle,
                   ),
                   label: Text(
                     isInNewWordbook
@@ -99,19 +105,36 @@ class TargetWordDetailScreen extends ConsumerWidget {
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 112),
+          padding: const EdgeInsets.fromLTRB(
+            AppTokens.s20,
+            AppTokens.s20,
+            AppTokens.s20,
+            112,
+          ),
           children: [
-            _WordHero(word: word, bookTitle: detail.book.title, l10n: l10n),
-            const SizedBox(height: 18),
-            _DefinitionSections(word: word, l10n: l10n),
-            const SizedBox(height: 18),
-            _ExampleSections(word: word, l10n: l10n),
-            const SizedBox(height: 18),
+            AppCard(
+              child: _WordHero(
+                word: word,
+                bookTitle: detail.book.nameFor(
+                  Localizations.localeOf(context).languageCode,
+                ),
+                l10n: l10n,
+              ),
+            ),
+            const SizedBox(height: AppTokens.s16),
+            AppCard(
+              child: _DefinitionSections(word: word, l10n: l10n),
+            ),
+            const SizedBox(height: AppTokens.s16),
+            AppCard(
+              child: _ExampleSections(word: word, l10n: l10n),
+            ),
+            const SizedBox(height: AppTokens.s16),
             WordKnowledgeSections(word: word),
-            const SizedBox(height: 22),
+            const SizedBox(height: AppTokens.s24),
             _WordTags(word: word, progress: progress, l10n: l10n),
-            const SizedBox(height: 22),
-            OutlinedButton.icon(
+            const SizedBox(height: AppTokens.s24),
+            AppSecondaryButton(
               onPressed: () => _toggleIgnored(
                 context,
                 ref,
@@ -120,16 +143,9 @@ class TargetWordDetailScreen extends ConsumerWidget {
                 progress?.isIgnored ?? false,
                 l10n,
               ),
-              icon: Icon(
-                progress?.isIgnored == true
-                    ? Icons.undo_rounded
-                    : Icons.block_outlined,
-              ),
-              label: Text(
-                progress?.isIgnored == true
-                    ? l10n.wordbookResumeLearning
-                    : l10n.wordbookIgnoreEasy,
-              ),
+              label: progress?.isIgnored == true
+                  ? l10n.wordbookResumeLearning
+                  : l10n.wordbookIgnoreEasy,
             ),
             const SizedBox(height: 12),
             _AiWordSupportLink(word: word),
@@ -376,17 +392,17 @@ class _WordHero extends StatelessWidget {
             spacing: 8,
             runSpacing: 8,
             children: [
-              PillLabel(label: word.partOfSpeech),
-              PillLabel(label: bookTitle, color: AppTheme.cyan),
-              PillLabel(
+              AppPill(label: word.partOfSpeech, variant: PillVariant.neutral),
+              AppPill(label: bookTitle, variant: PillVariant.neutral),
+              AppPill(
                 label: l10n.wordbookCurrentPlan,
-                icon: Icons.playlist_add_check_rounded,
-                color: AppTheme.cyan,
+                icon: AppIcons.playlistAddCheck,
+                variant: PillVariant.primary,
               ),
               if (word.tags.isNotEmpty)
-                PillLabel(
+                AppPill(
                   label: l10n.wordbookHighFrequencyDefinition,
-                  color: AppTheme.coral,
+                  variant: PillVariant.primary,
                 ),
             ],
           ),
@@ -449,6 +465,7 @@ class _DefinitionSections extends StatelessWidget {
     final en = word.englishDefinitions.isEmpty
         ? [word.definition]
         : word.englishDefinitions;
+    final ms = word.malayDefinitions;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -469,6 +486,14 @@ class _DefinitionSections extends StatelessWidget {
           values: en,
           l10n: l10n,
         ),
+        if (ms.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          _DefinitionList(
+            title: l10n.wordbookMalayDefinitions,
+            values: ms,
+            l10n: l10n,
+          ),
+        ],
       ],
     );
   }
@@ -502,9 +527,9 @@ class _DefinitionList extends StatelessWidget {
             Text(title, style: theme.textTheme.titleMedium),
             if (highFrequency) ...[
               const SizedBox(width: 8),
-              PillLabel(
+              AppPill(
                 label: l10n.wordbookHighFrequency,
-                color: AppTheme.coral,
+                variant: PillVariant.primary,
               ),
             ],
           ],
@@ -549,7 +574,7 @@ class _ExampleSections extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.format_quote, color: AppTheme.coral),
+                const Icon(AppIcons.formatQuote, color: AppTokens.coral),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -596,19 +621,23 @@ class _WordTags extends StatelessWidget {
       runSpacing: 8,
       children: [
         if (progress != null) ...[
-          PillLabel(
+          AppPill(
             label: displayWordStatus(progress!.status),
-            icon: Icons.psychology_outlined,
-            color: AppTheme.mango,
+            icon: AppIcons.psychology,
+            variant: PillVariant.success,
           ),
-          PillLabel(label: l10n.wordbookMasteryLevel(progress!.masteryLevel)),
+          AppPill(
+            label: l10n.wordbookMasteryLevel(progress!.masteryLevel),
+            variant: PillVariant.neutral,
+          ),
         ],
-        PillLabel(label: word.partOfSpeech),
-        PillLabel(
+        AppPill(label: word.partOfSpeech, variant: PillVariant.neutral),
+        AppPill(
           label: displayDifficulty(word.difficulty),
-          color: AppTheme.coral,
+          variant: PillVariant.primary,
         ),
-        for (final tag in word.tags) PillLabel(label: displayWordTag(tag)),
+        for (final tag in word.tags)
+          AppPill(label: displayWordTag(tag), variant: PillVariant.neutral),
       ],
     );
   }

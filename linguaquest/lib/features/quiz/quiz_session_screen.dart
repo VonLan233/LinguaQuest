@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
+import '../../core/utils/quiz_localization.dart';
 import '../../core/utils/ui_labels.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
+import '../../core/widgets/app_progress_bar.dart';
 import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/word_choice_button.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -27,23 +35,37 @@ class QuizSessionScreen extends ConsumerStatefulWidget {
   ConsumerState<QuizSessionScreen> createState() => _QuizSessionScreenState();
 }
 
-class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
-  static const _feedbackHoldDuration = Duration(milliseconds: 500);
+class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
+    with SingleTickerProviderStateMixin {
+  static const _autoAdvanceDelay = Duration(milliseconds: 1500);
 
+  // Times the 1500ms pause before auto-advancing after a correct answer;
+  // it drives no visual property, only the delay.
+  late final AnimationController _autoAdvanceController;
   final _textController = TextEditingController();
   final List<QuizQuestion> _mistakes = [];
   final Set<String> _mistakeQuestionIds = {};
+  final Set<String> _wrongTries = {};
   int _index = 0;
   int _correct = 0;
   String? _selected;
   bool _checked = false;
   bool _lastCorrect = false;
   bool _isSubmitting = false;
-  bool _feedbackReady = true;
-  int _feedbackHoldToken = 0;
+  bool _lockedCorrect = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _autoAdvanceController = AnimationController(
+      vsync: this,
+      duration: _autoAdvanceDelay,
+    );
+  }
 
   @override
   void dispose() {
+    _autoAdvanceController.dispose();
     _textController.dispose();
     super.dispose();
   }
@@ -67,7 +89,12 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
         body: Center(child: Text(l10n.quizNoQuestions)),
       );
     }
-    final question = lesson.questions[_index];
+    final localeCode = Localizations.localeOf(context).languageCode;
+    final question = localizeQuizQuestion(
+      lesson.questions[_index],
+      _meaningPool(lessons),
+      localeCode,
+    );
     final progress = (_index + 1) / lesson.questions.length;
 
     return PopScope(
@@ -89,30 +116,18 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
               children: [
                 Row(
                   children: [
-                    Expanded(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(999),
-                        child: LinearProgressIndicator(
-                          value: progress,
-                          minHeight: 12,
-                          backgroundColor: AppTheme.progressTrack(context),
-                          valueColor: const AlwaysStoppedAnimation<Color>(
-                            AppTheme.teal,
-                          ),
-                        ),
-                      ),
-                    ),
+                    Expanded(child: AppProgressBar(value: progress)),
                     const SizedBox(width: 12),
-                    PillLabel(
+                    AppPill(
                       label: '${_index + 1}/${lesson.questions.length}',
-                      icon: Icons.flag_outlined,
+                      icon: AppIcons.flag,
                     ),
                     if (isTimed) ...[
                       const SizedBox(width: 8),
-                      PillLabel(
+                      AppPill(
                         label: l10n.quizCampusSpeed,
-                        icon: Icons.timer_outlined,
-                        color: AppTheme.coral,
+                        icon: AppIcons.timer,
+                        variant: PillVariant.streak,
                       ),
                     ],
                   ],
@@ -128,16 +143,17 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
                         _QuestionInput(
                           question: question,
                           selected: _selected,
-                          checked: _checked,
+                          lockedCorrect: _lockedCorrect,
+                          wrongTries: _wrongTries,
                           controller: _textController,
-                          onSelected: (value) =>
-                              setState(() => _selected = value),
+                          onSelected: (value) => _judge(lesson, question, value),
                           onInputChanged: () => setState(() {}),
                         ),
                         if (_checked) ...[
                           const SizedBox(height: 14),
                           _FeedbackPanel(
                             isCorrect: _lastCorrect,
+                            revealAnswer: _lastCorrect,
                             question: question,
                           ),
                         ],
@@ -145,27 +161,17 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
                     ),
                   ),
                 ),
-                FilledButton.icon(
-                  onPressed: _canUsePrimaryAction(question) && !_isSubmitting
-                      ? () => _handlePrimary(lesson, question)
-                      : null,
-                  style: FilledButton.styleFrom(
-                    backgroundColor: _checked && !_lastCorrect
-                        ? Theme.of(context).colorScheme.error
-                        : null,
-                    foregroundColor: _checked && !_lastCorrect
-                        ? Theme.of(context).colorScheme.onError
+                if (question.type == QuizQuestionType.spelling)
+                  AppPrimaryButton(
+                    label: l10n.quizCheck,
+                    icon: AppIcons.check,
+                    onPressed:
+                        _hasAnswer(question) &&
+                            !_lockedCorrect &&
+                            !_isSubmitting
+                        ? () => _submitSpelling(lesson, question)
                         : null,
                   ),
-                  icon: Icon(
-                    _checked
-                        ? Icons.arrow_forward_rounded
-                        : Icons.check_rounded,
-                  ),
-                  label: Text(_checked
-                      ? (_lastCorrect ? l10n.quizContinue : l10n.quizRetry)
-                      : l10n.quizCheck),
-                ),
               ],
             ),
           ),
@@ -199,7 +205,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
             ),
             FilledButton.icon(
               onPressed: () => Navigator.pop(context, true),
-              icon: const Icon(Icons.exit_to_app_rounded),
+              icon: const Icon(AppIcons.exitToApp),
               label: Text(l10n.commonLeave),
             ),
           ],
@@ -221,16 +227,18 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
   String get _fallbackExitRoute =>
       widget.mode == QuizSessionMode.timed ? '/training' : '/learn';
 
+  /// Word pool used to resolve baked (Chinese) option/answer meanings to the
+  /// app locale. Covers the wordbook distractors by spanning every lesson's
+  /// words.
+  Iterable<Word> _meaningPool(List<Lesson> lessons) {
+    return [for (final lesson in lessons) ...lesson.words];
+  }
+
   Lesson? _findLesson(List<Lesson> lessons) {
     for (final lesson in lessons) {
       if (lesson.id == widget.lessonId) return lesson;
     }
     return null;
-  }
-
-  bool _canUsePrimaryAction(QuizQuestion question) {
-    if (_checked) return _feedbackReady;
-    return _hasAnswer(question);
   }
 
   bool _hasAnswer(QuizQuestion question) {
@@ -240,38 +248,72 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
     return _selected != null;
   }
 
-  Future<void> _handlePrimary(Lesson lesson, QuizQuestion question) async {
-    if (!_checked) {
-      final answer = question.type == QuizQuestionType.spelling
-          ? _textController.text.trim()
-          : _selected;
-      final isCorrect = answer?.toLowerCase() == question.answer.toLowerCase();
-      setState(() {
-        _checked = true;
-        _lastCorrect = isCorrect;
-        _feedbackReady = false;
-        if (isCorrect) {
-          if (!_mistakeQuestionIds.contains(question.id)) {
-            _correct++;
-          }
-        } else if (_mistakeQuestionIds.add(question.id)) {
-          _mistakes.add(question);
-        }
-      });
-      _holdFeedback();
-      return;
+  /// Records the first-attempt scoring/mistake semantics for [question] given
+  /// whether this attempt was [isCorrect]. Must mirror the legacy logic exactly.
+  void _recordAttempt(QuizQuestion question, bool isCorrect) {
+    if (isCorrect) {
+      if (!_mistakeQuestionIds.contains(question.id)) {
+        _correct++;
+      }
+    } else if (_mistakeQuestionIds.add(question.id)) {
+      _mistakes.add(question);
     }
+  }
 
-    if (!_lastCorrect) {
-      setState(() {
+  /// Instant judgment for a tapped choice [option].
+  void _judge(Lesson lesson, QuizQuestion question, String option) {
+    if (_lockedCorrect) return;
+    final isCorrect = option.toLowerCase() == question.answer.toLowerCase();
+    setState(() {
+      _recordAttempt(question, isCorrect);
+      _selected = option;
+      _checked = true;
+      _lastCorrect = isCorrect;
+      if (isCorrect) {
+        _lockedCorrect = true;
+      } else {
+        _wrongTries.add(option);
+      }
+    });
+    if (isCorrect) {
+      _autoAdvanceController
+        ..reset()
+        ..forward().whenComplete(() {
+          if (!mounted) return;
+          _advance(lesson, question);
+        });
+    }
+  }
+
+  /// Submit handler for spelling questions (keeps the explicit check button).
+  void _submitSpelling(Lesson lesson, QuizQuestion question) {
+    if (_lockedCorrect) return;
+    final answer = _textController.text.trim();
+    if (answer.isEmpty) return;
+    final isCorrect = answer.toLowerCase() == question.answer.toLowerCase();
+    setState(() {
+      _recordAttempt(question, isCorrect);
+      _checked = true;
+      _lastCorrect = isCorrect;
+      if (isCorrect) {
+        _lockedCorrect = true;
+      } else {
+        // Hide the feedback panel so the still-enabled field invites an
+        // immediate retry (the field stays enabled via !_lockedCorrect).
         _checked = false;
-        _selected = null;
-        _feedbackReady = true;
-        _feedbackHoldToken++;
-      });
-      return;
+      }
+    });
+    if (isCorrect) {
+      _autoAdvanceController
+        ..reset()
+        ..forward().whenComplete(() {
+          if (!mounted) return;
+          _advance(lesson, question);
+        });
     }
+  }
 
+  Future<void> _advance(Lesson lesson, QuizQuestion question) async {
     if (_index == lesson.questions.length - 1) {
       if (_isSubmitting) return;
       final result = LessonResult(
@@ -313,17 +355,9 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
       _selected = null;
       _checked = false;
       _lastCorrect = false;
-      _feedbackReady = true;
-      _feedbackHoldToken++;
+      _lockedCorrect = false;
+      _wrongTries.clear();
       _textController.clear();
-    });
-  }
-
-  void _holdFeedback() {
-    final token = ++_feedbackHoldToken;
-    Future<void>.delayed(_feedbackHoldDuration, () {
-      if (!mounted || token != _feedbackHoldToken) return;
-      setState(() => _feedbackReady = true);
     });
   }
 }
@@ -335,8 +369,7 @@ class _QuestionPromptPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+    return AppCard(
       child: Column(
         children: [
           ImageCueBadge(cue: question.word.imageCue, size: 104),
@@ -352,15 +385,15 @@ class _QuestionPromptPanel extends StatelessWidget {
             runSpacing: 8,
             alignment: WrapAlignment.center,
             children: [
-              PillLabel(
+              AppPill(
                 label: displayQuestionType(question.type),
                 icon: _questionTypeIcon(question.type),
-                color: AppTheme.cyan,
+                variant: PillVariant.primary,
               ),
-              PillLabel(label: question.word.partOfSpeech),
-              PillLabel(
+              AppPill(label: question.word.partOfSpeech),
+              AppPill(
                 label: displayDifficulty(question.word.difficulty),
-                color: AppTheme.coral,
+                variant: PillVariant.streak,
               ),
             ],
           ),
@@ -372,18 +405,18 @@ class _QuestionPromptPanel extends StatelessWidget {
   IconData _questionTypeIcon(QuizQuestionType type) {
     switch (type) {
       case QuizQuestionType.meaningChoice:
-        return Icons.translate_outlined;
+        return AppIcons.translate;
       case QuizQuestionType.chineseChoice:
-        return Icons.swap_horiz_rounded;
+        return AppIcons.swapHoriz;
       case QuizQuestionType.contextChoice:
-        return Icons.format_quote_outlined;
+        return AppIcons.formatQuote;
       case QuizQuestionType.imageChoice:
-        return Icons.image_search_outlined;
+        return AppIcons.imageSearch;
       case QuizQuestionType.listeningWordChoice:
       case QuizQuestionType.listeningMeaningChoice:
-        return Icons.hearing_outlined;
+        return AppIcons.hearing;
       case QuizQuestionType.spelling:
-        return Icons.edit_outlined;
+        return AppIcons.edit;
     }
   }
 }
@@ -392,7 +425,8 @@ class _QuestionInput extends StatelessWidget {
   const _QuestionInput({
     required this.question,
     required this.selected,
-    required this.checked,
+    required this.lockedCorrect,
+    required this.wrongTries,
     required this.controller,
     required this.onSelected,
     required this.onInputChanged,
@@ -400,7 +434,8 @@ class _QuestionInput extends StatelessWidget {
 
   final QuizQuestion question;
   final String? selected;
-  final bool checked;
+  final bool lockedCorrect;
+  final Set<String> wrongTries;
   final TextEditingController controller;
   final ValueChanged<String> onSelected;
   final VoidCallback onInputChanged;
@@ -410,10 +445,10 @@ class _QuestionInput extends StatelessWidget {
     if (question.type == QuizQuestionType.spelling) {
       return TextField(
         controller: controller,
-        enabled: !checked,
+        enabled: !lockedCorrect,
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context).quizInputWord,
-          prefixIcon: const Icon(Icons.edit_outlined),
+          prefixIcon: const Icon(AppIcons.edit),
         ),
         onChanged: (_) => onInputChanged(),
       );
@@ -421,50 +456,14 @@ class _QuestionInput extends StatelessWidget {
 
     return Column(
       children: [
-        for (final option in question.options)
+        for (var i = 0; i < question.options.length; i++)
           Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: SizedBox(
-              width: double.infinity,
-              height: 66,
-              child: OutlinedButton(
-                onPressed: checked ? () {} : () => onSelected(option),
-                style: OutlinedButton.styleFrom(
-                  splashFactory: checked ? NoSplash.splashFactory : null,
-                  overlayColor: checked ? Colors.transparent : null,
-                  enabledMouseCursor: checked ? SystemMouseCursors.basic : null,
-                  backgroundColor: _optionBackground(context, option),
-                  foregroundColor: _optionForeground(context, option),
-                  side: BorderSide(
-                    color: _optionBorder(context, option),
-                    width: selected == option || _isCorrectOption(option)
-                        ? 2
-                        : 1,
-                  ),
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.all(18),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        option,
-                        style: const TextStyle(fontWeight: FontWeight.w900),
-                      ),
-                    ),
-                    if (checked && selected == option)
-                      Icon(
-                        _isCorrectOption(option)
-                            ? Icons.check_circle_outline
-                            : Icons.cancel_outlined,
-                      ),
-                    if (checked &&
-                        selected != option &&
-                        _isCorrectOption(option))
-                      const Icon(Icons.check_circle_outline),
-                  ],
-                ),
-              ),
+            padding: const EdgeInsets.only(bottom: AppTokens.s12),
+            child: WordChoiceButton(
+              letter: String.fromCharCode(65 + i),
+              text: question.options[i],
+              state: _optionState(question.options[i]),
+              onTap: lockedCorrect ? null : () => onSelected(question.options[i]),
             ),
           ),
       ],
@@ -475,50 +474,25 @@ class _QuestionInput extends StatelessWidget {
     return option.toLowerCase() == question.answer.toLowerCase();
   }
 
-  Color _optionBackground(BuildContext context, String option) {
-    if (!checked) {
-      return selected == option
-          ? AppTheme.selectedSurface(context)
-          : Theme.of(context).colorScheme.surface;
-    }
-    if (_isCorrectOption(option)) {
-      return _successColor(context).withValues(alpha: 0.12);
-    }
-    if (selected == option) {
-      return Theme.of(context).colorScheme.error.withValues(alpha: 0.12);
-    }
-    return Theme.of(context).colorScheme.surface;
-  }
-
-  Color _optionForeground(BuildContext context, String option) {
-    if (!checked) return Theme.of(context).colorScheme.onSurface;
-    if (_isCorrectOption(option)) return _successColor(context);
-    if (selected == option) return Theme.of(context).colorScheme.error;
-    return Theme.of(context).colorScheme.onSurface;
-  }
-
-  Color _optionBorder(BuildContext context, String option) {
-    if (!checked) {
-      return selected == option
-          ? Theme.of(context).colorScheme.primary
-          : Theme.of(context).colorScheme.outlineVariant;
-    }
-    if (_isCorrectOption(option)) return _successColor(context);
-    if (selected == option) return Theme.of(context).colorScheme.error;
-    return Theme.of(context).colorScheme.outlineVariant;
-  }
-
-  Color _successColor(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.dark
-        ? Theme.of(context).colorScheme.primary
-        : AppTheme.success;
+  ChoiceState _optionState(String option) {
+    if (lockedCorrect && _isCorrectOption(option)) return ChoiceState.correct;
+    if (wrongTries.contains(option)) return ChoiceState.wrong;
+    return ChoiceState.idle;
   }
 }
 
 class _FeedbackPanel extends StatelessWidget {
-  const _FeedbackPanel({required this.isCorrect, required this.question});
+  const _FeedbackPanel({
+    required this.isCorrect,
+    required this.revealAnswer,
+    required this.question,
+  });
 
   final bool isCorrect;
+
+  /// When false (wrong attempt) the panel only shows a retry hint and hides the
+  /// explanation, correct word and example so retrying stays meaningful.
+  final bool revealAnswer;
   final QuizQuestion question;
 
   @override
@@ -530,8 +504,7 @@ class _FeedbackPanel extends StatelessWidget {
               ? theme.colorScheme.primary
               : AppTheme.success)
         : theme.colorScheme.error;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+    return AppCard(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -543,7 +516,7 @@ class _FeedbackPanel extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: Icon(
-              isCorrect ? Icons.check_rounded : Icons.close_rounded,
+              isCorrect ? AppIcons.check : AppIcons.close,
               color: color,
             ),
           ),
@@ -553,15 +526,15 @@ class _FeedbackPanel extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isCorrect
+                  revealAnswer
                       ? '${l10n.quizCorrect}${question.explanation}'
-                      : '${l10n.quizWrong}${question.explanation}',
+                      : '${l10n.quizWrong}${l10n.quizRetry}',
                   style: TextStyle(color: color),
                 ),
-                if (isCorrect) ...[
+                if (revealAnswer) ...[
                   const SizedBox(height: 8),
                   Text(
-                    '${l10n.quizReinforce}${question.word.word} · ${question.word.meaning}',
+                    '${l10n.quizReinforce}${question.word.word} · ${question.word.primaryDefinitionFor(Localizations.localeOf(context).languageCode)}',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                       fontWeight: FontWeight.w800,

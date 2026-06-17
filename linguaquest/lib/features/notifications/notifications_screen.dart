@@ -3,11 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/date_formatting.dart';
-import '../../core/widgets/empty_state.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/mascot_empty_state.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/app_notification.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -73,24 +77,20 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                   ? ListView(
                       padding: const EdgeInsets.fromLTRB(20, 12, 20, 88),
                       children: [
-                        EmptyState(
-                          icon: Icons.notifications_none_outlined,
+                        MascotEmptyState(
                           title: l10n.notificationEmptyTitle,
                           message: _filter == _NotificationFilter.unread
                               ? l10n.notificationEmptyUnread
                               : l10n.notificationEmptyAll,
-                          action: OutlinedButton.icon(
+                          action: AppSecondaryButton(
+                            label: l10n.notificationBackHome,
+                            icon: AppIcons.home,
                             onPressed: () => context.go('/home'),
-                            icon: const Icon(Icons.home_outlined),
-                            label: Text(l10n.notificationBackHome),
                           ),
                         ),
                       ],
                     )
-                  : _NotificationList(
-                      notifications: notifications,
-                      l10n: l10n,
-                    ),
+                  : _NotificationList(notifications: notifications, l10n: l10n),
             ),
           ],
         ),
@@ -184,10 +184,7 @@ class _NotificationFilterTab extends StatelessWidget {
 }
 
 class _NotificationList extends StatelessWidget {
-  const _NotificationList({
-    required this.notifications,
-    required this.l10n,
-  });
+  const _NotificationList({required this.notifications, required this.l10n});
 
   final List<AppNotification> notifications;
   final AppLocalizations l10n;
@@ -197,25 +194,15 @@ class _NotificationList extends StatelessWidget {
     return ListView.separated(
       padding: const EdgeInsets.fromLTRB(20, 4, 20, 88),
       itemCount: notifications.length,
-      itemBuilder: (context, index) => _NotificationRow(
-        notification: notifications[index],
-        l10n: l10n,
-      ),
-      separatorBuilder: (context, index) => Divider(
-        height: 10,
-        color: Theme.of(
-          context,
-        ).colorScheme.outlineVariant.withValues(alpha: 0.7),
-      ),
+      itemBuilder: (context, index) =>
+          _NotificationRow(notification: notifications[index], l10n: l10n),
+      separatorBuilder: (context, index) => const SizedBox(height: 10),
     );
   }
 }
 
 class _NotificationRow extends ConsumerWidget {
-  const _NotificationRow({
-    required this.notification,
-    required this.l10n,
-  });
+  const _NotificationRow({required this.notification, required this.l10n});
 
   final AppNotification notification;
   final AppLocalizations l10n;
@@ -224,82 +211,71 @@ class _NotificationRow extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final color = _notificationColor(notification.type);
-    return Material(
-      color: Colors.transparent,
-      borderRadius: BorderRadius.circular(12),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () => _open(context, ref),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              IconCueBadge(
-                icon: _notificationIcon(notification.type),
-                color: color,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
+    return AppCard(
+      padding: const EdgeInsets.all(12),
+      onTap: () => _open(context, ref),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          IconCueBadge(
+            icon: _notificationIcon(notification.type),
+            color: color,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            notification.title,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: notification.isRead
-                                  ? FontWeight.w700
-                                  : FontWeight.w900,
-                            ),
-                          ),
+                    Expanded(
+                      child: Text(
+                        localizedNotificationTitle(notification, l10n),
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: notification.isRead
+                              ? FontWeight.w700
+                              : FontWeight.w900,
                         ),
-                        if (!notification.isRead) ...[
-                          const SizedBox(width: 8),
-                          _UnreadDot(color: color),
-                        ],
-                      ],
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      notification.body,
-                      style: TextStyle(
-                        color: theme.colorScheme.onSurfaceVariant,
                       ),
                     ),
-                    const SizedBox(height: 7),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 6,
-                      children: [
-                        PillLabel(
-                          label: appNotificationTypeLabel(
-                            notification.type,
-                            l10n: l10n,
-                          ),
-                          icon: Icons.label_outline,
-                          color: color,
-                        ),
-                        PillLabel(
-                          label: formatFullDate(
-                            notification.createdAt.toLocal(),
-                          ),
-                          icon: Icons.schedule_outlined,
-                          color: AppTheme.cyan,
-                        ),
-                      ],
+                    if (!notification.isRead) ...[
+                      const SizedBox(width: 8),
+                      _UnreadDot(color: color),
+                    ],
+                  ],
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  localizedNotificationBody(notification, l10n),
+                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                ),
+                const SizedBox(height: 7),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 6,
+                  children: [
+                    AppPill(
+                      label: appNotificationTypeLabel(
+                        notification.type,
+                        l10n: l10n,
+                      ),
+                      variant: _notificationPillVariant(notification.type),
+                      icon: AppIcons.label,
+                    ),
+                    AppPill(
+                      label: formatFullDate(notification.createdAt.toLocal()),
+                      variant: PillVariant.neutral,
+                      icon: AppIcons.schedule,
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(width: 6),
-              const Icon(Icons.chevron_right_rounded),
-            ],
+              ],
+            ),
           ),
-        ),
+          const SizedBox(width: 6),
+          const Icon(AppIcons.chevronRight),
+        ],
       ),
     );
   }
@@ -375,13 +351,13 @@ enum _NotificationFilter {
 IconData _notificationIcon(AppNotificationType type) {
   switch (type) {
     case AppNotificationType.learningReminder:
-      return Icons.school_outlined;
+      return AppIcons.school;
     case AppNotificationType.reviewDue:
-      return Icons.replay_outlined;
+      return AppIcons.replay;
     case AppNotificationType.checkInReminder:
-      return Icons.local_fire_department_outlined;
+      return AppIcons.localFireDepartment;
     case AppNotificationType.activity:
-      return Icons.emoji_events_outlined;
+      return AppIcons.emojiEvents;
   }
 }
 
@@ -395,5 +371,18 @@ Color _notificationColor(AppNotificationType type) {
       return AppTheme.coral;
     case AppNotificationType.activity:
       return AppTheme.cyan;
+  }
+}
+
+PillVariant _notificationPillVariant(AppNotificationType type) {
+  switch (type) {
+    case AppNotificationType.learningReminder:
+      return PillVariant.success;
+    case AppNotificationType.reviewDue:
+      return PillVariant.streak;
+    case AppNotificationType.checkInReminder:
+      return PillVariant.streak;
+    case AppNotificationType.activity:
+      return PillVariant.primary;
   }
 }

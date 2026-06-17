@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
 import '../../core/utils/ui_labels.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/mascot_empty_state.dart';
+import '../../core/widgets/mascot_image.dart';
 import '../../core/widgets/section_header.dart';
+import '../../core/widgets/stat_tile.dart';
 import '../../data/models/custom_word.dart';
 import '../../l10n/generated/app_localizations.dart';
 
@@ -16,6 +24,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final localeCode = Localizations.localeOf(context).languageCode;
     final state = ref.watch(appControllerProvider);
     final user = state.user;
     final currentBook = state.currentWordBook;
@@ -43,22 +52,16 @@ class HomeScreen extends ConsumerWidget {
           children: [
             Tooltip(
               message: l10n.homePersonalSpace,
-              child: GestureDetector(
+              child: InkWell(
+                borderRadius: BorderRadius.circular(999),
                 onTap: () => context.go('/profile'),
-                child: CircleAvatar(
-                  radius: 24,
-                  backgroundColor: Theme.of(
-                    context,
-                  ).colorScheme.primaryContainer,
-                  child: Icon(
-                    Icons.person_rounded,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    size: 28,
-                  ),
+                child: const Padding(
+                  padding: EdgeInsets.all(2),
+                  child: MascotImage(size: 40),
                 ),
               ),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: AppTokens.s8),
             Expanded(
               child: SizedBox(
                 height: 48,
@@ -68,16 +71,18 @@ class HomeScreen extends ConsumerWidget {
                   child: InputDecorator(
                     decoration: InputDecoration(
                       isDense: true,
-                      prefixIcon: const Icon(Icons.search),
+                      prefixIcon: const Icon(AppIcons.search),
                       hintText: l10n.homeSearchHint,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 8),
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: AppTokens.s8,
+                      ),
                     ),
                     child: const SizedBox.shrink(),
                   ),
                 ),
               ),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: AppTokens.s8),
             _NotificationBellButton(
               unreadCount: state.unreadNotificationCount,
               onPressed: () => context.push('/notifications'),
@@ -85,136 +90,137 @@ class HomeScreen extends ConsumerWidget {
             ),
           ],
         ),
-        const SizedBox(height: 14),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: _DailyFocusHeader(
-              streak: user?.streak ?? 0,
-              target:
-                  currentBook?.title ??
-                  displayTarget(user?.targetExam, l10n: l10n),
-              level: state.isStudyPlanPaused
-                  ? l10n.homePlanPaused
-                  : displayLevel(user?.level, l10n: l10n),
-              todayWork: todayWork,
-              totalWork: totalWork,
-              progress: dailyProgress,
-              isPaused: state.isStudyPlanPaused,
-              l10n: l10n,
-            ),
+        const SizedBox(height: AppTokens.s16),
+        AppCard(
+          padding: const EdgeInsets.all(AppTokens.s24),
+          child: _DailyFocusHeader(
+            streak: user?.streak ?? 0,
+            target:
+                currentBook?.nameFor(localeCode) ??
+                displayTarget(user?.targetExam, l10n: l10n),
+            level: state.isStudyPlanPaused
+                ? l10n.homePlanPaused
+                : displayLevel(user?.level, l10n: l10n),
+            todayWork: todayWork,
+            totalWork: totalWork,
+            progress: dailyProgress,
+            isPaused: state.isStudyPlanPaused,
+            l10n: l10n,
           ),
         ),
-        const SizedBox(height: 12),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            child: _HomeLearningSignals(
-              completedWords: state.completedLearningWords,
-              masteredWords: state.masteredReviewWords,
-              dueWords: state.dueWords.length,
-              l10n: l10n,
-            ),
+        const SizedBox(height: AppTokens.s24),
+        AppCard(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppTokens.s16,
+            vertical: AppTokens.s16,
+          ),
+          child: _HomeLearningSignals(
+            completedWords: state.completedLearningWords,
+            masteredWords: state.masteredReviewWords,
+            dueWords: state.dueWords.length,
+            l10n: l10n,
           ),
         ),
-        const SizedBox(height: 12),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: _DailyTaskPanel(
-              currentSection:
-                  currentLesson?.section ??
-                  currentBook?.title ??
-                  displayTarget(user?.targetExam ?? '雅思核心词汇', l10n: l10n),
-              dailyGoal: dailyGoal,
-              dueCount: dueCount,
-              isPaused: state.isStudyPlanPaused,
-              canStartNew:
-                  currentLesson != null &&
-                  !pathComplete &&
-                  !state.isStudyPlanPaused,
-              onOpenPlan: () => context.push('/settings/study-plan'),
-              onNewStudy: () => context.push('/study/new'),
-              onReview: () => context.push('/study/review'),
-            ),
+        const SizedBox(height: AppTokens.s12),
+        AppCard(
+          child: _DailyTaskPanel(
+            currentSection:
+                currentLesson?.section ??
+                currentBook?.nameFor(localeCode) ??
+                displayTarget(user?.targetExam ?? '雅思核心词汇', l10n: l10n),
+            dailyGoal: dailyGoal,
+            dueCount: dueCount,
+            isPaused: state.isStudyPlanPaused,
+            canStartNew:
+                currentLesson != null &&
+                !pathComplete &&
+                !state.isStudyPlanPaused,
+            onOpenPlan: () => context.push('/settings/study-plan'),
+            onNewStudy: () => context.push('/study/new'),
+            onReview: () => context.push('/study/review'),
           ),
         ),
-        const SizedBox(height: 12),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: _HomeShortcutList(
-              actions: [
-                _HomeShortcutData(
-                  icon: Icons.menu_book_outlined,
-                  title: l10n.homeWordbookShortcut,
-                  subtitle: currentBook == null
-                      ? '${state.totalLearningWords} ${l10n.commonWords}'
-                      : '${currentBook.totalWords} ${l10n.commonWords}',
-                  onTap: () => context.push('/wordbook'),
+        const SizedBox(height: AppTokens.s20),
+        AppCard(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppTokens.s16,
+            vertical: AppTokens.s8,
+          ),
+          child: _HomeShortcutList(
+            actions: [
+              _HomeShortcutData(
+                icon: AppIcons.menuBook,
+                title: l10n.homeWordbookShortcut,
+                subtitle: currentBook == null
+                    ? '${state.totalLearningWords} ${l10n.commonWords}'
+                    : '${currentBook.totalWords} ${l10n.commonWords}',
+                onTap: () => context.push('/wordbook'),
+              ),
+              _HomeShortcutData(
+                icon: AppIcons.article,
+                title: l10n.homeDailyArticle,
+                subtitle: l10n.homeDailyArticleSubtitle,
+                onTap: () => context.go('/ai-learning'),
+              ),
+              _HomeShortcutData(
+                icon: AppIcons.route,
+                title: l10n.homeLearningPath,
+                subtitle:
+                    currentBook?.nameFor(localeCode) ??
+                    l10n.homeLearningPathSubtitle,
+                onTap: () => context.push('/learn'),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: AppTokens.s20),
+        AppCard(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppTokens.s16,
+            vertical: AppTokens.s8,
+          ),
+          child: _HomeInfoLink(
+            cue: wordOfDay?.imageCue ?? '🌟',
+            title: l10n.homeWordOfDay,
+            body: wordOfDay == null
+                ? l10n.homeOpenWordCard
+                : '${wordOfDay.word} · ${wordOfDay.primaryDefinitionFor(Localizations.localeOf(context).languageCode)}',
+            onTap: () => wordOfDay == null
+                ? context.push('/wordbook')
+                : context.push('/wordbook/${wordOfDay.id}'),
+          ),
+        ),
+        const SizedBox(height: AppTokens.s24),
+        AppCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SectionHeader(
+                title: l10n.homeWeakWords,
+                subtitle: state.weakWords.isEmpty
+                    ? l10n.homeNoWeakWords
+                    : l10n.homeWeakWordsReview,
+                trailing: TextButton(
+                  onPressed: () => context.push('/study/review'),
+                  child: Text(l10n.commonReview),
                 ),
-                _HomeShortcutData(
-                  icon: Icons.article_outlined,
-                  title: l10n.homeDailyArticle,
-                  subtitle: l10n.homeDailyArticleSubtitle,
-                  onTap: () => context.go('/ai-learning'),
-                ),
-                _HomeShortcutData(
-                  icon: Icons.route_outlined,
-                  title: l10n.homeLearningPath,
-                  subtitle: currentBook?.title ?? l10n.homeLearningPathSubtitle,
-                  onTap: () => context.push('/learn'),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 12),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: _HomeInfoLink(
-              cue: wordOfDay?.imageCue ?? '🌟',
-              title: l10n.homeWordOfDay,
-              body: wordOfDay == null
-                  ? l10n.homeOpenWordCard
-                  : '${wordOfDay.word} · ${wordOfDay.meaning}',
-              onTap: () => wordOfDay == null
-                  ? context.push('/wordbook')
-                  : context.push('/wordbook/${wordOfDay.id}'),
-            ),
-          ),
-        ),
-        const SizedBox(height: 16),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SectionHeader(
-                  title: l10n.homeWeakWords,
-                  subtitle: state.weakWords.isEmpty
-                      ? l10n.homeNoWeakWords
-                      : l10n.homeWeakWordsReview,
-                  trailing: TextButton(
+              ),
+              if (state.weakWords.isEmpty)
+                MascotEmptyState(
+                  title: l10n.homeNoWeakWords,
+                  message: l10n.homeWeakWordsEmptyHint,
+                  action: AppSecondaryButton(
+                    label: l10n.commonReview,
                     onPressed: () => context.push('/study/review'),
-                    child: Text(l10n.commonReview),
                   ),
-                ),
-                if (state.weakWords.isEmpty)
-                  _SoftPanel(
-                    icon: Icons.check_circle_outline,
-                    text: l10n.homeWeakWordsEmptyHint,
-                  )
-                else ...[
-                  const SizedBox(height: 8),
-                  ...state.weakWords
-                      .take(3)
-                      .map((word) => _WeakWordLink(word: word)),
-                ],
+                )
+              else ...[
+                const SizedBox(height: 8),
+                ...state.weakWords
+                    .take(3)
+                    .map((word) => _WeakWordLink(word: word)),
               ],
-            ),
+            ],
           ),
         ),
       ],
@@ -241,7 +247,7 @@ class _NotificationBellButton extends StatelessWidget {
         QuestIconButton(
           tooltip: l10n.homeNotifications,
           onPressed: onPressed,
-          icon: Icons.notifications_outlined,
+          icon: AppIcons.notifications,
           color: AppTheme.coral,
         ),
         if (unreadCount > 0)
@@ -289,77 +295,29 @@ class _HomeLearningSignals extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: _HomeSignal(
+          child: StatTile(
             label: l10n.homeLearned,
             value: '$completedWords',
-            icon: Icons.school_outlined,
-            color: AppTheme.cyan,
+            icon: AppIcons.school,
+            accent: AppTheme.cyan,
           ),
         ),
         const _HomeSignalDivider(),
         Expanded(
-          child: _HomeSignal(
+          child: StatTile(
             label: l10n.homeMastered,
             value: '$masteredWords',
-            icon: Icons.verified_outlined,
-            color: AppTheme.success,
+            icon: AppIcons.verified,
+            accent: AppTheme.success,
           ),
         ),
         const _HomeSignalDivider(),
         Expanded(
-          child: _HomeSignal(
+          child: StatTile(
             label: l10n.homeReviewLabel,
             value: '$dueWords',
-            icon: Icons.replay,
-            color: AppTheme.mango,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _HomeSignal extends StatelessWidget {
-  const _HomeSignal({
-    required this.label,
-    required this.value,
-    required this.icon,
-    required this.color,
-  });
-
-  final String label;
-  final String value;
-  final IconData icon;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, color: color, size: 20),
-        const SizedBox(width: 6),
-        Flexible(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                value,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.titleMedium,
-              ),
-              Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ],
+            icon: AppIcons.replay,
+            accent: AppTheme.mango,
           ),
         ),
       ],
@@ -405,7 +363,7 @@ class _HomeInfoLink extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: AppTokens.s8),
           child: Row(
             children: [
               ImageCueBadge(cue: cue, size: 52),
@@ -425,7 +383,7 @@ class _HomeInfoLink extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right_rounded),
+              const Icon(AppIcons.chevronRight),
             ],
           ),
         ),
@@ -461,7 +419,7 @@ class _DailyTaskPanel extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final hasReview = dueCount > 0;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+      padding: const EdgeInsets.symmetric(vertical: AppTokens.s4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -473,30 +431,29 @@ class _DailyTaskPanel extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           if (isPaused)
-            OutlinedButton.icon(
+            AppPrimaryButton(
               onPressed: onOpenPlan,
-              icon: const Icon(Icons.play_circle_outline),
-              label: Text(l10n.homeResumePlan),
+              icon: AppIcons.playCircle,
+              label: l10n.homeResumePlan,
             )
           else
             Row(
               children: [
                 Expanded(
-                  child: FilledButton.icon(
+                  child: AppPrimaryButton(
                     onPressed: canStartNew
                         ? onNewStudy
                         : (hasReview ? onReview : null),
-                    icon: const Icon(Icons.play_arrow_rounded),
-                    label: Text(l10n.homeStartLearning),
+                    icon: AppIcons.playArrow,
+                    label: l10n.homeStartLearning,
                   ),
                 ),
                 if (hasReview) ...[
                   const SizedBox(width: 12),
                   Expanded(
-                    child: OutlinedButton.icon(
+                    child: AppSecondaryButton(
                       onPressed: onReview,
-                      icon: const Icon(Icons.replay_rounded),
-                      label: Text(l10n.homeReviewOnly),
+                      label: l10n.homeReviewOnly,
                     ),
                   ),
                 ],
@@ -505,7 +462,7 @@ class _DailyTaskPanel extends StatelessWidget {
           const SizedBox(height: 10),
           TextButton.icon(
             onPressed: onOpenPlan,
-            icon: const Icon(Icons.tune_rounded),
+            icon: const Icon(AppIcons.tune),
             label: Text(l10n.homeAdjustPlan),
           ),
         ],
@@ -542,18 +499,17 @@ class _DailyFocusHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Wrap(
-          spacing: 8,
-          runSpacing: 8,
+          spacing: AppTokens.s8,
+          runSpacing: AppTokens.s8,
           children: [
-            PillLabel(
+            AppPill(
               label: '$target · $level',
-              icon: Icons.track_changes_outlined,
-              color: theme.colorScheme.secondary,
+              icon: AppIcons.trackChanges,
             ),
-            PillLabel(
+            AppPill(
+              variant: PillVariant.streak,
+              icon: AppIcons.localFireDepartment,
               label: l10n.homeStreakDays(streak),
-              icon: Icons.local_fire_department_outlined,
-              color: AppTheme.mango,
             ),
           ],
         ),
@@ -596,7 +552,7 @@ class _DailyProgressRing extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           SizedBox.square(
-            dimension: 82,
+            dimension: 96,
             child: CircularProgressIndicator(
               value: progress.clamp(0.0, 1.0),
               strokeWidth: 8,
@@ -641,12 +597,7 @@ class _HomeShortcutList extends StatelessWidget {
         for (var index = 0; index < actions.length; index++) ...[
           _HomeShortcutLink(data: actions[index]),
           if (index != actions.length - 1)
-            Divider(
-              height: 10,
-              color: Theme.of(
-                context,
-              ).colorScheme.outlineVariant.withValues(alpha: 0.7),
-            ),
+            const SizedBox(height: AppTokens.s12),
         ],
       ],
     );
@@ -668,7 +619,7 @@ class _HomeShortcutLink extends StatelessWidget {
       child: InkWell(
         onTap: data.onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 7),
+          padding: const EdgeInsets.symmetric(vertical: AppTokens.s8),
           child: Row(
             children: [
               Icon(data.icon, color: theme.colorScheme.primary),
@@ -678,7 +629,7 @@ class _HomeShortcutLink extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(data.title, style: theme.textTheme.titleMedium),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: AppTokens.s4),
                     Text(
                       data.subtitle,
                       maxLines: 1,
@@ -690,7 +641,7 @@ class _HomeShortcutLink extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right_rounded),
+              const Icon(AppIcons.chevronRight),
             ],
           ),
         ),
@@ -753,38 +704,11 @@ class _WeakWordLink extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Icon(Icons.chevron_right_rounded),
+                const Icon(AppIcons.chevronRight),
               ],
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _SoftPanel extends StatelessWidget {
-  const _SoftPanel({required this.icon, required this.text});
-
-  final IconData icon;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(
-          context,
-        ).colorScheme.primaryContainer.withValues(alpha: 0.35),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: Theme.of(context).colorScheme.primary),
-          const SizedBox(width: 12),
-          Expanded(child: Text(text)),
-        ],
       ),
     );
   }

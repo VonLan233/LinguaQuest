@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/state/app_controller.dart';
+import 'package:linguaquest/core/theme/app_icons.dart';
+
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_progress_bar.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/section_header.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class ProgressAnalyticsScreen extends ConsumerWidget {
   const ProgressAnalyticsScreen({super.key});
@@ -23,19 +28,20 @@ class ProgressAnalyticsScreen extends ConsumerWidget {
       (sum, word) => sum + word.correctCount,
     );
     final accuracy = attempts == 0 ? 0 : (correct / attempts * 100).round();
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/quest'),
-        title: const Text('学习分析'),
+        title: Text(l10n.questAnalytics),
       ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            const SectionHeader(
-              title: '学习数据',
-              subtitle: '根据生词卡和复习记录生成的首版分析视图。',
+            SectionHeader(
+              title: l10n.analyticsDataTitle,
+              subtitle: l10n.analyticsDataSubtitle,
             ),
             const SizedBox(height: 16),
             _ProgressSignals(
@@ -52,7 +58,7 @@ class ProgressAnalyticsScreen extends ConsumerWidget {
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 10),
-            LinearProgressIndicator(
+            AppProgressBar(
               value: reviewWords.isEmpty
                   ? 0
                   : (state.dueWords.length / reviewWords.length).clamp(
@@ -61,7 +67,12 @@ class ProgressAnalyticsScreen extends ConsumerWidget {
                     ),
             ),
             const SizedBox(height: 8),
-            Text('${reviewWords.length} 个学习资产中有 ${state.dueWords.length} 个到期'),
+            Text(
+              l10n.analyticsAssetsDue(
+                state.dueWords.length,
+                reviewWords.length,
+              ),
+            ),
           ],
         ),
       ),
@@ -84,44 +95,47 @@ class _ProgressSignals extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: _ProgressSignal(
-            label: '生词卡',
-            value: '$cardCount',
-            icon: Icons.style_outlined,
-            color: AppTheme.cyan,
+    final l10n = AppLocalizations.of(context);
+    return AppCard(
+      child: Row(
+        children: [
+          Expanded(
+            child: _ProgressSignal(
+              label: l10n.analyticsCards,
+              value: '$cardCount',
+              icon: AppIcons.style,
+              color: AppTheme.cyan,
+            ),
           ),
-        ),
-        const _ProgressSignalDivider(),
-        Expanded(
-          child: _ProgressSignal(
-            label: '已掌握',
-            value: '$masteredCount',
-            icon: Icons.verified_outlined,
-            color: AppTheme.success,
+          const _ProgressSignalDivider(),
+          Expanded(
+            child: _ProgressSignal(
+              label: l10n.homeMastered,
+              value: '$masteredCount',
+              icon: AppIcons.verified,
+              color: AppTheme.success,
+            ),
           ),
-        ),
-        const _ProgressSignalDivider(),
-        Expanded(
-          child: _ProgressSignal(
-            label: '训练 XP',
-            value: '$trainingXp',
-            icon: Icons.sports_esports_outlined,
-            color: AppTheme.mango,
+          const _ProgressSignalDivider(),
+          Expanded(
+            child: _ProgressSignal(
+              label: l10n.analyticsTrainingXp,
+              value: '$trainingXp',
+              icon: AppIcons.sportsEsports,
+              color: AppTheme.mango,
+            ),
           ),
-        ),
-        const _ProgressSignalDivider(),
-        Expanded(
-          child: _ProgressSignal(
-            label: '正确率',
-            value: '$accuracy%',
-            icon: Icons.insights_outlined,
-            color: AppTheme.coral,
+          const _ProgressSignalDivider(),
+          Expanded(
+            child: _ProgressSignal(
+              label: l10n.analyticsAccuracy,
+              value: '$accuracy%',
+              icon: AppIcons.insights,
+              color: AppTheme.coral,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

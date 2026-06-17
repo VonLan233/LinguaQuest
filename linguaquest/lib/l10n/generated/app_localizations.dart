@@ -529,7 +529,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Short lessons, visual memory cards, and smart review help you steadily build English vocabulary.'**
+  /// **'Short lessons, visual memory cards, and smart review help you build vocabulary steadily.'**
   String get onboardingSubtitle;
 
   /// No description provided for @onboardingTagline.
@@ -537,6 +537,612 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Level up daily like a game'**
   String get onboardingTagline;
+
+  /// No description provided for @onboardingTagWorld.
+  ///
+  /// In en, this message translates to:
+  /// **'Word Quest World'**
+  String get onboardingTagWorld;
+
+  /// No description provided for @onboardingTagStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily streak'**
+  String get onboardingTagStreak;
+
+  /// No description provided for @splashTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Image word cards, clear paths, smart review.'**
+  String get splashTagline;
+
+  /// No description provided for @studyNewScreenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New words'**
+  String get studyNewScreenTitle;
+
+  /// No description provided for @studyWordbookPath.
+  ///
+  /// In en, this message translates to:
+  /// **'Wordbook path'**
+  String get studyWordbookPath;
+
+  /// No description provided for @studyEnterCards.
+  ///
+  /// In en, this message translates to:
+  /// **'Start word cards'**
+  String get studyEnterCards;
+
+  /// No description provided for @studyNewPackTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s new word pack'**
+  String get studyNewPackTitle;
+
+  /// No description provided for @studyNewPackDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Self-assess first, then view cards, then context questions. Formal review is queued separately.'**
+  String get studyNewPackDesc;
+
+  /// No description provided for @studyNoNewWords.
+  ///
+  /// In en, this message translates to:
+  /// **'No new words'**
+  String get studyNoNewWords;
+
+  /// No description provided for @studyNewPausedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Study plan paused. Resume to continue today\'s new words.'**
+  String get studyNewPausedHint;
+
+  /// No description provided for @studyNewEmptyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'The current wordbook is finished, or the plan isn\'t generated yet. Check the wordbook path for the next set.'**
+  String get studyNewEmptyHint;
+
+  /// No description provided for @studyOpenWordbookPath.
+  ///
+  /// In en, this message translates to:
+  /// **'Open wordbook path'**
+  String get studyOpenWordbookPath;
+
+  /// No description provided for @studyTodayLearnCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn {count} new words today'**
+  String studyTodayLearnCount(Object count);
+
+  /// No description provided for @studyNewNoLessonHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish review before adding new words; keeping a rhythm beats piling on tasks.'**
+  String get studyNewNoLessonHint;
+
+  /// No description provided for @studyNewPausedResume.
+  ///
+  /// In en, this message translates to:
+  /// **'Study plan paused; resume to continue from {section}.'**
+  String studyNewPausedResume(Object section);
+
+  /// No description provided for @studyRecallKnown.
+  ///
+  /// In en, this message translates to:
+  /// **'Know it'**
+  String get studyRecallKnown;
+
+  /// No description provided for @studyRecallFuzzy.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsure'**
+  String get studyRecallFuzzy;
+
+  /// No description provided for @studyRecallUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t know'**
+  String get studyRecallUnknown;
+
+  /// No description provided for @studyStepSelfAssess.
+  ///
+  /// In en, this message translates to:
+  /// **'Self-assess'**
+  String get studyStepSelfAssess;
+
+  /// No description provided for @studyStepSelfAssessDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce wasted repetition'**
+  String get studyStepSelfAssessDesc;
+
+  /// No description provided for @studyStepCards.
+  ///
+  /// In en, this message translates to:
+  /// **'Word cards'**
+  String get studyStepCards;
+
+  /// No description provided for @studyStepCardsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in meaning and examples'**
+  String get studyStepCardsDesc;
+
+  /// No description provided for @studyStepContext.
+  ///
+  /// In en, this message translates to:
+  /// **'Context'**
+  String get studyStepContext;
+
+  /// No description provided for @studyStepContextDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Active recall'**
+  String get studyStepContextDesc;
+
+  /// No description provided for @mixedManageReviewQueue.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage review queue'**
+  String get mixedManageReviewQueue;
+
+  /// No description provided for @mixedReviewRatio.
+  ///
+  /// In en, this message translates to:
+  /// **'Review {percent}%'**
+  String mixedReviewRatio(Object percent);
+
+  /// No description provided for @mixedTitleNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s new word pack'**
+  String get mixedTitleNew;
+
+  /// No description provided for @mixedTitleReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick review'**
+  String get mixedTitleReview;
+
+  /// No description provided for @mixedTitleMixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s mixed pack'**
+  String get mixedTitleMixed;
+
+  /// No description provided for @mixedSaveReviewFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to save the review record for now'**
+  String get mixedSaveReviewFailed;
+
+  /// No description provided for @mixedUnsureOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsure {index}'**
+  String mixedUnsureOption(Object index);
+
+  /// No description provided for @mixedSaveProgressTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Save this progress?'**
+  String get mixedSaveProgressTitle;
+
+  /// No description provided for @mixedSaveProgressBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved review records are kept; saving records the questions completed this time, and unfinished words return to the pack next time.'**
+  String get mixedSaveProgressBody;
+
+  /// No description provided for @mixedContinueStudy.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep studying'**
+  String get mixedContinueStudy;
+
+  /// No description provided for @mixedLeaveWithoutSaving.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave without saving'**
+  String get mixedLeaveWithoutSaving;
+
+  /// No description provided for @mixedSaveAndLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save and leave'**
+  String get mixedSaveAndLeave;
+
+  /// No description provided for @mixedSaveStudyFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to save study progress for now'**
+  String get mixedSaveStudyFailed;
+
+  /// No description provided for @mixedSelfAssessHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Self-assess first; the app adjusts today\'s repetitions'**
+  String get mixedSelfAssessHint;
+
+  /// No description provided for @mixedEnterRecognition.
+  ///
+  /// In en, this message translates to:
+  /// **'Start recognition'**
+  String get mixedEnterRecognition;
+
+  /// No description provided for @mixedAddLaterRecall.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to later recall'**
+  String get mixedAddLaterRecall;
+
+  /// No description provided for @mixedReviewQuickAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Review quick answer'**
+  String get mixedReviewQuickAnswer;
+
+  /// No description provided for @mixedFeedbackCorrect.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct, on to the next one.'**
+  String get mixedFeedbackCorrect;
+
+  /// No description provided for @mixedFeedbackWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong; check the knowledge card, it will appear again later.'**
+  String get mixedFeedbackWrong;
+
+  /// No description provided for @mixedFeedbackRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Not yet. Pick the correct answer before continuing.'**
+  String get mixedFeedbackRetry;
+
+  /// No description provided for @mixedShortRecallPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Short recall: what does {word} mean?'**
+  String mixedShortRecallPrompt(Object word);
+
+  /// No description provided for @mixedMeaningPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'What is the meaning of {word}?'**
+  String mixedMeaningPrompt(Object word);
+
+  /// No description provided for @mixedStepRecognition.
+  ///
+  /// In en, this message translates to:
+  /// **'Recognition'**
+  String get mixedStepRecognition;
+
+  /// No description provided for @mixedStepShortRecall.
+  ///
+  /// In en, this message translates to:
+  /// **'Short recall'**
+  String get mixedStepShortRecall;
+
+  /// No description provided for @mixedStepDueReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Due review'**
+  String get mixedStepDueReview;
+
+  /// No description provided for @mixedStepKnowledge.
+  ///
+  /// In en, this message translates to:
+  /// **'Knowledge card'**
+  String get mixedStepKnowledge;
+
+  /// No description provided for @mixedCompleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s pack complete'**
+  String get mixedCompleteTitle;
+
+  /// No description provided for @mixedNoContentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to study today'**
+  String get mixedNoContentTitle;
+
+  /// No description provided for @mixedCompleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Mistakes have been recycled this round; your answers and time are saved to the study log.'**
+  String get mixedCompleteBody;
+
+  /// No description provided for @mixedNoContentBody.
+  ///
+  /// In en, this message translates to:
+  /// **'No new words or due reviews right now.'**
+  String get mixedNoContentBody;
+
+  /// No description provided for @mixedSaveAndHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Save and go home'**
+  String get mixedSaveAndHome;
+
+  /// No description provided for @questCenterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Task center'**
+  String get questCenterTitle;
+
+  /// No description provided for @questCenterSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Earn points after study actions; also view rankings, analytics, and class learning.'**
+  String get questCenterSubtitle;
+
+  /// No description provided for @questDailyTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily tasks'**
+  String get questDailyTask;
+
+  /// No description provided for @questDailyTaskBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish a lesson and review 5 due words.'**
+  String get questDailyTaskBody;
+
+  /// No description provided for @questAchievements.
+  ///
+  /// In en, this message translates to:
+  /// **'Achievements'**
+  String get questAchievements;
+
+  /// No description provided for @questAchievementsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Streaks, 100 words learned, first perfect lesson, and more.'**
+  String get questAchievementsBody;
+
+  /// No description provided for @questAchievementsValue.
+  ///
+  /// In en, this message translates to:
+  /// **'3'**
+  String get questAchievementsValue;
+
+  /// No description provided for @questLeaderboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Leaderboard'**
+  String get questLeaderboard;
+
+  /// No description provided for @questLeaderboardBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly XP ranking for friends and future classes.'**
+  String get questLeaderboardBody;
+
+  /// No description provided for @questWeekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly'**
+  String get questWeekly;
+
+  /// No description provided for @questAnalytics.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning analytics'**
+  String get questAnalytics;
+
+  /// No description provided for @questAnalyticsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Accuracy, vocabulary growth, and review completion trends.'**
+  String get questAnalyticsBody;
+
+  /// No description provided for @questTrend.
+  ///
+  /// In en, this message translates to:
+  /// **'Trends'**
+  String get questTrend;
+
+  /// No description provided for @questClassMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Class Mode'**
+  String get questClassMode;
+
+  /// No description provided for @questClassModeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Join with a class code to see the teacher dashboard and group learning.'**
+  String get questClassModeBody;
+
+  /// No description provided for @questClassCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Class code'**
+  String get questClassCode;
+
+  /// No description provided for @questAiTutor.
+  ///
+  /// In en, this message translates to:
+  /// **'AI tutor'**
+  String get questAiTutor;
+
+  /// No description provided for @questAiTutorBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Explain mistakes and suggest example sentences.'**
+  String get questAiTutorBody;
+
+  /// No description provided for @aiTutorSamplePrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Explain the difference between affect and effect'**
+  String get aiTutorSamplePrompt;
+
+  /// No description provided for @aiTutorSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a word, grammar point, or mistake to get a structured explanation and practice sentences.'**
+  String get aiTutorSubtitle;
+
+  /// No description provided for @aiTutorInputLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask about a word, grammar, or mistake'**
+  String get aiTutorInputLabel;
+
+  /// No description provided for @aiTutorSampleAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Affect is usually a verb: \"The weather affects my mood.\" Effect is usually a noun: \"The effect was immediate.\" Try writing a sentence with each word.'**
+  String get aiTutorSampleAnswer;
+
+  /// No description provided for @classModeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Class learning'**
+  String get classModeTitle;
+
+  /// No description provided for @classModeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a class code to join a group and view class progress and weak-spot summaries.'**
+  String get classModeSubtitle;
+
+  /// No description provided for @classModeJoined.
+  ///
+  /// In en, this message translates to:
+  /// **'Joined class {code}'**
+  String classModeJoined(Object code);
+
+  /// No description provided for @classModeJoin.
+  ///
+  /// In en, this message translates to:
+  /// **'Join class'**
+  String get classModeJoin;
+
+  /// No description provided for @classModeViewProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'View class progress'**
+  String get classModeViewProgress;
+
+  /// No description provided for @classProgressTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Class progress'**
+  String get classProgressTitle;
+
+  /// No description provided for @classProgressOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Class overview'**
+  String get classProgressOverview;
+
+  /// No description provided for @classProgressSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Teacher-side completion and weak-word summary.'**
+  String get classProgressSubtitle;
+
+  /// No description provided for @classProgressWeakWord.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak word: {word}'**
+  String classProgressWeakWord(Object word);
+
+  /// No description provided for @classTopicExamSignals.
+  ///
+  /// In en, this message translates to:
+  /// **'Exam signal words'**
+  String get classTopicExamSignals;
+
+  /// No description provided for @classTopicTravelBasics.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel basics'**
+  String get classTopicTravelBasics;
+
+  /// No description provided for @classTopicWorkplace.
+  ///
+  /// In en, this message translates to:
+  /// **'Workplace expressions'**
+  String get classTopicWorkplace;
+
+  /// No description provided for @leaderboardDefaultName.
+  ///
+  /// In en, this message translates to:
+  /// **'Learner'**
+  String get leaderboardDefaultName;
+
+  /// No description provided for @leaderboardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Training leaderboard'**
+  String get leaderboardTitle;
+
+  /// No description provided for @leaderboardSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Counts only real completed training XP; no static demo board.'**
+  String get leaderboardSubtitle;
+
+  /// No description provided for @leaderboardEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No training results yet'**
+  String get leaderboardEmptyTitle;
+
+  /// No description provided for @leaderboardEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'After finishing Word Rush, Survival, or Spelling, real training XP generates the ranking.'**
+  String get leaderboardEmptyBody;
+
+  /// No description provided for @leaderboardOnlyValidXp.
+  ///
+  /// In en, this message translates to:
+  /// **'Counts valid learning XP only'**
+  String get leaderboardOnlyValidXp;
+
+  /// No description provided for @analyticsDataTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning data'**
+  String get analyticsDataTitle;
+
+  /// No description provided for @analyticsDataSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A first analytics view based on word cards and review records.'**
+  String get analyticsDataSubtitle;
+
+  /// No description provided for @analyticsAssetsDue.
+  ///
+  /// In en, this message translates to:
+  /// **'{due} of {total} learning assets are due'**
+  String analyticsAssetsDue(Object due, Object total);
+
+  /// No description provided for @analyticsCards.
+  ///
+  /// In en, this message translates to:
+  /// **'Word cards'**
+  String get analyticsCards;
+
+  /// No description provided for @analyticsTrainingXp.
+  ///
+  /// In en, this message translates to:
+  /// **'Training XP'**
+  String get analyticsTrainingXp;
+
+  /// No description provided for @analyticsAccuracy.
+  ///
+  /// In en, this message translates to:
+  /// **'Accuracy'**
+  String get analyticsAccuracy;
 
   /// No description provided for @onboardingFeatureImageCards.
   ///
@@ -2276,6 +2882,89 @@ abstract class AppLocalizations {
   /// **'Current preview progress will be discarded.'**
   String get lessonPreviewLeaveContent;
 
+  /// No description provided for @lessonPreviewBuildUnderstanding.
+  ///
+  /// In en, this message translates to:
+  /// **'Build understanding first, then context questions'**
+  String get lessonPreviewBuildUnderstanding;
+
+  /// No description provided for @lessonPreviewProgressMeta.
+  ///
+  /// In en, this message translates to:
+  /// **'{section} · {minutes} min · {current}/{total}'**
+  String lessonPreviewProgressMeta(
+    Object current,
+    Object minutes,
+    Object section,
+    Object total,
+  );
+
+  /// No description provided for @lessonPreviewLessonCards.
+  ///
+  /// In en, this message translates to:
+  /// **'Lesson cards'**
+  String get lessonPreviewLessonCards;
+
+  /// No description provided for @lessonPreviewCardMeta.
+  ///
+  /// In en, this message translates to:
+  /// **'{xp} XP · {count} context questions'**
+  String lessonPreviewCardMeta(Object count, Object xp);
+
+  /// No description provided for @lessonPreviewEnterContext.
+  ///
+  /// In en, this message translates to:
+  /// **'Start context practice'**
+  String get lessonPreviewEnterContext;
+
+  /// No description provided for @lessonPreviewNextCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Next card'**
+  String get lessonPreviewNextCard;
+
+  /// No description provided for @lessonPreviewNoCards.
+  ///
+  /// In en, this message translates to:
+  /// **'No cards'**
+  String get lessonPreviewNoCards;
+
+  /// No description provided for @lessonPreviewNoCardsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This lesson has no words to study yet.'**
+  String get lessonPreviewNoCardsBody;
+
+  /// No description provided for @lessonPreviewLeaveCardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave cards?'**
+  String get lessonPreviewLeaveCardTitle;
+
+  /// No description provided for @lessonPreviewLeaveCardContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Your current new-word card progress will be discarded.'**
+  String get lessonPreviewLeaveCardContent;
+
+  /// No description provided for @lessonPreviewLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave'**
+  String get lessonPreviewLeave;
+
+  /// No description provided for @lessonPreviewAssessFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Judge your familiarity first'**
+  String get lessonPreviewAssessFirst;
+
+  /// No description provided for @lessonPreviewContextExample.
+  ///
+  /// In en, this message translates to:
+  /// **'Context example'**
+  String get lessonPreviewContextExample;
+
   /// No description provided for @reviewCenterTitle.
   ///
   /// In en, this message translates to:
@@ -2389,6 +3078,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Remembered'**
   String get reviewCenterRemembered;
+
+  /// No description provided for @wordDetailNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Word not found'**
+  String get wordDetailNotFound;
+
+  /// No description provided for @wordDetailReviewStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Review stats'**
+  String get wordDetailReviewStats;
+
+  /// No description provided for @wordDetailMarkRemembered.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as remembered'**
+  String get wordDetailMarkRemembered;
+
+  /// No description provided for @wordDetailScheduleSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice again soon'**
+  String get wordDetailScheduleSoon;
+
+  /// No description provided for @wordDetailMarkedRemembered.
+  ///
+  /// In en, this message translates to:
+  /// **'Marked as remembered'**
+  String get wordDetailMarkedRemembered;
+
+  /// No description provided for @wordDetailScheduledSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled to practice again soon'**
+  String get wordDetailScheduledSoon;
+
+  /// No description provided for @wordDetailStatRemembered.
+  ///
+  /// In en, this message translates to:
+  /// **'Remembered'**
+  String get wordDetailStatRemembered;
+
+  /// No description provided for @wordDetailStatForgot.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot'**
+  String get wordDetailStatForgot;
+
+  /// No description provided for @wordDetailStatMastery.
+  ///
+  /// In en, this message translates to:
+  /// **'Mastery'**
+  String get wordDetailStatMastery;
+
+  /// No description provided for @wordDetailUpdateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to update this card for now'**
+  String get wordDetailUpdateFailed;
+
+  /// No description provided for @wordDetailMasteryLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Mastery {level}/5'**
+  String wordDetailMasteryLabel(Object level);
+
+  /// No description provided for @wordDetailNextReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Next {when}'**
+  String wordDetailNextReview(Object when);
 
   /// No description provided for @reviewCenterPostponedMessage.
   ///
@@ -3248,6 +4009,96 @@ abstract class AppLocalizations {
   /// **'Activity Message'**
   String get notificationTypeActivity;
 
+  /// No description provided for @notificationLearningReminderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s study plan is waiting'**
+  String get notificationLearningReminderTitle;
+
+  /// No description provided for @notificationLearningReminderBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s goal: {dailyGoal} new words. Start with your current wordbook.'**
+  String notificationLearningReminderBody(int dailyGoal);
+
+  /// No description provided for @notificationReviewDueTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{dueCount} words due for review'**
+  String notificationReviewDueTitle(int dueCount);
+
+  /// No description provided for @notificationReviewDueBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear your review queue first — missed words move to the reinforcement stage.'**
+  String get notificationReviewDueBody;
+
+  /// No description provided for @notificationCheckInTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t checked in today'**
+  String get notificationCheckInTitle;
+
+  /// No description provided for @notificationCheckInBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap check-in on the Discover page to unlock the claimable task.'**
+  String get notificationCheckInBody;
+
+  /// No description provided for @notificationActivityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover point tasks refreshed'**
+  String get notificationActivityTitle;
+
+  /// No description provided for @notificationActivityBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Earn XP after finishing new words, reviews, and clearing missed words.'**
+  String get notificationActivityBody;
+
+  /// No description provided for @notificationLotteryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Lottery result'**
+  String get notificationLotteryTitle;
+
+  /// No description provided for @notificationLotteryBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You won \"{prizeName}\" — added to your assets.'**
+  String notificationLotteryBody(String prizeName);
+
+  /// No description provided for @osNotificationStudyReminderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your study tasks are ready'**
+  String get osNotificationStudyReminderTitle;
+
+  /// No description provided for @osNotificationStudyReminderBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish new words, reviews and check-in to keep your streak going.'**
+  String get osNotificationStudyReminderBody;
+
+  /// No description provided for @osNotificationReviewDueBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear your review queue, then start today\'s new words.'**
+  String get osNotificationReviewDueBody;
+
+  /// No description provided for @osNotificationChannelName.
+  ///
+  /// In en, this message translates to:
+  /// **'Study reminders'**
+  String get osNotificationChannelName;
+
+  /// No description provided for @osNotificationChannelDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Study reminders, review-due and check-in alerts'**
+  String get osNotificationChannelDescription;
+
   /// No description provided for @studyNewStudy.
   ///
   /// In en, this message translates to:
@@ -3626,24 +4477,6 @@ abstract class AppLocalizations {
   /// **'Daily Quests'**
   String get questDailyQuests;
 
-  /// No description provided for @questAchievements.
-  ///
-  /// In en, this message translates to:
-  /// **'Achievements'**
-  String get questAchievements;
-
-  /// No description provided for @questLeaderboard.
-  ///
-  /// In en, this message translates to:
-  /// **'Leaderboard'**
-  String get questLeaderboard;
-
-  /// No description provided for @questClassMode.
-  ///
-  /// In en, this message translates to:
-  /// **'Class Mode'**
-  String get questClassMode;
-
   /// No description provided for @questProgress.
   ///
   /// In en, this message translates to:
@@ -3782,6 +4615,84 @@ abstract class AppLocalizations {
   /// **'This also deletes this personal word card and its review plan.'**
   String get customWordsDeleteContent;
 
+  /// No description provided for @customWordsEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit word'**
+  String get customWordsEditTitle;
+
+  /// No description provided for @customWordsAddTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add word'**
+  String get customWordsAddTitle;
+
+  /// No description provided for @customWordsFieldWord.
+  ///
+  /// In en, this message translates to:
+  /// **'Word'**
+  String get customWordsFieldWord;
+
+  /// No description provided for @customWordsFieldMeaning.
+  ///
+  /// In en, this message translates to:
+  /// **'Meaning'**
+  String get customWordsFieldMeaning;
+
+  /// No description provided for @customWordsFieldExample.
+  ///
+  /// In en, this message translates to:
+  /// **'Example'**
+  String get customWordsFieldExample;
+
+  /// No description provided for @customWordsFieldNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Note'**
+  String get customWordsFieldNote;
+
+  /// No description provided for @customWordsFieldTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Tag'**
+  String get customWordsFieldTag;
+
+  /// No description provided for @customWordsSaveEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get customWordsSaveEdit;
+
+  /// No description provided for @customWordsCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create word'**
+  String get customWordsCreate;
+
+  /// No description provided for @customWordsSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to save this word for now'**
+  String get customWordsSaveFailed;
+
+  /// No description provided for @customWordsSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Word saved'**
+  String get customWordsSaved;
+
+  /// No description provided for @customWordsDifficulty.
+  ///
+  /// In en, this message translates to:
+  /// **'Difficulty'**
+  String get customWordsDifficulty;
+
+  /// No description provided for @commonRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get commonRequired;
+
   /// No description provided for @customWordsDeleteFailed.
   ///
   /// In en, this message translates to:
@@ -3913,6 +4824,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'English definitions'**
   String get wordbookEnglishDefinitions;
+
+  /// No description provided for @wordbookMalayDefinitions.
+  ///
+  /// In en, this message translates to:
+  /// **'Malay definitions'**
+  String get wordbookMalayDefinitions;
 
   /// No description provided for @wordbookHighFrequency.
   ///

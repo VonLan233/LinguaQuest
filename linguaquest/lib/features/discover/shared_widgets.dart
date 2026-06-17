@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../core/theme/app_theme.dart';
-import '../../core/widgets/learning_badges.dart';
+import '../../core/theme/app_icons.dart';
+import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 class RewardTaskList extends StatelessWidget {
@@ -11,20 +13,17 @@ class RewardTaskList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        for (var index = 0; index < tasks.length; index++) ...[
-          RewardTaskRow(task: tasks[index]),
-          if (index != tasks.length - 1)
-            Divider(
-              height: 10,
-              color: Theme.of(context)
-                  .colorScheme
-                  .outlineVariant
-                  .withValues(alpha: 0.7),
-            ),
+    return AppCard(
+      padding: EdgeInsets.zero,
+      child: Column(
+        children: [
+          for (var index = 0; index < tasks.length; index++) ...[
+            RewardTaskRow(task: tasks[index]),
+            if (index != tasks.length - 1)
+              const Divider(height: AppTokens.s16, color: AppTokens.hairline),
+          ],
         ],
-      ],
+      ),
     );
   }
 }
@@ -36,72 +35,91 @@ class RewardTaskRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context);
     final canClaim = task.isDone && !task.isClaimed;
-    final activeColor = canClaim
-        ? AppTheme.teal
+    final accent = canClaim
+        ? AppTokens.azure
         : task.isDone
-        ? AppTheme.success
-        : AppTheme.mango;
-    return Material(
-      color: Colors.transparent,
-      borderRadius: BorderRadius.circular(12),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: canClaim
-            ? task.onClaim
-            : task.isDone
-            ? null
-            : task.onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 7),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: activeColor.withValues(alpha: 0.14),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Icon(task.icon, color: activeColor),
+        ? AppTokens.successColor(context)
+        : AppTokens.mangoColor(context);
+
+    final String badgeLabel;
+    final PillVariant badgeVariant;
+    final IconData badgeIcon;
+    if (task.isClaimed) {
+      badgeLabel = l10n.discoverClaimed(task.points.toString());
+      badgeVariant = PillVariant.success;
+      badgeIcon = AppIcons.checkCircle;
+    } else if (canClaim) {
+      badgeLabel = l10n.discoverClaim(task.points.toString());
+      badgeVariant = PillVariant.primary;
+      badgeIcon = AppIcons.addCircle;
+    } else {
+      badgeLabel = l10n.discoverGoComplete(task.points.toString());
+      badgeVariant = PillVariant.streak;
+      badgeIcon = AppIcons.addCircle;
+    }
+
+    return InkWell(
+      onTap: canClaim
+          ? task.onClaim
+          : task.isDone
+          ? null
+          : task.onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppTokens.s16,
+          vertical: AppTokens.s16,
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: accent.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(task.title, style: theme.textTheme.titleMedium),
-                    const SizedBox(height: 3),
-                    Text(
-                      task.condition,
-                      style: TextStyle(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
+              alignment: Alignment.center,
+              child: Icon(task.icon, size: 22, color: accent),
+            ),
+            const SizedBox(width: AppTokens.s12),
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    task.title,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
                     ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 10),
-              ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 132),
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: PillLabel(
-                    label: task.isClaimed
-                        ? l10n.discoverClaimed(task.points.toString())
-                        : canClaim
-                        ? l10n.discoverClaim(task.points.toString())
-                        : l10n.discoverGoComplete(task.points.toString()),
-                    icon: task.isDone
-                        ? Icons.check_circle_outline
-                        : Icons.add_circle_outline,
-                    color: activeColor,
                   ),
+                  const SizedBox(height: AppTokens.s2),
+                  Text(
+                    task.condition,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: AppTokens.s8),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 132),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: AppPill(
+                  label: badgeLabel,
+                  variant: badgeVariant,
+                  icon: badgeIcon,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

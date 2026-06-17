@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui' show PlatformDispatcher;
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ import '../../data/repositories/reward_task_repository.dart';
 import '../../data/repositories/review_repository.dart';
 import '../../data/repositories/study_plan_repository.dart';
 import '../../data/repositories/user_word_repository.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../services/local_notification_service.dart';
 import '../constants/app_constants.dart';
 import '../utils/ui_labels.dart';
@@ -335,6 +337,24 @@ class AppController extends Notifier<AppState> {
         email: email,
         password: password,
       );
+      final lotteryData = await _loadLotteryData(user);
+      state = state.copyWith(
+        user: user,
+        customWords: await _customWordRepository.list(user.uid),
+        lotteryPrizes: lotteryData.prizes,
+        userAssets: lotteryData.assets,
+        userWords: await _userWordRepository.list(user.uid),
+      );
+      await _ensureStudyPlan(user);
+      await refreshNotifications();
+      await refreshRewardTasks();
+      unawaited(_scheduleLocalNotifications());
+    });
+  }
+
+  Future<bool> enterDemo() async {
+    return _run(() async {
+      final user = UserProfile.demo();
       final lotteryData = await _loadLotteryData(user);
       state = state.copyWith(
         user: user,
@@ -1828,6 +1848,7 @@ class AppController extends Notifier<AppState> {
           targetRoute: '/study/new',
           sourceKey: 'learningReminder:$dateKey',
           now: now,
+          params: {'dailyGoal': dailyGoal},
         ),
       );
     }
@@ -1841,6 +1862,7 @@ class AppController extends Notifier<AppState> {
           targetRoute: '/study/review',
           sourceKey: 'reviewDue:$dateKey',
           now: now,
+          params: {'dueCount': dueCount},
         ),
       );
     }
@@ -1854,6 +1876,7 @@ class AppController extends Notifier<AppState> {
           targetRoute: '/discover',
           sourceKey: 'checkInReminder:$dateKey',
           now: now,
+          params: const {'kind': 'checkin'},
         ),
       );
     }
@@ -1866,6 +1889,7 @@ class AppController extends Notifier<AppState> {
         targetRoute: '/discover',
         sourceKey: 'activity:$dateKey',
         now: now,
+        params: const {'kind': 'activity'},
       ),
     );
     return notifications;
@@ -1879,6 +1903,7 @@ class AppController extends Notifier<AppState> {
     required String targetRoute,
     required String sourceKey,
     required DateTime now,
+    Map<String, dynamic>? params,
   }) {
     return AppNotification(
       id: 'notification-${sourceKey.replaceAll(':', '-')}-${now.year}',
@@ -1890,6 +1915,7 @@ class AppController extends Notifier<AppState> {
       isRead: false,
       createdAt: now.toUtc(),
       sourceKey: sourceKey,
+      params: params,
     );
   }
 
@@ -1901,6 +1927,8 @@ class AppController extends Notifier<AppState> {
     final dueCount = user == null || snapshot.isStudyPlanPaused
         ? 0
         : snapshot.reviewQueue.length;
+    final l10n = _resolveLocalizations(snapshot.locale);
+    final strings = LocalNotificationStrings.fromL10n(l10n);
     await _localNotificationService.scheduleDailyStudyReminder(
       enabled:
           user != null &&
@@ -1908,10 +1936,31 @@ class AppController extends Notifier<AppState> {
           !snapshot.isStudyPlanPaused,
       hour: reminderSettings.hour,
       minute: reminderSettings.minute,
+      strings: strings,
     );
     await _localNotificationService.scheduleReviewDueReminder(
       dueCount: dueCount,
+      title: l10n.notificationReviewDueTitle(dueCount),
+      strings: strings,
     );
+  }
+
+  /// Resolves [AppLocalizations] for the OS push, which fires outside any
+  /// widget context. Prefers the in-app [locale] setting; otherwise clamps the
+  /// platform locale to the supported set, defaulting to the app default (zh).
+  AppLocalizations _resolveLocalizations(Locale? locale) {
+    final supported = AppLocalizations.supportedLocales;
+    bool isSupported(Locale candidate) =>
+        supported.any((l) => l.languageCode == candidate.languageCode);
+
+    Locale resolved;
+    if (locale != null && isSupported(locale)) {
+      resolved = locale;
+    } else {
+      final platform = PlatformDispatcher.instance.locale;
+      resolved = isSupported(platform) ? platform : const Locale('zh');
+    }
+    return lookupAppLocalizations(resolved);
   }
 
   Future<void> _initializeLocalNotifications() async {

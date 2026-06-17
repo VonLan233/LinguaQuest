@@ -1,6 +1,8 @@
 {
   "id": "cet4",
   "title": "四级核心词汇",
+  "titleEn": "CET-4 High-Frequency Words",
+  "titleMs": "Perkataan Kerap CET-4",
   "category": "exam",
   "examType": "CET-4",
   "coverUrl": "https://source.unsplash.com/featured/800x480/?english,vocabulary,cet4",
@@ -158,7 +160,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,achievement",
-      "sceneCue": "CET-4 · 完成"
+      "sceneCue": "CET-4 · 完成",
+      "malayDefinitions": [
+        "pencapaian",
+        "kejayaan"
+      ]
     },
     {
       "id": "cet4_002_acknowledge",
@@ -218,7 +224,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acknowledge",
-      "sceneCue": "CET-4 · 承认， 承认…的权威"
+      "sceneCue": "CET-4 · 承认， 承认…的权威",
+      "malayDefinitions": [
+        "mengakui",
+        "mengesahkan penerimaan",
+        "menghargai"
+      ]
     },
     {
       "id": "cet4_003_acquire",
@@ -272,7 +283,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acquire",
-      "sceneCue": "CET-4 · 取得， 获得， 学到"
+      "sceneCue": "CET-4 · 取得， 获得， 学到",
+      "malayDefinitions": [
+        "memperoleh",
+        "mendapatkan",
+        "mempelajari"
+      ]
     },
     {
       "id": "cet4_004_across",
@@ -333,7 +349,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,across",
-      "sceneCue": "CET-4 · 横过"
+      "sceneCue": "CET-4 · 横过",
+      "malayDefinitions": [
+        "melintasi",
+        "ke seberang",
+        "merentasi"
+      ]
     },
     {
       "id": "cet4_005_act",
@@ -398,7 +419,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,act",
-      "sceneCue": "CET-4 · 扮演"
+      "sceneCue": "CET-4 · 扮演",
+      "malayDefinitions": [
+        "berlakon",
+        "berpura-pura",
+        "bertindak"
+      ]
     },
     {
       "id": "cet4_006_action",
@@ -467,7 +493,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,action",
-      "sceneCue": "CET-4 · 行动"
+      "sceneCue": "CET-4 · 行动",
+      "malayDefinitions": [
+        "tindakan",
+        "perbuatan",
+        "fungsi"
+      ]
     },
     {
       "id": "cet4_007_active",
@@ -531,7 +562,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,active",
-      "sceneCue": "CET-4 · 活跃的， 积极的"
+      "sceneCue": "CET-4 · 活跃的， 积极的",
+      "malayDefinitions": [
+        "aktif",
+        "proaktif",
+        "berfungsi"
+      ]
     },
     {
       "id": "cet4_008_activity",
@@ -599,7 +635,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,activity",
-      "sceneCue": "CET-4 · 活动"
+      "sceneCue": "CET-4 · 活动",
+      "malayDefinitions": [
+        "aktiviti",
+        "kecergasan",
+        "tindakan"
+      ]
     },
     {
       "id": "cet4_009_actor",
@@ -659,7 +700,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,actor",
-      "sceneCue": "CET-4 · 男演员"
+      "sceneCue": "CET-4 · 男演员",
+      "malayDefinitions": [
+        "pelakon lelaki",
+        "pelaku",
+        "agen"
+      ]
     },
     {
       "id": "cet4_010_actress",
@@ -709,7 +755,10 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,actress",
-      "sceneCue": "CET-4 · 女演员"
+      "sceneCue": "CET-4 · 女演员",
+      "malayDefinitions": [
+        "pelakon wanita"
+      ]
     },
     {
       "id": "cet4_011_actual",
@@ -776,7 +825,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,actual",
-      "sceneCue": "CET-4 · 实际的"
+      "sceneCue": "CET-4 · 实际的",
+      "malayDefinitions": [
+        "sebenar",
+        "nyata"
+      ]
     },
     {
       "id": "cet4_012_actually",
@@ -827,7 +880,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,actually",
-      "sceneCue": "CET-4 · 实际上"
+      "sceneCue": "CET-4 · 实际上",
+      "malayDefinitions": [
+        "sebenarnya",
+        "pada hakikatnya"
+      ]
     },
     {
       "id": "cet4_013_adapt",
@@ -878,7 +935,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adapt",
-      "sceneCue": "CET-4 · 使适应"
+      "sceneCue": "CET-4 · 使适应",
+      "malayDefinitions": [
+        "menyesuaikan diri",
+        "mengadaptasi"
+      ]
     },
     {
       "id": "cet4_014_add",
@@ -939,7 +1000,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,add",
-      "sceneCue": "CET-4 · 加"
+      "sceneCue": "CET-4 · 加",
+      "malayDefinitions": [
+        "menambah",
+        "meningkatkan",
+        "menjumlahkan"
+      ]
     },
     {
       "id": "cet4_015_addition",
@@ -998,7 +1064,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,addition",
-      "sceneCue": "CET-4 · 加， 加法"
+      "sceneCue": "CET-4 · 加， 加法",
+      "malayDefinitions": [
+        "penambahan",
+        "tambahan"
+      ]
     },
     {
       "id": "cet4_016_additional",
@@ -1056,7 +1126,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,additional",
-      "sceneCue": "CET-4 · 附加的， 追加的"
+      "sceneCue": "CET-4 · 附加的， 追加的",
+      "malayDefinitions": [
+        "tambahan",
+        "lanjutan"
+      ]
     },
     {
       "id": "cet4_017_address",
@@ -1117,7 +1191,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,address",
-      "sceneCue": "CET-4 · 作讲话"
+      "sceneCue": "CET-4 · 作讲话",
+      "malayDefinitions": [
+        "berucap",
+        "menulis alamat",
+        "alamat"
+      ]
     },
     {
       "id": "cet4_018_administration",
@@ -1181,7 +1260,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,administration",
-      "sceneCue": "CET-4 · 管理"
+      "sceneCue": "CET-4 · 管理",
+      "malayDefinitions": [
+        "pentadbiran",
+        "jabatan pentadbiran",
+        "pelaksanaan"
+      ]
     },
     {
       "id": "cet4_019_admire",
@@ -1228,7 +1312,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,admire",
-      "sceneCue": "CET-4 · 钦佩， 羡慕"
+      "sceneCue": "CET-4 · 钦佩， 羡慕",
+      "malayDefinitions": [
+        "mengagumi",
+        "memuji"
+      ]
     },
     {
       "id": "cet4_020_admit",
@@ -1283,7 +1371,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,admit",
-      "sceneCue": "CET-4 · 承认， 供认"
+      "sceneCue": "CET-4 · 承认， 供认",
+      "malayDefinitions": [
+        "mengaku",
+        "membenarkan masuk"
+      ]
     },
     {
       "id": "cet4_021_adopt",
@@ -1335,7 +1427,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adopt",
-      "sceneCue": "CET-4 · 收养"
+      "sceneCue": "CET-4 · 收养",
+      "malayDefinitions": [
+        "mengambil sebagai anak",
+        "menggunakan",
+        "meluluskan secara rasmi"
+      ]
     },
     {
       "id": "cet4_022_adult",
@@ -1403,7 +1500,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adult",
-      "sceneCue": "CET-4 · 成年的"
+      "sceneCue": "CET-4 · 成年的",
+      "malayDefinitions": [
+        "dewasa",
+        "untuk orang dewasa",
+        "orang dewasa"
+      ]
     },
     {
       "id": "cet4_023_advance",
@@ -1468,7 +1570,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,advance",
-      "sceneCue": "CET-4 · 前进，向前移动"
+      "sceneCue": "CET-4 · 前进，向前移动",
+      "malayDefinitions": [
+        "maju ke hadapan",
+        "berkembang",
+        "menggalakkan"
+      ]
     },
     {
       "id": "cet4_024_advanced",
@@ -1537,7 +1644,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,advanced",
-      "sceneCue": "CET-4 · 先进的"
+      "sceneCue": "CET-4 · 先进的",
+      "malayDefinitions": [
+        "maju",
+        "peringkat tinggi",
+        "berusia"
+      ]
     },
     {
       "id": "cet4_025_advantage",
@@ -1595,7 +1707,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,advantage",
-      "sceneCue": "CET-4 · 优点， 优势， 好处"
+      "sceneCue": "CET-4 · 优点， 优势， 好处",
+      "malayDefinitions": [
+        "kelebihan",
+        "kebaikan",
+        "faedah"
+      ]
     },
     {
       "id": "cet4_026_adventure",
@@ -1650,7 +1767,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adventure",
-      "sceneCue": "CET-4 · 奇遇"
+      "sceneCue": "CET-4 · 奇遇",
+      "malayDefinitions": [
+        "pengembaraan",
+        "aktiviti mencabar"
+      ]
     },
     {
       "id": "cet4_027_advertise",
@@ -1702,7 +1823,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,advertise",
-      "sceneCue": "CET-4 · 为…做广告， 宣传"
+      "sceneCue": "CET-4 · 为…做广告， 宣传",
+      "malayDefinitions": [
+        "mengiklankan",
+        "mengumumkan",
+        "mempromosikan"
+      ]
     },
     {
       "id": "cet4_028_advertisement",
@@ -1769,7 +1895,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,advertisement",
-      "sceneCue": "CET-4 · 广告， 公告， 登广告"
+      "sceneCue": "CET-4 · 广告， 公告， 登广告",
+      "malayDefinitions": [
+        "iklan",
+        "pengiklanan"
+      ]
     },
     {
       "id": "cet4_029_advertising",
@@ -1820,7 +1950,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,advertising",
-      "sceneCue": "CET-4 · 广告"
+      "sceneCue": "CET-4 · 广告",
+      "malayDefinitions": [
+        "pengiklanan",
+        "industri pengiklanan"
+      ]
     },
     {
       "id": "cet4_030_advice",
@@ -1879,7 +2013,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,advice",
-      "sceneCue": "CET-4 · 劝告， 忠告"
+      "sceneCue": "CET-4 · 劝告， 忠告",
+      "malayDefinitions": [
+        "nasihat",
+        "cadangan"
+      ]
     },
     {
       "id": "cet4_031_advise",
@@ -1936,7 +2074,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,advise",
-      "sceneCue": "CET-4 · 建议"
+      "sceneCue": "CET-4 · 建议",
+      "malayDefinitions": [
+        "menasihati",
+        "memberi nasihat",
+        "memberitahu"
+      ]
     },
     {
       "id": "cet4_032_affair",
@@ -2005,7 +2148,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,affair",
-      "sceneCue": "CET-4 · 事情"
+      "sceneCue": "CET-4 · 事情",
+      "malayDefinitions": [
+        "hal",
+        "urusan",
+        "perkara peribadi"
+      ]
     },
     {
       "id": "cet4_033_affect",
@@ -2064,7 +2212,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,affect",
-      "sceneCue": "CET-4 · 影响"
+      "sceneCue": "CET-4 · 影响",
+      "malayDefinitions": [
+        "mempengaruhi",
+        "menyentuh perasaan"
+      ]
     },
     {
       "id": "cet4_034_afford",
@@ -2115,7 +2267,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,afford",
-      "sceneCue": "CET-4 · 担负得起"
+      "sceneCue": "CET-4 · 担负得起",
+      "malayDefinitions": [
+        "mampu membeli",
+        "menyediakan"
+      ]
     },
     {
       "id": "cet4_035_afraid",
@@ -2167,7 +2323,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,afraid",
-      "sceneCue": "CET-4 · 害怕的"
+      "sceneCue": "CET-4 · 害怕的",
+      "malayDefinitions": [
+        "takut",
+        "bimbang",
+        "risau"
+      ]
     },
     {
       "id": "cet4_036_after",
@@ -2227,7 +2388,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,after",
-      "sceneCue": "CET-4 · 后来，以后"
+      "sceneCue": "CET-4 · 后来，以后",
+      "malayDefinitions": [
+        "kemudian",
+        "selepas",
+        "berikutnya"
+      ]
     },
     {
       "id": "cet4_037_afternoon",
@@ -2293,7 +2459,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,afternoon",
-      "sceneCue": "CET-4 · 午后，下午"
+      "sceneCue": "CET-4 · 午后，下午",
+      "malayDefinitions": [
+        "petang",
+        "waktu tengah hari"
+      ]
     },
     {
       "id": "cet4_038_afterwards",
@@ -2351,7 +2521,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,afterwards",
-      "sceneCue": "CET-4 · 后来， 以后"
+      "sceneCue": "CET-4 · 后来， 以后",
+      "malayDefinitions": [
+        "kemudian",
+        "selepas itu"
+      ]
     },
     {
       "id": "cet4_039_again",
@@ -2420,7 +2594,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,again",
-      "sceneCue": "CET-4 · 又，此外"
+      "sceneCue": "CET-4 · 又，此外",
+      "malayDefinitions": [
+        "lagi",
+        "sekali lagi",
+        "tambahan pula"
+      ]
     },
     {
       "id": "cet4_040_against",
@@ -2485,7 +2664,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,against",
-      "sceneCue": "CET-4 · 反对，违反"
+      "sceneCue": "CET-4 · 反对，违反",
+      "malayDefinitions": [
+        "menentang",
+        "bersandar",
+        "berlawanan"
+      ]
     },
     {
       "id": "cet4_041_age",
@@ -2554,7 +2738,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,age",
-      "sceneCue": "CET-4 · 年龄"
+      "sceneCue": "CET-4 · 年龄",
+      "malayDefinitions": [
+        "umur",
+        "zaman",
+        "jangka hayat"
+      ]
     },
     {
       "id": "cet4_042_aged",
@@ -2605,7 +2794,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aged",
-      "sceneCue": "CET-4 · 年老的"
+      "sceneCue": "CET-4 · 年老的",
+      "malayDefinitions": [
+        "berusia",
+        "tua"
+      ]
     },
     {
       "id": "cet4_043_agency",
@@ -2665,7 +2858,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,agency",
-      "sceneCue": "CET-4 · 经办， 代理"
+      "sceneCue": "CET-4 · 经办， 代理",
+      "malayDefinitions": [
+        "agensi",
+        "pejabat perwakilan",
+        "badan pentadbiran"
+      ]
     },
     {
       "id": "cet4_044_agenda",
@@ -2719,7 +2917,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,agenda",
-      "sceneCue": "CET-4 · 议事日程"
+      "sceneCue": "CET-4 · 议事日程",
+      "malayDefinitions": [
+        "agenda",
+        "jadual mesyuarat"
+      ]
     },
     {
       "id": "cet4_045_agent",
@@ -2780,7 +2982,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,agent",
-      "sceneCue": "CET-4 · 代理人， 代理商"
+      "sceneCue": "CET-4 · 代理人， 代理商",
+      "malayDefinitions": [
+        "ejen",
+        "wakil kerajaan",
+        "penyebab"
+      ]
     },
     {
       "id": "cet4_046_aggressive",
@@ -2844,7 +3051,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aggressive",
-      "sceneCue": "CET-4 · 侵略的， 好斗的"
+      "sceneCue": "CET-4 · 侵略的， 好斗的",
+      "malayDefinitions": [
+        "agresif",
+        "berani bertindak",
+        "bercita-cita tinggi"
+      ]
     },
     {
       "id": "cet4_047_ago",
@@ -2901,7 +3113,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ago",
-      "sceneCue": "CET-4 · 以前，以往"
+      "sceneCue": "CET-4 · 以前，以往",
+      "malayDefinitions": [
+        "dahulu",
+        "yang lalu",
+        "masa lampau"
+      ]
     },
     {
       "id": "cet4_048_agree",
@@ -2961,7 +3178,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,agree",
-      "sceneCue": "CET-4 · 同意，赞成"
+      "sceneCue": "CET-4 · 同意，赞成",
+      "malayDefinitions": [
+        "bersetuju",
+        "mengakui",
+        "memutuskan bersama"
+      ]
     },
     {
       "id": "cet4_049_agreement",
@@ -3020,7 +3242,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,agreement",
-      "sceneCue": "CET-4 · 协议"
+      "sceneCue": "CET-4 · 协议",
+      "malayDefinitions": [
+        "perjanjian",
+        "persetujuan"
+      ]
     },
     {
       "id": "cet4_050_ah",
@@ -3070,7 +3296,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ah",
-      "sceneCue": "CET-4 · 啊"
+      "sceneCue": "CET-4 · 啊",
+      "malayDefinitions": [
+        "ah",
+        "oh"
+      ]
     },
     {
       "id": "cet4_051_ahead",
@@ -3139,7 +3369,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ahead",
-      "sceneCue": "CET-4 · 向前"
+      "sceneCue": "CET-4 · 向前",
+      "malayDefinitions": [
+        "ke hadapan",
+        "di depan",
+        "mendahului"
+      ]
     },
     {
       "id": "cet4_052_aid",
@@ -3200,7 +3435,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aid",
-      "sceneCue": "CET-4 · 帮助"
+      "sceneCue": "CET-4 · 帮助",
+      "malayDefinitions": [
+        "bantuan",
+        "pertolongan",
+        "pembantu"
+      ]
     },
     {
       "id": "cet4_053_aim",
@@ -3261,7 +3501,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aim",
-      "sceneCue": "CET-4 · 目的在于"
+      "sceneCue": "CET-4 · 目的在于",
+      "malayDefinitions": [
+        "bertujuan",
+        "membimbing",
+        "mensasarkan"
+      ]
     },
     {
       "id": "cet4_054_air",
@@ -3326,7 +3571,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,air",
-      "sceneCue": "CET-4 · 空气，大气"
+      "sceneCue": "CET-4 · 空气，大气",
+      "malayDefinitions": [
+        "udara",
+        "langit",
+        "rupa"
+      ]
     },
     {
       "id": "cet4_055_aircraft",
@@ -3384,7 +3634,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aircraft",
-      "sceneCue": "CET-4 · 飞机， 飞行器"
+      "sceneCue": "CET-4 · 飞机， 飞行器",
+      "malayDefinitions": [
+        "kapal terbang",
+        "pesawat"
+      ]
     },
     {
       "id": "cet4_056_airline",
@@ -3443,7 +3697,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,airline",
-      "sceneCue": "CET-4 · 航空公司"
+      "sceneCue": "CET-4 · 航空公司",
+      "malayDefinitions": [
+        "syarikat penerbangan",
+        "laluan udara"
+      ]
     },
     {
       "id": "cet4_057_airport",
@@ -3505,7 +3763,10 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,airport",
-      "sceneCue": "CET-4 · 机场， 航空港"
+      "sceneCue": "CET-4 · 机场， 航空港",
+      "malayDefinitions": [
+        "lapangan terbang"
+      ]
     },
     {
       "id": "cet4_058_alarm",
@@ -3574,7 +3835,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alarm",
-      "sceneCue": "CET-4 · 惊恐"
+      "sceneCue": "CET-4 · 惊恐",
+      "malayDefinitions": [
+        "ketakutan",
+        "kebimbangan",
+        "penggera"
+      ]
     },
     {
       "id": "cet4_059_album",
@@ -3632,7 +3898,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,album",
-      "sceneCue": "CET-4 · 粘贴簿， 集邮簿， 相册"
+      "sceneCue": "CET-4 · 粘贴簿， 集邮簿， 相册",
+      "malayDefinitions": [
+        "album",
+        "buku koleksi"
+      ]
     },
     {
       "id": "cet4_060_alcohol",
@@ -3698,7 +3968,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alcohol",
-      "sceneCue": "CET-4 · 酒精， 乙醇"
+      "sceneCue": "CET-4 · 酒精， 乙醇",
+      "malayDefinitions": [
+        "alkohol",
+        "etanol"
+      ]
     },
     {
       "id": "cet4_061_alcoholic",
@@ -3757,7 +4031,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alcoholic",
-      "sceneCue": "CET-4 · 酒精的，含酒精的"
+      "sceneCue": "CET-4 · 酒精的，含酒精的",
+      "malayDefinitions": [
+        "beralkohol",
+        "peminum arak"
+      ]
     },
     {
       "id": "cet4_062_alive",
@@ -3825,7 +4103,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alive",
-      "sceneCue": "CET-4 · 活着的"
+      "sceneCue": "CET-4 · 活着的",
+      "malayDefinitions": [
+        "hidup",
+        "cergas",
+        "bersemangat"
+      ]
     },
     {
       "id": "cet4_063_all",
@@ -3894,7 +4177,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,all",
-      "sceneCue": "CET-4 · 全部的"
+      "sceneCue": "CET-4 · 全部的",
+      "malayDefinitions": [
+        "semua",
+        "seluruhnya",
+        "semakin"
+      ]
     },
     {
       "id": "cet4_064_allow",
@@ -3947,7 +4235,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,allow",
-      "sceneCue": "CET-4 · 允许， 准许"
+      "sceneCue": "CET-4 · 允许， 准许",
+      "malayDefinitions": [
+        "membenarkan",
+        "memberi kebenaran",
+        "mengakui"
+      ]
     },
     {
       "id": "cet4_065_almost",
@@ -4001,7 +4294,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,almost",
-      "sceneCue": "CET-4 · 差不多，几乎"
+      "sceneCue": "CET-4 · 差不多，几乎",
+      "malayDefinitions": [
+        "hampir",
+        "nyaris"
+      ]
     },
     {
       "id": "cet4_066_alone",
@@ -4070,7 +4367,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alone",
-      "sceneCue": "CET-4 · 独自的"
+      "sceneCue": "CET-4 · 独自的",
+      "malayDefinitions": [
+        "bersendirian",
+        "keseorangan",
+        "sunyi"
+      ]
     },
     {
       "id": "cet4_067_along",
@@ -4134,7 +4436,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,along",
-      "sceneCue": "CET-4 · 向前"
+      "sceneCue": "CET-4 · 向前",
+      "malayDefinitions": [
+        "ke hadapan",
+        "bersama",
+        "sepanjang"
+      ]
     },
     {
       "id": "cet4_068_already",
@@ -4188,7 +4495,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,already",
-      "sceneCue": "CET-4 · 已， 已经"
+      "sceneCue": "CET-4 · 已， 已经",
+      "malayDefinitions": [
+        "sudah",
+        "telah"
+      ]
     },
     {
       "id": "cet4_069_also",
@@ -4257,7 +4568,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,also",
-      "sceneCue": "CET-4 · 也"
+      "sceneCue": "CET-4 · 也",
+      "malayDefinitions": [
+        "juga",
+        "tambahan pula",
+        "sama juga"
+      ]
     },
     {
       "id": "cet4_070_alter",
@@ -4311,7 +4627,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alter",
-      "sceneCue": "CET-4 · 改变， 变更， 变动"
+      "sceneCue": "CET-4 · 改变， 变更， 变动",
+      "malayDefinitions": [
+        "mengubah",
+        "menukar",
+        "mengubah suai"
+      ]
     },
     {
       "id": "cet4_071_alternative",
@@ -4372,7 +4693,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alternative",
-      "sceneCue": "CET-4 · 两者选一的， 供选择的"
+      "sceneCue": "CET-4 · 两者选一的， 供选择的",
+      "malayDefinitions": [
+        "pilihan",
+        "alternatif",
+        "gantian"
+      ]
     },
     {
       "id": "cet4_072_although",
@@ -4433,7 +4759,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,although",
-      "sceneCue": "CET-4 · 尽管"
+      "sceneCue": "CET-4 · 尽管",
+      "malayDefinitions": [
+        "walaupun",
+        "meskipun",
+        "tetapi"
+      ]
     },
     {
       "id": "cet4_073_always",
@@ -4501,7 +4832,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,always",
-      "sceneCue": "CET-4 · 永远，一直"
+      "sceneCue": "CET-4 · 永远，一直",
+      "malayDefinitions": [
+        "sentiasa",
+        "selalu",
+        "sering"
+      ]
     },
     {
       "id": "cet4_074_amazed",
@@ -4552,7 +4888,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,amazed",
-      "sceneCue": "CET-4 · 惊奇的"
+      "sceneCue": "CET-4 · 惊奇的",
+      "malayDefinitions": [
+        "terkejut",
+        "kagum"
+      ]
     },
     {
       "id": "cet4_075_amazing",
@@ -4603,7 +4943,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,amazing",
-      "sceneCue": "CET-4 · 令人惊异的"
+      "sceneCue": "CET-4 · 令人惊异的",
+      "malayDefinitions": [
+        "menakjubkan",
+        "mengagumkan"
+      ]
     },
     {
       "id": "cet4_076_ambition",
@@ -4655,7 +4999,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ambition",
-      "sceneCue": "CET-4 · 雄心， 抱负"
+      "sceneCue": "CET-4 · 雄心， 抱负",
+      "malayDefinitions": [
+        "cita-cita",
+        "aspirasi",
+        "keinginan"
+      ]
     },
     {
       "id": "cet4_077_ambitious",
@@ -4706,7 +5055,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ambitious",
-      "sceneCue": "CET-4 · 有抱负的， 雄心勃勃的"
+      "sceneCue": "CET-4 · 有抱负的， 雄心勃勃的",
+      "malayDefinitions": [
+        "bercita-cita tinggi",
+        "beraspirasi"
+      ]
     },
     {
       "id": "cet4_078_among",
@@ -4773,7 +5126,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,among",
-      "sceneCue": "CET-4 · 在…中间"
+      "sceneCue": "CET-4 · 在…中间",
+      "malayDefinitions": [
+        "antara",
+        "di kalangan"
+      ]
     },
     {
       "id": "cet4_079_amount",
@@ -4833,7 +5190,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,amount",
-      "sceneCue": "CET-4 · 合计， 总共达"
+      "sceneCue": "CET-4 · 合计， 总共达",
+      "malayDefinitions": [
+        "jumlah",
+        "berjumlah",
+        "kuantiti"
+      ]
     },
     {
       "id": "cet4_080_analyse",
@@ -4893,7 +5255,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,analyse",
-      "sceneCue": "CET-4 · 分析"
+      "sceneCue": "CET-4 · 分析",
+      "malayDefinitions": [
+        "menganalisis",
+        "mengurai",
+        "menghuraikan"
+      ]
     },
     {
       "id": "cet4_081_analysis",
@@ -4953,7 +5320,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,analysis",
-      "sceneCue": "CET-4 · 分析， 分析报告"
+      "sceneCue": "CET-4 · 分析， 分析报告",
+      "malayDefinitions": [
+        "analisis",
+        "penguraian",
+        "penghuraian"
+      ]
     },
     {
       "id": "cet4_082_ancient",
@@ -5012,7 +5384,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ancient",
-      "sceneCue": "CET-4 · 古代的， 古老的"
+      "sceneCue": "CET-4 · 古代的， 古老的",
+      "malayDefinitions": [
+        "purba",
+        "kuno",
+        "tua"
+      ]
     },
     {
       "id": "cet4_083_and",
@@ -5081,7 +5458,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,and",
-      "sceneCue": "CET-4 · 和，与"
+      "sceneCue": "CET-4 · 和，与",
+      "malayDefinitions": [
+        "dan",
+        "serta",
+        "tambahan pula"
+      ]
     },
     {
       "id": "cet4_084_anger",
@@ -5134,7 +5516,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,anger",
-      "sceneCue": "CET-4 · 怒，愤怒"
+      "sceneCue": "CET-4 · 怒，愤怒",
+      "malayDefinitions": [
+        "kemarahan",
+        "amarah",
+        "menimbulkan kemarahan"
+      ]
     },
     {
       "id": "cet4_085_angle",
@@ -5193,7 +5580,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,angle",
-      "sceneCue": "CET-4 · 角， 角度"
+      "sceneCue": "CET-4 · 角， 角度",
+      "malayDefinitions": [
+        "sudut",
+        "perspektif",
+        "pendirian"
+      ]
     },
     {
       "id": "cet4_086_angry",
@@ -5262,7 +5654,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,angry",
-      "sceneCue": "CET-4 · 生气的"
+      "sceneCue": "CET-4 · 生气的",
+      "malayDefinitions": [
+        "marah",
+        "berang",
+        "ganas"
+      ]
     },
     {
       "id": "cet4_087_animal",
@@ -5328,7 +5725,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,animal",
-      "sceneCue": "CET-4 · 动物"
+      "sceneCue": "CET-4 · 动物",
+      "malayDefinitions": [
+        "haiwan",
+        "binatang"
+      ]
     },
     {
       "id": "cet4_088_ankle",
@@ -5374,7 +5775,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ankle",
-      "sceneCue": "CET-4 · 踝， 踝关节"
+      "sceneCue": "CET-4 · 踝， 踝关节",
+      "malayDefinitions": [
+        "buku lali",
+        "pergelangan kaki"
+      ]
     },
     {
       "id": "cet4_089_anniversary",
@@ -5428,7 +5833,10 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,anniversary",
-      "sceneCue": "CET-4 · 周年纪念日"
+      "sceneCue": "CET-4 · 周年纪念日",
+      "malayDefinitions": [
+        "ulang tahun"
+      ]
     },
     {
       "id": "cet4_090_announce",
@@ -5485,7 +5893,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,announce",
-      "sceneCue": "CET-4 · 宣布"
+      "sceneCue": "CET-4 · 宣布",
+      "malayDefinitions": [
+        "mengumumkan",
+        "memberitahu",
+        "menyatakan"
+      ]
     }
   ]
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -7,12 +8,14 @@ import '../../core/theme/app_theme.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../data/models/lesson.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class NewStudyScreen extends ConsumerWidget {
   const NewStudyScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final lesson = state.currentLesson;
     final dailyGoal = state.dailyNewTarget;
@@ -23,12 +26,12 @@ class NewStudyScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/home'),
-        title: const Text('新学'),
+        title: Text(l10n.studyNewScreenTitle),
         actions: [
           QuestIconButton(
-            tooltip: '词书路径',
+            tooltip: l10n.studyWordbookPath,
             onPressed: () => context.push('/learn'),
-            icon: Icons.route_outlined,
+            icon: AppIcons.route,
           ),
           const SizedBox(width: 12),
         ],
@@ -39,8 +42,8 @@ class NewStudyScreen extends ConsumerWidget {
                 padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
                 child: FilledButton.icon(
                   onPressed: () => context.push('/lesson/${lesson.id}'),
-                  icon: const Icon(Icons.play_arrow_rounded),
-                  label: const Text('进入词卡学习'),
+                  icon: const Icon(AppIcons.playArrow),
+                  label: Text(l10n.studyEnterCards),
                 ),
               ),
             )
@@ -57,14 +60,14 @@ class NewStudyScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 20),
             Text(
-              '今日新词包',
+              l10n.studyNewPackTitle,
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
             ),
             const SizedBox(height: 6),
             Text(
-              '先自评，再看词卡，最后进入语境题。正式复习会单独排队。',
+              l10n.studyNewPackDesc,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
@@ -79,20 +82,20 @@ class NewStudyScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '暂无新学词',
+                      l10n.studyNoNewWords,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(height: 8),
                     Text(
                       state.isStudyPlanPaused
-                          ? '学习计划已暂停。恢复计划后，系统会继续安排今日新词。'
-                          : '当前词书已经学完，或学习计划还没有生成。可以去词书路径检查下一组内容。',
+                          ? l10n.studyNewPausedHint
+                          : l10n.studyNewEmptyHint,
                     ),
                     const SizedBox(height: 14),
                     OutlinedButton.icon(
                       onPressed: () => context.push('/learn'),
-                      icon: const Icon(Icons.route_outlined),
-                      label: const Text('打开词书路径'),
+                      icon: const Icon(AppIcons.route),
+                      label: Text(l10n.studyOpenWordbookPath),
                     ),
                   ],
                 ),
@@ -123,12 +126,13 @@ class _StudyHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final section = lesson?.section;
+    final l10n = AppLocalizations.of(context);
+    final section = lesson?.section ?? '';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '今天先学 $count 个新词',
+          l10n.studyTodayLearnCount(count),
           style: theme.textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.w900,
             height: 1.1,
@@ -137,9 +141,9 @@ class _StudyHeader extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           lesson == null
-              ? '完成复习后再补新词，保持节奏比堆任务更重要。'
+              ? l10n.studyNewNoLessonHint
               : isPaused
-              ? '学习计划已暂停，恢复后继续从 $section 开始。'
+              ? l10n.studyNewPausedResume(section)
               : '$section · 目标 $dailyGoal 词 · 不做限时测试',
           style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
         ),
@@ -147,16 +151,19 @@ class _StudyHeader extends StatelessWidget {
         Wrap(
           spacing: 8,
           runSpacing: 8,
-          children: const [
-            PillLabel(label: '认识', icon: Icons.sentiment_satisfied_outlined),
+          children: [
             PillLabel(
-              label: '模糊',
-              icon: Icons.visibility_outlined,
+              label: l10n.studyRecallKnown,
+              icon: AppIcons.sentimentSatisfied,
+            ),
+            PillLabel(
+              label: l10n.studyRecallFuzzy,
+              icon: AppIcons.visibility,
               color: AppTheme.mango,
             ),
             PillLabel(
-              label: '不认识',
-              icon: Icons.help_outline,
+              label: l10n.studyRecallUnknown,
+              icon: AppIcons.help,
               color: AppTheme.coral,
             ),
           ],
@@ -169,10 +176,11 @@ class _StudyHeader extends StatelessWidget {
 class _FlowSteps extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final steps = [
-      ('1', '自评', '降低无效重复'),
-      ('2', '词卡', '补全释义和例句'),
-      ('3', '语境题', '主动回忆'),
+      ('1', l10n.studyStepSelfAssess, l10n.studyStepSelfAssessDesc),
+      ('2', l10n.studyStepCards, l10n.studyStepCardsDesc),
+      ('3', l10n.studyStepContext, l10n.studyStepContextDesc),
     ];
     final colorScheme = Theme.of(context).colorScheme;
     return Padding(
@@ -253,7 +261,9 @@ class _WordPreviewTile extends StatelessWidget {
                     Text(word.word, style: theme.textTheme.titleMedium),
                     const SizedBox(height: 3),
                     Text(
-                      word.meaning,
+                      word.primaryDefinitionFor(
+                        Localizations.localeOf(context).languageCode,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),

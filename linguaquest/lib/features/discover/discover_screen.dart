@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
-import '../../core/theme/app_theme.dart';
-import '../../core/widgets/learning_badges.dart';
+import '../../core/theme/app_icons.dart';
+import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 class DiscoverScreen extends ConsumerWidget {
@@ -17,54 +19,59 @@ class DiscoverScreen extends ConsumerWidget {
     final user = state.user;
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
+      padding: const EdgeInsets.fromLTRB(
+        AppTokens.s20,
+        AppTokens.s20,
+        AppTokens.s20,
+        88,
+      ),
       children: [
         Wrap(
-          spacing: 8,
-          runSpacing: 8,
+          spacing: AppTokens.s8,
+          runSpacing: AppTokens.s8,
           children: [
-            PillLabel(
+            AppPill(
               label: '${user?.xp ?? 0} ${l10n.commonXP}',
-              icon: Icons.bolt,
-              color: AppTheme.mango,
+              icon: AppIcons.bolt,
+              variant: PillVariant.xp,
             ),
-            PillLabel(
+            AppPill(
               label: '${user?.streak ?? 0} ${l10n.homeStreakLabel}',
-              icon: Icons.local_fire_department_outlined,
-              color: AppTheme.coral,
+              icon: AppIcons.localFireDepartment,
+              variant: PillVariant.streak,
             ),
           ],
         ),
-        const SizedBox(height: 22),
+        const SizedBox(height: AppTokens.s32),
         Row(
           children: [
             Expanded(
               child: _DiscoverNavCard(
-                icon: Icons.emoji_events_outlined,
+                icon: AppIcons.emojiEvents,
                 title: l10n.discoverXpTasks,
                 subtitle: l10n.discoverXpTasksSubtitle,
-                color: AppTheme.mango,
+                color: AppTokens.xpSoftText,
                 onTap: () => context.push('/discover/xp-tasks'),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppTokens.s12),
             Expanded(
               child: _DiscoverNavCard(
-                icon: Icons.card_giftcard_outlined,
+                icon: AppIcons.cardGiftcard,
                 title: l10n.discoverLuckyDraw,
                 subtitle: l10n.discoverLuckyDrawSubtitle,
-                color: AppTheme.coral,
+                color: AppTokens.streakSoftText,
                 onTap: () => context.push('/discover/lucky-draw'),
               ),
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppTokens.s12),
         _DiscoverNavCard(
-          icon: Icons.forum_outlined,
+          icon: AppIcons.forum,
           title: l10n.discoverCommunityPosts,
           subtitle: l10n.discoverCommunityPostsSubtitle,
-          color: AppTheme.leaf,
+          color: AppTokens.successSoftText,
           onTap: () => context.push('/discover/community'),
         ),
       ],
@@ -90,40 +97,30 @@ class _DiscoverNavCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Material(
-      color: Colors.transparent,
-      borderRadius: BorderRadius.circular(16),
-      clipBehavior: Clip.antiAlias,
-      child: Ink(
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withValues(alpha: 0.24)),
-        ),
-        child: InkWell(
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(icon, color: color, size: 32),
-                const SizedBox(height: 12),
-                Text(title, style: theme.textTheme.titleMedium),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: theme.colorScheme.onSurfaceVariant,
-                    fontSize: 13,
-                  ),
-                ),
-              ],
+    return AppCard(
+      padding: const EdgeInsets.all(AppTokens.s20),
+      onTap: onTap,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, color: color, size: 36),
+          const SizedBox(height: AppTokens.s12),
+          Text(
+            title,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w700,
             ),
           ),
-        ),
+          const SizedBox(height: AppTokens.s4),
+          Text(
+            subtitle,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
       ),
     );
   }

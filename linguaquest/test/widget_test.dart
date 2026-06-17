@@ -10,9 +10,13 @@ import 'package:linguaquest/app.dart';
 import 'package:linguaquest/core/routing/app_router.dart';
 import 'package:linguaquest/core/state/app_controller.dart';
 import 'package:linguaquest/core/state/app_state.dart';
+import 'package:linguaquest/core/theme/app_icons.dart';
 import 'package:linguaquest/core/theme/app_theme.dart';
+import 'package:linguaquest/core/widgets/app_button.dart';
+import 'package:linguaquest/core/widgets/app_card.dart';
 import 'package:linguaquest/core/widgets/learning_badges.dart';
 import 'package:linguaquest/core/widgets/pronunciation_controls.dart';
+import 'package:linguaquest/core/widgets/word_choice_button.dart';
 import 'package:linguaquest/l10n/generated/app_localizations.dart';
 import 'package:linguaquest/data/models/custom_word.dart';
 import 'package:linguaquest/data/models/daily_reward_task.dart';
@@ -56,7 +60,7 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     expect(find.text('LinguaQuest'), findsWidgets);
-    expect(find.byIcon(Icons.route_outlined), findsWidgets);
+    expect(find.byIcon(AppIcons.route), findsWidgets);
 
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -500));
     await tester.pumpAndSettle();
@@ -100,6 +104,9 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('今日词条'), findsOneWidget);
+
+    // Cozy Quest cards landed on home.
+    expect(find.byType(AppCard), findsWidgets);
   });
 
   testWidgets('home progress uses the combined new and review target', (
@@ -334,20 +341,24 @@ void main() {
 
     expect(find.text('快速复习'), findsOneWidget);
     expect(find.textContaining('ambiguous'), findsWidgets);
-    expect(find.text('检查'), findsOneWidget);
+    // Instant judgment: question steps no longer carry a check button.
+    expect(find.text('检查'), findsNothing);
     expect(find.text('管理复习队列'), findsOneWidget);
+    // Cozy Quest cards landed on the mixed study session screen.
+    expect(find.byType(AppCard), findsWidgets);
     expect(find.text('记住了'), findsNothing);
     expect(find.text('没记住'), findsNothing);
     expect(find.text('显示释义'), findsNothing);
     expect(find.text('加入错词卡'), findsNothing);
 
-    await _tapAnyOptionExcept(tester, '含糊的');
-    await tester.tap(find.text('检查'));
-    await tester.pumpAndSettle();
-
+    // A review item is recorded on the first attempt: a wrong tap shows the
+    // feedback, then auto-advances after the 1500ms timer (no retry).
+    await _tapAnyOptionExceptNoSettle(tester, '含糊的');
+    await tester.pump();
     expect(find.textContaining('答错了'), findsOneWidget);
+    expect(find.text('继续'), findsNothing);
 
-    await tester.tap(find.text('继续'));
+    await tester.pump(const Duration(milliseconds: 1500));
     await tester.pumpAndSettle();
 
     expect(find.text('加入稍后复现'), findsOneWidget);
@@ -389,9 +400,10 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.textContaining('仅复习'));
     await tester.pumpAndSettle();
-    await _tapAnyOptionExcept(tester, '含糊的');
-    await tester.tap(find.text('检查'));
-    await tester.pumpAndSettle();
+    // Instant judgment records the attempt on tap (no check button); the wrong
+    // review answer would auto-advance after 1500ms, but we leave before then.
+    await _tapAnyOptionExceptNoSettle(tester, '含糊的');
+    await tester.pump();
 
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
@@ -440,60 +452,66 @@ void main() {
     await tester.tap(find.text('积分任务'));
     await tester.pumpAndSettle();
 
+    expect(find.byType(AppCard), findsWidgets);
     expect(find.text('每日签到'), findsOneWidget);
     expect(find.text('去完成 +5 XP'), findsOneWidget);
     expect(find.textContaining('已入账'), findsNothing);
   });
 
-  test('lesson completion compares server UTC last study date locally', () async {
-    final now = DateTime.now();
-    final yesterdayEarlyLocal = DateTime(
-      now.year,
-      now.month,
-      now.day,
-    ).subtract(const Duration(days: 1)).add(const Duration(minutes: 30));
-    final serverLastStudyDate = yesterdayEarlyLocal.toUtc();
-    final profile = UserProfile(
-      uid: 'utc-streak-user',
-      name: 'Uma',
-      email: 'uma@lingua.quest',
-      targetExam: 'IELTS',
-      level: 'Intermediate',
-      dailyGoal: 12,
-      xp: 120,
-      streak: 4,
-      lastStudyDate: serverLastStudyDate,
-      createdAt: serverLastStudyDate,
-      updatedAt: serverLastStudyDate,
-    );
-    SharedPreferences.setMockInitialValues({
-      'linguaquest.profile': jsonEncode(profile.toJson()),
-    });
-    final container = ProviderContainer();
-    addTearDown(container.dispose);
+  test(
+    'lesson completion compares server UTC last study date locally',
+    () async {
+      final now = DateTime.now();
+      final yesterdayEarlyLocal = DateTime(
+        now.year,
+        now.month,
+        now.day,
+      ).subtract(const Duration(days: 1)).add(const Duration(minutes: 30));
+      final serverLastStudyDate = yesterdayEarlyLocal.toUtc();
+      final profile = UserProfile(
+        uid: 'utc-streak-user',
+        name: 'Uma',
+        email: 'uma@lingua.quest',
+        targetExam: 'IELTS',
+        level: 'Intermediate',
+        dailyGoal: 12,
+        xp: 120,
+        streak: 4,
+        lastStudyDate: serverLastStudyDate,
+        createdAt: serverLastStudyDate,
+        updatedAt: serverLastStudyDate,
+      );
+      SharedPreferences.setMockInitialValues({
+        'linguaquest.profile': jsonEncode(profile.toJson()),
+      });
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
 
-    await container.read(appControllerProvider.notifier).bootstrap();
-    final lesson = container
-        .read(appControllerProvider)
-        .lessons
-        .firstWhere((lesson) => !lesson.isTrainingPack);
+      await container.read(appControllerProvider.notifier).bootstrap();
+      final lesson = container
+          .read(appControllerProvider)
+          .lessons
+          .firstWhere((lesson) => !lesson.isTrainingPack);
 
-    expect(
-      await container.read(appControllerProvider.notifier).completeLesson(
-            LessonResult(
-              lessonId: lesson.id,
-              lessonTitle: lesson.title,
-              totalQuestions: lesson.questions.length,
-              correctAnswers: lesson.questions.length,
-              xpEarned: 10,
-              mistakes: const [],
-              completedAt: DateTime.now(),
+      expect(
+        await container
+            .read(appControllerProvider.notifier)
+            .completeLesson(
+              LessonResult(
+                lessonId: lesson.id,
+                lessonTitle: lesson.title,
+                totalQuestions: lesson.questions.length,
+                correctAnswers: lesson.questions.length,
+                xpEarned: 10,
+                mistakes: const [],
+                completedAt: DateTime.now(),
+              ),
             ),
-          ),
-      true,
-    );
-    expect(container.read(appControllerProvider).user?.streak, 5);
-  });
+        true,
+      );
+      expect(container.read(appControllerProvider).user?.streak, 5);
+    },
+  );
 
   testWidgets(
     'training completion does not unlock formal new-learning reward',
@@ -733,6 +751,25 @@ void main() {
     );
   });
 
+  testWidgets('login quick-enter goes straight into the app', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+
+    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -500));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(AppSecondaryButton, '登录'));
+    await tester.pumpAndSettle();
+
+    // The quick-enter (demo/guest) button on the login screen.
+    await tester.tap(find.widgetWithText(AppSecondaryButton, '进入 LinguaQuest'));
+    await tester.pumpAndSettle();
+
+    // Landed inside the authenticated home experience.
+    expect(find.text('今日任务控制台'), findsOneWidget);
+  });
+
   testWidgets('failed login stays on login screen and shows error', (
     tester,
   ) async {
@@ -748,7 +785,7 @@ void main() {
 
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -500));
     await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(OutlinedButton, '登录'));
+    await tester.tap(find.widgetWithText(AppSecondaryButton, '登录'));
     await tester.pumpAndSettle();
 
     expect(find.text('learner@lingua.quest'), findsNothing);
@@ -759,7 +796,7 @@ void main() {
     await tester.enterText(find.byType(TextFormField).at(1), 'password123');
     await tester.pumpAndSettle();
 
-    await tester.tap(find.widgetWithText(FilledButton, '登录'));
+    await tester.tap(find.widgetWithText(AppPrimaryButton, '登录'));
     await tester.pumpAndSettle();
 
     expect(find.text('欢迎回来'), findsOneWidget);
@@ -785,13 +822,13 @@ void main() {
 
     expect(learningRepository.listAttempts, 1);
     expect(find.textContaining('LinguaQuest 启动失败'), findsOneWidget);
-    expect(find.text('重试'), findsOneWidget);
+    expect(find.text('再试一次'), findsOneWidget);
 
-    await tester.tap(find.text('重试'));
+    await tester.tap(find.text('再试一次'));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     expect(learningRepository.listAttempts, 2);
-    expect(find.byIcon(Icons.route_outlined), findsWidgets);
+    expect(find.byIcon(AppIcons.route), findsWidgets);
   });
 
   testWidgets('session load failure falls back to onboarding', (tester) async {
@@ -809,7 +846,7 @@ void main() {
 
     expect(find.textContaining('LinguaQuest 启动失败'), findsNothing);
     expect(find.text('LinguaQuest'), findsWidgets);
-    expect(find.byIcon(Icons.route_outlined), findsWidgets);
+    expect(find.byIcon(AppIcons.route), findsWidgets);
   });
 
   testWidgets('main shell supports deliberate horizontal tab swiping', (
@@ -844,6 +881,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('限时测试'), findsOneWidget);
+    expect(find.byType(AppCard), findsWidgets);
   });
 
   testWidgets('main shell fling direction matches drag direction', (
@@ -1516,6 +1554,9 @@ void main() {
         container: container,
         child: MaterialApp(
           theme: AppTheme.light(),
+          locale: const Locale('zh'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: LessonPreviewScreen(lessonId: trainingLesson.id),
         ),
       ),
@@ -1657,28 +1698,12 @@ void main() {
     final lesson = _currentLesson(tester);
     await _completeNewWordCards(tester);
 
-    await _answerQuizQuestion(tester, lesson.questions[0], correct: false);
-    await tester.tap(find.text('检查'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('再试一次'));
-    await tester.pumpAndSettle();
-    await _answerQuizQuestion(tester, lesson.questions[0]);
-    await tester.tap(find.text('检查'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('继续'));
-    await tester.pumpAndSettle();
+    // Wrong-then-right on the first question still records it as a mistake.
+    await _answerWrongQuizQuestion(tester, lesson.questions[0]);
+    await _advanceCorrectQuizQuestion(tester, lesson.questions[0]);
 
-    await _answerQuizQuestion(tester, lesson.questions[1]);
-    await tester.tap(find.text('检查'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('继续'));
-    await tester.pumpAndSettle();
-
-    await _answerQuizQuestion(tester, lesson.questions[2]);
-    await tester.tap(find.text('检查'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('继续'));
-    await tester.pumpAndSettle();
+    await _advanceCorrectQuizQuestion(tester, lesson.questions[1]);
+    await _advanceCorrectQuizQuestion(tester, lesson.questions[2]);
 
     expect(find.text('2/3 · +15 XP · 错题已进入复习。'), findsOneWidget);
     expect(find.text('已入账 +15 XP'), findsOneWidget);
@@ -1686,6 +1711,8 @@ void main() {
     expect(find.text('总积分 15 XP'), findsOneWidget);
     expect(find.text('当前总积分 15 XP。XP 会同步到个人主页、排行榜和发现页抽奖余额。'), findsOneWidget);
     expect(find.text('查看 XP 用途'), findsOneWidget);
+    // Cozy Quest cards landed on the lesson result screen.
+    expect(find.byType(AppCard), findsWidgets);
 
     await tester.scrollUntilVisible(
       find.text('去复习中心'),
@@ -1698,6 +1725,7 @@ void main() {
 
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -900));
     await tester.pumpAndSettle();
+    expect(find.byType(AppCard), findsWidgets);
     expect(find.text(lesson.questions[0].word.word), findsWidgets);
     expect(find.text('课程'), findsWidgets);
     expect(find.byType(BackButtonIcon), findsOneWidget);
@@ -1709,7 +1737,7 @@ void main() {
     expect(find.text('复习'), findsWidgets);
   });
 
-  testWidgets('quiz feedback stays visible before continuing', (tester) async {
+  testWidgets('quiz auto-advances after the feedback delay', (tester) async {
     final now = DateTime(2026, 5, 25);
     final profile = UserProfile(
       uid: 'feedback-user',
@@ -1734,27 +1762,95 @@ void main() {
     final lesson = _currentLesson(tester);
     await _completeNewWordCards(tester);
 
-    await _answerQuizQuestion(tester, lesson.questions.first);
-    await tester.tap(find.text('检查'));
-    await tester.pump();
+    // Advance to the first choice question (skipping any leading spelling ones).
+    final choiceIndex = _advanceToFirstChoiceQuestion(lesson);
+    for (var i = 0; i < choiceIndex; i++) {
+      await _advanceCorrectQuizQuestion(tester, lesson.questions[i]);
+    }
 
-    Finder continueButton() => find.widgetWithText(FilledButton, '继续');
+    final choiceQuestion = lesson.questions[choiceIndex];
+    final nextQuestion = lesson.questions[choiceIndex + 1];
 
+    // Tapping the correct choice judges instantly — no check/continue buttons.
+    await _tapOptionNoSettle(tester, choiceQuestion.answer);
+
+    expect(find.byType(AppCard), findsWidgets);
+    expect(find.text('继续'), findsNothing);
     expect(find.textContaining('答对了'), findsOneWidget);
     expect(
       find.textContaining(
-        '强化记忆：${lesson.questions.first.word.word} · ${lesson.questions.first.word.meaning}',
+        '强化记忆：${choiceQuestion.word.word} · ${choiceQuestion.word.meaning}',
       ),
       findsOneWidget,
     );
-    expect(continueButton(), findsOneWidget);
-    expect(tester.widget<FilledButton>(continueButton()).onPressed, isNull);
+    // Still on the choice question prompt before the auto-advance delay.
+    expect(find.text(choiceQuestion.prompt), findsOneWidget);
 
-    await tester.pump(const Duration(milliseconds: 499));
-    expect(tester.widget<FilledButton>(continueButton()).onPressed, isNull);
+    await tester.pump(const Duration(milliseconds: 1499));
+    expect(find.text(choiceQuestion.prompt), findsOneWidget);
+    expect(find.text(nextQuestion.prompt), findsNothing);
 
     await tester.pump(const Duration(milliseconds: 2));
-    expect(tester.widget<FilledButton>(continueButton()).onPressed, isNotNull);
+    await tester.pumpAndSettle();
+    // Advanced to the next question.
+    expect(find.text(choiceQuestion.prompt), findsNothing);
+    expect(find.text(nextQuestion.prompt), findsOneWidget);
+  });
+
+  testWidgets('quiz lets you re-select after a wrong choice', (tester) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'reselect-user',
+      name: 'Remy',
+      email: 'remy@lingua.quest',
+      targetExam: 'IELTS',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+
+    await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await _openCurrentLessonCards(tester);
+    final lesson = _currentLesson(tester);
+    await _completeNewWordCards(tester);
+
+    final choiceIndex = _advanceToFirstChoiceQuestion(lesson);
+    for (var i = 0; i < choiceIndex; i++) {
+      await _advanceCorrectQuizQuestion(tester, lesson.questions[i]);
+    }
+
+    final choiceQuestion = lesson.questions[choiceIndex];
+    final nextQuestion = lesson.questions[choiceIndex + 1];
+
+    // A wrong tap shows the retry feedback and does NOT advance or reveal.
+    await _tapAnyOptionExceptNoSettle(tester, choiceQuestion.answer);
+    expect(find.textContaining('还不对'), findsOneWidget);
+    // Does not reveal the explanation / reinforce block on a wrong attempt.
+    expect(
+      find.textContaining(
+        '强化记忆：${choiceQuestion.word.word} · ${choiceQuestion.word.meaning}',
+      ),
+      findsNothing,
+    );
+    // Still on the same question (no auto-advance on wrong).
+    await tester.pump(const Duration(milliseconds: 1600));
+    expect(find.text(choiceQuestion.prompt), findsOneWidget);
+    expect(find.text(nextQuestion.prompt), findsNothing);
+
+    // Re-selecting the correct option now judges correct and advances.
+    await _tapOptionNoSettle(tester, choiceQuestion.answer);
+    expect(find.textContaining('答对了'), findsOneWidget);
+    await tester.pump(const Duration(milliseconds: 1500));
+    await tester.pumpAndSettle();
+    expect(find.text(nextQuestion.prompt), findsOneWidget);
   });
 
   testWidgets('lesson and quiz screens expose a working back path', (
@@ -1790,6 +1886,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('学习路径'), findsOneWidget);
+    // Cozy Quest cards landed on the learning path.
+    expect(find.byType(AppCard), findsWidgets);
 
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
@@ -1799,10 +1897,14 @@ void main() {
     await _openCurrentLessonCards(tester);
     await _completeNewWordCards(tester);
 
-    expect(find.text('检查'), findsOneWidget);
+    final quizLesson = _currentLesson(tester);
+    final firstQuestion = quizLesson.questions.first;
+    // The question prompt marks that we are on the quiz screen.
+    expect(find.text(firstQuestion.prompt), findsOneWidget);
     expect(find.byType(BackButtonIcon), findsOneWidget);
 
-    await _answerQuizQuestion(tester, _currentLesson(tester).questions.first);
+    // A wrong answer registers progress but does not advance.
+    await _answerWrongQuizQuestion(tester, firstQuestion);
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
 
@@ -1811,11 +1913,8 @@ void main() {
     await tester.tap(find.text('继续答题'));
     await tester.pumpAndSettle();
 
-    expect(find.text('检查'), findsOneWidget);
-    await tester.tap(find.text('检查'));
-    await tester.pumpAndSettle();
-
-    expect(find.widgetWithText(FilledButton, '继续'), findsOneWidget);
+    // Still on the same quiz question after choosing to keep answering.
+    expect(find.text(firstQuestion.prompt), findsOneWidget);
 
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
@@ -1823,7 +1922,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('离开测验？'), findsNothing);
-    expect(find.text('检查'), findsNothing);
+    expect(find.text(firstQuestion.prompt), findsNothing);
   });
 
   testWidgets('new word cards confirm before leaving after progress', (
@@ -1850,6 +1949,8 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     await _openCurrentLessonCards(tester);
+
+    expect(find.byType(AppCard), findsWidgets);
 
     await tester.tap(find.widgetWithText(OutlinedButton, '认识'));
     await tester.pumpAndSettle();
@@ -2167,6 +2268,7 @@ void main() {
     await tester.tap(find.text('调整计划'));
     await tester.pumpAndSettle();
 
+    expect(find.byType(AppCard), findsWidgets);
     expect(find.byType(LinearProgressIndicator), findsOneWidget);
     await tester.tap(find.text('保存学习计划'));
     await tester.pump();
@@ -2672,6 +2774,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('加入生词本'), findsOneWidget);
+    expect(find.byType(AppCard), findsWidgets);
 
     await tester.tap(find.widgetWithText(FilledButton, '加入生词本'));
     await tester.pumpAndSettle();
@@ -2812,6 +2915,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('context'), findsWidgets);
+    expect(find.byType(AppCard), findsWidgets);
     await tester.scrollUntilVisible(
       find.text('词汇全解'),
       300,
@@ -2913,6 +3017,7 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(find.text('context'), findsOneWidget);
     expect(find.text('简单'), findsOneWidget);
+    expect(find.byType(AppCard), findsWidgets);
   });
 
   test('deadline planning saves daily words into the profile', () async {
@@ -3492,24 +3597,98 @@ void main() {
     await tester.tap(find.text('进入识别题'));
     await tester.pumpAndSettle();
 
-    await _tapAnyOptionExcept(tester, firstWord.meaning);
-    await tester.tap(find.text('检查'));
-    await tester.pumpAndSettle();
+    // Instant judgment: a wrong tap marks the option red but keeps the same
+    // question open for re-selection (no auto-advance, no check button).
+    await _tapAnyOptionExceptNoSettle(tester, firstWord.meaning);
+    await tester.pump();
+    expect(find.text('检查'), findsNothing);
     expect(find.textContaining(firstWord.word), findsWidgets);
 
-    if (find.text('再试一次').evaluate().isNotEmpty) {
-      await tester.tap(find.text('再试一次'));
-      await tester.pumpAndSettle();
-    }
-    await tester.tap(find.widgetWithText(OutlinedButton, firstWord.meaning));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('检查'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('继续'));
+    // Selecting the correct answer settles the step and auto-advances after the
+    // 1500ms timer.
+    await _tapOptionNoSettle(tester, firstWord.meaning);
+    await tester.pump(const Duration(milliseconds: 1500));
     await tester.pumpAndSettle();
 
     expect(find.text('加入稍后复现'), findsOneWidget);
+
+    // Drain the top-notice auto-dismiss timer so no timer outlives the test.
+    await tester.pump(const Duration(milliseconds: 1800));
+    await tester.pumpAndSettle();
   });
+
+  testWidgets(
+    'mixed study question step instant-judges: wrong stays, correct auto-advances',
+    (tester) async {
+      final now = DateTime(2026, 5, 25);
+      final profile = UserProfile(
+        uid: 'instant-judge-user',
+        name: 'Ivy',
+        email: 'ivy@lingua.quest',
+        targetExam: 'IELTS',
+        level: 'Elementary',
+        dailyGoal: 10,
+        xp: 0,
+        streak: 0,
+        createdAt: now,
+        updatedAt: now,
+      );
+      SharedPreferences.setMockInitialValues({
+        'linguaquest.profile': jsonEncode(profile.toJson()),
+      });
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            customWordRepositoryProvider.overrideWithValue(
+              _EmptyCustomWordRepository(),
+            ),
+          ],
+          child: const LinguaQuestApp(),
+        ),
+      );
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+      final container = ProviderScope.containerOf(
+        tester.element(find.byType(LinguaQuestApp)),
+      );
+      final firstWord = container
+          .read(appControllerProvider)
+          .currentLesson!
+          .words
+          .first;
+      await tester.tap(find.textContaining('开始今日学习'));
+      await tester.pumpAndSettle();
+
+      // Enter the recognition question for the first new word.
+      await tester.tap(find.text('不认识'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('进入识别题'));
+      await tester.pumpAndSettle();
+      // No check button: question steps judge on tap.
+      expect(find.text('检查'), findsNothing);
+      // The recall card that follows the question is not on screen yet.
+      expect(find.text('加入稍后复现'), findsNothing);
+
+      // A wrong tap does NOT advance: even after the auto-advance window would
+      // have elapsed, the follow-up recall card has not appeared.
+      await _tapAnyOptionExceptNoSettle(tester, firstWord.meaning);
+      await tester.pump(const Duration(milliseconds: 1500));
+      await tester.pump();
+      expect(find.text('加入稍后复现'), findsNothing);
+
+      // A correct tap settles the step. Before the 1500ms timer fires we have
+      // not advanced; after it fires the follow-up recall card appears.
+      await _tapOptionNoSettle(tester, firstWord.meaning);
+      expect(find.text('加入稍后复现'), findsNothing);
+      await tester.pump(const Duration(milliseconds: 1500));
+      await tester.pumpAndSettle();
+      expect(find.text('加入稍后复现'), findsOneWidget);
+
+      // Drain the top-notice auto-dismiss timer.
+      await tester.pump(const Duration(milliseconds: 1800));
+      await tester.pumpAndSettle();
+    },
+  );
 
   test('mixed study completion records learned target words', () async {
     final now = DateTime(2026, 5, 25);
@@ -4059,40 +4238,10 @@ Future<void> _openCurrentLessonCards(WidgetTester tester) async {
   );
   container.read(routerProvider).go('/learn');
   await tester.pumpAndSettle();
-  await tester.tap(find.byIcon(Icons.play_arrow_rounded).first);
+  await tester.tap(find.byIcon(AppIcons.playArrow).first);
   await tester.pumpAndSettle();
-  await tester.tap(find.widgetWithText(FilledButton, '开始学习'));
+  await tester.tap(find.widgetWithText(AppPrimaryButton, '开始学习'));
   await tester.pumpAndSettle();
-}
-
-Future<void> _tapOption(WidgetTester tester, String label) async {
-  final option = find.widgetWithText(OutlinedButton, label).first;
-  expect(option, findsOneWidget);
-  await tester.ensureVisible(option);
-  await tester.pumpAndSettle();
-  final rect = tester.getRect(option);
-  await tester.tapAt(Offset(rect.left + 24, rect.top + 24));
-  await tester.pumpAndSettle();
-}
-
-Future<void> _tapAnyOptionExcept(WidgetTester tester, String label) async {
-  for (final element in find.byType(OutlinedButton).evaluate()) {
-    final option = find.byElementPredicate((candidate) {
-      return identical(candidate, element);
-    });
-    final hasExcludedLabel = find
-        .descendant(of: option, matching: find.text(label))
-        .evaluate()
-        .isNotEmpty;
-    if (hasExcludedLabel) continue;
-    await tester.ensureVisible(option);
-    await tester.pumpAndSettle();
-    final rect = tester.getRect(option);
-    await tester.tapAt(Offset(rect.left + 24, rect.top + 24));
-    await tester.pumpAndSettle();
-    return;
-  }
-  fail('No option found except $label');
 }
 
 Lesson _currentLesson(WidgetTester tester) {
@@ -4102,30 +4251,88 @@ Lesson _currentLesson(WidgetTester tester) {
   return container.read(appControllerProvider).currentLesson!;
 }
 
-Future<void> _answerQuizQuestion(
+/// Answers [question] correctly in the [QuizSessionScreen] immediate-judgment
+/// flow and advances past the 1500ms auto-advance to the next question (or to
+/// the result screen if it was the last). For choice questions this taps the
+/// correct option; for spelling it enters the answer and taps the check button.
+Future<void> _advanceCorrectQuizQuestion(
   WidgetTester tester,
-  QuizQuestion question, {
-  bool correct = true,
-}) async {
-  switch (question.type) {
-    case QuizQuestionType.spelling:
-      await tester.enterText(
-        find.byType(TextField),
-        correct ? question.answer : '${question.answer}x',
-      );
-      await tester.pumpAndSettle();
-    case QuizQuestionType.meaningChoice:
-    case QuizQuestionType.chineseChoice:
-    case QuizQuestionType.contextChoice:
-    case QuizQuestionType.imageChoice:
-    case QuizQuestionType.listeningWordChoice:
-    case QuizQuestionType.listeningMeaningChoice:
-      if (correct) {
-        await _tapOption(tester, question.answer);
-      } else {
-        await _tapAnyOptionExcept(tester, question.answer);
-      }
+  QuizQuestion question,
+) async {
+  if (question.type == QuizQuestionType.spelling) {
+    await tester.enterText(find.byType(TextField), question.answer);
+    await tester.pump();
+    await tester.tap(find.text('检查'));
+    await tester.pump();
+  } else {
+    await _tapOptionNoSettle(tester, question.answer);
   }
+  // Run the auto-advance timer to completion, then let navigation settle.
+  await tester.pump(const Duration(milliseconds: 1500));
+  await tester.pumpAndSettle();
+}
+
+/// Returns the index of the first non-spelling (choice) question in [lesson]
+/// that is followed by at least one more question. Fails if none exists.
+int _advanceToFirstChoiceQuestion(Lesson lesson) {
+  for (var i = 0; i < lesson.questions.length - 1; i++) {
+    if (lesson.questions[i].type != QuizQuestionType.spelling) return i;
+  }
+  fail('No non-final choice question found in lesson ${lesson.id}.');
+}
+
+/// Answers [question] incorrectly in the [QuizSessionScreen] immediate-judgment
+/// flow. The screen stays on the same question (no auto-advance on wrong).
+Future<void> _answerWrongQuizQuestion(
+  WidgetTester tester,
+  QuizQuestion question,
+) async {
+  if (question.type == QuizQuestionType.spelling) {
+    await tester.enterText(find.byType(TextField), '${question.answer}x');
+    await tester.pump();
+    await tester.tap(find.text('检查'));
+    await tester.pump();
+  } else {
+    await _tapAnyOptionExceptNoSettle(tester, question.answer);
+  }
+}
+
+/// Taps the option labelled [label] without pumping past the auto-advance
+/// timer (unlike [_tapOption] which calls pumpAndSettle).
+Future<void> _tapOptionNoSettle(WidgetTester tester, String label) async {
+  final finder = find.widgetWithText(WordChoiceButton, label).first;
+  expect(finder, findsOneWidget);
+  await tester.ensureVisible(finder);
+  await tester.pump();
+  final rect = tester.getRect(finder);
+  await tester.tapAt(Offset(rect.left + 24, rect.top + 24));
+  await tester.pump();
+}
+
+/// Taps any choice option except the one labelled [label], without pumping
+/// past the auto-advance timer.
+Future<void> _tapAnyOptionExceptNoSettle(
+  WidgetTester tester,
+  String label,
+) async {
+  final candidates = find.byType(WordChoiceButton).evaluate();
+  for (final element in candidates) {
+    final option = find.byElementPredicate(
+      (candidate) => identical(candidate, element),
+    );
+    final hasExcludedLabel = find
+        .descendant(of: option, matching: find.text(label))
+        .evaluate()
+        .isNotEmpty;
+    if (hasExcludedLabel) continue;
+    await tester.ensureVisible(option);
+    await tester.pump();
+    final rect = tester.getRect(option);
+    await tester.tapAt(Offset(rect.left + 24, rect.top + 24));
+    await tester.pump();
+    return;
+  }
+  fail('No option found except $label');
 }
 
 Future<void> _completeNewWordCards(WidgetTester tester) async {
@@ -4550,9 +4757,7 @@ class _IncompleteClaimRewardRepository implements RewardTaskRepository {
 
   @override
   Future<RewardTaskSnapshot> claimTask(String uid, String taskId) async {
-    final requestOptions = RequestOptions(
-      path: '/rewards/tasks/$taskId/claim',
-    );
+    final requestOptions = RequestOptions(path: '/rewards/tasks/$taskId/claim');
     throw DioException(
       requestOptions: requestOptions,
       response: Response<Map<String, dynamic>>(

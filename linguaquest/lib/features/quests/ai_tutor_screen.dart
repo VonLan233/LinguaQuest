@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
+import 'package:linguaquest/core/theme/app_icons.dart';
+
+import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_card.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/section_header.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class AiTutorScreen extends StatefulWidget {
   const AiTutorScreen({super.key});
@@ -11,9 +16,8 @@ class AiTutorScreen extends StatefulWidget {
 }
 
 class _AiTutorScreenState extends State<AiTutorScreen> {
-  final _promptController = TextEditingController(
-    text: '解释 affect 和 effect 的区别',
-  );
+  final _promptController = TextEditingController();
+  bool _promptInitialized = false;
 
   @override
   void dispose() {
@@ -23,47 +27,49 @@ class _AiTutorScreenState extends State<AiTutorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    if (!_promptInitialized) {
+      _promptController.text = l10n.aiTutorSamplePrompt;
+      _promptInitialized = true;
+    }
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/quest'),
-        title: const Text('AI 助教'),
+        title: Text(l10n.questAiTutor),
       ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            const SectionHeader(
-              title: '即时反馈',
-              subtitle: '输入单词、语法或错题，获得结构化解释和可练习的例句。',
-            ),
+            SectionHeader(title: '即时反馈', subtitle: l10n.aiTutorSubtitle),
             const SizedBox(height: 16),
             TextField(
               controller: _promptController,
               minLines: 2,
               maxLines: 4,
-              decoration: const InputDecoration(
-                labelText: '询问单词、语法或错题',
-                prefixIcon: Icon(Icons.smart_toy_outlined),
+              decoration: InputDecoration(
+                labelText: l10n.aiTutorInputLabel,
+                prefixIcon: const Icon(AppIcons.smartToy),
               ),
             ),
-            const SizedBox(height: 16),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(
-                  Icons.psychology_alt_outlined,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    'Affect is usually a verb: "The weather affects my mood." '
-                    'Effect is usually a noun: "The effect was immediate." '
-                    '你可以分别用两个词各造一个句子。',
-                    style: Theme.of(context).textTheme.bodyLarge,
+            const SizedBox(height: AppTokens.s16),
+            AppCard(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    AppIcons.psychologyAlt,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
-                ),
-              ],
+                  const SizedBox(width: AppTokens.s12),
+                  Expanded(
+                    child: Text(
+                      l10n.aiTutorSampleAnswer,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

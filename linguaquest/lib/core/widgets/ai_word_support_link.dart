@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../l10n/generated/app_localizations.dart';
+import '../theme/app_icons.dart';
 import '../theme/app_theme.dart';
 import 'learning_badges.dart';
 
@@ -33,7 +34,7 @@ class AiWordSupportLink extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const IconCueBadge(
-                icon: Icons.auto_awesome_outlined,
+                icon: AppIcons.autoAwesome,
                 color: AppTheme.cyan,
               ),
               const SizedBox(width: 12),
@@ -56,7 +57,7 @@ class AiWordSupportLink extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right_rounded),
+              const Icon(AppIcons.chevronRight),
             ],
           ),
         ),

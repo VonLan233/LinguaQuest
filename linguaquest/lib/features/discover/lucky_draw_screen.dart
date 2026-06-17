@@ -3,8 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
-import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_icons.dart';
+import '../../core/theme/app_tokens.dart';
 import '../../core/utils/ui_labels.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../data/models/lottery.dart';
@@ -24,7 +28,7 @@ class LuckyDrawScreen extends ConsumerWidget {
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(AppTokens.s20),
           children: const [_LotteryPanel()],
         ),
       ),
@@ -50,65 +54,84 @@ class _LotteryPanel extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const ImageCueBadge(cue: '🎁', size: 52),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
+        AppCard(
+          padding: const EdgeInsets.all(AppTokens.s20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    l10n.luckyDrawCostLine(lotteryDrawCost),
-                    style: theme.textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    l10n.luckyDrawBalanceHint(user?.xp ?? 0),
-                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                  const ImageCueBadge(cue: '🎁', size: 52),
+                  const SizedBox(width: AppTokens.s12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.luckyDrawCostLine(lotteryDrawCost),
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: AppTokens.s4),
+                        Text(
+                          l10n.luckyDrawBalanceHint(user?.xp ?? 0),
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
-            ),
-          ],
+              const SizedBox(height: AppTokens.s12),
+              Wrap(
+                spacing: AppTokens.s8,
+                runSpacing: AppTokens.s8,
+                children: [
+                  AppPill(
+                    label: l10n.luckyDrawInventoryCount(inventoryCount),
+                    variant: PillVariant.primary,
+                    icon: AppIcons.inventory2,
+                  ),
+                  AppPill(
+                    label: l10n.luckyDrawNoBoost,
+                    variant: PillVariant.neutral,
+                    icon: AppIcons.balance,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 12),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
+        const SizedBox(height: AppTokens.s12),
+        AppCard(child: _ProbabilityList(prizes: state.lotteryPrizes)),
+        const SizedBox(height: AppTokens.s16),
+        Stack(
+          alignment: Alignment.center,
           children: [
-            PillLabel(
-              label: l10n.luckyDrawInventoryCount(inventoryCount),
-              icon: Icons.inventory_2_outlined,
-              color: AppTheme.teal,
+            AppPrimaryButton(
+              onPressed: canDraw ? () => _draw(context, ref) : null,
+              icon: state.isLoading ? null : AppIcons.casino,
+              label: canDraw ? l10n.luckyDrawNow : l10n.luckyDrawInsufficient,
             ),
-            PillLabel(
-              label: l10n.luckyDrawNoBoost,
-              icon: Icons.balance_outlined,
-              color: AppTheme.coral,
-            ),
+            if (state.isLoading)
+              const SizedBox(
+                width: 18,
+                height: 18,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
           ],
-        ),
-        const SizedBox(height: 12),
-        _ProbabilityList(prizes: state.lotteryPrizes),
-        const SizedBox(height: 12),
-        FilledButton.icon(
-          onPressed: canDraw ? () => _draw(context, ref) : null,
-          icon: state.isLoading
-              ? const SizedBox(
-                  width: 18,
-                  height: 18,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const Icon(Icons.casino_outlined),
-          label: Text(canDraw ? l10n.luckyDrawNow : l10n.luckyDrawInsufficient),
         ),
         if ((user?.xp ?? 0) < lotteryDrawCost) ...[
-          const SizedBox(height: 8),
+          const SizedBox(height: AppTokens.s8),
           Text(
             l10n.luckyDrawShortfall(lotteryDrawCost - (user?.xp ?? 0)),
-            style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
           ),
         ],
       ],
@@ -138,14 +161,14 @@ class _LotteryPanel extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(l10n.luckyDrawReward(result.prize.name)),
-            const SizedBox(height: 6),
+            const SizedBox(height: AppTokens.s8),
             Text(
               '${displayLotteryCategory(result.prize.category, l10n: l10n)} · '
               '${displayLotteryRarity(result.prize.rarity, l10n: l10n)}',
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: AppTokens.s8),
             Text(result.prize.description),
-            const SizedBox(height: 10),
+            const SizedBox(height: AppTokens.s12),
             Text(l10n.luckyDrawDeducted(result.cost, result.balanceAfter)),
           ],
         ),
@@ -181,14 +204,16 @@ class _ProbabilityList extends StatelessWidget {
     if (prizes.isEmpty) {
       return Text(
         l10n.luckyDrawPoolLoading,
-        style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+        style: theme.textTheme.bodyMedium?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
       );
     }
     return Column(
       children: [
         for (final prize in prizes)
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 3),
+            padding: const EdgeInsets.symmetric(vertical: AppTokens.s4),
             child: Row(
               children: [
                 Expanded(
@@ -198,11 +223,13 @@ class _ProbabilityList extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppTokens.s8),
                 Text(
                   '${displayLotteryRarity(prize.rarity, l10n: l10n)} '
                   '${_formatProbability(prize.probability)}%',
-                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ],
             ),

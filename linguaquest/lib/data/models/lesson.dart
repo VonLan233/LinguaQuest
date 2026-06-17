@@ -60,6 +60,7 @@ class Word {
     this.audioUSUrl = '',
     this.definitions = const [],
     this.englishDefinitions = const [],
+    this.malayDefinitions = const [],
     this.examples = const [],
     this.collocations = const [],
     this.synonyms = const [],
@@ -86,6 +87,7 @@ class Word {
   final String audioUSUrl;
   final List<String> definitions;
   final List<String> englishDefinitions;
+  final List<String> malayDefinitions;
   final List<WordExample> examples;
   final List<WordPhrase> collocations;
   final List<String> synonyms;
@@ -96,10 +98,55 @@ class Word {
 
   String get audioUrl => audioUSUrl.isNotEmpty ? audioUSUrl : audioUKUrl;
 
+  /// Returns the list of meanings localized for [languageCode]:
+  /// - 'en' → [englishDefinitions], falling back to [definitions].
+  /// - 'ms' → [malayDefinitions], falling back to [englishDefinitions], then
+  ///   [definitions].
+  /// - anything else (incl. 'zh') → [definitions], falling back to
+  ///   [englishDefinitions].
+  ///
+  /// As a final fallback (e.g. legacy/custom words that only carry the scalar
+  /// [meaning]/[definition] fields), returns a single-element list derived from
+  /// those so callers always have something to show.
+  List<String> definitionsFor(String languageCode) {
+    List<String> pick() {
+      switch (languageCode) {
+        case 'en':
+          if (englishDefinitions.isNotEmpty) return englishDefinitions;
+          return definitions;
+        case 'ms':
+          if (malayDefinitions.isNotEmpty) return malayDefinitions;
+          if (englishDefinitions.isNotEmpty) return englishDefinitions;
+          return definitions;
+        default:
+          if (definitions.isNotEmpty) return definitions;
+          return englishDefinitions;
+      }
+    }
+
+    final result = pick();
+    if (result.isNotEmpty) return result;
+    // Legacy/custom words: synthesize from the scalar fields.
+    if (languageCode == 'en' && definition.trim().isNotEmpty) {
+      return [definition];
+    }
+    if (meaning.trim().isNotEmpty) return [meaning];
+    if (definition.trim().isNotEmpty) return [definition];
+    return const [];
+  }
+
+  /// The primary (first) meaning localized for [languageCode], or '' if none.
+  /// Intended for single-line displays and as the answer key for quiz options.
+  String primaryDefinitionFor(String languageCode) {
+    final list = definitionsFor(languageCode);
+    return list.isEmpty ? '' : list.first;
+  }
+
   factory Word.fromJson(Map<String, dynamic> json) {
     final wordText = _string(json['word']);
     final definitions = _stringList(json['definitions']);
     final englishDefinitions = _stringList(json['englishDefinitions']);
+    final malayDefinitions = _stringList(json['malayDefinitions']);
     final examples = _examples(json['exampleSentences']);
     final phoneticUK = _string(json['phoneticUK']);
     final phoneticUS = _string(json['phoneticUS']);
@@ -148,6 +195,7 @@ class Word {
       audioUSUrl: _string(json['audioUSUrl']),
       definitions: definitions,
       englishDefinitions: englishDefinitions,
+      malayDefinitions: malayDefinitions,
       examples: examples,
       collocations: _phrases(json['collocations']),
       synonyms: _stringList(json['synonyms']),
@@ -171,6 +219,7 @@ class Word {
       'englishDefinitions': englishDefinitions.isEmpty
           ? [definition]
           : englishDefinitions,
+      'malayDefinitions': malayDefinitions,
       'exampleSentences': examples.isEmpty
           ? [WordExample(en: exampleSentence, cn: exampleTranslation).toJson()]
           : [for (final example in examples) example.toJson()],
@@ -199,10 +248,14 @@ class WordBook {
     required this.wordIds,
     required this.createdAt,
     required this.words,
+    this.titleEn = '',
+    this.titleMs = '',
   });
 
   final String id;
   final String title;
+  final String titleEn;
+  final String titleMs;
   final String category;
   final String examType;
   final String coverUrl;
@@ -213,6 +266,24 @@ class WordBook {
   final DateTime createdAt;
   final List<Word> words;
 
+  /// The wordbook title localized for [languageCode]:
+  /// - 'en' → [titleEn], falling back to [title].
+  /// - 'ms' → [titleMs], falling back to [titleEn], then [title].
+  /// - anything else (incl. 'zh') → [title].
+  ///
+  /// Display-only; never use as a map key or id.
+  String nameFor(String languageCode) {
+    switch (languageCode) {
+      case 'en':
+        return titleEn.isNotEmpty ? titleEn : title;
+      case 'ms':
+        if (titleMs.isNotEmpty) return titleMs;
+        return titleEn.isNotEmpty ? titleEn : title;
+      default:
+        return title;
+    }
+  }
+
   factory WordBook.fromJson(Map<String, dynamic> json) {
     final words = (json['words'] as List? ?? const [])
         .whereType<Map>()
@@ -222,6 +293,8 @@ class WordBook {
     return WordBook(
       id: _string(json['id']),
       title: _string(json['title']),
+      titleEn: _string(json['titleEn']),
+      titleMs: _string(json['titleMs']),
       category: _string(json['category'], fallback: 'exam'),
       examType: _string(json['examType']),
       coverUrl: _string(json['coverUrl']),
@@ -242,6 +315,8 @@ class WordBook {
     return {
       'id': id,
       'title': title,
+      'titleEn': titleEn,
+      'titleMs': titleMs,
       'category': category,
       'examType': examType,
       'coverUrl': coverUrl,

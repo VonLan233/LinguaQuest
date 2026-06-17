@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
-import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
 import '../../core/utils/date_formatting.dart';
-import '../../core/widgets/empty_state.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/mascot_empty_state.dart';
+import '../../core/widgets/stat_tile.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -34,7 +39,12 @@ class ReviewCenterScreen extends ConsumerWidget {
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
+          padding: const EdgeInsets.fromLTRB(
+            AppTokens.s20,
+            AppTokens.s20,
+            AppTokens.s20,
+            88,
+          ),
           children: [
             _ReviewStatusHeader(
               isPaused: state.isStudyPlanPaused,
@@ -43,14 +53,14 @@ class ReviewCenterScreen extends ConsumerWidget {
               dailyReviewLimit: state.dailyReviewLimit,
               l10n: l10n,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppTokens.s16),
             _ReviewQueueSignals(
               dueCount: due.length,
               weakCount: weak.length,
               cardCount: state.customWords.length,
               l10n: l10n,
             ),
-            const SizedBox(height: 22),
+            const SizedBox(height: AppTokens.s24),
             Text(
               l10n.reviewCenterTodayDue,
               style: Theme.of(
@@ -59,14 +69,12 @@ class ReviewCenterScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 10),
             if (due.isEmpty)
-              EmptyState(
-                icon: Icons.check_circle_outline,
-                title: l10n.reviewCenterEmpty,
+              MascotEmptyState(
+                title: l10n.reviewCenterTodayDone,
                 message: l10n.reviewCenterEmpty,
-                action: OutlinedButton.icon(
+                action: AppSecondaryButton(
+                  label: l10n.wordbookAddCustom,
                   onPressed: () => context.push('/custom-words/new'),
-                  icon: const Icon(Icons.add),
-                  label: Text(l10n.wordbookAddCustom),
                 ),
               )
             else
@@ -167,98 +175,37 @@ class _ReviewQueueSignals extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: _ReviewSignal(
-            label: l10n.reviewCenterTodayDue,
-            value: '$dueCount',
-            icon: Icons.today_outlined,
-            color: AppTheme.teal,
+    return AppCard(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(
+            child: StatTile(
+              value: '$dueCount',
+              label: l10n.reviewCenterTodayDue,
+              icon: AppIcons.today,
+              accent: AppTokens.azure,
+            ),
           ),
-        ),
-        const _ReviewSignalDivider(),
-        Expanded(
-          child: _ReviewSignal(
-            label: l10n.mistakeBookTitle,
-            value: '$weakCount',
-            icon: Icons.warning_amber_outlined,
-            color: AppTheme.coral,
+          const SizedBox(width: AppTokens.s12),
+          Flexible(
+            child: StatTile(
+              value: '$weakCount',
+              label: l10n.mistakeBookTitle,
+              icon: AppIcons.warningAmber,
+              accent: AppTokens.coral,
+            ),
           ),
-        ),
-        const _ReviewSignalDivider(),
-        Expanded(
-          child: _ReviewSignal(
-            label: l10n.commonCustomWords,
-            value: '$cardCount',
-            icon: Icons.style_outlined,
-            color: AppTheme.cyan,
+          const SizedBox(width: AppTokens.s12),
+          Flexible(
+            child: StatTile(
+              value: '$cardCount',
+              label: l10n.commonCustomWords,
+              icon: AppIcons.style,
+              accent: AppTokens.azure,
+            ),
           ),
-        ),
-      ],
-    );
-  }
-}
-
-class _ReviewSignal extends StatelessWidget {
-  const _ReviewSignal({
-    required this.label,
-    required this.value,
-    required this.icon,
-    required this.color,
-  });
-
-  final String label;
-  final String value;
-  final IconData icon;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, color: color, size: 20),
-        const SizedBox(width: 6),
-        Flexible(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                value,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.titleMedium,
-              ),
-              Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _ReviewSignalDivider extends StatelessWidget {
-  const _ReviewSignalDivider();
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 34,
-      child: VerticalDivider(
-        width: 16,
-        thickness: 1,
-        color: Theme.of(context).colorScheme.outlineVariant,
+        ],
       ),
     );
   }
@@ -278,71 +225,66 @@ class _ReviewTile extends ConsumerWidget {
     final canReview = word.isDue(DateTime.now()) && !isLoading;
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              ImageCueBadge(cue: wordInitialCue(word.word), size: 54),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(word.word, style: theme.textTheme.titleMedium),
-                    const SizedBox(height: 3),
-                    Text(
-                      '${word.meaning} · ${formatRelativeDue(word.nextReviewAt, DateTime.now())}',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: theme.colorScheme.onSurfaceVariant,
+      padding: const EdgeInsets.only(bottom: AppTokens.s16),
+      child: AppCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                ImageCueBadge(cue: wordInitialCue(word.word), size: 54),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(word.word, style: theme.textTheme.titleMedium),
+                      const SizedBox(height: 3),
+                      Text(
+                        '${word.meaning} · ${formatRelativeDue(word.nextReviewAt, DateTime.now())}',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              PillLabel(
-                label: '${word.masteryLevel}/5',
-                icon: Icons.psychology_outlined,
-                color: AppTheme.mango,
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(48),
+                    ],
                   ),
-                  onPressed: canReview
-                      ? () => _review(context, ref, isCorrect: false)
-                      : null,
-                  icon: const Icon(Icons.close),
-                  label: FittedBox(child: Text(l10n.reviewCenterForgot)),
                 ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: FilledButton.icon(
-                  style: FilledButton.styleFrom(
-                    minimumSize: const Size.fromHeight(48),
+                AppPill(
+                  label: '${word.masteryLevel}/5',
+                  icon: AppIcons.psychology,
+                  variant: word.masteryLevel >= 3
+                      ? PillVariant.success
+                      : PillVariant.streak,
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(
+                  child: AppSecondaryButton(
+                    label: l10n.reviewCenterForgot,
+                    onPressed: canReview
+                        ? () => _review(context, ref, isCorrect: false)
+                        : null,
                   ),
-                  onPressed: canReview
-                      ? () => _review(context, ref, isCorrect: true)
-                      : null,
-                  icon: const Icon(Icons.check),
-                  label: FittedBox(child: Text(l10n.reviewCenterRemembered)),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 14),
-          Divider(height: 1, color: theme.colorScheme.outlineVariant),
-        ],
+                const SizedBox(width: 10),
+                Expanded(
+                  child: AppPrimaryButton(
+                    label: l10n.reviewCenterRemembered,
+                    icon: AppIcons.check,
+                    onPressed: canReview
+                        ? () => _review(context, ref, isCorrect: true)
+                        : null,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -379,33 +321,35 @@ class _LessonMistakeRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.only(bottom: 14),
-      child: Row(
-        children: [
-          ImageCueBadge(cue: mistake.word.imageCue, size: 52),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(mistake.word.word, style: theme.textTheme.titleMedium),
-                const SizedBox(height: 3),
-                Text(
-                  mistake.explanation,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
-                ),
-              ],
+      padding: const EdgeInsets.only(bottom: AppTokens.s12),
+      child: AppCard(
+        child: Row(
+          children: [
+            ImageCueBadge(cue: mistake.word.imageCue, size: 52),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(mistake.word.word, style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 3),
+                  Text(
+                    mistake.explanation,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(width: 10),
-          PillLabel(
-            label: l10n.commonLesson,
-            icon: Icons.school_outlined,
-            color: AppTheme.coral,
-          ),
-        ],
+            const SizedBox(width: 10),
+            AppPill(
+              label: l10n.commonLesson,
+              icon: AppIcons.school,
+              variant: PillVariant.streak,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -422,40 +366,31 @@ class _WeakWordRow extends StatelessWidget {
     final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(12),
-          onTap: () => word.source == 'target'
-              ? context.push('/wordbook/${word.sourceWordId ?? word.id}')
-              : context.push('/custom-words/${word.id}'),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6),
-            child: Row(
-              children: [
-                ImageCueBadge(cue: wordInitialCue(word.word), size: 52),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(word.word, style: theme.textTheme.titleMedium),
-                      const SizedBox(height: 3),
-                      Text(
-                        word.meaning,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
+      child: AppCard(
+        onTap: () => word.source == 'target'
+            ? context.push('/wordbook/${word.sourceWordId ?? word.id}')
+            : context.push('/custom-words/${word.id}'),
+        child: Row(
+          children: [
+            ImageCueBadge(cue: wordInitialCue(word.word), size: 52),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(word.word, style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 3),
+                  Text(
+                    word.meaning,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                   ),
-                ),
-                const Icon(Icons.chevron_right_rounded),
-              ],
+                ],
+              ),
             ),
-          ),
+            const Icon(AppIcons.chevronRight),
+          ],
         ),
       ),
     );
@@ -516,63 +451,65 @@ class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
         .length;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            widget.l10n.reviewCenterAddMistakeCards,
-            style: Theme.of(
-              context,
-            ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            selectableCount == 0
-                ? widget.l10n.mistakeBookNoLessonMistakes
-                : widget.l10n.mistakeBookMistakes(selectableCount),
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+      padding: const EdgeInsets.only(bottom: AppTokens.s12),
+      child: AppCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.l10n.reviewCenterAddMistakeCards,
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
             ),
-          ),
-          const SizedBox(height: 10),
-          for (final mistake in visibleMistakes) ...[
-            Builder(
-              builder: (context) {
-                final exists = existingWords.contains(
-                  mistake.word.word.trim().toLowerCase(),
-                );
-                return _MistakeSelectionRow(
-                  key: ValueKey('mistake-select-${mistake.word.id}'),
-                  word: mistake.word.word,
-                  meaning: exists ? 'Already added' : mistake.word.meaning,
-                  selected: !exists && _selectedIds.contains(mistake.word.id),
-                  enabled: !exists,
-                  onChanged: (checked) {
-                    setState(() {
-                      if (checked) {
-                        _selectedIds.add(mistake.word.id);
-                      } else {
-                        _selectedIds.remove(mistake.word.id);
-                      }
-                    });
-                  },
-                );
-              },
-            ),
-          ],
-          const SizedBox(height: 8),
-          if (selectableCount > 0)
-            FilledButton.icon(
-              onPressed: selectedAddableCount == 0 || state.isLoading
-                  ? null
-                  : _addSelected,
-              icon: const Icon(Icons.add_card_outlined),
-              label: Text(
-                '${widget.l10n.reviewCenterAddSelected} ($selectedAddableCount)',
+            const SizedBox(height: 6),
+            Text(
+              selectableCount == 0
+                  ? widget.l10n.mistakeBookNoLessonMistakes
+                  : widget.l10n.mistakeBookMistakes(selectableCount),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
-        ],
+            const SizedBox(height: 10),
+            for (final mistake in visibleMistakes) ...[
+              Builder(
+                builder: (context) {
+                  final exists = existingWords.contains(
+                    mistake.word.word.trim().toLowerCase(),
+                  );
+                  return _MistakeSelectionRow(
+                    key: ValueKey('mistake-select-${mistake.word.id}'),
+                    word: mistake.word.word,
+                    meaning: exists ? 'Already added' : mistake.word.meaning,
+                    selected: !exists && _selectedIds.contains(mistake.word.id),
+                    enabled: !exists,
+                    onChanged: (checked) {
+                      setState(() {
+                        if (checked) {
+                          _selectedIds.add(mistake.word.id);
+                        } else {
+                          _selectedIds.remove(mistake.word.id);
+                        }
+                      });
+                    },
+                  );
+                },
+              ),
+            ],
+            const SizedBox(height: 8),
+            if (selectableCount > 0)
+              FilledButton.icon(
+                onPressed: selectedAddableCount == 0 || state.isLoading
+                    ? null
+                    : _addSelected,
+                icon: const Icon(AppIcons.addCard),
+                label: Text(
+                  '${widget.l10n.reviewCenterAddSelected} ($selectedAddableCount)',
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -617,14 +554,14 @@ class _MistakeSelectionRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final color = selected ? AppTheme.teal : theme.colorScheme.outline;
+    final color = selected ? AppTokens.azure : theme.colorScheme.outline;
     return Semantics(
       button: true,
       checked: selected,
       enabled: enabled,
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: enabled ? () => onChanged(!selected) : null,
@@ -639,14 +576,14 @@ class _MistakeSelectionRow extends StatelessWidget {
                   height: 30,
                   decoration: BoxDecoration(
                     color: selected
-                        ? AppTheme.selectedSurface(context)
+                        ? AppTokens.primarySoft
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(color: color, width: selected ? 2 : 1),
                   ),
                   child: Icon(
-                    selected ? Icons.check_rounded : Icons.add_rounded,
-                    color: selected ? AppTheme.teal : color,
+                    selected ? AppIcons.check : AppIcons.add,
+                    color: selected ? AppTokens.azure : color,
                     size: 19,
                   ),
                 ),
@@ -669,10 +606,10 @@ class _MistakeSelectionRow extends StatelessWidget {
                   ),
                 ),
                 if (!enabled)
-                  PillLabel(
+                  const AppPill(
                     label: 'Added',
-                    icon: Icons.check_circle_outline,
-                    color: AppTheme.cyan,
+                    icon: AppIcons.checkCircle,
+                    variant: PillVariant.success,
                   ),
               ],
             ),

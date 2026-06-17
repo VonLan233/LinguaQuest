@@ -561,6 +561,7 @@ class MockLotteryRepository implements LotteryRepository {
           isRead: false,
           createdAt: now,
           sourceKey: 'lottery:${now.microsecondsSinceEpoch}',
+          params: {'kind': 'lottery', 'prizeName': prize.name},
         ),
       ],
     );
