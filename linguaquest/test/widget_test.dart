@@ -12,6 +12,7 @@ import 'package:linguaquest/core/state/app_controller.dart';
 import 'package:linguaquest/core/state/app_state.dart';
 import 'package:linguaquest/core/theme/app_icons.dart';
 import 'package:linguaquest/core/theme/app_theme.dart';
+import 'package:linguaquest/core/utils/ui_labels.dart';
 import 'package:linguaquest/core/widgets/app_button.dart';
 import 'package:linguaquest/core/widgets/app_card.dart';
 import 'package:linguaquest/core/widgets/learning_badges.dart';
@@ -53,6 +54,24 @@ import 'package:linguaquest/features/wordbook/wordbook_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
+  test('default user display name localizes untouched defaults', () async {
+    final en = await AppLocalizations.delegate.load(const Locale('en'));
+    final zh = await AppLocalizations.delegate.load(const Locale('zh'));
+    final ms = await AppLocalizations.delegate.load(const Locale('ms'));
+    final user = UserProfile.demo();
+
+    expect(displayUserName(user, l10n: en), 'Explorer');
+    expect(displayUserName(user, l10n: zh), '探索者');
+    expect(displayUserName(user, l10n: ms), isNot('学习者'));
+  });
+
+  test('custom user display name is preserved', () async {
+    final en = await AppLocalizations.delegate.load(const Locale('en'));
+    final user = UserProfile.demo().copyWith(name: 'Ava');
+
+    expect(displayUserName(user, l10n: en), 'Ava');
+  });
+
   testWidgets('starts at onboarding when no session exists', (tester) async {
     SharedPreferences.setMockInitialValues({});
 
@@ -296,12 +315,12 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     await tester.scrollUntilVisible(
-      find.textContaining('开始今日学习'),
+      find.textContaining('开始'),
       300,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.textContaining('开始今日学习'));
+    await tester.tap(find.textContaining('开始'));
     await tester.pumpAndSettle();
 
     expect(find.text('今日混排学习包'), findsOneWidget);
@@ -331,12 +350,12 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     await tester.scrollUntilVisible(
-      find.textContaining('仅复习'),
+      find.textContaining('复习'),
       300,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.textContaining('仅复习'));
+    await tester.tap(find.textContaining('复习'));
     await tester.pumpAndSettle();
 
     expect(find.text('快速复习'), findsOneWidget);
@@ -393,12 +412,12 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     await tester.scrollUntilVisible(
-      find.textContaining('仅复习'),
+      find.textContaining('复习'),
       300,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.textContaining('仅复习'));
+    await tester.tap(find.textContaining('复习'));
     await tester.pumpAndSettle();
     // Instant judgment records the attempt on tap (no check button); the wrong
     // review answer would auto-advance after 1500ms, but we leave before then.
@@ -3586,7 +3605,7 @@ void main() {
         .currentLesson!
         .words
         .first;
-    await tester.tap(find.textContaining('开始今日学习'));
+    await tester.tap(find.textContaining('开始'));
     await tester.pumpAndSettle();
 
     expect(find.text('今日混排学习包'), findsOneWidget);
@@ -3656,7 +3675,7 @@ void main() {
           .currentLesson!
           .words
           .first;
-      await tester.tap(find.textContaining('开始今日学习'));
+      await tester.tap(find.textContaining('开始'));
       await tester.pumpAndSettle();
 
       // Enter the recognition question for the first new word.
@@ -4098,12 +4117,12 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     await tester.scrollUntilVisible(
-      find.textContaining('仅复习'),
+      find.textContaining('复习'),
       300,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.textContaining('仅复习'));
+    await tester.tap(find.textContaining('复习'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('管理复习队列'));
     await tester.pumpAndSettle();
@@ -4181,12 +4200,12 @@ void main() {
       await tester.pumpAndSettle(const Duration(seconds: 1));
 
       await tester.scrollUntilVisible(
-        find.textContaining('仅复习'),
+        find.textContaining('复习'),
         300,
         scrollable: find.byType(Scrollable).first,
       );
       await tester.pumpAndSettle();
-      await tester.tap(find.textContaining('仅复习'));
+      await tester.tap(find.textContaining('复习'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('管理复习队列'));
       await tester.pumpAndSettle();

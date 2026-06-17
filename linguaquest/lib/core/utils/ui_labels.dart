@@ -1,5 +1,13 @@
 import '../../data/models/lesson.dart';
+import '../../data/models/user_profile.dart';
 import '../../l10n/generated/app_localizations.dart';
+
+String displayUserName(UserProfile? user, {required AppLocalizations l10n}) {
+  final name = user?.name.trim() ?? '';
+  const localizableDefaults = {'', '学习者', 'Learner', 'Explorer', 'Pelajar'};
+  if (localizableDefaults.contains(name)) return l10n.profileLearner;
+  return name;
+}
 
 String displayTarget(String? value, {AppLocalizations? l10n}) {
   if (l10n != null) {
@@ -288,9 +296,7 @@ String displayWordTag(String value, {AppLocalizations? l10n}) {
       case 'writing':
         return l10n.labelWordTagWriting;
       default:
-        return value.trim().isEmpty
-            ? l10n.labelWordTagDefault
-            : value.trim();
+        return value.trim().isEmpty ? l10n.labelWordTagDefault : value.trim();
     }
   }
   switch (value.trim().toLowerCase()) {

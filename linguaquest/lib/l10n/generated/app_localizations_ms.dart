@@ -544,7 +544,7 @@ class AppLocalizationsMs extends AppLocalizations {
   String get classTopicWorkplace => 'Ungkapan tempat kerja';
 
   @override
-  String get leaderboardDefaultName => 'Pelajar';
+  String get leaderboardDefaultName => 'Penjelajah';
 
   @override
   String get leaderboardTitle => 'Papan pendahulu arena latihan';
@@ -705,10 +705,10 @@ class AppLocalizationsMs extends AppLocalizations {
   String get homeResumePlan => 'Sambung pelan untuk terus belajar';
 
   @override
-  String get homeStartLearning => 'Mula Pembelajaran Hari Ini';
+  String get homeStartLearning => 'Mula';
 
   @override
-  String get homeReviewOnly => 'Ulangkaji Sahaja';
+  String get homeReviewOnly => 'Ulang Kaji';
 
   @override
   String get homeStreakLabel => 'daftar masuk berturut-turut';
@@ -763,7 +763,7 @@ class AppLocalizationsMs extends AppLocalizations {
   String get homeTodayCompleted => 'Hari ini selesai';
 
   @override
-  String get profileLearner => 'Pelajar';
+  String get profileLearner => 'Penjelajah';
 
   @override
   String get profileNoEmail => 'Tiada e-mel ditetapkan';

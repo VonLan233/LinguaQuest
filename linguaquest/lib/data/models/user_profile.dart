@@ -31,7 +31,7 @@ class UserProfile {
     final now = DateTime.now();
     return UserProfile(
       uid: 'demo-user',
-      name: '学习者',
+      name: 'Explorer',
       email: 'learner@lingua.quest',
       targetExam: 'Daily English',
       level: 'Elementary',

@@ -1075,7 +1075,7 @@ abstract class AppLocalizations {
   /// No description provided for @leaderboardDefaultName.
   ///
   /// In en, this message translates to:
-  /// **'Learner'**
+  /// **'Explorer'**
   String get leaderboardDefaultName;
 
   /// No description provided for @leaderboardTitle.
@@ -1369,13 +1369,13 @@ abstract class AppLocalizations {
   /// No description provided for @homeStartLearning.
   ///
   /// In en, this message translates to:
-  /// **'Start Today\'s Learning'**
+  /// **'Start'**
   String get homeStartLearning;
 
   /// No description provided for @homeReviewOnly.
   ///
   /// In en, this message translates to:
-  /// **'Review Only'**
+  /// **'Review'**
   String get homeReviewOnly;
 
   /// No description provided for @homeStreakLabel.
@@ -1477,7 +1477,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileLearner.
   ///
   /// In en, this message translates to:
-  /// **'Learner'**
+  /// **'Explorer'**
   String get profileLearner;
 
   /// No description provided for @profileNoEmail.

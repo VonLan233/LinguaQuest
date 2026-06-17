@@ -513,7 +513,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get classTopicWorkplace => '职场表达';
 
   @override
-  String get leaderboardDefaultName => '学习者';
+  String get leaderboardDefaultName => '探索者';
 
   @override
   String get leaderboardTitle => '训练场排行榜';
@@ -666,10 +666,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get homeResumePlan => '恢复计划以继续学习';
 
   @override
-  String get homeStartLearning => '开始今日学习';
+  String get homeStartLearning => '开始';
 
   @override
-  String get homeReviewOnly => '仅复习';
+  String get homeReviewOnly => '复习';
 
   @override
   String get homeStreakLabel => '连续打卡';
@@ -722,7 +722,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get homeTodayCompleted => '今天完成';
 
   @override
-  String get profileLearner => '学习者';
+  String get profileLearner => '探索者';
 
   @override
   String get profileNoEmail => '未设置邮箱';

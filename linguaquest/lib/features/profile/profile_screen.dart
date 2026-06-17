@@ -45,7 +45,7 @@ class ProfileScreen extends ConsumerWidget {
       children: [
         // Hero: mascot avatar + name/email/target·level + XP/streak pills.
         _ProfileHeader(
-          name: user?.name ?? l10n.profileLearner,
+          name: displayUserName(user, l10n: l10n),
           email: user?.email ?? l10n.profileNoEmail,
           target: displayTarget(user?.targetExam, l10n: l10n),
           level: displayLevel(user?.level, l10n: l10n),
@@ -398,12 +398,7 @@ class _SettingsItem extends StatelessWidget {
             children: [
               Icon(icon, color: theme.colorScheme.primary, size: 22),
               const SizedBox(width: AppTokens.s16),
-              Expanded(
-                child: Text(
-                  title,
-                  style: theme.textTheme.bodyMedium,
-                ),
-              ),
+              Expanded(child: Text(title, style: theme.textTheme.bodyMedium)),
               if (value != null)
                 Text(
                   value!,
