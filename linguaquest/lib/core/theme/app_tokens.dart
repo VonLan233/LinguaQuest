@@ -39,9 +39,14 @@ class AppTokens {
   static const Color mango = Color(0xFFFFB22E);
   static const Color coral = Color(0xFFFF6B5A);
   static const Color amber = Color(0xFFF5A623);
+  // True antonym/error red (cool-blue reference comps use a truer red than the
+  // warm `coral`): used for antonyms, errors, and high-difficulty tags.
+  static const Color danger = Color(0xFFE5484D);
+  static const Color dangerSoft = Color(0xFFFCE9EA);
 
   // Neutrals.
-  static const Color bgLight = Color(0xFFFFFFFF); // bgCanvas — pure white (no flicker)
+  // Cool off-white page background (reference comps float white cards on it).
+  static const Color bgLight = Color(0xFFF4F6FA);
   static const Color surfaceLight = Color(0xFFFFFFFF);
   static const Color surfaceSunken = Color(0xFFF2EFEA);
   static const Color hairline = Color(0xFFECE7E0);

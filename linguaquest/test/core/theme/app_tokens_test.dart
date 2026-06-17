@@ -23,8 +23,9 @@ Future<T> _readWithBrightness<T>(
 }
 
 void main() {
-  test('Cozy Quest neutral tokens are locked to warm-porcelain palette', () {
-    expect(AppTokens.bgLight, const Color(0xFFFFFFFF)); // bgCanvas — pure white
+  test('neutral tokens are locked (cool off-white page bg)', () {
+    expect(AppTokens.bgLight, const Color(0xFFF4F6FA)); // cool off-white page bg
+    expect(AppTokens.surfaceLight, const Color(0xFFFFFFFF)); // cards stay white
     expect(AppTokens.surfaceSunken, const Color(0xFFF2EFEA));
     expect(AppTokens.hairline, const Color(0xFFECE7E0));
     expect(AppTokens.textPrimaryLight, const Color(0xFF233A66));
@@ -37,6 +38,11 @@ void main() {
     expect(AppTokens.successSoft, const Color(0xFFF2FAEC));
     expect(AppTokens.streakSoft, const Color(0xFFFFE2DC));
     expect(AppTokens.primarySoft, const Color(0xFFEAF2FC));
+  });
+
+  test('danger tokens are locked (true antonym/error red)', () {
+    expect(AppTokens.danger, const Color(0xFFE5484D));
+    expect(AppTokens.dangerSoft, const Color(0xFFFCE9EA));
   });
 
   test('radii match spec', () {
