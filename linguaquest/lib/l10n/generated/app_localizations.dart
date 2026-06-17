@@ -2581,7 +2581,7 @@ abstract class AppLocalizations {
   /// No description provided for @trainingPromptWordRush.
   ///
   /// In en, this message translates to:
-  /// **'Choose the Chinese meaning of \"{word}\" quickly'**
+  /// **'Choose the meaning of \"{word}\" quickly'**
   String trainingPromptWordRush(Object word);
 
   /// No description provided for @trainingExplanationWordRush.
@@ -2615,7 +2615,7 @@ abstract class AppLocalizations {
   /// No description provided for @trainingPromptMeaningChoice.
   ///
   /// In en, this message translates to:
-  /// **'Choose the Chinese meaning of \"{word}\"'**
+  /// **'Choose the meaning of \"{word}\"'**
   String trainingPromptMeaningChoice(Object word);
 
   /// No description provided for @trainingExplanationMeaningChoice.
@@ -2627,7 +2627,7 @@ abstract class AppLocalizations {
   /// No description provided for @trainingPromptChineseSpelling.
   ///
   /// In en, this message translates to:
-  /// **'Spell the English word from Chinese: {meaning}'**
+  /// **'Spell the English word from the meaning: {meaning}'**
   String trainingPromptChineseSpelling(Object meaning);
 
   /// No description provided for @trainingPromptAudioSpelling.

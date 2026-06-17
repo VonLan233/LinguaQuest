@@ -9,6 +9,7 @@ import '../../data/models/lottery.dart';
 import '../../data/models/study_plan.dart';
 import '../../data/models/user_word.dart';
 import '../../data/models/user_profile.dart';
+import '../utils/custom_word_localization.dart';
 
 class DailyReminderSettings {
   const DailyReminderSettings({
@@ -331,25 +332,7 @@ class AppState {
 }
 
 Word _wordFromCustomWord(CustomWord word) {
-  return Word(
-    id: word.id,
-    word: word.word,
-    phonetic: '',
-    meaning: word.meaning,
-    definition: word.note.isEmpty ? word.meaning : word.note,
-    partOfSpeech: 'word',
-    exampleSentence: word.exampleSentence,
-    exampleTranslation: '',
-    imageCue: _wordInitialForTraining(word.word),
-    difficulty: word.difficulty,
-    tags: [word.tag],
-  );
-}
-
-String _wordInitialForTraining(String value) {
-  final trimmed = value.trim();
-  if (trimmed.isEmpty) return '?';
-  return trimmed.characters.first.toUpperCase();
+  return wordFromCustomWord(word);
 }
 
 List<CustomWord> _buildReviewWords(

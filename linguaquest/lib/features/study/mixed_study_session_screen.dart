@@ -10,6 +10,7 @@ import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/utils/custom_word_localization.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
@@ -473,7 +474,9 @@ class _MixedStudySessionScreenState
       }
     }
     for (final word in state.customWords) {
-      if (word.id != item.wordId) addDistractor(word.meaning);
+      if (word.id != item.wordId) {
+        addDistractor(customWordMeaningFor(word, localeCode));
+      }
     }
 
     final options = <String>[answer];

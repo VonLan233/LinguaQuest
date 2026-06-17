@@ -1379,7 +1379,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String trainingPromptWordRush(Object word) {
-    return 'Choose the Chinese meaning of \"$word\" quickly';
+    return 'Choose the meaning of \"$word\" quickly';
   }
 
   @override
@@ -1408,7 +1408,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String trainingPromptMeaningChoice(Object word) {
-    return 'Choose the Chinese meaning of \"$word\"';
+    return 'Choose the meaning of \"$word\"';
   }
 
   @override
@@ -1418,7 +1418,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String trainingPromptChineseSpelling(Object meaning) {
-    return 'Spell the English word from Chinese: $meaning';
+    return 'Spell the English word from the meaning: $meaning';
   }
 
   @override

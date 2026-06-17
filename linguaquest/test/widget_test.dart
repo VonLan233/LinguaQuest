@@ -331,7 +331,10 @@ void main() {
 
       final prompt = localizedQuizPrompt(question, en);
 
-      expect(prompt, 'Spell the English word from Chinese: to leave behind');
+      expect(
+        prompt,
+        'Spell the English word from the meaning: to leave behind',
+      );
       expect(prompt, isNot(contains('根据释义')));
     },
   );

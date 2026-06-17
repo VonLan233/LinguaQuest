@@ -1,6 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:linguaquest/data/models/lesson.dart';
 import 'package:linguaquest/core/utils/quiz_localization.dart';
+import 'package:linguaquest/core/utils/custom_word_localization.dart';
+import 'package:linguaquest/data/models/custom_word.dart';
+import 'package:linguaquest/data/models/lesson.dart';
+import 'package:linguaquest/features/study/session/session_queue_builder.dart';
 
 Word _word({
   String word = 'allocate',
@@ -29,6 +32,65 @@ Word _word({
 }
 
 void main() {
+  group('custom review word localized meanings', () {
+    final custom = CustomWord.create(
+      id: 'custom-ambiguous',
+      uid: 'u1',
+      word: 'ambiguous',
+      meaning: '含糊的',
+      exampleSentence: 'The sentence was ambiguous.',
+      note: 'A target vocabulary item commonly tested as “含糊的”.',
+      now: DateTime(2026, 6, 18),
+    );
+
+    test('keeps Chinese meaning only for Chinese UI', () {
+      expect(customWordMeaningFor(custom, 'zh'), '含糊的');
+    });
+
+    test('removes Chinese text from generated English and Malay notes', () {
+      expect(
+        customWordMeaningFor(custom, 'en'),
+        'Review vocabulary item for ambiguous.',
+      );
+      expect(
+        customWordMeaningFor(custom, 'ms'),
+        'Item kosa kata ulang kaji untuk ambiguous.',
+      );
+      expect(customWordMeaningFor(custom, 'en'), isNot(contains('含糊的')));
+      expect(customWordMeaningFor(custom, 'ms'), isNot(contains('含糊的')));
+    });
+
+    test('study session queue uses localized custom review meaning', () {
+      final item = StudySessionQueueItem(
+        id: 'q1',
+        wordId: custom.id,
+        source: StudySessionItemSource.dueReview,
+        step: StudySessionStep.reviewRecall,
+        customWord: custom,
+        attempt: 0,
+        affectsSchedule: true,
+      );
+
+      expect(item.meaningFor('en'), 'Review vocabulary item for ambiguous.');
+      expect(item.meaningFor('en'), isNot(contains('含糊的')));
+    });
+
+    test('training word conversion exposes localized definitions', () {
+      final converted = wordFromCustomWord(custom);
+
+      expect(
+        converted.primaryDefinitionFor('en'),
+        'Review vocabulary item for ambiguous.',
+      );
+      expect(
+        converted.primaryDefinitionFor('ms'),
+        'Item kosa kata ulang kaji untuk ambiguous.',
+      );
+      expect(converted.primaryDefinitionFor('zh'), '含糊的');
+      expect(converted.primaryDefinitionFor('en'), isNot(contains('含糊的')));
+    });
+  });
+
   group('Word.definitionsFor / primaryDefinitionFor', () {
     final w = _word();
 
@@ -47,17 +109,40 @@ void main() {
       expect(w.primaryDefinitionFor('ms'), 'memperuntukkan');
     });
 
-    test('en falls back to Chinese when englishDefinitions empty', () {
-      final noEn = _word(englishDefinitions: const []);
-      expect(noEn.definitionsFor('en'), ['分配', '划拨']);
+    test(
+      'en falls back to scalar English definition when localized list empty',
+      () {
+        final noEn = _word(englishDefinitions: const []);
+        expect(noEn.definitionsFor('en'), ['to distribute']);
+      },
+    );
+
+    test('en filters generated definitions that still contain Chinese', () {
+      final generated = _word(
+        word: 'ambiguous',
+        meaning: '含糊的',
+        definitions: const ['含糊的'],
+        englishDefinitions: const [
+          'A target vocabulary item commonly tested as “含糊的”.',
+        ],
+        definition: 'A target vocabulary item commonly tested as “含糊的”.',
+      );
+
+      expect(
+        generated.primaryDefinitionFor('en'),
+        'Vocabulary item for ambiguous.',
+      );
+      expect(generated.primaryDefinitionFor('en'), isNot(contains('含糊的')));
     });
 
-    test('ms falls back to English then Chinese', () {
+    test('ms falls back to English then scalar English definition', () {
       final noMs = _word(malayDefinitions: const []);
       expect(noMs.definitionsFor('ms'), ['to distribute', 'to assign']);
-      final noMsNoEn =
-          _word(malayDefinitions: const [], englishDefinitions: const []);
-      expect(noMsNoEn.definitionsFor('ms'), ['分配', '划拨']);
+      final noMsNoEn = _word(
+        malayDefinitions: const [],
+        englishDefinitions: const [],
+      );
+      expect(noMsNoEn.definitionsFor('ms'), ['to distribute']);
     });
 
     test('zh falls back to English when definitions empty', () {
@@ -74,7 +159,7 @@ void main() {
         definition: 'to distribute',
       );
       expect(legacy.primaryDefinitionFor('zh'), '分配');
-      expect(legacy.primaryDefinitionFor('ms'), '分配');
+      expect(legacy.primaryDefinitionFor('ms'), 'to distribute');
       expect(legacy.primaryDefinitionFor('en'), 'to distribute');
     });
 

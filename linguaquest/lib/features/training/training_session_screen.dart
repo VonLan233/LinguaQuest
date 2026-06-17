@@ -8,6 +8,7 @@ import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/utils/custom_word_localization.dart';
 import '../../core/utils/quiz_localization.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
@@ -1011,19 +1012,5 @@ class _TrainingFeedback extends StatelessWidget {
 }
 
 Word _wordFromCustom(CustomWord word) {
-  return Word(
-    id: word.id,
-    word: word.word,
-    phonetic: '',
-    meaning: word.meaning,
-    definition: word.note.isEmpty ? word.meaning : word.note,
-    partOfSpeech: 'word',
-    exampleSentence: word.exampleSentence,
-    exampleTranslation: '',
-    imageCue: word.word.trim().isEmpty
-        ? '?'
-        : word.word.trim().characters.first.toUpperCase(),
-    difficulty: word.difficulty,
-    tags: [word.tag],
-  );
+  return wordFromCustomWord(word);
 }
