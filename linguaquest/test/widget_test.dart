@@ -1157,6 +1157,10 @@ void main() {
     );
   });
 
+  test('study plan reminder picker uses input mode', () {
+    expect(studyPlanReminderTimePickerEntryMode, TimePickerEntryMode.inputOnly);
+  });
+
   test('learning plan day count uses calendar days', () {
     final plan = StudyPlan(
       id: 'study-plan-calendar-user',

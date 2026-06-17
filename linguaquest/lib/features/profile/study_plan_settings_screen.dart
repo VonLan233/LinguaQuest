@@ -344,6 +344,7 @@ class _StudyPlanSettingsScreenState
     final picked = await showTimePicker(
       context: context,
       initialTime: _reminderTime,
+      initialEntryMode: studyPlanReminderTimePickerEntryMode,
     );
     if (picked == null || !mounted) return;
     setState(() => _reminderTime = picked);
@@ -366,6 +367,8 @@ class _StudyPlanSettingsScreenState
     return _studyPlanDateOnly(value);
   }
 }
+
+const studyPlanReminderTimePickerEntryMode = TimePickerEntryMode.inputOnly;
 
 WordBook? _wordBookForId(List<WordBook> books, String id) {
   for (final book in books) {
