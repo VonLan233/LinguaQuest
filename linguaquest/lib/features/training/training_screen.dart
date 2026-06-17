@@ -32,9 +32,9 @@ class TrainingScreen extends ConsumerWidget {
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(
+        AppTokens.s16,
         AppTokens.s20,
-        AppTokens.s20,
-        AppTokens.s20,
+        AppTokens.s16,
         88,
       ),
       children: [
@@ -45,7 +45,7 @@ class TrainingScreen extends ConsumerWidget {
           streak: user?.streak ?? 0,
           streakLabel: l10n.homeStreakLabel,
         ),
-        const SizedBox(height: AppTokens.s24),
+        const SizedBox(height: AppTokens.s32),
         Text(
           l10n.trainingTimedTests,
           style: Theme.of(
@@ -113,7 +113,7 @@ class TrainingScreen extends ConsumerWidget {
             ),
           ],
         ),
-        const SizedBox(height: AppTokens.s24),
+        const SizedBox(height: AppTokens.s32),
         _TrainingReadinessLine(
           dueWords: state.dueWords.length,
           weakWords: state.weakWords.length,
@@ -144,7 +144,12 @@ class _TrainingGoalHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AppCard(
-      padding: const EdgeInsets.all(AppTokens.s20),
+      padding: const EdgeInsets.fromLTRB(
+        AppTokens.s20,
+        AppTokens.s16,
+        AppTokens.s20,
+        AppTokens.s20,
+      ),
       child: Row(
         children: [
           const IconCueBadge(icon: Icons.bolt, color: AppTokens.mango),
@@ -159,7 +164,7 @@ class _TrainingGoalHeader extends StatelessWidget {
                     fontWeight: FontWeight.w800,
                   ),
                 ),
-                const SizedBox(height: AppTokens.s4),
+                const SizedBox(height: AppTokens.s8),
                 Text(
                   dailyAvailable,
                   style: theme.textTheme.bodyMedium?.copyWith(
@@ -220,10 +225,7 @@ class _TrainingGameRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final locked = onTap == null;
-    return AppCard(
-      padding: const EdgeInsets.all(AppTokens.s16),
-      onTap: onTap,
-      child: Column(
+    final content = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -264,7 +266,11 @@ class _TrainingGameRow extends StatelessWidget {
             ),
           ),
         ],
-      ),
+      );
+    return AppCard(
+      padding: const EdgeInsets.all(AppTokens.s16),
+      onTap: onTap,
+      child: locked ? Opacity(opacity: 0.6, child: content) : content,
     );
   }
 }
@@ -287,7 +293,7 @@ class _TrainingReadinessLine extends StatelessWidget {
     return AppCard(
       child: Row(
         children: [
-          Expanded(
+          Flexible(
             child: StatTile(
               value: '$dueWords',
               label: l10n.trainingDueWords,
@@ -295,8 +301,8 @@ class _TrainingReadinessLine extends StatelessWidget {
               accent: AppTokens.azure,
             ),
           ),
-          const _TrainingSignalDivider(),
-          Expanded(
+          const SizedBox(width: AppTokens.s12),
+          Flexible(
             child: StatTile(
               value: '$weakWords',
               label: l10n.trainingWeakWords,
@@ -304,8 +310,8 @@ class _TrainingReadinessLine extends StatelessWidget {
               accent: AppTokens.coralColor(context),
             ),
           ),
-          const _TrainingSignalDivider(),
-          Expanded(
+          const SizedBox(width: AppTokens.s12),
+          Flexible(
             child: StatTile(
               value: '$comboTarget',
               label: l10n.trainingComboTarget,
@@ -314,22 +320,6 @@ class _TrainingReadinessLine extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _TrainingSignalDivider extends StatelessWidget {
-  const _TrainingSignalDivider();
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 40,
-      child: VerticalDivider(
-        width: AppTokens.s16,
-        thickness: 1,
-        color: Theme.of(context).colorScheme.outlineVariant,
       ),
     );
   }
