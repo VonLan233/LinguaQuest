@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_card.dart';
@@ -33,7 +34,7 @@ class AiLearningScreen extends StatelessWidget {
           trailing: QuestIconButton(
             tooltip: l10n.aiLearningTooltip,
             onPressed: () => context.push('/ai-tutor'),
-            icon: Icons.chat_bubble_outline,
+            icon: AppIcons.chatBubble,
             color: AppTheme.cyan,
           ),
         ),
@@ -43,7 +44,7 @@ class AiLearningScreen extends StatelessWidget {
           child: AppPill(
             label: l10n.aiLearningPillError,
             variant: PillVariant.primary,
-            icon: Icons.psychology_alt_outlined,
+            icon: AppIcons.psychologyAlt,
           ),
         ),
         const SizedBox(height: AppTokens.s32),
@@ -61,7 +62,7 @@ class AiLearningScreen extends StatelessWidget {
         _AiToolList(
           children: [
             _AiToolLink(
-              icon: Icons.question_answer_outlined,
+              icon: AppIcons.questionAnswer,
               title: l10n.aiLearningToolAiQA,
               subtitle: l10n.aiLearningToolAiQADesc,
               color: AppTheme.cyan,
@@ -69,7 +70,7 @@ class AiLearningScreen extends StatelessWidget {
               onTap: () => context.push('/ai-tutor'),
             ),
             _AiToolLink(
-              icon: Icons.account_tree_outlined,
+              icon: AppIcons.accountTree,
               title: l10n.aiLearningToolAiAnalysis,
               subtitle: l10n.aiLearningToolAiAnalysisDesc,
               color: AppTokens.azure,
@@ -87,28 +88,28 @@ class AiLearningScreen extends StatelessWidget {
           child: Column(
             children: [
               _AiToolRow(
-                icon: Icons.rate_review_outlined,
+                icon: AppIcons.rateReview,
                 title: l10n.aiLearningToolAiWriting,
                 subtitle: l10n.aiLearningToolAiWritingDesc,
                 color: AppTokens.coralColor(context),
                 status: l10n.aiLearningStatusLater,
               ),
               _AiToolRow(
-                icon: Icons.auto_stories_outlined,
+                icon: AppIcons.autoStories,
                 title: l10n.aiLearningToolCloze,
                 subtitle: l10n.aiLearningToolClozeDesc,
                 color: AppTokens.mangoColor(context),
                 status: l10n.aiLearningStatusPlanning,
               ),
               _AiToolRow(
-                icon: Icons.compare_arrows_outlined,
+                icon: AppIcons.compareArrows,
                 title: l10n.aiLearningToolConfusion,
                 subtitle: l10n.aiLearningToolConfusionDesc,
                 color: AppTheme.cyan,
                 status: l10n.aiLearningStatusPlanning,
               ),
               _AiToolRow(
-                icon: Icons.tips_and_updates_outlined,
+                icon: AppIcons.tipsAndUpdates,
                 title: l10n.aiLearningToolSentence,
                 subtitle: l10n.aiLearningToolSentenceDesc,
                 color: AppTokens.azure,
@@ -162,7 +163,7 @@ class _AiWordContextCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const IconCueBadge(icon: Icons.travel_explore, color: AppTheme.cyan),
+          const IconCueBadge(icon: AppIcons.travelExplore, color: AppTheme.cyan),
           const SizedBox(width: AppTokens.s12),
           Expanded(
             child: Column(

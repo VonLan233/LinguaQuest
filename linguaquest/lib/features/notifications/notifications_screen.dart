@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/date_formatting.dart';
 import '../../core/widgets/app_button.dart';
@@ -83,7 +84,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                               : l10n.notificationEmptyAll,
                           action: AppSecondaryButton(
                             label: l10n.notificationBackHome,
-                            icon: Icons.home_outlined,
+                            icon: AppIcons.home,
                             onPressed: () => context.go('/home'),
                           ),
                         ),
@@ -260,12 +261,12 @@ class _NotificationRow extends ConsumerWidget {
                         l10n: l10n,
                       ),
                       variant: _notificationPillVariant(notification.type),
-                      icon: Icons.label_outline,
+                      icon: AppIcons.label,
                     ),
                     AppPill(
                       label: formatFullDate(notification.createdAt.toLocal()),
                       variant: PillVariant.neutral,
-                      icon: Icons.schedule_outlined,
+                      icon: AppIcons.schedule,
                     ),
                   ],
                 ),
@@ -273,7 +274,7 @@ class _NotificationRow extends ConsumerWidget {
             ),
           ),
           const SizedBox(width: 6),
-          const Icon(Icons.chevron_right_rounded),
+          const Icon(AppIcons.chevronRight),
         ],
       ),
     );
@@ -350,13 +351,13 @@ enum _NotificationFilter {
 IconData _notificationIcon(AppNotificationType type) {
   switch (type) {
     case AppNotificationType.learningReminder:
-      return Icons.school_outlined;
+      return AppIcons.school;
     case AppNotificationType.reviewDue:
-      return Icons.replay_outlined;
+      return AppIcons.replay;
     case AppNotificationType.checkInReminder:
-      return Icons.local_fire_department_outlined;
+      return AppIcons.localFireDepartment;
     case AppNotificationType.activity:
-      return Icons.emoji_events_outlined;
+      return AppIcons.emojiEvents;
   }
 }
 

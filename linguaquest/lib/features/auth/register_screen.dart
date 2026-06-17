@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_pill.dart';
@@ -71,7 +72,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   child: AppPill(
                     label: l10n.authStep1of2,
                     variant: PillVariant.primary,
-                    icon: Icons.person_add_alt_1,
+                    icon: AppIcons.personAdd,
                   ),
                 ),
                 const SizedBox(height: AppTokens.s32),
@@ -80,7 +81,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   decoration: InputDecoration(
                     labelText: l10n.authNickname,
                     hintText: l10n.authNicknameHint,
-                    prefixIcon: const Icon(Icons.badge_outlined),
+                    prefixIcon: const Icon(AppIcons.badge),
                   ),
                   validator: (value) => value == null || value.trim().isEmpty
                       ? l10n.authNameRequired
@@ -92,7 +93,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   decoration: InputDecoration(
                     labelText: l10n.authEmail,
                     hintText: l10n.authEmailHint,
-                    prefixIcon: const Icon(Icons.mail_outline),
+                    prefixIcon: const Icon(AppIcons.mail),
                   ),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) => _emailValidator(value, l10n),
@@ -103,7 +104,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   decoration: InputDecoration(
                     labelText: l10n.authPassword,
                     hintText: l10n.authPasswordHint,
-                    prefixIcon: const Icon(Icons.lock_outline),
+                    prefixIcon: const Icon(AppIcons.lock),
                   ),
                   obscureText: true,
                   validator: (value) => _passwordValidator(value, l10n),
@@ -122,7 +123,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   children: [
                     AppPrimaryButton(
                       label: l10n.authContinueToGoal,
-                      icon: Icons.arrow_forward_rounded,
+                      icon: AppIcons.arrowForward,
                       onPressed: state.isLoading ? null : _submit,
                     ),
                     if (state.isLoading)

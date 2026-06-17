@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:linguaquest/core/theme/app_icons.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
@@ -76,7 +77,7 @@ class _AddEditCustomWordScreenState
                         controller: _wordController,
                         decoration: InputDecoration(
                           labelText: l10n.customWordsFieldWord,
-                          prefixIcon: const Icon(Icons.abc),
+                          prefixIcon: const Icon(AppIcons.abc),
                         ),
                         validator: (value) => _required(value, l10n),
                       ),
@@ -85,7 +86,7 @@ class _AddEditCustomWordScreenState
                         controller: _meaningController,
                         decoration: InputDecoration(
                           labelText: l10n.customWordsFieldMeaning,
-                          prefixIcon: const Icon(Icons.translate),
+                          prefixIcon: const Icon(AppIcons.translate),
                         ),
                         validator: (value) => _required(value, l10n),
                       ),
@@ -94,7 +95,7 @@ class _AddEditCustomWordScreenState
                         controller: _exampleController,
                         decoration: InputDecoration(
                           labelText: l10n.customWordsFieldExample,
-                          prefixIcon: const Icon(Icons.notes_outlined),
+                          prefixIcon: const Icon(AppIcons.notes),
                         ),
                         minLines: 2,
                         maxLines: 4,
@@ -105,7 +106,7 @@ class _AddEditCustomWordScreenState
                         controller: _noteController,
                         decoration: InputDecoration(
                           labelText: l10n.customWordsFieldNote,
-                          prefixIcon: const Icon(Icons.edit_note),
+                          prefixIcon: const Icon(AppIcons.editNote),
                         ),
                         minLines: 2,
                         maxLines: 4,
@@ -115,7 +116,7 @@ class _AddEditCustomWordScreenState
                         controller: _tagController,
                         decoration: InputDecoration(
                           labelText: l10n.customWordsFieldTag,
-                          prefixIcon: const Icon(Icons.sell_outlined),
+                          prefixIcon: const Icon(AppIcons.sell),
                         ),
                       ),
                       const SizedBox(height: AppTokens.s16),
@@ -129,7 +130,7 @@ class _AddEditCustomWordScreenState
                 ),
                 const SizedBox(height: AppTokens.s24),
                 AppPrimaryButton(
-                  icon: Icons.save_outlined,
+                  icon: AppIcons.save,
                   label: isEditing
                       ? l10n.customWordsSaveEdit
                       : l10n.customWordsCreate,

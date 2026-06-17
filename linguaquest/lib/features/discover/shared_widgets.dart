@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
@@ -50,15 +51,15 @@ class RewardTaskRow extends StatelessWidget {
     if (task.isClaimed) {
       badgeLabel = l10n.discoverClaimed(task.points.toString());
       badgeVariant = PillVariant.success;
-      badgeIcon = Icons.check_circle_outline;
+      badgeIcon = AppIcons.checkCircle;
     } else if (canClaim) {
       badgeLabel = l10n.discoverClaim(task.points.toString());
       badgeVariant = PillVariant.primary;
-      badgeIcon = Icons.add_circle_outline;
+      badgeIcon = AppIcons.addCircle;
     } else {
       badgeLabel = l10n.discoverGoComplete(task.points.toString());
       badgeVariant = PillVariant.streak;
-      badgeIcon = Icons.add_circle_outline;
+      badgeIcon = AppIcons.addCircle;
     }
 
     return InkWell(

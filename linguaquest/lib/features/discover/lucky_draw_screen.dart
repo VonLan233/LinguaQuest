@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/app_button.dart';
@@ -93,12 +94,12 @@ class _LotteryPanel extends ConsumerWidget {
                   AppPill(
                     label: l10n.luckyDrawInventoryCount(inventoryCount),
                     variant: PillVariant.primary,
-                    icon: Icons.inventory_2_outlined,
+                    icon: AppIcons.inventory2,
                   ),
                   AppPill(
                     label: l10n.luckyDrawNoBoost,
                     variant: PillVariant.neutral,
-                    icon: Icons.balance_outlined,
+                    icon: AppIcons.balance,
                   ),
                 ],
               ),
@@ -113,7 +114,7 @@ class _LotteryPanel extends ConsumerWidget {
           children: [
             AppPrimaryButton(
               onPressed: canDraw ? () => _draw(context, ref) : null,
-              icon: state.isLoading ? null : Icons.casino_outlined,
+              icon: state.isLoading ? null : AppIcons.casino,
               label: canDraw ? l10n.luckyDrawNow : l10n.luckyDrawInsufficient,
             ),
             if (state.isLoading)

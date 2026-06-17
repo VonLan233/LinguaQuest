@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:linguaquest/core/theme/app_icons.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
@@ -47,7 +48,7 @@ class WordbookScreen extends ConsumerWidget {
               trailing: QuestIconButton(
                 tooltip: l10n.wordbookCustomTooltip,
                 onPressed: () => context.push('/custom-words'),
-                icon: Icons.add_card_outlined,
+                icon: AppIcons.addCard,
                 color: AppTheme.cyan,
               ),
             ),
@@ -69,19 +70,19 @@ class WordbookScreen extends ConsumerWidget {
                   label: l10n.wordbookTargetWords(
                     currentBook?.totalWords ?? words.length,
                   ),
-                  icon: Icons.style_outlined,
+                  icon: AppIcons.style,
                   variant: PillVariant.primary,
                 ),
                 AppPill(
                   label: l10n.wordbookBookCount(state.wordBooks.length),
-                  icon: Icons.library_books_outlined,
+                  icon: AppIcons.libraryBooks,
                   variant: PillVariant.primary,
                 ),
                 AppPill(
                   label: l10n.wordbookCompletion(
                     (state.learningPathProgress * 100).round(),
                   ),
-                  icon: Icons.route_outlined,
+                  icon: AppIcons.route,
                   variant: PillVariant.success,
                 ),
               ],
@@ -193,7 +194,7 @@ class _StudyBookHero extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: TextButton.icon(
               onPressed: onOpenPlan,
-              icon: const Icon(Icons.tune_outlined),
+              icon: const Icon(AppIcons.tune),
               label: Text(l10n.wordbookSwitch),
               style: TextButton.styleFrom(
                 foregroundColor: Colors.white,
@@ -299,7 +300,7 @@ class _TargetWordRow extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
               ),
               alignment: Alignment.center,
-              child: Icon(Icons.menu_book_outlined, size: 22, color: accent),
+              child: Icon(AppIcons.menuBook, size: 22, color: accent),
             ),
             const SizedBox(width: AppTokens.s12),
             Expanded(

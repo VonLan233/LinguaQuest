@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:linguaquest/core/theme/app_icons.dart';
+
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_card.dart';
@@ -48,7 +50,7 @@ class _ClassModeScreenState extends State<ClassModeScreen> {
                     controller: _codeController,
                     decoration: InputDecoration(
                       labelText: l10n.questClassCode,
-                      prefixIcon: const Icon(Icons.key_outlined),
+                      prefixIcon: const Icon(AppIcons.key),
                     ),
                   ),
                   const SizedBox(height: AppTokens.s12),
@@ -60,7 +62,7 @@ class _ClassModeScreenState extends State<ClassModeScreen> {
                         ),
                       ),
                     ),
-                    icon: Icons.group_add_outlined,
+                    icon: AppIcons.groupAdd,
                     label: l10n.classModeJoin,
                   ),
                 ],
@@ -69,7 +71,7 @@ class _ClassModeScreenState extends State<ClassModeScreen> {
             const SizedBox(height: AppTokens.s16),
             AppSecondaryButton(
               onPressed: () => context.push('/class-progress'),
-              icon: Icons.query_stats_outlined,
+              icon: AppIcons.queryStats,
               label: l10n.classModeViewProgress,
             ),
           ],

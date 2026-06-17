@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/state/app_controller.dart';
+import 'package:linguaquest/core/theme/app_icons.dart';
+
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_progress_bar.dart';
@@ -101,7 +103,7 @@ class _ProgressSignals extends StatelessWidget {
             child: _ProgressSignal(
               label: l10n.analyticsCards,
               value: '$cardCount',
-              icon: Icons.style_outlined,
+              icon: AppIcons.style,
               color: AppTheme.cyan,
             ),
           ),
@@ -110,7 +112,7 @@ class _ProgressSignals extends StatelessWidget {
             child: _ProgressSignal(
               label: l10n.homeMastered,
               value: '$masteredCount',
-              icon: Icons.verified_outlined,
+              icon: AppIcons.verified,
               color: AppTheme.success,
             ),
           ),
@@ -119,7 +121,7 @@ class _ProgressSignals extends StatelessWidget {
             child: _ProgressSignal(
               label: l10n.analyticsTrainingXp,
               value: '$trainingXp',
-              icon: Icons.sports_esports_outlined,
+              icon: AppIcons.sportsEsports,
               color: AppTheme.mango,
             ),
           ),
@@ -128,7 +130,7 @@ class _ProgressSignals extends StatelessWidget {
             child: _ProgressSignal(
               label: l10n.analyticsAccuracy,
               value: '$accuracy%',
-              icon: Icons.insights_outlined,
+              icon: AppIcons.insights,
               color: AppTheme.coral,
             ),
           ),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_card.dart';
@@ -56,7 +57,7 @@ class TrainingScreen extends ConsumerWidget {
         _TrainingGameList(
           children: [
             _TrainingGameRow(
-              icon: Icons.school_outlined,
+              icon: AppIcons.school,
               title: l10n.trainingCampusSpeed,
               subtitle: currentBook == null
                   ? '$studyBookTitle · ${l10n.trainingTimedTests}'
@@ -67,7 +68,7 @@ class TrainingScreen extends ConsumerWidget {
                   : () => context.push('/timed-test/${speedLesson.id}'),
             ),
             _TrainingGameRow(
-              icon: Icons.timer_outlined,
+              icon: AppIcons.timer,
               title: l10n.trainingSpeedGame,
               subtitle: l10n.trainingSpeedGameDesc,
               color: AppTokens.mangoColor(context),
@@ -84,28 +85,28 @@ class TrainingScreen extends ConsumerWidget {
         _TrainingGameList(
           children: [
             _TrainingGameRow(
-              icon: Icons.stairs_outlined,
+              icon: AppIcons.stairs,
               title: l10n.trainingSurvivor,
               subtitle: l10n.trainingSurvivorDesc,
               color: AppTokens.coralColor(context),
               onTap: () => context.push('/training/survival'),
             ),
             _TrainingGameRow(
-              icon: Icons.edit_note_outlined,
+              icon: AppIcons.editNote,
               title: l10n.trainingSpelling,
               subtitle: l10n.trainingSpellingDesc,
               color: AppTheme.cyan,
               onTap: () => context.push('/training/spelling'),
             ),
             _TrainingGameRow(
-              icon: Icons.article_outlined,
+              icon: AppIcons.article,
               title: l10n.trainingPassageCloze,
               subtitle: l10n.trainingPassageClozeDesc,
               color: AppTokens.successColor(context),
               onTap: null,
             ),
             _TrainingGameRow(
-              icon: Icons.hearing_outlined,
+              icon: AppIcons.hearing,
               title: l10n.trainingListening,
               subtitle: l10n.trainingListeningDesc,
               color: AppTokens.mangoColor(context),
@@ -152,7 +153,7 @@ class _TrainingGoalHeader extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const IconCueBadge(icon: Icons.bolt, color: AppTokens.mango),
+          const IconCueBadge(icon: AppIcons.bolt, color: AppTokens.mango),
           const SizedBox(width: AppTokens.s16),
           Expanded(
             child: Column(
@@ -178,7 +179,7 @@ class _TrainingGoalHeader extends StatelessWidget {
           AppPill(
             label: '$streak $streakLabel',
             variant: PillVariant.streak,
-            icon: Icons.local_fire_department_outlined,
+            icon: AppIcons.localFireDepartment,
           ),
         ],
       ),
@@ -245,7 +246,7 @@ class _TrainingGameRow extends StatelessWidget {
                 AppPill(
                   label: AppLocalizations.of(context).trainingComingSoon,
                   variant: PillVariant.primary,
-                  icon: Icons.lock_clock_outlined,
+                  icon: AppIcons.lockClock,
                 ),
             ],
           ),
@@ -297,7 +298,7 @@ class _TrainingReadinessLine extends StatelessWidget {
             child: StatTile(
               value: '$dueWords',
               label: l10n.trainingDueWords,
-              icon: Icons.today_outlined,
+              icon: AppIcons.today,
               accent: AppTokens.azure,
             ),
           ),
@@ -306,7 +307,7 @@ class _TrainingReadinessLine extends StatelessWidget {
             child: StatTile(
               value: '$weakWords',
               label: l10n.trainingWeakWords,
-              icon: Icons.warning_amber_outlined,
+              icon: AppIcons.warningAmber,
               accent: AppTokens.coralColor(context),
             ),
           ),
@@ -315,7 +316,7 @@ class _TrainingReadinessLine extends StatelessWidget {
             child: StatTile(
               value: '$comboTarget',
               label: l10n.trainingComboTarget,
-              icon: Icons.bolt,
+              icon: AppIcons.bolt,
               accent: AppTokens.mangoColor(context),
             ),
           ),

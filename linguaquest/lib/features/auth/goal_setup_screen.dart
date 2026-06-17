@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/date_formatting.dart';
 import '../../core/utils/ui_labels.dart';
@@ -93,17 +94,17 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
               children: [
                 AppPill(
                   label: l10n.authStep2of2,
-                  icon: Icons.track_changes_rounded,
+                  icon: AppIcons.trackChanges,
                   variant: PillVariant.primary,
                 ),
                 AppPill(
                   label: displayTarget(_target, l10n: l10n),
-                  icon: Icons.flag_outlined,
+                  icon: AppIcons.flag,
                   variant: PillVariant.neutral,
                 ),
                 AppPill(
                   label: '$dailyWords${l10n.commonWords}/${l10n.commonDay}',
-                  icon: Icons.today_outlined,
+                  icon: AppIcons.today,
                   variant: PillVariant.xp,
                 ),
               ],
@@ -162,7 +163,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
                     Expanded(
                       child: AppSecondaryButton(
                         onPressed: _pickDeadline,
-                        icon: Icons.event_outlined,
+                        icon: AppIcons.event,
                         label: _deadline == null
                             ? l10n.goalSetupPickDate
                             : l10n.goalSetupChangeDate,
@@ -173,7 +174,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
                       QuestIconButton(
                         tooltip: l10n.goalSetupClearDate,
                         onPressed: () => setState(() => _deadline = null),
-                        icon: Icons.close_rounded,
+                        icon: AppIcons.close,
                         color: AppTheme.coral,
                       ),
                     ],
@@ -184,7 +185,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
             const SizedBox(height: 28),
             AppPrimaryButton(
               onPressed: _save,
-              icon: Icons.check_circle_outline,
+              icon: AppIcons.checkCircle,
               label: l10n.goalSetupEnterApp,
             ),
           ],
@@ -318,7 +319,7 @@ class _PlanSnapshotLine extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               IconCueBadge(
-                icon: Icons.menu_book_outlined,
+                icon: AppIcons.menuBook,
                 color: AppTheme.cyan,
                 size: 44,
               ),
@@ -361,17 +362,17 @@ class _PlanSnapshotLine extends StatelessWidget {
             children: [
               AppPill(
                 label: l10n.goalSetupNewWordsCount(dailyWords),
-                icon: Icons.add_task_rounded,
+                icon: AppIcons.addTask,
                 variant: PillVariant.success,
               ),
               AppPill(
                 label: l10n.goalSetupReviewLimitCount(reviewLimit),
-                icon: Icons.replay_rounded,
+                icon: AppIcons.replay,
                 variant: PillVariant.xp,
               ),
               TextButton.icon(
                 onPressed: onOpenWordbook,
-                icon: const Icon(Icons.style_outlined),
+                icon: const Icon(AppIcons.style),
                 label: Text(l10n.goalSetupViewWordbook),
               ),
             ],
@@ -500,8 +501,8 @@ class _StableChoiceButton extends StatelessWidget {
               children: [
                 Icon(
                   selected
-                      ? Icons.check_circle_rounded
-                      : Icons.radio_button_unchecked_rounded,
+                      ? AppIcons.checkCircle
+                      : AppIcons.radioButtonUnchecked,
                   color: selected
                       ? theme.colorScheme.primary
                       : theme.colorScheme.outline,

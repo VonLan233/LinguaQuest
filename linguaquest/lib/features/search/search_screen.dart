@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/utils/ui_labels.dart';
@@ -106,7 +107,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               autofocus: true,
               decoration: InputDecoration(
                 labelText: l10n.searchFieldLabel,
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon: const Icon(AppIcons.search),
               ),
               textInputAction: TextInputAction.search,
               onChanged: (value) {
@@ -145,7 +146,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 message: l10n.searchNoResultsMessage,
                 action: OutlinedButton.icon(
                   onPressed: () => context.push('/custom-words/new'),
-                  icon: const Icon(Icons.add),
+                  icon: const Icon(AppIcons.add),
                   label: Text(l10n.wordbookAddCustom),
                 ),
               )
@@ -444,7 +445,7 @@ class _CustomWordTile extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right_rounded),
+            const Icon(AppIcons.chevronRight),
           ],
         ),
       ),

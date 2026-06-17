@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:linguaquest/core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_pill.dart';
@@ -58,13 +59,13 @@ class _WordKnowledgeSectionsState extends State<WordKnowledgeSections> {
     );
     final items = [
       _KnowledgePanelData(
-        icon: Icons.hub_outlined,
+        icon: AppIcons.hub,
         color: AppTheme.cyan,
         title: '词组搭配',
         body: knowledge.collocations.join(' · '),
       ),
       _KnowledgePanelData(
-        icon: Icons.compare_arrows_rounded,
+        icon: AppIcons.compareArrows,
         color: AppTheme.teal,
         title: '近义 / 反义',
         body:
@@ -73,13 +74,13 @@ class _WordKnowledgeSectionsState extends State<WordKnowledgeSections> {
         antonyms: knowledge.antonyms,
       ),
       _KnowledgePanelData(
-        icon: Icons.account_tree_outlined,
+        icon: AppIcons.accountTree,
         color: AppTheme.mango,
         title: '派生词族',
         body: knowledge.family.join(' · '),
       ),
       _KnowledgePanelData(
-        icon: Icons.psychology_outlined,
+        icon: AppIcons.psychology,
         color: AppTheme.coral,
         title: '词根拆词',
         body: knowledge.rootNote,
@@ -164,8 +165,8 @@ class _KnowledgeDisclosure extends StatelessWidget {
                           ),
                           Icon(
                             expanded
-                                ? Icons.keyboard_arrow_up_rounded
-                                : Icons.keyboard_arrow_down_rounded,
+                                ? AppIcons.keyboardArrowUp
+                                : AppIcons.keyboardArrowDown,
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
                         ],

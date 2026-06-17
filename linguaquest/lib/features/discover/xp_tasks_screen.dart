@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/fallback_back_button.dart';
@@ -40,7 +41,7 @@ class XpTasksScreen extends ConsumerWidget {
           RewardTaskList(
             tasks: [
               RewardTaskData(
-                icon: Icons.calendar_month_outlined,
+                icon: AppIcons.calendarMonth,
                 title: l10n.discoverDailyCheckin,
                 condition: l10n.discoverDailyCheckinCondition,
                 points: 5,
@@ -57,7 +58,7 @@ class XpTasksScreen extends ConsumerWidget {
                 ),
               ),
               RewardTaskData(
-                icon: Icons.school_outlined,
+                icon: AppIcons.school,
                 title: l10n.discoverNewLearning,
                 condition: l10n.discoverNewLearningCondition,
                 points: 20,
@@ -74,7 +75,7 @@ class XpTasksScreen extends ConsumerWidget {
                 ),
               ),
               RewardTaskData(
-                icon: Icons.replay_outlined,
+                icon: AppIcons.replay,
                 title: l10n.discoverReviewDone,
                 condition: l10n.discoverReviewDoneCondition,
                 points: 15,
@@ -91,7 +92,7 @@ class XpTasksScreen extends ConsumerWidget {
                 ),
               ),
               RewardTaskData(
-                icon: Icons.sports_esports_outlined,
+                icon: AppIcons.sportsEsports,
                 title: l10n.discoverTrainingChallenge,
                 condition: l10n.discoverTrainingChallengeCondition,
                 points: 20,
@@ -108,7 +109,7 @@ class XpTasksScreen extends ConsumerWidget {
                 ),
               ),
               RewardTaskData(
-                icon: Icons.cleaning_services_outlined,
+                icon: AppIcons.cleaningServices,
                 title: l10n.discoverWeakCleanup,
                 condition: l10n.discoverWeakCleanupCondition,
                 points: 10,

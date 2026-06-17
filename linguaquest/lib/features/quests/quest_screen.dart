@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:linguaquest/core/theme/app_icons.dart';
+
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/learning_badges.dart';
@@ -23,26 +25,26 @@ class QuestScreen extends StatelessWidget {
         const SizedBox(height: 12),
         const AppPill(
           label: '任务 XP',
-          icon: Icons.bolt,
+          icon: AppIcons.bolt,
           variant: PillVariant.xp,
         ),
         const SizedBox(height: 16),
         _QuestRow(
-          icon: Icons.flag_outlined,
+          icon: AppIcons.flag,
           title: l10n.questDailyTask,
           body: l10n.questDailyTaskBody,
           value: '20 XP',
         ),
         const SizedBox(height: 10),
         _QuestRow(
-          icon: Icons.workspace_premium_outlined,
+          icon: AppIcons.workspacePremium,
           title: l10n.questAchievements,
           body: l10n.questAchievementsBody,
           value: l10n.questAchievementsValue,
         ),
         const SizedBox(height: 10),
         _QuestRow(
-          icon: Icons.leaderboard_outlined,
+          icon: AppIcons.leaderboard,
           title: l10n.questLeaderboard,
           body: l10n.questLeaderboardBody,
           value: l10n.questWeekly,
@@ -50,7 +52,7 @@ class QuestScreen extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         _QuestRow(
-          icon: Icons.insights_outlined,
+          icon: AppIcons.insights,
           title: l10n.questAnalytics,
           body: l10n.questAnalyticsBody,
           value: l10n.questTrend,
@@ -58,7 +60,7 @@ class QuestScreen extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         _QuestRow(
-          icon: Icons.groups_outlined,
+          icon: AppIcons.groups,
           title: l10n.questClassMode,
           body: l10n.questClassModeBody,
           value: l10n.questClassCode,
@@ -66,7 +68,7 @@ class QuestScreen extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         _QuestRow(
-          icon: Icons.smart_toy_outlined,
+          icon: AppIcons.smartToy,
           title: l10n.questAiTutor,
           body: l10n.questAiTutorBody,
           value: '暂未开放',

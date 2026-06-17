@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
@@ -23,9 +24,9 @@ import '../../l10n/generated/app_localizations.dart';
 import '../quiz/lesson_result_screen.dart';
 
 enum TrainingGameType {
-  wordRush('word-rush', Icons.timer_outlined),
-  survival('survival', Icons.stairs_outlined),
-  spelling('spelling', Icons.edit_note_outlined);
+  wordRush('word-rush', AppIcons.timer),
+  survival('survival', AppIcons.stairs),
+  spelling('spelling', AppIcons.editNote);
 
   const TrainingGameType(this.id, this.icon);
 
@@ -124,7 +125,7 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
               const SizedBox(height: 16),
               FilledButton.icon(
                 onPressed: () => context.go('/training'),
-                icon: const Icon(Icons.arrow_back_rounded),
+                icon: const Icon(AppIcons.arrowBack),
                 label: Text(l10n.trainingBack),
               ),
             ],
@@ -147,7 +148,7 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
               const SizedBox(height: 16),
               FilledButton.icon(
                 onPressed: () => context.go('/training'),
-                icon: const Icon(Icons.arrow_back_rounded),
+                icon: const Icon(AppIcons.arrowBack),
                 label: Text(l10n.trainingBack),
               ),
             ],
@@ -236,8 +237,8 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
                         ? () => _submitAnswer(_textController.text.trim())
                         : null,
                     icon: _checked
-                        ? Icons.arrow_forward_rounded
-                        : Icons.check_rounded,
+                        ? AppIcons.arrowForward
+                        : AppIcons.check,
                     label: _checked
                         ? l10n.trainingNextQuestion
                         : l10n.trainingSubmitSpelling,
@@ -271,7 +272,7 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
             ),
             FilledButton.icon(
               onPressed: () => Navigator.pop(context, true),
-              icon: const Icon(Icons.exit_to_app_rounded),
+              icon: const Icon(AppIcons.exitToApp),
               label: Text(l10n.trainingExit),
             ),
           ],
@@ -738,26 +739,26 @@ class _TrainingStatusLine extends StatelessWidget {
             if (game == TrainingGameType.wordRush)
               AppPill(
                 label: '${remainingSeconds}s',
-                icon: Icons.timer_outlined,
+                icon: AppIcons.timer,
                 variant: PillVariant.streak,
               ),
             AppPill(
               label: AppLocalizations.of(
                 context,
               ).trainingCorrectAttempts(correct, attempts),
-              icon: Icons.check_rounded,
+              icon: AppIcons.check,
               variant: PillVariant.success,
             ),
             AppPill(
               label: AppLocalizations.of(context).trainingStreak(streak),
-              icon: Icons.bolt,
+              icon: AppIcons.bolt,
               variant: PillVariant.xp,
             ),
             AppPill(
               label: AppLocalizations.of(
                 context,
               ).trainingAccuracyValue(accuracy),
-              icon: Icons.insights_outlined,
+              icon: AppIcons.insights,
               variant: PillVariant.primary,
             ),
             if (game == TrainingGameType.survival)
@@ -765,7 +766,7 @@ class _TrainingStatusLine extends StatelessWidget {
                 label: AppLocalizations.of(
                   context,
                 ).trainingSurvivalResources(revives, nodeRewards),
-                icon: Icons.favorite_border_rounded,
+                icon: AppIcons.favorite,
                 variant: PillVariant.streak,
               ),
             if (game == TrainingGameType.wordRush)
@@ -773,7 +774,7 @@ class _TrainingStatusLine extends StatelessWidget {
                 label: AppLocalizations.of(
                   context,
                 ).trainingBestStreak(bestStreak),
-                icon: Icons.local_fire_department_outlined,
+                icon: AppIcons.localFireDepartment,
                 variant: PillVariant.xp,
               ),
           ],
@@ -916,10 +917,10 @@ class _SpellingInput extends StatelessWidget {
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
         labelText: AppLocalizations.of(context).trainingSpellingInputLabel,
-        prefixIcon: const Icon(Icons.edit_outlined),
+        prefixIcon: const Icon(AppIcons.edit),
         suffixIcon: checked
             ? Icon(
-                isCorrect ? Icons.check_circle_outline : Icons.cancel_outlined,
+                isCorrect ? AppIcons.checkCircle : AppIcons.cancel,
                 color: isCorrect
                     ? AppTokens.successColor(context)
                     : Theme.of(context).colorScheme.error,
@@ -971,7 +972,7 @@ class _TrainingFeedback extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Icon(
-                isCorrect ? Icons.check_circle_outline : Icons.cancel_outlined,
+                isCorrect ? AppIcons.checkCircle : AppIcons.cancel,
                 color: foreground,
               ),
               const SizedBox(width: AppTokens.s8),

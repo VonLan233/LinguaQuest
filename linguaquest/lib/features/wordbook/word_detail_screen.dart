@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:linguaquest/core/theme/app_icons.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/utils/date_formatting.dart';
@@ -40,7 +41,7 @@ class WordDetailScreen extends ConsumerWidget {
           IconButton(
             tooltip: l10n.commonEdit,
             onPressed: () => context.push('/custom-words/${word.id}/edit'),
-            icon: const Icon(Icons.edit_outlined),
+            icon: const Icon(AppIcons.edit),
           ),
           const SizedBox(width: 12),
         ],
@@ -108,14 +109,14 @@ class WordDetailScreen extends ConsumerWidget {
                   variant: word.masteryLevel > 0
                       ? PillVariant.success
                       : PillVariant.neutral,
-                  icon: Icons.psychology_outlined,
+                  icon: AppIcons.psychology,
                 ),
                 AppPill(
                   label: l10n.wordDetailNextReview(
                     formatRelativeDue(word.nextReviewAt, DateTime.now()),
                   ),
                   variant: PillVariant.neutral,
-                  icon: Icons.schedule_outlined,
+                  icon: AppIcons.schedule,
                 ),
               ],
             ),
@@ -163,7 +164,7 @@ class WordDetailScreen extends ConsumerWidget {
               onPressed: canReview
                   ? () => _review(context, ref, word.id, isCorrect: true)
                   : null,
-              icon: Icons.check_circle_outline,
+              icon: AppIcons.checkCircle,
               label: l10n.wordDetailMarkRemembered,
             ),
             const SizedBox(height: 12),
@@ -171,7 +172,7 @@ class WordDetailScreen extends ConsumerWidget {
               onPressed: canReview
                   ? () => _review(context, ref, word.id, isCorrect: false)
                   : null,
-              icon: Icons.replay,
+              icon: AppIcons.replay,
               label: l10n.wordDetailScheduleSoon,
             ),
           ],

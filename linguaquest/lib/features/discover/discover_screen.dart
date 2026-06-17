@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
@@ -31,12 +32,12 @@ class DiscoverScreen extends ConsumerWidget {
           children: [
             AppPill(
               label: '${user?.xp ?? 0} ${l10n.commonXP}',
-              icon: Icons.bolt,
+              icon: AppIcons.bolt,
               variant: PillVariant.xp,
             ),
             AppPill(
               label: '${user?.streak ?? 0} ${l10n.homeStreakLabel}',
-              icon: Icons.local_fire_department_outlined,
+              icon: AppIcons.localFireDepartment,
               variant: PillVariant.streak,
             ),
           ],
@@ -46,7 +47,7 @@ class DiscoverScreen extends ConsumerWidget {
           children: [
             Expanded(
               child: _DiscoverNavCard(
-                icon: Icons.emoji_events_outlined,
+                icon: AppIcons.emojiEvents,
                 title: l10n.discoverXpTasks,
                 subtitle: l10n.discoverXpTasksSubtitle,
                 color: AppTokens.xpSoftText,
@@ -56,7 +57,7 @@ class DiscoverScreen extends ConsumerWidget {
             const SizedBox(width: AppTokens.s12),
             Expanded(
               child: _DiscoverNavCard(
-                icon: Icons.card_giftcard_outlined,
+                icon: AppIcons.cardGiftcard,
                 title: l10n.discoverLuckyDraw,
                 subtitle: l10n.discoverLuckyDrawSubtitle,
                 color: AppTokens.streakSoftText,
@@ -67,7 +68,7 @@ class DiscoverScreen extends ConsumerWidget {
         ),
         const SizedBox(height: AppTokens.s12),
         _DiscoverNavCard(
-          icon: Icons.forum_outlined,
+          icon: AppIcons.forum,
           title: l10n.discoverCommunityPosts,
           subtitle: l10n.discoverCommunityPostsSubtitle,
           color: AppTokens.successSoftText,

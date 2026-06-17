@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/brand_mark.dart';
@@ -108,7 +109,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                     const SizedBox(height: 14),
                     AppPrimaryButton(
                       onPressed: _start,
-                      icon: Icons.refresh_rounded,
+                      icon: AppIcons.refresh,
                       label: l10n.commonRetry,
                     ),
                   ],

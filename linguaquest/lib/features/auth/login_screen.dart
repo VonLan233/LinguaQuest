@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/mascot_image.dart';
@@ -79,7 +80,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   decoration: InputDecoration(
                     labelText: l10n.authEmail,
                     hintText: l10n.authEmailHint,
-                    prefixIcon: const Icon(Icons.mail_outline),
+                    prefixIcon: const Icon(AppIcons.mail),
                   ),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) => _emailValidator(value, l10n),
@@ -90,7 +91,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   decoration: InputDecoration(
                     labelText: l10n.authPassword,
                     hintText: l10n.authPasswordHint,
-                    prefixIcon: const Icon(Icons.lock_outline),
+                    prefixIcon: const Icon(AppIcons.lock),
                   ),
                   obscureText: true,
                   validator: (value) => _passwordValidator(value, l10n),
@@ -109,7 +110,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   children: [
                     AppPrimaryButton(
                       label: l10n.commonLogin,
-                      icon: Icons.login,
+                      icon: AppIcons.login,
                       onPressed: state.isLoading ? null : _submit,
                     ),
                     if (state.isLoading)
@@ -129,7 +130,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 const SizedBox(height: AppTokens.s12),
                 AppSecondaryButton(
                   label: l10n.goalSetupEnterApp,
-                  icon: Icons.bolt,
+                  icon: AppIcons.bolt,
                   onPressed: state.isLoading ? null : _enterDemo,
                 ),
                 const SizedBox(height: AppTokens.s8),

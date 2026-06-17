@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
@@ -61,7 +62,7 @@ class _ForumPost extends StatelessWidget {
           AppPill(
             label: post.tag,
             variant: PillVariant.streak,
-            icon: Icons.tag_outlined,
+            icon: AppIcons.tag,
           ),
           const SizedBox(height: AppTokens.s12),
           Text(
@@ -81,7 +82,7 @@ class _ForumPost extends StatelessWidget {
           Row(
             children: [
               Icon(
-                Icons.thumb_up_alt_outlined,
+                AppIcons.thumbUpAlt,
                 size: 18,
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -94,7 +95,7 @@ class _ForumPost extends StatelessWidget {
               ),
               const SizedBox(width: AppTokens.s16),
               Icon(
-                Icons.mode_comment_outlined,
+                AppIcons.modeComment,
                 size: 18,
                 color: theme.colorScheme.onSurfaceVariant,
               ),

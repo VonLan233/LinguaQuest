@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:linguaquest/core/theme/app_icons.dart';
+
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
@@ -60,7 +62,7 @@ class _ClassProgressRow extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.assignment_outlined,
+                  AppIcons.assignment,
                   color: theme.colorScheme.primary,
                 ),
                 const SizedBox(width: AppTokens.s12),

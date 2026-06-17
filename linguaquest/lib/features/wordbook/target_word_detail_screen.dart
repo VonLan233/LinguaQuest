@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:linguaquest/core/theme/app_icons.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_tokens.dart';
@@ -88,8 +89,8 @@ class TargetWordDetailScreen extends ConsumerWidget {
                   ),
                   icon: Icon(
                     isInNewWordbook
-                        ? Icons.check_circle_outline
-                        : Icons.add_circle_outline,
+                        ? AppIcons.checkCircle
+                        : AppIcons.addCircle,
                   ),
                   label: Text(
                     isInNewWordbook
@@ -393,7 +394,7 @@ class _WordHero extends StatelessWidget {
               AppPill(label: bookTitle, variant: PillVariant.neutral),
               AppPill(
                 label: l10n.wordbookCurrentPlan,
-                icon: Icons.playlist_add_check_rounded,
+                icon: AppIcons.playlistAddCheck,
                 variant: PillVariant.primary,
               ),
               if (word.tags.isNotEmpty)
@@ -562,7 +563,7 @@ class _ExampleSections extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.format_quote, color: AppTokens.coral),
+                const Icon(AppIcons.formatQuote, color: AppTokens.coral),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -611,7 +612,7 @@ class _WordTags extends StatelessWidget {
         if (progress != null) ...[
           AppPill(
             label: displayWordStatus(progress!.status),
-            icon: Icons.psychology_outlined,
+            icon: AppIcons.psychology,
             variant: PillVariant.success,
           ),
           AppPill(

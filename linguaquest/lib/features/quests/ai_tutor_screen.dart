@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:linguaquest/core/theme/app_icons.dart';
+
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/fallback_back_button.dart';
@@ -47,7 +49,7 @@ class _AiTutorScreenState extends State<AiTutorScreen> {
               maxLines: 4,
               decoration: InputDecoration(
                 labelText: l10n.aiTutorInputLabel,
-                prefixIcon: const Icon(Icons.smart_toy_outlined),
+                prefixIcon: const Icon(AppIcons.smartToy),
               ),
             ),
             const SizedBox(height: AppTokens.s16),
@@ -56,7 +58,7 @@ class _AiTutorScreenState extends State<AiTutorScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(
-                    Icons.psychology_alt_outlined,
+                    AppIcons.psychologyAlt,
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   const SizedBox(width: AppTokens.s12),

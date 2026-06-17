@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:linguaquest/core/theme/app_icons.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/ui_labels.dart';
@@ -40,7 +41,7 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/custom-words/new'),
-        icon: const Icon(Icons.add),
+        icon: const Icon(AppIcons.add),
         label: Text(l10n.commonAdd),
       ),
       body: SafeArea(
@@ -54,7 +55,7 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
                 trailing: AppPill(
                   label: l10n.customWordsCardCount(state.customWords.length),
                   variant: PillVariant.neutral,
-                  icon: Icons.add_card_outlined,
+                  icon: AppIcons.addCard,
                 ),
               ),
             ),
@@ -63,7 +64,7 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
               child: TextField(
                 decoration: InputDecoration(
                   labelText: l10n.customWordsSearchLabel,
-                  prefixIcon: const Icon(Icons.search),
+                  prefixIcon: const Icon(AppIcons.search),
                 ),
                 onChanged: (value) => setState(() => _query = value),
               ),
@@ -102,7 +103,7 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
                       message: l10n.customWordsNoMatchMessage,
                       action: AppPrimaryButton(
                         onPressed: () => context.push('/custom-words/new'),
-                        icon: Icons.add,
+                        icon: AppIcons.add,
                         label: l10n.customWordsAddCard,
                       ),
                     )
@@ -153,7 +154,7 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
           ),
           FilledButton.icon(
             onPressed: () => Navigator.pop(context, true),
-            icon: const Icon(Icons.delete_outline),
+            icon: const Icon(AppIcons.delete),
             label: Text(l10n.commonDelete),
           ),
         ],
@@ -228,7 +229,7 @@ class _CustomWordTile extends StatelessWidget {
           ),
           QuestIconButton(
             tooltip: l10n.commonDelete,
-            icon: Icons.delete_outline,
+            icon: AppIcons.delete,
             color: AppTheme.coral,
             onPressed: onDelete,
           ),

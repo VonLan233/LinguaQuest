@@ -60,7 +60,7 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     expect(find.text('LinguaQuest'), findsWidgets);
-    expect(find.byIcon(Icons.route_outlined), findsWidgets);
+    expect(find.byIcon(AppIcons.route), findsWidgets);
 
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -500));
     await tester.pumpAndSettle();
@@ -828,7 +828,7 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     expect(learningRepository.listAttempts, 2);
-    expect(find.byIcon(Icons.route_outlined), findsWidgets);
+    expect(find.byIcon(AppIcons.route), findsWidgets);
   });
 
   testWidgets('session load failure falls back to onboarding', (tester) async {
@@ -846,7 +846,7 @@ void main() {
 
     expect(find.textContaining('LinguaQuest 启动失败'), findsNothing);
     expect(find.text('LinguaQuest'), findsWidgets);
-    expect(find.byIcon(Icons.route_outlined), findsWidgets);
+    expect(find.byIcon(AppIcons.route), findsWidgets);
   });
 
   testWidgets('main shell supports deliberate horizontal tab swiping', (

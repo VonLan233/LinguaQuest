@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/theme/app_icons.dart';
+
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_card.dart';
@@ -18,19 +20,19 @@ class OnboardingScreen extends StatelessWidget {
     final steps = [
       _OnboardingStepData(
         cue: '🖼',
-        icon: Icons.image_search_outlined,
+        icon: AppIcons.imageSearch,
         title: l10n.onboardingFeatureImageCards,
         body: l10n.onboardingFeatureImageCardsDesc,
       ),
       _OnboardingStepData(
         cue: '🛤',
-        icon: Icons.route_outlined,
+        icon: AppIcons.route,
         title: l10n.onboardingFeaturePath,
         body: l10n.onboardingFeaturePathDesc,
       ),
       _OnboardingStepData(
         cue: '🔁',
-        icon: Icons.replay_outlined,
+        icon: AppIcons.replay,
         title: l10n.onboardingFeatureReview,
         body: l10n.onboardingFeatureReviewDesc,
       ),
@@ -76,13 +78,13 @@ class OnboardingScreen extends StatelessWidget {
               const SizedBox(height: AppTokens.s32),
               AppPrimaryButton(
                 onPressed: () => context.go('/register'),
-                icon: Icons.person_add_alt_1,
+                icon: AppIcons.personAdd,
                 label: l10n.onboardingRegisterButton,
               ),
               const SizedBox(height: AppTokens.s12),
               AppSecondaryButton(
                 onPressed: () => context.go('/login'),
-                icon: Icons.login,
+                icon: AppIcons.login,
                 label: l10n.commonLogin,
               ),
             ],
