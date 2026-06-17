@@ -127,6 +127,7 @@ class AppTheme {
       useMaterial3: true,
       colorScheme: scheme,
       fontFamily: 'Avenir',
+      iconTheme: const IconThemeData(weight: 400, grade: 0, opticalSize: 24, fill: 0),
       textTheme: baseTextTheme.copyWith(
         displayMedium: baseTextTheme.displayMedium?.copyWith(
           fontWeight: FontWeight.w800,
