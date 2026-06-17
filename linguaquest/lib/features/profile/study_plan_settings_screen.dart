@@ -10,13 +10,18 @@ import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/utils/date_formatting.dart';
 import '../../core/utils/ui_labels.dart';
+import '../../core/utils/wordbook_progress.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
+import '../../core/widgets/app_progress_bar.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
+import '../../core/widgets/wordbook_cover_card.dart';
+import '../../data/models/lesson.dart';
 import '../../data/models/study_plan.dart';
+import '../../data/models/user_word.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 class StudyPlanSettingsScreen extends ConsumerStatefulWidget {
@@ -71,17 +76,23 @@ class _StudyPlanSettingsScreenState
       );
     }
 
+    final localeCode = Localizations.localeOf(context).languageCode;
+    final selectedWordBook = _wordBookForId(state.wordBooks, _wordBookId);
     final lessons = learningLessonsForTarget(state.lessons, _wordBookId);
-    final totalWords = lessons.fold<int>(
-      0,
-      (total, lesson) => total + lesson.words.length,
+    final fallbackWords = lessons.expand((lesson) => lesson.words).toList();
+    final selectedWordIds =
+        selectedWordBook?.wordIds.toSet() ??
+        fallbackWords.map((word) => word.id).toSet();
+    final totalWords = selectedWordBook?.totalWords ?? fallbackWords.length;
+    final completedWords = learnedWordCountForBook(
+      userWords: state.userWords,
+      wordBookId: _wordBookId,
+      wordIds: selectedWordIds,
     );
-    final completedWords = lessons
-        .where((lesson) => state.completedLessonIds.contains(lesson.id))
-        .fold<int>(0, (total, lesson) => total + lesson.words.length);
-    final progress = totalWords == 0
-        ? 0.0
-        : (completedWords / totalWords).clamp(0.0, 1.0);
+    final progress = wordbookProgressValue(
+      learnedWords: completedWords,
+      totalWords: totalWords,
+    );
     final book = studyBookInfoForId(_wordBookId);
     final plan = state.studyPlan;
 
@@ -138,7 +149,10 @@ class _StudyPlanSettingsScreenState
               ),
               const SizedBox(height: 24),
               _StudyBookSelector(
+                books: state.wordBooks,
+                userWords: state.userWords,
                 selectedId: _wordBookId,
+                localeCode: localeCode,
                 onSelected: (value) => setState(() => _wordBookId = value),
                 l10n: l10n,
               ),
@@ -353,6 +367,15 @@ class _StudyPlanSettingsScreenState
   }
 }
 
+WordBook? _wordBookForId(List<WordBook> books, String id) {
+  for (final book in books) {
+    if (normalizedStudyBookId(book.id) == normalizedStudyBookId(id)) {
+      return book;
+    }
+  }
+  return null;
+}
+
 bool rejectChangedExpiredTargetFinishDate({
   required DateTime finishDate,
   required DateTime originalFinishDate,
@@ -528,12 +551,18 @@ class _PlanHeroCard extends StatelessWidget {
 
 class _StudyBookSelector extends StatelessWidget {
   const _StudyBookSelector({
+    required this.books,
+    required this.userWords,
     required this.selectedId,
+    required this.localeCode,
     required this.onSelected,
     required this.l10n,
   });
 
+  final List<WordBook> books;
+  final List<UserWord> userWords;
   final String selectedId;
+  final String localeCode;
   final ValueChanged<String> onSelected;
   final AppLocalizations l10n;
 
@@ -547,70 +576,156 @@ class _StudyBookSelector extends StatelessWidget {
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 10),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            for (final book in studyBooks)
-              _StudyBookPill(
+        SizedBox(
+          height: 168,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: _books.length,
+            separatorBuilder: (_, _) => const SizedBox(width: AppTokens.s12),
+            itemBuilder: (context, index) {
+              final book = _books[index];
+              final selected =
+                  normalizedStudyBookId(selectedId) ==
+                  normalizedStudyBookId(book.id);
+              final learned = learnedWordCountForBook(
+                userWords: userWords,
+                wordBookId: book.id,
+                wordIds: book.wordIds.toSet(),
+              );
+              final progress = wordbookProgressValue(
+                learnedWords: learned,
+                totalWords: book.totalWords,
+              );
+              return _StudyBookCoverOption(
                 book: book,
-                selected: selectedId == book.id,
+                localeCode: localeCode,
+                learnedWords: learned,
+                progress: progress,
+                selected: selected,
                 onTap: () => onSelected(book.id),
-              ),
-          ],
+                l10n: l10n,
+              );
+            },
+          ),
         ),
       ],
     );
   }
+
+  List<WordBook> get _books {
+    if (books.isNotEmpty) return books;
+    final now = DateTime.now().toUtc();
+    return [
+      for (final book in studyBooks)
+        WordBook(
+          id: book.id,
+          title: book.name,
+          category: 'exam',
+          examType: book.id,
+          coverUrl: '',
+          totalWords: 0,
+          includedWords: 0,
+          description: book.description,
+          wordIds: const [],
+          createdAt: now,
+          words: const [],
+        ),
+    ];
+  }
 }
 
-class _StudyBookPill extends StatelessWidget {
-  const _StudyBookPill({
+class _StudyBookCoverOption extends StatelessWidget {
+  const _StudyBookCoverOption({
     required this.book,
+    required this.localeCode,
+    required this.learnedWords,
+    required this.progress,
     required this.selected,
     required this.onTap,
+    required this.l10n,
   });
 
-  final StudyBookInfo book;
+  final WordBook book;
+  final String localeCode;
+  final int learnedWords;
+  final double progress;
   final bool selected;
   final VoidCallback onTap;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     return Material(
       color: selected ? AppTokens.primarySoft : theme.colorScheme.surface,
-      borderRadius: BorderRadius.circular(AppTokens.radiusPill),
+      borderRadius: BorderRadius.circular(AppTokens.radiusTile + 4),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppTokens.s12,
-            vertical: 9,
-          ),
+          width: 148,
+          padding: const EdgeInsets.all(AppTokens.s8),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppTokens.radiusPill),
+            borderRadius: BorderRadius.circular(AppTokens.radiusTile + 4),
             border: Border.all(
-              color: selected ? AppTokens.primarySoftText : AppTokens.hairline,
+              color: selected ? AppTokens.azure : AppTokens.hairline,
               width: selected ? 2 : 1,
             ),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(book.cover),
-              const SizedBox(width: 6),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  WordbookCoverCard(
+                    examType: book.examType,
+                    bookId: book.id,
+                    title: book.nameFor(localeCode),
+                    width: 56,
+                    height: 74,
+                  ),
+                  const SizedBox(width: AppTokens.s12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          displayWordbookTitle(book.id, l10n: l10n),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            fontWeight: FontWeight.w800,
+                            color: selected
+                                ? AppTokens.primarySoftText
+                                : theme.colorScheme.onSurface,
+                          ),
+                        ),
+                        const SizedBox(height: AppTokens.s4),
+                        Text(
+                          displayWordbookDescription(book.id, l10n: l10n),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const Spacer(),
               Text(
-                displayWordbookTitle(book.id, l10n: l10n),
-                style: theme.textTheme.labelLarge?.copyWith(
-                  color: selected
-                      ? AppTokens.primarySoftText
-                      : theme.colorScheme.onSurface,
-                  fontWeight: selected ? FontWeight.w800 : null,
+                l10n.wordbookWordsLearned(learnedWords, book.totalWords),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
+              const SizedBox(height: AppTokens.s4),
+              AppProgressBar(value: progress, solid: true, height: 5),
             ],
           ),
         ),
@@ -734,9 +849,7 @@ class _PlanActions extends StatelessWidget {
         const SizedBox(height: AppTokens.s12),
         AppSecondaryButton(
           label: isPaused ? l10n.studyPlanResume : l10n.studyPlanPause,
-          icon: isPaused
-              ? AppIcons.playCircle
-              : AppIcons.pauseCircle,
+          icon: isPaused ? AppIcons.playCircle : AppIcons.pauseCircle,
           onPressed: isLoading ? null : onTogglePause,
         ),
         const SizedBox(height: AppTokens.s12),

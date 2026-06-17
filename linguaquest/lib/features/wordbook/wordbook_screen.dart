@@ -6,6 +6,7 @@ import 'package:linguaquest/core/theme/app_icons.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/utils/ui_labels.dart';
+import '../../core/utils/wordbook_progress.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/app_progress_bar.dart';
@@ -35,12 +36,20 @@ class WordbookScreen extends ConsumerWidget {
       for (final uw in state.userWords) uw.wordId: uw,
     };
 
-    final completed = state.completedLearningWords;
-    final total = words.length;
-    final progress = state.learningPathProgress;
-    final percent = (progress * 100).round();
-
     final bookId = currentBook?.id ?? studyBook.id;
+    final currentWordIds =
+        currentBook?.wordIds.toSet() ?? words.map((word) => word.id).toSet();
+    final completed = learnedWordCountForBook(
+      userWords: state.userWords,
+      wordBookId: bookId,
+      wordIds: currentWordIds,
+    );
+    final total = currentBook?.totalWords ?? words.length;
+    final progress = wordbookProgressValue(
+      learnedWords: completed,
+      totalWords: total,
+    );
+    final percent = (progress * 100).round();
     final bookName = currentBook != null
         ? displayWordbookTitle(currentBook.id, l10n: l10n)
         : studyBook.name;
@@ -90,6 +99,7 @@ class WordbookScreen extends ConsumerWidget {
                 currentId: state.currentWordBookId,
                 localeCode: localeCode,
                 l10n: l10n,
+                userWords: state.userWords,
                 onSelect: (id) => _switchBook(context, ref, l10n, id),
               ),
               const SizedBox(height: AppTokens.s20),
@@ -198,7 +208,10 @@ class _HeroBookCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: AppTokens.s8),
-                    _EditPlanChip(label: l10n.wordbookSwitch, onTap: onEditPlan),
+                    _EditPlanChip(
+                      label: l10n.wordbookSwitch,
+                      onTap: onEditPlan,
+                    ),
                   ],
                 ),
                 const SizedBox(height: AppTokens.s4),
@@ -284,7 +297,10 @@ class _EditPlanChip extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(AppTokens.radiusPill),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: AppTokens.s8, vertical: 3),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppTokens.s8,
+          vertical: 3,
+        ),
         decoration: BoxDecoration(
           color: AppTokens.primarySoft,
           borderRadius: BorderRadius.circular(AppTokens.radiusPill),
@@ -292,7 +308,11 @@ class _EditPlanChip extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(AppIcons.tune, size: 13, color: AppTokens.primarySoftText),
+            const Icon(
+              AppIcons.tune,
+              size: 13,
+              color: AppTokens.primarySoftText,
+            ),
             const SizedBox(width: 4),
             Text(
               label,
@@ -316,6 +336,7 @@ class _BookScroller extends StatelessWidget {
     required this.currentId,
     required this.localeCode,
     required this.l10n,
+    required this.userWords,
     required this.onSelect,
   });
 
@@ -323,6 +344,7 @@ class _BookScroller extends StatelessWidget {
   final String currentId;
   final String localeCode;
   final AppLocalizations l10n;
+  final List<UserWord> userWords;
   final ValueChanged<String> onSelect;
 
   @override
@@ -336,9 +358,16 @@ class _BookScroller extends StatelessWidget {
         itemBuilder: (context, index) {
           final book = books[index];
           final selected = book.id == currentId;
-          final learned = book.includedWords;
+          final learned = learnedWordCountForBook(
+            userWords: userWords,
+            wordBookId: book.id,
+            wordIds: book.wordIds.toSet(),
+          );
           final total = book.totalWords;
-          final progress = total == 0 ? 0.0 : (learned / total).clamp(0.0, 1.0);
+          final progress = wordbookProgressValue(
+            learnedWords: learned,
+            totalWords: total,
+          );
           return GestureDetector(
             onTap: selected ? null : () => onSelect(book.id),
             child: Container(
@@ -506,10 +535,7 @@ class _WordListRow extends StatelessWidget {
                   ],
                   if (meaning.isNotEmpty) ...[
                     const SizedBox(height: AppTokens.s2),
-                    Text(
-                      meaning,
-                      style: theme.textTheme.bodyMedium,
-                    ),
+                    Text(meaning, style: theme.textTheme.bodyMedium),
                   ],
                   if (word.exampleSentence.isNotEmpty) ...[
                     const SizedBox(height: AppTokens.s2),

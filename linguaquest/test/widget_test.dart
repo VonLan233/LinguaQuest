@@ -13,6 +13,7 @@ import 'package:linguaquest/core/state/app_state.dart';
 import 'package:linguaquest/core/theme/app_icons.dart';
 import 'package:linguaquest/core/theme/app_theme.dart';
 import 'package:linguaquest/core/utils/ui_labels.dart';
+import 'package:linguaquest/core/utils/wordbook_progress.dart';
 import 'package:linguaquest/core/widgets/app_button.dart';
 import 'package:linguaquest/core/widgets/app_card.dart';
 import 'package:linguaquest/core/widgets/learning_badges.dart';
@@ -270,6 +271,44 @@ void main() {
     );
 
     expect(newWordbookCount(state), 1);
+  });
+
+  test('wordbook progress counts learned user words by book only', () {
+    final now = DateTime(2026, 5, 25);
+    final words = seedLessons().expand((lesson) => lesson.words).toList();
+    final learned = UserWord.create(
+      uid: 'u1',
+      word: words[0],
+      wordBookId: 'IELTS',
+      now: now,
+    ).copyWith(status: 'Learning');
+    final newWord = UserWord.create(
+      uid: 'u1',
+      word: words[1],
+      wordBookId: 'IELTS',
+      now: now,
+    );
+    final ignored = UserWord.create(
+      uid: 'u1',
+      word: words[2],
+      wordBookId: 'IELTS',
+      now: now,
+    ).copyWith(status: 'Mastered', isIgnored: true);
+    final otherBook = UserWord.create(
+      uid: 'u1',
+      word: words[3],
+      wordBookId: 'GRE',
+      now: now,
+    ).copyWith(status: 'Review');
+
+    expect(
+      learnedWordCountForBook(
+        userWords: [learned, newWord, ignored, otherBook],
+        wordBookId: 'ielts',
+        wordIds: words.take(3).map((word) => word.id).toSet(),
+      ),
+      1,
+    );
   });
 
   testWidgets('pronunciation controls expose loading and retry states', (
@@ -2639,7 +2678,9 @@ void main() {
               false,
         );
 
-    expect(digitOnlyFields(), hasLength(1));
+    await tester.drag(find.byType(Scrollable).last, const Offset(0, -260));
+    await tester.pumpAndSettle();
+    expect(digitOnlyFields(), hasLength(2));
     await tester.drag(find.byType(Scrollable).last, const Offset(0, -180));
     await tester.pumpAndSettle();
     expect(

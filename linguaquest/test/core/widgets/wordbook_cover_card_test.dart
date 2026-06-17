@@ -19,7 +19,8 @@ void main() {
     );
 
     expect(find.text('IELTS'), findsOneWidget);
-    expect(find.text('雅思核心词汇'), findsOneWidget);
+    expect(find.text('雅思核心'), findsOneWidget);
+    expect(find.text('词汇'), findsOneWidget);
     // Programmatic cover — must not pull a network image.
     expect(find.byType(Image), findsNothing);
   });
@@ -36,7 +37,11 @@ void main() {
   });
 
   test('badge falls back to book id when examType is empty', () {
-    const card = WordbookCoverCard(examType: '', bookId: 'beginner', title: 'x');
+    const card = WordbookCoverCard(
+      examType: '',
+      bookId: 'beginner',
+      title: 'x',
+    );
     expect(card.examType, isEmpty);
     // Palette still resolves via the bookId key.
     final palette = WordbookCoverCard.paletteFor('', 'beginner');
