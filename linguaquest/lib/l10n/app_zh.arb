@@ -815,6 +815,7 @@
   "wordbookBilingualDefinitions": "中英释义",
   "wordbookChineseDefinitions": "中文释义",
   "wordbookEnglishDefinitions": "英文释义",
+  "wordbookMalayDefinitions": "马来语释义",
   "wordbookHighFrequency": "高频",
   "wordbookContextExamples": "语境例句",
   "wordbookMasteryLevel": "掌握 {level}/5",

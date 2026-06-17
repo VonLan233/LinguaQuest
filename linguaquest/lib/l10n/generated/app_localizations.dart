@@ -4825,6 +4825,12 @@ abstract class AppLocalizations {
   /// **'English definitions'**
   String get wordbookEnglishDefinitions;
 
+  /// No description provided for @wordbookMalayDefinitions.
+  ///
+  /// In en, this message translates to:
+  /// **'Malay definitions'**
+  String get wordbookMalayDefinitions;
+
   /// No description provided for @wordbookHighFrequency.
   ///
   /// In en, this message translates to:

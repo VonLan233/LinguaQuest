@@ -159,7 +159,13 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,a",
-      "sceneCue": "Beginner · 字母A"
+      "sceneCue": "Beginner · 字母A",
+      "malayDefinitions": [
+        "huruf A",
+        "gred tertinggi",
+        "simbol pencapaian akademik tertinggi",
+        "ampere (unit elektrik)"
+      ]
     },
     {
       "id": "beginner_002_abandon",
@@ -211,7 +217,13 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abandon",
-      "sceneCue": "Beginner · 离弃，丢弃"
+      "sceneCue": "Beginner · 离弃，丢弃",
+      "malayDefinitions": [
+        "meninggalkan",
+        "membuang",
+        "menyerah",
+        "melepaskan"
+      ]
     },
     {
       "id": "beginner_003_ability",
@@ -269,7 +281,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ability",
-      "sceneCue": "Beginner · 能力， 本领"
+      "sceneCue": "Beginner · 能力， 本领",
+      "malayDefinitions": [
+        "kebolehan",
+        "keupayaan",
+        "bakat"
+      ]
     },
     {
       "id": "beginner_004_able",
@@ -329,7 +346,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,able",
-      "sceneCue": "Beginner · 能"
+      "sceneCue": "Beginner · 能",
+      "malayDefinitions": [
+        "boleh",
+        "berkemampuan",
+        "cekap"
+      ]
     },
     {
       "id": "beginner_005_about",
@@ -397,7 +419,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,about",
-      "sceneCue": "Beginner · 关于"
+      "sceneCue": "Beginner · 关于",
+      "malayDefinitions": [
+        "tentang",
+        "kira-kira",
+        "berdekatan"
+      ]
     },
     {
       "id": "beginner_006_above",
@@ -465,7 +492,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,above",
-      "sceneCue": "Beginner · 超过"
+      "sceneCue": "Beginner · 超过",
+      "malayDefinitions": [
+        "melebihi",
+        "di atas",
+        "di bahagian atas"
+      ]
     },
     {
       "id": "beginner_007_abroad",
@@ -531,7 +563,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abroad",
-      "sceneCue": "Beginner · 到国外"
+      "sceneCue": "Beginner · 到国外",
+      "malayDefinitions": [
+        "ke luar negara",
+        "sedang tersebar"
+      ]
     },
     {
       "id": "beginner_008_absolute",
@@ -594,7 +630,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,absolute",
-      "sceneCue": "Beginner · 十足的， 地道的"
+      "sceneCue": "Beginner · 十足的， 地道的",
+      "malayDefinitions": [
+        "mutlak",
+        "sepenuhnya",
+        "tidak terbatas"
+      ]
     },
     {
       "id": "beginner_009_absolutely",
@@ -644,7 +685,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,absolutely",
-      "sceneCue": "Beginner · 绝对地"
+      "sceneCue": "Beginner · 绝对地",
+      "malayDefinitions": [
+        "sama sekali",
+        "sepenuhnya"
+      ]
     },
     {
       "id": "beginner_010_academic",
@@ -707,7 +752,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,academic",
-      "sceneCue": "Beginner · 学院的"
+      "sceneCue": "Beginner · 学院的",
+      "malayDefinitions": [
+        "akademik",
+        "ilmiah",
+        "bersifat teori"
+      ]
     },
     {
       "id": "beginner_011_accept",
@@ -763,7 +813,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accept",
-      "sceneCue": "Beginner · 接受"
+      "sceneCue": "Beginner · 接受",
+      "malayDefinitions": [
+        "menerima",
+        "mengakui",
+        "menanggung"
+      ]
     },
     {
       "id": "beginner_012_acceptable",
@@ -824,7 +879,10 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acceptable",
-      "sceneCue": "Beginner · 可接受的"
+      "sceneCue": "Beginner · 可接受的",
+      "malayDefinitions": [
+        "boleh diterima"
+      ]
     },
     {
       "id": "beginner_013_access",
@@ -884,7 +942,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,access",
-      "sceneCue": "Beginner · 接近"
+      "sceneCue": "Beginner · 接近",
+      "malayDefinitions": [
+        "akses",
+        "laluan masuk",
+        "peluang mendekati"
+      ]
     },
     {
       "id": "beginner_014_accident",
@@ -949,7 +1012,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accident",
-      "sceneCue": "Beginner · 意外， 事故"
+      "sceneCue": "Beginner · 意外， 事故",
+      "malayDefinitions": [
+        "kemalangan",
+        "kecelakaan"
+      ]
     },
     {
       "id": "beginner_015_accommodation",
@@ -1007,7 +1074,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accommodation",
-      "sceneCue": "Beginner · 住处"
+      "sceneCue": "Beginner · 住处",
+      "malayDefinitions": [
+        "tempat tinggal",
+        "penginapan"
+      ]
     },
     {
       "id": "beginner_016_accompany",
@@ -1061,7 +1132,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accompany",
-      "sceneCue": "Beginner · 陪伴， 陪同， 伴随"
+      "sceneCue": "Beginner · 陪伴， 陪同， 伴随",
+      "malayDefinitions": [
+        "menemani",
+        "mengiringi",
+        "mengiringi muzik"
+      ]
     },
     {
       "id": "beginner_017_account",
@@ -1129,7 +1205,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,account",
-      "sceneCue": "Beginner · 说明原因"
+      "sceneCue": "Beginner · 说明原因",
+      "malayDefinitions": [
+        "menerangkan",
+        "mengambil bahagian",
+        "akaun"
+      ]
     },
     {
       "id": "beginner_018_accurate",
@@ -1186,7 +1267,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accurate",
-      "sceneCue": "Beginner · 准确的， 正确无误的"
+      "sceneCue": "Beginner · 准确的， 正确无误的",
+      "malayDefinitions": [
+        "tepat",
+        "betul"
+      ]
     },
     {
       "id": "beginner_019_accuse",
@@ -1231,7 +1316,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accuse",
-      "sceneCue": "Beginner · 指责， 归咎于"
+      "sceneCue": "Beginner · 指责， 归咎于",
+      "malayDefinitions": [
+        "menuduh",
+        "menyalahkan"
+      ]
     },
     {
       "id": "beginner_020_achieve",
@@ -1291,7 +1380,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,achieve",
-      "sceneCue": "Beginner · 取得"
+      "sceneCue": "Beginner · 取得",
+      "malayDefinitions": [
+        "mencapai",
+        "memperoleh",
+        "merealisasikan"
+      ]
     },
     {
       "id": "beginner_021_achievement",
@@ -1349,7 +1443,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,achievement",
-      "sceneCue": "Beginner · 完成"
+      "sceneCue": "Beginner · 完成",
+      "malayDefinitions": [
+        "pencapaian",
+        "kejayaan"
+      ]
     },
     {
       "id": "beginner_022_acknowledge",
@@ -1408,7 +1506,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acknowledge",
-      "sceneCue": "Beginner · 承认， 承认…的权威"
+      "sceneCue": "Beginner · 承认， 承认…的权威",
+      "malayDefinitions": [
+        "mengakui",
+        "mengesahkan penerimaan",
+        "menghargai"
+      ]
     },
     {
       "id": "beginner_023_acquire",
@@ -1461,7 +1564,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acquire",
-      "sceneCue": "Beginner · 取得， 获得， 学到"
+      "sceneCue": "Beginner · 取得， 获得， 学到",
+      "malayDefinitions": [
+        "memperoleh",
+        "mendapatkan",
+        "mempelajari"
+      ]
     },
     {
       "id": "beginner_024_across",
@@ -1521,7 +1629,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,across",
-      "sceneCue": "Beginner · 横过"
+      "sceneCue": "Beginner · 横过",
+      "malayDefinitions": [
+        "melintasi",
+        "ke seberang",
+        "merentasi"
+      ]
     },
     {
       "id": "beginner_025_act",
@@ -1585,7 +1698,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,act",
-      "sceneCue": "Beginner · 扮演"
+      "sceneCue": "Beginner · 扮演",
+      "malayDefinitions": [
+        "berlakon",
+        "berpura-pura",
+        "bertindak"
+      ]
     },
     {
       "id": "beginner_026_action",
@@ -1653,7 +1771,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,action",
-      "sceneCue": "Beginner · 行动"
+      "sceneCue": "Beginner · 行动",
+      "malayDefinitions": [
+        "tindakan",
+        "perbuatan",
+        "fungsi"
+      ]
     },
     {
       "id": "beginner_027_active",
@@ -1716,7 +1839,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,active",
-      "sceneCue": "Beginner · 活跃的， 积极的"
+      "sceneCue": "Beginner · 活跃的， 积极的",
+      "malayDefinitions": [
+        "aktif",
+        "proaktif",
+        "berfungsi"
+      ]
     },
     {
       "id": "beginner_028_activity",
@@ -1783,7 +1911,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,activity",
-      "sceneCue": "Beginner · 活动"
+      "sceneCue": "Beginner · 活动",
+      "malayDefinitions": [
+        "aktiviti",
+        "kecergasan",
+        "tindakan"
+      ]
     },
     {
       "id": "beginner_029_actor",
@@ -1842,7 +1975,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,actor",
-      "sceneCue": "Beginner · 男演员"
+      "sceneCue": "Beginner · 男演员",
+      "malayDefinitions": [
+        "pelakon lelaki",
+        "pelaku",
+        "agen"
+      ]
     },
     {
       "id": "beginner_030_actress",
@@ -1891,7 +2029,10 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,actress",
-      "sceneCue": "Beginner · 女演员"
+      "sceneCue": "Beginner · 女演员",
+      "malayDefinitions": [
+        "pelakon wanita"
+      ]
     },
     {
       "id": "beginner_031_actual",
@@ -1957,7 +2098,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,actual",
-      "sceneCue": "Beginner · 实际的"
+      "sceneCue": "Beginner · 实际的",
+      "malayDefinitions": [
+        "sebenar",
+        "nyata"
+      ]
     },
     {
       "id": "beginner_032_actually",
@@ -2007,7 +2152,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,actually",
-      "sceneCue": "Beginner · 实际上"
+      "sceneCue": "Beginner · 实际上",
+      "malayDefinitions": [
+        "sebenarnya",
+        "pada hakikatnya"
+      ]
     },
     {
       "id": "beginner_033_adapt",
@@ -2057,7 +2206,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adapt",
-      "sceneCue": "Beginner · 使适应"
+      "sceneCue": "Beginner · 使适应",
+      "malayDefinitions": [
+        "menyesuaikan diri",
+        "mengadaptasi"
+      ]
     },
     {
       "id": "beginner_034_add",
@@ -2117,7 +2270,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,add",
-      "sceneCue": "Beginner · 加"
+      "sceneCue": "Beginner · 加",
+      "malayDefinitions": [
+        "menambah",
+        "meningkatkan",
+        "menjumlahkan"
+      ]
     },
     {
       "id": "beginner_035_addition",
@@ -2175,7 +2333,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,addition",
-      "sceneCue": "Beginner · 加， 加法"
+      "sceneCue": "Beginner · 加， 加法",
+      "malayDefinitions": [
+        "penambahan",
+        "tambahan"
+      ]
     },
     {
       "id": "beginner_036_additional",
@@ -2232,7 +2394,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,additional",
-      "sceneCue": "Beginner · 附加的， 追加的"
+      "sceneCue": "Beginner · 附加的， 追加的",
+      "malayDefinitions": [
+        "tambahan",
+        "lanjutan"
+      ]
     },
     {
       "id": "beginner_037_address",
@@ -2292,7 +2458,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,address",
-      "sceneCue": "Beginner · 作讲话"
+      "sceneCue": "Beginner · 作讲话",
+      "malayDefinitions": [
+        "berucap",
+        "menulis alamat",
+        "alamat"
+      ]
     },
     {
       "id": "beginner_038_administration",
@@ -2355,7 +2526,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,administration",
-      "sceneCue": "Beginner · 管理"
+      "sceneCue": "Beginner · 管理",
+      "malayDefinitions": [
+        "pentadbiran",
+        "jabatan pentadbiran",
+        "pelaksanaan"
+      ]
     },
     {
       "id": "beginner_039_admire",
@@ -2401,7 +2577,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,admire",
-      "sceneCue": "Beginner · 钦佩， 羡慕"
+      "sceneCue": "Beginner · 钦佩， 羡慕",
+      "malayDefinitions": [
+        "mengagumi",
+        "memuji"
+      ]
     },
     {
       "id": "beginner_040_admit",
@@ -2455,7 +2635,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,admit",
-      "sceneCue": "Beginner · 承认， 供认"
+      "sceneCue": "Beginner · 承认， 供认",
+      "malayDefinitions": [
+        "mengaku",
+        "membenarkan masuk"
+      ]
     },
     {
       "id": "beginner_041_adopt",
@@ -2506,7 +2690,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adopt",
-      "sceneCue": "Beginner · 收养"
+      "sceneCue": "Beginner · 收养",
+      "malayDefinitions": [
+        "mengambil sebagai anak",
+        "menggunakan",
+        "meluluskan secara rasmi"
+      ]
     },
     {
       "id": "beginner_042_adult",
@@ -2573,7 +2762,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adult",
-      "sceneCue": "Beginner · 成年的"
+      "sceneCue": "Beginner · 成年的",
+      "malayDefinitions": [
+        "dewasa",
+        "untuk orang dewasa",
+        "orang dewasa"
+      ]
     },
     {
       "id": "beginner_043_advance",
@@ -2637,7 +2831,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,advance",
-      "sceneCue": "Beginner · 前进，向前移动"
+      "sceneCue": "Beginner · 前进，向前移动",
+      "malayDefinitions": [
+        "maju ke hadapan",
+        "berkembang",
+        "menggalakkan"
+      ]
     },
     {
       "id": "beginner_044_advanced",
@@ -2705,7 +2904,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,advanced",
-      "sceneCue": "Beginner · 先进的"
+      "sceneCue": "Beginner · 先进的",
+      "malayDefinitions": [
+        "maju",
+        "peringkat tinggi",
+        "berusia"
+      ]
     },
     {
       "id": "beginner_045_advantage",
@@ -2762,7 +2966,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,advantage",
-      "sceneCue": "Beginner · 优点， 优势， 好处"
+      "sceneCue": "Beginner · 优点， 优势， 好处",
+      "malayDefinitions": [
+        "kelebihan",
+        "kebaikan",
+        "faedah"
+      ]
     },
     {
       "id": "beginner_046_adventure",
@@ -2816,7 +3025,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adventure",
-      "sceneCue": "Beginner · 奇遇"
+      "sceneCue": "Beginner · 奇遇",
+      "malayDefinitions": [
+        "pengembaraan",
+        "aktiviti mencabar"
+      ]
     },
     {
       "id": "beginner_047_advertise",
@@ -2867,7 +3080,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,advertise",
-      "sceneCue": "Beginner · 为…做广告， 宣传"
+      "sceneCue": "Beginner · 为…做广告， 宣传",
+      "malayDefinitions": [
+        "mengiklankan",
+        "mengumumkan",
+        "mempromosikan"
+      ]
     },
     {
       "id": "beginner_048_advertisement",
@@ -2933,7 +3151,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,advertisement",
-      "sceneCue": "Beginner · 广告， 公告， 登广告"
+      "sceneCue": "Beginner · 广告， 公告， 登广告",
+      "malayDefinitions": [
+        "iklan",
+        "pengiklanan"
+      ]
     },
     {
       "id": "beginner_049_advertising",
@@ -2983,7 +3205,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,advertising",
-      "sceneCue": "Beginner · 广告"
+      "sceneCue": "Beginner · 广告",
+      "malayDefinitions": [
+        "pengiklanan",
+        "industri pengiklanan"
+      ]
     },
     {
       "id": "beginner_050_advice",
@@ -3041,7 +3267,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,advice",
-      "sceneCue": "Beginner · 劝告， 忠告"
+      "sceneCue": "Beginner · 劝告， 忠告",
+      "malayDefinitions": [
+        "nasihat",
+        "cadangan"
+      ]
     },
     {
       "id": "beginner_051_advise",
@@ -3097,7 +3327,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,advise",
-      "sceneCue": "Beginner · 建议"
+      "sceneCue": "Beginner · 建议",
+      "malayDefinitions": [
+        "menasihati",
+        "memberi nasihat",
+        "memberitahu"
+      ]
     },
     {
       "id": "beginner_052_affair",
@@ -3165,7 +3400,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,affair",
-      "sceneCue": "Beginner · 事情"
+      "sceneCue": "Beginner · 事情",
+      "malayDefinitions": [
+        "hal",
+        "urusan",
+        "perkara peribadi"
+      ]
     },
     {
       "id": "beginner_053_affect",
@@ -3223,7 +3463,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,affect",
-      "sceneCue": "Beginner · 影响"
+      "sceneCue": "Beginner · 影响",
+      "malayDefinitions": [
+        "mempengaruhi",
+        "menyentuh perasaan"
+      ]
     },
     {
       "id": "beginner_054_afford",
@@ -3273,7 +3517,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,afford",
-      "sceneCue": "Beginner · 担负得起"
+      "sceneCue": "Beginner · 担负得起",
+      "malayDefinitions": [
+        "mampu membeli",
+        "menyediakan"
+      ]
     },
     {
       "id": "beginner_055_afraid",
@@ -3324,7 +3572,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,afraid",
-      "sceneCue": "Beginner · 害怕的"
+      "sceneCue": "Beginner · 害怕的",
+      "malayDefinitions": [
+        "takut",
+        "bimbang",
+        "risau"
+      ]
     },
     {
       "id": "beginner_056_after",
@@ -3383,7 +3636,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,after",
-      "sceneCue": "Beginner · 后来，以后"
+      "sceneCue": "Beginner · 后来，以后",
+      "malayDefinitions": [
+        "kemudian",
+        "selepas",
+        "berikutnya"
+      ]
     },
     {
       "id": "beginner_057_afternoon",
@@ -3448,7 +3706,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,afternoon",
-      "sceneCue": "Beginner · 午后，下午"
+      "sceneCue": "Beginner · 午后，下午",
+      "malayDefinitions": [
+        "petang",
+        "waktu tengah hari"
+      ]
     },
     {
       "id": "beginner_058_afterwards",
@@ -3505,7 +3767,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,afterwards",
-      "sceneCue": "Beginner · 后来， 以后"
+      "sceneCue": "Beginner · 后来， 以后",
+      "malayDefinitions": [
+        "kemudian",
+        "selepas itu"
+      ]
     },
     {
       "id": "beginner_059_again",
@@ -3573,7 +3839,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,again",
-      "sceneCue": "Beginner · 又，此外"
+      "sceneCue": "Beginner · 又，此外",
+      "malayDefinitions": [
+        "lagi",
+        "sekali lagi",
+        "tambahan pula"
+      ]
     },
     {
       "id": "beginner_060_against",
@@ -3637,7 +3908,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,against",
-      "sceneCue": "Beginner · 反对，违反"
+      "sceneCue": "Beginner · 反对，违反",
+      "malayDefinitions": [
+        "menentang",
+        "bersandar",
+        "berlawanan"
+      ]
     },
     {
       "id": "beginner_061_age",
@@ -3705,7 +3981,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,age",
-      "sceneCue": "Beginner · 年龄"
+      "sceneCue": "Beginner · 年龄",
+      "malayDefinitions": [
+        "umur",
+        "zaman",
+        "jangka hayat"
+      ]
     },
     {
       "id": "beginner_062_aged",
@@ -3755,7 +4036,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aged",
-      "sceneCue": "Beginner · 年老的"
+      "sceneCue": "Beginner · 年老的",
+      "malayDefinitions": [
+        "berusia",
+        "tua"
+      ]
     },
     {
       "id": "beginner_063_agency",
@@ -3814,7 +4099,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,agency",
-      "sceneCue": "Beginner · 经办， 代理"
+      "sceneCue": "Beginner · 经办， 代理",
+      "malayDefinitions": [
+        "agensi",
+        "pejabat perwakilan",
+        "badan pentadbiran"
+      ]
     },
     {
       "id": "beginner_064_agenda",
@@ -3867,7 +4157,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,agenda",
-      "sceneCue": "Beginner · 议事日程"
+      "sceneCue": "Beginner · 议事日程",
+      "malayDefinitions": [
+        "agenda",
+        "jadual mesyuarat"
+      ]
     },
     {
       "id": "beginner_065_agent",
@@ -3927,7 +4221,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,agent",
-      "sceneCue": "Beginner · 代理人， 代理商"
+      "sceneCue": "Beginner · 代理人， 代理商",
+      "malayDefinitions": [
+        "ejen",
+        "wakil kerajaan",
+        "penyebab"
+      ]
     },
     {
       "id": "beginner_066_aggressive",
@@ -3990,7 +4289,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aggressive",
-      "sceneCue": "Beginner · 侵略的， 好斗的"
+      "sceneCue": "Beginner · 侵略的， 好斗的",
+      "malayDefinitions": [
+        "agresif",
+        "berani bertindak",
+        "bercita-cita tinggi"
+      ]
     },
     {
       "id": "beginner_067_ago",
@@ -4046,7 +4350,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ago",
-      "sceneCue": "Beginner · 以前，以往"
+      "sceneCue": "Beginner · 以前，以往",
+      "malayDefinitions": [
+        "dahulu",
+        "yang lalu",
+        "masa lampau"
+      ]
     },
     {
       "id": "beginner_068_agree",
@@ -4105,7 +4414,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,agree",
-      "sceneCue": "Beginner · 同意，赞成"
+      "sceneCue": "Beginner · 同意，赞成",
+      "malayDefinitions": [
+        "bersetuju",
+        "mengakui",
+        "memutuskan bersama"
+      ]
     },
     {
       "id": "beginner_069_agreement",
@@ -4163,7 +4477,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,agreement",
-      "sceneCue": "Beginner · 协议"
+      "sceneCue": "Beginner · 协议",
+      "malayDefinitions": [
+        "perjanjian",
+        "persetujuan"
+      ]
     },
     {
       "id": "beginner_070_ah",
@@ -4212,7 +4530,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ah",
-      "sceneCue": "Beginner · 啊"
+      "sceneCue": "Beginner · 啊",
+      "malayDefinitions": [
+        "ah",
+        "oh"
+      ]
     },
     {
       "id": "beginner_071_ahead",
@@ -4280,7 +4602,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ahead",
-      "sceneCue": "Beginner · 向前"
+      "sceneCue": "Beginner · 向前",
+      "malayDefinitions": [
+        "ke hadapan",
+        "di depan",
+        "mendahului"
+      ]
     },
     {
       "id": "beginner_072_aid",
@@ -4340,7 +4667,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aid",
-      "sceneCue": "Beginner · 帮助"
+      "sceneCue": "Beginner · 帮助",
+      "malayDefinitions": [
+        "bantuan",
+        "pertolongan",
+        "pembantu"
+      ]
     },
     {
       "id": "beginner_073_aim",
@@ -4400,7 +4732,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aim",
-      "sceneCue": "Beginner · 目的在于"
+      "sceneCue": "Beginner · 目的在于",
+      "malayDefinitions": [
+        "bertujuan",
+        "membimbing",
+        "mensasarkan"
+      ]
     },
     {
       "id": "beginner_074_air",
@@ -4464,7 +4801,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,air",
-      "sceneCue": "Beginner · 空气，大气"
+      "sceneCue": "Beginner · 空气，大气",
+      "malayDefinitions": [
+        "udara",
+        "langit",
+        "rupa"
+      ]
     },
     {
       "id": "beginner_075_aircraft",
@@ -4521,7 +4863,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aircraft",
-      "sceneCue": "Beginner · 飞机， 飞行器"
+      "sceneCue": "Beginner · 飞机， 飞行器",
+      "malayDefinitions": [
+        "kapal terbang",
+        "pesawat"
+      ]
     },
     {
       "id": "beginner_076_airline",
@@ -4579,7 +4925,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,airline",
-      "sceneCue": "Beginner · 航空公司"
+      "sceneCue": "Beginner · 航空公司",
+      "malayDefinitions": [
+        "syarikat penerbangan",
+        "laluan udara"
+      ]
     },
     {
       "id": "beginner_077_airport",
@@ -4640,7 +4990,10 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,airport",
-      "sceneCue": "Beginner · 机场， 航空港"
+      "sceneCue": "Beginner · 机场， 航空港",
+      "malayDefinitions": [
+        "lapangan terbang"
+      ]
     },
     {
       "id": "beginner_078_alarm",
@@ -4708,7 +5061,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alarm",
-      "sceneCue": "Beginner · 惊恐"
+      "sceneCue": "Beginner · 惊恐",
+      "malayDefinitions": [
+        "ketakutan",
+        "kebimbangan",
+        "penggera"
+      ]
     },
     {
       "id": "beginner_079_album",
@@ -4765,7 +5123,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,album",
-      "sceneCue": "Beginner · 粘贴簿， 集邮簿， 相册"
+      "sceneCue": "Beginner · 粘贴簿， 集邮簿， 相册",
+      "malayDefinitions": [
+        "album",
+        "buku koleksi"
+      ]
     },
     {
       "id": "beginner_080_alcohol",
@@ -4830,7 +5192,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alcohol",
-      "sceneCue": "Beginner · 酒精， 乙醇"
+      "sceneCue": "Beginner · 酒精， 乙醇",
+      "malayDefinitions": [
+        "alkohol",
+        "etanol"
+      ]
     },
     {
       "id": "beginner_081_alcoholic",
@@ -4888,7 +5254,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alcoholic",
-      "sceneCue": "Beginner · 酒精的，含酒精的"
+      "sceneCue": "Beginner · 酒精的，含酒精的",
+      "malayDefinitions": [
+        "beralkohol",
+        "peminum arak"
+      ]
     },
     {
       "id": "beginner_082_alive",
@@ -4955,7 +5325,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alive",
-      "sceneCue": "Beginner · 活着的"
+      "sceneCue": "Beginner · 活着的",
+      "malayDefinitions": [
+        "hidup",
+        "cergas",
+        "bersemangat"
+      ]
     },
     {
       "id": "beginner_083_all",
@@ -5023,7 +5398,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,all",
-      "sceneCue": "Beginner · 全部的"
+      "sceneCue": "Beginner · 全部的",
+      "malayDefinitions": [
+        "semua",
+        "seluruhnya",
+        "semakin"
+      ]
     },
     {
       "id": "beginner_084_allow",
@@ -5075,7 +5455,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,allow",
-      "sceneCue": "Beginner · 允许， 准许"
+      "sceneCue": "Beginner · 允许， 准许",
+      "malayDefinitions": [
+        "membenarkan",
+        "memberi kebenaran",
+        "mengakui"
+      ]
     },
     {
       "id": "beginner_085_almost",
@@ -5128,7 +5513,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,almost",
-      "sceneCue": "Beginner · 差不多，几乎"
+      "sceneCue": "Beginner · 差不多，几乎",
+      "malayDefinitions": [
+        "hampir",
+        "nyaris"
+      ]
     },
     {
       "id": "beginner_086_alone",
@@ -5196,7 +5585,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alone",
-      "sceneCue": "Beginner · 独自的"
+      "sceneCue": "Beginner · 独自的",
+      "malayDefinitions": [
+        "bersendirian",
+        "keseorangan",
+        "sunyi"
+      ]
     },
     {
       "id": "beginner_087_along",
@@ -5259,7 +5653,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,along",
-      "sceneCue": "Beginner · 向前"
+      "sceneCue": "Beginner · 向前",
+      "malayDefinitions": [
+        "ke hadapan",
+        "bersama",
+        "sepanjang"
+      ]
     },
     {
       "id": "beginner_088_already",
@@ -5312,7 +5711,11 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,already",
-      "sceneCue": "Beginner · 已， 已经"
+      "sceneCue": "Beginner · 已， 已经",
+      "malayDefinitions": [
+        "sudah",
+        "telah"
+      ]
     },
     {
       "id": "beginner_089_also",
@@ -5380,7 +5783,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,also",
-      "sceneCue": "Beginner · 也"
+      "sceneCue": "Beginner · 也",
+      "malayDefinitions": [
+        "juga",
+        "tambahan pula",
+        "sama juga"
+      ]
     },
     {
       "id": "beginner_090_alter",
@@ -5433,7 +5841,12 @@
       ],
       "difficulty": "Easy",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alter",
-      "sceneCue": "Beginner · 改变， 变更， 变动"
+      "sceneCue": "Beginner · 改变， 变更， 变动",
+      "malayDefinitions": [
+        "mengubah",
+        "menukar",
+        "mengubah suai"
+      ]
     }
   ]
 }

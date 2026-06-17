@@ -60,6 +60,7 @@ class Word {
     this.audioUSUrl = '',
     this.definitions = const [],
     this.englishDefinitions = const [],
+    this.malayDefinitions = const [],
     this.examples = const [],
     this.collocations = const [],
     this.synonyms = const [],
@@ -86,6 +87,7 @@ class Word {
   final String audioUSUrl;
   final List<String> definitions;
   final List<String> englishDefinitions;
+  final List<String> malayDefinitions;
   final List<WordExample> examples;
   final List<WordPhrase> collocations;
   final List<String> synonyms;
@@ -100,6 +102,7 @@ class Word {
     final wordText = _string(json['word']);
     final definitions = _stringList(json['definitions']);
     final englishDefinitions = _stringList(json['englishDefinitions']);
+    final malayDefinitions = _stringList(json['malayDefinitions']);
     final examples = _examples(json['exampleSentences']);
     final phoneticUK = _string(json['phoneticUK']);
     final phoneticUS = _string(json['phoneticUS']);
@@ -148,6 +151,7 @@ class Word {
       audioUSUrl: _string(json['audioUSUrl']),
       definitions: definitions,
       englishDefinitions: englishDefinitions,
+      malayDefinitions: malayDefinitions,
       examples: examples,
       collocations: _phrases(json['collocations']),
       synonyms: _stringList(json['synonyms']),
@@ -171,6 +175,7 @@ class Word {
       'englishDefinitions': englishDefinitions.isEmpty
           ? [definition]
           : englishDefinitions,
+      'malayDefinitions': malayDefinitions,
       'exampleSentences': examples.isEmpty
           ? [WordExample(en: exampleSentence, cn: exampleTranslation).toJson()]
           : [for (final example in examples) example.toJson()],

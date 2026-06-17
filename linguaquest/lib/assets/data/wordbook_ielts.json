@@ -194,7 +194,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,cancel",
-      "sceneCue": "IELTS · 取消， 废除"
+      "sceneCue": "IELTS · 取消， 废除",
+      "malayDefinitions": [
+        "membatalkan",
+        "menghapuskan",
+        "memotong"
+      ]
     },
     {
       "id": "ielts_002_explosive",
@@ -263,7 +268,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,explosive",
-      "sceneCue": "IELTS · 爆炸的， 爆发的"
+      "sceneCue": "IELTS · 爆炸的， 爆发的",
+      "malayDefinitions": [
+        "bahan letupan",
+        "meledak",
+        "mudah meletup"
+      ]
     },
     {
       "id": "ielts_003_prepare",
@@ -324,7 +334,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,prepare",
-      "sceneCue": "IELTS · 准备， 预备"
+      "sceneCue": "IELTS · 准备， 预备",
+      "malayDefinitions": [
+        "menyediakan",
+        "bersedia"
+      ]
     },
     {
       "id": "ielts_004_surgeon",
@@ -383,7 +397,10 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,surgeon",
-      "sceneCue": "IELTS · 外科医生"
+      "sceneCue": "IELTS · 外科医生",
+      "malayDefinitions": [
+        "pakar bedah"
+      ]
     },
     {
       "id": "ielts_005_hall",
@@ -442,7 +459,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,hall",
-      "sceneCue": "IELTS · 门厅"
+      "sceneCue": "IELTS · 门厅",
+      "malayDefinitions": [
+        "dewan",
+        "lobi"
+      ]
     },
     {
       "id": "ielts_006_discourage",
@@ -497,7 +518,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,discourage",
-      "sceneCue": "IELTS · 使泄气， 使灰心"
+      "sceneCue": "IELTS · 使泄气， 使灰心",
+      "malayDefinitions": [
+        "melemahkan semangat",
+        "menghalang"
+      ]
     },
     {
       "id": "ielts_007_predispose",
@@ -548,7 +573,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,predispose",
-      "sceneCue": "IELTS · 事先影响某人"
+      "sceneCue": "IELTS · 事先影响某人",
+      "malayDefinitions": [
+        "mempengaruhi terlebih dahulu",
+        "cenderung",
+        "mudah terdedah"
+      ]
     },
     {
       "id": "ielts_008_oversee",
@@ -598,7 +628,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,oversee",
-      "sceneCue": "IELTS · 监督， 监视"
+      "sceneCue": "IELTS · 监督， 监视",
+      "malayDefinitions": [
+        "mengawasi",
+        "memantau"
+      ]
     },
     {
       "id": "ielts_009_pollution",
@@ -659,7 +693,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,pollution",
-      "sceneCue": "IELTS · 污染， 污染物"
+      "sceneCue": "IELTS · 污染， 污染物",
+      "malayDefinitions": [
+        "pencemaran",
+        "bahan cemar"
+      ]
     },
     {
       "id": "ielts_010_pretend",
@@ -721,7 +759,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,pretend",
-      "sceneCue": "IELTS · 装作， 假装"
+      "sceneCue": "IELTS · 装作， 假装",
+      "malayDefinitions": [
+        "berpura-pura",
+        "berlakon"
+      ]
     },
     {
       "id": "ielts_011_convection",
@@ -780,7 +822,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,convection",
-      "sceneCue": "IELTS · 传送"
+      "sceneCue": "IELTS · 传送",
+      "malayDefinitions": [
+        "perolakan",
+        "pemindahan haba"
+      ]
     },
     {
       "id": "ielts_012_warrant",
@@ -842,7 +888,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,warrant",
-      "sceneCue": "IELTS · 保证"
+      "sceneCue": "IELTS · 保证",
+      "malayDefinitions": [
+        "jaminan",
+        "menjamin"
+      ]
     },
     {
       "id": "ielts_013_ecliptic",
@@ -895,7 +945,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ecliptic",
-      "sceneCue": "IELTS · 【天】"
+      "sceneCue": "IELTS · 【天】",
+      "malayDefinitions": [
+        "ekliptik",
+        "satah orbit"
+      ]
     },
     {
       "id": "ielts_014_conceal",
@@ -956,7 +1010,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,conceal",
-      "sceneCue": "IELTS · 隐藏"
+      "sceneCue": "IELTS · 隐藏",
+      "malayDefinitions": [
+        "menyembunyikan",
+        "merahsia"
+      ]
     },
     {
       "id": "ielts_015_overrate",
@@ -1005,7 +1063,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,overrate",
-      "sceneCue": "IELTS · 对…评价过高， 高估"
+      "sceneCue": "IELTS · 对…评价过高， 高估",
+      "malayDefinitions": [
+        "melebih-lebihkan",
+        "menilai terlalu tinggi"
+      ]
     },
     {
       "id": "ielts_016_meanwhile",
@@ -1051,7 +1113,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,meanwhile",
-      "sceneCue": "IELTS · 与此同时"
+      "sceneCue": "IELTS · 与此同时",
+      "malayDefinitions": [
+        "sementara itu",
+        "dalam pada itu"
+      ]
     },
     {
       "id": "ielts_017_opulent",
@@ -1104,7 +1170,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,opulent",
-      "sceneCue": "IELTS · 豪华的， 华丽的， 富裕的"
+      "sceneCue": "IELTS · 豪华的， 华丽的， 富裕的",
+      "malayDefinitions": [
+        "mewah",
+        "kaya raya",
+        "melimpah"
+      ]
     },
     {
       "id": "ielts_018_coincide",
@@ -1159,7 +1230,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,coincide",
-      "sceneCue": "IELTS · 同时发生"
+      "sceneCue": "IELTS · 同时发生",
+      "malayDefinitions": [
+        "bertepatan",
+        "serentak"
+      ]
     },
     {
       "id": "ielts_019_competent",
@@ -1221,7 +1296,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,competent",
-      "sceneCue": "IELTS · 有能力的"
+      "sceneCue": "IELTS · 有能力的",
+      "malayDefinitions": [
+        "berkemampuan",
+        "cekap"
+      ]
     },
     {
       "id": "ielts_020_require",
@@ -1283,7 +1362,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,require",
-      "sceneCue": "IELTS · 需要"
+      "sceneCue": "IELTS · 需要",
+      "malayDefinitions": [
+        "memerlukan",
+        "mewajibkan"
+      ]
     },
     {
       "id": "ielts_021_scratch",
@@ -1351,7 +1434,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,scratch",
-      "sceneCue": "IELTS · 划伤，"
+      "sceneCue": "IELTS · 划伤，",
+      "malayDefinitions": [
+        "mencakar",
+        "menggaru"
+      ]
     },
     {
       "id": "ielts_022_compassionate",
@@ -1411,7 +1498,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,compassionate",
-      "sceneCue": "IELTS · 有同情心的， 表示怜悯的"
+      "sceneCue": "IELTS · 有同情心的， 表示怜悯的",
+      "malayDefinitions": [
+        "bersimpati",
+        "berbelas kasihan"
+      ]
     },
     {
       "id": "ielts_023_cooperative",
@@ -1479,7 +1570,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,cooperative",
-      "sceneCue": "IELTS · 合作的，协作的"
+      "sceneCue": "IELTS · 合作的，协作的",
+      "malayDefinitions": [
+        "bekerjasama",
+        "koperasi"
+      ]
     },
     {
       "id": "ielts_024_strategist",
@@ -1530,7 +1625,10 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,strategist",
-      "sceneCue": "IELTS · 战略家"
+      "sceneCue": "IELTS · 战略家",
+      "malayDefinitions": [
+        "ahli strategi"
+      ]
     },
     {
       "id": "ielts_025_irritable",
@@ -1577,7 +1675,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,irritable",
-      "sceneCue": "IELTS · 急躁的， 易怒的， 易受刺激的"
+      "sceneCue": "IELTS · 急躁的， 易怒的， 易受刺激的",
+      "malayDefinitions": [
+        "mudah marah",
+        "alergi"
+      ]
     },
     {
       "id": "ielts_026_triple",
@@ -1648,7 +1750,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,triple",
-      "sceneCue": "IELTS · 三部分的"
+      "sceneCue": "IELTS · 三部分的",
+      "malayDefinitions": [
+        "tiga kali ganda",
+        "tiga bahagian"
+      ]
     },
     {
       "id": "ielts_027_reserved",
@@ -1710,7 +1816,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,reserved",
-      "sceneCue": "IELTS · 说话不多的， 内向的"
+      "sceneCue": "IELTS · 说话不多的， 内向的",
+      "malayDefinitions": [
+        "pendiam",
+        "terpelihara",
+        "ditempah"
+      ]
     },
     {
       "id": "ielts_028_temper",
@@ -1774,7 +1885,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,temper",
-      "sceneCue": "IELTS · 情绪"
+      "sceneCue": "IELTS · 情绪",
+      "malayDefinitions": [
+        "perangai",
+        "meredakan"
+      ]
     },
     {
       "id": "ielts_029_tickle",
@@ -1835,7 +1950,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,tickle",
-      "sceneCue": "IELTS · 发痒"
+      "sceneCue": "IELTS · 发痒",
+      "malayDefinitions": [
+        "menggelitik",
+        "menghiburkan",
+        "geletek"
+      ]
     },
     {
       "id": "ielts_030_object",
@@ -1901,7 +2021,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,object",
-      "sceneCue": "IELTS · 反对， 不赞成"
+      "sceneCue": "IELTS · 反对， 不赞成",
+      "malayDefinitions": [
+        "membantah",
+        "objek",
+        "sasaran"
+      ]
     },
     {
       "id": "ielts_031_accessible",
@@ -1953,7 +2078,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accessible",
-      "sceneCue": "IELTS · 能接近的"
+      "sceneCue": "IELTS · 能接近的",
+      "malayDefinitions": [
+        "boleh diakses",
+        "mudah dicapai"
+      ]
     },
     {
       "id": "ielts_032_hang",
@@ -2014,7 +2143,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,hang",
-      "sceneCue": "IELTS · 悬挂， 吊， 垂下"
+      "sceneCue": "IELTS · 悬挂， 吊， 垂下",
+      "malayDefinitions": [
+        "menggantung",
+        "menghukum gantung"
+      ]
     },
     {
       "id": "ielts_033_authenticate",
@@ -2070,7 +2203,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,authenticate",
-      "sceneCue": "IELTS · 鉴别， 证明"
+      "sceneCue": "IELTS · 鉴别， 证明",
+      "malayDefinitions": [
+        "mengesahkan",
+        "membuktikan"
+      ]
     },
     {
       "id": "ielts_034_suffice",
@@ -2119,7 +2256,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,suffice",
-      "sceneCue": "IELTS · 满足， 满意"
+      "sceneCue": "IELTS · 满足， 满意",
+      "malayDefinitions": [
+        "mencukupi",
+        "memadai"
+      ]
     },
     {
       "id": "ielts_035_concede",
@@ -2172,7 +2313,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,concede",
-      "sceneCue": "IELTS · 承认"
+      "sceneCue": "IELTS · 承认",
+      "malayDefinitions": [
+        "mengakui",
+        "mengalah"
+      ]
     },
     {
       "id": "ielts_036_notable",
@@ -2228,7 +2373,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,notable",
-      "sceneCue": "IELTS · 值得注意的"
+      "sceneCue": "IELTS · 值得注意的",
+      "malayDefinitions": [
+        "terkenal",
+        "ketara",
+        "orang ternama"
+      ]
     },
     {
       "id": "ielts_037_unparalleled",
@@ -2278,7 +2428,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,unparalleled",
-      "sceneCue": "IELTS · 无双的， 无比的， 空前的"
+      "sceneCue": "IELTS · 无双的， 无比的， 空前的",
+      "malayDefinitions": [
+        "tiada tandingan",
+        "luar biasa"
+      ]
     },
     {
       "id": "ielts_038_plush",
@@ -2334,7 +2488,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,plush",
-      "sceneCue": "IELTS · 豪华的，舒适的"
+      "sceneCue": "IELTS · 豪华的，舒适的",
+      "malayDefinitions": [
+        "mewah",
+        "selesa",
+        "baldu"
+      ]
     },
     {
       "id": "ielts_039_evaporate",
@@ -2393,7 +2552,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,evaporate",
-      "sceneCue": "IELTS · 蒸发"
+      "sceneCue": "IELTS · 蒸发",
+      "malayDefinitions": [
+        "menyejat",
+        "hilang",
+        "lenyap"
+      ]
     },
     {
       "id": "ielts_040_commission",
@@ -2458,7 +2622,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,commission",
-      "sceneCue": "IELTS · 委托"
+      "sceneCue": "IELTS · 委托",
+      "malayDefinitions": [
+        "menugaskan",
+        "komisen",
+        "surat kuasa"
+      ]
     },
     {
       "id": "ielts_041_staircase",
@@ -2502,7 +2671,10 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,staircase",
-      "sceneCue": "IELTS · 楼梯"
+      "sceneCue": "IELTS · 楼梯",
+      "malayDefinitions": [
+        "tangga"
+      ]
     },
     {
       "id": "ielts_042_flip",
@@ -2569,7 +2741,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,flip",
-      "sceneCue": "IELTS · 轻抛"
+      "sceneCue": "IELTS · 轻抛",
+      "malayDefinitions": [
+        "melempar ringan",
+        "membalikkan"
+      ]
     },
     {
       "id": "ielts_043_connect",
@@ -2630,7 +2806,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,connect",
-      "sceneCue": "IELTS · 连接， 衔接"
+      "sceneCue": "IELTS · 连接， 衔接",
+      "malayDefinitions": [
+        "menyambung",
+        "mengaitkan"
+      ]
     },
     {
       "id": "ielts_044_resume",
@@ -2681,7 +2861,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,resume",
-      "sceneCue": "IELTS · 重新开始， 继续恢复"
+      "sceneCue": "IELTS · 重新开始， 继续恢复",
+      "malayDefinitions": [
+        "menyambung semula",
+        "meneruskan"
+      ]
     },
     {
       "id": "ielts_045_address",
@@ -2745,7 +2929,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,address",
-      "sceneCue": "IELTS · 致函，写姓名地址"
+      "sceneCue": "IELTS · 致函，写姓名地址",
+      "malayDefinitions": [
+        "menulis alamat",
+        "berucap",
+        "menangani"
+      ]
     },
     {
       "id": "ielts_046_posture",
@@ -2795,7 +2984,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,posture",
-      "sceneCue": "IELTS · 姿势"
+      "sceneCue": "IELTS · 姿势",
+      "malayDefinitions": [
+        "postur",
+        "sikap",
+        "keadaan"
+      ]
     },
     {
       "id": "ielts_047_spiral",
@@ -2866,7 +3060,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,spiral",
-      "sceneCue": "IELTS · 螺旋形的，盘旋的"
+      "sceneCue": "IELTS · 螺旋形的，盘旋的",
+      "malayDefinitions": [
+        "berpusing",
+        "meningkat secara mendadak"
+      ]
     },
     {
       "id": "ielts_048_decapitate",
@@ -2915,7 +3113,10 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,decapitate",
-      "sceneCue": "IELTS · 斩首"
+      "sceneCue": "IELTS · 斩首",
+      "malayDefinitions": [
+        "memancung kepala"
+      ]
     },
     {
       "id": "ielts_049_exorbitant",
@@ -2966,7 +3167,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,exorbitant",
-      "sceneCue": "IELTS · 过分的， 不合理的"
+      "sceneCue": "IELTS · 过分的， 不合理的",
+      "malayDefinitions": [
+        "melampau",
+        "keterlaluan"
+      ]
     },
     {
       "id": "ielts_050_surgery",
@@ -3027,7 +3232,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,surgery",
-      "sceneCue": "IELTS · 外科学"
+      "sceneCue": "IELTS · 外科学",
+      "malayDefinitions": [
+        "pembedahan",
+        "bilik bedah"
+      ]
     },
     {
       "id": "ielts_051_violent",
@@ -3095,7 +3304,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,violent",
-      "sceneCue": "IELTS · 暴力的"
+      "sceneCue": "IELTS · 暴力的",
+      "malayDefinitions": [
+        "ganas",
+        "bersemangat",
+        "dahsyat"
+      ]
     },
     {
       "id": "ielts_052_resolve",
@@ -3153,7 +3367,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,resolve",
-      "sceneCue": "IELTS · 解决，解答"
+      "sceneCue": "IELTS · 解决，解答",
+      "malayDefinitions": [
+        "menyelesaikan",
+        "memutuskan",
+        "mengurai"
+      ]
     },
     {
       "id": "ielts_053_confront",
@@ -3200,7 +3419,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,confront",
-      "sceneCue": "IELTS · 遭遇"
+      "sceneCue": "IELTS · 遭遇",
+      "malayDefinitions": [
+        "berhadapan",
+        "menghadapi"
+      ]
     },
     {
       "id": "ielts_054_deploy",
@@ -3252,7 +3475,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,deploy",
-      "sceneCue": "IELTS · 部署"
+      "sceneCue": "IELTS · 部署",
+      "malayDefinitions": [
+        "mengerahkan",
+        "menggunakan"
+      ]
     },
     {
       "id": "ielts_055_reproduce",
@@ -3308,7 +3535,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,reproduce",
-      "sceneCue": "IELTS · 繁殖， 生育"
+      "sceneCue": "IELTS · 繁殖， 生育",
+      "malayDefinitions": [
+        "membiak",
+        "menyalin",
+        "menghasilkan semula"
+      ]
     },
     {
       "id": "ielts_056_huddle",
@@ -3367,7 +3599,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,huddle",
-      "sceneCue": "IELTS · 聚集在一起"
+      "sceneCue": "IELTS · 聚集在一起",
+      "malayDefinitions": [
+        "berkumpul",
+        "berhimpit",
+        "bersesak"
+      ]
     },
     {
       "id": "ielts_057_rendition",
@@ -3421,7 +3658,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,rendition",
-      "sceneCue": "IELTS · 表演， 扮演， 演唱"
+      "sceneCue": "IELTS · 表演， 扮演， 演唱",
+      "malayDefinitions": [
+        "persembahan",
+        "terjemahan",
+        "gambaran"
+      ]
     },
     {
       "id": "ielts_058_intersection",
@@ -3479,7 +3721,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,intersection",
-      "sceneCue": "IELTS · 道路交叉口， 十字路口"
+      "sceneCue": "IELTS · 道路交叉口， 十字路口",
+      "malayDefinitions": [
+        "persimpangan",
+        "simpang jalan"
+      ]
     },
     {
       "id": "ielts_059_scholarship",
@@ -3532,7 +3778,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,scholarship",
-      "sceneCue": "IELTS · 奖学金"
+      "sceneCue": "IELTS · 奖学金",
+      "malayDefinitions": [
+        "biasiswa",
+        "keilmuan"
+      ]
     },
     {
       "id": "ielts_060_besides",
@@ -3584,7 +3834,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,besides",
-      "sceneCue": "IELTS · 除此之外，而且"
+      "sceneCue": "IELTS · 除此之外，而且",
+      "malayDefinitions": [
+        "selain itu",
+        "tambahan pula"
+      ]
     },
     {
       "id": "ielts_061_instil",
@@ -3637,7 +3891,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,instil",
-      "sceneCue": "IELTS · 滴注"
+      "sceneCue": "IELTS · 滴注",
+      "malayDefinitions": [
+        "menanamkan",
+        "menyemai",
+        "memupuk"
+      ]
     },
     {
       "id": "ielts_062_inflammable",
@@ -3690,7 +3949,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,inflammable",
-      "sceneCue": "IELTS · 易燃的"
+      "sceneCue": "IELTS · 易燃的",
+      "malayDefinitions": [
+        "mudah terbakar",
+        "mudah marah"
+      ]
     },
     {
       "id": "ielts_063_implement",
@@ -3745,7 +4008,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,implement",
-      "sceneCue": "IELTS · 使生效，实施"
+      "sceneCue": "IELTS · 使生效，实施",
+      "malayDefinitions": [
+        "melaksanakan",
+        "menjalankan",
+        "alat"
+      ]
     },
     {
       "id": "ielts_064_export",
@@ -3809,7 +4077,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,export",
-      "sceneCue": "IELTS · 出口"
+      "sceneCue": "IELTS · 出口",
+      "malayDefinitions": [
+        "mengeksport",
+        "eksport"
+      ]
     },
     {
       "id": "ielts_065_incinerate",
@@ -3857,7 +4129,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,incinerate",
-      "sceneCue": "IELTS · 焚化， 焚毁， 把…烧成灰烬"
+      "sceneCue": "IELTS · 焚化， 焚毁， 把…烧成灰烬",
+      "malayDefinitions": [
+        "membakar",
+        "menjadikan abu"
+      ]
     },
     {
       "id": "ielts_066_fantasy",
@@ -3915,7 +4191,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,fantasy",
-      "sceneCue": "IELTS · 想象"
+      "sceneCue": "IELTS · 想象",
+      "malayDefinitions": [
+        "fantasi",
+        "khayalan"
+      ]
     },
     {
       "id": "ielts_067_erode",
@@ -3973,7 +4253,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,erode",
-      "sceneCue": "IELTS · 侵蚀， 腐蚀"
+      "sceneCue": "IELTS · 侵蚀， 腐蚀",
+      "malayDefinitions": [
+        "menghakis",
+        "mengikis"
+      ]
     },
     {
       "id": "ielts_068_check",
@@ -4034,7 +4318,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,check",
-      "sceneCue": "IELTS · 检查，核对"
+      "sceneCue": "IELTS · 检查，核对",
+      "malayDefinitions": [
+        "memeriksa",
+        "menyekat"
+      ]
     },
     {
       "id": "ielts_069_frustrate",
@@ -4088,7 +4376,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,frustrate",
-      "sceneCue": "IELTS · 使沮丧"
+      "sceneCue": "IELTS · 使沮丧",
+      "malayDefinitions": [
+        "mengecewakan",
+        "menggagalkan"
+      ]
     },
     {
       "id": "ielts_070_gorgeous",
@@ -4140,7 +4432,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,gorgeous",
-      "sceneCue": "IELTS · 华丽的"
+      "sceneCue": "IELTS · 华丽的",
+      "malayDefinitions": [
+        "indah",
+        "hebat",
+        "cantik"
+      ]
     },
     {
       "id": "ielts_071_pragmatic",
@@ -4199,7 +4496,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,pragmatic",
-      "sceneCue": "IELTS · 务实的"
+      "sceneCue": "IELTS · 务实的",
+      "malayDefinitions": [
+        "pragmatik",
+        "realistik",
+        "praktikal"
+      ]
     },
     {
       "id": "ielts_072_methane",
@@ -4252,7 +4554,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,methane",
-      "sceneCue": "IELTS · 甲烷， 沼气"
+      "sceneCue": "IELTS · 甲烷， 沼气",
+      "malayDefinitions": [
+        "metana",
+        "gas paya"
+      ]
     },
     {
       "id": "ielts_073_erosion",
@@ -4317,7 +4623,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,erosion",
-      "sceneCue": "IELTS · 腐蚀"
+      "sceneCue": "IELTS · 腐蚀",
+      "malayDefinitions": [
+        "hakisan",
+        "haus"
+      ]
     },
     {
       "id": "ielts_074_ascend",
@@ -4372,7 +4682,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ascend",
-      "sceneCue": "IELTS · 攀登"
+      "sceneCue": "IELTS · 攀登",
+      "malayDefinitions": [
+        "mendaki",
+        "naik",
+        "meningkat"
+      ]
     },
     {
       "id": "ielts_075_superstitious",
@@ -4424,7 +4739,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,superstitious",
-      "sceneCue": "IELTS · 迷信的"
+      "sceneCue": "IELTS · 迷信的",
+      "malayDefinitions": [
+        "tahyul",
+        "karut"
+      ]
     },
     {
       "id": "ielts_076_provided",
@@ -4476,7 +4795,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,provided",
-      "sceneCue": "IELTS · 倘若， 只要， 假如"
+      "sceneCue": "IELTS · 倘若， 只要， 假如",
+      "malayDefinitions": [
+        "asalkan",
+        "dengan syarat"
+      ]
     },
     {
       "id": "ielts_077_indispensable",
@@ -4524,7 +4847,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,indispensable",
-      "sceneCue": "IELTS · 必不可少的， 必需的"
+      "sceneCue": "IELTS · 必不可少的， 必需的",
+      "malayDefinitions": [
+        "sangat diperlukan",
+        "wajib"
+      ]
     },
     {
       "id": "ielts_078_lens",
@@ -4583,7 +4910,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,lens",
-      "sceneCue": "IELTS · 透镜"
+      "sceneCue": "IELTS · 透镜",
+      "malayDefinitions": [
+        "kanta",
+        "lensa"
+      ]
     },
     {
       "id": "ielts_079_embody",
@@ -4634,7 +4965,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,embody",
-      "sceneCue": "IELTS · 表达， 体现"
+      "sceneCue": "IELTS · 表达， 体现",
+      "malayDefinitions": [
+        "melambangkan",
+        "mewakili",
+        "merangkumi"
+      ]
     },
     {
       "id": "ielts_080_bacterial",
@@ -4692,7 +5028,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,bacterial",
-      "sceneCue": "IELTS · 细菌的"
+      "sceneCue": "IELTS · 细菌的",
+      "malayDefinitions": [
+        "bakteria",
+        "disebabkan bakteria"
+      ]
     },
     {
       "id": "ielts_081_motive",
@@ -4762,7 +5102,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,motive",
-      "sceneCue": "IELTS · 动机， 目的"
+      "sceneCue": "IELTS · 动机， 目的",
+      "malayDefinitions": [
+        "motif",
+        "tujuan"
+      ]
     },
     {
       "id": "ielts_082_envisage",
@@ -4814,7 +5158,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,envisage",
-      "sceneCue": "IELTS · 展望， 想象"
+      "sceneCue": "IELTS · 展望， 想象",
+      "malayDefinitions": [
+        "membayangkan",
+        "menjangka"
+      ]
     },
     {
       "id": "ielts_083_anticipation",
@@ -4872,7 +5220,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,anticipation",
-      "sceneCue": "IELTS · 预料"
+      "sceneCue": "IELTS · 预料",
+      "malayDefinitions": [
+        "jangkaan",
+        "antisipasi"
+      ]
     },
     {
       "id": "ielts_084_motivate",
@@ -4927,7 +5279,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,motivate",
-      "sceneCue": "IELTS · 使有动机"
+      "sceneCue": "IELTS · 使有动机",
+      "malayDefinitions": [
+        "memotivasikan",
+        "mendorong"
+      ]
     },
     {
       "id": "ielts_085_reinforcement",
@@ -4986,7 +5342,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,reinforcement",
-      "sceneCue": "IELTS · 增援， 加强， 加固"
+      "sceneCue": "IELTS · 增援， 加强， 加固",
+      "malayDefinitions": [
+        "pengukuhan",
+        "bantuan tambahan"
+      ]
     },
     {
       "id": "ielts_086_tutorial",
@@ -5033,7 +5393,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,tutorial",
-      "sceneCue": "IELTS · 大学导师的辅导课"
+      "sceneCue": "IELTS · 大学导师的辅导课",
+      "malayDefinitions": [
+        "tutorial",
+        "kelas bimbingan"
+      ]
     },
     {
       "id": "ielts_087_spoil",
@@ -5092,7 +5456,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,spoil",
-      "sceneCue": "IELTS · 损坏，破坏，糟蹋"
+      "sceneCue": "IELTS · 损坏，破坏，糟蹋",
+      "malayDefinitions": [
+        "merosakkan",
+        "memanjakan",
+        "menjadi busuk"
+      ]
     },
     {
       "id": "ielts_088_multiply",
@@ -5143,7 +5512,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,multiply",
-      "sceneCue": "IELTS · 增加， 繁殖"
+      "sceneCue": "IELTS · 增加， 繁殖",
+      "malayDefinitions": [
+        "mendarab",
+        "membiak"
+      ]
     },
     {
       "id": "ielts_089_pasture",
@@ -5205,7 +5578,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,pasture",
-      "sceneCue": "IELTS · 牧场，草原"
+      "sceneCue": "IELTS · 牧场，草原",
+      "malayDefinitions": [
+        "padang rumput",
+        "meragut"
+      ]
     },
     {
       "id": "ielts_090_infirmity",
@@ -5260,7 +5637,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,infirmity",
-      "sceneCue": "IELTS · 虚弱， 衰弱"
+      "sceneCue": "IELTS · 虚弱， 衰弱",
+      "malayDefinitions": [
+        "kelemahan",
+        "penyakit"
+      ]
     },
     {
       "id": "ielts_091_pilot",
@@ -5331,7 +5712,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,pilot",
-      "sceneCue": "IELTS · 飞行员，引航员"
+      "sceneCue": "IELTS · 飞行员，引航员",
+      "malayDefinitions": [
+        "juruterbang",
+        "mengemudi"
+      ]
     },
     {
       "id": "ielts_092_approval",
@@ -5402,7 +5787,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,approval",
-      "sceneCue": "IELTS · 赞成， 同意"
+      "sceneCue": "IELTS · 赞成， 同意",
+      "malayDefinitions": [
+        "kelulusan",
+        "persetujuan"
+      ]
     },
     {
       "id": "ielts_093_curative",
@@ -5449,7 +5838,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,curative",
-      "sceneCue": "IELTS · 有疗效的"
+      "sceneCue": "IELTS · 有疗效的",
+      "malayDefinitions": [
+        "menyembuhkan",
+        "berubat"
+      ]
     },
     {
       "id": "ielts_094_multiple",
@@ -5522,7 +5915,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,multiple",
-      "sceneCue": "IELTS · 多重的"
+      "sceneCue": "IELTS · 多重的",
+      "malayDefinitions": [
+        "berbilang",
+        "pelbagai",
+        "gandaan"
+      ]
     },
     {
       "id": "ielts_095_microbiology",
@@ -5577,7 +5975,10 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,microbiology",
-      "sceneCue": "IELTS · 微生物学"
+      "sceneCue": "IELTS · 微生物学",
+      "malayDefinitions": [
+        "mikrobiologi"
+      ]
     },
     {
       "id": "ielts_096_magnet",
@@ -5639,7 +6040,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,magnet",
-      "sceneCue": "IELTS · 磁铁， 磁石"
+      "sceneCue": "IELTS · 磁铁， 磁石",
+      "malayDefinitions": [
+        "magnet",
+        "penarik"
+      ]
     },
     {
       "id": "ielts_097_expose",
@@ -5691,7 +6096,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,expose",
-      "sceneCue": "IELTS · 使暴露， 揭露"
+      "sceneCue": "IELTS · 使暴露， 揭露",
+      "malayDefinitions": [
+        "mendedahkan",
+        "membongkar"
+      ]
     },
     {
       "id": "ielts_098_versatile",
@@ -5742,7 +6151,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,versatile",
-      "sceneCue": "IELTS · 多才多艺的， 多面手的"
+      "sceneCue": "IELTS · 多才多艺的， 多面手的",
+      "malayDefinitions": [
+        "serba boleh",
+        "pelbagai guna"
+      ]
     },
     {
       "id": "ielts_099_concentrate",
@@ -5808,7 +6221,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,concentrate",
-      "sceneCue": "IELTS · 全神贯注，全力以赴"
+      "sceneCue": "IELTS · 全神贯注，全力以赴",
+      "malayDefinitions": [
+        "menumpukan perhatian",
+        "memfokuskan",
+        "memekatkan"
+      ]
     },
     {
       "id": "ielts_100_versus",
@@ -5861,7 +6279,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,versus",
-      "sceneCue": "IELTS · 与…相对， 对抗"
+      "sceneCue": "IELTS · 与…相对， 对抗",
+      "malayDefinitions": [
+        "lawan",
+        "berbanding"
+      ]
     },
     {
       "id": "ielts_101_populate",
@@ -5913,7 +6335,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,populate",
-      "sceneCue": "IELTS · 居住于， 生活于"
+      "sceneCue": "IELTS · 居住于， 生活于",
+      "malayDefinitions": [
+        "mendiami",
+        "menghuni"
+      ]
     },
     {
       "id": "ielts_102_up-to-date",
@@ -5966,7 +6392,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,up-to-date",
-      "sceneCue": "IELTS · 直到最近的"
+      "sceneCue": "IELTS · 直到最近的",
+      "malayDefinitions": [
+        "terkini",
+        "moden"
+      ]
     },
     {
       "id": "ielts_103_suitable",
@@ -6025,7 +6455,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,suitable",
-      "sceneCue": "IELTS · 适当的， 相配的"
+      "sceneCue": "IELTS · 适当的， 相配的",
+      "malayDefinitions": [
+        "sesuai",
+        "sepadan",
+        "cocok"
+      ]
     },
     {
       "id": "ielts_104_personnel",
@@ -6083,7 +6518,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,personnel",
-      "sceneCue": "IELTS · 全体人员， 员工"
+      "sceneCue": "IELTS · 全体人员， 员工",
+      "malayDefinitions": [
+        "kakitangan",
+        "pekerja"
+      ]
     },
     {
       "id": "ielts_105_splash",
@@ -6143,7 +6582,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,splash",
-      "sceneCue": "IELTS · 溅"
+      "sceneCue": "IELTS · 溅",
+      "malayDefinitions": [
+        "memercik",
+        "menyiram"
+      ]
     },
     {
       "id": "ielts_106_outlook",
@@ -6204,7 +6647,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,outlook",
-      "sceneCue": "IELTS · 观点， 见解"
+      "sceneCue": "IELTS · 观点， 见解",
+      "malayDefinitions": [
+        "pandangan",
+        "prospek"
+      ]
     },
     {
       "id": "ielts_107_romance",
@@ -6256,7 +6703,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,romance",
-      "sceneCue": "IELTS · 恋爱"
+      "sceneCue": "IELTS · 恋爱",
+      "malayDefinitions": [
+        "percintaan",
+        "romantik",
+        "kisah cinta"
+      ]
     },
     {
       "id": "ielts_108_fountain",
@@ -6314,7 +6766,10 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,fountain",
-      "sceneCue": "IELTS · 喷泉"
+      "sceneCue": "IELTS · 喷泉",
+      "malayDefinitions": [
+        "air pancut"
+      ]
     },
     {
       "id": "ielts_109_irrelevant",
@@ -6370,7 +6825,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,irrelevant",
-      "sceneCue": "IELTS · 不相关的"
+      "sceneCue": "IELTS · 不相关的",
+      "malayDefinitions": [
+        "tidak berkaitan",
+        "tidak relevan"
+      ]
     },
     {
       "id": "ielts_110_gadget",
@@ -6421,7 +6880,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,gadget",
-      "sceneCue": "IELTS · 小巧的器械， 精巧的装置"
+      "sceneCue": "IELTS · 小巧的器械， 精巧的装置",
+      "malayDefinitions": [
+        "alat kecil",
+        "gajet"
+      ]
     },
     {
       "id": "ielts_111_compatriot",
@@ -6472,7 +6935,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,compatriot",
-      "sceneCue": "IELTS · 同胞"
+      "sceneCue": "IELTS · 同胞",
+      "malayDefinitions": [
+        "rakan senegara",
+        "saudara sebangsa"
+      ]
     },
     {
       "id": "ielts_112_implication",
@@ -6524,7 +6991,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,implication",
-      "sceneCue": "IELTS · 含意"
+      "sceneCue": "IELTS · 含意",
+      "malayDefinitions": [
+        "implikasi",
+        "petunjuk",
+        "penglibatan"
+      ]
     },
     {
       "id": "ielts_113_fierce",
@@ -6574,7 +7046,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,fierce",
-      "sceneCue": "IELTS · 凶猛的"
+      "sceneCue": "IELTS · 凶猛的",
+      "malayDefinitions": [
+        "ganas",
+        "kuat",
+        "sengit"
+      ]
     },
     {
       "id": "ielts_114_reservation",
@@ -6639,7 +7116,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,reservation",
-      "sceneCue": "IELTS · 保留意见， 存疑"
+      "sceneCue": "IELTS · 保留意见， 存疑",
+      "malayDefinitions": [
+        "keraguan",
+        "tempahan"
+      ]
     },
     {
       "id": "ielts_115_block",
@@ -6705,7 +7186,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,block",
-      "sceneCue": "IELTS · 一排房屋，街区"
+      "sceneCue": "IELTS · 一排房屋，街区",
+      "malayDefinitions": [
+        "blok bangunan",
+        "menyekat",
+        "bongkah"
+      ]
     },
     {
       "id": "ielts_116_extinguisher",
@@ -6762,7 +7248,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,extinguisher",
-      "sceneCue": "IELTS · 灭火器"
+      "sceneCue": "IELTS · 灭火器",
+      "malayDefinitions": [
+        "alat pemadam api",
+        "pemadam"
+      ]
     },
     {
       "id": "ielts_117_cooperation",
@@ -6823,7 +7313,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,cooperation",
-      "sceneCue": "IELTS · 合作， 协作"
+      "sceneCue": "IELTS · 合作， 协作",
+      "malayDefinitions": [
+        "kerjasama",
+        "kolaborasi"
+      ]
     },
     {
       "id": "ielts_118_timid",
@@ -6880,7 +7374,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,timid",
-      "sceneCue": "IELTS · 胆小的"
+      "sceneCue": "IELTS · 胆小的",
+      "malayDefinitions": [
+        "penakut",
+        "malu"
+      ]
     },
     {
       "id": "ielts_119_propose",
@@ -6949,7 +7447,12 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,propose",
-      "sceneCue": "IELTS · 提议， 建议"
+      "sceneCue": "IELTS · 提议， 建议",
+      "malayDefinitions": [
+        "mencadangkan",
+        "menamakan",
+        "merancang"
+      ]
     },
     {
       "id": "ielts_120_in-comparison-with",
@@ -6998,7 +7501,11 @@
       ],
       "difficulty": "Medium",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,in-comparison-with",
-      "sceneCue": "IELTS · 与…比较，同…比较起来"
+      "sceneCue": "IELTS · 与…比较，同…比较起来",
+      "malayDefinitions": [
+        "berbanding dengan",
+        "dibandingkan dengan"
+      ]
     }
   ]
 }

@@ -2528,6 +2528,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get wordbookEnglishDefinitions => '英文释义';
 
   @override
+  String get wordbookMalayDefinitions => '马来语释义';
+
+  @override
   String get wordbookHighFrequency => '高频';
 
   @override

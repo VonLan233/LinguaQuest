@@ -838,6 +838,7 @@
   "wordbookBilingualDefinitions": "Chinese and English definitions",
   "wordbookChineseDefinitions": "Chinese definitions",
   "wordbookEnglishDefinitions": "English definitions",
+  "wordbookMalayDefinitions": "Malay definitions",
   "wordbookHighFrequency": "High frequency",
   "wordbookContextExamples": "Context examples",
   "wordbookMasteryLevel": "Mastery {level}/5",

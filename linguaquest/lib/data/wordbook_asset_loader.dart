@@ -10,9 +10,12 @@ class WordBookAssetLoader {
 
   static const _bookIds = [
     'beginner',
+    'cet4',
+    'cet6',
     'ielts',
     'toefl',
     'gre',
+    'kaoyan',
   ];
 
   final AssetBundle _bundle;

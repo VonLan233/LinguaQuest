@@ -463,6 +463,7 @@ class _DefinitionSections extends StatelessWidget {
     final en = word.englishDefinitions.isEmpty
         ? [word.definition]
         : word.englishDefinitions;
+    final ms = word.malayDefinitions;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -483,6 +484,14 @@ class _DefinitionSections extends StatelessWidget {
           values: en,
           l10n: l10n,
         ),
+        if (ms.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          _DefinitionList(
+            title: l10n.wordbookMalayDefinitions,
+            values: ms,
+            l10n: l10n,
+          ),
+        ],
       ],
     );
   }

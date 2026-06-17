@@ -2673,6 +2673,9 @@ class AppLocalizationsMs extends AppLocalizations {
   String get wordbookEnglishDefinitions => 'Definisi Inggeris';
 
   @override
+  String get wordbookMalayDefinitions => 'Definisi Melayu';
+
+  @override
   String get wordbookHighFrequency => 'Frekuensi tinggi';
 
   @override

@@ -2661,6 +2661,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get wordbookEnglishDefinitions => 'English definitions';
 
   @override
+  String get wordbookMalayDefinitions => 'Malay definitions';
+
+  @override
   String get wordbookHighFrequency => 'High frequency';
 
   @override

@@ -161,7 +161,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abandon",
-      "sceneCue": "GRE · 放弃, 遗弃"
+      "sceneCue": "GRE · 放弃, 遗弃",
+      "malayDefinitions": [
+        "meninggalkan",
+        "membuang"
+      ]
     },
     {
       "id": "gre_002_abate",
@@ -212,7 +216,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abate",
-      "sceneCue": "GRE · 使(数量、程度等)减少, 减轻, 除去, 缓和, 打折扣"
+      "sceneCue": "GRE · 使(数量、程度等)减少, 减轻, 除去, 缓和, 打折扣",
+      "malayDefinitions": [
+        "mengurangkan",
+        "meredakan",
+        "mengurangkan intensiti"
+      ]
     },
     {
       "id": "gre_003_abbreviate",
@@ -263,7 +272,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abbreviate",
-      "sceneCue": "GRE · 缩短"
+      "sceneCue": "GRE · 缩短",
+      "malayDefinitions": [
+        "memendekkan",
+        "menyingkatkan"
+      ]
     },
     {
       "id": "gre_004_abdicate",
@@ -320,7 +333,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abdicate",
-      "sceneCue": "GRE · 退位, 放弃(职位,权力等)"
+      "sceneCue": "GRE · 退位, 放弃(职位,权力等)",
+      "malayDefinitions": [
+        "turun takhta",
+        "melepaskan jawatan"
+      ]
     },
     {
       "id": "gre_005_aberrant",
@@ -373,7 +390,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aberrant",
-      "sceneCue": "GRE · 异常的"
+      "sceneCue": "GRE · 异常的",
+      "malayDefinitions": [
+        "luar biasa",
+        "menyimpang"
+      ]
     },
     {
       "id": "gre_006_abet",
@@ -426,7 +447,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abet",
-      "sceneCue": "GRE · 教唆, 煽动, 帮助, 支持"
+      "sceneCue": "GRE · 教唆, 煽动, 帮助, 支持",
+      "malayDefinitions": [
+        "menghasut",
+        "membantu"
+      ]
     },
     {
       "id": "gre_007_abhor",
@@ -477,7 +502,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abhor",
-      "sceneCue": "GRE · 憎恶, 痛恨"
+      "sceneCue": "GRE · 憎恶, 痛恨",
+      "malayDefinitions": [
+        "benci",
+        "meluat"
+      ]
     },
     {
       "id": "gre_008_abiding",
@@ -538,7 +567,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abiding",
-      "sceneCue": "GRE · 持久的， 永久的"
+      "sceneCue": "GRE · 持久的， 永久的",
+      "malayDefinitions": [
+        "berkekalan",
+        "tetap"
+      ]
     },
     {
       "id": "gre_009_abject",
@@ -590,7 +623,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abject",
-      "sceneCue": "GRE · 卑鄙的, 可怜的"
+      "sceneCue": "GRE · 卑鄙的, 可怜的",
+      "malayDefinitions": [
+        "hina",
+        "daif"
+      ]
     },
     {
       "id": "gre_010_abjure",
@@ -639,7 +676,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abjure",
-      "sceneCue": "GRE · 发誓放弃, 避免, 公开放弃"
+      "sceneCue": "GRE · 发誓放弃, 避免, 公开放弃",
+      "malayDefinitions": [
+        "bersumpah meninggalkan",
+        "menolak secara terbuka"
+      ]
     },
     {
       "id": "gre_011_abnegate",
@@ -692,7 +733,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abnegate",
-      "sceneCue": "GRE · 否认， 放弃"
+      "sceneCue": "GRE · 否认， 放弃",
+      "malayDefinitions": [
+        "menafikan",
+        "menyerah"
+      ]
     },
     {
       "id": "gre_012_abominate",
@@ -743,7 +788,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abominate",
-      "sceneCue": "GRE · 痛恨, 憎恶"
+      "sceneCue": "GRE · 痛恨, 憎恶",
+      "malayDefinitions": [
+        "membenci",
+        "meluat"
+      ]
     },
     {
       "id": "gre_013_aboveboard",
@@ -799,7 +848,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aboveboard",
-      "sceneCue": "GRE · 光明正大的"
+      "sceneCue": "GRE · 光明正大的",
+      "malayDefinitions": [
+        "jujur",
+        "terus terang"
+      ]
     },
     {
       "id": "gre_014_abrade",
@@ -851,7 +904,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abrade",
-      "sceneCue": "GRE · 磨损, 摩擦, 折磨"
+      "sceneCue": "GRE · 磨损, 摩擦, 折磨",
+      "malayDefinitions": [
+        "melecetkan",
+        "menggosok",
+        "menyeksa"
+      ]
     },
     {
       "id": "gre_015_abreast",
@@ -905,7 +963,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abreast",
-      "sceneCue": "GRE · 并肩地, 并排地"
+      "sceneCue": "GRE · 并肩地, 并排地",
+      "malayDefinitions": [
+        "sebaris",
+        "bersebelahan"
+      ]
     },
     {
       "id": "gre_016_abrogate",
@@ -954,7 +1016,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abrogate",
-      "sceneCue": "GRE · 废除, 取消"
+      "sceneCue": "GRE · 废除, 取消",
+      "malayDefinitions": [
+        "memansuhkan",
+        "membatalkan"
+      ]
     },
     {
       "id": "gre_017_abscond",
@@ -1004,7 +1070,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abscond",
-      "sceneCue": "GRE · 潜逃, 避债"
+      "sceneCue": "GRE · 潜逃, 避债",
+      "malayDefinitions": [
+        "melarikan diri",
+        "menghilangkan diri"
+      ]
     },
     {
       "id": "gre_018_absent",
@@ -1062,7 +1132,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,absent",
-      "sceneCue": "GRE · 缺席，不参加away)"
+      "sceneCue": "GRE · 缺席，不参加away)",
+      "malayDefinitions": [
+        "tidak hadir",
+        "tiada"
+      ]
     },
     {
       "id": "gre_019_absolute",
@@ -1131,7 +1205,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,absolute",
-      "sceneCue": "GRE · 完全的， 绝对的"
+      "sceneCue": "GRE · 完全的， 绝对的",
+      "malayDefinitions": [
+        "mutlak",
+        "sepenuhnya",
+        "pasti"
+      ]
     },
     {
       "id": "gre_020_absolve",
@@ -1180,7 +1259,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,absolve",
-      "sceneCue": "GRE · 赦免， 免除"
+      "sceneCue": "GRE · 赦免， 免除",
+      "malayDefinitions": [
+        "mengampunkan",
+        "membebaskan"
+      ]
     },
     {
       "id": "gre_021_abstain",
@@ -1229,7 +1312,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abstain",
-      "sceneCue": "GRE · 禁绝, 放弃"
+      "sceneCue": "GRE · 禁绝, 放弃",
+      "malayDefinitions": [
+        "berpantang",
+        "menahan diri"
+      ]
     },
     {
       "id": "gre_022_abstemious",
@@ -1280,7 +1367,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abstemious",
-      "sceneCue": "GRE · 有节制的, 节约的"
+      "sceneCue": "GRE · 有节制的, 节约的",
+      "malayDefinitions": [
+        "bersederhana",
+        "berjimat"
+      ]
     },
     {
       "id": "gre_023_abstract",
@@ -1342,7 +1433,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abstract",
-      "sceneCue": "GRE · 摘要, 概要, 抽象"
+      "sceneCue": "GRE · 摘要, 概要, 抽象",
+      "malayDefinitions": [
+        "abstrak",
+        "ringkasan",
+        "konsep"
+      ]
     },
     {
       "id": "gre_024_abstruse",
@@ -1393,7 +1489,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abstruse",
-      "sceneCue": "GRE · 奥妙的, 深奥的"
+      "sceneCue": "GRE · 奥妙的, 深奥的",
+      "malayDefinitions": [
+        "mendalam",
+        "sukar difahami"
+      ]
     },
     {
       "id": "gre_025_absurd",
@@ -1440,7 +1540,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,absurd",
-      "sceneCue": "GRE · 荒谬的, 可笑的"
+      "sceneCue": "GRE · 荒谬的, 可笑的",
+      "malayDefinitions": [
+        "tidak masuk akal",
+        "melucukan"
+      ]
     },
     {
       "id": "gre_026_abundant",
@@ -1498,7 +1602,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abundant",
-      "sceneCue": "GRE · 丰富的"
+      "sceneCue": "GRE · 丰富的",
+      "malayDefinitions": [
+        "melimpah",
+        "banyak",
+        "berleluasa"
+      ]
     },
     {
       "id": "gre_027_abuse",
@@ -1563,7 +1672,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abuse",
-      "sceneCue": "GRE · 滥用, 虐待, 辱骂, 陋习, 弊端"
+      "sceneCue": "GRE · 滥用, 虐待, 辱骂, 陋习, 弊端",
+      "malayDefinitions": [
+        "menyalahgunakan",
+        "mendera",
+        "mencaci"
+      ]
     },
     {
       "id": "gre_028_abysmal",
@@ -1614,7 +1728,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,abysmal",
-      "sceneCue": "GRE · 深不可测的, 无底的"
+      "sceneCue": "GRE · 深不可测的, 无底的",
+      "malayDefinitions": [
+        "sangat dalam",
+        "tidak terduga"
+      ]
     },
     {
       "id": "gre_029_accelerate",
@@ -1666,7 +1784,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accelerate",
-      "sceneCue": "GRE · 加速, 促进"
+      "sceneCue": "GRE · 加速, 促进",
+      "malayDefinitions": [
+        "memecut",
+        "mempercepatkan"
+      ]
     },
     {
       "id": "gre_030_accessible",
@@ -1717,7 +1839,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accessible",
-      "sceneCue": "GRE · 易接近的, 可到达的, 易受影响的, 可理解的"
+      "sceneCue": "GRE · 易接近的, 可到达的, 易受影响的, 可理解的",
+      "malayDefinitions": [
+        "mudah diakses",
+        "boleh difahami"
+      ]
     },
     {
       "id": "gre_031_accidental",
@@ -1781,7 +1907,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accidental",
-      "sceneCue": "GRE · 意外的, 非主要的, 附属的"
+      "sceneCue": "GRE · 意外的, 非主要的, 附属的",
+      "malayDefinitions": [
+        "tidak sengaja",
+        "sampingan"
+      ]
     },
     {
       "id": "gre_032_acclaim",
@@ -1833,7 +1963,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acclaim",
-      "sceneCue": "GRE · 欢呼， 称赞"
+      "sceneCue": "GRE · 欢呼， 称赞",
+      "malayDefinitions": [
+        "sorakan",
+        "pujian"
+      ]
     },
     {
       "id": "gre_033_accommodate",
@@ -1885,7 +2019,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accommodate",
-      "sceneCue": "GRE · 与…一致"
+      "sceneCue": "GRE · 与…一致",
+      "malayDefinitions": [
+        "menyesuaikan",
+        "menyediakan penginapan",
+        "memenuhi"
+      ]
     },
     {
       "id": "gre_034_accomplish",
@@ -1938,7 +2077,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accomplish",
-      "sceneCue": "GRE · 完成， 做成功"
+      "sceneCue": "GRE · 完成， 做成功",
+      "malayDefinitions": [
+        "menyelesaikan",
+        "mencapai"
+      ]
     },
     {
       "id": "gre_035_accord",
@@ -1999,7 +2142,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accord",
-      "sceneCue": "GRE · 一致, 符合, 调和, 协定"
+      "sceneCue": "GRE · 一致, 符合, 调和, 协定",
+      "malayDefinitions": [
+        "persetujuan",
+        "selaras",
+        "perjanjian"
+      ]
     },
     {
       "id": "gre_036_accost",
@@ -2049,7 +2197,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accost",
-      "sceneCue": "GRE · 搭话"
+      "sceneCue": "GRE · 搭话",
+      "malayDefinitions": [
+        "menegur",
+        "mendekati"
+      ]
     },
     {
       "id": "gre_037_accumulate",
@@ -2101,7 +2253,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,accumulate",
-      "sceneCue": "GRE · 积聚, 堆积"
+      "sceneCue": "GRE · 积聚, 堆积",
+      "malayDefinitions": [
+        "mengumpul",
+        "menimbun"
+      ]
     },
     {
       "id": "gre_038_acerbic",
@@ -2151,7 +2307,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acerbic",
-      "sceneCue": "GRE · 尖酸的"
+      "sceneCue": "GRE · 尖酸的",
+      "malayDefinitions": [
+        "tajam",
+        "pedas"
+      ]
     },
     {
       "id": "gre_039_acknowledge",
@@ -2213,7 +2373,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acknowledge",
-      "sceneCue": "GRE · 承认"
+      "sceneCue": "GRE · 承认",
+      "malayDefinitions": [
+        "mengakui",
+        "menghargai"
+      ]
     },
     {
       "id": "gre_040_acme",
@@ -2265,7 +2429,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acme",
-      "sceneCue": "GRE · 顶点, 极致"
+      "sceneCue": "GRE · 顶点, 极致",
+      "malayDefinitions": [
+        "kemuncak",
+        "puncak"
+      ]
     },
     {
       "id": "gre_041_acquiesce",
@@ -2310,7 +2478,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acquiesce",
-      "sceneCue": "GRE · 默许, 勉强同意"
+      "sceneCue": "GRE · 默许, 勉强同意",
+      "malayDefinitions": [
+        "mengakur",
+        "bersetuju dengan berat hati"
+      ]
     },
     {
       "id": "gre_042_acquire",
@@ -2370,7 +2542,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acquire",
-      "sceneCue": "GRE · 获得"
+      "sceneCue": "GRE · 获得",
+      "malayDefinitions": [
+        "memperoleh",
+        "mendapatkan"
+      ]
     },
     {
       "id": "gre_043_acquisitive",
@@ -2419,7 +2595,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acquisitive",
-      "sceneCue": "GRE · 想获得的, 有获得可能性的, 可学到的"
+      "sceneCue": "GRE · 想获得的, 有获得可能性的, 可学到的",
+      "malayDefinitions": [
+        "ingin memiliki",
+        "tamak"
+      ]
     },
     {
       "id": "gre_044_acrid",
@@ -2470,7 +2650,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acrid",
-      "sceneCue": "GRE · 辛辣的， 刻薄的"
+      "sceneCue": "GRE · 辛辣的， 刻薄的",
+      "malayDefinitions": [
+        "pedas",
+        "tajam"
+      ]
     },
     {
       "id": "gre_045_acrimonious",
@@ -2521,7 +2705,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acrimonious",
-      "sceneCue": "GRE · 严厉的, 辛辣的"
+      "sceneCue": "GRE · 严厉的, 辛辣的",
+      "malayDefinitions": [
+        "keras",
+        "pedas"
+      ]
     },
     {
       "id": "gre_046_acute",
@@ -2588,7 +2776,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,acute",
-      "sceneCue": "GRE · 敏锐的, [医]急性的, 剧烈"
+      "sceneCue": "GRE · 敏锐的, [医]急性的, 剧烈",
+      "malayDefinitions": [
+        "tajam",
+        "akut",
+        "teruk"
+      ]
     },
     {
       "id": "gre_047_adamant",
@@ -2640,7 +2833,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adamant",
-      "sceneCue": "GRE · 坚硬的"
+      "sceneCue": "GRE · 坚硬的",
+      "malayDefinitions": [
+        "keras",
+        "tegar"
+      ]
     },
     {
       "id": "gre_048_adapt",
@@ -2695,7 +2892,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adapt",
-      "sceneCue": "GRE · 使适应"
+      "sceneCue": "GRE · 使适应",
+      "malayDefinitions": [
+        "menyesuaikan diri",
+        "mengubah suai"
+      ]
     },
     {
       "id": "gre_049_addict",
@@ -2746,7 +2947,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,addict",
-      "sceneCue": "GRE · 沉溺"
+      "sceneCue": "GRE · 沉溺",
+      "malayDefinitions": [
+        "ketagih",
+        "penagih"
+      ]
     },
     {
       "id": "gre_050_adhere",
@@ -2796,7 +3001,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adhere",
-      "sceneCue": "GRE · 粘附, 胶着, 坚持"
+      "sceneCue": "GRE · 粘附, 胶着, 坚持",
+      "malayDefinitions": [
+        "melekat",
+        "berpegang teguh"
+      ]
     },
     {
       "id": "gre_051_adjourn",
@@ -2848,7 +3057,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adjourn",
-      "sceneCue": "GRE · 延期， 推迟"
+      "sceneCue": "GRE · 延期， 推迟",
+      "malayDefinitions": [
+        "menangguhkan",
+        "menunda"
+      ]
     },
     {
       "id": "gre_052_adjudicate",
@@ -2900,7 +3113,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adjudicate",
-      "sceneCue": "GRE · 判决, 宣判, 裁定"
+      "sceneCue": "GRE · 判决, 宣判, 裁定",
+      "malayDefinitions": [
+        "menghakimi",
+        "memutuskan"
+      ]
     },
     {
       "id": "gre_053_admonish",
@@ -2950,7 +3167,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,admonish",
-      "sceneCue": "GRE · 劝告, 训诫, 警告"
+      "sceneCue": "GRE · 劝告, 训诫, 警告",
+      "malayDefinitions": [
+        "menasihati",
+        "menegur",
+        "memberi amaran"
+      ]
     },
     {
       "id": "gre_054_adore",
@@ -3004,7 +3226,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adore",
-      "sceneCue": "GRE · 崇拜, 爱慕, (口语)喜爱"
+      "sceneCue": "GRE · 崇拜, 爱慕, (口语)喜爱",
+      "malayDefinitions": [
+        "memuja",
+        "mengasihi",
+        "sangat suka"
+      ]
     },
     {
       "id": "gre_055_adulterate",
@@ -3055,7 +3282,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adulterate",
-      "sceneCue": "GRE · 掺杂"
+      "sceneCue": "GRE · 掺杂",
+      "malayDefinitions": [
+        "mencampurkan",
+        "memalsukan"
+      ]
     },
     {
       "id": "gre_056_adventitious",
@@ -3110,7 +3341,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adventitious",
-      "sceneCue": "GRE · 偶然的, 外来的"
+      "sceneCue": "GRE · 偶然的, 外来的",
+      "malayDefinitions": [
+        "kebetulan",
+        "luaran"
+      ]
     },
     {
       "id": "gre_057_adversary",
@@ -3158,7 +3393,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adversary",
-      "sceneCue": "GRE · 敌手, 对手"
+      "sceneCue": "GRE · 敌手, 对手",
+      "malayDefinitions": [
+        "lawan",
+        "musuh"
+      ]
     },
     {
       "id": "gre_058_adversity",
@@ -3210,7 +3449,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,adversity",
-      "sceneCue": "GRE · 不幸, 灾祸, 逆境"
+      "sceneCue": "GRE · 不幸, 灾祸, 逆境",
+      "malayDefinitions": [
+        "kesengsaraan",
+        "bencana",
+        "kesusahan"
+      ]
     },
     {
       "id": "gre_059_advocate",
@@ -3260,7 +3504,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,advocate",
-      "sceneCue": "GRE · 提倡， 主张， 拥护"
+      "sceneCue": "GRE · 提倡， 主张， 拥护",
+      "malayDefinitions": [
+        "menyokong",
+        "peguam bela",
+        "penyokong"
+      ]
     },
     {
       "id": "gre_060_affable",
@@ -3310,7 +3559,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,affable",
-      "sceneCue": "GRE · 和蔼可亲的"
+      "sceneCue": "GRE · 和蔼可亲的",
+      "malayDefinitions": [
+        "ramah",
+        "mesra"
+      ]
     },
     {
       "id": "gre_061_affectation",
@@ -3361,7 +3614,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,affectation",
-      "sceneCue": "GRE · 假装, 虚饰, 做作"
+      "sceneCue": "GRE · 假装, 虚饰, 做作",
+      "malayDefinitions": [
+        "kepura-puraan",
+        "buatan"
+      ]
     },
     {
       "id": "gre_062_affinity",
@@ -3412,7 +3669,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,affinity",
-      "sceneCue": "GRE · 密切关系, 吸引力, 姻亲关系, 亲合力"
+      "sceneCue": "GRE · 密切关系, 吸引力, 姻亲关系, 亲合力",
+      "malayDefinitions": [
+        "hubungan rapat",
+        "tarikan",
+        "persamaan"
+      ]
     },
     {
       "id": "gre_063_affirm",
@@ -3467,7 +3729,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,affirm",
-      "sceneCue": "GRE · 断言， 坚持声称"
+      "sceneCue": "GRE · 断言， 坚持声称",
+      "malayDefinitions": [
+        "menegaskan",
+        "mengesahkan"
+      ]
     },
     {
       "id": "gre_064_affix",
@@ -3524,7 +3790,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,affix",
-      "sceneCue": "GRE · 黏上， 贴上"
+      "sceneCue": "GRE · 黏上， 贴上",
+      "malayDefinitions": [
+        "melekatkan",
+        "menambah",
+        "imbuhan"
+      ]
     },
     {
       "id": "gre_065_affliction",
@@ -3574,7 +3845,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,affliction",
-      "sceneCue": "GRE · 痛苦, 苦恼"
+      "sceneCue": "GRE · 痛苦, 苦恼",
+      "malayDefinitions": [
+        "kesengsaraan",
+        "penderitaan"
+      ]
     },
     {
       "id": "gre_066_affluent",
@@ -3621,7 +3896,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,affluent",
-      "sceneCue": "GRE · 富有的， 丰富的"
+      "sceneCue": "GRE · 富有的， 丰富的",
+      "malayDefinitions": [
+        "kaya",
+        "mewah"
+      ]
     },
     {
       "id": "gre_067_agape",
@@ -3670,7 +3949,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,agape",
-      "sceneCue": "GRE · 大张着的"
+      "sceneCue": "GRE · 大张着的",
+      "malayDefinitions": [
+        "ternganga",
+        "terbuka luas"
+      ]
     },
     {
       "id": "gre_068_aggrandize",
@@ -3725,7 +4008,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aggrandize",
-      "sceneCue": "GRE · 增加, 夸大"
+      "sceneCue": "GRE · 增加, 夸大",
+      "malayDefinitions": [
+        "membesarkan",
+        "meninggikan"
+      ]
     },
     {
       "id": "gre_069_aggravate",
@@ -3780,7 +4067,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aggravate",
-      "sceneCue": "GRE · 使恶化, 加重"
+      "sceneCue": "GRE · 使恶化, 加重",
+      "malayDefinitions": [
+        "memburukkan",
+        "mengeruhkan"
+      ]
     },
     {
       "id": "gre_070_aggregate",
@@ -3842,7 +4133,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aggregate",
-      "sceneCue": "GRE · 合计, 总计, 集合体"
+      "sceneCue": "GRE · 合计, 总计, 集合体",
+      "malayDefinitions": [
+        "jumlah",
+        "keseluruhan",
+        "agregat"
+      ]
     },
     {
       "id": "gre_071_aggressive",
@@ -3906,7 +4202,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aggressive",
-      "sceneCue": "GRE · 好斗的, 敢作敢为的, 有闯劲的, 侵略性的"
+      "sceneCue": "GRE · 好斗的, 敢作敢为的, 有闯劲的, 侵略性的",
+      "malayDefinitions": [
+        "agresif",
+        "berani",
+        "bercita-cita tinggi"
+      ]
     },
     {
       "id": "gre_072_aggrieve",
@@ -3958,7 +4259,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aggrieve",
-      "sceneCue": "GRE · 使受委屈， 使痛苦"
+      "sceneCue": "GRE · 使受委屈， 使痛苦",
+      "malayDefinitions": [
+        "menyusahkan",
+        "menyakiti"
+      ]
     },
     {
       "id": "gre_073_agility",
@@ -4008,7 +4313,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,agility",
-      "sceneCue": "GRE · 敏捷"
+      "sceneCue": "GRE · 敏捷",
+      "malayDefinitions": [
+        "ketangkasan",
+        "kepantasan"
+      ]
     },
     {
       "id": "gre_074_agitate",
@@ -4059,7 +4368,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,agitate",
-      "sceneCue": "GRE · 鼓动， 煽动"
+      "sceneCue": "GRE · 鼓动， 煽动",
+      "malayDefinitions": [
+        "menghasut",
+        "menggelisahkan"
+      ]
     },
     {
       "id": "gre_075_agog",
@@ -4115,7 +4428,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,agog",
-      "sceneCue": "GRE · 兴奋的, 热切的"
+      "sceneCue": "GRE · 兴奋的, 热切的",
+      "malayDefinitions": [
+        "teruja",
+        "tidak sabar"
+      ]
     },
     {
       "id": "gre_076_agreeable",
@@ -4172,7 +4489,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,agreeable",
-      "sceneCue": "GRE · 令人愉快的"
+      "sceneCue": "GRE · 令人愉快的",
+      "malayDefinitions": [
+        "menyenangkan",
+        "bersetuju"
+      ]
     },
     {
       "id": "gre_077_airtight",
@@ -4218,7 +4539,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,airtight",
-      "sceneCue": "GRE · 密封的, 无懈可击的"
+      "sceneCue": "GRE · 密封的, 无懈可击的",
+      "malayDefinitions": [
+        "kedap udara",
+        "tidak boleh disangkal"
+      ]
     },
     {
       "id": "gre_078_alacrity",
@@ -4270,7 +4595,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alacrity",
-      "sceneCue": "GRE · 敏捷"
+      "sceneCue": "GRE · 敏捷",
+      "malayDefinitions": [
+        "ketangkasan",
+        "kerelaan",
+        "kesediaan"
+      ]
     },
     {
       "id": "gre_079_alienate",
@@ -4322,7 +4652,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alienate",
-      "sceneCue": "GRE · 使疏远， 离间"
+      "sceneCue": "GRE · 使疏远， 离间",
+      "malayDefinitions": [
+        "menjauhkan",
+        "memisahkan"
+      ]
     },
     {
       "id": "gre_080_align",
@@ -4371,7 +4705,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,align",
-      "sceneCue": "GRE · 结盟"
+      "sceneCue": "GRE · 结盟",
+      "malayDefinitions": [
+        "menjajarkan",
+        "menyelaraskan",
+        "bersekutu"
+      ]
     },
     {
       "id": "gre_081_allay",
@@ -4423,7 +4762,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,allay",
-      "sceneCue": "GRE · 减轻， 缓和"
+      "sceneCue": "GRE · 减轻， 缓和",
+      "malayDefinitions": [
+        "meredakan",
+        "menenangkan"
+      ]
     },
     {
       "id": "gre_082_allegiance",
@@ -4472,7 +4815,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,allegiance",
-      "sceneCue": "GRE · 忠贞, 效忠"
+      "sceneCue": "GRE · 忠贞, 效忠",
+      "malayDefinitions": [
+        "kesetiaan",
+        "ketaatan"
+      ]
     },
     {
       "id": "gre_083_alleviate",
@@ -4523,7 +4870,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alleviate",
-      "sceneCue": "GRE · 使(痛苦等)易于忍受, 减轻"
+      "sceneCue": "GRE · 使(痛苦等)易于忍受, 减轻",
+      "malayDefinitions": [
+        "meringankan",
+        "mengurangkan"
+      ]
     },
     {
       "id": "gre_084_alloy",
@@ -4580,7 +4931,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,alloy",
-      "sceneCue": "GRE · 合金"
+      "sceneCue": "GRE · 合金",
+      "malayDefinitions": [
+        "aloi",
+        "campuran logam"
+      ]
     },
     {
       "id": "gre_085_allude",
@@ -4629,7 +4984,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,allude",
-      "sceneCue": "GRE · 暗指, 影射, 间接提到"
+      "sceneCue": "GRE · 暗指, 影射, 间接提到",
+      "malayDefinitions": [
+        "mengkiaskan",
+        "menyindir"
+      ]
     },
     {
       "id": "gre_086_allure",
@@ -4685,7 +5044,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,allure",
-      "sceneCue": "GRE · 吸引"
+      "sceneCue": "GRE · 吸引",
+      "malayDefinitions": [
+        "memikat",
+        "menarik"
+      ]
     },
     {
       "id": "gre_087_ally",
@@ -4734,7 +5097,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ally",
-      "sceneCue": "GRE · 结盟， 联合"
+      "sceneCue": "GRE · 结盟， 联合",
+      "malayDefinitions": [
+        "bersekutu",
+        "rakan",
+        "sekutu"
+      ]
     },
     {
       "id": "gre_088_aloft",
@@ -4787,7 +5155,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aloft",
-      "sceneCue": "GRE · 在高处"
+      "sceneCue": "GRE · 在高处",
+      "malayDefinitions": [
+        "di atas",
+        "di udara"
+      ]
     },
     {
       "id": "gre_089_aloof",
@@ -4835,7 +5207,12 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,aloof",
-      "sceneCue": "GRE · 远离的"
+      "sceneCue": "GRE · 远离的",
+      "malayDefinitions": [
+        "menjauhkan diri",
+        "dingin",
+        "tidak mesra"
+      ]
     },
     {
       "id": "gre_090_altruism",
@@ -4885,7 +5262,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,altruism",
-      "sceneCue": "GRE · 利他主义, 利他"
+      "sceneCue": "GRE · 利他主义, 利他",
+      "malayDefinitions": [
+        "altruisme",
+        "sifat mementingkan orang lain"
+      ]
     },
     {
       "id": "gre_091_amalgamate",
@@ -4938,7 +5319,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,amalgamate",
-      "sceneCue": "GRE · 使与汞混合, 合并"
+      "sceneCue": "GRE · 使与汞混合, 合并",
+      "malayDefinitions": [
+        "menggabungkan",
+        "bercantum"
+      ]
     },
     {
       "id": "gre_092_ambiguous",
@@ -4990,7 +5375,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ambiguous",
-      "sceneCue": "GRE · 暧昧的, 不明确的"
+      "sceneCue": "GRE · 暧昧的, 不明确的",
+      "malayDefinitions": [
+        "samar-samar",
+        "tidak jelas"
+      ]
     },
     {
       "id": "gre_093_ambivalent",
@@ -5043,7 +5432,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ambivalent",
-      "sceneCue": "GRE · 矛盾的, 好恶相克的"
+      "sceneCue": "GRE · 矛盾的, 好恶相克的",
+      "malayDefinitions": [
+        "bercampur perasaan",
+        "bertentangan"
+      ]
     },
     {
       "id": "gre_094_ambrosial",
@@ -5097,7 +5490,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ambrosial",
-      "sceneCue": "GRE · 特别美味的"
+      "sceneCue": "GRE · 特别美味的",
+      "malayDefinitions": [
+        "sangat lazat",
+        "harum"
+      ]
     },
     {
       "id": "gre_095_ameliorate",
@@ -5148,7 +5545,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,ameliorate",
-      "sceneCue": "GRE · 改善， 改良"
+      "sceneCue": "GRE · 改善， 改良",
+      "malayDefinitions": [
+        "memperbaiki",
+        "meningkatkan"
+      ]
     },
     {
       "id": "gre_096_amenable",
@@ -5199,7 +5600,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,amenable",
-      "sceneCue": "GRE · 应服从的, 有服从义务的, 有责任的"
+      "sceneCue": "GRE · 应服从的, 有服从义务的, 有责任的",
+      "malayDefinitions": [
+        "patuh",
+        "bertanggungjawab"
+      ]
     },
     {
       "id": "gre_097_amiable",
@@ -5256,7 +5661,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,amiable",
-      "sceneCue": "GRE · 亲切的, 和蔼可亲的"
+      "sceneCue": "GRE · 亲切的, 和蔼可亲的",
+      "malayDefinitions": [
+        "ramah",
+        "mesra"
+      ]
     },
     {
       "id": "gre_098_amicable",
@@ -5302,7 +5711,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,amicable",
-      "sceneCue": "GRE · 友善的, 和平的"
+      "sceneCue": "GRE · 友善的, 和平的",
+      "malayDefinitions": [
+        "mesra",
+        "damai"
+      ]
     },
     {
       "id": "gre_099_amity",
@@ -5352,7 +5765,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,amity",
-      "sceneCue": "GRE · 友好关系"
+      "sceneCue": "GRE · 友好关系",
+      "malayDefinitions": [
+        "persahabatan",
+        "hubungan baik"
+      ]
     },
     {
       "id": "gre_100_amorphous",
@@ -5410,7 +5827,11 @@
       ],
       "difficulty": "Hard",
       "imageUrl": "https://source.unsplash.com/featured/640x480/?english,amorphous",
-      "sceneCue": "GRE · 无定形的, 无组织的"
+      "sceneCue": "GRE · 无定形的, 无组织的",
+      "malayDefinitions": [
+        "tidak berbentuk",
+        "tidak teratur"
+      ]
     }
   ]
 }

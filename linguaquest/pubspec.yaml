@@ -73,9 +73,12 @@ flutter:
   assets:
     - lib/assets/image/
     - lib/assets/data/wordbook_beginner.json
+    - lib/assets/data/wordbook_cet4.json
+    - lib/assets/data/wordbook_cet6.json
     - lib/assets/data/wordbook_ielts.json
     - lib/assets/data/wordbook_toefl.json
     - lib/assets/data/wordbook_gre.json
+    - lib/assets/data/wordbook_kaoyan.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
