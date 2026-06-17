@@ -11,7 +11,6 @@ import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
-import '../../core/widgets/stat_tile.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 class TrainingScreen extends ConsumerWidget {
@@ -232,47 +231,49 @@ class _TrainingGameRow extends StatelessWidget {
     final theme = Theme.of(context);
     final locked = onTap == null;
     final content = Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
-                ),
-                alignment: Alignment.center,
-                child: Icon(icon, color: color, size: 24),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
               ),
-              const Spacer(),
-              if (locked)
-                AppPill(
-                  label: AppLocalizations.of(context).trainingComingSoon,
-                  variant: PillVariant.primary,
-                  icon: AppIcons.lockClock,
-                ),
-            ],
-          ),
-          const SizedBox(height: AppTokens.s12),
-          Text(
-            title,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w700,
+              alignment: Alignment.center,
+              child: Icon(icon, color: color, size: 24),
             ),
+            const Spacer(),
+            if (locked)
+              AppPill(
+                label: AppLocalizations.of(context).trainingComingSoon,
+                variant: PillVariant.primary,
+                icon: AppIcons.lockClock,
+              ),
+          ],
+        ),
+        const SizedBox(height: AppTokens.s12),
+        Text(
+          title,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w700,
           ),
-          const SizedBox(height: AppTokens.s4),
-          Text(
-            subtitle,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
+        ),
+        const SizedBox(height: AppTokens.s4),
+        Text(
+          subtitle,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
           ),
-        ],
-      );
+        ),
+      ],
+    );
     return AppCard(
       padding: const EdgeInsets.all(AppTokens.s16),
       onTap: onTap,
@@ -297,28 +298,30 @@ class _TrainingReadinessLine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppCard(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppTokens.s12,
+        vertical: AppTokens.s16,
+      ),
       child: Row(
         children: [
-          Flexible(
-            child: StatTile(
+          Expanded(
+            child: _TrainingReadinessItem(
               value: '$dueWords',
               label: l10n.trainingDueWords,
               icon: AppIcons.today,
               accent: AppTokens.azure,
             ),
           ),
-          const SizedBox(width: AppTokens.s12),
-          Flexible(
-            child: StatTile(
+          Expanded(
+            child: _TrainingReadinessItem(
               value: '$weakWords',
               label: l10n.trainingWeakWords,
               icon: AppIcons.warningAmber,
               accent: AppTokens.coralColor(context),
             ),
           ),
-          const SizedBox(width: AppTokens.s12),
-          Flexible(
-            child: StatTile(
+          Expanded(
+            child: _TrainingReadinessItem(
               value: '$comboTarget',
               label: l10n.trainingComboTarget,
               icon: AppIcons.bolt,
@@ -327,6 +330,59 @@ class _TrainingReadinessLine extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _TrainingReadinessItem extends StatelessWidget {
+  const _TrainingReadinessItem({
+    required this.value,
+    required this.label,
+    required this.icon,
+    required this.accent,
+  });
+
+  final String value;
+  final String label;
+  final IconData icon;
+  final Color accent;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 34,
+          height: 34,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: accent.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
+          ),
+          child: Icon(icon, color: accent, size: 20),
+        ),
+        const SizedBox(height: AppTokens.s8),
+        Text(
+          value,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+        const SizedBox(height: AppTokens.s2),
+        Text(
+          label,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ],
     );
   }
 }

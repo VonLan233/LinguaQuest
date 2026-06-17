@@ -2479,19 +2479,19 @@ abstract class AppLocalizations {
   /// No description provided for @trainingDueWords.
   ///
   /// In en, this message translates to:
-  /// **'Due Words'**
+  /// **'Review'**
   String get trainingDueWords;
 
   /// No description provided for @trainingWeakWords.
   ///
   /// In en, this message translates to:
-  /// **'Weak Words'**
+  /// **'Weak'**
   String get trainingWeakWords;
 
   /// No description provided for @trainingComboTarget.
   ///
   /// In en, this message translates to:
-  /// **'Combo Target'**
+  /// **'Combo'**
   String get trainingComboTarget;
 
   /// No description provided for @trainingEnterCustomWords.

@@ -67,7 +67,6 @@ class AiLearningScreen extends StatelessWidget {
               subtitle: l10n.aiLearningToolAiQADesc,
               color: AppTheme.cyan,
               status: l10n.aiLearningStatusSoon,
-              onTap: () => context.push('/ai-tutor'),
             ),
             _AiToolLink(
               icon: AppIcons.accountTree,
@@ -75,48 +74,36 @@ class AiLearningScreen extends StatelessWidget {
               subtitle: l10n.aiLearningToolAiAnalysisDesc,
               color: AppTokens.azure,
               status: l10n.aiLearningStatusSoon,
-              onTap: () => context.push('/ai-tutor'),
+            ),
+            _AiToolLink(
+              icon: AppIcons.rateReview,
+              title: l10n.aiLearningToolAiWriting,
+              subtitle: l10n.aiLearningToolAiWritingDesc,
+              color: AppTokens.coralColor(context),
+              status: l10n.aiLearningStatusLater,
+            ),
+            _AiToolLink(
+              icon: AppIcons.autoStories,
+              title: l10n.aiLearningToolCloze,
+              subtitle: l10n.aiLearningToolClozeDesc,
+              color: AppTokens.mangoColor(context),
+              status: l10n.aiLearningStatusPlanning,
+            ),
+            _AiToolLink(
+              icon: AppIcons.compareArrows,
+              title: l10n.aiLearningToolConfusion,
+              subtitle: l10n.aiLearningToolConfusionDesc,
+              color: AppTheme.cyan,
+              status: l10n.aiLearningStatusPlanning,
+            ),
+            _AiToolLink(
+              icon: AppIcons.tipsAndUpdates,
+              title: l10n.aiLearningToolSentence,
+              subtitle: l10n.aiLearningToolSentenceDesc,
+              color: AppTokens.azure,
+              status: l10n.aiLearningStatusPlanning,
             ),
           ],
-        ),
-        const SizedBox(height: AppTokens.s16),
-        AppCard(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppTokens.s16,
-            vertical: AppTokens.s12,
-          ),
-          child: Column(
-            children: [
-              _AiToolRow(
-                icon: AppIcons.rateReview,
-                title: l10n.aiLearningToolAiWriting,
-                subtitle: l10n.aiLearningToolAiWritingDesc,
-                color: AppTokens.coralColor(context),
-                status: l10n.aiLearningStatusLater,
-              ),
-              _AiToolRow(
-                icon: AppIcons.autoStories,
-                title: l10n.aiLearningToolCloze,
-                subtitle: l10n.aiLearningToolClozeDesc,
-                color: AppTokens.mangoColor(context),
-                status: l10n.aiLearningStatusPlanning,
-              ),
-              _AiToolRow(
-                icon: AppIcons.compareArrows,
-                title: l10n.aiLearningToolConfusion,
-                subtitle: l10n.aiLearningToolConfusionDesc,
-                color: AppTheme.cyan,
-                status: l10n.aiLearningStatusPlanning,
-              ),
-              _AiToolRow(
-                icon: AppIcons.tipsAndUpdates,
-                title: l10n.aiLearningToolSentence,
-                subtitle: l10n.aiLearningToolSentenceDesc,
-                color: AppTokens.azure,
-                status: l10n.aiLearningStatusPlanning,
-              ),
-            ],
-          ),
         ),
       ],
     );
@@ -130,12 +117,13 @@ class _AiToolList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         for (var index = 0; index < children.length; index++) ...[
-          Expanded(child: children[index]),
-          if (index < children.length - 1) const SizedBox(width: AppTokens.s12),
+          children[index],
+          if (index < children.length - 1)
+            const SizedBox(height: AppTokens.s12),
         ],
       ],
     );
@@ -163,7 +151,10 @@ class _AiWordContextCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const IconCueBadge(icon: AppIcons.travelExplore, color: AppTheme.cyan),
+          const IconCueBadge(
+            icon: AppIcons.travelExplore,
+            color: AppTheme.cyan,
+          ),
           const SizedBox(width: AppTokens.s12),
           Expanded(
             child: Column(
@@ -240,6 +231,8 @@ class _AiToolLink extends StatelessWidget {
             const SizedBox(height: AppTokens.s12),
             Text(
               title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w700,
               ),

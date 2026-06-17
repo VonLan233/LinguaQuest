@@ -146,7 +146,8 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
                           lockedCorrect: _lockedCorrect,
                           wrongTries: _wrongTries,
                           controller: _textController,
-                          onSelected: (value) => _judge(lesson, question, value),
+                          onSelected: (value) =>
+                              _judge(lesson, question, value),
                           onInputChanged: () => setState(() {}),
                         ),
                         if (_checked) ...[
@@ -369,13 +370,14 @@ class _QuestionPromptPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return AppCard(
       child: Column(
         children: [
           ImageCueBadge(cue: question.word.imageCue, size: 104),
           const SizedBox(height: 14),
           Text(
-            question.prompt,
+            localizedQuizPrompt(question, l10n),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.headlineSmall,
           ),
@@ -386,7 +388,7 @@ class _QuestionPromptPanel extends StatelessWidget {
             alignment: WrapAlignment.center,
             children: [
               AppPill(
-                label: displayQuestionType(question.type),
+                label: displayQuestionType(question.type, l10n: l10n),
                 icon: _questionTypeIcon(question.type),
                 variant: PillVariant.primary,
               ),
@@ -463,7 +465,9 @@ class _QuestionInput extends StatelessWidget {
               letter: String.fromCharCode(65 + i),
               text: question.options[i],
               state: _optionState(question.options[i]),
-              onTap: lockedCorrect ? null : () => onSelected(question.options[i]),
+              onTap: lockedCorrect
+                  ? null
+                  : () => onSelected(question.options[i]),
             ),
           ),
       ],

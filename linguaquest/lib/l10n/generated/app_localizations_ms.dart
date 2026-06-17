@@ -1322,13 +1322,13 @@ class AppLocalizationsMs extends AppLocalizations {
   String get trainingListeningSource => 'Perkataan lemah pendengaran';
 
   @override
-  String get trainingDueWords => 'Perkataan Tamat Tempoh';
+  String get trainingDueWords => 'Ulang Kaji';
 
   @override
-  String get trainingWeakWords => 'Perkataan Lemah';
+  String get trainingWeakWords => 'Lemah';
 
   @override
-  String get trainingComboTarget => 'Sasaran Kombo';
+  String get trainingComboTarget => 'Kombo';
 
   @override
   String get trainingEnterCustomWords => 'Pergi ke Perkataan Tersuai';

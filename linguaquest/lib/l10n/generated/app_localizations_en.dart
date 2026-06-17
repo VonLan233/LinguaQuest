@@ -1324,13 +1324,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get trainingListeningSource => 'Listening weak words';
 
   @override
-  String get trainingDueWords => 'Due Words';
+  String get trainingDueWords => 'Review';
 
   @override
-  String get trainingWeakWords => 'Weak Words';
+  String get trainingWeakWords => 'Weak';
 
   @override
-  String get trainingComboTarget => 'Combo Target';
+  String get trainingComboTarget => 'Combo';
 
   @override
   String get trainingEnterCustomWords => 'Go to Custom Words';

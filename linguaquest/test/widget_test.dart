@@ -12,6 +12,7 @@ import 'package:linguaquest/core/state/app_controller.dart';
 import 'package:linguaquest/core/state/app_state.dart';
 import 'package:linguaquest/core/theme/app_icons.dart';
 import 'package:linguaquest/core/theme/app_theme.dart';
+import 'package:linguaquest/core/utils/quiz_localization.dart';
 import 'package:linguaquest/core/utils/ui_labels.dart';
 import 'package:linguaquest/core/utils/wordbook_progress.dart';
 import 'package:linguaquest/core/widgets/app_button.dart';
@@ -310,6 +311,28 @@ void main() {
       1,
     );
   });
+
+  test(
+    'localized quiz prompt rewrites generated Chinese spelling prompts',
+    () async {
+      final en = await AppLocalizations.delegate.load(const Locale('en'));
+      final word = seedLessons().first.words.first;
+      final question = QuizQuestion(
+        id: 'spelling-1',
+        type: QuizQuestionType.spelling,
+        prompt: '根据释义拼写单词：to leave behind',
+        answer: 'abandon',
+        options: [],
+        explanation: '正确拼写是“abandon”。',
+        word: word,
+      );
+
+      final prompt = localizedQuizPrompt(question, en);
+
+      expect(prompt, 'Spell the English word from Chinese: to leave behind');
+      expect(prompt, isNot(contains('根据释义')));
+    },
+  );
 
   testWidgets('pronunciation controls expose loading and retry states', (
     tester,

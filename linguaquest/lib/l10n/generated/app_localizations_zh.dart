@@ -1247,13 +1247,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get trainingListeningSource => '听力弱项词';
 
   @override
-  String get trainingDueWords => '到期词';
+  String get trainingDueWords => '复习';
 
   @override
-  String get trainingWeakWords => '弱项词';
+  String get trainingWeakWords => '弱项';
 
   @override
-  String get trainingComboTarget => '连击目标';
+  String get trainingComboTarget => '连击';
 
   @override
   String get trainingEnterCustomWords => '进入生词本';

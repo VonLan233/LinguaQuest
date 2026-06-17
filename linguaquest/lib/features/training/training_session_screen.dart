@@ -8,6 +8,7 @@ import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/utils/quiz_localization.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/app_button.dart';
@@ -236,9 +237,7 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
                     onPressed: _canSubmitSpelling
                         ? () => _submitAnswer(_textController.text.trim())
                         : null,
-                    icon: _checked
-                        ? AppIcons.arrowForward
-                        : AppIcons.check,
+                    icon: _checked ? AppIcons.arrowForward : AppIcons.check,
                     label: _checked
                         ? l10n.trainingNextQuestion
                         : l10n.trainingSubmitSpelling,
@@ -812,6 +811,7 @@ class _TrainingPromptPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final promptType = game == TrainingGameType.spelling
         ? question.id.split('-').last
         : '';
@@ -824,7 +824,7 @@ class _TrainingPromptPanel extends StatelessWidget {
           ImageCueBadge(cue: question.word.imageCue, size: 104),
           const SizedBox(height: 14),
           Text(
-            question.prompt,
+            localizedQuizPrompt(question, l10n),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.headlineSmall,
           ),
