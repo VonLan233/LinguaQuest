@@ -33,8 +33,9 @@ void main() {
     expect(decoration.color, AppTokens.xpSoft);
   });
 
-  testWidgets('every variant maps to its soft background and text color',
-      (tester) async {
+  testWidgets('every variant maps to its soft background and text color', (
+    tester,
+  ) async {
     final cases = <(PillVariant, Color, Color)>[
       (PillVariant.xp, AppTokens.xpSoft, AppTokens.xpSoftText),
       (PillVariant.success, AppTokens.successSoft, AppTokens.successSoftText),
@@ -71,5 +72,23 @@ void main() {
       final text = tester.widget<Text>(find.text(variant.name));
       expect(text.style?.color, fg, reason: 'text color for $variant');
     }
+  });
+
+  testWidgets('AppPill constrains long labels', (tester) async {
+    const label = 'Coming Soon With A Very Long Localized Label';
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: SizedBox(
+            width: 120,
+            child: AppPill(label: label, icon: Icons.lock_outline),
+          ),
+        ),
+      ),
+    );
+
+    final text = tester.widget<Text>(find.text(label));
+    expect(text.maxLines, 1);
+    expect(text.overflow, TextOverflow.ellipsis);
   });
 }

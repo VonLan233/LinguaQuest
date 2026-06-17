@@ -7,11 +7,7 @@ void main() {
     await tester.pumpWidget(
       const MaterialApp(
         home: Scaffold(
-          body: StatTile(
-            value: '42',
-            label: 'streak days',
-            icon: Icons.bolt,
-          ),
+          body: StatTile(value: '42', label: 'streak days', icon: Icons.bolt),
         ),
       ),
     );
@@ -19,5 +15,27 @@ void main() {
     expect(find.text('42'), findsOneWidget);
     expect(find.text('streak days'), findsOneWidget);
     expect(find.byIcon(Icons.bolt), findsOneWidget);
+  });
+
+  testWidgets('StatTile constrains value and label text', (tester) async {
+    const value = '1234567890';
+    const label = 'Very Long Combo Target Label';
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: SizedBox(
+            width: 120,
+            child: StatTile(value: value, label: label, icon: Icons.bolt),
+          ),
+        ),
+      ),
+    );
+
+    final valueText = tester.widget<Text>(find.text(value));
+    final labelText = tester.widget<Text>(find.text(label));
+    expect(valueText.maxLines, 1);
+    expect(valueText.overflow, TextOverflow.ellipsis);
+    expect(labelText.maxLines, 1);
+    expect(labelText.overflow, TextOverflow.ellipsis);
   });
 }
