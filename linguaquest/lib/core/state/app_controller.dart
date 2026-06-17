@@ -350,6 +350,24 @@ class AppController extends Notifier<AppState> {
     });
   }
 
+  Future<bool> enterDemo() async {
+    return _run(() async {
+      final user = UserProfile.demo();
+      final lotteryData = await _loadLotteryData(user);
+      state = state.copyWith(
+        user: user,
+        customWords: await _customWordRepository.list(user.uid),
+        lotteryPrizes: lotteryData.prizes,
+        userAssets: lotteryData.assets,
+        userWords: await _userWordRepository.list(user.uid),
+      );
+      await _ensureStudyPlan(user);
+      await refreshNotifications();
+      await refreshRewardTasks();
+      unawaited(_scheduleLocalNotifications());
+    });
+  }
+
   Future<bool> completeGoalSetup({
     required String targetExam,
     required String level,
