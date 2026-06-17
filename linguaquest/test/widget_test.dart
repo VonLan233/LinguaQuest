@@ -50,6 +50,8 @@ import 'package:linguaquest/features/quiz/quiz_session_screen.dart';
 import 'package:linguaquest/features/profile/profile_screen.dart';
 import 'package:linguaquest/features/profile/study_plan_settings_screen.dart';
 import 'package:linguaquest/features/search/search_screen.dart';
+import 'package:linguaquest/features/study/session/session_queue_builder.dart';
+import 'package:linguaquest/features/study/session/study_session_draft.dart';
 import 'package:linguaquest/features/wordbook/target_word_detail_screen.dart';
 import 'package:linguaquest/features/wordbook/word_detail_screen.dart';
 import 'package:linguaquest/features/wordbook/wordbook_screen.dart';
@@ -333,6 +335,60 @@ void main() {
       expect(prompt, isNot(contains('根据释义')));
     },
   );
+
+  test('study session draft round trips queue and progress', () {
+    final now = DateTime(2026, 5, 25);
+    final word = seedLessons().first.words.first;
+    final item = StudySessionQueueItem(
+      id: 'new-${word.id}-understanding-0',
+      wordId: word.id,
+      source: StudySessionItemSource.newWord,
+      step: StudySessionStep.understanding,
+      lessonWord: word,
+      attempt: 0,
+      affectsSchedule: false,
+    );
+    final log = StudyAnswerLog(
+      itemId: item.id,
+      wordId: item.wordId,
+      source: item.source,
+      step: item.step,
+      isCorrect: true,
+      responseTimeMs: 1200,
+      confidence: 4,
+      selectedAnswer: word.meaning,
+      answeredAt: now,
+    );
+    final draft = StudySessionDraft(
+      uid: 'u1',
+      mode: StudySessionEntryMode.mixed,
+      startedAt: now,
+      savedAt: now.add(const Duration(minutes: 3)),
+      completedItems: 2,
+      correctAnswers: 1,
+      confidence: 4,
+      reviewTargetRatio: 0.3,
+      newTargetRatio: 0.7,
+      dueReviewCount: 1,
+      newWordCount: 3,
+      weakWordCount: 0,
+      queue: [item],
+      answerLogs: [log],
+      wrongItemIds: {'w2'},
+      scheduledWrongIds: {'w2:0'},
+    );
+
+    final restored = StudySessionDraft.fromJson(draft.toJson());
+
+    expect(restored.uid, 'u1');
+    expect(restored.mode, StudySessionEntryMode.mixed);
+    expect(restored.completedItems, 2);
+    expect(restored.correctAnswers, 1);
+    expect(restored.queue.single.wordId, word.id);
+    expect(restored.queue.single.lessonWord?.word, word.word);
+    expect(restored.answerLogs.single.responseTimeMs, 1200);
+    expect(restored.wrongItemIds, contains('w2'));
+  });
 
   testWidgets('pronunciation controls expose loading and retry states', (
     tester,
