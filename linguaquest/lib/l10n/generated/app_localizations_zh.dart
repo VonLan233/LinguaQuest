@@ -2092,6 +2092,42 @@ class AppLocalizationsZh extends AppLocalizations {
   String get notificationTypeActivity => '活动消息';
 
   @override
+  String get notificationLearningReminderTitle => '今日学习计划待完成';
+
+  @override
+  String notificationLearningReminderBody(int dailyGoal) {
+    return '今天目标新学 $dailyGoal 词，先从当前词书开始。';
+  }
+
+  @override
+  String notificationReviewDueTitle(int dueCount) {
+    return '$dueCount 个词到期复习';
+  }
+
+  @override
+  String get notificationReviewDueBody => '先清理复习队列，答错词会自动进入强化阶段。';
+
+  @override
+  String get notificationCheckInTitle => '今天还没有打卡';
+
+  @override
+  String get notificationCheckInBody => '去发现页点击签到，签到任务会进入可领取状态。';
+
+  @override
+  String get notificationActivityTitle => '发现页积分任务已刷新';
+
+  @override
+  String get notificationActivityBody => '完成新学、复习和错词清理后可领取 XP。';
+
+  @override
+  String get notificationLotteryTitle => '积分抽奖结果';
+
+  @override
+  String notificationLotteryBody(String prizeName) {
+    return '获得「$prizeName」，已放入个人资产。';
+  }
+
+  @override
   String get studyNewStudy => '新学';
 
   @override

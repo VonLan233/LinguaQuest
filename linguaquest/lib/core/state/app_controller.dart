@@ -1846,6 +1846,7 @@ class AppController extends Notifier<AppState> {
           targetRoute: '/study/new',
           sourceKey: 'learningReminder:$dateKey',
           now: now,
+          params: {'dailyGoal': dailyGoal},
         ),
       );
     }
@@ -1859,6 +1860,7 @@ class AppController extends Notifier<AppState> {
           targetRoute: '/study/review',
           sourceKey: 'reviewDue:$dateKey',
           now: now,
+          params: {'dueCount': dueCount},
         ),
       );
     }
@@ -1872,6 +1874,7 @@ class AppController extends Notifier<AppState> {
           targetRoute: '/discover',
           sourceKey: 'checkInReminder:$dateKey',
           now: now,
+          params: const {'kind': 'checkin'},
         ),
       );
     }
@@ -1884,6 +1887,7 @@ class AppController extends Notifier<AppState> {
         targetRoute: '/discover',
         sourceKey: 'activity:$dateKey',
         now: now,
+        params: const {'kind': 'activity'},
       ),
     );
     return notifications;
@@ -1897,6 +1901,7 @@ class AppController extends Notifier<AppState> {
     required String targetRoute,
     required String sourceKey,
     required DateTime now,
+    Map<String, dynamic>? params,
   }) {
     return AppNotification(
       id: 'notification-${sourceKey.replaceAll(':', '-')}-${now.year}',
@@ -1908,6 +1913,7 @@ class AppController extends Notifier<AppState> {
       isRead: false,
       createdAt: now.toUtc(),
       sourceKey: sourceKey,
+      params: params,
     );
   }
 

@@ -2205,6 +2205,47 @@ class AppLocalizationsMs extends AppLocalizations {
   String get notificationTypeActivity => 'Mesej Aktiviti';
 
   @override
+  String get notificationLearningReminderTitle =>
+      'Pelan belajar hari ini menanti';
+
+  @override
+  String notificationLearningReminderBody(int dailyGoal) {
+    return 'Matlamat hari ini: $dailyGoal perkataan baharu. Mula dengan buku perkataan semasa anda.';
+  }
+
+  @override
+  String notificationReviewDueTitle(int dueCount) {
+    return '$dueCount perkataan perlu diulang kaji';
+  }
+
+  @override
+  String get notificationReviewDueBody =>
+      'Bersihkan baris ulang kaji dahulu — perkataan yang salah akan masuk ke peringkat pengukuhan.';
+
+  @override
+  String get notificationCheckInTitle => 'Anda belum daftar masuk hari ini';
+
+  @override
+  String get notificationCheckInBody =>
+      'Ketik daftar masuk di halaman Terokai untuk membuka tugasan daftar masuk.';
+
+  @override
+  String get notificationActivityTitle =>
+      'Tugasan mata Terokai telah disegarkan';
+
+  @override
+  String get notificationActivityBody =>
+      'Dapatkan XP selepas belajar perkataan baharu, ulang kaji dan membersihkan perkataan salah.';
+
+  @override
+  String get notificationLotteryTitle => 'Keputusan cabutan';
+
+  @override
+  String notificationLotteryBody(String prizeName) {
+    return 'Anda memenangi \"$prizeName\" — ditambah ke aset anda.';
+  }
+
+  @override
   String get studyNewStudy => 'Pembelajaran Baru';
 
   @override

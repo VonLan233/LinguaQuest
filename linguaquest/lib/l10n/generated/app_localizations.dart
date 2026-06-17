@@ -4009,6 +4009,66 @@ abstract class AppLocalizations {
   /// **'Activity Message'**
   String get notificationTypeActivity;
 
+  /// No description provided for @notificationLearningReminderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s study plan is waiting'**
+  String get notificationLearningReminderTitle;
+
+  /// No description provided for @notificationLearningReminderBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s goal: {dailyGoal} new words. Start with your current wordbook.'**
+  String notificationLearningReminderBody(int dailyGoal);
+
+  /// No description provided for @notificationReviewDueTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{dueCount} words due for review'**
+  String notificationReviewDueTitle(int dueCount);
+
+  /// No description provided for @notificationReviewDueBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear your review queue first — missed words move to the reinforcement stage.'**
+  String get notificationReviewDueBody;
+
+  /// No description provided for @notificationCheckInTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t checked in today'**
+  String get notificationCheckInTitle;
+
+  /// No description provided for @notificationCheckInBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap check-in on the Discover page to unlock the claimable task.'**
+  String get notificationCheckInBody;
+
+  /// No description provided for @notificationActivityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover point tasks refreshed'**
+  String get notificationActivityTitle;
+
+  /// No description provided for @notificationActivityBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Earn XP after finishing new words, reviews, and clearing missed words.'**
+  String get notificationActivityBody;
+
+  /// No description provided for @notificationLotteryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Lottery result'**
+  String get notificationLotteryTitle;
+
+  /// No description provided for @notificationLotteryBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You won \"{prizeName}\" — added to your assets.'**
+  String notificationLotteryBody(String prizeName);
+
   /// No description provided for @studyNewStudy.
   ///
   /// In en, this message translates to:

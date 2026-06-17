@@ -2198,6 +2198,46 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notificationTypeActivity => 'Activity Message';
 
   @override
+  String get notificationLearningReminderTitle =>
+      'Today\'s study plan is waiting';
+
+  @override
+  String notificationLearningReminderBody(int dailyGoal) {
+    return 'Today\'s goal: $dailyGoal new words. Start with your current wordbook.';
+  }
+
+  @override
+  String notificationReviewDueTitle(int dueCount) {
+    return '$dueCount words due for review';
+  }
+
+  @override
+  String get notificationReviewDueBody =>
+      'Clear your review queue first — missed words move to the reinforcement stage.';
+
+  @override
+  String get notificationCheckInTitle => 'You haven\'t checked in today';
+
+  @override
+  String get notificationCheckInBody =>
+      'Tap check-in on the Discover page to unlock the claimable task.';
+
+  @override
+  String get notificationActivityTitle => 'Discover point tasks refreshed';
+
+  @override
+  String get notificationActivityBody =>
+      'Earn XP after finishing new words, reviews, and clearing missed words.';
+
+  @override
+  String get notificationLotteryTitle => 'Lottery result';
+
+  @override
+  String notificationLotteryBody(String prizeName) {
+    return 'You won \"$prizeName\" — added to your assets.';
+  }
+
+  @override
   String get studyNewStudy => 'New Study';
 
   @override

@@ -671,6 +671,37 @@
   "notificationTypeReviewDue": "Review Due",
   "notificationTypeCheckIn": "Check-in Reminder",
   "notificationTypeActivity": "Activity Message",
+  "notificationLearningReminderTitle": "Today's study plan is waiting",
+  "notificationLearningReminderBody": "Today's goal: {dailyGoal} new words. Start with your current wordbook.",
+  "@notificationLearningReminderBody": {
+    "placeholders": {
+      "dailyGoal": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationReviewDueTitle": "{dueCount} words due for review",
+  "@notificationReviewDueTitle": {
+    "placeholders": {
+      "dueCount": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationReviewDueBody": "Clear your review queue first — missed words move to the reinforcement stage.",
+  "notificationCheckInTitle": "You haven't checked in today",
+  "notificationCheckInBody": "Tap check-in on the Discover page to unlock the claimable task.",
+  "notificationActivityTitle": "Discover point tasks refreshed",
+  "notificationActivityBody": "Earn XP after finishing new words, reviews, and clearing missed words.",
+  "notificationLotteryTitle": "Lottery result",
+  "notificationLotteryBody": "You won \"{prizeName}\" — added to your assets.",
+  "@notificationLotteryBody": {
+    "placeholders": {
+      "prizeName": {
+        "type": "String"
+      }
+    }
+  },
 
   "studyNewStudy": "New Study",
   "studyReviewOnly": "Review Only",

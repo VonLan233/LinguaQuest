@@ -231,7 +231,7 @@ class _NotificationRow extends ConsumerWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        notification.title,
+                        localizedNotificationTitle(notification, l10n),
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: notification.isRead
                               ? FontWeight.w700
@@ -247,7 +247,7 @@ class _NotificationRow extends ConsumerWidget {
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  notification.body,
+                  localizedNotificationBody(notification, l10n),
                   style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                 ),
                 const SizedBox(height: 7),
