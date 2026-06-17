@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_card.dart';
@@ -14,25 +15,25 @@ class AboutScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final infos = <(IconData, Color, String, String)>[
       (
-        Icons.flag_outlined,
+        AppIcons.flag,
         AppTokens.azure,
         l10n.aboutGoalTitle,
         l10n.aboutGoalSubtitle,
       ),
       (
-        Icons.groups_outlined,
+        AppIcons.groups,
         AppTokens.successColor(context),
         l10n.aboutTeamTitle,
         l10n.aboutTeamSubtitle,
       ),
       (
-        Icons.extension_outlined,
+        AppIcons.extension,
         AppTokens.mangoColor(context),
         l10n.aboutCoreTitle,
         l10n.aboutCoreSubtitle,
       ),
       (
-        Icons.privacy_tip_outlined,
+        AppIcons.privacyTip,
         AppTokens.coralColor(context),
         l10n.aboutPrivacyTitle,
         l10n.aboutPrivacySubtitle,

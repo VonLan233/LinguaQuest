@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -53,7 +54,7 @@ class LearningPathScreen extends ConsumerWidget {
             const SizedBox(height: 10),
             TextButton.icon(
               onPressed: () => context.push('/settings/study-plan'),
-              icon: const Icon(Icons.tune_outlined),
+              icon: const Icon(AppIcons.tune),
               label: Text(l10n.learningPathAdjustPlan),
             ),
           ],
@@ -74,7 +75,7 @@ class _PausedBanner extends StatelessWidget {
       child: Row(
         children: [
           Icon(
-            Icons.pause_circle_outlined,
+            AppIcons.pauseCircle,
             color: Theme.of(context).colorScheme.primary,
           ),
           const SizedBox(width: AppTokens.s12),
@@ -139,12 +140,12 @@ class _PathNode extends StatelessWidget {
                   ),
                   child: Icon(
                     locked
-                        ? Icons.lock_rounded
+                        ? AppIcons.lock
                         : current
-                        ? Icons.play_arrow_rounded
+                        ? AppIcons.playArrow
                         : completed
-                        ? Icons.check_rounded
-                        : Icons.star_rounded,
+                        ? AppIcons.check
+                        : AppIcons.star,
                     color: current ? AppTheme.ink : theme.colorScheme.onPrimary,
                     size: current ? 38 : 30,
                   ),
@@ -170,7 +171,7 @@ class _PathNode extends StatelessWidget {
                       AppPill(
                         label: _statusLabel(lesson.status, l10n),
                         variant: _statusVariant(lesson.status),
-                        icon: locked ? Icons.lock_outline : Icons.bolt,
+                        icon: locked ? AppIcons.lock : AppIcons.bolt,
                       ),
                     ],
                   ),
@@ -196,17 +197,17 @@ class _PathNode extends StatelessWidget {
                       AppPill(
                         label: '${lesson.xpReward} ${l10n.commonXP}',
                         variant: PillVariant.xp,
-                        icon: Icons.bolt,
+                        icon: AppIcons.bolt,
                       ),
                       AppPill(
                         label: '${lesson.estimatedMinutes} min',
                         variant: PillVariant.primary,
-                        icon: Icons.timer_outlined,
+                        icon: AppIcons.timer,
                       ),
                       AppPill(
                         label: '${lesson.words.length} ${l10n.commonWords}',
                         variant: PillVariant.primary,
-                        icon: Icons.style_outlined,
+                        icon: AppIcons.style,
                       ),
                     ],
                   ),
@@ -248,7 +249,7 @@ class _PathNode extends StatelessWidget {
                   const SizedBox(height: 16),
                   AppPrimaryButton(
                     label: l10n.learningPathStartLearning,
-                    icon: Icons.play_arrow_rounded,
+                    icon: AppIcons.playArrow,
                     onPressed: () {
                       Navigator.pop(sheetContext);
                       parentContext.push('/lesson/${lesson.id}');

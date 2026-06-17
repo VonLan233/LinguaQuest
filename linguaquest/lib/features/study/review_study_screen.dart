@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -93,7 +94,7 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
                       subtitle: l10n.reviewStudyTodaySubtitle,
                       trailing: PillLabel(
                         label: '${_reviewedCount + 1}/$totalCount',
-                        icon: Icons.auto_graph,
+                        icon: AppIcons.autoGraph,
                         color: AppTheme.cyan,
                       ),
                     ),
@@ -159,7 +160,7 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
           ),
           FilledButton.icon(
             onPressed: () => Navigator.pop(context, true),
-            icon: const Icon(Icons.exit_to_app_rounded),
+            icon: const Icon(AppIcons.exitToApp),
             label: Text(AppLocalizations.of(context).commonLeave),
           ),
         ],
@@ -179,7 +180,7 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
       showTopNotice(
         context,
         AppLocalizations.of(context).reviewStudyReinforced,
-        icon: Icons.check_circle_outline,
+        icon: AppIcons.checkCircle,
       );
       return;
     }
@@ -206,7 +207,7 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
     showTopNotice(
       context,
       message,
-      icon: isCorrect ? Icons.check_circle_outline : Icons.replay_rounded,
+      icon: isCorrect ? AppIcons.checkCircle : AppIcons.replay,
     );
     _completeCurrentReview(word, requeue: !isCorrect);
   }
@@ -311,7 +312,7 @@ class _ReviewWordCard extends StatelessWidget {
                       children: [
                         PillLabel(
                           label: displayCustomTag(word.tag),
-                          icon: Icons.label_outline,
+                          icon: AppIcons.label,
                           color: AppTheme.teal,
                         ),
                         PillLabel(
@@ -319,15 +320,15 @@ class _ReviewWordCard extends StatelessWidget {
                               ? l10n.reviewCenterTargetWord
                               : l10n.reviewCenterCustomCard,
                           icon: word.source == 'target'
-                              ? Icons.route_outlined
-                              : Icons.style_outlined,
+                              ? AppIcons.route
+                              : AppIcons.style,
                           color: word.source == 'target'
                               ? AppTheme.cyan
                               : AppTheme.teal,
                         ),
                         PillLabel(
                           label: l10n.wordbookMasteryLevel(word.masteryLevel),
-                          icon: Icons.psychology_alt_outlined,
+                          icon: AppIcons.psychologyAlt,
                           color: AppTheme.mango,
                         ),
                       ],
@@ -398,8 +399,8 @@ class _MemoryHintLine extends StatelessWidget {
       children: [
         IconCueBadge(
           icon: isRevealed
-              ? Icons.lightbulb_outline
-              : Icons.visibility_outlined,
+              ? AppIcons.lightbulb
+              : AppIcons.visibility,
           color: colorScheme.secondary,
           size: 38,
         ),
@@ -477,7 +478,7 @@ class _ReviewActions extends StatelessWidget {
               ? FilledButton.icon(
                   onPressed: isSubmitting ? null : onContinueAfterReveal,
                   style: compactButtonStyle,
-                  icon: const Icon(Icons.replay_rounded),
+                  icon: const Icon(AppIcons.replay),
                   label: FittedBox(child: Text(l10n.reviewStudyReinforce)),
                 )
               : Row(
@@ -486,7 +487,7 @@ class _ReviewActions extends StatelessWidget {
                       child: OutlinedButton.icon(
                         onPressed: isSubmitting ? null : onMissed,
                         style: compactOutlineStyle,
-                        icon: const Icon(Icons.visibility_outlined),
+                        icon: const Icon(AppIcons.visibility),
                         label: FittedBox(child: Text(l10n.reviewCenterForgot)),
                       ),
                     ),
@@ -495,7 +496,7 @@ class _ReviewActions extends StatelessWidget {
                       child: FilledButton.icon(
                         onPressed: isSubmitting ? null : onKnown,
                         style: compactButtonStyle,
-                        icon: const Icon(Icons.check_rounded),
+                        icon: const Icon(AppIcons.check),
                         label: FittedBox(
                           child: Text(l10n.reviewCenterRemembered),
                         ),
@@ -521,7 +522,7 @@ class _QueueCompleteView extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 88),
       children: [
         EmptyState(
-          icon: Icons.check_circle_outline,
+          icon: AppIcons.checkCircle,
           title: hasReviewed
               ? l10n.reviewStudyCompleteTitle
               : l10n.reviewCenterEmptyTitle,
@@ -535,12 +536,12 @@ class _QueueCompleteView extends StatelessWidget {
             children: [
               FilledButton.icon(
                 onPressed: () => context.go('/home'),
-                icon: const Icon(Icons.home_outlined),
+                icon: const Icon(AppIcons.home),
                 label: Text(l10n.learningPathBackToHome),
               ),
               OutlinedButton.icon(
                 onPressed: () => context.push('/review'),
-                icon: const Icon(Icons.style_outlined),
+                icon: const Icon(AppIcons.style),
                 label: Text(l10n.reviewStudyManageQueue),
               ),
             ],

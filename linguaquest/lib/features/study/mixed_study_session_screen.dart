@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -106,7 +107,7 @@ class _MixedStudySessionScreenState
                     label: l10n.mixedReviewRatio(
                       '${(_plan!.reviewTargetRatio * 100).round()}',
                     ),
-                    icon: Icons.shuffle_rounded,
+                    icon: AppIcons.shuffle,
                     variant: PillVariant.primary,
                   ),
                 ),
@@ -133,7 +134,7 @@ class _MixedStudySessionScreenState
                           const SizedBox(width: 12),
                           AppPill(
                             label: '${_completedItems + 1}/$total',
-                            icon: Icons.auto_awesome_motion_outlined,
+                            icon: AppIcons.autoAwesomeMotion,
                           ),
                         ],
                       ),
@@ -438,7 +439,7 @@ class _MixedStudySessionScreenState
           ),
           FilledButton.icon(
             onPressed: () => Navigator.pop(context, _ExitAction.save),
-            icon: const Icon(Icons.save_outlined),
+            icon: const Icon(AppIcons.save),
             label: Text(dialogL10n.mixedSaveAndLeave),
           ),
         ],
@@ -594,7 +595,7 @@ class _KnowledgeCardStep extends StatelessWidget {
               ],
               AppPrimaryButton(
                 onPressed: isSubmitting ? null : onContinue,
-                icon: Icons.arrow_forward_rounded,
+                icon: AppIcons.arrowForward,
                 label: showAssessment
                     ? l10n.mixedEnterRecognition
                     : l10n.mixedAddLaterRecall,
@@ -649,12 +650,12 @@ class _QuestionStep extends StatelessWidget {
           children: [
             AppPill(
               label: _stepLabelFor(l10n),
-              icon: Icons.psychology_alt_outlined,
+              icon: AppIcons.psychologyAlt,
             ),
             if (item.isReview)
               AppPill(
                 label: l10n.mixedReviewQuickAnswer,
-                icon: Icons.flash_on_outlined,
+                icon: AppIcons.flashOn,
                 variant: PillVariant.xp,
               ),
           ],
@@ -762,7 +763,7 @@ class _CompleteView extends StatelessWidget {
       message: hasProgress ? l10n.mixedCompleteBody : l10n.mixedNoContentBody,
       action: AppPrimaryButton(
         onPressed: isSubmitting ? null : onFinish,
-        icon: Icons.home_outlined,
+        icon: AppIcons.home,
         label: l10n.mixedSaveAndHome,
       ),
     );

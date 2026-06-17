@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -97,10 +98,10 @@ class LessonResultScreen extends ConsumerWidget {
                     ? PillVariant.streak
                     : PillVariant.primary,
                 icon: isTimed
-                    ? Icons.timer_outlined
+                    ? AppIcons.timer
                     : isTraining
-                    ? Icons.sports_esports_outlined
-                    : Icons.workspace_premium_outlined,
+                    ? AppIcons.sportsEsports
+                    : AppIcons.workspacePremium,
               ),
             ),
             const SizedBox(height: AppTokens.s12),
@@ -165,14 +166,14 @@ class _ResultActions extends StatelessWidget {
               AppPrimaryButton(
                 onPressed: () =>
                     context.go('/training/spelling?source=mistakes'),
-                icon: Icons.replay_circle_filled_outlined,
+                icon: AppIcons.replayCircleFilled,
                 label: l10n.quizRetryMistakes,
               ),
               const SizedBox(height: 8),
             ],
             AppPrimaryButton(
               onPressed: () => context.go('/review'),
-              icon: Icons.replay,
+              icon: AppIcons.replay,
               label: l10n.quizGoReviewCenter,
             ),
             const SizedBox(height: 8),
@@ -211,7 +212,7 @@ class _XpImpactNotice extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const IconCueBadge(icon: Icons.bolt, color: AppTheme.mango, size: 48),
+          const IconCueBadge(icon: AppIcons.bolt, color: AppTheme.mango, size: 48),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -240,8 +241,8 @@ class _XpImpactNotice extends StatelessWidget {
                           : l10n.quizLessonReward,
                       variant: isTimed ? PillVariant.streak : PillVariant.xp,
                       icon: isTimed
-                          ? Icons.timer_outlined
-                          : Icons.workspace_premium_outlined,
+                          ? AppIcons.timer
+                          : AppIcons.workspacePremium,
                     ),
                     AppSecondaryButton(
                       onPressed: () => context.go('/discover'),
@@ -377,18 +378,18 @@ class _ResultScoreSummary extends StatelessWidget {
             AppPill(
               label: l10n.quizXpEarned(result.xpEarned),
               variant: PillVariant.xp,
-              icon: Icons.bolt,
+              icon: AppIcons.bolt,
             ),
             if (currentXp != null)
               AppPill(
                 label: l10n.quizTotalXp(currentXp!),
                 variant: PillVariant.primary,
-                icon: Icons.account_balance_wallet_outlined,
+                icon: AppIcons.accountBalanceWallet,
               ),
             AppPill(
               label: l10n.quizMistakeCount(result.mistakes.length),
               variant: PillVariant.streak,
-              icon: Icons.replay_rounded,
+              icon: AppIcons.replay,
             ),
           ],
         ),

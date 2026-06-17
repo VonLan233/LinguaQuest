@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -44,7 +45,7 @@ class MistakeBookScreen extends ConsumerWidget {
                 message: l10n.mistakeBookClearedMsg,
                 action: AppSecondaryButton(
                   onPressed: () => context.go('/learn'),
-                  icon: Icons.play_arrow_rounded,
+                  icon: AppIcons.playArrow,
                   label: l10n.commonContinue,
                 ),
               )

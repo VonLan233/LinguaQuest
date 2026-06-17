@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -26,7 +27,7 @@ class SettingsScreen extends ConsumerWidget {
           padding: const EdgeInsets.all(AppTokens.s20),
           children: [
             _SettingsAction(
-              icon: Icons.flag_outlined,
+              icon: AppIcons.flag,
               title: l10n.commonStudyPlan,
               subtitle:
                   '${state.currentStudyBook.name} · ${l10n.commonNew} ${state.dailyNewTarget} · ${l10n.commonReview} ${state.dailyReviewLimit}',
@@ -34,7 +35,7 @@ class SettingsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: AppTokens.s12),
             _SettingsAction(
-              icon: Icons.notifications_outlined,
+              icon: AppIcons.notifications,
               title: l10n.commonDailyReminder,
               subtitle: state.reminderSettings.enabled
                   ? '${l10n.commonDay} ${state.reminderSettings.formattedTime}'
@@ -43,7 +44,7 @@ class SettingsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: AppTokens.s12),
             _SettingsAction(
-              icon: Icons.dark_mode_outlined,
+              icon: AppIcons.darkMode,
               title: l10n.commonTheme,
               subtitle: _themeModeLabel(state.themeMode, l10n),
               route: '/settings/theme',
@@ -56,7 +57,7 @@ class SettingsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: AppTokens.s12),
             _SettingsInfoLine(
-              icon: Icons.volume_up_outlined,
+              icon: AppIcons.volumeUp,
               title: l10n.settingsSoundFeedback,
               subtitle: l10n.settingsSoundFeedbackSubtitle,
             ),
@@ -88,7 +89,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
             _ThemeOption(
               value: ThemeMode.system,
               groupValue: themeMode,
-              icon: Icons.phone_android_outlined,
+              icon: AppIcons.phoneAndroid,
               title: l10n.settingsThemeSystem,
               subtitle: l10n.settingsThemeSystemSubtitle,
             ),
@@ -96,7 +97,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
             _ThemeOption(
               value: ThemeMode.light,
               groupValue: themeMode,
-              icon: Icons.light_mode_outlined,
+              icon: AppIcons.lightMode,
               title: l10n.settingsThemeLight,
               subtitle: l10n.settingsThemeLightSubtitle,
             ),
@@ -104,7 +105,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
             _ThemeOption(
               value: ThemeMode.dark,
               groupValue: themeMode,
-              icon: Icons.dark_mode_outlined,
+              icon: AppIcons.darkMode,
               title: l10n.settingsThemeDark,
               subtitle: l10n.settingsThemeDarkSubtitle,
             ),
@@ -157,10 +158,10 @@ class ReminderSettingsScreen extends ConsumerWidget {
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     enabled: settings.enabled,
-                    leading: const Icon(Icons.schedule_outlined),
+                    leading: const Icon(AppIcons.schedule),
                     title: Text(l10n.settingsReminderTime),
                     subtitle: Text(settings.formattedTime),
-                    trailing: const Icon(Icons.chevron_right_rounded),
+                    trailing: const Icon(AppIcons.chevronRight),
                     onTap: settings.enabled
                         ? () => _pickTime(context, ref, settings)
                         : null,
@@ -216,7 +217,7 @@ class _LanguageSetting extends StatelessWidget {
       onTap: () => _showLanguageSheet(context, langCode),
       child: Row(
         children: [
-          Icon(Icons.language_outlined, color: theme.colorScheme.primary),
+          Icon(AppIcons.language, color: theme.colorScheme.primary),
           const SizedBox(width: AppTokens.s12),
           Expanded(
             child: Column(
@@ -230,7 +231,7 @@ class _LanguageSetting extends StatelessWidget {
               ],
             ),
           ),
-          const Icon(Icons.chevron_right_rounded),
+          const Icon(AppIcons.chevronRight),
         ],
       ),
     );
@@ -308,7 +309,7 @@ class _LanguageOption extends StatelessWidget {
     final theme = Theme.of(context);
     return ListTile(
       leading: Icon(
-        selected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+        selected ? AppIcons.radioButtonChecked : AppIcons.radioButtonUnchecked,
         color: selected ? theme.colorScheme.primary : null,
       ),
       title: Text(label),
@@ -352,7 +353,7 @@ class _SettingsAction extends StatelessWidget {
               ],
             ),
           ),
-          const Icon(Icons.chevron_right_rounded),
+          const Icon(AppIcons.chevronRight),
         ],
       ),
     );
@@ -441,8 +442,8 @@ class _ThemeOption extends ConsumerWidget {
           ),
           Icon(
             selected
-                ? Icons.radio_button_checked
-                : Icons.radio_button_unchecked,
+                ? AppIcons.radioButtonChecked
+                : AppIcons.radioButtonUnchecked,
             color: theme.colorScheme.primary,
           ),
         ],

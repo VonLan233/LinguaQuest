@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_card.dart';
@@ -75,7 +76,7 @@ class HelpSupportScreen extends StatelessWidget {
               padding: const EdgeInsets.all(AppTokens.s16),
               child: Row(
                 children: [
-                  Icon(Icons.mail_outline, color: AppTokens.azure),
+                  Icon(AppIcons.mail, color: AppTokens.azure),
                   const SizedBox(width: AppTokens.s12),
                   Expanded(
                     child: Column(

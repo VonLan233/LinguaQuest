@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -92,8 +93,8 @@ class _LessonPreviewScreenState extends ConsumerState<LessonPreviewScreen> {
                                 ? l10n.lessonPreviewEnterContext
                                 : l10n.lessonPreviewNextCard,
                             icon: isLastWord
-                                ? Icons.play_arrow_rounded
-                                : Icons.arrow_forward_rounded,
+                                ? AppIcons.playArrow
+                                : AppIcons.arrowForward,
                             onPressed: selectedConfidence == null
                                 ? null
                                 : () {
@@ -185,7 +186,7 @@ class _LessonPreviewScreenState extends ConsumerState<LessonPreviewScreen> {
             ),
             FilledButton.icon(
               onPressed: () => Navigator.pop(context, true),
-              icon: const Icon(Icons.exit_to_app_rounded),
+              icon: const Icon(AppIcons.exitToApp),
               label: Text(dialogL10n.lessonPreviewLeave),
             ),
           ],
@@ -291,11 +292,11 @@ class _ConfidenceSelector extends StatelessWidget {
     final items = [
       (
         l10n.studyRecallKnown,
-        Icons.sentiment_satisfied_alt_outlined,
+        AppIcons.sentimentSatisfiedAlt,
         AppTokens.azure,
       ),
-      (l10n.studyRecallFuzzy, Icons.visibility_outlined, AppTokens.mango),
-      (l10n.studyRecallUnknown, Icons.help_outline, AppTokens.coral),
+      (l10n.studyRecallFuzzy, AppIcons.visibility, AppTokens.mango),
+      (l10n.studyRecallUnknown, AppIcons.help, AppTokens.coral),
     ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -375,7 +376,7 @@ class _ContextSection extends StatelessWidget {
           Row(
             children: [
               Icon(
-                Icons.format_quote_rounded,
+                AppIcons.formatQuote,
                 color: theme.colorScheme.primary,
               ),
               const SizedBox(width: AppTokens.s8),
@@ -434,7 +435,7 @@ class _MiniWordRow extends StatelessWidget {
                   child: Text(word.word, style: theme.textTheme.titleMedium),
                 ),
                 Icon(
-                  isChecked ? Icons.check_circle : Icons.radio_button_unchecked,
+                  isChecked ? AppIcons.checkCircle : AppIcons.radioButtonUnchecked,
                   color: isChecked
                       ? AppTokens.azure
                       : theme.colorScheme.onSurfaceVariant,

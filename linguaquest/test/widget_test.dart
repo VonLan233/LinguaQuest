@@ -10,6 +10,7 @@ import 'package:linguaquest/app.dart';
 import 'package:linguaquest/core/routing/app_router.dart';
 import 'package:linguaquest/core/state/app_controller.dart';
 import 'package:linguaquest/core/state/app_state.dart';
+import 'package:linguaquest/core/theme/app_icons.dart';
 import 'package:linguaquest/core/theme/app_theme.dart';
 import 'package:linguaquest/core/widgets/app_button.dart';
 import 'package:linguaquest/core/widgets/app_card.dart';
@@ -4237,7 +4238,7 @@ Future<void> _openCurrentLessonCards(WidgetTester tester) async {
   );
   container.read(routerProvider).go('/learn');
   await tester.pumpAndSettle();
-  await tester.tap(find.byIcon(Icons.play_arrow_rounded).first);
+  await tester.tap(find.byIcon(AppIcons.playArrow).first);
   await tester.pumpAndSettle();
   await tester.tap(find.widgetWithText(AppPrimaryButton, '开始学习'));
   await tester.pumpAndSettle();

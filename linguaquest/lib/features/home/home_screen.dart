@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -69,7 +70,7 @@ class HomeScreen extends ConsumerWidget {
                   child: InputDecorator(
                     decoration: InputDecoration(
                       isDense: true,
-                      prefixIcon: const Icon(Icons.search),
+                      prefixIcon: const Icon(AppIcons.search),
                       hintText: l10n.homeSearchHint,
                       contentPadding: const EdgeInsets.symmetric(
                         vertical: AppTokens.s8,
@@ -147,7 +148,7 @@ class HomeScreen extends ConsumerWidget {
           child: _HomeShortcutList(
             actions: [
               _HomeShortcutData(
-                icon: Icons.menu_book_outlined,
+                icon: AppIcons.menuBook,
                 title: l10n.homeWordbookShortcut,
                 subtitle: currentBook == null
                     ? '${state.totalLearningWords} ${l10n.commonWords}'
@@ -155,13 +156,13 @@ class HomeScreen extends ConsumerWidget {
                 onTap: () => context.push('/wordbook'),
               ),
               _HomeShortcutData(
-                icon: Icons.article_outlined,
+                icon: AppIcons.article,
                 title: l10n.homeDailyArticle,
                 subtitle: l10n.homeDailyArticleSubtitle,
                 onTap: () => context.go('/ai-learning'),
               ),
               _HomeShortcutData(
-                icon: Icons.route_outlined,
+                icon: AppIcons.route,
                 title: l10n.homeLearningPath,
                 subtitle: currentBook?.title ?? l10n.homeLearningPathSubtitle,
                 onTap: () => context.push('/learn'),
@@ -243,7 +244,7 @@ class _NotificationBellButton extends StatelessWidget {
         QuestIconButton(
           tooltip: l10n.homeNotifications,
           onPressed: onPressed,
-          icon: Icons.notifications_outlined,
+          icon: AppIcons.notifications,
           color: AppTheme.coral,
         ),
         if (unreadCount > 0)
@@ -294,7 +295,7 @@ class _HomeLearningSignals extends StatelessWidget {
           child: StatTile(
             label: l10n.homeLearned,
             value: '$completedWords',
-            icon: Icons.school_outlined,
+            icon: AppIcons.school,
             accent: AppTheme.cyan,
           ),
         ),
@@ -303,7 +304,7 @@ class _HomeLearningSignals extends StatelessWidget {
           child: StatTile(
             label: l10n.homeMastered,
             value: '$masteredWords',
-            icon: Icons.verified_outlined,
+            icon: AppIcons.verified,
             accent: AppTheme.success,
           ),
         ),
@@ -312,7 +313,7 @@ class _HomeLearningSignals extends StatelessWidget {
           child: StatTile(
             label: l10n.homeReviewLabel,
             value: '$dueWords',
-            icon: Icons.replay,
+            icon: AppIcons.replay,
             accent: AppTheme.mango,
           ),
         ),
@@ -379,7 +380,7 @@ class _HomeInfoLink extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right_rounded),
+              const Icon(AppIcons.chevronRight),
             ],
           ),
         ),
@@ -429,7 +430,7 @@ class _DailyTaskPanel extends StatelessWidget {
           if (isPaused)
             AppPrimaryButton(
               onPressed: onOpenPlan,
-              icon: Icons.play_circle_outline,
+              icon: AppIcons.playCircle,
               label: l10n.homeResumePlan,
             )
           else
@@ -440,7 +441,7 @@ class _DailyTaskPanel extends StatelessWidget {
                     onPressed: canStartNew
                         ? onNewStudy
                         : (hasReview ? onReview : null),
-                    icon: Icons.play_arrow_rounded,
+                    icon: AppIcons.playArrow,
                     label: l10n.homeStartLearning,
                   ),
                 ),
@@ -458,7 +459,7 @@ class _DailyTaskPanel extends StatelessWidget {
           const SizedBox(height: 10),
           TextButton.icon(
             onPressed: onOpenPlan,
-            icon: const Icon(Icons.tune_rounded),
+            icon: const Icon(AppIcons.tune),
             label: Text(l10n.homeAdjustPlan),
           ),
         ],
@@ -500,11 +501,11 @@ class _DailyFocusHeader extends StatelessWidget {
           children: [
             AppPill(
               label: '$target · $level',
-              icon: Icons.track_changes_outlined,
+              icon: AppIcons.trackChanges,
             ),
             AppPill(
               variant: PillVariant.streak,
-              icon: Icons.local_fire_department_rounded,
+              icon: AppIcons.localFireDepartment,
               label: l10n.homeStreakDays(streak),
             ),
           ],
@@ -637,7 +638,7 @@ class _HomeShortcutLink extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right_rounded),
+              const Icon(AppIcons.chevronRight),
             ],
           ),
         ),
@@ -700,7 +701,7 @@ class _WeakWordLink extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Icon(Icons.chevron_right_rounded),
+                const Icon(AppIcons.chevronRight),
               ],
             ),
           ),

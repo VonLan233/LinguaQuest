@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -30,7 +31,7 @@ class NewStudyScreen extends ConsumerWidget {
           QuestIconButton(
             tooltip: l10n.studyWordbookPath,
             onPressed: () => context.push('/learn'),
-            icon: Icons.route_outlined,
+            icon: AppIcons.route,
           ),
           const SizedBox(width: 12),
         ],
@@ -41,7 +42,7 @@ class NewStudyScreen extends ConsumerWidget {
                 padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
                 child: FilledButton.icon(
                   onPressed: () => context.push('/lesson/${lesson.id}'),
-                  icon: const Icon(Icons.play_arrow_rounded),
+                  icon: const Icon(AppIcons.playArrow),
                   label: Text(l10n.studyEnterCards),
                 ),
               ),
@@ -93,7 +94,7 @@ class NewStudyScreen extends ConsumerWidget {
                     const SizedBox(height: 14),
                     OutlinedButton.icon(
                       onPressed: () => context.push('/learn'),
-                      icon: const Icon(Icons.route_outlined),
+                      icon: const Icon(AppIcons.route),
                       label: Text(l10n.studyOpenWordbookPath),
                     ),
                   ],
@@ -153,16 +154,16 @@ class _StudyHeader extends StatelessWidget {
           children: [
             PillLabel(
               label: l10n.studyRecallKnown,
-              icon: Icons.sentiment_satisfied_outlined,
+              icon: AppIcons.sentimentSatisfied,
             ),
             PillLabel(
               label: l10n.studyRecallFuzzy,
-              icon: Icons.visibility_outlined,
+              icon: AppIcons.visibility,
               color: AppTheme.mango,
             ),
             PillLabel(
               label: l10n.studyRecallUnknown,
-              icon: Icons.help_outline,
+              icon: AppIcons.help,
               color: AppTheme.coral,
             ),
           ],

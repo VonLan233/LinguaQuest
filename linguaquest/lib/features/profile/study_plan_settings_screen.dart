@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -95,7 +96,7 @@ class _StudyPlanSettingsScreenState
             children: [
               AppPrimaryButton(
                 label: l10n.studyPlanSave,
-                icon: Icons.save_outlined,
+                icon: AppIcons.save,
                 onPressed: state.isLoading ? null : _save,
               ),
             ],
@@ -119,7 +120,7 @@ class _StudyPlanSettingsScreenState
                 trailing: QuestIconButton(
                   tooltip: l10n.studyPlanViewWords,
                   onPressed: () => context.push('/wordbook'),
-                  icon: Icons.style_outlined,
+                  icon: AppIcons.style,
                   color: AppTheme.cyan,
                 ),
               ),
@@ -146,7 +147,7 @@ class _StudyPlanSettingsScreenState
                 controller: _dailyNewController,
                 label: l10n.studyPlanDailyNew,
                 helperText: l10n.studyPlanDailyNewHint,
-                icon: Icons.add_task_outlined,
+                icon: AppIcons.addTask,
                 min: 1,
                 max: 200,
                 l10n: l10n,
@@ -156,7 +157,7 @@ class _StudyPlanSettingsScreenState
                 controller: _dailyReviewController,
                 label: l10n.studyPlanDailyReview,
                 helperText: l10n.studyPlanDailyReviewHint,
-                icon: Icons.replay_outlined,
+                icon: AppIcons.replay,
                 min: 0,
                 max: 500,
                 l10n: l10n,
@@ -498,12 +499,12 @@ class _PlanHeroCard extends StatelessWidget {
             children: [
               AppPill(
                 label: l10n.wordbookWordsLearned(completedWords, totalWords),
-                icon: Icons.school_outlined,
+                icon: AppIcons.school,
                 variant: PillVariant.primary,
               ),
               AppPill(
                 label: l10n.studyPlanDaysLeft(daysLeft),
-                icon: Icons.event_outlined,
+                icon: AppIcons.event,
                 variant: PillVariant.streak,
               ),
               AppPill(
@@ -511,8 +512,8 @@ class _PlanHeroCard extends StatelessWidget {
                     ? l10n.studyPlanPausedLabel
                     : l10n.studyPlanActive,
                 icon: status == 'paused'
-                    ? Icons.pause_circle_outline
-                    : Icons.play_circle_outline,
+                    ? AppIcons.pauseCircle
+                    : AppIcons.playCircle,
                 variant: status == 'paused'
                     ? PillVariant.neutral
                     : PillVariant.success,
@@ -685,14 +686,14 @@ class _PlanDateTimeSection extends StatelessWidget {
       child: Column(
         children: [
           _PlanActionRow(
-            icon: Icons.event_outlined,
+            icon: AppIcons.event,
             title: l10n.studyPlanTargetDate,
             subtitle: formatShortDate(targetFinishDate),
             onTap: onPickDate,
           ),
           const Divider(height: 18),
           _PlanActionRow(
-            icon: Icons.schedule_outlined,
+            icon: AppIcons.schedule,
             title: l10n.studyPlanReminderTime,
             subtitle: reminderTimeLabel,
             onTap: onPickTime,
@@ -727,21 +728,21 @@ class _PlanActions extends StatelessWidget {
       children: [
         AppSecondaryButton(
           label: l10n.studyPlanViewWords,
-          icon: Icons.style_outlined,
+          icon: AppIcons.style,
           onPressed: onOpenWords,
         ),
         const SizedBox(height: AppTokens.s12),
         AppSecondaryButton(
           label: isPaused ? l10n.studyPlanResume : l10n.studyPlanPause,
           icon: isPaused
-              ? Icons.play_circle_outline
-              : Icons.pause_circle_outline,
+              ? AppIcons.playCircle
+              : AppIcons.pauseCircle,
           onPressed: isLoading ? null : onTogglePause,
         ),
         const SizedBox(height: AppTokens.s12),
         AppPrimaryButton(
           label: l10n.studyPlanReset,
-          icon: Icons.restart_alt_outlined,
+          icon: AppIcons.restartAlt,
           onPressed: isLoading ? null : onReset,
         ),
       ],
@@ -792,7 +793,7 @@ class _PlanActionRow extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right_rounded),
+              const Icon(AppIcons.chevronRight),
             ],
           ),
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -75,25 +76,25 @@ class ProfileScreen extends ConsumerWidget {
         _SettingsGroup(
           children: [
             _SettingsItem(
-              icon: Icons.flag_outlined,
+              icon: AppIcons.flag,
               title: l10n.profilePlanLabel,
               value: state.currentStudyBook.name,
               onTap: () => context.push('/settings/study-plan'),
             ),
             _SettingsItem(
-              icon: Icons.menu_book_outlined,
+              icon: AppIcons.menuBook,
               title: l10n.commonWordbook,
               value: '${state.totalLearningWords} ${l10n.commonWords}',
               onTap: () => context.push('/wordbook'),
             ),
             _SettingsItem(
-              icon: Icons.style_outlined,
+              icon: AppIcons.style,
               title: l10n.commonCustomWords,
               value: '${newWordbookCount(state)}',
               onTap: () => context.push('/custom-words'),
             ),
             _SettingsItem(
-              icon: Icons.warning_amber_outlined,
+              icon: AppIcons.warningAmber,
               title: l10n.commonMistakeBook,
               value: '${state.weakWords.length}',
               onTap: () => context.push('/mistake-book'),
@@ -104,13 +105,13 @@ class ProfileScreen extends ConsumerWidget {
         _SettingsGroup(
           children: [
             _SettingsItem(
-              icon: Icons.dark_mode_outlined,
+              icon: AppIcons.darkMode,
               title: l10n.commonTheme,
               value: _themeModeLabel(state.themeMode, l10n),
               onTap: () => context.push('/settings/theme'),
             ),
             _SettingsItem(
-              icon: Icons.notifications_outlined,
+              icon: AppIcons.notifications,
               title: l10n.commonDailyReminder,
               value: state.reminderSettings.enabled
                   ? state.reminderSettings.formattedTime
@@ -128,12 +129,12 @@ class ProfileScreen extends ConsumerWidget {
         _SettingsGroup(
           children: [
             _SettingsItem(
-              icon: Icons.help_outline,
+              icon: AppIcons.help,
               title: l10n.profileHelpTitle,
               onTap: () => context.push('/help'),
             ),
             _SettingsItem(
-              icon: Icons.info_outline,
+              icon: AppIcons.info,
               title: l10n.profileAboutTitle,
               onTap: () => context.push('/about'),
             ),
@@ -219,12 +220,12 @@ class _ProfileHeader extends StatelessWidget {
                 AppPill(
                   label: '$xp ${l10n.commonXP}',
                   variant: PillVariant.xp,
-                  icon: Icons.bolt,
+                  icon: AppIcons.bolt,
                 ),
                 AppPill(
                   label: '$streak ${l10n.profileStreakDays}',
                   variant: PillVariant.streak,
-                  icon: Icons.local_fire_department,
+                  icon: AppIcons.localFireDepartment,
                 ),
               ],
             ),
@@ -409,7 +410,7 @@ class _SettingsItem extends StatelessWidget {
                 ),
               const SizedBox(width: AppTokens.s4),
               Icon(
-                Icons.chevron_right_rounded,
+                AppIcons.chevronRight,
                 color: theme.colorScheme.onSurfaceVariant,
                 size: 20,
               ),
@@ -449,7 +450,7 @@ class _LanguageSettingsItem extends StatelessWidget {
           child: Row(
             children: [
               Icon(
-                Icons.language_rounded,
+                AppIcons.language,
                 color: theme.colorScheme.primary,
                 size: 22,
               ),
@@ -468,7 +469,7 @@ class _LanguageSettingsItem extends StatelessWidget {
               ),
               const SizedBox(width: AppTokens.s4),
               Icon(
-                Icons.chevron_right_rounded,
+                AppIcons.chevronRight,
                 color: theme.colorScheme.onSurfaceVariant,
                 size: 20,
               ),
@@ -551,7 +552,7 @@ class _LanguageOption extends StatelessWidget {
     final theme = Theme.of(context);
     return ListTile(
       leading: Icon(
-        selected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+        selected ? AppIcons.radioButtonChecked : AppIcons.radioButtonUnchecked,
         color: selected ? theme.colorScheme.primary : null,
       ),
       title: Text(label),
@@ -662,17 +663,17 @@ class _AssetRow extends StatelessWidget {
   IconData _assetIcon(String category) {
     switch (category) {
       case 'avatarFrame':
-        return Icons.account_circle_outlined;
+        return AppIcons.accountCircle;
       case 'profileBackground':
-        return Icons.wallpaper_outlined;
+        return AppIcons.wallpaper;
       case 'badge':
-        return Icons.workspace_premium_outlined;
+        return AppIcons.workspacePremium;
       case 'title':
-        return Icons.military_tech_outlined;
+        return AppIcons.militaryTech;
       case 'cardSkin':
-        return Icons.style_outlined;
+        return AppIcons.style;
       default:
-        return Icons.auto_awesome_outlined;
+        return AppIcons.autoAwesome;
     }
   }
 

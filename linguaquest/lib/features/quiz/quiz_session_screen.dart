@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -113,13 +114,13 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
                     const SizedBox(width: 12),
                     AppPill(
                       label: '${_index + 1}/${lesson.questions.length}',
-                      icon: Icons.flag_outlined,
+                      icon: AppIcons.flag,
                     ),
                     if (isTimed) ...[
                       const SizedBox(width: 8),
                       AppPill(
                         label: l10n.quizCampusSpeed,
-                        icon: Icons.timer_outlined,
+                        icon: AppIcons.timer,
                         variant: PillVariant.streak,
                       ),
                     ],
@@ -157,7 +158,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
                 if (question.type == QuizQuestionType.spelling)
                   AppPrimaryButton(
                     label: l10n.quizCheck,
-                    icon: Icons.check_rounded,
+                    icon: AppIcons.check,
                     onPressed:
                         _hasAnswer(question) &&
                             !_lockedCorrect &&
@@ -198,7 +199,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
             ),
             FilledButton.icon(
               onPressed: () => Navigator.pop(context, true),
-              icon: const Icon(Icons.exit_to_app_rounded),
+              icon: const Icon(AppIcons.exitToApp),
               label: Text(l10n.commonLeave),
             ),
           ],
@@ -391,18 +392,18 @@ class _QuestionPromptPanel extends StatelessWidget {
   IconData _questionTypeIcon(QuizQuestionType type) {
     switch (type) {
       case QuizQuestionType.meaningChoice:
-        return Icons.translate_outlined;
+        return AppIcons.translate;
       case QuizQuestionType.chineseChoice:
-        return Icons.swap_horiz_rounded;
+        return AppIcons.swapHoriz;
       case QuizQuestionType.contextChoice:
-        return Icons.format_quote_outlined;
+        return AppIcons.formatQuote;
       case QuizQuestionType.imageChoice:
-        return Icons.image_search_outlined;
+        return AppIcons.imageSearch;
       case QuizQuestionType.listeningWordChoice:
       case QuizQuestionType.listeningMeaningChoice:
-        return Icons.hearing_outlined;
+        return AppIcons.hearing;
       case QuizQuestionType.spelling:
-        return Icons.edit_outlined;
+        return AppIcons.edit;
     }
   }
 }
@@ -434,7 +435,7 @@ class _QuestionInput extends StatelessWidget {
         enabled: !lockedCorrect,
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context).quizInputWord,
-          prefixIcon: const Icon(Icons.edit_outlined),
+          prefixIcon: const Icon(AppIcons.edit),
         ),
         onChanged: (_) => onInputChanged(),
       );
@@ -502,7 +503,7 @@ class _FeedbackPanel extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: Icon(
-              isCorrect ? Icons.check_rounded : Icons.close_rounded,
+              isCorrect ? AppIcons.check : AppIcons.close,
               color: color,
             ),
           ),

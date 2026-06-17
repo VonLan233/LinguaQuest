@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -182,7 +183,7 @@ class _ReviewQueueSignals extends StatelessWidget {
             child: StatTile(
               value: '$dueCount',
               label: l10n.reviewCenterTodayDue,
-              icon: Icons.today_outlined,
+              icon: AppIcons.today,
               accent: AppTokens.azure,
             ),
           ),
@@ -191,7 +192,7 @@ class _ReviewQueueSignals extends StatelessWidget {
             child: StatTile(
               value: '$weakCount',
               label: l10n.mistakeBookTitle,
-              icon: Icons.warning_amber_outlined,
+              icon: AppIcons.warningAmber,
               accent: AppTokens.coral,
             ),
           ),
@@ -200,7 +201,7 @@ class _ReviewQueueSignals extends StatelessWidget {
             child: StatTile(
               value: '$cardCount',
               label: l10n.commonCustomWords,
-              icon: Icons.style_outlined,
+              icon: AppIcons.style,
               accent: AppTokens.azure,
             ),
           ),
@@ -252,7 +253,7 @@ class _ReviewTile extends ConsumerWidget {
                 ),
                 AppPill(
                   label: '${word.masteryLevel}/5',
-                  icon: Icons.psychology_outlined,
+                  icon: AppIcons.psychology,
                   variant: word.masteryLevel >= 3
                       ? PillVariant.success
                       : PillVariant.streak,
@@ -274,7 +275,7 @@ class _ReviewTile extends ConsumerWidget {
                 Expanded(
                   child: AppPrimaryButton(
                     label: l10n.reviewCenterRemembered,
-                    icon: Icons.check,
+                    icon: AppIcons.check,
                     onPressed: canReview
                         ? () => _review(context, ref, isCorrect: true)
                         : null,
@@ -344,7 +345,7 @@ class _LessonMistakeRow extends StatelessWidget {
             const SizedBox(width: 10),
             AppPill(
               label: l10n.commonLesson,
-              icon: Icons.school_outlined,
+              icon: AppIcons.school,
               variant: PillVariant.streak,
             ),
           ],
@@ -388,7 +389,7 @@ class _WeakWordRow extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right_rounded),
+            const Icon(AppIcons.chevronRight),
           ],
         ),
       ),
@@ -502,7 +503,7 @@ class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
                 onPressed: selectedAddableCount == 0 || state.isLoading
                     ? null
                     : _addSelected,
-                icon: const Icon(Icons.add_card_outlined),
+                icon: const Icon(AppIcons.addCard),
                 label: Text(
                   '${widget.l10n.reviewCenterAddSelected} ($selectedAddableCount)',
                 ),
@@ -581,7 +582,7 @@ class _MistakeSelectionRow extends StatelessWidget {
                     border: Border.all(color: color, width: selected ? 2 : 1),
                   ),
                   child: Icon(
-                    selected ? Icons.check_rounded : Icons.add_rounded,
+                    selected ? AppIcons.check : AppIcons.add,
                     color: selected ? AppTokens.azure : color,
                     size: 19,
                   ),
@@ -607,7 +608,7 @@ class _MistakeSelectionRow extends StatelessWidget {
                 if (!enabled)
                   const AppPill(
                     label: 'Added',
-                    icon: Icons.check_circle_outline,
+                    icon: AppIcons.checkCircle,
                     variant: PillVariant.success,
                   ),
               ],
