@@ -40,8 +40,8 @@ class AppTokens {
   static const Color coral = Color(0xFFFF6B5A);
   static const Color amber = Color(0xFFF5A623);
 
-  // Neutrals — warm porcelain.
-  static const Color bgLight = Color(0xFFFAF8F5); // bgCanvas (定稿)
+  // Neutrals.
+  static const Color bgLight = Color(0xFFFFFFFF); // bgCanvas — pure white (no flicker)
   static const Color surfaceLight = Color(0xFFFFFFFF);
   static const Color surfaceSunken = Color(0xFFF2EFEA);
   static const Color hairline = Color(0xFFECE7E0);

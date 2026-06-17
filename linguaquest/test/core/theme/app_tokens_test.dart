@@ -24,7 +24,7 @@ Future<T> _readWithBrightness<T>(
 
 void main() {
   test('Cozy Quest neutral tokens are locked to warm-porcelain palette', () {
-    expect(AppTokens.bgLight, const Color(0xFFFAF8F5)); // bgCanvas
+    expect(AppTokens.bgLight, const Color(0xFFFFFFFF)); // bgCanvas — pure white
     expect(AppTokens.surfaceSunken, const Color(0xFFF2EFEA));
     expect(AppTokens.hairline, const Color(0xFFECE7E0));
     expect(AppTokens.textPrimaryLight, const Color(0xFF233A66));
