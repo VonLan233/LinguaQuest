@@ -101,6 +101,8 @@ class AppTokens {
       _isDark(c) ? const Color(0xFFFFC85C) : mango;
   static Color coralColor(BuildContext c) =>
       _isDark(c) ? const Color(0xFFFF8A7B) : coral;
+  static Color dangerColor(BuildContext c) =>
+      _isDark(c) ? const Color(0xFFF26F73) : danger;
   static Color amberColor(BuildContext c) =>
       _isDark(c) ? const Color(0xFFFFC04D) : amber;
 }
