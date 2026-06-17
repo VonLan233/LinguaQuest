@@ -42,11 +42,11 @@ class AiLearningScreen extends StatelessWidget {
           alignment: Alignment.centerLeft,
           child: AppPill(
             label: l10n.aiLearningPillError,
-            variant: PillVariant.streak,
+            variant: PillVariant.primary,
             icon: Icons.psychology_alt_outlined,
           ),
         ),
-        const SizedBox(height: AppTokens.s24),
+        const SizedBox(height: AppTokens.s32),
         if (word.isNotEmpty) ...[
           _AiWordContextCard(
             word: word,
@@ -54,10 +54,10 @@ class AiLearningScreen extends StatelessWidget {
             translation: translation,
             l10n: l10n,
           ),
-          const SizedBox(height: AppTokens.s24),
+          const SizedBox(height: AppTokens.s32),
         ],
         SectionHeader(title: l10n.aiLearningToolsTitle),
-        const SizedBox(height: AppTokens.s12),
+        const SizedBox(height: AppTokens.s16),
         _AiToolList(
           children: [
             _AiToolLink(
@@ -78,11 +78,11 @@ class AiLearningScreen extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: AppTokens.s12),
+        const SizedBox(height: AppTokens.s16),
         AppCard(
           padding: const EdgeInsets.symmetric(
-            horizontal: AppTokens.s8,
-            vertical: AppTokens.s4,
+            horizontal: AppTokens.s16,
+            vertical: AppTokens.s12,
           ),
           child: Column(
             children: [
@@ -226,16 +226,7 @@ class _AiToolLink extends StatelessWidget {
           children: [
             Row(
               children: [
-                Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
-                  ),
-                  alignment: Alignment.center,
-                  child: Icon(icon, color: color, size: 24),
-                ),
+                IconCueBadge(icon: icon, color: color, size: 44),
                 const Spacer(),
                 AppPill(
                   label: status,
@@ -287,10 +278,7 @@ class _AiToolRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppTokens.s8,
-        vertical: AppTokens.s12,
-      ),
+      padding: const EdgeInsets.symmetric(vertical: AppTokens.s16),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
