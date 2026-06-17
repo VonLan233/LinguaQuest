@@ -6,6 +6,7 @@ class StudySessionDraft {
   const StudySessionDraft({
     required this.uid,
     required this.mode,
+    required this.lessonId,
     required this.startedAt,
     required this.savedAt,
     required this.completedItems,
@@ -24,6 +25,7 @@ class StudySessionDraft {
 
   final String uid;
   final StudySessionEntryMode mode;
+  final String lessonId;
   final DateTime startedAt;
   final DateTime savedAt;
   final int completedItems;
@@ -54,6 +56,7 @@ class StudySessionDraft {
     return {
       'uid': uid,
       'mode': mode.name,
+      'lessonId': lessonId,
       'startedAt': startedAt.toIso8601String(),
       'savedAt': savedAt.toIso8601String(),
       'completedItems': completedItems,
@@ -75,6 +78,7 @@ class StudySessionDraft {
     return StudySessionDraft(
       uid: json['uid'] as String? ?? '',
       mode: _mode(json['mode']),
+      lessonId: json['lessonId'] as String? ?? '',
       startedAt:
           DateTime.tryParse(json['startedAt'] as String? ?? '') ??
           DateTime.now(),

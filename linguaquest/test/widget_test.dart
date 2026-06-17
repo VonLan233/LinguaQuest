@@ -362,6 +362,7 @@ void main() {
     final draft = StudySessionDraft(
       uid: 'u1',
       mode: StudySessionEntryMode.mixed,
+      lessonId: 'lesson-1',
       startedAt: now,
       savedAt: now.add(const Duration(minutes: 3)),
       completedItems: 2,
@@ -382,12 +383,85 @@ void main() {
 
     expect(restored.uid, 'u1');
     expect(restored.mode, StudySessionEntryMode.mixed);
+    expect(restored.lessonId, 'lesson-1');
     expect(restored.completedItems, 2);
     expect(restored.correctAnswers, 1);
     expect(restored.queue.single.wordId, word.id);
     expect(restored.queue.single.lessonWord?.word, word.word);
     expect(restored.answerLogs.single.responseTimeMs, 1200);
     expect(restored.wrongItemIds, contains('w2'));
+  });
+
+  testWidgets('mixed study clears a saved draft from another lesson', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'stale-draft-user',
+      name: 'Stale',
+      email: 'stale@lingua.quest',
+      targetExam: 'IELTS',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    final word = seedLessons().first.words.first;
+    final staleDraft = StudySessionDraft(
+      uid: profile.uid,
+      mode: StudySessionEntryMode.mixed,
+      lessonId: 'old-lesson',
+      startedAt: now,
+      savedAt: now,
+      completedItems: 2,
+      correctAnswers: 1,
+      confidence: 4,
+      reviewTargetRatio: 0.3,
+      newTargetRatio: 0.7,
+      dueReviewCount: 0,
+      newWordCount: 1,
+      weakWordCount: 0,
+      queue: [
+        StudySessionQueueItem(
+          id: 'new-${word.id}-understanding-0',
+          wordId: word.id,
+          source: StudySessionItemSource.newWord,
+          step: StudySessionStep.understanding,
+          lessonWord: word,
+          attempt: 0,
+          affectsSchedule: false,
+        ),
+      ],
+      answerLogs: const [],
+      wrongItemIds: const {},
+      scheduledWrongIds: const {},
+    );
+    const key = 'linguaquest.study_session_draft.stale-draft-user.mixed';
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+      key: jsonEncode(staleDraft.toJson()),
+    });
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          customWordRepositoryProvider.overrideWithValue(
+            _EmptyCustomWordRepository(),
+          ),
+        ],
+        child: const LinguaQuestApp(),
+      ),
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.tap(find.textContaining('开始'));
+    await tester.pumpAndSettle();
+
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getString(key), isNull);
+    expect(find.text('今日混排学习包'), findsOneWidget);
   });
 
   testWidgets('pronunciation controls expose loading and retry states', (

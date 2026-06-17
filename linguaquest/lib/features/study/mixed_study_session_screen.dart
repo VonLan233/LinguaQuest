@@ -231,9 +231,7 @@ class _MixedStudySessionScreenState
       final draft = StudySessionDraft.fromJson(
         Map<String, dynamic>.from(jsonDecode(raw) as Map),
       );
-      if (draft.uid != uid ||
-          draft.mode != widget.mode ||
-          draft.queue.isEmpty) {
+      if (!_canRestoreDraft(draft, state, uid)) {
         await prefs.remove(key);
         return false;
       }
@@ -266,6 +264,27 @@ class _MixedStudySessionScreenState
       await prefs.remove(key);
       return false;
     }
+  }
+
+  bool _canRestoreDraft(StudySessionDraft draft, AppState state, String uid) {
+    if (draft.uid != uid || draft.mode != widget.mode || draft.queue.isEmpty) {
+      return false;
+    }
+    final currentLesson = state.currentLesson;
+    if (draft.lessonId != (currentLesson?.id ?? '')) return false;
+    final currentLessonWordIds = {
+      for (final word in currentLesson?.words ?? const <Word>[]) word.id,
+    };
+    final customWordIds = {for (final word in state.customWords) word.id};
+    for (final item in draft.queue) {
+      if (item.isNewWord && !currentLessonWordIds.contains(item.wordId)) {
+        return false;
+      }
+      if (!item.isNewWord && !customWordIds.contains(item.wordId)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   Future<void> _continueFromCard(StudySessionQueueItem item) async {
@@ -541,6 +560,7 @@ class _MixedStudySessionScreenState
       final draft = StudySessionDraft(
         uid: uid,
         mode: widget.mode,
+        lessonId: state.currentLesson?.id ?? '',
         startedAt: _sessionStartedAt,
         savedAt: DateTime.now(),
         completedItems: _completedItems,
