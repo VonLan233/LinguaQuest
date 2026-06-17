@@ -1,6 +1,8 @@
 {
   "id": "toefl",
   "title": "托福高频词汇",
+  "titleEn": "TOEFL Core Words",
+  "titleMs": "Perkataan Teras TOEFL",
   "category": "exam",
   "examType": "TOEFL",
   "coverUrl": "https://source.unsplash.com/featured/800x480/?english,vocabulary,toefl",

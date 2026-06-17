@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -30,7 +31,7 @@ class SettingsScreen extends ConsumerWidget {
               icon: AppIcons.flag,
               title: l10n.commonStudyPlan,
               subtitle:
-                  '${state.currentStudyBook.name} · ${l10n.commonNew} ${state.dailyNewTarget} · ${l10n.commonReview} ${state.dailyReviewLimit}',
+                  '${displayWordbookTitle(state.currentStudyBook.id, l10n: l10n)} · ${l10n.commonNew} ${state.dailyNewTarget} · ${l10n.commonReview} ${state.dailyReviewLimit}',
               route: '/settings/study-plan',
             ),
             const SizedBox(height: AppTokens.s12),

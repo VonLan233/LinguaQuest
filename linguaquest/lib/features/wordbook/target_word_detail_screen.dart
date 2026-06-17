@@ -115,7 +115,9 @@ class TargetWordDetailScreen extends ConsumerWidget {
             AppCard(
               child: _WordHero(
                 word: word,
-                bookTitle: detail.book.title,
+                bookTitle: detail.book.nameFor(
+                  Localizations.localeOf(context).languageCode,
+                ),
                 l10n: l10n,
               ),
             ),

@@ -6,6 +6,7 @@ import '../../core/state/app_controller.dart';
 import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/learning_badges.dart';
@@ -21,8 +22,12 @@ class TrainingScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final user = state.user;
+    final localeCode = Localizations.localeOf(context).languageCode;
     final currentBook = state.currentWordBook;
-    final studyBookName = state.currentStudyBook.name;
+    final studyBookName = displayWordbookTitle(
+      state.currentStudyBook.id,
+      l10n: l10n,
+    );
     final studyBookTitle = studyBookName.isNotEmpty
         ? studyBookName
         : l10n.searchCurrentPlan;
@@ -61,7 +66,7 @@ class TrainingScreen extends ConsumerWidget {
               title: l10n.trainingCampusSpeed,
               subtitle: currentBook == null
                   ? '$studyBookTitle · ${l10n.trainingTimedTests}'
-                  : '${currentBook.title} · ${l10n.trainingTimedTests}',
+                  : '${currentBook.nameFor(localeCode)} · ${l10n.trainingTimedTests}',
               color: AppTokens.successColor(context),
               onTap: speedLesson == null
                   ? null
