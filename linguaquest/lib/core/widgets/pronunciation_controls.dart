@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 
+import '../theme/app_icons.dart';
 import '../theme/app_theme.dart';
 
 enum _PronunciationAccent {
@@ -206,7 +207,7 @@ class _PronunciationButton extends StatelessWidget {
               child: CircularProgressIndicator(strokeWidth: compact ? 2 : 2.2),
             )
           : Icon(
-              hasFailed ? Icons.refresh_rounded : Icons.volume_up_outlined,
+              hasFailed ? AppIcons.refresh : AppIcons.volumeUp,
               size: compact ? 16 : 18,
             ),
       label: Text(

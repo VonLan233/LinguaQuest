@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_icons.dart';
 import 'learning_badges.dart';
 
 class EmptyState extends StatelessWidget {
@@ -50,9 +51,9 @@ class EmptyState extends StatelessWidget {
   }
 
   String _iconEmoji(IconData icon) {
-    if (icon == Icons.check_circle_outline) return '✅';
-    if (icon == Icons.style_outlined) return '🗂';
-    if (icon == Icons.add) return '➕';
+    if (icon == AppIcons.checkCircle) return '✅';
+    if (icon == AppIcons.style) return '🗂';
+    if (icon == AppIcons.add) return '➕';
     return '🌱';
   }
 }

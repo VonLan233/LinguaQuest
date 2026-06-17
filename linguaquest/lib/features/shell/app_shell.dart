@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -120,32 +121,27 @@ class _QuestBottomNav extends StatelessWidget {
     return [
       _QuestTabData(
         label: l10n.tabHome,
-        icon: Icons.home_outlined,
-        selectedIcon: Icons.home_rounded,
+        icon: AppIcons.home,
         color: AppTheme.teal,
       ),
       _QuestTabData(
         label: l10n.tabTraining,
-        icon: Icons.sports_esports_outlined,
-        selectedIcon: Icons.sports_esports_rounded,
+        icon: AppIcons.sportsEsports,
         color: AppTheme.leaf,
       ),
       _QuestTabData(
         label: l10n.tabAiLearning,
-        icon: Icons.psychology_alt_outlined,
-        selectedIcon: Icons.psychology_alt_rounded,
+        icon: AppIcons.psychologyAlt,
         color: AppTheme.cyan,
       ),
       _QuestTabData(
         label: l10n.tabDiscover,
-        icon: Icons.explore_outlined,
-        selectedIcon: Icons.explore_rounded,
+        icon: AppIcons.explore,
         color: AppTheme.mango,
       ),
       _QuestTabData(
         label: l10n.tabProfile,
-        icon: Icons.person_outline,
-        selectedIcon: Icons.person_rounded,
+        icon: AppIcons.person,
         color: AppTheme.teal,
       ),
     ];
@@ -269,9 +265,10 @@ class _QuestTabIcon extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppTokens.radiusPill),
       ),
       child: Icon(
-        selected ? data.selectedIcon : data.icon,
+        data.icon,
         color: color,
         size: 22,
+        fill: selected ? 1 : 0,
       ),
     );
   }
@@ -281,12 +278,10 @@ class _QuestTabData {
   const _QuestTabData({
     required this.label,
     required this.icon,
-    required this.selectedIcon,
     required this.color,
   });
 
   final String label;
   final IconData icon;
-  final IconData selectedIcon;
   final Color color;
 }
