@@ -4069,6 +4069,36 @@ abstract class AppLocalizations {
   /// **'You won \"{prizeName}\" — added to your assets.'**
   String notificationLotteryBody(String prizeName);
 
+  /// No description provided for @osNotificationStudyReminderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your study tasks are ready'**
+  String get osNotificationStudyReminderTitle;
+
+  /// No description provided for @osNotificationStudyReminderBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish new words, reviews and check-in to keep your streak going.'**
+  String get osNotificationStudyReminderBody;
+
+  /// No description provided for @osNotificationReviewDueBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear your review queue, then start today\'s new words.'**
+  String get osNotificationReviewDueBody;
+
+  /// No description provided for @osNotificationChannelName.
+  ///
+  /// In en, this message translates to:
+  /// **'Study reminders'**
+  String get osNotificationChannelName;
+
+  /// No description provided for @osNotificationChannelDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Study reminders, review-due and check-in alerts'**
+  String get osNotificationChannelDescription;
+
   /// No description provided for @studyNewStudy.
   ///
   /// In en, this message translates to:

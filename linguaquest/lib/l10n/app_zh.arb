@@ -679,6 +679,11 @@
   "notificationActivityBody": "完成新学、复习和错词清理后可领取 XP。",
   "notificationLotteryTitle": "积分抽奖结果",
   "notificationLotteryBody": "获得「{prizeName}」，已放入个人资产。",
+  "osNotificationStudyReminderTitle": "今天的学习任务等你开始",
+  "osNotificationStudyReminderBody": "完成新学、复习和打卡，保持你的连续学习节奏。",
+  "osNotificationReviewDueBody": "先清掉复习队列，再开始今天的新词。",
+  "osNotificationChannelName": "学习提醒",
+  "osNotificationChannelDescription": "学习提醒、复习到期和打卡提醒",
 
   "studyNewStudy": "新学",
   "studyReviewOnly": "复习",

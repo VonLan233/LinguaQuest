@@ -2246,6 +2246,24 @@ class AppLocalizationsMs extends AppLocalizations {
   }
 
   @override
+  String get osNotificationStudyReminderTitle => 'Tugasan belajar anda sedia';
+
+  @override
+  String get osNotificationStudyReminderBody =>
+      'Selesaikan perkataan baharu, ulang kaji dan daftar masuk untuk mengekalkan momentum anda.';
+
+  @override
+  String get osNotificationReviewDueBody =>
+      'Bersihkan baris ulang kaji, kemudian mula perkataan baharu hari ini.';
+
+  @override
+  String get osNotificationChannelName => 'Peringatan belajar';
+
+  @override
+  String get osNotificationChannelDescription =>
+      'Peringatan belajar, ulang kaji dan daftar masuk';
+
+  @override
   String get studyNewStudy => 'Pembelajaran Baru';
 
   @override

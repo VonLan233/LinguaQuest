@@ -2128,6 +2128,21 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get osNotificationStudyReminderTitle => '今天的学习任务等你开始';
+
+  @override
+  String get osNotificationStudyReminderBody => '完成新学、复习和打卡，保持你的连续学习节奏。';
+
+  @override
+  String get osNotificationReviewDueBody => '先清掉复习队列，再开始今天的新词。';
+
+  @override
+  String get osNotificationChannelName => '学习提醒';
+
+  @override
+  String get osNotificationChannelDescription => '学习提醒、复习到期和打卡提醒';
+
+  @override
   String get studyNewStudy => '新学';
 
   @override

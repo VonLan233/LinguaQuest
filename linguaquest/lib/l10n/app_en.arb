@@ -702,6 +702,11 @@
       }
     }
   },
+  "osNotificationStudyReminderTitle": "Your study tasks are ready",
+  "osNotificationStudyReminderBody": "Finish new words, reviews and check-in to keep your streak going.",
+  "osNotificationReviewDueBody": "Clear your review queue, then start today's new words.",
+  "osNotificationChannelName": "Study reminders",
+  "osNotificationChannelDescription": "Study reminders, review-due and check-in alerts",
 
   "studyNewStudy": "New Study",
   "studyReviewOnly": "Review Only",

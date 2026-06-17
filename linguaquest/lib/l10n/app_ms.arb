@@ -679,6 +679,11 @@
   "notificationActivityBody": "Dapatkan XP selepas belajar perkataan baharu, ulang kaji dan membersihkan perkataan salah.",
   "notificationLotteryTitle": "Keputusan cabutan",
   "notificationLotteryBody": "Anda memenangi \"{prizeName}\" — ditambah ke aset anda.",
+  "osNotificationStudyReminderTitle": "Tugasan belajar anda sedia",
+  "osNotificationStudyReminderBody": "Selesaikan perkataan baharu, ulang kaji dan daftar masuk untuk mengekalkan momentum anda.",
+  "osNotificationReviewDueBody": "Bersihkan baris ulang kaji, kemudian mula perkataan baharu hari ini.",
+  "osNotificationChannelName": "Peringatan belajar",
+  "osNotificationChannelDescription": "Peringatan belajar, ulang kaji dan daftar masuk",
 
   "studyNewStudy": "Pembelajaran Baru",
   "studyReviewOnly": "Ulangkaji Sahaja",

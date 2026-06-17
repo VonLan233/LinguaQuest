@@ -495,12 +495,17 @@ class _CountingLocalNotificationService implements LocalNotificationService {
     required bool enabled,
     required int hour,
     required int minute,
+    required LocalNotificationStrings strings,
   }) async {
     dailyScheduleCalls += 1;
   }
 
   @override
-  Future<void> scheduleReviewDueReminder({required int dueCount}) async {}
+  Future<void> scheduleReviewDueReminder({
+    required int dueCount,
+    required String title,
+    required LocalNotificationStrings strings,
+  }) async {}
 }
 
 class _FailingNotificationRepository implements NotificationRepository {

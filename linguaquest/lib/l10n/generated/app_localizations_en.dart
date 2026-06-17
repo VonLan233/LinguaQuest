@@ -2238,6 +2238,24 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get osNotificationStudyReminderTitle => 'Your study tasks are ready';
+
+  @override
+  String get osNotificationStudyReminderBody =>
+      'Finish new words, reviews and check-in to keep your streak going.';
+
+  @override
+  String get osNotificationReviewDueBody =>
+      'Clear your review queue, then start today\'s new words.';
+
+  @override
+  String get osNotificationChannelName => 'Study reminders';
+
+  @override
+  String get osNotificationChannelDescription =>
+      'Study reminders, review-due and check-in alerts';
+
+  @override
   String get studyNewStudy => 'New Study';
 
   @override

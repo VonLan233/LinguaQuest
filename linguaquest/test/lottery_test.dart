@@ -407,8 +407,13 @@ class _NoopLocalNotificationService implements LocalNotificationService {
     required bool enabled,
     required int hour,
     required int minute,
+    required LocalNotificationStrings strings,
   }) async {}
 
   @override
-  Future<void> scheduleReviewDueReminder({required int dueCount}) async {}
+  Future<void> scheduleReviewDueReminder({
+    required int dueCount,
+    required String title,
+    required LocalNotificationStrings strings,
+  }) async {}
 }
