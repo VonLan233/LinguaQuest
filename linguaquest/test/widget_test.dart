@@ -51,7 +51,7 @@ import 'package:linguaquest/features/profile/profile_screen.dart';
 import 'package:linguaquest/features/profile/study_plan_settings_screen.dart';
 import 'package:linguaquest/features/search/search_screen.dart';
 import 'package:linguaquest/features/study/session/session_queue_builder.dart';
-import 'package:linguaquest/features/study/session/study_session_draft.dart';
+import 'package:linguaquest/data/models/study_session_draft.dart';
 import 'package:linguaquest/features/wordbook/target_word_detail_screen.dart';
 import 'package:linguaquest/features/wordbook/word_detail_screen.dart';
 import 'package:linguaquest/features/wordbook/wordbook_screen.dart';

@@ -1,6 +1,6 @@
-import '../../../data/models/custom_word.dart';
-import '../../../data/models/lesson.dart';
-import 'session_queue_builder.dart';
+import '../../features/study/session/session_queue_builder.dart';
+import 'custom_word.dart';
+import 'lesson.dart';
 
 class StudySessionDraft {
   const StudySessionDraft({

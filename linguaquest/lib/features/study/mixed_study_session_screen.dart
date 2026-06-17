@@ -19,9 +19,9 @@ import '../../core/widgets/mascot_empty_state.dart';
 import '../../core/widgets/word_choice_button.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
+import '../../data/models/study_session_draft.dart';
 import '../../l10n/generated/app_localizations.dart';
 import 'session/session_queue_builder.dart';
-import 'session/study_session_draft.dart';
 
 class MixedStudySessionScreen extends ConsumerStatefulWidget {
   const MixedStudySessionScreen({required this.mode, super.key});
