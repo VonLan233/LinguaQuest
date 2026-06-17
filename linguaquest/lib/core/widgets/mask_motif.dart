@@ -21,7 +21,7 @@ class MaskBackdrop extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           CustomPaint(painter: MaskMotifPainter(color: tint)),
-          if (overlay != null) overlay,
+          ?overlay,
         ],
       ),
     );

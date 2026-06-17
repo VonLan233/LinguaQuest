@@ -195,7 +195,6 @@ class _AiToolLink extends StatelessWidget {
     required this.subtitle,
     required this.color,
     required this.status,
-    this.onTap,
   });
 
   final IconData icon;
@@ -203,14 +202,12 @@ class _AiToolLink extends StatelessWidget {
   final String subtitle;
   final Color color;
   final String status;
-  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AppCard(
       padding: EdgeInsets.zero,
-      onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.all(AppTokens.s16),
         child: Column(
@@ -220,12 +217,7 @@ class _AiToolLink extends StatelessWidget {
               children: [
                 IconCueBadge(icon: icon, color: color, size: 44),
                 const Spacer(),
-                AppPill(
-                  label: status,
-                  variant: onTap == null
-                      ? PillVariant.neutral
-                      : PillVariant.primary,
-                ),
+                AppPill(label: status, variant: PillVariant.neutral),
               ],
             ),
             const SizedBox(height: AppTokens.s12),
@@ -248,59 +240,6 @@ class _AiToolLink extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _AiToolRow extends StatelessWidget {
-  const _AiToolRow({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.color,
-    required this.status,
-  });
-
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final Color color;
-  final String status;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppTokens.s16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          IconCueBadge(icon: icon, color: color),
-          const SizedBox(width: AppTokens.s12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: AppTokens.s4),
-                Text(
-                  subtitle,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: AppTokens.s12),
-          AppPill(label: status, variant: PillVariant.neutral),
-        ],
       ),
     );
   }

@@ -513,6 +513,7 @@ class _MixedStudySessionScreenState
       if (!activeContext.mounted || !saved) return;
     } else if (action == _ExitAction.discard) {
       await _clearDraft();
+      if (!activeContext.mounted) return;
     }
     _leave(activeContext);
   }
