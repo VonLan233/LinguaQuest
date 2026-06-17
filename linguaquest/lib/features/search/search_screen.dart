@@ -90,8 +90,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     final query = normalizeDictionaryQuery(_query);
     final hasQuery = query.isNotEmpty;
     final hasResults = _targetWords.isNotEmpty || _customWords.isNotEmpty;
+    final localeCode = Localizations.localeOf(context).languageCode;
     final currentBookTitle = state.currentWordBook?.title.isNotEmpty == true
-        ? state.currentWordBook!.title
+        ? state.currentWordBook!.nameFor(localeCode)
         : null;
 
     return Scaffold(
@@ -345,6 +346,7 @@ class _TargetWordTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localeCode = Localizations.localeOf(context).languageCode;
     final word = result.word;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppTokens.s12),
@@ -361,7 +363,7 @@ class _TargetWordTile extends StatelessWidget {
                 children: [
                   Text(word.word, style: theme.textTheme.titleMedium),
                   const SizedBox(height: 2),
-                  Text(word.meaning),
+                  Text(word.primaryDefinitionFor(localeCode)),
                   const SizedBox(height: 4),
                   Text(
                     '${result.matchedBy} · ${result.preview}',
@@ -371,7 +373,7 @@ class _TargetWordTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    result.book.title,
+                    result.book.nameFor(localeCode),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.bodySmall,

@@ -156,6 +156,9 @@ class _MixedStudySessionScreenState
                               )
                             : _QuestionStep(
                                 item: current,
+                                localeCode: Localizations.localeOf(
+                                  context,
+                                ).languageCode,
                                 options: _currentOptions,
                                 checked: _checked,
                                 lastCorrect: _lastCorrect,
@@ -235,8 +238,10 @@ class _MixedStudySessionScreenState
     // Ignore taps while a settle/persist is in flight, or once a correct (or
     // settled review) answer has locked the step.
     if (_isSubmitting || _lockedCorrect || (_checked && item.isReview)) return;
+    final localeCode = Localizations.localeOf(context).languageCode;
     final isCorrect =
-        answer.trim().toLowerCase() == item.meaning.trim().toLowerCase();
+        answer.trim().toLowerCase() ==
+        item.meaningFor(localeCode).trim().toLowerCase();
     final responseTime = DateTime.now()
         .difference(_itemStartedAt)
         .inMilliseconds;
@@ -379,7 +384,9 @@ class _MixedStudySessionScreenState
   }
 
   List<String> _buildOptionsFor(StudySessionQueueItem item, AppState state) {
-    final answerKey = item.meaning.trim().toLowerCase();
+    final localeCode = Localizations.localeOf(context).languageCode;
+    final answer = item.meaningFor(localeCode);
+    final answerKey = answer.trim().toLowerCase();
     final seen = <String>{answerKey};
     final distractorPool = <String>[];
 
@@ -392,14 +399,16 @@ class _MixedStudySessionScreenState
 
     for (final lesson in state.formalLessons) {
       for (final word in lesson.words) {
-        if (word.id != item.wordId) addDistractor(word.meaning);
+        if (word.id != item.wordId) {
+          addDistractor(word.primaryDefinitionFor(localeCode));
+        }
       }
     }
     for (final word in state.customWords) {
       if (word.id != item.wordId) addDistractor(word.meaning);
     }
 
-    final options = <String>[item.meaning];
+    final options = <String>[answer];
     final randomIndices = <int>{};
     final targetCount = min(3, distractorPool.length);
     while (randomIndices.length < targetCount) {
@@ -559,7 +568,7 @@ class _KnowledgeCardStep extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                item.meaning,
+                item.meaningFor(Localizations.localeOf(context).languageCode),
                 textAlign: TextAlign.center,
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w800,
@@ -617,9 +626,11 @@ class _QuestionStep extends StatelessWidget {
     required this.lockedCorrect,
     required this.wrongTries,
     required this.onSelected,
+    required this.localeCode,
   });
 
   final StudySessionQueueItem item;
+  final String localeCode;
   final List<String> options;
   final bool checked;
   final bool lastCorrect;
@@ -704,7 +715,8 @@ class _QuestionStep extends StatelessWidget {
   }
 
   bool _isCorrectOption(String option) {
-    return option.trim().toLowerCase() == item.meaning.trim().toLowerCase();
+    return option.trim().toLowerCase() ==
+        item.meaningFor(localeCode).trim().toLowerCase();
   }
 
   ChoiceState _optionState(String option) {

@@ -24,6 +24,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final localeCode = Localizations.localeOf(context).languageCode;
     final state = ref.watch(appControllerProvider);
     final user = state.user;
     final currentBook = state.currentWordBook;
@@ -95,7 +96,7 @@ class HomeScreen extends ConsumerWidget {
           child: _DailyFocusHeader(
             streak: user?.streak ?? 0,
             target:
-                currentBook?.title ??
+                currentBook?.nameFor(localeCode) ??
                 displayTarget(user?.targetExam, l10n: l10n),
             level: state.isStudyPlanPaused
                 ? l10n.homePlanPaused
@@ -125,7 +126,7 @@ class HomeScreen extends ConsumerWidget {
           child: _DailyTaskPanel(
             currentSection:
                 currentLesson?.section ??
-                currentBook?.title ??
+                currentBook?.nameFor(localeCode) ??
                 displayTarget(user?.targetExam ?? '雅思核心词汇', l10n: l10n),
             dailyGoal: dailyGoal,
             dueCount: dueCount,
@@ -164,7 +165,9 @@ class HomeScreen extends ConsumerWidget {
               _HomeShortcutData(
                 icon: AppIcons.route,
                 title: l10n.homeLearningPath,
-                subtitle: currentBook?.title ?? l10n.homeLearningPathSubtitle,
+                subtitle:
+                    currentBook?.nameFor(localeCode) ??
+                    l10n.homeLearningPathSubtitle,
                 onTap: () => context.push('/learn'),
               ),
             ],
@@ -181,7 +184,7 @@ class HomeScreen extends ConsumerWidget {
             title: l10n.homeWordOfDay,
             body: wordOfDay == null
                 ? l10n.homeOpenWordCard
-                : '${wordOfDay.word} · ${wordOfDay.meaning}',
+                : '${wordOfDay.word} · ${wordOfDay.primaryDefinitionFor(Localizations.localeOf(context).languageCode)}',
             onTap: () => wordOfDay == null
                 ? context.push('/wordbook')
                 : context.push('/wordbook/${wordOfDay.id}'),

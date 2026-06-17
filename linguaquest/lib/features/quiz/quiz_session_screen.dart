@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/utils/quiz_localization.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_card.dart';
@@ -88,7 +89,12 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
         body: Center(child: Text(l10n.quizNoQuestions)),
       );
     }
-    final question = lesson.questions[_index];
+    final localeCode = Localizations.localeOf(context).languageCode;
+    final question = localizeQuizQuestion(
+      lesson.questions[_index],
+      _meaningPool(lessons),
+      localeCode,
+    );
     final progress = (_index + 1) / lesson.questions.length;
 
     return PopScope(
@@ -220,6 +226,13 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
 
   String get _fallbackExitRoute =>
       widget.mode == QuizSessionMode.timed ? '/training' : '/learn';
+
+  /// Word pool used to resolve baked (Chinese) option/answer meanings to the
+  /// app locale. Covers the wordbook distractors by spanning every lesson's
+  /// words.
+  Iterable<Word> _meaningPool(List<Lesson> lessons) {
+    return [for (final lesson in lessons) ...lesson.words];
+  }
 
   Lesson? _findLesson(List<Lesson> lessons) {
     for (final lesson in lessons) {
@@ -521,7 +534,7 @@ class _FeedbackPanel extends StatelessWidget {
                 if (revealAnswer) ...[
                   const SizedBox(height: 8),
                   Text(
-                    '${l10n.quizReinforce}${question.word.word} · ${question.word.meaning}',
+                    '${l10n.quizReinforce}${question.word.word} · ${question.word.primaryDefinitionFor(Localizations.localeOf(context).languageCode)}',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                       fontWeight: FontWeight.w800,

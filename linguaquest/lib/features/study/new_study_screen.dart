@@ -261,7 +261,9 @@ class _WordPreviewTile extends StatelessWidget {
                     Text(word.word, style: theme.textTheme.titleMedium),
                     const SizedBox(height: 3),
                     Text(
-                      word.meaning,
+                      word.primaryDefinitionFor(
+                        Localizations.localeOf(context).languageCode,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),

@@ -302,9 +302,10 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
       _initialized = true;
       return;
     }
+    final localeCode = Localizations.localeOf(context).languageCode;
     _questions
       ..clear()
-      ..addAll(_buildQuestions(game, distinctWords, l10n));
+      ..addAll(_buildQuestions(game, distinctWords, l10n, localeCode));
     _initialized = true;
     _questionStartedAt = DateTime.now();
     _timer?.cancel();
@@ -364,6 +365,7 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
     TrainingGameType game,
     List<Word> words,
     AppLocalizations l10n,
+    String localeCode,
   ) {
     final count = switch (game) {
       TrainingGameType.wordRush => words.length * 4,
@@ -372,7 +374,14 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
     };
     return [
       for (var index = 0; index < count; index++)
-        _questionFor(game, words[index % words.length], words, index, l10n),
+        _questionFor(
+          game,
+          words[index % words.length],
+          words,
+          index,
+          l10n,
+          localeCode,
+        ),
     ];
   }
 
@@ -382,22 +391,24 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
     List<Word> words,
     int index,
     AppLocalizations l10n,
+    String localeCode,
   ) {
+    final wordMeaning = word.primaryDefinitionFor(localeCode);
     switch (game) {
       case TrainingGameType.wordRush:
         return QuizQuestion(
           id: '${game.id}-${word.id}-$index',
           type: QuizQuestionType.meaningChoice,
           prompt: l10n.trainingPromptWordRush(word.word),
-          answer: word.meaning,
+          answer: wordMeaning,
           options: _options(
-            answer: word.meaning,
-            values: words.map((item) => item.meaning),
+            answer: wordMeaning,
+            values: words.map((item) => item.primaryDefinitionFor(localeCode)),
             offset: index,
           ),
           explanation: l10n.trainingExplanationWordRush(
             word.word,
-            word.meaning,
+            wordMeaning,
             word.exampleSentence,
           ),
           word: word,
@@ -408,7 +419,7 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
           return QuizQuestion(
             id: '${game.id}-${word.id}-$index',
             type: QuizQuestionType.chineseChoice,
-            prompt: l10n.trainingPromptChineseChoice(word.meaning),
+            prompt: l10n.trainingPromptChineseChoice(wordMeaning),
             answer: word.word,
             options: _options(
               answer: word.word,
@@ -416,7 +427,7 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
               offset: index,
             ),
             explanation: l10n.trainingExplanationChineseChoice(
-              word.meaning,
+              wordMeaning,
               word.word,
             ),
             word: word,
@@ -431,26 +442,28 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
           prompt: variant == 2 && hasExample
               ? l10n.trainingPromptContextChoice(word.exampleSentence)
               : l10n.trainingPromptMeaningChoice(word.word),
-          answer: word.meaning,
+          answer: wordMeaning,
           options: _options(
-            answer: word.meaning,
-            values: words.map((item) => item.meaning),
+            answer: wordMeaning,
+            values: words.map((item) => item.primaryDefinitionFor(localeCode)),
             offset: index,
           ),
           explanation: l10n.trainingExplanationMeaningChoice(
             word.word,
-            word.meaning,
+            wordMeaning,
           ),
           word: word,
         );
       case TrainingGameType.spelling:
         final variant = index % 3;
         final prompt = switch (variant) {
-          0 => l10n.trainingPromptChineseSpelling(word.meaning),
+          0 => l10n.trainingPromptChineseSpelling(wordMeaning),
           1 => l10n.trainingPromptAudioSpelling(
             word.phonetic.isEmpty ? word.word : word.phonetic,
           ),
-          _ => l10n.trainingPromptContextSpelling(_blankExample(word)),
+          _ => l10n.trainingPromptContextSpelling(
+            _blankExample(word, localeCode),
+          ),
         };
         return QuizQuestion(
           id: '${game.id}-${word.id}-$index',
@@ -494,10 +507,12 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
     return List.unmodifiable(options);
   }
 
-  String _blankExample(Word word) {
+  String _blankExample(Word word, String localeCode) {
     final expression = RegExp(RegExp.escape(word.word), caseSensitive: false);
     final sentence = word.exampleSentence.trim();
-    if (sentence.isEmpty) return '____ (${word.meaning})';
+    if (sentence.isEmpty) {
+      return '____ (${word.primaryDefinitionFor(localeCode)})';
+    }
     return sentence.replaceFirst(expression, '____');
   }
 

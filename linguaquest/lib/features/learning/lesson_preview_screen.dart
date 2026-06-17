@@ -267,7 +267,9 @@ class _WordStudyCard extends StatelessWidget {
           ),
           const SizedBox(height: AppTokens.s20),
           Text(
-            word.meaning,
+            word.primaryDefinitionFor(
+              Localizations.localeOf(context).languageCode,
+            ),
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.w800,
             ),

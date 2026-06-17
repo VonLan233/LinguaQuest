@@ -316,7 +316,7 @@ class _TargetWordRow extends StatelessWidget {
                   ),
                   const SizedBox(height: AppTokens.s2),
                   Text(
-                    '${word.meaning}\n${word.phonetic} · ${word.partOfSpeech}',
+                    '${word.primaryDefinitionFor(Localizations.localeOf(context).languageCode)}\n${word.phonetic} · ${word.partOfSpeech}',
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: colorScheme.onSurfaceVariant,
                     ),
