@@ -34,6 +34,7 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
+  material_symbols_icons: ^4.2941.0
   dio: ^5.9.2
   flutter_riverpod: ^3.3.1
   flutter_local_notifications: ^21.0.0
