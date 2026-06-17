@@ -160,14 +160,14 @@ class _LotteryPanel extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(l10n.luckyDrawReward(result.prize.name)),
-            const SizedBox(height: 6),
+            const SizedBox(height: AppTokens.s8),
             Text(
               '${displayLotteryCategory(result.prize.category, l10n: l10n)} · '
               '${displayLotteryRarity(result.prize.rarity, l10n: l10n)}',
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: AppTokens.s8),
             Text(result.prize.description),
-            const SizedBox(height: 10),
+            const SizedBox(height: AppTokens.s12),
             Text(l10n.luckyDrawDeducted(result.cost, result.balanceAfter)),
           ],
         ),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../l10n/generated/app_localizations.dart';
 import 'shared_widgets.dart';
@@ -34,7 +35,7 @@ class XpTasksScreen extends ConsumerWidget {
         title: Text(l10n.discoverXpTasks),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(AppTokens.s20),
         children: [
           RewardTaskList(
             tasks: [

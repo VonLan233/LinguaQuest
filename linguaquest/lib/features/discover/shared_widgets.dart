@@ -12,13 +12,17 @@ class RewardTaskList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        for (var index = 0; index < tasks.length; index++) ...[
-          RewardTaskRow(task: tasks[index]),
-          if (index != tasks.length - 1) const SizedBox(height: AppTokens.s12),
+    return AppCard(
+      padding: EdgeInsets.zero,
+      child: Column(
+        children: [
+          for (var index = 0; index < tasks.length; index++) ...[
+            RewardTaskRow(task: tasks[index]),
+            if (index != tasks.length - 1)
+              const Divider(height: AppTokens.s16, color: AppTokens.hairline),
+          ],
         ],
-      ],
+      ),
     );
   }
 }
@@ -57,63 +61,65 @@ class RewardTaskRow extends StatelessWidget {
       badgeIcon = Icons.add_circle_outline;
     }
 
-    return AppCard(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppTokens.s12,
-        vertical: AppTokens.s12,
-      ),
+    return InkWell(
       onTap: canClaim
           ? task.onClaim
           : task.isDone
           ? null
           : task.onTap,
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: accent.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppTokens.s16,
+          vertical: AppTokens.s16,
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: accent.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
+              ),
+              alignment: Alignment.center,
+              child: Icon(task.icon, size: 22, color: accent),
             ),
-            alignment: Alignment.center,
-            child: Icon(task.icon, size: 22, color: accent),
-          ),
-          const SizedBox(width: AppTokens.s12),
-          Expanded(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  task.title,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
+            const SizedBox(width: AppTokens.s12),
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    task.title,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
-                ),
-                const SizedBox(height: AppTokens.s2),
-                Text(
-                  task.condition,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
+                  const SizedBox(height: AppTokens.s2),
+                  Text(
+                    task.condition,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: AppTokens.s8),
-          ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 132),
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: AppPill(
-                label: badgeLabel,
-                variant: badgeVariant,
-                icon: badgeIcon,
+                ],
               ),
             ),
-          ),
-        ],
+            const SizedBox(width: AppTokens.s8),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 132),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: AppPill(
+                  label: badgeLabel,
+                  variant: badgeVariant,
+                  icon: badgeIcon,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

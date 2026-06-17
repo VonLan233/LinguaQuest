@@ -41,7 +41,7 @@ class DiscoverScreen extends ConsumerWidget {
             ),
           ],
         ),
-        const SizedBox(height: AppTokens.s24),
+        const SizedBox(height: AppTokens.s32),
         Row(
           children: [
             Expanded(
@@ -102,17 +102,21 @@ class _DiscoverNavCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: color, size: 32),
+          Icon(icon, color: color, size: 36),
           const SizedBox(height: AppTokens.s12),
-          Text(title, style: theme.textTheme.titleMedium),
+          Text(
+            title,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
           const SizedBox(height: AppTokens.s4),
           Text(
             subtitle,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
+            style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
-              fontSize: 13,
             ),
           ),
         ],
