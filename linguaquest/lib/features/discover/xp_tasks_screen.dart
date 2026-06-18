@@ -6,6 +6,7 @@ import '../../core/theme/app_icons.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/fallback_back_button.dart';
+import '../../core/widgets/top_notice.dart';
 import '../../l10n/generated/app_localizations.dart';
 import 'shared_widgets.dart';
 
@@ -154,17 +155,13 @@ class XpTasksScreen extends ConsumerWidget {
           )
         : ref.read(appControllerProvider).errorMessage ??
               l10n.discoverCannotClaim;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        duration: const Duration(seconds: 2),
-        content: Text(message),
-        action: succeeded
-            ? SnackBarAction(
-                label: l10n.discoverViewProfile,
-                onPressed: () => context.go('/profile'),
-              )
-            : null,
-      ),
+    // A passive top notice that auto-dismisses (~1.8s) rather than a bottom
+    // SnackBar the user had to tap away. The XP is already credited, so no
+    // navigation action is needed.
+    showTopNotice(
+      context,
+      message,
+      icon: succeeded ? AppIcons.checkCircle : AppIcons.warningAmber,
     );
   }
 }
