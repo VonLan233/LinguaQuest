@@ -8,8 +8,8 @@ import '../../core/state/app_state.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/app_card.dart';
-import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
+import '../../core/widgets/target_language_picker.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -156,21 +156,16 @@ class _TargetLanguageSetting extends StatelessWidget {
   final String targetLanguage;
   final ValueChanged<String> onChanged;
 
-  // Active languages plus coming-soon placeholders.
-  static const _active = {'zh': 'Chinese (中文)'};
-  static const _comingSoon = {
-    'ms': 'Malay (Bahasa Melayu)',
-    'es': 'Spanish (Español)',
-    'fr': 'French (Français)',
-    'ja': 'Japanese (日本語)',
-  };
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final label = _active[targetLanguage] ?? _active['zh']!;
+    final label = targetLanguageLabel(targetLanguage);
     return AppCard(
-      onTap: () => _showSheet(context),
+      onTap: () => showTargetLanguageSheet(
+        context,
+        targetLanguage: targetLanguage,
+        onChanged: onChanged,
+      ),
       child: Row(
         children: [
           Icon(AppIcons.language, color: theme.colorScheme.primary),
@@ -179,7 +174,7 @@ class _TargetLanguageSetting extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Target language', style: theme.textTheme.titleMedium),
+                Text('Target Language', style: theme.textTheme.titleMedium),
                 Text(
                   label,
                   style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
@@ -189,47 +184,6 @@ class _TargetLanguageSetting extends StatelessWidget {
           ),
           const Icon(AppIcons.chevronRight),
         ],
-      ),
-    );
-  }
-
-  void _showSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (ctx) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            for (final entry in _active.entries)
-              ListTile(
-                leading: Icon(
-                  entry.key == targetLanguage
-                      ? AppIcons.radioButtonChecked
-                      : AppIcons.radioButtonUnchecked,
-                  color: Theme.of(ctx).colorScheme.primary,
-                ),
-                title: Text(entry.value),
-                selected: entry.key == targetLanguage,
-                onTap: () {
-                  onChanged(entry.key);
-                  Navigator.pop(ctx);
-                },
-              ),
-            for (final entry in _comingSoon.entries)
-              Opacity(
-                opacity: 0.6,
-                child: ListTile(
-                  leading: const Icon(AppIcons.radioButtonUnchecked),
-                  title: Text(entry.value),
-                  trailing: const AppPill(
-                    label: 'Coming Soon',
-                    variant: PillVariant.neutral,
-                  ),
-                  enabled: false,
-                ),
-              ),
-          ],
-        ),
       ),
     );
   }

@@ -16,6 +16,7 @@ import '../../core/widgets/mascot_image.dart';
 import '../../core/widgets/progress_ring.dart';
 import '../../core/widgets/section_header.dart';
 import '../../core/widgets/stat_tile.dart';
+import '../../core/widgets/target_language_picker.dart';
 import '../../data/models/lottery.dart';
 import '../../l10n/generated/app_localizations.dart';
 
@@ -116,9 +117,10 @@ class ProfileScreen extends ConsumerWidget {
               onTap: () => context.push('/settings/reminder'),
             ),
             _LanguageSettingsItem(
-              currentLocale: state.locale,
-              onChanged: (locale) =>
-                  ref.read(appControllerProvider.notifier).updateLocale(locale),
+              targetLanguage: state.targetLanguage,
+              onChanged: (code) => ref
+                  .read(appControllerProvider.notifier)
+                  .updateTargetLanguage(code),
             ),
           ],
         ),
@@ -415,24 +417,26 @@ class _SettingsItem extends StatelessWidget {
 
 class _LanguageSettingsItem extends StatelessWidget {
   const _LanguageSettingsItem({
-    required this.currentLocale,
+    required this.targetLanguage,
     required this.onChanged,
   });
 
-  final Locale? currentLocale;
-  final ValueChanged<Locale> onChanged;
+  final String targetLanguage;
+  final ValueChanged<String> onChanged;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final langCode = currentLocale?.languageCode ?? 'zh';
     return Material(
       color: Colors.transparent,
       borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () => _showLanguageSheet(context, langCode),
+        onTap: () => showTargetLanguageSheet(
+          context,
+          targetLanguage: targetLanguage,
+          onChanged: onChanged,
+        ),
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: AppTokens.s16,
@@ -448,12 +452,12 @@ class _LanguageSettingsItem extends StatelessWidget {
               const SizedBox(width: AppTokens.s16),
               Expanded(
                 child: Text(
-                  l10n.languageSetting,
+                  'Target Language',
                   style: theme.textTheme.bodyMedium,
                 ),
               ),
               Text(
-                _localeLabel(langCode),
+                targetLanguageLabel(targetLanguage),
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -468,87 +472,6 @@ class _LanguageSettingsItem extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  void _showLanguageSheet(BuildContext context, String current) {
-    showModalBottomSheet(
-      context: context,
-      builder: (ctx) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _LanguageOption(
-              code: 'zh',
-              label: '中文',
-              selected: current == 'zh',
-              onTap: () {
-                Navigator.pop(ctx);
-                onChanged(const Locale('zh'));
-              },
-            ),
-            _LanguageOption(
-              code: 'ms',
-              label: 'Bahasa Melayu',
-              selected: current == 'ms',
-              onTap: () {
-                Navigator.pop(ctx);
-                onChanged(const Locale('ms'));
-              },
-            ),
-            _LanguageOption(
-              code: 'en',
-              label: 'English',
-              selected: current == 'en',
-              onTap: () {
-                Navigator.pop(ctx);
-                onChanged(const Locale('en'));
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  String _localeLabel(String langCode) {
-    switch (langCode) {
-      case 'zh':
-        return '中文';
-      case 'ms':
-        return 'Bahasa Melayu';
-      case 'en':
-        return 'English';
-      default:
-        return '中文';
-    }
-  }
-}
-
-class _LanguageOption extends StatelessWidget {
-  const _LanguageOption({
-    required this.code,
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final String code;
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return ListTile(
-      leading: Icon(
-        selected ? AppIcons.radioButtonChecked : AppIcons.radioButtonUnchecked,
-        color: selected ? theme.colorScheme.primary : null,
-      ),
-      title: Text(label),
-      selected: selected,
-      onTap: onTap,
     );
   }
 }
