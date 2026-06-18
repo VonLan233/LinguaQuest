@@ -158,7 +158,9 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    expect(find.text('今天完成 4/14 词'), findsOneWidget);
+    // The label and the count now stack on two lines (was one combined string).
+    expect(find.text('今天完成'), findsOneWidget);
+    expect(find.text('4/14 词'), findsOneWidget);
     expect(find.text('29%'), findsOneWidget);
     expect(find.text('今日'), findsOneWidget);
 
@@ -1070,7 +1072,9 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     expect(learningRepository.listAttempts, 1);
-    expect(find.textContaining('LinguaQuest 启动失败'), findsOneWidget);
+    // The startup error is now localized; assert on the interpolated failure
+    // detail (locale-independent) rather than the Chinese wording.
+    expect(find.textContaining('temporary catalog failure'), findsOneWidget);
     expect(find.text('再试一次'), findsOneWidget);
 
     await tester.tap(find.text('再试一次'));

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../../data/models/app_notification.dart';
@@ -200,6 +202,24 @@ class AppState {
   }
 
   List<CustomWord> get reviewQueue => dueWords.take(dailyReviewLimit).toList();
+
+  /// The number of reviews planned for *today* — those already completed today
+  /// plus those still due (capped by the plan's review limit). Unlike the live
+  /// [reviewQueue], this stays constant as the user reviews: a word simply moves
+  /// from "due" to "done". Use this for the home progress denominator so it
+  /// never shrinks mid-session (which previously produced a nonsensical "5/4").
+  int get dailyReviewTarget {
+    if (isStudyPlanPaused) return 0;
+    // Count words still due that haven't been reviewed today, so a word can't be
+    // counted both as "done" and "still due" (it normally leaves the due set on
+    // review; this guards synthetic/edge states too).
+    final stillDue = reviewQueue
+        .where((word) => !todayReviewWordIds.contains(word.id))
+        .length;
+    final planned = todayReviewWordIds.length + stillDue;
+    final planLimit = studyPlan?.dailyReviewLimit;
+    return planLimit == null ? planned : math.min(planLimit, planned);
+  }
 
   List<CustomWord> get weakWords {
     final weak = reviewWords.where((word) => word.isWeak).toList()

@@ -31,10 +31,13 @@ class HomeScreen extends ConsumerWidget {
     final currentBook = state.currentWordBook;
     final dueCount = state.reviewQueue.length;
     final dailyGoal = state.dailyNewTarget;
-    final reviewTarget = state.isStudyPlanPaused ? 0 : dueCount;
     final todayLessonWords = state.todayLearningWords;
     final todayWork = todayLessonWords + state.todayReviewWordIds.length;
-    final totalWork = state.isStudyPlanPaused ? 0 : dailyGoal + reviewTarget;
+    // Stable denominator: reviewing a due word moves it from "due" to "done"
+    // without shrinking the total, so progress can't overshoot (the "5/4" bug).
+    final totalWork = state.isStudyPlanPaused
+        ? 0
+        : dailyGoal + state.dailyReviewTarget;
     final dailyProgress = totalWork <= 0
         ? 0.0
         : (todayWork / totalWork).clamp(0.0, 1.0);
@@ -519,14 +522,27 @@ class _DailyFocusHeader extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
-              child: Text(
-                isPaused
-                    ? l10n.homePlanPaused
-                    : '${l10n.homeTodayCompleted} $todayWork/$totalWork ${l10n.commonWords}',
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w900,
-                  height: 1.08,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    isPaused ? l10n.homePlanPaused : l10n.homeTodayCompleted,
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w900,
+                      height: 1.08,
+                    ),
+                  ),
+                  if (!isPaused) ...[
+                    const SizedBox(height: AppTokens.s4),
+                    Text(
+                      '$todayWork/$totalWork ${l10n.commonWords}',
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w800,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ),
             const SizedBox(width: 14),
