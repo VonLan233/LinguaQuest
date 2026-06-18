@@ -118,6 +118,7 @@ final appControllerProvider = NotifierProvider<AppController, AppState>(
 class AppController extends Notifier<AppState> {
   static const _themeModeKey = 'linguaquest.themeMode';
   static const _localeKey = 'linguaquest.locale';
+  static const _targetLanguageKey = 'linguaquest.target_language';
   static const _reminderKey = 'linguaquest.reminderSettings';
   static const _currentWordBookIdKey = 'linguaquest.currentWordBookId';
   static const _completedLessonIdsKey = 'linguaquest.completedLessons';
@@ -245,6 +246,7 @@ class AppController extends Notifier<AppState> {
         userWords: userWords,
         themeMode: _themeModeFromName(prefs.getString(_themeModeKey)),
         locale: _localeFromName(prefs.getString(_localeKey)),
+        targetLanguage: prefs.getString(_targetLanguageKey) ?? 'zh',
         reminderSettings: reminderSettings,
         studyPlan: studyPlan,
         completedLessonIds: completedLessonIds,
@@ -279,6 +281,12 @@ class AppController extends Notifier<AppState> {
     state = state.copyWith(locale: locale);
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_localeKey, locale.languageCode);
+  }
+
+  Future<void> updateTargetLanguage(String code) async {
+    state = state.copyWith(targetLanguage: code);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_targetLanguageKey, code);
   }
 
   Future<void> updateReminderSettings(DailyReminderSettings settings) async {
