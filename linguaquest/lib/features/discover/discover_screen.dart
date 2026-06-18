@@ -5,8 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_tokens.dart';
-import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
+import '../../core/widgets/compact_entry_card.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 class DiscoverScreen extends ConsumerWidget {
@@ -43,85 +43,27 @@ class DiscoverScreen extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: AppTokens.s32),
-        Row(
-          children: [
-            Expanded(
-              child: _DiscoverNavCard(
-                icon: AppIcons.emojiEvents,
-                title: l10n.discoverXpTasks,
-                subtitle: l10n.discoverXpTasksSubtitle,
-                color: AppTokens.xpSoftText,
-                onTap: () => context.push('/discover/xp-tasks'),
-              ),
-            ),
-            const SizedBox(width: AppTokens.s12),
-            Expanded(
-              child: _DiscoverNavCard(
-                icon: AppIcons.cardGiftcard,
-                title: l10n.discoverLuckyDraw,
-                subtitle: l10n.discoverLuckyDrawSubtitle,
-                color: AppTokens.streakSoftText,
-                onTap: () => context.push('/discover/lucky-draw'),
-              ),
-            ),
-          ],
+        CompactEntryCard(
+          icon: AppIcons.emojiEvents,
+          title: l10n.discoverXpTasks,
+          color: AppTokens.xpSoftText,
+          onTap: () => context.push('/discover/xp-tasks'),
         ),
         const SizedBox(height: AppTokens.s12),
-        _DiscoverNavCard(
+        CompactEntryCard(
+          icon: AppIcons.cardGiftcard,
+          title: l10n.discoverLuckyDraw,
+          color: AppTokens.streakSoftText,
+          onTap: () => context.push('/discover/lucky-draw'),
+        ),
+        const SizedBox(height: AppTokens.s12),
+        CompactEntryCard(
           icon: AppIcons.forum,
           title: l10n.discoverCommunityPosts,
-          subtitle: l10n.discoverCommunityPostsSubtitle,
           color: AppTokens.successSoftText,
           onTap: () => context.push('/discover/community'),
         ),
       ],
-    );
-  }
-}
-
-class _DiscoverNavCard extends StatelessWidget {
-  const _DiscoverNavCard({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.color,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final Color color;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return AppCard(
-      padding: const EdgeInsets.all(AppTokens.s20),
-      onTap: onTap,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, color: color, size: 36),
-          const SizedBox(height: AppTokens.s12),
-          Text(
-            title,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: AppTokens.s4),
-          Text(
-            subtitle,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

@@ -6,6 +6,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
+import '../../core/widgets/compact_entry_card.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -59,73 +60,74 @@ class AiLearningScreen extends StatelessWidget {
         ],
         SectionHeader(title: l10n.aiLearningToolsTitle),
         const SizedBox(height: AppTokens.s16),
-        _AiToolList(
-          children: [
-            _AiToolLink(
-              icon: AppIcons.questionAnswer,
-              title: l10n.aiLearningToolAiQA,
-              subtitle: l10n.aiLearningToolAiQADesc,
-              color: AppTheme.cyan,
-              status: l10n.aiLearningStatusSoon,
-            ),
-            _AiToolLink(
-              icon: AppIcons.accountTree,
-              title: l10n.aiLearningToolAiAnalysis,
-              subtitle: l10n.aiLearningToolAiAnalysisDesc,
-              color: AppTokens.azure,
-              status: l10n.aiLearningStatusSoon,
-            ),
-            _AiToolLink(
-              icon: AppIcons.rateReview,
-              title: l10n.aiLearningToolAiWriting,
-              subtitle: l10n.aiLearningToolAiWritingDesc,
-              color: AppTokens.coralColor(context),
-              status: l10n.aiLearningStatusLater,
-            ),
-            _AiToolLink(
-              icon: AppIcons.autoStories,
-              title: l10n.aiLearningToolCloze,
-              subtitle: l10n.aiLearningToolClozeDesc,
-              color: AppTokens.mangoColor(context),
-              status: l10n.aiLearningStatusPlanning,
-            ),
-            _AiToolLink(
-              icon: AppIcons.compareArrows,
-              title: l10n.aiLearningToolConfusion,
-              subtitle: l10n.aiLearningToolConfusionDesc,
-              color: AppTheme.cyan,
-              status: l10n.aiLearningStatusPlanning,
-            ),
-            _AiToolLink(
-              icon: AppIcons.tipsAndUpdates,
-              title: l10n.aiLearningToolSentence,
-              subtitle: l10n.aiLearningToolSentenceDesc,
-              color: AppTokens.azure,
-              status: l10n.aiLearningStatusPlanning,
-            ),
-          ],
+        _AiToolRow(
+          icon: AppIcons.questionAnswer,
+          title: l10n.aiLearningToolAiQA,
+          color: AppTheme.cyan,
+          status: l10n.aiLearningStatusSoon,
+        ),
+        const SizedBox(height: AppTokens.s12),
+        _AiToolRow(
+          icon: AppIcons.accountTree,
+          title: l10n.aiLearningToolAiAnalysis,
+          color: AppTokens.azure,
+          status: l10n.aiLearningStatusSoon,
+        ),
+        const SizedBox(height: AppTokens.s12),
+        _AiToolRow(
+          icon: AppIcons.rateReview,
+          title: l10n.aiLearningToolAiWriting,
+          color: AppTokens.coralColor(context),
+          status: l10n.aiLearningStatusLater,
+        ),
+        const SizedBox(height: AppTokens.s12),
+        _AiToolRow(
+          icon: AppIcons.autoStories,
+          title: l10n.aiLearningToolCloze,
+          color: AppTokens.mangoColor(context),
+          status: l10n.aiLearningStatusPlanning,
+        ),
+        const SizedBox(height: AppTokens.s12),
+        _AiToolRow(
+          icon: AppIcons.compareArrows,
+          title: l10n.aiLearningToolConfusion,
+          color: AppTheme.cyan,
+          status: l10n.aiLearningStatusPlanning,
+        ),
+        const SizedBox(height: AppTokens.s12),
+        _AiToolRow(
+          icon: AppIcons.tipsAndUpdates,
+          title: l10n.aiLearningToolSentence,
+          color: AppTokens.azure,
+          status: l10n.aiLearningStatusPlanning,
         ),
       ],
     );
   }
 }
 
-class _AiToolList extends StatelessWidget {
-  const _AiToolList({required this.children});
+/// A compact "coming soon" AI tool entry: icon + name + status pill, no blurb.
+class _AiToolRow extends StatelessWidget {
+  const _AiToolRow({
+    required this.icon,
+    required this.title,
+    required this.color,
+    required this.status,
+  });
 
-  final List<_AiToolLink> children;
+  final IconData icon;
+  final String title;
+  final Color color;
+  final String status;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        for (var index = 0; index < children.length; index++) ...[
-          children[index],
-          if (index < children.length - 1)
-            const SizedBox(height: AppTokens.s12),
-        ],
-      ],
+    return CompactEntryCard(
+      icon: icon,
+      title: title,
+      color: color,
+      enabled: false,
+      trailing: AppPill(label: status, variant: PillVariant.neutral),
     );
   }
 }
@@ -188,59 +190,3 @@ class _AiWordContextCard extends StatelessWidget {
   }
 }
 
-class _AiToolLink extends StatelessWidget {
-  const _AiToolLink({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.color,
-    required this.status,
-  });
-
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final Color color;
-  final String status;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return AppCard(
-      padding: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(AppTokens.s16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                IconCueBadge(icon: icon, color: color, size: 44),
-                const Spacer(),
-                AppPill(label: status, variant: PillVariant.neutral),
-              ],
-            ),
-            const SizedBox(height: AppTokens.s12),
-            Text(
-              title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(height: AppTokens.s4),
-            Text(
-              subtitle,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
