@@ -46,7 +46,7 @@ void main(List<String> args) {
     final meanings = <String>[
       for (final m in (form['meanings'] as List? ?? const []))
         m.toString().trim(),
-    ].where((m) => m.isNotEmpty).toList();
+    ].where((m) => m.isNotEmpty && !_containsCjk(m)).toList();
     if (meanings.isEmpty) continue;
     final pos = <String>[
       for (final p in (entry['pos'] as List? ?? const [])) p.toString().trim(),
@@ -112,3 +112,6 @@ String _uniqueId(Set<String> used, String pinyin, int index) {
   }
   return id;
 }
+
+final _cjk = RegExp(r'[一-鿿㐀-䶿]');
+bool _containsCjk(String value) => _cjk.hasMatch(value);
