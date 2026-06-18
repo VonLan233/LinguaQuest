@@ -2078,20 +2078,10 @@ class AppController extends Notifier<AppState> {
     return books.isEmpty ? mapped : books.first.id;
   }
 
-  String _mappedWordBookId(String normalizedTarget) {
-    if (normalizedTarget == 'beginner' || normalizedTarget == 'daily-english') {
-      return 'beginner';
-    }
-    if (normalizedTarget == 'exam-core') return 'ielts';
-    if (normalizedTarget.contains('ielts') || normalizedTarget.contains('雅思')) {
-      return 'ielts';
-    }
-    if (normalizedTarget.contains('toefl') || normalizedTarget.contains('托福')) {
-      return 'toefl';
-    }
-    if (normalizedTarget.contains('gre')) return 'gre';
-    return 'beginner';
-  }
+  // Only the HSK 1 book ships today; every target maps to it. (The
+  // _wordBookIdForTarget title/examType fallback above still adapts if more
+  // books are added later.)
+  String _mappedWordBookId(String normalizedTarget) => 'hsk1';
 
   bool _hasWordBook(String wordBookId) {
     return _wordBookById(state.wordBooks, wordBookId) != null;

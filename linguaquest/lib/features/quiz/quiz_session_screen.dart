@@ -382,7 +382,7 @@ class _QuestionPromptPanel extends StatelessWidget {
           ImageCueBadge(cue: question.word.imageCue, size: 104),
           const SizedBox(height: 14),
           Text(
-            localizedQuizPrompt(question, l10n),
+            question.prompt,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.headlineSmall,
           ),
@@ -536,7 +536,7 @@ class _FeedbackPanel extends StatelessWidget {
               children: [
                 Text(
                   revealAnswer
-                      ? '${l10n.quizCorrect}${localizedQuizExplanation(question, l10n)}'
+                      ? '${l10n.quizCorrect}${question.explanation}'
                       : '${l10n.quizWrong}${l10n.quizRetry}',
                   style: TextStyle(color: color),
                 ),

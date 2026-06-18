@@ -320,31 +320,6 @@ void main() {
     );
   });
 
-  test(
-    'localized quiz prompt rewrites generated Chinese spelling prompts',
-    () async {
-      final en = await AppLocalizations.delegate.load(const Locale('en'));
-      final word = seedLessons().first.words.first;
-      final question = QuizQuestion(
-        id: 'spelling-1',
-        type: QuizQuestionType.spelling,
-        prompt: '根据释义拼写单词：to leave behind',
-        answer: 'abandon',
-        options: [],
-        explanation: '正确拼写是“abandon”。',
-        word: word,
-      );
-
-      final prompt = localizedQuizPrompt(question, en);
-
-      expect(
-        prompt,
-        'Spell the English word from the meaning: to leave behind',
-      );
-      expect(prompt, isNot(contains('根据释义')));
-    },
-  );
-
   test('localized quiz question resolves baked Chinese answer options', () {
     final lessons = seedLessons();
     final lesson = lessons.first;
@@ -362,17 +337,6 @@ void main() {
     for (final option in localized.options) {
       expect(option, isNot(contains(chineseText)));
     }
-  });
-
-  test('localized quiz explanation rewrites baked Chinese feedback', () async {
-    final en = await AppLocalizations.delegate.load(const Locale('en'));
-    final question = seedLessons().first.questions.first;
-    final explanation = localizedQuizExplanation(question, en);
-
-    expect(explanation, contains(question.word.word));
-    expect(explanation, contains(question.word.primaryDefinitionFor('en')));
-    expect(explanation, isNot(contains(RegExp(r'[\u4e00-\u9fff]'))));
-    expect(explanation, isNot(question.explanation));
   });
 
   test('study session draft round trips queue and progress', () {
@@ -2171,10 +2135,9 @@ void main() {
 
     final choiceQuestion = lesson.questions[choiceIndex];
     final nextQuestion = lesson.questions[choiceIndex + 1];
-    // The UI is locked to English, so resolve prompts with the English l10n.
-    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
-    final choicePrompt = localizedQuizPrompt(choiceQuestion, l10n);
-    final nextPrompt = localizedQuizPrompt(nextQuestion, l10n);
+    // The UI is locked to English; the factory bakes the English prompt.
+    final choicePrompt = choiceQuestion.prompt;
+    final nextPrompt = nextQuestion.prompt;
 
     // Tapping the correct choice judges instantly — no check/continue buttons.
     await _tapOptionNoSettle(tester, choiceQuestion.answer);
@@ -2234,10 +2197,9 @@ void main() {
 
     final choiceQuestion = lesson.questions[choiceIndex];
     final nextQuestion = lesson.questions[choiceIndex + 1];
-    // The UI is locked to English, so resolve prompts with the English l10n.
-    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
-    final choicePrompt = localizedQuizPrompt(choiceQuestion, l10n);
-    final nextPrompt = localizedQuizPrompt(nextQuestion, l10n);
+    // The UI is locked to English; the factory bakes the English prompt.
+    final choicePrompt = choiceQuestion.prompt;
+    final nextPrompt = nextQuestion.prompt;
 
     // A wrong tap shows the retry feedback and does NOT advance or reveal.
     await _tapAnyOptionExceptNoSettle(tester, choiceQuestion.answer);
@@ -2308,9 +2270,8 @@ void main() {
 
     final quizLesson = _currentLesson(tester);
     final firstQuestion = quizLesson.questions.first;
-    // The UI is locked to English, so resolve the prompt with the English l10n.
-    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
-    final firstPrompt = localizedQuizPrompt(firstQuestion, l10n);
+    // The UI is locked to English; the factory bakes the English prompt.
+    final firstPrompt = firstQuestion.prompt;
     // The question prompt marks that we are on the quiz screen.
     expect(find.text(firstPrompt), findsOneWidget);
     expect(find.byType(BackButtonIcon), findsOneWidget);
