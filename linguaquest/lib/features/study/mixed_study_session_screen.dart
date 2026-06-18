@@ -22,6 +22,7 @@ import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/study_session_draft.dart';
 import '../../l10n/generated/app_localizations.dart';
+import 'session/recognition_prompt.dart';
 import 'session/session_queue_builder.dart';
 
 class MixedStudySessionScreen extends ConsumerStatefulWidget {
@@ -775,8 +776,8 @@ class _QuestionStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          _promptFor(l10n),
+        Text.rich(
+          _promptSpans(l10n, theme),
           textAlign: TextAlign.center,
           style: theme.textTheme.headlineSmall,
         ),
@@ -863,6 +864,32 @@ class _QuestionStep extends StatelessWidget {
       return item.exampleSentence;
     }
     return l10n.mixedMeaningPrompt(item.displayWord);
+  }
+
+  /// Builds the prompt with the tested word ([item.displayWord]) underlined, so
+  /// recognition questions (which show only an example sentence) make clear
+  /// which word the learner must pick the meaning for.
+  TextSpan _promptSpans(AppLocalizations l10n, ThemeData theme) {
+    final segments = recognitionPromptSegments(
+      _promptFor(l10n),
+      item.displayWord,
+    );
+    final highlightStyle = TextStyle(
+      fontWeight: FontWeight.w900,
+      color: theme.colorScheme.primary,
+      decoration: TextDecoration.underline,
+      decorationColor: theme.colorScheme.primary,
+      decorationThickness: 2.5,
+    );
+    return TextSpan(
+      children: [
+        for (final segment in segments)
+          TextSpan(
+            text: segment.text,
+            style: segment.highlight ? highlightStyle : null,
+          ),
+      ],
+    );
   }
 
   String _stepLabelFor(AppLocalizations l10n) {
