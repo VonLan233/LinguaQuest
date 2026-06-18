@@ -356,13 +356,19 @@ CREATE TABLE IF NOT EXISTS user_assets (
 
     await connection.execute('''
 CREATE INDEX IF NOT EXISTS idx_study_sessions_uid_ended_at
-ON study_sessions (uid, ended_at);
+ON study_sessions (uid, ended_at)
+''');
+    await connection.execute('''
 CREATE INDEX IF NOT EXISTS idx_review_events_uid_reviewed_at
-ON review_events (uid, reviewed_at);
+ON review_events (uid, reviewed_at)
+''');
+    await connection.execute('''
 CREATE INDEX IF NOT EXISTS idx_custom_words_uid
-ON custom_words (uid);
+ON custom_words (uid)
+''');
+    await connection.execute('''
 CREATE INDEX IF NOT EXISTS idx_custom_words_uid_next_review
-ON custom_words (uid, next_review_at);
+ON custom_words (uid, next_review_at)
 ''');
 
     await connection.execute('''
