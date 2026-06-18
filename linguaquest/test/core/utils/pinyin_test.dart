@@ -24,5 +24,11 @@ void main() {
       expect(normalizePinyin(''), '');
       expect(normalizePinyin('   '), '');
     });
+
+    test('toneless typed pinyin matches the canonical answer', () {
+      // The quiz compares normalizePinyin(input) == normalizePinyin(answer).
+      expect(normalizePinyin('ni hao'), normalizePinyin('nǐhǎo'));
+      expect(normalizePinyin('PENGYOU'), normalizePinyin('péngyou'));
+    });
   });
 }

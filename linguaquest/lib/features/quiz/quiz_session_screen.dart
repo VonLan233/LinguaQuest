@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/utils/pinyin.dart';
 import '../../core/utils/quiz_localization.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/app_button.dart';
@@ -294,7 +295,8 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
     if (_lockedCorrect) return;
     final answer = _textController.text.trim();
     if (answer.isEmpty) return;
-    final isCorrect = answer.toLowerCase() == question.answer.toLowerCase();
+    final isCorrect =
+        normalizePinyin(answer) == normalizePinyin(question.answer);
     setState(() {
       _recordAttempt(question, isCorrect);
       _checked = true;
