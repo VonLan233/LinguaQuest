@@ -196,23 +196,19 @@ class _HeroBookCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        bookName,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: AppTokens.s8),
-                    _EditPlanChip(
-                      label: l10n.wordbookSwitch,
-                      onTap: onEditPlan,
-                    ),
-                  ],
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: _EditPlanChip(
+                    label: l10n.wordbookSwitch,
+                    onTap: onEditPlan,
+                  ),
+                ),
+                const SizedBox(height: AppTokens.s8),
+                Text(
+                  bookName,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
                 const SizedBox(height: AppTokens.s4),
                 Text(
