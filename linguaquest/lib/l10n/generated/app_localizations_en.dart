@@ -2891,8 +2891,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Decorative assets won from draws are for display only and don\'t affect learning scores.';
 
   @override
-  String get profileAssetsEmpty =>
-      'No decorative assets yet. After spending XP on the Discover page draw, avatar frames, profile backgrounds, badges, titles, card skins, and fragments will appear here.';
+  String get profileAssetsEmpty => 'No Assets Yet';
 
   @override
   String profileAssetMeta(Object category, Object fragments, Object quantity) {
@@ -2940,4 +2939,73 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get languageEnglish => 'English';
+
+  @override
+  String get wordKnowledgeTitle => 'Word breakdown';
+
+  @override
+  String get wordKnowledgeCollocations => 'Collocations';
+
+  @override
+  String get wordKnowledgeSynAnt => 'Synonyms / Antonyms';
+
+  @override
+  String get wordKnowledgeFamily => 'Word family';
+
+  @override
+  String get wordKnowledgeRoots => 'Roots & affixes';
+
+  @override
+  String get pronunciationAccentUk => 'UK';
+
+  @override
+  String get pronunciationAccentUs => 'US';
+
+  @override
+  String pronunciationAnnounce(String accent, String word) {
+    return '$accent $word';
+  }
+
+  @override
+  String pronunciationPlaying(String accent, String word) {
+    return '$accent: $word';
+  }
+
+  @override
+  String pronunciationUnavailable(String accent) {
+    return '$accent audio unavailable';
+  }
+
+  @override
+  String pronunciationFailedRetry(String accent) {
+    return '$accent playback failed, tap to retry';
+  }
+
+  @override
+  String pronunciationLoading(String accent) {
+    return '$accent loading';
+  }
+
+  @override
+  String pronunciationRetry(String accent) {
+    return '$accent retry';
+  }
+
+  @override
+  String get dueNow => 'Due now';
+
+  @override
+  String dueInDays(int count) {
+    return 'In $count days';
+  }
+
+  @override
+  String dueInHours(int count) {
+    return 'In $count hours';
+  }
+
+  @override
+  String dueInMinutes(int count) {
+    return 'In $count minutes';
+  }
 }

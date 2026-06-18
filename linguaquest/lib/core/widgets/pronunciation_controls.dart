@@ -3,16 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 
+import '../../l10n/generated/app_localizations.dart';
 import '../theme/app_icons.dart';
 import '../theme/app_theme.dart';
 
-enum _PronunciationAccent {
-  uk('英音'),
-  us('美音');
+enum _PronunciationAccent { uk, us }
 
-  const _PronunciationAccent(this.label);
-
-  final String label;
+String _accentLabel(AppLocalizations l10n, _PronunciationAccent accent) {
+  switch (accent) {
+    case _PronunciationAccent.uk:
+      return l10n.pronunciationAccentUk;
+    case _PronunciationAccent.us:
+      return l10n.pronunciationAccentUs;
+  }
 }
 
 class PronunciationControls extends StatefulWidget {
@@ -58,6 +61,7 @@ class _PronunciationControlsState extends State<PronunciationControls> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final failedAccent = _failedAccent;
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -86,7 +90,7 @@ class _PronunciationControlsState extends State<PronunciationControls> {
         if (failedAccent != null) ...[
           const SizedBox(height: 6),
           Text(
-            '${failedAccent.label}发音失败，请重试',
+            l10n.pronunciationFailedRetry(_accentLabel(l10n, failedAccent)),
             style: TextStyle(
               color: Theme.of(context).colorScheme.error,
               fontWeight: FontWeight.w800,
@@ -100,6 +104,8 @@ class _PronunciationControlsState extends State<PronunciationControls> {
   Future<void> _play(_PronunciationAccent accent) async {
     if (_loadingAccent != null) return;
     final view = View.of(context);
+    final l10n = AppLocalizations.of(context);
+    final accentLabel = _accentLabel(l10n, accent);
     setState(() {
       _loadingAccent = accent;
       _failedAccent = null;
@@ -118,7 +124,7 @@ class _PronunciationControlsState extends State<PronunciationControls> {
       if (!mounted) return;
       SemanticsService.sendAnnouncement(
         view,
-        '${accent.label} $word',
+        l10n.pronunciationAnnounce(accentLabel, word),
         TextDirection.ltr,
       );
     }
@@ -133,14 +139,14 @@ class _PronunciationControlsState extends State<PronunciationControls> {
           _loadingAccent = null;
           _failedAccent = null;
         });
-        _showMessage('${accent.label}发音：$word');
+        _showMessage(l10n.pronunciationPlaying(accentLabel, word));
       } catch (_) {
         if (!mounted || widget.word.trim() != word) return;
         setState(() {
           _loadingAccent = null;
           _failedAccent = accent;
         });
-        _showMessage('${accent.label}发音失败，请重试');
+        _showMessage(l10n.pronunciationFailedRetry(accentLabel));
       }
     } else {
       if (!mounted || widget.word.trim() != word) return;
@@ -148,8 +154,9 @@ class _PronunciationControlsState extends State<PronunciationControls> {
         _loadingAccent = null;
         _failedAccent = hasWord ? null : accent;
       });
-      final label = accent.label;
-      final message = hasWord ? '$label发音：$word' : '$label发音暂不可用';
+      final message = hasWord
+          ? l10n.pronunciationPlaying(accentLabel, word)
+          : l10n.pronunciationUnavailable(accentLabel);
       _showMessage(message);
     }
   }
@@ -184,6 +191,8 @@ class _PronunciationButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+    final accentLabel = _accentLabel(l10n, accent);
     final color = hasFailed ? theme.colorScheme.error : AppTheme.teal;
     return OutlinedButton.icon(
       key: ValueKey('pronunciation-${accent.name}'),
@@ -212,10 +221,10 @@ class _PronunciationButton extends StatelessWidget {
             ),
       label: Text(
         isLoading
-            ? '${accent.label}加载'
+            ? l10n.pronunciationLoading(accentLabel)
             : hasFailed
-            ? '${accent.label}重试'
-            : accent.label,
+            ? l10n.pronunciationRetry(accentLabel)
+            : accentLabel,
       ),
     );
   }

@@ -241,7 +241,7 @@ class _ReviewTile extends ConsumerWidget {
                       Text(word.word, style: theme.textTheme.titleMedium),
                       const SizedBox(height: 3),
                       Text(
-                        '${word.meaning} · ${formatRelativeDue(word.nextReviewAt, DateTime.now())}',
+                        '${word.meaning} · ${formatRelativeDue(word.nextReviewAt, DateTime.now(), l10n)}',
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(

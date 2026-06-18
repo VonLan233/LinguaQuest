@@ -409,7 +409,7 @@ class _MemoryHintLine extends StatelessWidget {
           child: Text(
             isRevealed
                 ? l10n.reviewStudyNextReview(
-                    formatRelativeDue(word.nextReviewAt, DateTime.now()),
+                    formatRelativeDue(word.nextReviewAt, DateTime.now(), l10n),
                   )
                 : l10n.reviewStudyHiddenHint,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(

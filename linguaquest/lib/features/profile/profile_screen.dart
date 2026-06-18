@@ -146,7 +146,6 @@ class ProfileScreen extends ConsumerWidget {
         const SizedBox(height: AppTokens.s32),
         SectionHeader(
           title: l10n.profileAssetsTitle,
-          subtitle: l10n.profileAssetsSubtitle,
         ),
         const SizedBox(height: AppTokens.s12),
         _AssetInventory(assets: state.userAssets),
@@ -583,7 +582,6 @@ class _AssetInventory extends StatelessWidget {
       return AppCard(
         child: MascotEmptyState(
           title: l10n.profileAssetsEmpty,
-          message: l10n.profileAssetsSubtitle,
         ),
       );
     }

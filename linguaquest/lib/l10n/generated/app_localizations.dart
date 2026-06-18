@@ -5206,7 +5206,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileAssetsEmpty.
   ///
   /// In en, this message translates to:
-  /// **'No decorative assets yet. After spending XP on the Discover page draw, avatar frames, profile backgrounds, badges, titles, card skins, and fragments will appear here.'**
+  /// **'No Assets Yet'**
   String get profileAssetsEmpty;
 
   /// No description provided for @profileAssetMeta.
@@ -5298,6 +5298,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'English'**
   String get languageEnglish;
+
+  /// No description provided for @wordKnowledgeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Word breakdown'**
+  String get wordKnowledgeTitle;
+
+  /// No description provided for @wordKnowledgeCollocations.
+  ///
+  /// In en, this message translates to:
+  /// **'Collocations'**
+  String get wordKnowledgeCollocations;
+
+  /// No description provided for @wordKnowledgeSynAnt.
+  ///
+  /// In en, this message translates to:
+  /// **'Synonyms / Antonyms'**
+  String get wordKnowledgeSynAnt;
+
+  /// No description provided for @wordKnowledgeFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Word family'**
+  String get wordKnowledgeFamily;
+
+  /// No description provided for @wordKnowledgeRoots.
+  ///
+  /// In en, this message translates to:
+  /// **'Roots & affixes'**
+  String get wordKnowledgeRoots;
+
+  /// No description provided for @pronunciationAccentUk.
+  ///
+  /// In en, this message translates to:
+  /// **'UK'**
+  String get pronunciationAccentUk;
+
+  /// No description provided for @pronunciationAccentUs.
+  ///
+  /// In en, this message translates to:
+  /// **'US'**
+  String get pronunciationAccentUs;
+
+  /// No description provided for @pronunciationAnnounce.
+  ///
+  /// In en, this message translates to:
+  /// **'{accent} {word}'**
+  String pronunciationAnnounce(String accent, String word);
+
+  /// No description provided for @pronunciationPlaying.
+  ///
+  /// In en, this message translates to:
+  /// **'{accent}: {word}'**
+  String pronunciationPlaying(String accent, String word);
+
+  /// No description provided for @pronunciationUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'{accent} audio unavailable'**
+  String pronunciationUnavailable(String accent);
+
+  /// No description provided for @pronunciationFailedRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'{accent} playback failed, tap to retry'**
+  String pronunciationFailedRetry(String accent);
+
+  /// No description provided for @pronunciationLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'{accent} loading'**
+  String pronunciationLoading(String accent);
+
+  /// No description provided for @pronunciationRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'{accent} retry'**
+  String pronunciationRetry(String accent);
+
+  /// No description provided for @dueNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Due now'**
+  String get dueNow;
+
+  /// No description provided for @dueInDays.
+  ///
+  /// In en, this message translates to:
+  /// **'In {count} days'**
+  String dueInDays(int count);
+
+  /// No description provided for @dueInHours.
+  ///
+  /// In en, this message translates to:
+  /// **'In {count} hours'**
+  String dueInHours(int count);
+
+  /// No description provided for @dueInMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'In {count} minutes'**
+  String dueInMinutes(int count);
 }
 
 class _AppLocalizationsDelegate

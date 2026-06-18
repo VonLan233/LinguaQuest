@@ -97,11 +97,11 @@ class WordDetailScreen extends ConsumerWidget {
               runSpacing: 8,
               children: [
                 AppPill(
-                  label: displayCustomTag(word.tag),
+                  label: displayCustomTag(word.tag, l10n: l10n),
                   variant: PillVariant.neutral,
                 ),
                 AppPill(
-                  label: displayDifficulty(word.difficulty),
+                  label: displayDifficulty(word.difficulty, l10n: l10n),
                   variant: _difficultyVariant(word.difficulty),
                 ),
                 AppPill(
@@ -113,7 +113,7 @@ class WordDetailScreen extends ConsumerWidget {
                 ),
                 AppPill(
                   label: l10n.wordDetailNextReview(
-                    formatRelativeDue(word.nextReviewAt, DateTime.now()),
+                    formatRelativeDue(word.nextReviewAt, DateTime.now(), l10n),
                   ),
                   variant: PillVariant.neutral,
                   icon: AppIcons.schedule,

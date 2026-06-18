@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:linguaquest/core/theme/app_icons.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_pill.dart';
@@ -47,6 +48,7 @@ class _WordKnowledgeSectionsState extends State<WordKnowledgeSections> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final knowledge = _knowledgeFor(
       widget.wordText,
       widget.meaning,
@@ -61,13 +63,13 @@ class _WordKnowledgeSectionsState extends State<WordKnowledgeSections> {
       _KnowledgePanelData(
         icon: AppIcons.hub,
         color: AppTheme.cyan,
-        title: '词组搭配',
+        title: l10n.wordKnowledgeCollocations,
         body: knowledge.collocations.join(' · '),
       ),
       _KnowledgePanelData(
         icon: AppIcons.compareArrows,
         color: AppTheme.teal,
-        title: '近义 / 反义',
+        title: l10n.wordKnowledgeSynAnt,
         body:
             '近义：${knowledge.synonyms.join('、')}；反义：${knowledge.antonyms.join('、')}',
         synonyms: knowledge.synonyms,
@@ -76,13 +78,13 @@ class _WordKnowledgeSectionsState extends State<WordKnowledgeSections> {
       _KnowledgePanelData(
         icon: AppIcons.accountTree,
         color: AppTheme.mango,
-        title: '派生词族',
+        title: l10n.wordKnowledgeFamily,
         body: knowledge.family.join(' · '),
       ),
       _KnowledgePanelData(
         icon: AppIcons.psychology,
         color: AppTheme.coral,
-        title: '词根拆词',
+        title: l10n.wordKnowledgeRoots,
         body: knowledge.rootNote,
       ),
     ];
@@ -91,7 +93,7 @@ class _WordKnowledgeSectionsState extends State<WordKnowledgeSections> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '词汇全解',
+          l10n.wordKnowledgeTitle,
           style: Theme.of(
             context,
           ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),

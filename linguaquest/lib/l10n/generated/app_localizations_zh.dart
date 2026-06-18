@@ -2739,8 +2739,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get profileAssetsSubtitle => '抽奖获得的装饰资产只用于展示，不影响学习分数。';
 
   @override
-  String get profileAssetsEmpty =>
-      '暂无装饰资产。前往发现页使用 XP 抽奖后，头像框、主页背景、徽章、称号、卡片皮肤和碎片会显示在这里。';
+  String get profileAssetsEmpty => '暂无资产';
 
   @override
   String profileAssetMeta(Object category, Object fragments, Object quantity) {
@@ -2788,4 +2787,73 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get languageEnglish => 'English';
+
+  @override
+  String get wordKnowledgeTitle => '词汇全解';
+
+  @override
+  String get wordKnowledgeCollocations => '词组搭配';
+
+  @override
+  String get wordKnowledgeSynAnt => '近义 / 反义';
+
+  @override
+  String get wordKnowledgeFamily => '派生词族';
+
+  @override
+  String get wordKnowledgeRoots => '词根拆词';
+
+  @override
+  String get pronunciationAccentUk => '英音';
+
+  @override
+  String get pronunciationAccentUs => '美音';
+
+  @override
+  String pronunciationAnnounce(String accent, String word) {
+    return '$accent $word';
+  }
+
+  @override
+  String pronunciationPlaying(String accent, String word) {
+    return '$accent发音：$word';
+  }
+
+  @override
+  String pronunciationUnavailable(String accent) {
+    return '$accent发音暂不可用';
+  }
+
+  @override
+  String pronunciationFailedRetry(String accent) {
+    return '$accent发音失败，请重试';
+  }
+
+  @override
+  String pronunciationLoading(String accent) {
+    return '$accent加载';
+  }
+
+  @override
+  String pronunciationRetry(String accent) {
+    return '$accent重试';
+  }
+
+  @override
+  String get dueNow => '现在到期';
+
+  @override
+  String dueInDays(int count) {
+    return '$count 天后';
+  }
+
+  @override
+  String dueInHours(int count) {
+    return '$count 小时后';
+  }
+
+  @override
+  String dueInMinutes(int count) {
+    return '$count 分钟后';
+  }
 }

@@ -155,35 +155,33 @@ class _TrainingGoalHeader extends StatelessWidget {
         AppTokens.s20,
         AppTokens.s20,
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const IconCueBadge(icon: AppIcons.bolt, color: AppTokens.mango),
-          const SizedBox(width: AppTokens.s16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '$weeklyPrefix $weeklyXp XP',
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                const SizedBox(height: AppTokens.s8),
-                Text(
-                  dailyAvailable,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
+          Row(
+            children: [
+              const IconCueBadge(icon: AppIcons.bolt, color: AppTokens.mango),
+              const Spacer(),
+              AppPill(
+                label: '$streak $streakLabel',
+                variant: PillVariant.streak,
+                icon: AppIcons.localFireDepartment,
+              ),
+            ],
+          ),
+          const SizedBox(height: AppTokens.s16),
+          Text(
+            '$weeklyPrefix $weeklyXp XP',
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w800,
             ),
           ),
-          const SizedBox(width: AppTokens.s12),
-          AppPill(
-            label: '$streak $streakLabel',
-            variant: PillVariant.streak,
-            icon: AppIcons.localFireDepartment,
+          const SizedBox(height: AppTokens.s4),
+          Text(
+            dailyAvailable,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
           ),
         ],
       ),

@@ -2904,8 +2904,7 @@ class AppLocalizationsMs extends AppLocalizations {
       'Aset hiasan yang dimenangi daripada cabutan adalah untuk paparan sahaja dan tidak menjejaskan skor pembelajaran.';
 
   @override
-  String get profileAssetsEmpty =>
-      'Belum ada aset hiasan. Selepas menggunakan XP untuk cabutan di halaman Discover, bingkai avatar, latar belakang profil, lencana, gelaran, kulit kad dan serpihan akan dipaparkan di sini.';
+  String get profileAssetsEmpty => 'Belum ada aset';
 
   @override
   String profileAssetMeta(Object category, Object fragments, Object quantity) {
@@ -2953,4 +2952,73 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get languageEnglish => 'English';
+
+  @override
+  String get wordKnowledgeTitle => 'Pecahan perkataan';
+
+  @override
+  String get wordKnowledgeCollocations => 'Kolokasi';
+
+  @override
+  String get wordKnowledgeSynAnt => 'Sinonim / Antonim';
+
+  @override
+  String get wordKnowledgeFamily => 'Keluarga perkataan';
+
+  @override
+  String get wordKnowledgeRoots => 'Akar & imbuhan';
+
+  @override
+  String get pronunciationAccentUk => 'UK';
+
+  @override
+  String get pronunciationAccentUs => 'US';
+
+  @override
+  String pronunciationAnnounce(String accent, String word) {
+    return '$accent $word';
+  }
+
+  @override
+  String pronunciationPlaying(String accent, String word) {
+    return '$accent: $word';
+  }
+
+  @override
+  String pronunciationUnavailable(String accent) {
+    return 'Audio $accent tidak tersedia';
+  }
+
+  @override
+  String pronunciationFailedRetry(String accent) {
+    return 'Main $accent gagal, ketik untuk cuba lagi';
+  }
+
+  @override
+  String pronunciationLoading(String accent) {
+    return '$accent memuat';
+  }
+
+  @override
+  String pronunciationRetry(String accent) {
+    return '$accent cuba lagi';
+  }
+
+  @override
+  String get dueNow => 'Perlu sekarang';
+
+  @override
+  String dueInDays(int count) {
+    return '$count hari lagi';
+  }
+
+  @override
+  String dueInHours(int count) {
+    return '$count jam lagi';
+  }
+
+  @override
+  String dueInMinutes(int count) {
+    return '$count minit lagi';
+  }
 }
