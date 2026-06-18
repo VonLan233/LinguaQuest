@@ -160,6 +160,9 @@ class _TargetLanguageSetting extends StatelessWidget {
   static const _active = {'zh': 'Chinese (中文)'};
   static const _comingSoon = {
     'ms': 'Malay (Bahasa Melayu)',
+    'es': 'Spanish (Español)',
+    'fr': 'French (Français)',
+    'ja': 'Japanese (日本語)',
   };
 
   @override
