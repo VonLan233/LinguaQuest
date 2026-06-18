@@ -235,11 +235,16 @@ CREATE TABLE IF NOT EXISTS notifications (
   target_route TEXT NOT NULL DEFAULT '/home',
   is_read BOOLEAN NOT NULL DEFAULT FALSE,
   source_key TEXT,
+  params TEXT NOT NULL DEFAULT '{}',
   read_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL,
   UNIQUE (uid, source_key)
 );
 ''');
+
+    await connection.execute(
+      "ALTER TABLE notifications ADD COLUMN IF NOT EXISTS params TEXT NOT NULL DEFAULT '{}'",
+    );
 
     await connection.execute('''
 CREATE TABLE IF NOT EXISTS lottery_prizes (
@@ -1086,7 +1091,7 @@ ORDER BY created_at DESC
       final data = notifications[index];
       values.add('''
 (@id$index, @uid, @type$index, @title$index, @body$index, @targetRoute$index,
- @isRead$index, @sourceKey$index, @readAt$index, @createdAt$index)
+ @isRead$index, @sourceKey$index, @params$index, @readAt$index, @createdAt$index)
 ''');
       parameters.addAll({
         'id$index': data['id'],
@@ -1096,6 +1101,7 @@ ORDER BY created_at DESC
         'targetRoute$index': data['targetRoute'] ?? '/home',
         'isRead$index': data['isRead'] ?? false,
         'sourceKey$index': data['sourceKey'],
+        'params$index': jsonEncode(_mapValue(data['params'])),
         'readAt$index': _date(data['readAt']),
         'createdAt$index': _date(data['createdAt']) ?? DateTime.now().toUtc(),
       });
@@ -1103,18 +1109,20 @@ ORDER BY created_at DESC
     await executor.execute(
       Sql.named('''
 INSERT INTO notifications (
-  id, uid, type, title, body, target_route, is_read, source_key, read_at, created_at
+  id, uid, type, title, body, target_route, is_read, source_key, params, read_at, created_at
 ) VALUES
   ${values.join(',\n')}
 ON CONFLICT (uid, source_key) DO UPDATE SET
   type=EXCLUDED.type,
   title=EXCLUDED.title,
   body=EXCLUDED.body,
-  target_route=EXCLUDED.target_route
+  target_route=EXCLUDED.target_route,
+  params=EXCLUDED.params
 WHERE notifications.type IS DISTINCT FROM EXCLUDED.type
    OR notifications.title IS DISTINCT FROM EXCLUDED.title
    OR notifications.body IS DISTINCT FROM EXCLUDED.body
    OR notifications.target_route IS DISTINCT FROM EXCLUDED.target_route
+   OR notifications.params IS DISTINCT FROM EXCLUDED.params
 '''),
       parameters: parameters,
     );
@@ -1268,6 +1276,7 @@ RETURNING *
         'targetRoute': '/profile',
         'isRead': false,
         'sourceKey': 'lottery:$drawId',
+        'params': {'kind': 'lottery', 'prizeName': prize['name']},
         'createdAt': now,
       }, session: tx);
       return {
@@ -1533,4 +1542,10 @@ DateTime? _date(Object? value) {
   if (value == null) return null;
   if (value is DateTime) return value.toUtc();
   return DateTime.tryParse(value.toString())?.toUtc();
+}
+
+Map<String, dynamic> _mapValue(Object? value) {
+  if (value is Map<String, dynamic>) return value;
+  if (value is Map) return Map<String, dynamic>.from(value);
+  return const <String, dynamic>{};
 }

@@ -16,6 +16,7 @@ messages to devices.
   "targetRoute": "/study/review",
   "isRead": false,
   "sourceKey": "reviewDue:2026-06-02",
+  "params": { "dueCount": 3 },
   "readAt": null,
   "createdAt": "2026-06-02T09:00:00.000Z"
 }
@@ -33,6 +34,7 @@ Field mapping:
 | `targetRoute` | `target_route` | Mobile route opened from the notification. |
 | `isRead` | `is_read` | Read state. |
 | `sourceKey` | `source_key` | Deterministic key for daily de-duplication. |
+| `params` | `params` | JSON object used by the mobile client for localized notification copy. |
 | `readAt` | `read_at` | Nullable read timestamp. |
 | `createdAt` | `created_at` | Creation timestamp. |
 
@@ -79,6 +81,7 @@ Response:
     "targetRoute": "/study/review",
     "isRead": false,
     "sourceKey": "reviewDue:2026-06-02",
+    "params": { "dueCount": 3 },
     "readAt": null,
     "createdAt": "2026-06-02T09:00:00.000Z"
   }
@@ -92,6 +95,16 @@ fills deterministic daily notifications for the current user:
 - `reviewDue` when there are due review words.
 - `checkInReminder` when the user has not checked in today.
 - `activity` once per day.
+
+Generated notification `params` are:
+
+| Type | Params |
+| --- | --- |
+| `learningReminder` | `{ "dailyGoal": 12 }` |
+| `reviewDue` | `{ "dueCount": 3 }` |
+| `checkInReminder` | `{}` |
+| `activity` daily refresh | `{ "kind": "activity" }` |
+| `activity` lottery result | `{ "kind": "lottery", "prizeName": "Gold Frame" }` |
 
 Daily de-duplication uses the unique `uid + source_key` constraint. The
 `sourceKey` date suffix is based on the client local `localDate`, while
@@ -126,6 +139,7 @@ Response:
     "targetRoute": "/discover",
     "isRead": true,
     "sourceKey": "activity:2026-06-02",
+    "params": { "kind": "activity" },
     "readAt": "2026-06-02T09:30:00.000Z",
     "createdAt": "2026-06-02T09:00:00.000Z"
   }

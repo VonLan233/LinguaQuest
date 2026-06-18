@@ -57,4 +57,37 @@ void main() {
     );
     expect(userWordDto({})['lastReviewedAt'], null);
   });
+
+  test('notification DTO decodes params safely', () {
+    final timestamp = DateTime.utc(2026, 6, 18, 9);
+
+    expect(
+      notificationDto({
+        'id': 'n1',
+        'uid': 'u1',
+        'type': 'reviewDue',
+        'title': '3 个词到期复习',
+        'body': '先清理复习队列',
+        'target_route': '/study/review',
+        'is_read': false,
+        'source_key': 'reviewDue:2026-06-18',
+        'created_at': timestamp,
+        'params': '{"dueCount":3}',
+      })['params'],
+      {'dueCount': 3},
+    );
+
+    expect(
+      notificationDto({
+        'id': 'n2',
+        'uid': 'u1',
+        'type': 'activity',
+        'title': '活动',
+        'body': '任务刷新',
+        'created_at': timestamp,
+        'params': '{bad json',
+      })['params'],
+      <String, dynamic>{},
+    );
+  });
 }
