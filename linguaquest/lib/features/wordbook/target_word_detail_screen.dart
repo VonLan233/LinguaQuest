@@ -259,6 +259,9 @@ class TargetWordDetailScreen extends ConsumerWidget {
                   ? l10n.reviewCenterTargetWord
                   : displayWordTag(word.tags.first),
               difficulty: word.difficulty,
+              definitions: word.definitions,
+              englishDefinitions: word.englishDefinitions,
+              malayDefinitions: word.malayDefinitions,
             );
       }
     } else if (succeeded && isInNewWordbook == false) {

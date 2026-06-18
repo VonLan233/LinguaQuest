@@ -53,12 +53,17 @@ keys) decode to empty lists.
 
 `customWordMeaningFor(word, languageCode)` becomes:
 
-- `en` → first non-empty of `englishDefinitions`; else `meaning` verbatim.
-- `ms` → `malayDefinitions` → `englishDefinitions` → `meaning` (mirrors `Word`'s ms chain).
+- `en` → first **Latin-script** `englishDefinitions` entry; else `meaning` verbatim.
+- `ms` → `malayDefinitions` → first Latin `englishDefinitions` → `meaning`.
 - `zh` / other → `definitions` → `meaning`.
 
-No CJK stripping, no generated filler. `wordFromCustomWord` fills the produced `Word`'s
-three lists directly from the stored `CustomWord` lists.
+No generated filler. **CJK guard (added after review):** some baked dictionary
+data carries auto-generated English "definitions" that embed the Chinese gloss
+(e.g. `A target vocabulary item commonly tested as "字母A".`). For `en`/`ms` the
+resolver skips candidates that still contain CJK so Chinese never surfaces in a
+Latin-script UI; it then falls back to `meaning` (the user's "show original"
+choice). The `meaning` fallback itself is shown verbatim and is never CJK-guarded.
+`wordFromCustomWord` keeps delegating to `customWordMeaningFor`.
 
 ### 3. Backfill A — "add to wordbook" (`addCustomWord` + `target_word_detail_screen.dart`)
 
@@ -79,6 +84,16 @@ fields, no persistence change).
 ### 5. Manual words
 
 Pass no lists (the three stay empty) → resolver returns the user's `meaning` verbatim.
+
+### 6. Demo seed words (added after review)
+
+In offline/demo mode the Home → Weak Words list is fed by two **seeded
+`CustomWord`s** in `mock_repositories.dart` (`seed-1` "resilient", `seed-2`
+"ambiguous") created with only a Chinese `meaning` — they bypass both backfill
+boundaries (no source `Word`, no `sourceWordId`). The reported "ambiguous" case is
+exactly one of these. So the seeds are given real `definitions` / `englishDefinitions`
+/ `malayDefinitions` directly, otherwise the fix would not be observable in the
+default demo build.
 
 ## Testing
 
@@ -104,5 +119,17 @@ Pass no lists (the three stay empty) → resolver returns the user's `meaning` v
 ## Touched files
 
 `custom_word.dart`, `custom_word_localization.dart`, `app_controller.dart`,
-`target_word_detail_screen.dart`, `app_state.dart`, `test/locale_aware_words_test.dart`.
+`target_word_detail_screen.dart`, `app_state.dart`, `user_word.dart`,
+`data/repositories/mock_repositories.dart` (seed words),
+`test/locale_aware_words_test.dart`.
 The 7 render sites changed in the prior commit need no further edits.
+
+## Known limitation
+
+Asset-sourced target words (`lib/assets/data/wordbook_*.json`) ship **real**
+`malayDefinitions` but auto-generated, CJK-contaminated `englishDefinitions`. With
+the CJK guard those filler entries are rejected, so adding such a word and viewing
+it in English falls back to the Chinese `meaning`. Producing real English glosses
+for the asset corpus is dictionary-content work owned by the external translator
+(see the i18n translation freeze), out of scope here. Malay UI and the seeded demo
+words localize correctly today.

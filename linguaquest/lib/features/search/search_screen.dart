@@ -9,6 +9,7 @@ import '../../core/state/app_state.dart';
 import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/utils/custom_word_localization.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
@@ -413,6 +414,7 @@ class _CustomWordTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localeCode = Localizations.localeOf(context).languageCode;
     final word = result.word;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppTokens.s12),
@@ -429,7 +431,7 @@ class _CustomWordTile extends StatelessWidget {
                 children: [
                   Text(word.word, style: theme.textTheme.titleMedium),
                   const SizedBox(height: 2),
-                  Text(word.meaning),
+                  Text(customWordMeaningFor(word, localeCode)),
                   const SizedBox(height: 4),
                   Text(
                     '${result.matchedBy} · ${result.preview}',

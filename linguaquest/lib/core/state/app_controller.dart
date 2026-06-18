@@ -581,6 +581,9 @@ class AppController extends Notifier<AppState> {
     required String note,
     required String tag,
     required String difficulty,
+    List<String> definitions = const [],
+    List<String> englishDefinitions = const [],
+    List<String> malayDefinitions = const [],
   }) async {
     final user = state.user;
     if (user == null) return false;
@@ -595,6 +598,9 @@ class AppController extends Notifier<AppState> {
           note: note,
           tag: tag,
           difficulty: difficulty,
+          definitions: definitions,
+          englishDefinitions: englishDefinitions,
+          malayDefinitions: malayDefinitions,
         ),
       );
       state = state.copyWith(customWords: [created, ...state.customWords]);

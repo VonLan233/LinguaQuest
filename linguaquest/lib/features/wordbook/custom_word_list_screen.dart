@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:linguaquest/core/theme/app_icons.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/utils/custom_word_localization.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
@@ -191,6 +192,7 @@ class _CustomWordTile extends StatelessWidget {
     final mastery = word.masteryLevel / 5;
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
+    final localeCode = Localizations.localeOf(context).languageCode;
     return AppCard(
       onTap: () => context.push('/custom-words/${word.id}'),
       child: Row(
@@ -210,14 +212,14 @@ class _CustomWordTile extends StatelessWidget {
                       ),
                     ),
                     AppPill(
-                      label: displayDifficulty(word.difficulty),
+                      label: displayDifficulty(word.difficulty, l10n: l10n),
                       variant: _difficultyVariant(word.difficulty),
                     ),
                   ],
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  '${word.meaning} · ${displayCustomTag(word.tag)}',
+                  '${customWordMeaningFor(word, localeCode)} · ${displayCustomTag(word.tag, l10n: l10n)}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(color: theme.colorScheme.onSurface),

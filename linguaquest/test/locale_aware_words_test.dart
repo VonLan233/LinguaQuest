@@ -3,6 +3,7 @@ import 'package:linguaquest/core/utils/quiz_localization.dart';
 import 'package:linguaquest/core/utils/custom_word_localization.dart';
 import 'package:linguaquest/data/models/custom_word.dart';
 import 'package:linguaquest/data/models/lesson.dart';
+import 'package:linguaquest/data/models/user_word.dart';
 import 'package:linguaquest/features/study/session/session_queue_builder.dart';
 
 Word _word({
@@ -33,61 +34,141 @@ Word _word({
 
 void main() {
   group('custom review word localized meanings', () {
-    final custom = CustomWord.create(
+    final enriched = CustomWord.create(
       id: 'custom-ambiguous',
       uid: 'u1',
       word: 'ambiguous',
       meaning: '含糊的',
       exampleSentence: 'The sentence was ambiguous.',
-      note: 'A target vocabulary item commonly tested as “含糊的”.',
+      now: DateTime(2026, 6, 18),
+      definitions: const ['含糊的'],
+      englishDefinitions: const ['unclear or open to interpretation'],
+      malayDefinitions: const ['kabur'],
+    );
+
+    final manual = CustomWord.create(
+      id: 'custom-gizmo',
+      uid: 'u1',
+      word: 'gizmo',
+      meaning: '小玩意',
+      exampleSentence: '',
       now: DateTime(2026, 6, 18),
     );
 
-    test('keeps Chinese meaning only for Chinese UI', () {
-      expect(customWordMeaningFor(custom, 'zh'), '含糊的');
+    test('uses stored per-language definitions when present', () {
+      expect(customWordMeaningFor(enriched, 'zh'), '含糊的');
+      expect(
+        customWordMeaningFor(enriched, 'en'),
+        'unclear or open to interpretation',
+      );
+      expect(customWordMeaningFor(enriched, 'ms'), 'kabur');
     });
 
-    test('removes Chinese text from generated English and Malay notes', () {
-      expect(
-        customWordMeaningFor(custom, 'en'),
-        'Review vocabulary item for ambiguous.',
-      );
-      expect(
-        customWordMeaningFor(custom, 'ms'),
-        'Item kosa kata ulang kaji untuk ambiguous.',
-      );
-      expect(customWordMeaningFor(custom, 'en'), isNot(contains('含糊的')));
-      expect(customWordMeaningFor(custom, 'ms'), isNot(contains('含糊的')));
+    test('manual word with only a meaning shows it verbatim everywhere', () {
+      expect(customWordMeaningFor(manual, 'zh'), '小玩意');
+      expect(customWordMeaningFor(manual, 'en'), '小玩意');
+      expect(customWordMeaningFor(manual, 'ms'), '小玩意');
     });
 
-    test('study session queue uses localized custom review meaning', () {
+    test('ms falls back to the English definition before the raw meaning', () {
+      final noMs = enriched.copyWith(malayDefinitions: const []);
+      expect(
+        customWordMeaningFor(noMs, 'ms'),
+        'unclear or open to interpretation',
+      );
+    });
+
+    test('skips CJK-contaminated English filler and shows meaning instead', () {
+      final filler = CustomWord.create(
+        id: 'custom-filler',
+        uid: 'u1',
+        word: 'a',
+        meaning: '字母A',
+        exampleSentence: '',
+        now: DateTime(2026, 6, 18),
+        englishDefinitions: const [
+          'A target vocabulary item commonly tested as “字母A”.',
+        ],
+      );
+      expect(customWordMeaningFor(filler, 'en'), '字母A');
+      expect(
+        customWordMeaningFor(filler, 'en'),
+        isNot(contains('target vocabulary')),
+      );
+    });
+
+    test('study session queue uses the stored localized meaning', () {
       final item = StudySessionQueueItem(
         id: 'q1',
-        wordId: custom.id,
+        wordId: enriched.id,
         source: StudySessionItemSource.dueReview,
         step: StudySessionStep.reviewRecall,
-        customWord: custom,
+        customWord: enriched,
         attempt: 0,
         affectsSchedule: true,
       );
 
-      expect(item.meaningFor('en'), 'Review vocabulary item for ambiguous.');
-      expect(item.meaningFor('en'), isNot(contains('含糊的')));
+      expect(item.meaningFor('en'), 'unclear or open to interpretation');
     });
 
-    test('training word conversion exposes localized definitions', () {
-      final converted = wordFromCustomWord(custom);
+    test('training word conversion exposes the stored definitions', () {
+      final converted = wordFromCustomWord(enriched);
 
       expect(
         converted.primaryDefinitionFor('en'),
-        'Review vocabulary item for ambiguous.',
+        'unclear or open to interpretation',
       );
-      expect(
-        converted.primaryDefinitionFor('ms'),
-        'Item kosa kata ulang kaji untuk ambiguous.',
-      );
+      expect(converted.primaryDefinitionFor('ms'), 'kabur');
       expect(converted.primaryDefinitionFor('zh'), '含糊的');
-      expect(converted.primaryDefinitionFor('en'), isNot(contains('含糊的')));
+    });
+
+    test('round-trips the multilingual definition lists through JSON', () {
+      final restored = CustomWord.fromJson(enriched.toJson());
+      expect(restored.definitions, ['含糊的']);
+      expect(restored.englishDefinitions, ['unclear or open to interpretation']);
+      expect(restored.malayDefinitions, ['kabur']);
+    });
+
+    test('legacy JSON without the lists decodes empty and shows meaning', () {
+      final json = manual.toJson()
+        ..remove('definitions')
+        ..remove('englishDefinitions')
+        ..remove('malayDefinitions');
+      final legacy = CustomWord.fromJson(json);
+      expect(legacy.englishDefinitions, isEmpty);
+      expect(customWordMeaningFor(legacy, 'en'), '小玩意');
+    });
+  });
+
+  group('UserWord.toReviewCard multilingual backfill', () {
+    final source = _word(
+      word: 'ambiguous',
+      meaning: '含糊的',
+      definitions: const ['含糊的'],
+      englishDefinitions: const ['unclear or open to interpretation'],
+      malayDefinitions: const ['kabur'],
+    );
+    final userWord = UserWord.create(
+      uid: 'u1',
+      word: source,
+      wordBookId: 'beginner',
+      now: DateTime(2026, 6, 18),
+    );
+
+    test('without a source the card keeps only the scalar meaning', () {
+      final card = userWord.toReviewCard();
+      expect(card.englishDefinitions, isEmpty);
+      expect(customWordMeaningFor(card, 'en'), '含糊的');
+    });
+
+    test('with a source the card carries the localized definitions', () {
+      final card = userWord.toReviewCard(source: source);
+      expect(
+        customWordMeaningFor(card, 'en'),
+        'unclear or open to interpretation',
+      );
+      expect(customWordMeaningFor(card, 'ms'), 'kabur');
+      expect(customWordMeaningFor(card, 'zh'), '含糊的');
     });
   });
 

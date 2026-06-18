@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:linguaquest/core/theme/app_icons.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/utils/custom_word_localization.dart';
 import '../../core/utils/date_formatting.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/ai_word_support_link.dart';
@@ -31,6 +32,7 @@ class WordDetailScreen extends ConsumerWidget {
       return Scaffold(body: Center(child: Text(l10n.wordDetailNotFound)));
     }
     final state = ref.watch(appControllerProvider);
+    final localeCode = Localizations.localeOf(context).languageCode;
     final canReview = word.isDue(DateTime.now()) && !state.isLoading;
 
     return Scaffold(
@@ -74,7 +76,7 @@ class WordDetailScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    word.meaning,
+                    customWordMeaningFor(word, localeCode),
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),

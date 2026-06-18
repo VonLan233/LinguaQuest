@@ -87,7 +87,7 @@ class AppState {
     this.errorMessage,
     List<CustomWord>? reviewWords,
   }) : _reviewWords = List.unmodifiable(
-         reviewWords ?? _buildReviewWords(userWords, customWords),
+         reviewWords ?? _buildReviewWords(userWords, customWords, wordBooks),
        );
 
   final bool isBootstrapped;
@@ -264,11 +264,12 @@ class AppState {
   }) {
     final nextCustomWords = customWords ?? this.customWords;
     final nextUserWords = userWords ?? this.userWords;
+    final nextWordBooks = wordBooks ?? this.wordBooks;
     return AppState(
       isBootstrapped: isBootstrapped ?? this.isBootstrapped,
       isLoading: isLoading ?? this.isLoading,
       user: clearUser ? null : user ?? this.user,
-      wordBooks: wordBooks ?? this.wordBooks,
+      wordBooks: nextWordBooks,
       currentWordBookId: currentWordBookId ?? this.currentWordBookId,
       lessons: lessons ?? this.lessons,
       customWords: nextCustomWords,
@@ -296,9 +297,9 @@ class AppState {
       lastResult: clearLastResult ? null : lastResult ?? this.lastResult,
       lastLotteryResult: lastLotteryResult ?? this.lastLotteryResult,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
-      reviewWords: customWords == null && userWords == null
+      reviewWords: customWords == null && userWords == null && wordBooks == null
           ? _reviewWords
-          : _buildReviewWords(nextUserWords, nextCustomWords),
+          : _buildReviewWords(nextUserWords, nextCustomWords, nextWordBooks),
     );
   }
 
@@ -338,12 +339,19 @@ Word _wordFromCustomWord(CustomWord word) {
 List<CustomWord> _buildReviewWords(
   List<UserWord> userWords,
   List<CustomWord> customWords,
+  List<WordBook> wordBooks,
 ) {
+  final sourceById = <String, Word>{};
+  for (final book in wordBooks) {
+    for (final word in book.words) {
+      sourceById.putIfAbsent(word.id, () => word);
+    }
+  }
   final seen = <String>{};
   final words = <CustomWord>[];
   for (final word in userWords) {
     if (!_isReviewEligibleStatus(word.status) || word.isIgnored) continue;
-    final card = word.toReviewCard();
+    final card = word.toReviewCard(source: sourceById[word.wordId]);
     if (seen.add(_reviewWordKey(card.word))) {
       words.add(card);
     }

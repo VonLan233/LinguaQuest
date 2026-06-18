@@ -15,6 +15,7 @@ import '../../core/widgets/mascot_empty_state.dart';
 import '../../core/widgets/mascot_image.dart';
 import '../../core/widgets/section_header.dart';
 import '../../core/widgets/stat_tile.dart';
+import '../../core/utils/custom_word_localization.dart';
 import '../../data/models/custom_word.dart';
 import '../../l10n/generated/app_localizations.dart';
 
@@ -673,6 +674,7 @@ class _WeakWordLink extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
+    final localeCode = Localizations.localeOf(context).languageCode;
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Material(
@@ -694,7 +696,7 @@ class _WeakWordLink extends StatelessWidget {
                       Text(word.word, style: theme.textTheme.titleMedium),
                       const SizedBox(height: 3),
                       Text(
-                        '${word.meaning} · ${l10n.commonMastery} ${word.masteryLevel}/5',
+                        '${customWordMeaningFor(word, localeCode)} · ${l10n.commonMastery} ${word.masteryLevel}/5',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(

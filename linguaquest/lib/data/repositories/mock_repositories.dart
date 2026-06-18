@@ -170,6 +170,9 @@ class MockCustomWordRepository implements CustomWordRepository {
         tag: 'character',
         difficulty: 'Medium',
         now: now.subtract(const Duration(days: 1)),
+        definitions: const ['有韧性的'],
+        englishDefinitions: const ['able to recover quickly from difficulties'],
+        malayDefinitions: const ['berdaya tahan'],
       ).copyWith(masteryLevel: 2, correctCount: 3, wrongCount: 1),
       CustomWord.create(
         id: 'seed-2',
@@ -182,6 +185,11 @@ class MockCustomWordRepository implements CustomWordRepository {
         tag: 'academic',
         difficulty: 'Hard',
         now: now.subtract(const Duration(days: 2)),
+        definitions: const ['含糊的'],
+        englishDefinitions: const [
+          'unclear or open to more than one interpretation',
+        ],
+        malayDefinitions: const ['kabur; taksa'],
       ).copyWith(
         masteryLevel: 1,
         correctCount: 1,
