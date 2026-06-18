@@ -42,7 +42,7 @@ class BrandMark extends StatelessWidget {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(size * 0.18),
             child: Image.asset(
-              'lib/assets/image/icon_transparent.png',
+              'lib/assets/image/icon.png',
               fit: BoxFit.contain,
             ),
           ),
