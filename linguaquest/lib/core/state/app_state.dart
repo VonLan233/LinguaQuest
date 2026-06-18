@@ -328,7 +328,7 @@ class AppState {
       isBootstrapped: false,
       isLoading: false,
       wordBooks: [],
-      currentWordBookId: 'beginner',
+      currentWordBookId: 'hsk1',
       lessons: [],
       customWords: [],
       userWords: [],

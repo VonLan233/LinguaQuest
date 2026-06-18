@@ -2046,7 +2046,7 @@ class AppController extends Notifier<AppState> {
     required String? savedId,
     required String? target,
   }) {
-    if (books.isEmpty) return savedId ?? 'beginner';
+    if (books.isEmpty) return savedId ?? 'hsk1';
     if (savedId != null && _wordBookById(books, savedId) != null) {
       return savedId;
     }
