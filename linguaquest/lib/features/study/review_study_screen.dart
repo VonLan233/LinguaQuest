@@ -313,7 +313,7 @@ class _ReviewWordCard extends StatelessWidget {
                       runSpacing: 8,
                       children: [
                         PillLabel(
-                          label: displayCustomTag(word.tag),
+                          label: displayCustomTag(word.tag, l10n: l10n),
                           icon: AppIcons.label,
                           color: AppTheme.teal,
                         ),

@@ -218,6 +218,7 @@ class _WordStudyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     return AppCard(
       padding: const EdgeInsets.all(AppTokens.s20),
       child: Column(
@@ -255,7 +256,7 @@ class _WordStudyCard extends StatelessWidget {
                       children: [
                         AppPill(label: word.partOfSpeech),
                         AppPill(
-                          label: displayDifficulty(word.difficulty),
+                          label: displayDifficulty(word.difficulty, l10n: l10n),
                           variant: PillVariant.streak,
                         ),
                       ],

@@ -943,6 +943,37 @@ class AppLocalizationsZh extends AppLocalizations {
   String get discoverViewProfile => '查看主页';
 
   @override
+  String errorStartupFailed(Object detail) {
+    return 'LinguaQuest 启动失败：$detail';
+  }
+
+  @override
+  String get errorPlanPausedNewLearning => '学习计划已暂停，恢复后才能完成新学。';
+
+  @override
+  String get errorPlanPausedReview => '学习计划已暂停，恢复后才能复习。';
+
+  @override
+  String get errorCardReviewedToday => '这张词卡今天已经完成复习。';
+
+  @override
+  String get errorTaskClaimedToday => '这个任务今天已经领取过。';
+
+  @override
+  String get errorTargetReviewedToday => '这个目标词今天已经完成复习。';
+
+  @override
+  String errorInsufficientXp(Object balance, Object cost) {
+    return '当前余额 $balance XP，不足 $cost XP。先完成积分任务再抽奖。';
+  }
+
+  @override
+  String get aiTutorInstantFeedback => '即时反馈';
+
+  @override
+  String get questTaskXp => '任务 XP';
+
+  @override
   String get discoverTasksEmpty => '今天的积分任务暂时没有加载出来。';
 
   @override

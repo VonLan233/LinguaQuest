@@ -23,8 +23,8 @@ class QuestScreen extends StatelessWidget {
           subtitle: l10n.questCenterSubtitle,
         ),
         const SizedBox(height: 12),
-        const AppPill(
-          label: '任务 XP',
+        AppPill(
+          label: l10n.questTaskXp,
           icon: AppIcons.bolt,
           variant: PillVariant.xp,
         ),

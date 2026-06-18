@@ -397,7 +397,7 @@ class _QuestionPromptPanel extends StatelessWidget {
               ),
               AppPill(label: question.word.partOfSpeech),
               AppPill(
-                label: displayDifficulty(question.word.difficulty),
+                label: displayDifficulty(question.word.difficulty, l10n: l10n),
                 variant: PillVariant.streak,
               ),
             ],

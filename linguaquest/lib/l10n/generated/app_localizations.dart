@@ -1900,6 +1900,60 @@ abstract class AppLocalizations {
   /// **'View Profile'**
   String get discoverViewProfile;
 
+  /// No description provided for @errorStartupFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'LinguaQuest failed to start: {detail}'**
+  String errorStartupFailed(Object detail);
+
+  /// No description provided for @errorPlanPausedNewLearning.
+  ///
+  /// In en, this message translates to:
+  /// **'Your study plan is paused. Resume it to start new learning.'**
+  String get errorPlanPausedNewLearning;
+
+  /// No description provided for @errorPlanPausedReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Your study plan is paused. Resume it to review.'**
+  String get errorPlanPausedReview;
+
+  /// No description provided for @errorCardReviewedToday.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve already reviewed this card today.'**
+  String get errorCardReviewedToday;
+
+  /// No description provided for @errorTaskClaimedToday.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve already claimed this task today.'**
+  String get errorTaskClaimedToday;
+
+  /// No description provided for @errorTargetReviewedToday.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve already reviewed this target word today.'**
+  String get errorTargetReviewedToday;
+
+  /// No description provided for @errorInsufficientXp.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance {balance} XP is below {cost} XP. Finish point tasks before the draw.'**
+  String errorInsufficientXp(Object balance, Object cost);
+
+  /// No description provided for @aiTutorInstantFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Instant Feedback'**
+  String get aiTutorInstantFeedback;
+
+  /// No description provided for @questTaskXp.
+  ///
+  /// In en, this message translates to:
+  /// **'Task XP'**
+  String get questTaskXp;
+
   /// No description provided for @discoverTasksEmpty.
   ///
   /// In en, this message translates to:

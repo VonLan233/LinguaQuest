@@ -999,6 +999,42 @@ class AppLocalizationsEn extends AppLocalizations {
   String get discoverViewProfile => 'View Profile';
 
   @override
+  String errorStartupFailed(Object detail) {
+    return 'LinguaQuest failed to start: $detail';
+  }
+
+  @override
+  String get errorPlanPausedNewLearning =>
+      'Your study plan is paused. Resume it to start new learning.';
+
+  @override
+  String get errorPlanPausedReview =>
+      'Your study plan is paused. Resume it to review.';
+
+  @override
+  String get errorCardReviewedToday =>
+      'You\'ve already reviewed this card today.';
+
+  @override
+  String get errorTaskClaimedToday =>
+      'You\'ve already claimed this task today.';
+
+  @override
+  String get errorTargetReviewedToday =>
+      'You\'ve already reviewed this target word today.';
+
+  @override
+  String errorInsufficientXp(Object balance, Object cost) {
+    return 'Balance $balance XP is below $cost XP. Finish point tasks before the draw.';
+  }
+
+  @override
+  String get aiTutorInstantFeedback => 'Instant Feedback';
+
+  @override
+  String get questTaskXp => 'Task XP';
+
+  @override
   String get discoverTasksEmpty => 'Today\'s point tasks haven\'t loaded yet.';
 
   @override

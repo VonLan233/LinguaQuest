@@ -257,7 +257,7 @@ class TargetWordDetailScreen extends ConsumerWidget {
               note: '${word.definition}\n${word.exampleTranslation}',
               tag: word.tags.isEmpty
                   ? l10n.reviewCenterTargetWord
-                  : displayWordTag(word.tags.first),
+                  : displayWordTag(word.tags.first, l10n: l10n),
               difficulty: word.difficulty,
               definitions: word.definitions,
               englishDefinitions: word.englishDefinitions,

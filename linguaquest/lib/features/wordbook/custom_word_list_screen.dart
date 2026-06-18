@@ -34,7 +34,7 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
-    final words = _filtered(state.customWords);
+    final words = _filtered(state.customWords, l10n);
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/wordbook'),
@@ -86,7 +86,7 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
                     Padding(
                       padding: const EdgeInsets.only(right: 8),
                       child: FilterPillButton(
-                        label: displayDifficultyFilter(filter),
+                        label: displayDifficultyFilter(filter, l10n: l10n),
                         selected: _filter == filter,
                         onSelected: () => setState(() => _filter = filter),
                         color: filter == 'Weak'
@@ -124,7 +124,7 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
     );
   }
 
-  List<CustomWord> _filtered(List<CustomWord> words) {
+  List<CustomWord> _filtered(List<CustomWord> words, AppLocalizations l10n) {
     final query = _query.trim().toLowerCase();
     return words.where((word) {
       final matchesQuery =
@@ -132,7 +132,7 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
           word.word.toLowerCase().contains(query) ||
           word.meaning.toLowerCase().contains(query) ||
           word.tag.toLowerCase().contains(query) ||
-          displayCustomTag(word.tag).toLowerCase().contains(query);
+          displayCustomTag(word.tag, l10n: l10n).toLowerCase().contains(query);
       final matchesFilter =
           _filter == 'All' ||
           word.difficulty == _filter ||

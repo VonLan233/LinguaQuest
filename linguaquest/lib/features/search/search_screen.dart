@@ -204,6 +204,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   void _runSearch(String query) {
     if (!mounted) return;
+    final l10n = AppLocalizations.of(context);
     final requestVersion = ++_searchVersion;
     final state = ref.read(appControllerProvider);
     final currentWords = _collectCurrentWords(state);
@@ -215,7 +216,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         scope: _scope,
         query: query,
         currentWords: currentWords,
-        tagLabeler: _displayTargetTag,
+        tagLabeler: (tag) => displayWordTag(tag, l10n: l10n),
       );
       final customWords = searchCustomWords(
         customWords: state.customWords,
@@ -266,7 +267,6 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 }
 
-String _displayTargetTag(String tag) => displayWordTag(tag);
 
 class _SearchScopeSelector extends StatelessWidget {
   const _SearchScopeSelector({
@@ -387,7 +387,7 @@ class _TargetWordTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 AppPill(
-                  label: displayDifficulty(word.difficulty),
+                  label: displayDifficulty(word.difficulty, l10n: l10n),
                   variant: PillVariant.neutral,
                 ),
                 if (result.inCurrentWordBook) ...[
@@ -414,6 +414,7 @@ class _CustomWordTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     final localeCode = Localizations.localeOf(context).languageCode;
     final word = result.word;
     return Padding(
@@ -441,7 +442,7 @@ class _CustomWordTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${displayDifficulty(word.difficulty)} · ${displayCustomTag(word.tag)}',
+                    '${displayDifficulty(word.difficulty, l10n: l10n)} · ${displayCustomTag(word.tag, l10n: l10n)}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.bodySmall,

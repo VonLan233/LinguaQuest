@@ -1008,6 +1008,42 @@ class AppLocalizationsMs extends AppLocalizations {
   String get discoverViewProfile => 'Lihat Profil';
 
   @override
+  String errorStartupFailed(Object detail) {
+    return 'LinguaQuest gagal dimulakan: $detail';
+  }
+
+  @override
+  String get errorPlanPausedNewLearning =>
+      'Pelan pembelajaran anda dijeda. Sambung semula untuk belajar perkataan baharu.';
+
+  @override
+  String get errorPlanPausedReview =>
+      'Pelan pembelajaran anda dijeda. Sambung semula untuk mengulang kaji.';
+
+  @override
+  String get errorCardReviewedToday =>
+      'Anda sudah mengulang kaji kad ini hari ini.';
+
+  @override
+  String get errorTaskClaimedToday =>
+      'Anda sudah menuntut tugasan ini hari ini.';
+
+  @override
+  String get errorTargetReviewedToday =>
+      'Anda sudah mengulang kaji perkataan sasaran ini hari ini.';
+
+  @override
+  String errorInsufficientXp(Object balance, Object cost) {
+    return 'Baki $balance XP kurang daripada $cost XP. Selesaikan tugasan mata dahulu sebelum cabutan.';
+  }
+
+  @override
+  String get aiTutorInstantFeedback => 'Maklum Balas Segera';
+
+  @override
+  String get questTaskXp => 'XP Tugasan';
+
+  @override
   String get discoverTasksEmpty => '今天的积分任务暂时没有加载出来。';
 
   @override
