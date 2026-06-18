@@ -1,4 +1,5 @@
 import '../../data/models/lesson.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Whether a quiz [type]'s options/answer are word MEANINGS (vs the English
 /// word itself). Only meaning-based options need locale resolution; word-answer
@@ -78,4 +79,68 @@ QuizQuestion localizeQuizQuestion(
     explanation: question.explanation,
     word: question.word,
   );
+}
+
+String localizedQuizPrompt(QuizQuestion question, AppLocalizations l10n) {
+  return switch (question.type) {
+    QuizQuestionType.chineseChoice => l10n.trainingPromptChineseChoice(
+      _promptDetail(question.prompt),
+    ),
+    QuizQuestionType.contextChoice => l10n.trainingPromptContextChoice(
+      _promptDetail(question.prompt),
+    ),
+    QuizQuestionType.spelling => l10n.trainingPromptChineseSpelling(
+      _promptDetail(question.prompt),
+    ),
+    QuizQuestionType.meaningChoice ||
+    QuizQuestionType.imageChoice => l10n.trainingPromptMeaningChoice(
+      _quotedValue(question.prompt) ?? question.word.word,
+    ),
+    QuizQuestionType.listeningWordChoice => question.prompt,
+    QuizQuestionType.listeningMeaningChoice => question.prompt,
+  };
+}
+
+String localizedQuizExplanation(QuizQuestion question, AppLocalizations l10n) {
+  final localeName = l10n.localeName;
+  final meaning = question.word.primaryDefinitionFor(localeName);
+  return switch (question.type) {
+    QuizQuestionType.chineseChoice || QuizQuestionType.listeningWordChoice =>
+      l10n.trainingExplanationChineseChoice(meaning, question.word.word),
+    QuizQuestionType.spelling => l10n.trainingExplanationSpelling(
+      question.word.word,
+      question.word.exampleSentence,
+    ),
+    QuizQuestionType.meaningChoice ||
+    QuizQuestionType.contextChoice ||
+    QuizQuestionType.imageChoice ||
+    QuizQuestionType.listeningMeaningChoice =>
+      l10n.trainingExplanationMeaningChoice(question.word.word, meaning),
+  };
+}
+
+String _promptDetail(String prompt) {
+  final colonIndex = prompt.lastIndexOf('：');
+  if (colonIndex >= 0 && colonIndex < prompt.length - 1) {
+    return prompt.substring(colonIndex + 1).trim();
+  }
+  final asciiColonIndex = prompt.lastIndexOf(':');
+  if (asciiColonIndex >= 0 && asciiColonIndex < prompt.length - 1) {
+    return prompt.substring(asciiColonIndex + 1).trim();
+  }
+  return prompt.trim();
+}
+
+String? _quotedValue(String prompt) {
+  final left = prompt.indexOf('“');
+  final right = prompt.indexOf('”', left + 1);
+  if (left >= 0 && right > left) {
+    return prompt.substring(left + 1, right).trim();
+  }
+  final asciiLeft = prompt.indexOf('"');
+  final asciiRight = prompt.indexOf('"', asciiLeft + 1);
+  if (asciiLeft >= 0 && asciiRight > asciiLeft) {
+    return prompt.substring(asciiLeft + 1, asciiRight).trim();
+  }
+  return null;
 }

@@ -41,7 +41,10 @@ class _AiTutorScreenState extends State<AiTutorScreen> {
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            SectionHeader(title: '即时反馈', subtitle: l10n.aiTutorSubtitle),
+            SectionHeader(
+              title: l10n.aiTutorInstantFeedback,
+              subtitle: l10n.aiTutorSubtitle,
+            ),
             const SizedBox(height: 16),
             TextField(
               controller: _promptController,

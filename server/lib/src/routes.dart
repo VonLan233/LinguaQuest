@@ -1032,9 +1032,24 @@ Map<String, dynamic> notificationDto(Map<String, dynamic> row) {
     'targetRoute': row['target_route'] ?? row['targetRoute'] ?? '/home',
     'isRead': row['is_read'] ?? row['isRead'] ?? false,
     'sourceKey': row['source_key'] ?? row['sourceKey'],
+    'params': _notificationParams(row['params']),
     'readAt': (row['read_at'] as DateTime?)?.toIso8601String(),
     'createdAt': _dateValue(row['created_at'] ?? row['createdAt']),
   };
+}
+
+Map<String, dynamic> _notificationParams(Object? value) {
+  if (value is Map<String, dynamic>) return value;
+  if (value is Map) return Map<String, dynamic>.from(value);
+  if (value is String && value.trim().isNotEmpty) {
+    try {
+      final decoded = jsonDecode(value);
+      if (decoded is Map) return Map<String, dynamic>.from(decoded);
+    } catch (_) {
+      return const <String, dynamic>{};
+    }
+  }
+  return const <String, dynamic>{};
 }
 
 Map<String, dynamic> prizeDto(Map<String, dynamic> row) {
@@ -1123,6 +1138,7 @@ Future<void> _ensureNotificationsForToday(
         'targetRoute': notification['targetRoute'],
         'isRead': false,
         'sourceKey': notification['sourceKey'],
+        'params': notification['params'],
         'createdAt': now,
       },
   ]);

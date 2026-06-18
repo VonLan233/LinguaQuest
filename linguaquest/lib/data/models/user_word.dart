@@ -199,12 +199,19 @@ class UserWord {
     return !nextReviewAt.isAfter(now);
   }
 
-  CustomWord toReviewCard() {
+  /// Builds the review-queue [CustomWord] for this target word. When [source]
+  /// (the dictionary word this progress row tracks) is provided, its per-language
+  /// definition lists are carried onto the card so the meaning localizes to the
+  /// app language instead of only showing the Chinese [meaning].
+  CustomWord toReviewCard({Word? source}) {
     return CustomWord(
       id: reviewCardId,
       uid: uid,
       word: word,
       meaning: meaning,
+      definitions: source?.definitions ?? const [],
+      englishDefinitions: source?.englishDefinitions ?? const [],
+      malayDefinitions: source?.malayDefinitions ?? const [],
       exampleSentence: exampleSentence,
       note: '目标词 · $wordBookId',
       tag: isInNewWordbook ? '生词本' : '目标词',

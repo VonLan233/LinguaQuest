@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../../data/models/app_notification.dart';
@@ -9,6 +11,7 @@ import '../../data/models/lottery.dart';
 import '../../data/models/study_plan.dart';
 import '../../data/models/user_word.dart';
 import '../../data/models/user_profile.dart';
+import '../utils/custom_word_localization.dart';
 
 class DailyReminderSettings {
   const DailyReminderSettings({
@@ -86,7 +89,7 @@ class AppState {
     this.errorMessage,
     List<CustomWord>? reviewWords,
   }) : _reviewWords = List.unmodifiable(
-         reviewWords ?? _buildReviewWords(userWords, customWords),
+         reviewWords ?? _buildReviewWords(userWords, customWords, wordBooks),
        );
 
   final bool isBootstrapped;
@@ -200,6 +203,24 @@ class AppState {
 
   List<CustomWord> get reviewQueue => dueWords.take(dailyReviewLimit).toList();
 
+  /// The number of reviews planned for *today* — those already completed today
+  /// plus those still due (capped by the plan's review limit). Unlike the live
+  /// [reviewQueue], this stays constant as the user reviews: a word simply moves
+  /// from "due" to "done". Use this for the home progress denominator so it
+  /// never shrinks mid-session (which previously produced a nonsensical "5/4").
+  int get dailyReviewTarget {
+    if (isStudyPlanPaused) return 0;
+    // Count words still due that haven't been reviewed today, so a word can't be
+    // counted both as "done" and "still due" (it normally leaves the due set on
+    // review; this guards synthetic/edge states too).
+    final stillDue = reviewQueue
+        .where((word) => !todayReviewWordIds.contains(word.id))
+        .length;
+    final planned = todayReviewWordIds.length + stillDue;
+    final planLimit = studyPlan?.dailyReviewLimit;
+    return planLimit == null ? planned : math.min(planLimit, planned);
+  }
+
   List<CustomWord> get weakWords {
     final weak = reviewWords.where((word) => word.isWeak).toList()
       ..sort((a, b) => b.wrongCount.compareTo(a.wrongCount));
@@ -263,11 +284,12 @@ class AppState {
   }) {
     final nextCustomWords = customWords ?? this.customWords;
     final nextUserWords = userWords ?? this.userWords;
+    final nextWordBooks = wordBooks ?? this.wordBooks;
     return AppState(
       isBootstrapped: isBootstrapped ?? this.isBootstrapped,
       isLoading: isLoading ?? this.isLoading,
       user: clearUser ? null : user ?? this.user,
-      wordBooks: wordBooks ?? this.wordBooks,
+      wordBooks: nextWordBooks,
       currentWordBookId: currentWordBookId ?? this.currentWordBookId,
       lessons: lessons ?? this.lessons,
       customWords: nextCustomWords,
@@ -295,9 +317,9 @@ class AppState {
       lastResult: clearLastResult ? null : lastResult ?? this.lastResult,
       lastLotteryResult: lastLotteryResult ?? this.lastLotteryResult,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
-      reviewWords: customWords == null && userWords == null
+      reviewWords: customWords == null && userWords == null && wordBooks == null
           ? _reviewWords
-          : _buildReviewWords(nextUserWords, nextCustomWords),
+          : _buildReviewWords(nextUserWords, nextCustomWords, nextWordBooks),
     );
   }
 
@@ -331,36 +353,25 @@ class AppState {
 }
 
 Word _wordFromCustomWord(CustomWord word) {
-  return Word(
-    id: word.id,
-    word: word.word,
-    phonetic: '',
-    meaning: word.meaning,
-    definition: word.note.isEmpty ? word.meaning : word.note,
-    partOfSpeech: 'word',
-    exampleSentence: word.exampleSentence,
-    exampleTranslation: '',
-    imageCue: _wordInitialForTraining(word.word),
-    difficulty: word.difficulty,
-    tags: [word.tag],
-  );
-}
-
-String _wordInitialForTraining(String value) {
-  final trimmed = value.trim();
-  if (trimmed.isEmpty) return '?';
-  return trimmed.characters.first.toUpperCase();
+  return wordFromCustomWord(word);
 }
 
 List<CustomWord> _buildReviewWords(
   List<UserWord> userWords,
   List<CustomWord> customWords,
+  List<WordBook> wordBooks,
 ) {
+  final sourceById = <String, Word>{};
+  for (final book in wordBooks) {
+    for (final word in book.words) {
+      sourceById.putIfAbsent(word.id, () => word);
+    }
+  }
   final seen = <String>{};
   final words = <CustomWord>[];
   for (final word in userWords) {
     if (!_isReviewEligibleStatus(word.status) || word.isIgnored) continue;
-    final card = word.toReviewCard();
+    final card = word.toReviewCard(source: sourceById[word.wordId]);
     if (seen.add(_reviewWordKey(card.word))) {
       words.add(card);
     }

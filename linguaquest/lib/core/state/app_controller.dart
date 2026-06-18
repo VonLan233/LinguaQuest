@@ -262,7 +262,9 @@ class AppController extends Notifier<AppState> {
       state = state.copyWith(
         isBootstrapped: false,
         isLoading: false,
-        errorMessage: 'LinguaQuest 启动失败：${_friendlyError(error)}',
+        errorMessage: _resolveLocalizations(
+          state.locale,
+        ).errorStartupFailed(_friendlyError(error)),
       );
     }
   }
@@ -581,6 +583,9 @@ class AppController extends Notifier<AppState> {
     required String note,
     required String tag,
     required String difficulty,
+    List<String> definitions = const [],
+    List<String> englishDefinitions = const [],
+    List<String> malayDefinitions = const [],
   }) async {
     final user = state.user;
     if (user == null) return false;
@@ -595,6 +600,9 @@ class AppController extends Notifier<AppState> {
           note: note,
           tag: tag,
           difficulty: difficulty,
+          definitions: definitions,
+          englishDefinitions: englishDefinitions,
+          malayDefinitions: malayDefinitions,
         ),
       );
       state = state.copyWith(customWords: [created, ...state.customWords]);
@@ -678,7 +686,11 @@ class AppController extends Notifier<AppState> {
     final user = state.user;
     if (user == null) return false;
     if (state.isStudyPlanPaused) {
-      state = state.copyWith(errorMessage: '学习计划已暂停，恢复后才能完成新学。');
+      state = state.copyWith(
+        errorMessage: _resolveLocalizations(
+          state.locale,
+        ).errorPlanPausedNewLearning,
+      );
       return false;
     }
     return _run(() async {
@@ -790,7 +802,9 @@ class AppController extends Notifier<AppState> {
     final user = state.user;
     if (user == null) return false;
     if (state.isStudyPlanPaused) {
-      state = state.copyWith(errorMessage: '学习计划已暂停，恢复后才能复习。');
+      state = state.copyWith(
+        errorMessage: _resolveLocalizations(state.locale).errorPlanPausedReview,
+      );
       return false;
     }
     final targetWord = _userWordByReviewId(id);
@@ -809,7 +823,11 @@ class AppController extends Notifier<AppState> {
     if (word == null) return false;
     final now = DateTime.now();
     if (isCorrect && !word.isDue(now)) {
-      state = state.copyWith(errorMessage: '这张词卡今天已经完成复习。');
+      state = state.copyWith(
+        errorMessage: _resolveLocalizations(
+          state.locale,
+        ).errorCardReviewedToday,
+      );
       return false;
     }
     return _run(() async {
@@ -948,7 +966,9 @@ class AppController extends Notifier<AppState> {
         pendingRewardTaskIds: state.pendingRewardTaskIds
             .where((taskId) => taskId != id)
             .toSet(),
-        errorMessage: snapshot.alreadyClaimed ? '这个任务今天已经领取过。' : null,
+        errorMessage: snapshot.alreadyClaimed
+            ? _resolveLocalizations(state.locale).errorTaskClaimedToday
+            : null,
         clearError: !snapshot.alreadyClaimed,
       );
       await refreshNotifications();
@@ -1132,7 +1152,11 @@ class AppController extends Notifier<AppState> {
   }) async {
     final now = DateTime.now();
     if (isCorrect && !word.isDue(now)) {
-      state = state.copyWith(errorMessage: '这个目标词今天已经完成复习。');
+      state = state.copyWith(
+        errorMessage: _resolveLocalizations(
+          state.locale,
+        ).errorTargetReviewedToday,
+      );
       return false;
     }
     return _run(() async {
@@ -1226,7 +1250,9 @@ class AppController extends Notifier<AppState> {
     if (user == null) return false;
     if (user.xp < lotteryDrawCost) {
       state = state.copyWith(
-        errorMessage: '当前余额 ${user.xp} XP，不足 $lotteryDrawCost XP。先完成积分任务再抽奖。',
+        errorMessage: _resolveLocalizations(
+          state.locale,
+        ).errorInsufficientXp(user.xp, lotteryDrawCost),
       );
       return false;
     }

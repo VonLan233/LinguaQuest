@@ -8,13 +8,13 @@ import 'mascot_image.dart';
 class MascotEmptyState extends StatelessWidget {
   const MascotEmptyState({
     required this.title,
-    required this.message,
+    this.message,
     this.action,
     super.key,
   });
 
   final String title;
-  final String message;
+  final String? message;
   final Widget? action;
 
   @override
@@ -38,14 +38,16 @@ class MascotEmptyState extends StatelessWidget {
                 fontWeight: FontWeight.w900,
               ),
             ),
-            const SizedBox(height: AppTokens.s8),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+            if (message != null && message!.isNotEmpty) ...[
+              const SizedBox(height: AppTokens.s8),
+              Text(
+                message!,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
-            ),
+            ],
             if (action != null) ...[
               const SizedBox(height: AppTokens.s20),
               action!,

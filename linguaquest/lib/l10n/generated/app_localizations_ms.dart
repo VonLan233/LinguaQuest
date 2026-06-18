@@ -544,7 +544,7 @@ class AppLocalizationsMs extends AppLocalizations {
   String get classTopicWorkplace => 'Ungkapan tempat kerja';
 
   @override
-  String get leaderboardDefaultName => 'Pelajar';
+  String get leaderboardDefaultName => 'Penjelajah';
 
   @override
   String get leaderboardTitle => 'Papan pendahulu arena latihan';
@@ -705,10 +705,10 @@ class AppLocalizationsMs extends AppLocalizations {
   String get homeResumePlan => 'Sambung pelan untuk terus belajar';
 
   @override
-  String get homeStartLearning => 'Mula Pembelajaran Hari Ini';
+  String get homeStartLearning => 'Mula';
 
   @override
-  String get homeReviewOnly => 'Ulangkaji Sahaja';
+  String get homeReviewOnly => 'Ulang Kaji';
 
   @override
   String get homeStreakLabel => 'daftar masuk berturut-turut';
@@ -763,7 +763,7 @@ class AppLocalizationsMs extends AppLocalizations {
   String get homeTodayCompleted => 'Hari ini selesai';
 
   @override
-  String get profileLearner => 'Pelajar';
+  String get profileLearner => 'Penjelajah';
 
   @override
   String get profileNoEmail => 'Tiada e-mel ditetapkan';
@@ -1006,6 +1006,42 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get discoverViewProfile => 'Lihat Profil';
+
+  @override
+  String errorStartupFailed(Object detail) {
+    return 'LinguaQuest gagal dimulakan: $detail';
+  }
+
+  @override
+  String get errorPlanPausedNewLearning =>
+      'Pelan pembelajaran anda dijeda. Sambung semula untuk belajar perkataan baharu.';
+
+  @override
+  String get errorPlanPausedReview =>
+      'Pelan pembelajaran anda dijeda. Sambung semula untuk mengulang kaji.';
+
+  @override
+  String get errorCardReviewedToday =>
+      'Anda sudah mengulang kaji kad ini hari ini.';
+
+  @override
+  String get errorTaskClaimedToday =>
+      'Anda sudah menuntut tugasan ini hari ini.';
+
+  @override
+  String get errorTargetReviewedToday =>
+      'Anda sudah mengulang kaji perkataan sasaran ini hari ini.';
+
+  @override
+  String errorInsufficientXp(Object balance, Object cost) {
+    return 'Baki $balance XP kurang daripada $cost XP. Selesaikan tugasan mata dahulu sebelum cabutan.';
+  }
+
+  @override
+  String get aiTutorInstantFeedback => 'Maklum Balas Segera';
+
+  @override
+  String get questTaskXp => 'XP Tugasan';
 
   @override
   String get discoverTasksEmpty => '今天的积分任务暂时没有加载出来。';
@@ -1322,13 +1358,13 @@ class AppLocalizationsMs extends AppLocalizations {
   String get trainingListeningSource => 'Perkataan lemah pendengaran';
 
   @override
-  String get trainingDueWords => 'Perkataan Tamat Tempoh';
+  String get trainingDueWords => 'Ulang Kaji';
 
   @override
-  String get trainingWeakWords => 'Perkataan Lemah';
+  String get trainingWeakWords => 'Lemah';
 
   @override
-  String get trainingComboTarget => 'Sasaran Kombo';
+  String get trainingComboTarget => 'Kombo';
 
   @override
   String get trainingEnterCustomWords => 'Pergi ke Perkataan Tersuai';
@@ -1378,7 +1414,7 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String trainingPromptWordRush(Object word) {
-    return 'Pilih makna Cina untuk \"$word\" dengan cepat';
+    return 'Pilih makna untuk \"$word\" dengan cepat';
   }
 
   @override
@@ -1407,7 +1443,7 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String trainingPromptMeaningChoice(Object word) {
-    return 'Pilih makna Cina untuk \"$word\"';
+    return 'Pilih makna untuk \"$word\"';
   }
 
   @override
@@ -1417,7 +1453,7 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String trainingPromptChineseSpelling(Object meaning) {
-    return 'Eja perkataan Inggeris daripada bahasa Cina: $meaning';
+    return 'Eja perkataan Inggeris daripada makna: $meaning';
   }
 
   @override
@@ -2904,8 +2940,7 @@ class AppLocalizationsMs extends AppLocalizations {
       'Aset hiasan yang dimenangi daripada cabutan adalah untuk paparan sahaja dan tidak menjejaskan skor pembelajaran.';
 
   @override
-  String get profileAssetsEmpty =>
-      'Belum ada aset hiasan. Selepas menggunakan XP untuk cabutan di halaman Discover, bingkai avatar, latar belakang profil, lencana, gelaran, kulit kad dan serpihan akan dipaparkan di sini.';
+  String get profileAssetsEmpty => 'Belum ada aset';
 
   @override
   String profileAssetMeta(Object category, Object fragments, Object quantity) {
@@ -2953,4 +2988,73 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get languageEnglish => 'English';
+
+  @override
+  String get wordKnowledgeTitle => 'Pecahan perkataan';
+
+  @override
+  String get wordKnowledgeCollocations => 'Kolokasi';
+
+  @override
+  String get wordKnowledgeSynAnt => 'Sinonim / Antonim';
+
+  @override
+  String get wordKnowledgeFamily => 'Keluarga perkataan';
+
+  @override
+  String get wordKnowledgeRoots => 'Akar & imbuhan';
+
+  @override
+  String get pronunciationAccentUk => 'UK';
+
+  @override
+  String get pronunciationAccentUs => 'US';
+
+  @override
+  String pronunciationAnnounce(String accent, String word) {
+    return '$accent $word';
+  }
+
+  @override
+  String pronunciationPlaying(String accent, String word) {
+    return '$accent: $word';
+  }
+
+  @override
+  String pronunciationUnavailable(String accent) {
+    return 'Audio $accent tidak tersedia';
+  }
+
+  @override
+  String pronunciationFailedRetry(String accent) {
+    return 'Main $accent gagal, ketik untuk cuba lagi';
+  }
+
+  @override
+  String pronunciationLoading(String accent) {
+    return '$accent memuat';
+  }
+
+  @override
+  String pronunciationRetry(String accent) {
+    return '$accent cuba lagi';
+  }
+
+  @override
+  String get dueNow => 'Perlu sekarang';
+
+  @override
+  String dueInDays(int count) {
+    return '$count hari lagi';
+  }
+
+  @override
+  String dueInHours(int count) {
+    return '$count jam lagi';
+  }
+
+  @override
+  String dueInMinutes(int count) {
+    return '$count minit lagi';
+  }
 }

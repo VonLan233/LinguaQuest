@@ -513,7 +513,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get classTopicWorkplace => '职场表达';
 
   @override
-  String get leaderboardDefaultName => '学习者';
+  String get leaderboardDefaultName => '探索者';
 
   @override
   String get leaderboardTitle => '训练场排行榜';
@@ -666,10 +666,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get homeResumePlan => '恢复计划以继续学习';
 
   @override
-  String get homeStartLearning => '开始今日学习';
+  String get homeStartLearning => '开始';
 
   @override
-  String get homeReviewOnly => '仅复习';
+  String get homeReviewOnly => '复习';
 
   @override
   String get homeStreakLabel => '连续打卡';
@@ -722,7 +722,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get homeTodayCompleted => '今天完成';
 
   @override
-  String get profileLearner => '学习者';
+  String get profileLearner => '探索者';
 
   @override
   String get profileNoEmail => '未设置邮箱';
@@ -941,6 +941,37 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get discoverViewProfile => '查看主页';
+
+  @override
+  String errorStartupFailed(Object detail) {
+    return 'LinguaQuest 启动失败：$detail';
+  }
+
+  @override
+  String get errorPlanPausedNewLearning => '学习计划已暂停，恢复后才能完成新学。';
+
+  @override
+  String get errorPlanPausedReview => '学习计划已暂停，恢复后才能复习。';
+
+  @override
+  String get errorCardReviewedToday => '这张词卡今天已经完成复习。';
+
+  @override
+  String get errorTaskClaimedToday => '这个任务今天已经领取过。';
+
+  @override
+  String get errorTargetReviewedToday => '这个目标词今天已经完成复习。';
+
+  @override
+  String errorInsufficientXp(Object balance, Object cost) {
+    return '当前余额 $balance XP，不足 $cost XP。先完成积分任务再抽奖。';
+  }
+
+  @override
+  String get aiTutorInstantFeedback => '即时反馈';
+
+  @override
+  String get questTaskXp => '任务 XP';
 
   @override
   String get discoverTasksEmpty => '今天的积分任务暂时没有加载出来。';
@@ -1247,13 +1278,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get trainingListeningSource => '听力弱项词';
 
   @override
-  String get trainingDueWords => '到期词';
+  String get trainingDueWords => '复习';
 
   @override
-  String get trainingWeakWords => '弱项词';
+  String get trainingWeakWords => '弱项';
 
   @override
-  String get trainingComboTarget => '连击目标';
+  String get trainingComboTarget => '连击';
 
   @override
   String get trainingEnterCustomWords => '进入生词本';
@@ -2739,8 +2770,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get profileAssetsSubtitle => '抽奖获得的装饰资产只用于展示，不影响学习分数。';
 
   @override
-  String get profileAssetsEmpty =>
-      '暂无装饰资产。前往发现页使用 XP 抽奖后，头像框、主页背景、徽章、称号、卡片皮肤和碎片会显示在这里。';
+  String get profileAssetsEmpty => '暂无资产';
 
   @override
   String profileAssetMeta(Object category, Object fragments, Object quantity) {
@@ -2788,4 +2818,73 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get languageEnglish => 'English';
+
+  @override
+  String get wordKnowledgeTitle => '词汇全解';
+
+  @override
+  String get wordKnowledgeCollocations => '词组搭配';
+
+  @override
+  String get wordKnowledgeSynAnt => '近义 / 反义';
+
+  @override
+  String get wordKnowledgeFamily => '派生词族';
+
+  @override
+  String get wordKnowledgeRoots => '词根拆词';
+
+  @override
+  String get pronunciationAccentUk => '英音';
+
+  @override
+  String get pronunciationAccentUs => '美音';
+
+  @override
+  String pronunciationAnnounce(String accent, String word) {
+    return '$accent $word';
+  }
+
+  @override
+  String pronunciationPlaying(String accent, String word) {
+    return '$accent发音：$word';
+  }
+
+  @override
+  String pronunciationUnavailable(String accent) {
+    return '$accent发音暂不可用';
+  }
+
+  @override
+  String pronunciationFailedRetry(String accent) {
+    return '$accent发音失败，请重试';
+  }
+
+  @override
+  String pronunciationLoading(String accent) {
+    return '$accent加载';
+  }
+
+  @override
+  String pronunciationRetry(String accent) {
+    return '$accent重试';
+  }
+
+  @override
+  String get dueNow => '现在到期';
+
+  @override
+  String dueInDays(int count) {
+    return '$count 天后';
+  }
+
+  @override
+  String dueInHours(int count) {
+    return '$count 小时后';
+  }
+
+  @override
+  String dueInMinutes(int count) {
+    return '$count 分钟后';
+  }
 }

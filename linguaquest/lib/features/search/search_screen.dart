@@ -9,6 +9,7 @@ import '../../core/state/app_state.dart';
 import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/utils/custom_word_localization.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
@@ -203,6 +204,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   void _runSearch(String query) {
     if (!mounted) return;
+    final l10n = AppLocalizations.of(context);
     final requestVersion = ++_searchVersion;
     final state = ref.read(appControllerProvider);
     final currentWords = _collectCurrentWords(state);
@@ -214,7 +216,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         scope: _scope,
         query: query,
         currentWords: currentWords,
-        tagLabeler: _displayTargetTag,
+        tagLabeler: (tag) => displayWordTag(tag, l10n: l10n),
       );
       final customWords = searchCustomWords(
         customWords: state.customWords,
@@ -265,7 +267,6 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 }
 
-String _displayTargetTag(String tag) => displayWordTag(tag);
 
 class _SearchScopeSelector extends StatelessWidget {
   const _SearchScopeSelector({
@@ -386,7 +387,7 @@ class _TargetWordTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 AppPill(
-                  label: displayDifficulty(word.difficulty),
+                  label: displayDifficulty(word.difficulty, l10n: l10n),
                   variant: PillVariant.neutral,
                 ),
                 if (result.inCurrentWordBook) ...[
@@ -413,6 +414,8 @@ class _CustomWordTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+    final localeCode = Localizations.localeOf(context).languageCode;
     final word = result.word;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppTokens.s12),
@@ -429,7 +432,7 @@ class _CustomWordTile extends StatelessWidget {
                 children: [
                   Text(word.word, style: theme.textTheme.titleMedium),
                   const SizedBox(height: 2),
-                  Text(word.meaning),
+                  Text(customWordMeaningFor(word, localeCode)),
                   const SizedBox(height: 4),
                   Text(
                     '${result.matchedBy} · ${result.preview}',
@@ -439,7 +442,7 @@ class _CustomWordTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${displayDifficulty(word.difficulty)} · ${displayCustomTag(word.tag)}',
+                    '${displayDifficulty(word.difficulty, l10n: l10n)} · ${displayCustomTag(word.tag, l10n: l10n)}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.bodySmall,

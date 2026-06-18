@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:linguaquest/core/theme/app_icons.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/utils/custom_word_localization.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
@@ -33,7 +34,7 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
-    final words = _filtered(state.customWords);
+    final words = _filtered(state.customWords, l10n);
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/wordbook'),
@@ -85,7 +86,7 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
                     Padding(
                       padding: const EdgeInsets.only(right: 8),
                       child: FilterPillButton(
-                        label: displayDifficultyFilter(filter),
+                        label: displayDifficultyFilter(filter, l10n: l10n),
                         selected: _filter == filter,
                         onSelected: () => setState(() => _filter = filter),
                         color: filter == 'Weak'
@@ -123,7 +124,7 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
     );
   }
 
-  List<CustomWord> _filtered(List<CustomWord> words) {
+  List<CustomWord> _filtered(List<CustomWord> words, AppLocalizations l10n) {
     final query = _query.trim().toLowerCase();
     return words.where((word) {
       final matchesQuery =
@@ -131,7 +132,7 @@ class _CustomWordListScreenState extends ConsumerState<CustomWordListScreen> {
           word.word.toLowerCase().contains(query) ||
           word.meaning.toLowerCase().contains(query) ||
           word.tag.toLowerCase().contains(query) ||
-          displayCustomTag(word.tag).toLowerCase().contains(query);
+          displayCustomTag(word.tag, l10n: l10n).toLowerCase().contains(query);
       final matchesFilter =
           _filter == 'All' ||
           word.difficulty == _filter ||
@@ -191,6 +192,7 @@ class _CustomWordTile extends StatelessWidget {
     final mastery = word.masteryLevel / 5;
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
+    final localeCode = Localizations.localeOf(context).languageCode;
     return AppCard(
       onTap: () => context.push('/custom-words/${word.id}'),
       child: Row(
@@ -210,14 +212,14 @@ class _CustomWordTile extends StatelessWidget {
                       ),
                     ),
                     AppPill(
-                      label: displayDifficulty(word.difficulty),
+                      label: displayDifficulty(word.difficulty, l10n: l10n),
                       variant: _difficultyVariant(word.difficulty),
                     ),
                   ],
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  '${word.meaning} · ${displayCustomTag(word.tag)}',
+                  '${customWordMeaningFor(word, localeCode)} · ${displayCustomTag(word.tag, l10n: l10n)}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(color: theme.colorScheme.onSurface),

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/utils/custom_word_localization.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
@@ -133,6 +134,7 @@ class _WeakCustomWordRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localeCode = Localizations.localeOf(context).languageCode;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppTokens.s8),
       child: AppCard(
@@ -150,7 +152,7 @@ class _WeakCustomWordRow extends StatelessWidget {
                   Text(word.word, style: theme.textTheme.titleMedium),
                   const SizedBox(height: 3),
                   Text(
-                    word.meaning,
+                    customWordMeaningFor(word, localeCode),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: theme.colorScheme.onSurfaceVariant),

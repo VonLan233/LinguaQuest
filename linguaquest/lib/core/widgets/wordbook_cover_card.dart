@@ -64,6 +64,7 @@ class WordbookCoverCard extends StatelessWidget {
     final WordbookCoverPalette palette = paletteFor(examType, bookId);
     final radius = BorderRadius.circular(AppTokens.radiusTile);
     final compact = width < 84;
+    final titleParts = _splitChineseVocabularyTitle(title);
     return Container(
       width: width,
       height: height,
@@ -113,23 +114,57 @@ class WordbookCoverCard extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontSize: compact ? 11 : 13,
-                    height: 1.2,
+                if (titleParts == null)
+                  Text(
+                    title,
+                    style: _titleStyle(compact),
+                    maxLines: compact ? 2 : 3,
+                    overflow: TextOverflow.ellipsis,
+                  )
+                else
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        titleParts.$1,
+                        style: _titleStyle(compact),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        titleParts.$2,
+                        style: _titleStyle(compact),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ),
-                  maxLines: compact ? 2 : 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
               ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  TextStyle _titleStyle(bool compact) {
+    return TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.w700,
+      fontSize: compact ? 11 : 13,
+      height: 1.2,
+    );
+  }
+
+  (String, String)? _splitChineseVocabularyTitle(String value) {
+    const suffix = '词汇';
+    if (!value.endsWith(suffix) || value.length <= suffix.length) {
+      return null;
+    }
+    final prefix = value.substring(0, value.length - suffix.length).trim();
+    if (prefix.isEmpty) return null;
+    return (prefix, suffix);
   }
 }
 

@@ -60,18 +60,23 @@ class _AppPrimaryButtonState extends State<AppPrimaryButton> {
           padding: const EdgeInsets.symmetric(vertical: AppTokens.s16),
           alignment: Alignment.center,
           child: Row(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (widget.icon != null) ...[
                 Icon(widget.icon, size: 20, color: contentColor),
                 const SizedBox(width: AppTokens.s8),
               ],
-              Text(
-                widget.label,
-                style: TextStyle(
-                  color: contentColor,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 15,
+              Flexible(
+                child: Text(
+                  widget.label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: contentColor,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                  ),
                 ),
               ),
             ],
@@ -101,27 +106,34 @@ class AppSecondaryButton extends StatelessWidget {
     final style = OutlinedButton.styleFrom(
       backgroundColor: Theme.of(context).colorScheme.surface,
       foregroundColor: AppTokens.azure,
+      padding: const EdgeInsets.symmetric(horizontal: AppTokens.s12),
       side: const BorderSide(color: AppTokens.primarySoftText, width: 2),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppTokens.radiusButton),
       ),
     );
-    final labelWidget = Text(
-      label,
-      style: const TextStyle(fontWeight: FontWeight.w800),
+    final labelWidget = Flexible(
+      child: Text(
+        label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(fontWeight: FontWeight.w800),
+      ),
     );
-    if (icon == null) {
-      return OutlinedButton(
-        onPressed: onPressed,
-        style: style,
-        child: labelWidget,
-      );
-    }
-    return OutlinedButton.icon(
+    return OutlinedButton(
       onPressed: onPressed,
       style: style,
-      icon: Icon(icon, size: 18),
-      label: labelWidget,
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (icon != null) ...[
+            Icon(icon, size: 18),
+            const SizedBox(width: AppTokens.s8),
+          ],
+          labelWidget,
+        ],
+      ),
     );
   }
 }

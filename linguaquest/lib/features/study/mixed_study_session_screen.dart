@@ -1,13 +1,16 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/utils/custom_word_localization.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
@@ -17,7 +20,9 @@ import '../../core/widgets/mascot_empty_state.dart';
 import '../../core/widgets/word_choice_button.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
+import '../../data/models/study_session_draft.dart';
 import '../../l10n/generated/app_localizations.dart';
+import 'session/recognition_prompt.dart';
 import 'session/session_queue_builder.dart';
 
 class MixedStudySessionScreen extends ConsumerStatefulWidget {
@@ -42,7 +47,7 @@ class _MixedStudySessionScreenState
   final Set<String> _wrongItemIds = {};
   final Set<String> _scheduledWrongIds = {};
   final Set<String> _wrongTries = {};
-  late final DateTime _sessionStartedAt;
+  late DateTime _sessionStartedAt;
   // Times the 1500ms pause before auto-advancing once a question step is
   // settled; it drives no visual property, only the delay.
   late final AnimationController _autoAdvanceController;
@@ -189,8 +194,9 @@ class _MixedStudySessionScreenState
 
   bool get _hasProgress => _completedItems > 0 || _answerLogs.isNotEmpty;
 
-  void _initializeQueue() {
+  Future<void> _initializeQueue() async {
     final state = ref.read(appControllerProvider);
+    if (await _restoreDraft(state)) return;
     final dailyGoal = state.dailyNewTarget;
     final newWords = state.currentLesson?.words ?? const <Word>[];
     final plan = _builder.build(
@@ -216,6 +222,73 @@ class _MixedStudySessionScreenState
     });
   }
 
+  Future<bool> _restoreDraft(AppState state) async {
+    final uid = state.user?.uid;
+    if (uid == null) return false;
+    final prefs = await SharedPreferences.getInstance();
+    final key = _draftKey(uid);
+    final raw = prefs.getString(key);
+    if (raw == null || raw.isEmpty) return false;
+    try {
+      final draft = StudySessionDraft.fromJson(
+        Map<String, dynamic>.from(jsonDecode(raw) as Map),
+      );
+      if (!_canRestoreDraft(draft, state, uid)) {
+        await prefs.remove(key);
+        return false;
+      }
+      if (!mounted) return true;
+      final firstItem = draft.queue.first;
+      final options = _buildOptionsFor(firstItem, state);
+      setState(() {
+        _sessionStartedAt = draft.startedAt;
+        _plan = draft.plan;
+        _queue
+          ..clear()
+          ..addAll(draft.queue);
+        _answerLogs
+          ..clear()
+          ..addAll(draft.answerLogs);
+        _wrongItemIds
+          ..clear()
+          ..addAll(draft.wrongItemIds);
+        _scheduledWrongIds
+          ..clear()
+          ..addAll(draft.scheduledWrongIds);
+        _completedItems = draft.completedItems;
+        _correctAnswers = draft.correctAnswers;
+        _confidence = draft.confidence;
+        _currentOptions = options;
+        _itemStartedAt = DateTime.now();
+      });
+      return true;
+    } catch (_) {
+      await prefs.remove(key);
+      return false;
+    }
+  }
+
+  bool _canRestoreDraft(StudySessionDraft draft, AppState state, String uid) {
+    if (draft.uid != uid || draft.mode != widget.mode || draft.queue.isEmpty) {
+      return false;
+    }
+    final currentLesson = state.currentLesson;
+    if (draft.lessonId != (currentLesson?.id ?? '')) return false;
+    final currentLessonWordIds = {
+      for (final word in currentLesson?.words ?? const <Word>[]) word.id,
+    };
+    final customWordIds = {for (final word in state.customWords) word.id};
+    for (final item in draft.queue) {
+      if (item.isNewWord && !currentLessonWordIds.contains(item.wordId)) {
+        return false;
+      }
+      if (!item.isNewWord && !customWordIds.contains(item.wordId)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   Future<void> _continueFromCard(StudySessionQueueItem item) async {
     if (_isSubmitting) return;
     if (item.step == StudySessionStep.understanding) {
@@ -231,10 +304,7 @@ class _MixedStudySessionScreenState
   /// - Correct: lock, count, then auto-advance after [_autoAdvanceDelay].
   /// - Wrong + review item: recorded/persisted once, then auto-advance.
   /// - Wrong + non-review item: marked red, stays tappable for re-select.
-  Future<void> _judgeQuestion(
-    StudySessionQueueItem item,
-    String answer,
-  ) async {
+  Future<void> _judgeQuestion(StudySessionQueueItem item, String answer) async {
     // Ignore taps while a settle/persist is in flight, or once a correct (or
     // settled review) answer has locked the step.
     if (_isSubmitting || _lockedCorrect || (_checked && item.isReview)) return;
@@ -405,7 +475,9 @@ class _MixedStudySessionScreenState
       }
     }
     for (final word in state.customWords) {
-      if (word.id != item.wordId) addDistractor(word.meaning);
+      if (word.id != item.wordId) {
+        addDistractor(customWordMeaningFor(word, localeCode));
+      }
     }
 
     final options = <String>[answer];
@@ -460,8 +532,11 @@ class _MixedStudySessionScreenState
       return;
     }
     if (action == _ExitAction.save) {
-      final saved = await _saveSessionProgress(completeCurrentLesson: false);
+      final saved = await _saveDraft();
       if (!activeContext.mounted || !saved) return;
+    } else if (action == _ExitAction.discard) {
+      await _clearDraft();
+      if (!activeContext.mounted) return;
     }
     _leave(activeContext);
   }
@@ -473,7 +548,60 @@ class _MixedStudySessionScreenState
     }
     final saved = await _saveSessionProgress(completeCurrentLesson: true);
     if (!mounted) return;
-    if (saved) context.go('/home');
+    if (saved) {
+      await _clearDraft();
+      if (!mounted) return;
+      context.go('/home');
+    }
+  }
+
+  Future<bool> _saveDraft() async {
+    final state = ref.read(appControllerProvider);
+    final uid = state.user?.uid;
+    if (uid == null || _isSubmitting) return false;
+    setState(() => _isSubmitting = true);
+    try {
+      final draft = StudySessionDraft(
+        uid: uid,
+        mode: widget.mode,
+        lessonId: state.currentLesson?.id ?? '',
+        startedAt: _sessionStartedAt,
+        savedAt: DateTime.now(),
+        completedItems: _completedItems,
+        correctAnswers: _correctAnswers,
+        confidence: _confidence,
+        reviewTargetRatio: _plan?.reviewTargetRatio ?? 0,
+        newTargetRatio: _plan?.newTargetRatio ?? 0,
+        dueReviewCount: _plan?.dueReviewCount ?? 0,
+        newWordCount: _plan?.newWordCount ?? 0,
+        weakWordCount: _plan?.weakWordCount ?? 0,
+        queue: List.unmodifiable(_queue),
+        answerLogs: List.unmodifiable(_answerLogs),
+        wrongItemIds: Set.unmodifiable(_wrongItemIds),
+        scheduledWrongIds: Set.unmodifiable(_scheduledWrongIds),
+      );
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_draftKey(uid), jsonEncode(draft.toJson()));
+      return true;
+    } catch (_) {
+      if (mounted) {
+        _showSubmitError(AppLocalizations.of(context).mixedSaveStudyFailed);
+      }
+      return false;
+    } finally {
+      if (mounted) setState(() => _isSubmitting = false);
+    }
+  }
+
+  Future<void> _clearDraft() async {
+    final uid = ref.read(appControllerProvider).user?.uid;
+    if (uid == null) return;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_draftKey(uid));
+  }
+
+  String _draftKey(String uid) {
+    return 'linguaquest.study_session_draft.$uid.${widget.mode.name}';
   }
 
   Future<bool> _saveSessionProgress({
@@ -648,8 +776,8 @@ class _QuestionStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          _promptFor(l10n),
+        Text.rich(
+          _promptSpans(l10n, theme),
           textAlign: TextAlign.center,
           style: theme.textTheme.headlineSmall,
         ),
@@ -659,10 +787,7 @@ class _QuestionStep extends StatelessWidget {
           runSpacing: 8,
           alignment: WrapAlignment.center,
           children: [
-            AppPill(
-              label: _stepLabelFor(l10n),
-              icon: AppIcons.psychologyAlt,
-            ),
+            AppPill(label: _stepLabelFor(l10n), icon: AppIcons.psychologyAlt),
             if (item.isReview)
               AppPill(
                 label: l10n.mixedReviewQuickAnswer,
@@ -739,6 +864,32 @@ class _QuestionStep extends StatelessWidget {
       return item.exampleSentence;
     }
     return l10n.mixedMeaningPrompt(item.displayWord);
+  }
+
+  /// Builds the prompt with the tested word ([item.displayWord]) underlined, so
+  /// recognition questions (which show only an example sentence) make clear
+  /// which word the learner must pick the meaning for.
+  TextSpan _promptSpans(AppLocalizations l10n, ThemeData theme) {
+    final segments = recognitionPromptSegments(
+      _promptFor(l10n),
+      item.displayWord,
+    );
+    final highlightStyle = TextStyle(
+      fontWeight: FontWeight.w900,
+      color: theme.colorScheme.primary,
+      decoration: TextDecoration.underline,
+      decorationColor: theme.colorScheme.primary,
+      decorationThickness: 2.5,
+    );
+    return TextSpan(
+      children: [
+        for (final segment in segments)
+          TextSpan(
+            text: segment.text,
+            style: segment.highlight ? highlightStyle : null,
+          ),
+      ],
+    );
   }
 
   String _stepLabelFor(AppLocalizations l10n) {

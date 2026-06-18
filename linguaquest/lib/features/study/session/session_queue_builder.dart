@@ -1,5 +1,6 @@
 import '../../../data/models/custom_word.dart';
 import '../../../data/models/lesson.dart';
+import '../../../core/utils/custom_word_localization.dart';
 
 enum StudySessionEntryMode { mixed, newOnly, reviewOnly }
 
@@ -47,12 +48,12 @@ class StudySessionQueueItem {
   String get meaning => lessonWord?.meaning ?? customWord!.meaning;
 
   /// The item's meaning localized for [languageCode]. Lesson words carry the
-  /// trilingual definition lists; custom words only have a single (Chinese)
-  /// meaning, so they fall back to it gracefully.
+  /// trilingual definition lists; custom review words use their localized note
+  /// or a neutral fallback so non-Chinese UI does not surface Chinese options.
   String meaningFor(String languageCode) {
     final lesson = lessonWord;
     if (lesson != null) return lesson.primaryDefinitionFor(languageCode);
-    return customWord!.meaning;
+    return customWordMeaningFor(customWord!, languageCode);
   }
 
   String get exampleSentence =>

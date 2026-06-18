@@ -257,8 +257,11 @@ class TargetWordDetailScreen extends ConsumerWidget {
               note: '${word.definition}\n${word.exampleTranslation}',
               tag: word.tags.isEmpty
                   ? l10n.reviewCenterTargetWord
-                  : displayWordTag(word.tags.first),
+                  : displayWordTag(word.tags.first, l10n: l10n),
               difficulty: word.difficulty,
+              definitions: word.definitions,
+              englishDefinitions: word.englishDefinitions,
+              malayDefinitions: word.malayDefinitions,
             );
       }
     } else if (succeeded && isInNewWordbook == false) {
@@ -622,7 +625,7 @@ class _WordTags extends StatelessWidget {
       children: [
         if (progress != null) ...[
           AppPill(
-            label: displayWordStatus(progress!.status),
+            label: displayWordStatus(progress!.status, l10n: l10n),
             icon: AppIcons.psychology,
             variant: PillVariant.success,
           ),
@@ -633,11 +636,14 @@ class _WordTags extends StatelessWidget {
         ],
         AppPill(label: word.partOfSpeech, variant: PillVariant.neutral),
         AppPill(
-          label: displayDifficulty(word.difficulty),
+          label: displayDifficulty(word.difficulty, l10n: l10n),
           variant: PillVariant.primary,
         ),
         for (final tag in word.tags)
-          AppPill(label: displayWordTag(tag), variant: PillVariant.neutral),
+          AppPill(
+            label: displayWordTag(tag, l10n: l10n),
+            variant: PillVariant.neutral,
+          ),
       ],
     );
   }

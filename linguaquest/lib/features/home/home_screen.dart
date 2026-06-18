@@ -15,6 +15,7 @@ import '../../core/widgets/mascot_empty_state.dart';
 import '../../core/widgets/mascot_image.dart';
 import '../../core/widgets/section_header.dart';
 import '../../core/widgets/stat_tile.dart';
+import '../../core/utils/custom_word_localization.dart';
 import '../../data/models/custom_word.dart';
 import '../../l10n/generated/app_localizations.dart';
 
@@ -30,10 +31,13 @@ class HomeScreen extends ConsumerWidget {
     final currentBook = state.currentWordBook;
     final dueCount = state.reviewQueue.length;
     final dailyGoal = state.dailyNewTarget;
-    final reviewTarget = state.isStudyPlanPaused ? 0 : dueCount;
     final todayLessonWords = state.todayLearningWords;
     final todayWork = todayLessonWords + state.todayReviewWordIds.length;
-    final totalWork = state.isStudyPlanPaused ? 0 : dailyGoal + reviewTarget;
+    // Stable denominator: reviewing a due word moves it from "due" to "done"
+    // without shrinking the total, so progress can't overshoot (the "5/4" bug).
+    final totalWork = state.isStudyPlanPaused
+        ? 0
+        : dailyGoal + state.dailyReviewTarget;
     final dailyProgress = totalWork <= 0
         ? 0.0
         : (todayWork / totalWork).clamp(0.0, 1.0);
@@ -518,14 +522,27 @@ class _DailyFocusHeader extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
-              child: Text(
-                isPaused
-                    ? l10n.homePlanPaused
-                    : '${l10n.homeTodayCompleted} $todayWork/$totalWork ${l10n.commonWords}',
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w900,
-                  height: 1.08,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    isPaused ? l10n.homePlanPaused : l10n.homeTodayCompleted,
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w900,
+                      height: 1.08,
+                    ),
+                  ),
+                  if (!isPaused) ...[
+                    const SizedBox(height: AppTokens.s4),
+                    Text(
+                      '$todayWork/$totalWork ${l10n.commonWords}',
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w800,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ),
             const SizedBox(width: 14),
@@ -673,6 +690,7 @@ class _WeakWordLink extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
+    final localeCode = Localizations.localeOf(context).languageCode;
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Material(
@@ -694,7 +712,7 @@ class _WeakWordLink extends StatelessWidget {
                       Text(word.word, style: theme.textTheme.titleMedium),
                       const SizedBox(height: 3),
                       Text(
-                        '${word.meaning} · ${l10n.commonMastery} ${word.masteryLevel}/5',
+                        '${customWordMeaningFor(word, localeCode)} · ${l10n.commonMastery} ${word.masteryLevel}/5',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(

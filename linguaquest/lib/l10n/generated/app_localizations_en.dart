@@ -537,7 +537,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get classTopicWorkplace => 'Workplace expressions';
 
   @override
-  String get leaderboardDefaultName => 'Learner';
+  String get leaderboardDefaultName => 'Explorer';
 
   @override
   String get leaderboardTitle => 'Training leaderboard';
@@ -698,10 +698,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeResumePlan => 'Resume plan to continue learning';
 
   @override
-  String get homeStartLearning => 'Start Today\'s Learning';
+  String get homeStartLearning => 'Start';
 
   @override
-  String get homeReviewOnly => 'Review Only';
+  String get homeReviewOnly => 'Review';
 
   @override
   String get homeStreakLabel => 'continuous check-in';
@@ -761,7 +761,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeTodayCompleted => 'Today completed';
 
   @override
-  String get profileLearner => 'Learner';
+  String get profileLearner => 'Explorer';
 
   @override
   String get profileNoEmail => 'No email set';
@@ -997,6 +997,42 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get discoverViewProfile => 'View Profile';
+
+  @override
+  String errorStartupFailed(Object detail) {
+    return 'LinguaQuest failed to start: $detail';
+  }
+
+  @override
+  String get errorPlanPausedNewLearning =>
+      'Your study plan is paused. Resume it to start new learning.';
+
+  @override
+  String get errorPlanPausedReview =>
+      'Your study plan is paused. Resume it to review.';
+
+  @override
+  String get errorCardReviewedToday =>
+      'You\'ve already reviewed this card today.';
+
+  @override
+  String get errorTaskClaimedToday =>
+      'You\'ve already claimed this task today.';
+
+  @override
+  String get errorTargetReviewedToday =>
+      'You\'ve already reviewed this target word today.';
+
+  @override
+  String errorInsufficientXp(Object balance, Object cost) {
+    return 'Balance $balance XP is below $cost XP. Finish point tasks before the draw.';
+  }
+
+  @override
+  String get aiTutorInstantFeedback => 'Instant Feedback';
+
+  @override
+  String get questTaskXp => 'Task XP';
 
   @override
   String get discoverTasksEmpty => 'Today\'s point tasks haven\'t loaded yet.';
@@ -1324,13 +1360,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get trainingListeningSource => 'Listening weak words';
 
   @override
-  String get trainingDueWords => 'Due Words';
+  String get trainingDueWords => 'Review';
 
   @override
-  String get trainingWeakWords => 'Weak Words';
+  String get trainingWeakWords => 'Weak';
 
   @override
-  String get trainingComboTarget => 'Combo Target';
+  String get trainingComboTarget => 'Combo';
 
   @override
   String get trainingEnterCustomWords => 'Go to Custom Words';
@@ -1379,7 +1415,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String trainingPromptWordRush(Object word) {
-    return 'Choose the Chinese meaning of \"$word\" quickly';
+    return 'Choose the meaning of \"$word\" quickly';
   }
 
   @override
@@ -1408,7 +1444,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String trainingPromptMeaningChoice(Object word) {
-    return 'Choose the Chinese meaning of \"$word\"';
+    return 'Choose the meaning of \"$word\"';
   }
 
   @override
@@ -1418,7 +1454,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String trainingPromptChineseSpelling(Object meaning) {
-    return 'Spell the English word from Chinese: $meaning';
+    return 'Spell the English word from the meaning: $meaning';
   }
 
   @override
@@ -2891,8 +2927,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Decorative assets won from draws are for display only and don\'t affect learning scores.';
 
   @override
-  String get profileAssetsEmpty =>
-      'No decorative assets yet. After spending XP on the Discover page draw, avatar frames, profile backgrounds, badges, titles, card skins, and fragments will appear here.';
+  String get profileAssetsEmpty => 'No Assets Yet';
 
   @override
   String profileAssetMeta(Object category, Object fragments, Object quantity) {
@@ -2940,4 +2975,73 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get languageEnglish => 'English';
+
+  @override
+  String get wordKnowledgeTitle => 'Word breakdown';
+
+  @override
+  String get wordKnowledgeCollocations => 'Collocations';
+
+  @override
+  String get wordKnowledgeSynAnt => 'Synonyms / Antonyms';
+
+  @override
+  String get wordKnowledgeFamily => 'Word family';
+
+  @override
+  String get wordKnowledgeRoots => 'Roots & affixes';
+
+  @override
+  String get pronunciationAccentUk => 'UK';
+
+  @override
+  String get pronunciationAccentUs => 'US';
+
+  @override
+  String pronunciationAnnounce(String accent, String word) {
+    return '$accent $word';
+  }
+
+  @override
+  String pronunciationPlaying(String accent, String word) {
+    return '$accent: $word';
+  }
+
+  @override
+  String pronunciationUnavailable(String accent) {
+    return '$accent audio unavailable';
+  }
+
+  @override
+  String pronunciationFailedRetry(String accent) {
+    return '$accent playback failed, tap to retry';
+  }
+
+  @override
+  String pronunciationLoading(String accent) {
+    return '$accent loading';
+  }
+
+  @override
+  String pronunciationRetry(String accent) {
+    return '$accent retry';
+  }
+
+  @override
+  String get dueNow => 'Due now';
+
+  @override
+  String dueInDays(int count) {
+    return 'In $count days';
+  }
+
+  @override
+  String dueInHours(int count) {
+    return 'In $count hours';
+  }
+
+  @override
+  String dueInMinutes(int count) {
+    return 'In $count minutes';
+  }
 }

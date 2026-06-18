@@ -12,6 +12,9 @@ import 'package:linguaquest/core/state/app_controller.dart';
 import 'package:linguaquest/core/state/app_state.dart';
 import 'package:linguaquest/core/theme/app_icons.dart';
 import 'package:linguaquest/core/theme/app_theme.dart';
+import 'package:linguaquest/core/utils/quiz_localization.dart';
+import 'package:linguaquest/core/utils/ui_labels.dart';
+import 'package:linguaquest/core/utils/wordbook_progress.dart';
 import 'package:linguaquest/core/widgets/app_button.dart';
 import 'package:linguaquest/core/widgets/app_card.dart';
 import 'package:linguaquest/core/widgets/learning_badges.dart';
@@ -47,12 +50,32 @@ import 'package:linguaquest/features/quiz/quiz_session_screen.dart';
 import 'package:linguaquest/features/profile/profile_screen.dart';
 import 'package:linguaquest/features/profile/study_plan_settings_screen.dart';
 import 'package:linguaquest/features/search/search_screen.dart';
+import 'package:linguaquest/features/study/session/session_queue_builder.dart';
+import 'package:linguaquest/data/models/study_session_draft.dart';
 import 'package:linguaquest/features/wordbook/target_word_detail_screen.dart';
 import 'package:linguaquest/features/wordbook/word_detail_screen.dart';
 import 'package:linguaquest/features/wordbook/wordbook_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
+  test('default user display name localizes untouched defaults', () async {
+    final en = await AppLocalizations.delegate.load(const Locale('en'));
+    final zh = await AppLocalizations.delegate.load(const Locale('zh'));
+    final ms = await AppLocalizations.delegate.load(const Locale('ms'));
+    final user = UserProfile.demo();
+
+    expect(displayUserName(user, l10n: en), 'Explorer');
+    expect(displayUserName(user, l10n: zh), '探索者');
+    expect(displayUserName(user, l10n: ms), isNot('学习者'));
+  });
+
+  test('custom user display name is preserved', () async {
+    final en = await AppLocalizations.delegate.load(const Locale('en'));
+    final user = UserProfile.demo().copyWith(name: 'Ava');
+
+    expect(displayUserName(user, l10n: en), 'Ava');
+  });
+
   testWidgets('starts at onboarding when no session exists', (tester) async {
     SharedPreferences.setMockInitialValues({});
 
@@ -135,7 +158,9 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    expect(find.text('今天完成 4/14 词'), findsOneWidget);
+    // The label and the count now stack on two lines (was one combined string).
+    expect(find.text('今天完成'), findsOneWidget);
+    expect(find.text('4/14 词'), findsOneWidget);
     expect(find.text('29%'), findsOneWidget);
     expect(find.text('今日'), findsOneWidget);
 
@@ -253,12 +278,236 @@ void main() {
     expect(newWordbookCount(state), 1);
   });
 
+  test('wordbook progress counts learned user words by book only', () {
+    final now = DateTime(2026, 5, 25);
+    final words = seedLessons().expand((lesson) => lesson.words).toList();
+    final learned = UserWord.create(
+      uid: 'u1',
+      word: words[0],
+      wordBookId: 'IELTS',
+      now: now,
+    ).copyWith(status: 'Learning');
+    final newWord = UserWord.create(
+      uid: 'u1',
+      word: words[1],
+      wordBookId: 'IELTS',
+      now: now,
+    );
+    final ignored = UserWord.create(
+      uid: 'u1',
+      word: words[2],
+      wordBookId: 'IELTS',
+      now: now,
+    ).copyWith(status: 'Mastered', isIgnored: true);
+    final otherBook = UserWord.create(
+      uid: 'u1',
+      word: words[3],
+      wordBookId: 'GRE',
+      now: now,
+    ).copyWith(status: 'Review');
+
+    expect(
+      learnedWordCountForBook(
+        userWords: [learned, newWord, ignored, otherBook],
+        wordBookId: 'ielts',
+        wordIds: words.take(3).map((word) => word.id).toSet(),
+      ),
+      1,
+    );
+  });
+
+  test(
+    'localized quiz prompt rewrites generated Chinese spelling prompts',
+    () async {
+      final en = await AppLocalizations.delegate.load(const Locale('en'));
+      final word = seedLessons().first.words.first;
+      final question = QuizQuestion(
+        id: 'spelling-1',
+        type: QuizQuestionType.spelling,
+        prompt: '根据释义拼写单词：to leave behind',
+        answer: 'abandon',
+        options: [],
+        explanation: '正确拼写是“abandon”。',
+        word: word,
+      );
+
+      final prompt = localizedQuizPrompt(question, en);
+
+      expect(
+        prompt,
+        'Spell the English word from the meaning: to leave behind',
+      );
+      expect(prompt, isNot(contains('根据释义')));
+    },
+  );
+
+  test('localized quiz question resolves baked Chinese answer options', () {
+    final lessons = seedLessons();
+    final lesson = lessons.first;
+    final question = lesson.questions.first;
+    final localized = localizeQuizQuestion(
+      question,
+      lessons.expand((lesson) => lesson.words),
+      'en',
+    );
+    final chineseText = RegExp(r'[\u4e00-\u9fff]');
+
+    expect(localized.answer, question.word.primaryDefinitionFor('en'));
+    expect(localized.answer, isNot(contains(chineseText)));
+    expect(localized.options, isNot(contains(question.word.meaning)));
+    for (final option in localized.options) {
+      expect(option, isNot(contains(chineseText)));
+    }
+  });
+
+  test('localized quiz explanation rewrites baked Chinese feedback', () async {
+    final en = await AppLocalizations.delegate.load(const Locale('en'));
+    final question = seedLessons().first.questions.first;
+    final explanation = localizedQuizExplanation(question, en);
+
+    expect(explanation, contains(question.word.word));
+    expect(explanation, contains(question.word.primaryDefinitionFor('en')));
+    expect(explanation, isNot(contains(RegExp(r'[\u4e00-\u9fff]'))));
+    expect(explanation, isNot(question.explanation));
+  });
+
+  test('study session draft round trips queue and progress', () {
+    final now = DateTime(2026, 5, 25);
+    final word = seedLessons().first.words.first;
+    final item = StudySessionQueueItem(
+      id: 'new-${word.id}-understanding-0',
+      wordId: word.id,
+      source: StudySessionItemSource.newWord,
+      step: StudySessionStep.understanding,
+      lessonWord: word,
+      attempt: 0,
+      affectsSchedule: false,
+    );
+    final log = StudyAnswerLog(
+      itemId: item.id,
+      wordId: item.wordId,
+      source: item.source,
+      step: item.step,
+      isCorrect: true,
+      responseTimeMs: 1200,
+      confidence: 4,
+      selectedAnswer: word.meaning,
+      answeredAt: now,
+    );
+    final draft = StudySessionDraft(
+      uid: 'u1',
+      mode: StudySessionEntryMode.mixed,
+      lessonId: 'lesson-1',
+      startedAt: now,
+      savedAt: now.add(const Duration(minutes: 3)),
+      completedItems: 2,
+      correctAnswers: 1,
+      confidence: 4,
+      reviewTargetRatio: 0.3,
+      newTargetRatio: 0.7,
+      dueReviewCount: 1,
+      newWordCount: 3,
+      weakWordCount: 0,
+      queue: [item],
+      answerLogs: [log],
+      wrongItemIds: {'w2'},
+      scheduledWrongIds: {'w2:0'},
+    );
+
+    final restored = StudySessionDraft.fromJson(draft.toJson());
+
+    expect(restored.uid, 'u1');
+    expect(restored.mode, StudySessionEntryMode.mixed);
+    expect(restored.lessonId, 'lesson-1');
+    expect(restored.completedItems, 2);
+    expect(restored.correctAnswers, 1);
+    expect(restored.queue.single.wordId, word.id);
+    expect(restored.queue.single.lessonWord?.word, word.word);
+    expect(restored.answerLogs.single.responseTimeMs, 1200);
+    expect(restored.wrongItemIds, contains('w2'));
+  });
+
+  testWidgets('mixed study clears a saved draft from another lesson', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'stale-draft-user',
+      name: 'Stale',
+      email: 'stale@lingua.quest',
+      targetExam: 'IELTS',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    final word = seedLessons().first.words.first;
+    final staleDraft = StudySessionDraft(
+      uid: profile.uid,
+      mode: StudySessionEntryMode.mixed,
+      lessonId: 'old-lesson',
+      startedAt: now,
+      savedAt: now,
+      completedItems: 2,
+      correctAnswers: 1,
+      confidence: 4,
+      reviewTargetRatio: 0.3,
+      newTargetRatio: 0.7,
+      dueReviewCount: 0,
+      newWordCount: 1,
+      weakWordCount: 0,
+      queue: [
+        StudySessionQueueItem(
+          id: 'new-${word.id}-understanding-0',
+          wordId: word.id,
+          source: StudySessionItemSource.newWord,
+          step: StudySessionStep.understanding,
+          lessonWord: word,
+          attempt: 0,
+          affectsSchedule: false,
+        ),
+      ],
+      answerLogs: const [],
+      wrongItemIds: const {},
+      scheduledWrongIds: const {},
+    );
+    const key = 'linguaquest.study_session_draft.stale-draft-user.mixed';
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+      key: jsonEncode(staleDraft.toJson()),
+    });
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          customWordRepositoryProvider.overrideWithValue(
+            _EmptyCustomWordRepository(),
+          ),
+        ],
+        child: const LinguaQuestApp(),
+      ),
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.tap(find.textContaining('开始'));
+    await tester.pumpAndSettle();
+
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getString(key), isNull);
+    expect(find.text('今日混排学习包'), findsOneWidget);
+  });
+
   testWidgets('pronunciation controls expose loading and retry states', (
     tester,
   ) async {
     await tester.pumpWidget(
       MaterialApp(
         theme: AppTheme.light(),
+        locale: const Locale('zh'),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         home: const Scaffold(body: PronunciationControls(word: '')),
       ),
     );
@@ -296,12 +545,12 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     await tester.scrollUntilVisible(
-      find.textContaining('开始今日学习'),
+      find.textContaining('开始'),
       300,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.textContaining('开始今日学习'));
+    await tester.tap(find.textContaining('开始'));
     await tester.pumpAndSettle();
 
     expect(find.text('今日混排学习包'), findsOneWidget);
@@ -330,13 +579,14 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
+    final reviewButton = find.widgetWithText(AppSecondaryButton, '复习');
     await tester.scrollUntilVisible(
-      find.textContaining('仅复习'),
+      reviewButton,
       300,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.textContaining('仅复习'));
+    await tester.tap(reviewButton);
     await tester.pumpAndSettle();
 
     expect(find.text('快速复习'), findsOneWidget);
@@ -392,13 +642,14 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
+    final reviewButton = find.widgetWithText(AppSecondaryButton, '复习');
     await tester.scrollUntilVisible(
-      find.textContaining('仅复习'),
+      reviewButton,
       300,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.textContaining('仅复习'));
+    await tester.tap(reviewButton);
     await tester.pumpAndSettle();
     // Instant judgment records the attempt on tap (no check button); the wrong
     // review answer would auto-advance after 1500ms, but we leave before then.
@@ -821,7 +1072,9 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     expect(learningRepository.listAttempts, 1);
-    expect(find.textContaining('LinguaQuest 启动失败'), findsOneWidget);
+    // The startup error is now localized; assert on the interpolated failure
+    // detail (locale-independent) rather than the Chinese wording.
+    expect(find.textContaining('temporary catalog failure'), findsOneWidget);
     expect(find.text('再试一次'), findsOneWidget);
 
     await tester.tap(find.text('再试一次'));
@@ -993,9 +1246,9 @@ void main() {
     expect(find.text('学习计划设置'), findsOneWidget);
     expect(find.text('雅思核心词汇'), findsWidgets);
     expect(find.text('切换词书'), findsOneWidget);
-    expect(find.text('每日新学词数'), findsOneWidget);
     await tester.drag(find.byType(Scrollable).last, const Offset(0, -320));
     await tester.pumpAndSettle();
+    expect(find.text('每日新学词数'), findsOneWidget);
     expect(find.text('每日复习上限'), findsOneWidget);
     await tester.drag(find.byType(Scrollable).last, const Offset(0, -520));
     await tester.pumpAndSettle();
@@ -1074,6 +1327,10 @@ void main() {
       parseStudyPlanReminderTime('bad'),
       const TimeOfDay(hour: 20, minute: 0),
     );
+  });
+
+  test('study plan reminder picker uses input mode', () {
+    expect(studyPlanReminderTimePickerEntryMode, TimePickerEntryMode.inputOnly);
   });
 
   test('learning plan day count uses calendar days', () {
@@ -1635,6 +1892,119 @@ void main() {
   });
 
   testWidgets(
+    'quiz answer options localize distractors from the full lesson pool',
+    (tester) async {
+      final now = DateTime(2026, 5, 25);
+      final profile = UserProfile(
+        uid: 'quiz-option-locale-user',
+        name: 'Olive',
+        email: 'olive@lingua.quest',
+        targetExam: 'Daily English',
+        level: 'Elementary',
+        dailyGoal: 10,
+        xp: 0,
+        streak: 0,
+        createdAt: now,
+        updatedAt: now,
+      );
+      SharedPreferences.setMockInitialValues({
+        'linguaquest.profile': jsonEncode(profile.toJson()),
+      });
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      await container.read(appControllerProvider.notifier).bootstrap();
+
+      final lessons = container.read(appControllerProvider).lessons;
+      final lesson = lessons.firstWhere(
+        (item) =>
+            !item.isTrainingPack &&
+            item.questions.any(
+              (question) => quizOptionsAreMeanings(question.type),
+            ),
+      );
+      final externalWord = Word(
+        id: 'external-training-meaning',
+        word: 'outside',
+        phonetic: '',
+        meaning: '外部干扰项',
+        definition: 'an item outside the current formal lesson',
+        partOfSpeech: 'n',
+        exampleSentence: 'This option comes from another pool.',
+        exampleTranslation: '这个选项来自另一个词池。',
+        imageCue: 'O',
+        difficulty: 'Easy',
+        tags: const ['training'],
+        definitions: const ['外部干扰项'],
+        englishDefinitions: const ['an item outside the current formal lesson'],
+      );
+      final externalLesson = Lesson(
+        id: 'lesson-training-external',
+        title: 'External training options',
+        section: '训练场',
+        description: 'Only used as a translation pool source.',
+        status: 'locked',
+        xpReward: 0,
+        estimatedMinutes: 1,
+        words: [externalWord],
+        questions: const [],
+      );
+      final originalQuestion = lesson.questions.firstWhere(
+        (question) => quizOptionsAreMeanings(question.type),
+      );
+      final patchedQuestion = QuizQuestion(
+        id: originalQuestion.id,
+        type: originalQuestion.type,
+        prompt: originalQuestion.prompt,
+        answer: originalQuestion.answer,
+        options: [
+          originalQuestion.answer,
+          externalWord.meaning,
+          ...originalQuestion.options.where(
+            (option) =>
+                option != originalQuestion.answer &&
+                option != externalWord.meaning,
+          ),
+        ].take(4).toList(growable: false),
+        explanation: originalQuestion.explanation,
+        word: originalQuestion.word,
+      );
+      final patchedLessons = [
+        for (final item in lessons)
+          if (item.id == lesson.id)
+            item.copyWith(
+              questions: [patchedQuestion, ...item.questions.skip(1)],
+            )
+          else
+            item,
+        externalLesson,
+      ];
+      container.read(appControllerProvider.notifier).state = container
+          .read(appControllerProvider)
+          .copyWith(lessons: patchedLessons);
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            locale: const Locale('en'),
+            theme: AppTheme.light(),
+            home: QuizSessionScreen(lessonId: lesson.id),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text(externalWord.primaryDefinitionFor('en')),
+        findsOneWidget,
+      );
+      expect(find.text(externalWord.meaning), findsNothing);
+    },
+  );
+
+  testWidgets(
     'timed test result returns to training instead of learning path',
     (tester) async {
       final lesson = seedLessons().last;
@@ -1770,6 +2140,9 @@ void main() {
 
     final choiceQuestion = lesson.questions[choiceIndex];
     final nextQuestion = lesson.questions[choiceIndex + 1];
+    final l10n = await AppLocalizations.delegate.load(const Locale('zh'));
+    final choicePrompt = localizedQuizPrompt(choiceQuestion, l10n);
+    final nextPrompt = localizedQuizPrompt(nextQuestion, l10n);
 
     // Tapping the correct choice judges instantly — no check/continue buttons.
     await _tapOptionNoSettle(tester, choiceQuestion.answer);
@@ -1784,17 +2157,17 @@ void main() {
       findsOneWidget,
     );
     // Still on the choice question prompt before the auto-advance delay.
-    expect(find.text(choiceQuestion.prompt), findsOneWidget);
+    expect(find.text(choicePrompt), findsOneWidget);
 
     await tester.pump(const Duration(milliseconds: 1499));
-    expect(find.text(choiceQuestion.prompt), findsOneWidget);
-    expect(find.text(nextQuestion.prompt), findsNothing);
+    expect(find.text(choicePrompt), findsOneWidget);
+    expect(find.text(nextPrompt), findsNothing);
 
     await tester.pump(const Duration(milliseconds: 2));
     await tester.pumpAndSettle();
     // Advanced to the next question.
-    expect(find.text(choiceQuestion.prompt), findsNothing);
-    expect(find.text(nextQuestion.prompt), findsOneWidget);
+    expect(find.text(choicePrompt), findsNothing);
+    expect(find.text(nextPrompt), findsOneWidget);
   });
 
   testWidgets('quiz lets you re-select after a wrong choice', (tester) async {
@@ -1829,6 +2202,9 @@ void main() {
 
     final choiceQuestion = lesson.questions[choiceIndex];
     final nextQuestion = lesson.questions[choiceIndex + 1];
+    final l10n = await AppLocalizations.delegate.load(const Locale('zh'));
+    final choicePrompt = localizedQuizPrompt(choiceQuestion, l10n);
+    final nextPrompt = localizedQuizPrompt(nextQuestion, l10n);
 
     // A wrong tap shows the retry feedback and does NOT advance or reveal.
     await _tapAnyOptionExceptNoSettle(tester, choiceQuestion.answer);
@@ -1842,15 +2218,15 @@ void main() {
     );
     // Still on the same question (no auto-advance on wrong).
     await tester.pump(const Duration(milliseconds: 1600));
-    expect(find.text(choiceQuestion.prompt), findsOneWidget);
-    expect(find.text(nextQuestion.prompt), findsNothing);
+    expect(find.text(choicePrompt), findsOneWidget);
+    expect(find.text(nextPrompt), findsNothing);
 
     // Re-selecting the correct option now judges correct and advances.
     await _tapOptionNoSettle(tester, choiceQuestion.answer);
     expect(find.textContaining('答对了'), findsOneWidget);
     await tester.pump(const Duration(milliseconds: 1500));
     await tester.pumpAndSettle();
-    expect(find.text(nextQuestion.prompt), findsOneWidget);
+    expect(find.text(nextPrompt), findsOneWidget);
   });
 
   testWidgets('lesson and quiz screens expose a working back path', (
@@ -1899,8 +2275,10 @@ void main() {
 
     final quizLesson = _currentLesson(tester);
     final firstQuestion = quizLesson.questions.first;
+    final l10n = await AppLocalizations.delegate.load(const Locale('zh'));
+    final firstPrompt = localizedQuizPrompt(firstQuestion, l10n);
     // The question prompt marks that we are on the quiz screen.
-    expect(find.text(firstQuestion.prompt), findsOneWidget);
+    expect(find.text(firstPrompt), findsOneWidget);
     expect(find.byType(BackButtonIcon), findsOneWidget);
 
     // A wrong answer registers progress but does not advance.
@@ -1914,7 +2292,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Still on the same quiz question after choosing to keep answering.
-    expect(find.text(firstQuestion.prompt), findsOneWidget);
+    expect(find.text(firstPrompt), findsOneWidget);
 
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
@@ -1922,7 +2300,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('离开测验？'), findsNothing);
-    expect(find.text(firstQuestion.prompt), findsNothing);
+    expect(find.text(firstPrompt), findsNothing);
   });
 
   testWidgets('new word cards confirm before leaving after progress', (
@@ -2555,6 +2933,8 @@ void main() {
         .whereType<String>()
         .toList();
 
+    await tester.drag(find.byType(Scrollable).last, const Offset(0, -360));
+    await tester.pumpAndSettle();
     expect(visibleNumberFieldValues(), contains('10'));
     final updatedPlan = initialPlan.copyWith(
       dailyNewTarget: 33,
@@ -2571,7 +2951,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(visibleNumberFieldValues(), contains('33'));
-    await tester.drag(find.byType(Scrollable).last, const Offset(0, -360));
+    await tester.drag(find.byType(Scrollable).last, const Offset(0, -180));
     await tester.pumpAndSettle();
     expect(visibleNumberFieldValues(), contains('44'));
     expect(
@@ -2620,7 +3000,9 @@ void main() {
               false,
         );
 
-    expect(digitOnlyFields(), hasLength(1));
+    await tester.drag(find.byType(Scrollable).last, const Offset(0, -260));
+    await tester.pumpAndSettle();
+    expect(digitOnlyFields(), hasLength(2));
     await tester.drag(find.byType(Scrollable).last, const Offset(0, -180));
     await tester.pumpAndSettle();
     expect(
@@ -2678,6 +3060,8 @@ void main() {
     await tester.tap(find.text('调整计划'));
     await tester.pumpAndSettle();
 
+    await tester.drag(find.byType(Scrollable).last, const Offset(0, -360));
+    await tester.pumpAndSettle();
     final field = tester.widget<TextFormField>(
       find.byType(TextFormField).first,
     );
@@ -3586,7 +3970,7 @@ void main() {
         .currentLesson!
         .words
         .first;
-    await tester.tap(find.textContaining('开始今日学习'));
+    await tester.tap(find.textContaining('开始'));
     await tester.pumpAndSettle();
 
     expect(find.text('今日混排学习包'), findsOneWidget);
@@ -3656,7 +4040,7 @@ void main() {
           .currentLesson!
           .words
           .first;
-      await tester.tap(find.textContaining('开始今日学习'));
+      await tester.tap(find.textContaining('开始'));
       await tester.pumpAndSettle();
 
       // Enter the recognition question for the first new word.
@@ -4097,13 +4481,14 @@ void main() {
     );
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
+    final reviewButton = find.widgetWithText(AppSecondaryButton, '复习');
     await tester.scrollUntilVisible(
-      find.textContaining('仅复习'),
+      reviewButton,
       300,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.textContaining('仅复习'));
+    await tester.tap(reviewButton);
     await tester.pumpAndSettle();
     await tester.tap(find.text('管理复习队列'));
     await tester.pumpAndSettle();
@@ -4180,13 +4565,14 @@ void main() {
       );
       await tester.pumpAndSettle(const Duration(seconds: 1));
 
+      final reviewButton = find.widgetWithText(AppSecondaryButton, '复习');
       await tester.scrollUntilVisible(
-        find.textContaining('仅复习'),
+        reviewButton,
         300,
         scrollable: find.byType(Scrollable).first,
       );
       await tester.pumpAndSettle();
-      await tester.tap(find.textContaining('仅复习'));
+      await tester.tap(reviewButton);
       await tester.pumpAndSettle();
       await tester.tap(find.text('管理复习队列'));
       await tester.pumpAndSettle();

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
@@ -21,7 +22,7 @@ class LeaderboardScreen extends ConsumerWidget {
     final entries = state.todayTrainingXp > 0
         ? [
             _Entry(
-              name: user?.name ?? l10n.leaderboardDefaultName,
+              name: displayUserName(user, l10n: l10n),
               xp: state.todayTrainingXp,
               rank: 1,
             ),

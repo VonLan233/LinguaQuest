@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/utils/custom_word_localization.dart';
 import '../../core/utils/date_formatting.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/empty_state.dart';
@@ -285,6 +286,7 @@ class _ReviewWordCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final localeCode = Localizations.localeOf(context).languageCode;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Column(
@@ -311,7 +313,7 @@ class _ReviewWordCard extends StatelessWidget {
                       runSpacing: 8,
                       children: [
                         PillLabel(
-                          label: displayCustomTag(word.tag),
+                          label: displayCustomTag(word.tag, l10n: l10n),
                           icon: AppIcons.label,
                           color: AppTheme.teal,
                         ),
@@ -343,7 +345,7 @@ class _ReviewWordCard extends StatelessWidget {
           if (isRevealed) ...[
             const SizedBox(height: 18),
             Text(
-              word.meaning,
+              customWordMeaningFor(word, localeCode),
               style: textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.w900,
               ),
@@ -409,7 +411,7 @@ class _MemoryHintLine extends StatelessWidget {
           child: Text(
             isRevealed
                 ? l10n.reviewStudyNextReview(
-                    formatRelativeDue(word.nextReviewAt, DateTime.now()),
+                    formatRelativeDue(word.nextReviewAt, DateTime.now(), l10n),
                   )
                 : l10n.reviewStudyHiddenHint,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(

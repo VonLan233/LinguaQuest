@@ -20,6 +20,7 @@ List<Map<String, dynamic>> generatedNotificationsForToday({
       'body': '今天目标新学 $dailyGoal 词，先从当前词书开始。',
       'targetRoute': '/study/new',
       'sourceKey': 'learningReminder:$dateKey',
+      'params': {'dailyGoal': dailyGoal},
     });
   }
   if (dueReviewCount > 0) {
@@ -29,6 +30,7 @@ List<Map<String, dynamic>> generatedNotificationsForToday({
       'body': '先清理复习队列，答错词会自动进入强化阶段。',
       'targetRoute': '/study/review',
       'sourceKey': 'reviewDue:$dateKey',
+      'params': {'dueCount': dueReviewCount},
     });
   }
   if (!hasCheckedIn) {
@@ -38,6 +40,7 @@ List<Map<String, dynamic>> generatedNotificationsForToday({
       'body': '完成一次学习或复习即可延续连续打卡。',
       'targetRoute': '/discover',
       'sourceKey': 'checkInReminder:$dateKey',
+      'params': <String, dynamic>{},
     });
   }
   notifications.add({
@@ -46,6 +49,7 @@ List<Map<String, dynamic>> generatedNotificationsForToday({
     'body': '完成新学、复习和错词清理后可领取 XP。',
     'targetRoute': '/discover',
     'sourceKey': 'activity:$dateKey',
+    'params': {'kind': 'activity'},
   });
   return notifications;
 }

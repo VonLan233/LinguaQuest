@@ -26,9 +26,6 @@ class LinguaQuestApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
-    final themeMode = ref.watch(
-      appControllerProvider.select((state) => state.themeMode),
-    );
     final locale = ref.watch(
       appControllerProvider.select((state) => state.locale),
     );
@@ -42,9 +39,8 @@ class LinguaQuestApp extends ConsumerWidget {
     return MaterialApp.router(
       title: 'LinguaQuest',
       debugShowCheckedModeBanner: false,
+      // Light-only: dark mode was removed (the theme was not production-ready).
       theme: AppTheme.light(),
-      darkTheme: AppTheme.dark(),
-      themeMode: themeMode,
       // An explicit in-app language choice (state.locale) overrides everything;
       // when null, follow the system language via localeResolutionCallback.
       locale: locale,

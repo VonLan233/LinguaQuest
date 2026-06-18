@@ -45,7 +45,7 @@ class ProfileScreen extends ConsumerWidget {
       children: [
         // Hero: mascot avatar + name/email/target·level + XP/streak pills.
         _ProfileHeader(
-          name: user?.name ?? l10n.profileLearner,
+          name: displayUserName(user, l10n: l10n),
           email: user?.email ?? l10n.profileNoEmail,
           target: displayTarget(user?.targetExam, l10n: l10n),
           level: displayLevel(user?.level, l10n: l10n),
@@ -108,12 +108,6 @@ class ProfileScreen extends ConsumerWidget {
         _SettingsGroup(
           children: [
             _SettingsItem(
-              icon: AppIcons.darkMode,
-              title: l10n.commonTheme,
-              value: _themeModeLabel(state.themeMode, l10n),
-              onTap: () => context.push('/settings/theme'),
-            ),
-            _SettingsItem(
               icon: AppIcons.notifications,
               title: l10n.commonDailyReminder,
               value: state.reminderSettings.enabled
@@ -146,7 +140,6 @@ class ProfileScreen extends ConsumerWidget {
         const SizedBox(height: AppTokens.s32),
         SectionHeader(
           title: l10n.profileAssetsTitle,
-          subtitle: l10n.profileAssetsSubtitle,
         ),
         const SizedBox(height: AppTokens.s12),
         _AssetInventory(assets: state.userAssets),
@@ -398,12 +391,7 @@ class _SettingsItem extends StatelessWidget {
             children: [
               Icon(icon, color: theme.colorScheme.primary, size: 22),
               const SizedBox(width: AppTokens.s16),
-              Expanded(
-                child: Text(
-                  title,
-                  style: theme.textTheme.bodyMedium,
-                ),
-              ),
+              Expanded(child: Text(title, style: theme.textTheme.bodyMedium)),
               if (value != null)
                 Text(
                   value!,
@@ -565,17 +553,6 @@ class _LanguageOption extends StatelessWidget {
   }
 }
 
-String _themeModeLabel(ThemeMode mode, AppLocalizations l10n) {
-  switch (mode) {
-    case ThemeMode.light:
-      return l10n.settingsThemeLight;
-    case ThemeMode.dark:
-      return l10n.settingsThemeDark;
-    case ThemeMode.system:
-      return l10n.settingsThemeSystem;
-  }
-}
-
 class _AssetInventory extends StatelessWidget {
   const _AssetInventory({required this.assets});
 
@@ -588,7 +565,6 @@ class _AssetInventory extends StatelessWidget {
       return AppCard(
         child: MascotEmptyState(
           title: l10n.profileAssetsEmpty,
-          message: l10n.profileAssetsSubtitle,
         ),
       );
     }

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/utils/custom_word_localization.dart';
 import '../../core/utils/date_formatting.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_card.dart';
@@ -224,6 +225,7 @@ class _ReviewTile extends ConsumerWidget {
     );
     final canReview = word.isDue(DateTime.now()) && !isLoading;
     final theme = Theme.of(context);
+    final localeCode = Localizations.localeOf(context).languageCode;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppTokens.s16),
       child: AppCard(
@@ -241,7 +243,7 @@ class _ReviewTile extends ConsumerWidget {
                       Text(word.word, style: theme.textTheme.titleMedium),
                       const SizedBox(height: 3),
                       Text(
-                        '${word.meaning} · ${formatRelativeDue(word.nextReviewAt, DateTime.now())}',
+                        '${customWordMeaningFor(word, localeCode)} · ${formatRelativeDue(word.nextReviewAt, DateTime.now(), l10n)}',
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -364,6 +366,7 @@ class _WeakWordRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localeCode = Localizations.localeOf(context).languageCode;
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: AppCard(
@@ -381,7 +384,7 @@ class _WeakWordRow extends StatelessWidget {
                   Text(word.word, style: theme.textTheme.titleMedium),
                   const SizedBox(height: 3),
                   Text(
-                    word.meaning,
+                    customWordMeaningFor(word, localeCode),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: theme.colorScheme.onSurfaceVariant),

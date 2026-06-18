@@ -1,3 +1,5 @@
+import '../../core/utils/text_language.dart';
+
 enum QuizQuestionType {
   meaningChoice,
   chineseChoice,
@@ -109,15 +111,47 @@ class Word {
   /// [meaning]/[definition] fields), returns a single-element list derived from
   /// those so callers always have something to show.
   List<String> definitionsFor(String languageCode) {
+    final normalizedLanguage = languageCode.toLowerCase();
+    List<String> nonChinese(Iterable<String> values) {
+      return [
+        for (final value in values)
+          if (value.trim().isNotEmpty && !containsCjkText(value)) value.trim(),
+      ];
+    }
+
+    List<String> nonChineseScalar(String value) {
+      final trimmed = value.trim();
+      if (trimmed.isEmpty || containsCjkText(trimmed)) return const [];
+      return [trimmed];
+    }
+
     List<String> pick() {
-      switch (languageCode) {
+      switch (normalizedLanguage) {
         case 'en':
-          if (englishDefinitions.isNotEmpty) return englishDefinitions;
-          return definitions;
+          if (nonChinese(englishDefinitions).isNotEmpty) {
+            return nonChinese(englishDefinitions);
+          }
+          if (nonChineseScalar(definition).isNotEmpty) {
+            return nonChineseScalar(definition);
+          }
+          if (nonChinese(definitions).isNotEmpty) {
+            return nonChinese(definitions);
+          }
+          return [_fallbackDefinitionFor(word, normalizedLanguage)];
         case 'ms':
-          if (malayDefinitions.isNotEmpty) return malayDefinitions;
-          if (englishDefinitions.isNotEmpty) return englishDefinitions;
-          return definitions;
+          if (nonChinese(malayDefinitions).isNotEmpty) {
+            return nonChinese(malayDefinitions);
+          }
+          if (nonChinese(englishDefinitions).isNotEmpty) {
+            return nonChinese(englishDefinitions);
+          }
+          if (nonChineseScalar(definition).isNotEmpty) {
+            return nonChineseScalar(definition);
+          }
+          if (nonChinese(definitions).isNotEmpty) {
+            return nonChinese(definitions);
+          }
+          return [_fallbackDefinitionFor(word, normalizedLanguage)];
         default:
           if (definitions.isNotEmpty) return definitions;
           return englishDefinitions;
@@ -233,6 +267,16 @@ class Word {
       'imageUrl': imageUrl,
     };
   }
+}
+
+String _fallbackDefinitionFor(String word, String languageCode) {
+  final fallbackWord = word.trim();
+  if (fallbackWord.isNotEmpty && !containsCjkText(fallbackWord)) {
+    if (languageCode == 'ms') return 'Item kosa kata untuk $fallbackWord.';
+    return 'Vocabulary item for $fallbackWord.';
+  }
+  if (languageCode == 'ms') return 'Item kosa kata.';
+  return 'Vocabulary item.';
 }
 
 class WordBook {

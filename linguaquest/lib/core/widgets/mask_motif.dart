@@ -5,12 +5,7 @@ import '../theme/app_tokens.dart';
 /// Purely decorative cat-mask motif: two soft ear-like arcs joined by a
 /// scalloped curve. Used as a subtle backdrop accent on branded surfaces.
 class MaskBackdrop extends StatelessWidget {
-  const MaskBackdrop({
-    this.color,
-    this.height = 120,
-    this.child,
-    super.key,
-  });
+  const MaskBackdrop({this.color, this.height = 120, this.child, super.key});
 
   final Color? color;
   final double height;
@@ -19,13 +14,14 @@ class MaskBackdrop extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tint = color ?? AppTokens.sky;
+    final overlay = child;
     return SizedBox(
       height: height,
       child: Stack(
         fit: StackFit.expand,
         children: [
           CustomPaint(painter: MaskMotifPainter(color: tint)),
-          if (child != null) child,
+          ?overlay,
         ],
       ),
     );

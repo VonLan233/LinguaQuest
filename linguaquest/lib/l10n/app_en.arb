@@ -168,7 +168,7 @@
   "classTopicExamSignals": "Exam signal words",
   "classTopicTravelBasics": "Travel basics",
   "classTopicWorkplace": "Workplace expressions",
-  "leaderboardDefaultName": "Learner",
+  "leaderboardDefaultName": "Explorer",
   "leaderboardTitle": "Training leaderboard",
   "leaderboardSubtitle": "Counts only real completed training XP; no static demo board.",
   "leaderboardEmptyTitle": "No training results yet",
@@ -219,8 +219,8 @@
   "homeTaskConsole": "Daily Task Console",
   "homeAdjustPlan": "Adjust Plan",
   "homeResumePlan": "Resume plan to continue learning",
-  "homeStartLearning": "Start Today's Learning",
-  "homeReviewOnly": "Review Only",
+  "homeStartLearning": "Start",
+  "homeReviewOnly": "Review",
   "homeStreakLabel": "continuous check-in",
   "homeStreakDays": "{count, plural, =1{1 day streak} other{{count} days check-in}}",
   "homeTodayProgress": "Today",
@@ -238,7 +238,7 @@
   "homePlanPaused": "Plan Paused",
   "homeTodayCompleted": "Today completed",
 
-  "profileLearner": "Learner",
+  "profileLearner": "Explorer",
   "profileNoEmail": "No email set",
   "profileDashboard": "Learning Dashboard",
   "profileDashboardSubtitle": "Key progress at a glance, with settings at the bottom.",
@@ -311,6 +311,15 @@
   "discoverClaimedMessage": "{title} claimed +{points} XP, current total {total} XP",
   "discoverCannotClaim": "Can't claim this task right now",
   "discoverViewProfile": "View Profile",
+  "errorStartupFailed": "LinguaQuest failed to start: {detail}",
+  "errorPlanPausedNewLearning": "Your study plan is paused. Resume it to start new learning.",
+  "errorPlanPausedReview": "Your study plan is paused. Resume it to review.",
+  "errorCardReviewedToday": "You've already reviewed this card today.",
+  "errorTaskClaimedToday": "You've already claimed this task today.",
+  "errorTargetReviewedToday": "You've already reviewed this target word today.",
+  "errorInsufficientXp": "Balance {balance} XP is below {cost} XP. Finish point tasks before the draw.",
+  "aiTutorInstantFeedback": "Instant Feedback",
+  "questTaskXp": "Task XP",
   "discoverTasksEmpty": "Today's point tasks haven't loaded yet.",
   "discoverForumCheckinTag": "Check-in",
   "discoverForumMistakeTag": "Mistake Talk",
@@ -411,9 +420,9 @@
   "trainingListening": "Listening Sprint",
   "trainingListeningDesc": "Listen to pronunciation, then select the word or meaning. Response time affects score.",
   "trainingListeningSource": "Listening weak words",
-  "trainingDueWords": "Due Words",
-  "trainingWeakWords": "Weak Words",
-  "trainingComboTarget": "Combo Target",
+  "trainingDueWords": "Review",
+  "trainingWeakWords": "Weak",
+  "trainingComboTarget": "Combo",
   "trainingEnterCustomWords": "Go to Custom Words",
   "trainingEntryMissingTitle": "Training entry unavailable",
   "trainingEntryMissingHeader": "Training not found",
@@ -428,14 +437,14 @@
   "trainingExitContent": "Current training progress will not be settled.",
   "trainingContinue": "Keep training",
   "trainingExit": "Leave",
-  "trainingPromptWordRush": "Choose the Chinese meaning of \"{word}\" quickly",
+  "trainingPromptWordRush": "Choose the meaning of \"{word}\" quickly",
   "trainingExplanationWordRush": "\"{word}\" means {meaning}. {example}",
   "trainingPromptChineseChoice": "Choose the English word for: {meaning}",
   "trainingExplanationChineseChoice": "{meaning} matches \"{word}\".",
   "trainingPromptContextChoice": "Choose the meaning from the example: {example}",
-  "trainingPromptMeaningChoice": "Choose the Chinese meaning of \"{word}\"",
+  "trainingPromptMeaningChoice": "Choose the meaning of \"{word}\"",
   "trainingExplanationMeaningChoice": "This question checks {word}: {meaning}.",
-  "trainingPromptChineseSpelling": "Spell the English word from Chinese: {meaning}",
+  "trainingPromptChineseSpelling": "Spell the English word from the meaning: {meaning}",
   "trainingPromptAudioSpelling": "Spell the English word after listening: {cue}",
   "trainingPromptContextSpelling": "Spell the blank in the example: {example}",
   "trainingExplanationSpelling": "The correct spelling is \"{word}\". {example}",
@@ -908,7 +917,7 @@
   "luckyDrawPoolLoading": "Prize pool loading: avatar frames, profile backgrounds, learning badges, training titles, card skins, consolation fragments.",
   "profileAssetsTitle": "My Assets",
   "profileAssetsSubtitle": "Decorative assets won from draws are for display only and don't affect learning scores.",
-  "profileAssetsEmpty": "No decorative assets yet. After spending XP on the Discover page draw, avatar frames, profile backgrounds, badges, titles, card skins, and fragments will appear here.",
+  "profileAssetsEmpty": "No Assets Yet",
   "profileAssetMeta": "{category} · Qty {quantity} · Fragments {fragments}",
   "lotteryCategoryAvatarFrame": "Avatar Frame",
   "lotteryCategoryProfileBackground": "Profile Background",
@@ -923,5 +932,69 @@
   "lotteryRarityComfort": "Comfort",
   "languageChinese": "中文",
   "languageMalay": "Bahasa Melayu",
-  "languageEnglish": "English"
+  "languageEnglish": "English",
+  "wordKnowledgeTitle": "Word breakdown",
+  "wordKnowledgeCollocations": "Collocations",
+  "wordKnowledgeSynAnt": "Synonyms / Antonyms",
+  "wordKnowledgeFamily": "Word family",
+  "wordKnowledgeRoots": "Roots & affixes",
+  "pronunciationAccentUk": "UK",
+  "pronunciationAccentUs": "US",
+  "pronunciationAnnounce": "{accent} {word}",
+  "@pronunciationAnnounce": {
+    "placeholders": {
+      "accent": { "type": "String" },
+      "word": { "type": "String" }
+    }
+  },
+  "pronunciationPlaying": "{accent}: {word}",
+  "@pronunciationPlaying": {
+    "placeholders": {
+      "accent": { "type": "String" },
+      "word": { "type": "String" }
+    }
+  },
+  "pronunciationUnavailable": "{accent} audio unavailable",
+  "@pronunciationUnavailable": {
+    "placeholders": {
+      "accent": { "type": "String" }
+    }
+  },
+  "pronunciationFailedRetry": "{accent} playback failed, tap to retry",
+  "@pronunciationFailedRetry": {
+    "placeholders": {
+      "accent": { "type": "String" }
+    }
+  },
+  "pronunciationLoading": "{accent} loading",
+  "@pronunciationLoading": {
+    "placeholders": {
+      "accent": { "type": "String" }
+    }
+  },
+  "pronunciationRetry": "{accent} retry",
+  "@pronunciationRetry": {
+    "placeholders": {
+      "accent": { "type": "String" }
+    }
+  },
+  "dueNow": "Due now",
+  "dueInDays": "In {count} days",
+  "@dueInDays": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "dueInHours": "In {count} hours",
+  "@dueInHours": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "dueInMinutes": "In {count} minutes",
+  "@dueInMinutes": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  }
 }

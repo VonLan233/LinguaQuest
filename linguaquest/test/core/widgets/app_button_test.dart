@@ -4,8 +4,9 @@ import 'package:linguaquest/core/theme/app_tokens.dart';
 import 'package:linguaquest/core/widgets/app_button.dart';
 
 void main() {
-  testWidgets('AppPrimaryButton shows label and fires onPressed',
-      (tester) async {
+  testWidgets('AppPrimaryButton shows label and fires onPressed', (
+    tester,
+  ) async {
     var pressed = false;
     await tester.pumpWidget(
       MaterialApp(
@@ -22,13 +23,12 @@ void main() {
     expect(pressed, isTrue);
   });
 
-  testWidgets('AppPrimaryButton with null onPressed is disabled',
-      (tester) async {
+  testWidgets('AppPrimaryButton with null onPressed is disabled', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       const MaterialApp(
-        home: Scaffold(
-          body: AppPrimaryButton(label: 'x', onPressed: null),
-        ),
+        home: Scaffold(body: AppPrimaryButton(label: 'x', onPressed: null)),
       ),
     );
     final gesture = tester.widget<GestureDetector>(
@@ -40,8 +40,9 @@ void main() {
     expect(gesture.onTap, isNull);
   });
 
-  testWidgets('AppPrimaryButton exposes an enabled button to a11y',
-      (tester) async {
+  testWidgets('AppPrimaryButton exposes an enabled button to a11y', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -61,17 +62,36 @@ void main() {
     expect(semantics.properties.enabled, isTrue);
   });
 
-  testWidgets('AppPrimaryButton mutes its label when disabled',
-      (tester) async {
+  testWidgets('AppPrimaryButton mutes its label when disabled', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(
-        home: Scaffold(
-          body: AppPrimaryButton(label: 'off', onPressed: null),
-        ),
+        home: Scaffold(body: AppPrimaryButton(label: 'off', onPressed: null)),
       ),
     );
     final label = tester.widget<Text>(find.text('off'));
     expect(label.style?.color, AppTokens.textHintLight);
+  });
+
+  testWidgets('AppPrimaryButton constrains long labels', (tester) async {
+    const label = 'Start Today With A Very Long Localized Label';
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SizedBox(
+            width: 180,
+            child: AppPrimaryButton(
+              label: label,
+              icon: Icons.play_arrow,
+              onPressed: () {},
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final text = tester.widget<Text>(find.text(label));
+    expect(text.maxLines, 1);
+    expect(text.overflow, TextOverflow.ellipsis);
   });
 
   testWidgets('AppSecondaryButton renders outlined label', (tester) async {
@@ -85,8 +105,9 @@ void main() {
     expect(find.text('稍后'), findsOneWidget);
   });
 
-  testWidgets('AppSecondaryButton renders optional leading icon',
-      (tester) async {
+  testWidgets('AppSecondaryButton renders optional leading icon', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -100,5 +121,27 @@ void main() {
     );
     expect(find.text('收藏'), findsOneWidget);
     expect(find.byIcon(Icons.star_border_rounded), findsOneWidget);
+  });
+
+  testWidgets('AppSecondaryButton constrains long labels', (tester) async {
+    const label = 'Review Only With A Very Long Localized Label';
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SizedBox(
+            width: 160,
+            child: AppSecondaryButton(
+              label: label,
+              icon: Icons.replay,
+              onPressed: () {},
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final text = tester.widget<Text>(find.text(label));
+    expect(text.maxLines, 1);
+    expect(text.overflow, TextOverflow.ellipsis);
   });
 }
