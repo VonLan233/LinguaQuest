@@ -150,10 +150,6 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const StudyPlanSettingsScreen(),
       ),
       GoRoute(
-        path: '/settings/theme',
-        builder: (context, state) => const ThemeSettingsScreen(),
-      ),
-      GoRoute(
         path: '/settings/reminder',
         builder: (context, state) => const ReminderSettingsScreen(),
       ),

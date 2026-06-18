@@ -108,12 +108,6 @@ class ProfileScreen extends ConsumerWidget {
         _SettingsGroup(
           children: [
             _SettingsItem(
-              icon: AppIcons.darkMode,
-              title: l10n.commonTheme,
-              value: _themeModeLabel(state.themeMode, l10n),
-              onTap: () => context.push('/settings/theme'),
-            ),
-            _SettingsItem(
               icon: AppIcons.notifications,
               title: l10n.commonDailyReminder,
               value: state.reminderSettings.enabled
@@ -556,17 +550,6 @@ class _LanguageOption extends StatelessWidget {
       selected: selected,
       onTap: onTap,
     );
-  }
-}
-
-String _themeModeLabel(ThemeMode mode, AppLocalizations l10n) {
-  switch (mode) {
-    case ThemeMode.light:
-      return l10n.settingsThemeLight;
-    case ThemeMode.dark:
-      return l10n.settingsThemeDark;
-    case ThemeMode.system:
-      return l10n.settingsThemeSystem;
   }
 }
 

@@ -44,13 +44,6 @@ class SettingsScreen extends ConsumerWidget {
               route: '/settings/reminder',
             ),
             const SizedBox(height: AppTokens.s12),
-            _SettingsAction(
-              icon: AppIcons.darkMode,
-              title: l10n.commonTheme,
-              subtitle: _themeModeLabel(state.themeMode, l10n),
-              route: '/settings/theme',
-            ),
-            const SizedBox(height: AppTokens.s12),
             _LanguageSetting(
               currentLocale: state.locale,
               onChanged: (locale) =>
@@ -61,54 +54,6 @@ class SettingsScreen extends ConsumerWidget {
               icon: AppIcons.volumeUp,
               title: l10n.settingsSoundFeedback,
               subtitle: l10n.settingsSoundFeedbackSubtitle,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ThemeSettingsScreen extends ConsumerWidget {
-  const ThemeSettingsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context);
-    final themeMode = ref.watch(
-      appControllerProvider.select((state) => state.themeMode),
-    );
-    return Scaffold(
-      appBar: AppBar(
-        leading: const FallbackBackButton(fallbackLocation: '/settings'),
-        title: Text(l10n.commonTheme),
-      ),
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(AppTokens.s20),
-          children: [
-            _ThemeOption(
-              value: ThemeMode.system,
-              groupValue: themeMode,
-              icon: AppIcons.phoneAndroid,
-              title: l10n.settingsThemeSystem,
-              subtitle: l10n.settingsThemeSystemSubtitle,
-            ),
-            const SizedBox(height: AppTokens.s12),
-            _ThemeOption(
-              value: ThemeMode.light,
-              groupValue: themeMode,
-              icon: AppIcons.lightMode,
-              title: l10n.settingsThemeLight,
-              subtitle: l10n.settingsThemeLightSubtitle,
-            ),
-            const SizedBox(height: AppTokens.s12),
-            _ThemeOption(
-              value: ThemeMode.dark,
-              groupValue: themeMode,
-              icon: AppIcons.darkMode,
-              title: l10n.settingsThemeDark,
-              subtitle: l10n.settingsThemeDarkSubtitle,
             ),
           ],
         ),
@@ -398,68 +343,3 @@ class _SettingsInfoLine extends StatelessWidget {
   }
 }
 
-class _ThemeOption extends ConsumerWidget {
-  const _ThemeOption({
-    required this.value,
-    required this.groupValue,
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-  });
-
-  final ThemeMode value;
-  final ThemeMode groupValue;
-  final IconData icon;
-  final String title;
-  final String subtitle;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final selected = value == groupValue;
-    return AppCard(
-      onTap: () =>
-          ref.read(appControllerProvider.notifier).updateThemeMode(value),
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            color: selected
-                ? theme.colorScheme.primary
-                : theme.colorScheme.onSurfaceVariant,
-          ),
-          const SizedBox(width: AppTokens.s12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: theme.textTheme.titleMedium),
-                Text(
-                  subtitle,
-                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
-                ),
-              ],
-            ),
-          ),
-          Icon(
-            selected
-                ? AppIcons.radioButtonChecked
-                : AppIcons.radioButtonUnchecked,
-            color: theme.colorScheme.primary,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-String _themeModeLabel(ThemeMode mode, AppLocalizations l10n) {
-  switch (mode) {
-    case ThemeMode.light:
-      return l10n.settingsThemeLight;
-    case ThemeMode.dark:
-      return l10n.settingsThemeDark;
-    case ThemeMode.system:
-      return l10n.settingsThemeSystem;
-  }
-}
