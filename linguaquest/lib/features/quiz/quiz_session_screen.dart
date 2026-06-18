@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/utils/pinyin.dart';
 import '../../core/utils/quiz_localization.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/app_button.dart';
@@ -294,7 +295,8 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
     if (_lockedCorrect) return;
     final answer = _textController.text.trim();
     if (answer.isEmpty) return;
-    final isCorrect = answer.toLowerCase() == question.answer.toLowerCase();
+    final isCorrect =
+        normalizePinyin(answer) == normalizePinyin(question.answer);
     setState(() {
       _recordAttempt(question, isCorrect);
       _checked = true;
@@ -380,7 +382,7 @@ class _QuestionPromptPanel extends StatelessWidget {
           ImageCueBadge(cue: question.word.imageCue, size: 104),
           const SizedBox(height: 14),
           Text(
-            localizedQuizPrompt(question, l10n),
+            question.prompt,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.headlineSmall,
           ),
@@ -534,7 +536,7 @@ class _FeedbackPanel extends StatelessWidget {
               children: [
                 Text(
                   revealAnswer
-                      ? '${l10n.quizCorrect}${localizedQuizExplanation(question, l10n)}'
+                      ? '${l10n.quizCorrect}${question.explanation}'
                       : '${l10n.quizWrong}${l10n.quizRetry}',
                   style: TextStyle(color: color),
                 ),

@@ -343,6 +343,7 @@ String displayWordTag(String value, {AppLocalizations? l10n}) {
 }
 
 String displayWordbookTitle(String id, {AppLocalizations? l10n}) {
+  if (id.toLowerCase() == 'hsk1') return 'HSK 1';
   if (l10n == null) return id;
   switch (id.toLowerCase()) {
     case 'beginner':
@@ -365,6 +366,7 @@ String displayWordbookTitle(String id, {AppLocalizations? l10n}) {
 }
 
 String displayWordbookDescription(String id, {AppLocalizations? l10n}) {
+  if (id.toLowerCase() == 'hsk1') return 'Core vocabulary for HSK Level 1.';
   if (l10n == null) return '';
   switch (id.toLowerCase()) {
     case 'beginner':

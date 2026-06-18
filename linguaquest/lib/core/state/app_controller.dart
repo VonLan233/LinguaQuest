@@ -118,6 +118,7 @@ final appControllerProvider = NotifierProvider<AppController, AppState>(
 class AppController extends Notifier<AppState> {
   static const _themeModeKey = 'linguaquest.themeMode';
   static const _localeKey = 'linguaquest.locale';
+  static const _targetLanguageKey = 'linguaquest.target_language';
   static const _reminderKey = 'linguaquest.reminderSettings';
   static const _currentWordBookIdKey = 'linguaquest.currentWordBookId';
   static const _completedLessonIdsKey = 'linguaquest.completedLessons';
@@ -245,6 +246,7 @@ class AppController extends Notifier<AppState> {
         userWords: userWords,
         themeMode: _themeModeFromName(prefs.getString(_themeModeKey)),
         locale: _localeFromName(prefs.getString(_localeKey)),
+        targetLanguage: prefs.getString(_targetLanguageKey) ?? 'zh',
         reminderSettings: reminderSettings,
         studyPlan: studyPlan,
         completedLessonIds: completedLessonIds,
@@ -279,6 +281,12 @@ class AppController extends Notifier<AppState> {
     state = state.copyWith(locale: locale);
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_localeKey, locale.languageCode);
+  }
+
+  Future<void> updateTargetLanguage(String code) async {
+    state = state.copyWith(targetLanguage: code);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_targetLanguageKey, code);
   }
 
   Future<void> updateReminderSettings(DailyReminderSettings settings) async {
@@ -2046,7 +2054,7 @@ class AppController extends Notifier<AppState> {
     required String? savedId,
     required String? target,
   }) {
-    if (books.isEmpty) return savedId ?? 'beginner';
+    if (books.isEmpty) return savedId ?? 'hsk1';
     if (savedId != null && _wordBookById(books, savedId) != null) {
       return savedId;
     }
@@ -2070,20 +2078,10 @@ class AppController extends Notifier<AppState> {
     return books.isEmpty ? mapped : books.first.id;
   }
 
-  String _mappedWordBookId(String normalizedTarget) {
-    if (normalizedTarget == 'beginner' || normalizedTarget == 'daily-english') {
-      return 'beginner';
-    }
-    if (normalizedTarget == 'exam-core') return 'ielts';
-    if (normalizedTarget.contains('ielts') || normalizedTarget.contains('雅思')) {
-      return 'ielts';
-    }
-    if (normalizedTarget.contains('toefl') || normalizedTarget.contains('托福')) {
-      return 'toefl';
-    }
-    if (normalizedTarget.contains('gre')) return 'gre';
-    return 'beginner';
-  }
+  // Only the HSK 1 book ships today; every target maps to it. (The
+  // _wordBookIdForTarget title/examType fallback above still adapts if more
+  // books are added later.)
+  String _mappedWordBookId(String normalizedTarget) => 'hsk1';
 
   bool _hasWordBook(String wordBookId) {
     return _wordBookById(state.wordBooks, wordBookId) != null;

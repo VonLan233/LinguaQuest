@@ -26,14 +26,14 @@ class GoalSetupScreen extends ConsumerStatefulWidget {
 }
 
 class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
-  String _target = 'Daily English';
+  String _target = 'HSK 1';
   String _level = 'Intermediate';
   int _dailyGoal = 10;
   DateTime? _deadline;
   var _initializedFromState = false;
   late final ProviderSubscription<AppState> _stateSubscription;
 
-  static const targets = ['IELTS', 'TOEFL', 'GRE', 'Beginner', 'Daily English'];
+  static const targets = ['HSK 1'];
   static const goals = [5, 10, 15, 20];
 
   @override

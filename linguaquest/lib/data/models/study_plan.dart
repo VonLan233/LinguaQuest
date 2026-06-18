@@ -143,28 +143,10 @@ class StudyBookInfo {
 
 const studyBooks = [
   StudyBookInfo(
-    id: 'beginner',
-    name: '入门基础词汇',
-    cover: '🌱',
-    description: '适合初级英语和日常表达入门的基础高频词。',
-  ),
-  StudyBookInfo(
-    id: 'ielts',
-    name: '雅思核心词汇',
-    cover: '🎓',
-    description: '覆盖雅思阅读、听力和写作中的高频学术词。',
-  ),
-  StudyBookInfo(
-    id: 'toefl',
-    name: '托福高频词汇',
-    cover: '🌎',
-    description: '面向托福场景的学术词汇和校园表达。',
-  ),
-  StudyBookInfo(
-    id: 'gre',
-    name: 'GRE 高频词汇',
-    cover: '🧠',
-    description: '强化 GRE 阅读和填空常见高阶词。',
+    id: 'hsk1',
+    name: 'HSK 1',
+    cover: '🀄',
+    description: 'Core vocabulary for HSK Level 1.',
   ),
 ];
 
@@ -175,41 +157,12 @@ StudyBookInfo studyBookInfoForId(String id) {
   );
 }
 
-String normalizedStudyBookId(String? value) {
-  final normalized = value?.trim().toLowerCase() ?? '';
-  if (studyBooks.any((book) => book.id == normalized)) return normalized;
-  if (normalized == 'daily-english') return 'beginner';
-  if (normalized == 'exam-core') return 'ielts';
-  return studyBookIdForTarget(normalized);
-}
+// Only one book exists for now; every legacy/exam/HSK target resolves to it.
+String normalizedStudyBookId(String? value) => 'hsk1';
 
-String studyBookIdForTarget(String? target) {
-  final normalized = target?.trim().toLowerCase() ?? '';
-  if (normalized.contains('toefl') || normalized.contains('托福')) return 'toefl';
-  if (normalized.contains('gre')) return 'gre';
-  if (normalized.contains('ielts') ||
-      normalized.contains('雅思') ||
-      normalized.contains('exam') ||
-      normalized.contains('考试') ||
-      normalized.contains('大学英语')) {
-    return 'ielts';
-  }
-  return 'beginner';
-}
+String studyBookIdForTarget(String? target) => 'hsk1';
 
-String targetForStudyBookId(String wordBookId) {
-  switch (normalizedStudyBookId(wordBookId)) {
-    case 'toefl':
-      return 'TOEFL';
-    case 'gre':
-      return 'GRE';
-    case 'ielts':
-      return 'IELTS';
-    case 'beginner':
-      return 'Daily English';
-  }
-  return 'Daily English';
-}
+String targetForStudyBookId(String wordBookId) => 'HSK 1';
 
 String normalizedPlanStatus(String? value) {
   return value == 'paused' ? 'paused' : 'active';

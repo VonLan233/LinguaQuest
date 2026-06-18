@@ -2,22 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/routing/app_router.dart';
-import 'core/state/app_controller.dart';
 import 'core/theme/app_theme.dart';
 import 'l10n/generated/app_localizations.dart';
 import 'services/local_notification_service.dart';
 
-/// Picks the locale to use when the user has NOT chosen one in-app: follow the
-/// device/system language if it's a supported locale, otherwise fall back to
-/// the app default (Chinese). Matching is by `languageCode` (region ignored),
-/// which fits the app's three single-language locales (en/zh/ms).
+/// The app is locked to English. The target language being *learned* (Chinese,
+/// etc.) is a separate concept (see AppState.targetLanguage); the UI itself is
+/// English-only. The `zh`/`ms` ARB files and updateLocale() infra are kept
+/// dormant for a future re-enable.
 Locale resolveAppLocale(Locale? deviceLocale, Iterable<Locale> supported) {
-  if (deviceLocale != null) {
-    for (final candidate in supported) {
-      if (candidate.languageCode == deviceLocale.languageCode) return candidate;
-    }
-  }
-  return const Locale('zh');
+  return const Locale('en');
 }
 
 class LinguaQuestApp extends ConsumerWidget {
@@ -26,9 +20,6 @@ class LinguaQuestApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
-    final locale = ref.watch(
-      appControllerProvider.select((state) => state.locale),
-    );
 
     ref.listen<String?>(localNotificationTapRouteProvider, (previous, next) {
       if (next == null || next.isEmpty) return;
@@ -41,15 +32,12 @@ class LinguaQuestApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       // Light-only: dark mode was removed (the theme was not production-ready).
       theme: AppTheme.light(),
-      // An explicit in-app language choice (state.locale) overrides everything;
-      // when null, follow the system language via localeResolutionCallback.
-      locale: locale,
+      // Hard-locked to English regardless of device or persisted locale.
+      locale: const Locale('en'),
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      localeResolutionCallback: (deviceLocale, supportedLocales) {
-        if (locale != null) return locale;
-        return resolveAppLocale(deviceLocale, supportedLocales);
-      },
+      localeResolutionCallback: (deviceLocale, supportedLocales) =>
+          const Locale('en'),
       routerConfig: router,
     );
   }

@@ -466,22 +466,22 @@ void main() {
       await tester.pumpAndSettle(const Duration(seconds: 1));
 
       expect(find.text('4'), findsOneWidget);
-      await tester.tap(find.byTooltip('消息通知'));
+      await tester.tap(find.byTooltip('Notifications'));
       await tester.pumpAndSettle();
 
-      expect(find.text('消息通知'), findsOneWidget);
-      expect(find.text('4 条未读消息'), findsOneWidget);
-      final filterTop = tester.getTopLeft(find.text('全部')).dy;
-      for (final label in ['未读', '学习', '活动']) {
+      expect(find.text('Notifications'), findsOneWidget);
+      expect(find.text('4 unread messages'), findsOneWidget);
+      final filterTop = tester.getTopLeft(find.text('All')).dy;
+      for (final label in ['Unread', 'Learning', 'Activity']) {
         expect(tester.getTopLeft(find.text(label)).dy, closeTo(filterTop, 1));
       }
 
-      await tester.tap(find.text('全部已读'));
+      await tester.tap(find.text('Mark All Read'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('未读'));
+      await tester.tap(find.text('Unread'));
       await tester.pumpAndSettle();
 
-      expect(find.text('当前没有未读消息。'), findsOneWidget);
+      expect(find.text('No unread messages right now.'), findsOneWidget);
     },
   );
 }

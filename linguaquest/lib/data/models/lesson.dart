@@ -70,6 +70,7 @@ class Word {
     this.derivatives = const [],
     this.rootAffix = '',
     this.imageUrl = '',
+    this.hskLevel,
   });
 
   final String id;
@@ -97,6 +98,7 @@ class Word {
   final List<String> derivatives;
   final String rootAffix;
   final String imageUrl;
+  final int? hskLevel;
 
   String get audioUrl => audioUSUrl.isNotEmpty ? audioUSUrl : audioUKUrl;
 
@@ -237,6 +239,7 @@ class Word {
       derivatives: _stringList(json['derivatives']),
       rootAffix: _string(json['rootAffix']),
       imageUrl: _string(json['imageUrl']),
+      hskLevel: _int(json['hskLevel']),
     );
   }
 
@@ -265,6 +268,7 @@ class Word {
       'examTags': tags,
       'difficulty': difficulty,
       'imageUrl': imageUrl,
+      'hskLevel': hskLevel,
     };
   }
 }

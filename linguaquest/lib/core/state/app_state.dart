@@ -81,6 +81,7 @@ class AppState {
     required this.notifications,
     required this.lotteryPrizes,
     required this.userAssets,
+    this.targetLanguage = 'zh',
     this.locale,
     this.user,
     this.lastResult,
@@ -117,6 +118,7 @@ class AppState {
   final List<AppNotification> notifications;
   final List<LotteryPrize> lotteryPrizes;
   final List<UserAsset> userAssets;
+  final String targetLanguage;
   final LessonResult? lastResult;
   final LotteryDrawResult? lastLotteryResult;
   final String? errorMessage;
@@ -276,6 +278,7 @@ class AppState {
     List<AppNotification>? notifications,
     List<LotteryPrize>? lotteryPrizes,
     List<UserAsset>? userAssets,
+    String? targetLanguage,
     LessonResult? lastResult,
     LotteryDrawResult? lastLotteryResult,
     bool clearLastResult = false,
@@ -314,6 +317,7 @@ class AppState {
       notifications: notifications ?? this.notifications,
       lotteryPrizes: lotteryPrizes ?? this.lotteryPrizes,
       userAssets: userAssets ?? this.userAssets,
+      targetLanguage: targetLanguage ?? this.targetLanguage,
       lastResult: clearLastResult ? null : lastResult ?? this.lastResult,
       lastLotteryResult: lastLotteryResult ?? this.lastLotteryResult,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
@@ -328,7 +332,7 @@ class AppState {
       isBootstrapped: false,
       isLoading: false,
       wordBooks: [],
-      currentWordBookId: 'beginner',
+      currentWordBookId: 'hsk1',
       lessons: [],
       customWords: [],
       userWords: [],
