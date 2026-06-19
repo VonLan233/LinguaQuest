@@ -2,8 +2,10 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 import '../../l10n/generated/app_localizations.dart';
+import '../services/pronunciation_service.dart';
 import '../theme/app_icons.dart';
 import '../theme/app_theme.dart';
 import '../utils/text_language.dart';
@@ -41,6 +43,29 @@ class _PronunciationControlsState extends State<PronunciationControls> {
   _PronunciationAccent? _loadingAccent;
   _PronunciationAccent? _failedAccent;
   final AudioPlayer _player = AudioPlayer();
+  final FlutterTts _tts = FlutterTts();
+  late final PronunciationService _service = PronunciationService(
+    audio: (url) async {
+      try {
+        await _player.stop();
+        await _player.play(UrlSource(url));
+        return true;
+      } catch (_) {
+        return false;
+      }
+    },
+    tts: (text, lang, slow) async {
+      try {
+        await _tts.setLanguage(lang);
+        await _tts.setSpeechRate(slow ? 0.4 : 0.5);
+        await _tts.stop();
+        await _tts.speak(text);
+        return true;
+      } catch (_) {
+        return false;
+      }
+    },
+  );
 
   @override
   void didUpdateWidget(covariant PronunciationControls oldWidget) {
@@ -57,6 +82,7 @@ class _PronunciationControlsState extends State<PronunciationControls> {
   @override
   void dispose() {
     _player.dispose();
+    _tts.stop();
     super.dispose();
   }
 
@@ -72,13 +98,24 @@ class _PronunciationControlsState extends State<PronunciationControls> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _PronunciationButton(
-            accent: _PronunciationAccent.us,
-            compact: widget.compact,
-            isLoading: _loadingAccent != null,
-            hasFailed: failedAccent != null,
-            onPressed: () => _play(_PronunciationAccent.us),
-            labelOverride: 'Audio',
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _PronunciationButton(
+                accent: _PronunciationAccent.us,
+                compact: widget.compact,
+                isLoading: _loadingAccent != null && !_isSlow,
+                hasFailed: failedAccent != null && !_isSlow,
+                onPressed: () => _play(_PronunciationAccent.us),
+                labelOverride: 'Audio',
+              ),
+              const SizedBox(width: 8),
+              _SlowButton(
+                compact: widget.compact,
+                isLoading: _loadingAccent != null && _isSlow,
+                onPressed: () => _play(_PronunciationAccent.us, slow: true),
+              ),
+            ],
           ),
           if (failedAccent != null) ...[
             const SizedBox(height: 6),
@@ -104,7 +141,7 @@ class _PronunciationControlsState extends State<PronunciationControls> {
             _PronunciationButton(
               accent: _PronunciationAccent.uk,
               compact: widget.compact,
-              isLoading: _loadingAccent == _PronunciationAccent.uk,
+              isLoading: _loadingAccent == _PronunciationAccent.uk && !_isSlow,
               hasFailed: failedAccent == _PronunciationAccent.uk,
               onPressed: () => _play(_PronunciationAccent.uk),
             ),
@@ -112,9 +149,18 @@ class _PronunciationControlsState extends State<PronunciationControls> {
             _PronunciationButton(
               accent: _PronunciationAccent.us,
               compact: widget.compact,
-              isLoading: _loadingAccent == _PronunciationAccent.us,
+              isLoading: _loadingAccent == _PronunciationAccent.us && !_isSlow,
               hasFailed: failedAccent == _PronunciationAccent.us,
               onPressed: () => _play(_PronunciationAccent.us),
+            ),
+            const SizedBox(width: 8),
+            _SlowButton(
+              compact: widget.compact,
+              isLoading: _loadingAccent != null && _isSlow,
+              onPressed: () => _play(
+                _lastAccent ?? _PronunciationAccent.us,
+                slow: true,
+              ),
             ),
           ],
         ),
@@ -132,7 +178,10 @@ class _PronunciationControlsState extends State<PronunciationControls> {
     );
   }
 
-  Future<void> _play(_PronunciationAccent accent) async {
+  _PronunciationAccent? _lastAccent;
+  bool _isSlow = false;
+
+  Future<void> _play(_PronunciationAccent accent, {bool slow = false}) async {
     if (_loadingAccent != null) return;
     final view = View.of(context);
     final l10n = AppLocalizations.of(context);
@@ -140,6 +189,8 @@ class _PronunciationControlsState extends State<PronunciationControls> {
     setState(() {
       _loadingAccent = accent;
       _failedAccent = null;
+      _isSlow = slow;
+      _lastAccent = accent;
     });
 
     final word = widget.word.trim();
@@ -148,7 +199,6 @@ class _PronunciationControlsState extends State<PronunciationControls> {
       _PronunciationAccent.us => widget.audioUSUrl.trim(),
     };
     final hasWord = word.isNotEmpty;
-    final hasAudioUrl = audioUrl.isNotEmpty;
 
     if (hasWord) {
       await HapticFeedback.selectionClick();
@@ -160,46 +210,54 @@ class _PronunciationControlsState extends State<PronunciationControls> {
       );
     }
 
-    if (hasAudioUrl) {
-      try {
-        await _player.stop();
-        if (!mounted || widget.word.trim() != word) return;
-        await _player.play(UrlSource(audioUrl));
-        if (!mounted || widget.word.trim() != word) return;
-        setState(() {
-          _loadingAccent = null;
-          _failedAccent = null;
-        });
-        _showMessage(l10n.pronunciationPlaying(accentLabel, word));
-      } catch (_) {
-        if (!mounted || widget.word.trim() != word) return;
-        setState(() {
-          _loadingAccent = null;
-          _failedAccent = accent;
-        });
-        _showMessage(l10n.pronunciationFailedRetry(accentLabel));
-      }
-    } else {
-      if (!mounted || widget.word.trim() != word) return;
-      setState(() {
-        _loadingAccent = null;
-        _failedAccent = hasWord ? null : accent;
-      });
-      final message = hasWord
-          ? l10n.pronunciationPlaying(accentLabel, word)
-          : l10n.pronunciationUnavailable(accentLabel);
-      _showMessage(message);
-    }
-  }
+    final outcome = await _service.play(word: word, audioUrl: audioUrl, slow: slow);
+    if (!mounted || widget.word.trim() != word) return;
 
-  void _showMessage(String message) {
-    final messenger = ScaffoldMessenger.maybeOf(context);
-    messenger?.clearSnackBars();
-    messenger?.showSnackBar(
-      SnackBar(
-        duration: const Duration(milliseconds: 1200),
-        content: Text(message),
+    setState(() {
+      _loadingAccent = null;
+      _isSlow = false;
+      _failedAccent = outcome == PronunciationOutcome.failed ? accent : null;
+    });
+  }
+}
+
+class _SlowButton extends StatelessWidget {
+  const _SlowButton({
+    required this.compact,
+    required this.isLoading,
+    required this.onPressed,
+  });
+
+  final bool compact;
+  final bool isLoading;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return OutlinedButton.icon(
+      key: const ValueKey('pronunciation-slow'),
+      onPressed: isLoading ? null : onPressed,
+      style: OutlinedButton.styleFrom(
+        minimumSize: Size(compact ? 64 : 72, compact ? 36 : 40),
+        padding: EdgeInsets.symmetric(horizontal: compact ? 9 : 11),
+        foregroundColor: AppTheme.teal,
+        disabledForegroundColor: AppTheme.teal.withValues(alpha: 0.72),
+        backgroundColor: isLoading
+            ? AppTheme.selectedSurface(context)
+            : Colors.transparent,
+        side: BorderSide(color: theme.colorScheme.outlineVariant),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(compact ? 12 : 14),
+        ),
       ),
+      icon: isLoading
+          ? SizedBox.square(
+              dimension: compact ? 13 : 15,
+              child: CircularProgressIndicator(strokeWidth: compact ? 2 : 2.2),
+            )
+          : Icon(Icons.slow_motion_video, size: compact ? 16 : 18),
+      label: Text(isLoading ? 'Loading…' : '0.5×'),
     );
   }
 }
