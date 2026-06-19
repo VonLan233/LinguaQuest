@@ -25,6 +25,7 @@ import 'privacy_policy.dart';
 import 'reward_policy.dart';
 import 'reward_task_policy.dart';
 import 'study_plan_policy.dart';
+import 'study_spot_policy.dart';
 
 final _httpClient = http.Client();
 
@@ -1343,6 +1344,36 @@ Router buildRouter(
         'data': response.data,
         'createdAt': record['createdAt'],
       });
+    });
+  });
+
+  router.get('/study-spots', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final spots = await database.listStudySpots(uid);
+      return jsonResponse({'spots': spots});
+    });
+  });
+
+  router.post('/study-spots', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      final name = (body['name'] as String? ?? '').trim();
+      final lat = (body['latitude'] as num?)?.toDouble() ?? 0;
+      final lng = (body['longitude'] as num?)?.toDouble() ?? 0;
+      final minutes = (body['studyMinutes'] as num?)?.toInt() ?? 0;
+      final err = StudySpotPolicy.validate(name: name, latitude: lat, longitude: lng);
+      if (err != null) return jsonResponse({'error': err}, status: 400);
+      final spot = await database.insertStudySpot(
+        uid, name: name, latitude: lat, longitude: lng, studyMinutes: minutes);
+      return jsonResponse(spot, status: 201);
+    });
+  });
+
+  router.delete('/study-spots/<id>', (Request request, String id) async {
+    return _protected(config, request, (uid) async {
+      final ok = await database.deleteStudySpot(uid, id);
+      if (!ok) return jsonResponse({'error': 'not found'}, status: 404);
+      return jsonResponse({'deleted': true});
     });
   });
 

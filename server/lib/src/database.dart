@@ -446,6 +446,21 @@ CREATE TABLE IF NOT EXISTS ai_history (
     );
 
     await connection.execute('''
+CREATE TABLE IF NOT EXISTS study_spots (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id TEXT NOT NULL,
+  name TEXT NOT NULL,
+  latitude DOUBLE PRECISION NOT NULL,
+  longitude DOUBLE PRECISION NOT NULL,
+  study_minutes INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+''');
+    await connection.execute(
+      'CREATE INDEX IF NOT EXISTS study_spots_user_id_idx ON study_spots(user_id)',
+    );
+
+    await connection.execute('''
 CREATE TABLE IF NOT EXISTS user_privacy (
   user_id TEXT PRIMARY KEY,
   public_stats BOOLEAN NOT NULL DEFAULT TRUE,
@@ -1869,6 +1884,68 @@ SELECT
     );
     if (result.isEmpty) return 0;
     return (result.first[0] as int?) ?? 0;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Study Spots
+  // ---------------------------------------------------------------------------
+
+  Future<List<Map<String, dynamic>>> listStudySpots(String userId) async {
+    final result = await connection.execute(
+      Sql.named(
+        'SELECT id, name, latitude, longitude, study_minutes, created_at '
+        'FROM study_spots WHERE user_id=@userId ORDER BY created_at DESC',
+      ),
+      parameters: {'userId': userId},
+    );
+    return result.map((row) => {
+          'id': row[0].toString(),
+          'name': row[1],
+          'latitude': row[2],
+          'longitude': row[3],
+          'studyMinutes': row[4],
+          'createdAt': row[5].toString(),
+        }).toList();
+  }
+
+  Future<Map<String, dynamic>> insertStudySpot(
+    String userId, {
+    required String name,
+    required double latitude,
+    required double longitude,
+    required int studyMinutes,
+  }) async {
+    final result = await connection.execute(
+      Sql.named(
+        'INSERT INTO study_spots (user_id, name, latitude, longitude, study_minutes) '
+        'VALUES (@userId, @name, @lat, @lng, @min) '
+        'RETURNING id, name, latitude, longitude, study_minutes, created_at',
+      ),
+      parameters: {
+        'userId': userId,
+        'name': name,
+        'lat': latitude,
+        'lng': longitude,
+        'min': studyMinutes,
+      },
+    );
+    final row = result.first;
+    return {
+      'id': row[0].toString(),
+      'name': row[1],
+      'latitude': row[2],
+      'longitude': row[3],
+      'studyMinutes': row[4],
+      'createdAt': row[5].toString(),
+    };
+  }
+
+  Future<bool> deleteStudySpot(String userId, String id) async {
+    final result = await connection.execute(
+      Sql.named('DELETE FROM study_spots WHERE id=@id::uuid AND user_id=@userId'),
+      parameters: {'id': id, 'userId': userId},
+    );
+    return result.affectedRows > 0;
   }
 
   // ---------------------------------------------------------------------------
