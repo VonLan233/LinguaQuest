@@ -10,6 +10,7 @@ dependencies:
   crypto: ^3.0.7
   dart_jsonwebtoken: ^3.4.1
   http: ^1.2.0
+  mailer: ^6.1.0
   postgres: ^3.5.11
   shelf: ^1.4.2
   shelf_router: ^1.1.4
