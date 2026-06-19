@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/theme/app_icons.dart';
+
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
 
@@ -16,6 +18,7 @@ class AppDrawer extends StatelessWidget {
         );
     return Drawer(
       child: SafeArea(
+        top: false,
         child: ListView(
           children: [
             const DrawerHeader(
@@ -26,13 +29,13 @@ class AppDrawer extends StatelessWidget {
                         TextStyle(fontSize: 22, fontWeight: FontWeight.w900)),
               ),
             ),
-            item(Icons.map, 'Study Map', '/map'),
-            item(Icons.place, 'Study Spots', '/map/spots'),
-            item(Icons.search, 'Search', '/search'),
-            item(Icons.person, 'Profile', '/profile'),
-            item(Icons.settings, 'Settings', '/settings'),
-            item(Icons.help_outline, 'Help', '/help'),
-            item(Icons.info_outline, 'About', '/about'),
+            item(AppIcons.map, 'Study Map', '/map'),
+            item(AppIcons.locationOn, 'Study Spots', '/map/spots'),
+            item(AppIcons.search, 'Search', '/search'),
+            item(AppIcons.person, 'Profile', '/profile'),
+            item(AppIcons.settings, 'Settings', '/settings'),
+            item(AppIcons.help, 'Help', '/help'),
+            item(AppIcons.info, 'About', '/about'),
           ],
         ),
       ),
