@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/utils/email_validation.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/mascot_image.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -167,7 +168,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
 String? _emailValidator(String? value, AppLocalizations l10n) {
   if (value == null || value.trim().isEmpty) return l10n.authEmailRequired;
-  if (!value.contains('@')) return l10n.authEmailInvalid;
+  if (!isValidEmail(value)) return l10n.authEmailInvalid;
   return null;
 }
 
