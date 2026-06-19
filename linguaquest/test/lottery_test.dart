@@ -293,13 +293,24 @@ class _CountingAuthRepository implements AuthRepository {
   Future<void> logout() async {}
 
   @override
-  Future<UserProfile> register({
+  Future<AuthResult> register({
     required String name,
     required String email,
     required String password,
   }) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<UserProfile> verifyEmail({
+    required String email,
+    required String code,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> resendCode(String email) async {}
 
   @override
   Future<UserProfile> updateProfile(UserProfile profile) async {

@@ -5,6 +5,7 @@ import '../../data/models/lesson_result.dart';
 import '../../features/auth/goal_setup_screen.dart';
 import '../../features/auth/login_screen.dart';
 import '../../features/auth/register_screen.dart';
+import '../../features/auth/verify_email_screen.dart';
 import '../../features/ai_learning/ai_learning_screen.dart';
 import '../../features/discover/discover_screen.dart';
 import '../../features/discover/xp_tasks_screen.dart';
@@ -57,6 +58,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/register',
         builder: (context, state) => const RegisterScreen(),
+      ),
+      GoRoute(
+        path: '/verify-email',
+        builder: (context, state) => VerifyEmailScreen(
+          email: state.uri.queryParameters['email'] ?? '',
+        ),
       ),
       GoRoute(
         path: '/goal-setup',

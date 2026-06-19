@@ -158,20 +158,26 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
-    final succeeded = await ref
-        .read(appControllerProvider.notifier)
-        .register(
+    final step = await ref.read(appControllerProvider.notifier).register(
           _nameController.text,
           _emailController.text,
           _passwordController.text,
         );
     if (!mounted) return;
-    if (!succeeded) return;
-    final l10n = AppLocalizations.of(context);
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(l10n.authAccountCreated)));
-    context.go('/goal-setup');
+    switch (step) {
+      case AuthStep.needsVerification:
+        context.go(
+          '/verify-email?email=${Uri.encodeComponent(_emailController.text.trim())}',
+        );
+      case AuthStep.authenticated:
+        final l10n = AppLocalizations.of(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.authAccountCreated)),
+        );
+        context.go('/goal-setup');
+      case AuthStep.failed:
+        break;
+    }
   }
 }
 

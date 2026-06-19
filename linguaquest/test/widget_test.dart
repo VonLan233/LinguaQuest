@@ -4764,12 +4764,25 @@ class _FailingAuth implements AuthRepository {
   }
 
   @override
-  Future<UserProfile> register({
+  Future<AuthResult> register({
     required String name,
     required String email,
     required String password,
   }) {
     throw Exception('register failed');
+  }
+
+  @override
+  Future<UserProfile> verifyEmail({
+    required String email,
+    required String code,
+  }) {
+    throw Exception('verifyEmail failed');
+  }
+
+  @override
+  Future<void> resendCode(String email) async {
+    throw Exception('resendCode failed');
   }
 
   @override
@@ -4794,12 +4807,25 @@ class _SnapshotAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<UserProfile> register({
+  Future<AuthResult> register({
     required String name,
     required String email,
     required String password,
   }) {
     throw Exception('register not expected');
+  }
+
+  @override
+  Future<UserProfile> verifyEmail({
+    required String email,
+    required String code,
+  }) {
+    throw Exception('verifyEmail not expected');
+  }
+
+  @override
+  Future<void> resendCode(String email) async {
+    throw Exception('resendCode not expected');
   }
 
   @override

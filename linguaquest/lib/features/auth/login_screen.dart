@@ -151,12 +151,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
-    final succeeded = await ref
+    final step = await ref
         .read(appControllerProvider.notifier)
         .login(_emailController.text, _passwordController.text);
     if (!mounted) return;
-    if (!succeeded) return;
-    context.go('/home');
+    switch (step) {
+      case AuthStep.authenticated:
+        context.go('/home');
+      case AuthStep.needsVerification:
+        context.go(
+          '/verify-email?email=${Uri.encodeComponent(_emailController.text.trim())}',
+        );
+      case AuthStep.failed:
+        break;
+    }
   }
 
   Future<void> _enterDemo() async {
