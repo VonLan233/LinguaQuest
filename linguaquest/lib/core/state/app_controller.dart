@@ -1744,6 +1744,15 @@ class AppController extends Notifier<AppState> {
       if (message == 'task_not_complete') {
         return '该任务尚未完成，无法领取奖励。';
       }
+      if (message == 'rate_limited') {
+        return '请求过于频繁，请稍后再试。';
+      }
+      if (message == 'blocked') {
+        return '内容不符合使用规范，请修改后重试。';
+      }
+      if (message == 'ai_unavailable') {
+        return 'AI 服务暂时不可用，请稍后重试。';
+      }
       if (message != null && message.isNotEmpty) return message;
       return '网络请求失败，请稍后重试。';
     }
@@ -2410,24 +2419,29 @@ class AppController extends Notifier<AppState> {
     required String prompt,
     String? targetWord,
   }) async {
-    final repo = ref.read(aiRepositoryProvider);
-    Map<String, dynamic> result;
-    switch (featureType) {
-      case 'chat':
-        result = await repo.chat(prompt: prompt, targetWord: targetWord);
-      case 'sentence_analysis':
-        result = await repo.analyzeStatement(prompt: prompt);
-      case 'cloze':
-        result = await repo.generateCloze(
-          prompt: prompt,
-          targetWord: targetWord,
-        );
-      default:
-        result = {};
+    try {
+      final repo = ref.read(aiRepositoryProvider);
+      Map<String, dynamic> result;
+      switch (featureType) {
+        case 'chat':
+          result = await repo.chat(prompt: prompt, targetWord: targetWord);
+        case 'sentence_analysis':
+          result = await repo.analyzeStatement(prompt: prompt);
+        case 'cloze':
+          result = await repo.generateCloze(
+            prompt: prompt,
+            targetWord: targetWord,
+          );
+        default:
+          result = {};
+      }
+      final history = await repo.listHistory();
+      state = state.copyWith(aiHistory: history);
+      return result;
+    } catch (e) {
+      state = state.copyWith(errorMessage: _friendlyError(e));
+      return {};
     }
-    final history = await repo.listHistory();
-    state = state.copyWith(aiHistory: history);
-    return result;
   }
 
   Future<Map<String, dynamic>> reviewWriting({
