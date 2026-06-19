@@ -23,6 +23,7 @@ import '../../features/notifications/notifications_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/onboarding/splash_screen.dart';
 import '../../features/profile/profile_screen.dart';
+import '../../features/profile/public_profile_screen.dart';
 import '../../features/profile/about_screen.dart';
 import '../../features/profile/data_settings_screen.dart';
 import '../../features/profile/help_support_screen.dart';
@@ -192,6 +193,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/profile/privacy',
         builder: (context, state) => const PrivacySettingsScreen(),
+      ),
+      GoRoute(
+        path: '/profile/:userId',
+        builder: (context, state) => PublicProfileScreen(
+          userId: state.pathParameters['userId']!,
+        ),
       ),
       GoRoute(
         path: '/profile/data',

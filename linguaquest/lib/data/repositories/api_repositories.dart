@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'profile_repository.dart';
+
 import '../models/app_notification.dart';
 import '../models/custom_word.dart';
 import '../models/daily_reward_task.dart';
@@ -779,4 +781,18 @@ String _localDateKey(DateTime date) {
   final month = date.month.toString().padLeft(2, '0');
   final day = date.day.toString().padLeft(2, '0');
   return '${date.year}-$month-$day';
+}
+
+class ApiProfileRepository implements ProfileRepository {
+  ApiProfileRepository(this._client);
+
+  final ApiClient _client;
+
+  @override
+  Future<Map<String, dynamic>> getPublicProfile(String userId) async {
+    final response = await _client.dio.get<Map<String, dynamic>>(
+      '/users/$userId/profile',
+    );
+    return response.data ?? {};
+  }
 }

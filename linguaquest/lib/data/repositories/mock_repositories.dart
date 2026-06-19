@@ -3,6 +3,8 @@ import 'dart:math';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'profile_repository.dart';
+
 import '../../core/utils/email_validation.dart';
 import '../models/app_notification.dart';
 import '../models/custom_word.dart';
@@ -1331,5 +1333,46 @@ class MockAnalyticsRepository implements AnalyticsRepository {
       entries: entries,
       currentUserRank: currentUserRank,
     );
+  }
+}
+
+class MockProfileRepository implements ProfileRepository {
+  MockProfileRepository({this.currentUserId});
+
+  final String? currentUserId;
+
+  @override
+  Future<Map<String, dynamic>> getPublicProfile(String userId) async {
+    // Simulate a short network delay in demo mode.
+    await Future<void>.delayed(const Duration(milliseconds: 150));
+
+    final isOwner = currentUserId != null && currentUserId == userId;
+    return {
+      'uid': userId,
+      'name': isOwner ? 'You' : 'Demo User',
+      'isOwner': isOwner,
+      'streak': 5,
+      'stats': {
+        'learnedWords': 89,
+        'masteredWords': 34,
+        'totalDays': 12,
+      },
+      'achievements': [
+        {
+          'id': 'first_lesson',
+          'title': 'First Step',
+          'iconKey': 'school',
+          'unlocked': true,
+        },
+        {
+          'id': 'streak_3',
+          'title': '3-Day Streak',
+          'iconKey': 'local_fire_department',
+          'unlocked': true,
+        },
+      ],
+      'posts': <Map<String, dynamic>>[],
+      'wordbookProgress': 18,
+    };
   }
 }

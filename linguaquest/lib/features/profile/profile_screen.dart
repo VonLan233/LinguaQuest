@@ -53,6 +53,9 @@ class ProfileScreen extends ConsumerWidget {
           xp: user?.xp ?? 0,
           streak: user?.streak ?? 0,
           l10n: l10n,
+          onAvatarTap: user?.uid != null
+              ? () => context.push('/profile/${user!.uid}')
+              : null,
         ),
         const SizedBox(height: AppTokens.s32),
         // Key stats in a clean row.
@@ -167,6 +170,7 @@ class _ProfileHeader extends StatelessWidget {
     required this.xp,
     required this.streak,
     required this.l10n,
+    this.onAvatarTap,
   });
 
   final String name;
@@ -176,6 +180,7 @@ class _ProfileHeader extends StatelessWidget {
   final int xp;
   final int streak;
   final AppLocalizations l10n;
+  final VoidCallback? onAvatarTap;
 
   @override
   Widget build(BuildContext context) {
@@ -190,7 +195,10 @@ class _ProfileHeader extends StatelessWidget {
         ),
         child: Column(
           children: [
-            const MascotImage(size: 72),
+            GestureDetector(
+              onTap: onAvatarTap,
+              child: const MascotImage(size: 72),
+            ),
             const SizedBox(height: AppTokens.s16),
             Text(
               name,

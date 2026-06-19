@@ -954,6 +954,74 @@ Router buildRouter(
     });
   }
 
+  // ── Public profile route (no auth required; isOwner determined by optional JWT) ──
+
+  router.get('/users/<userId>/profile', (Request request, String userId) async {
+    // Try to extract the requester's UID from the Bearer token (if present).
+    final callerUid = verifyToken(config, request.headers['Authorization']);
+
+    // Load the target user's data.
+    final user = await database.userById(userId);
+    if (user == null) {
+      return jsonResponse({'error': 'user not found'}, status: 404);
+    }
+
+    // Load the target user's privacy flags.
+    final privacyRow = await database.getUserPrivacy(userId);
+    final flags = privacyRow == null
+        ? const UserPrivacyFlags()
+        : UserPrivacyFlags.fromJson({
+            'publicStats': privacyRow['publicStats'],
+            'publicStreak': privacyRow['publicStreak'],
+            'publicWordbook': privacyRow['publicWordbook'],
+            'publicPosts': privacyRow['publicPosts'],
+          });
+
+    final isOwner = callerUid != null && callerUid == userId;
+
+    // Build the full profile before filtering.
+    final streak = user['streak'] as int? ?? 0;
+    final xp = user['xp'] as int? ?? 0;
+    final userWords = await database.userWords(userId);
+    final masteredWords = userWords
+        .where((w) => (w['mastery_level'] as int? ?? 0) >= 4)
+        .length;
+    final learnedWords = userWords.length;
+
+    final achievements = AchievementPolicy.evaluate(
+      streakDays: streak,
+      masteredWords: masteredWords,
+      totalStudyDays: 0,
+      trainingXp: xp,
+    );
+    final unlockedAchievements = achievements
+        .where((a) => a.unlocked)
+        .take(3)
+        .map((a) => a.toJson())
+        .toList();
+
+    final fullProfile = <String, dynamic>{
+      'uid': userId,
+      'name': user['name'] ?? '',
+      'streak': streak,
+      'stats': {
+        'learnedWords': learnedWords,
+        'masteredWords': masteredWords,
+        'totalDays': 0,
+      },
+      'wordbookProgress': masteredWords,
+      'posts': <Map<String, dynamic>>[],
+    };
+
+    final filtered = PrivacyPolicy.filterPublicProfile(fullProfile, flags);
+
+    return jsonResponse({
+      ...filtered,
+      'isOwner': isOwner,
+      'achievements': unlockedAchievements,
+    });
+  });
+
   router.get('/privacy', (Request request) async {
     return _protected(config, request, (uid) async {
       final row = await database.getUserPrivacy(uid);

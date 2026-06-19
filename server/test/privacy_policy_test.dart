@@ -74,5 +74,57 @@ void main() {
       final result = PrivacyPolicy.filterPublicProfile(fullProfile, flags);
       expect(result.containsKey('wordbookProgress'), isFalse);
     });
+
+    test('filterPublicProfile shows wordbook when publicWordbook=true', () {
+      const flags = UserPrivacyFlags(publicWordbook: true);
+      final result = PrivacyPolicy.filterPublicProfile(fullProfile, flags);
+      expect(result['wordbookProgress'], 0.3);
+    });
+
+    test('filterPublicProfile hides posts when publicPosts=false', () {
+      const flags = UserPrivacyFlags(publicPosts: false);
+      final result = PrivacyPolicy.filterPublicProfile(fullProfile, flags);
+      expect(result.containsKey('posts'), isFalse);
+    });
+  });
+
+  group('GET /users/:id/profile (PrivacyPolicy logic)', () {
+    final fullProfile = {
+      'uid': 'user-abc',
+      'name': 'Test User',
+      'stats': {'learnedWords': 50, 'masteredWords': 20, 'totalDays': 7},
+      'streak': 10,
+      'wordbookProgress': 25,
+      'posts': <Map<String, dynamic>>[],
+    };
+
+    test('returns public fields with default privacy flags', () {
+      // Default flags: publicStats=true, publicStreak=true, publicWordbook=false, publicPosts=true
+      const flags = UserPrivacyFlags();
+      final result = PrivacyPolicy.filterPublicProfile(fullProfile, flags);
+      expect(result['uid'], 'user-abc');
+      expect(result['name'], 'Test User');
+      expect(result.containsKey('stats'), isTrue);
+      expect(result.containsKey('streak'), isTrue);
+      // publicWordbook defaults to false
+      expect(result.containsKey('wordbookProgress'), isFalse);
+      expect(result.containsKey('posts'), isTrue);
+    });
+
+    test('isOwner scenario: all fields visible (simulated by full flags)', () {
+      // When the caller is the owner, the app can show all fields
+      // regardless of privacy flags. We simulate this by using all-true flags.
+      const ownerFlags = UserPrivacyFlags(
+        publicStats: true,
+        publicStreak: true,
+        publicWordbook: true,
+        publicPosts: true,
+      );
+      final result = PrivacyPolicy.filterPublicProfile(fullProfile, ownerFlags);
+      expect(result.containsKey('stats'), isTrue);
+      expect(result.containsKey('streak'), isTrue);
+      expect(result.containsKey('wordbookProgress'), isTrue);
+      expect(result.containsKey('posts'), isTrue);
+    });
   });
 }
