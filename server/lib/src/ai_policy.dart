@@ -104,22 +104,55 @@ class MockAiProvider implements AiProvider {
 }
 
 class AiPolicyService {
-  AiPolicyService({required this.provider, required this.dailyLimitPerUser});
+  AiPolicyService({
+    required this.provider,
+    required this.dailyLimitPerUser,
+    this.dailyCountLookup,
+  });
 
   static const int _maxPromptLength = 2000;
 
+  /// Deterministic minimal block-list for clearly disallowed requests.
+  /// Intentionally small; extend as needed. Case-insensitive substring match.
+  static const List<String> blockedKeywords = [
+    'make a bomb',
+    'build a bomb',
+    'how to kill',
+    '制造炸弹',
+    '自杀方法',
+  ];
+
   final AiProvider provider;
   final int dailyLimitPerUser;
+  final Future<int> Function(String userId)? dailyCountLookup;
 
   String? validateRequest(AiRequest request) {
-    final maxLength = request.featureType == 'writing_review' ? 3000 : _maxPromptLength;
+    final maxLength =
+        request.featureType == 'writing_review' ? 3000 : _maxPromptLength;
     if (request.prompt.length > maxLength) return 'too_long';
+    final lower = request.prompt.toLowerCase();
+    for (final kw in blockedKeywords) {
+      if (lower.contains(kw.toLowerCase())) return 'blocked';
+    }
     return null;
   }
 
   Future<AiResponse> handle(AiRequest request) async {
     final err = validateRequest(request);
-    if (err != null) return AiResponse(success: false, data: {}, errorCode: err);
+    if (err != null) {
+      return AiResponse(success: false, data: {}, errorCode: err);
+    }
+    final lookup = dailyCountLookup;
+    if (lookup != null) {
+      final count = await lookup(request.userId);
+      if (count >= dailyLimitPerUser) {
+        return const AiResponse(
+          success: false,
+          data: {},
+          errorCode: 'rate_limited',
+        );
+      }
+    }
     return provider.generate(request);
   }
 }

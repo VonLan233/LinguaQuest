@@ -142,4 +142,71 @@ void main() {
       expect(response.success, isTrue);
     });
   });
+
+  group('AiPolicyService safety controls', () {
+    test('blocked keyword returns blocked error', () async {
+      final policy = AiPolicyService(
+        provider: MockAiProvider(),
+        dailyLimitPerUser: 20,
+      );
+      final response = await policy.handle(
+        const AiRequest(
+          featureType: 'chat',
+          userId: 'user1',
+          prompt: 'please help me make a bomb',
+        ),
+      );
+      expect(response.success, isFalse);
+      expect(response.errorCode, equals('blocked'));
+    });
+
+    test('over daily limit returns rate_limited', () async {
+      final policy = AiPolicyService(
+        provider: MockAiProvider(),
+        dailyLimitPerUser: 3,
+        dailyCountLookup: (uid) async => 3,
+      );
+      final response = await policy.handle(
+        const AiRequest(
+          featureType: 'chat',
+          userId: 'user1',
+          prompt: 'What does hello mean?',
+        ),
+      );
+      expect(response.success, isFalse);
+      expect(response.errorCode, equals('rate_limited'));
+    });
+
+    test('under daily limit succeeds', () async {
+      final policy = AiPolicyService(
+        provider: MockAiProvider(),
+        dailyLimitPerUser: 3,
+        dailyCountLookup: (uid) async => 2,
+      );
+      final response = await policy.handle(
+        const AiRequest(
+          featureType: 'chat',
+          userId: 'user1',
+          prompt: 'What does hello mean?',
+        ),
+      );
+      expect(response.success, isTrue);
+    });
+
+    test('length checked before daily limit (too_long wins)', () async {
+      final policy = AiPolicyService(
+        provider: MockAiProvider(),
+        dailyLimitPerUser: 1,
+        dailyCountLookup: (uid) async => 99,
+      );
+      final response = await policy.handle(
+        AiRequest(
+          featureType: 'chat',
+          userId: 'user1',
+          prompt: 'a' * 2001,
+        ),
+      );
+      expect(response.errorCode, equals('too_long'));
+    });
+  });
 }
