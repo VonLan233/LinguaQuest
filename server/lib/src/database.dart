@@ -16,6 +16,26 @@ SET mastery_level=0,
 WHERE uid=@uid
 ''';
 
+const setEmailVerifiedSql =
+    'UPDATE users SET email_verified=TRUE, updated_at=@now WHERE id=@uid';
+
+const upsertVerificationCodeSql = '''
+INSERT INTO email_verification_codes (uid, code_hash, code_salt, expires_at, attempts, last_sent_at, created_at)
+VALUES (@uid, @codeHash, @codeSalt, @expiresAt, 0, @sentAt, @sentAt)
+ON CONFLICT (uid) DO UPDATE SET
+  code_hash=@codeHash,
+  code_salt=@codeSalt,
+  expires_at=@expiresAt,
+  attempts=0,
+  last_sent_at=@sentAt
+''';
+
+const incrementVerificationAttemptsSql =
+    'UPDATE email_verification_codes SET attempts=attempts+1 WHERE uid=@uid';
+
+const deleteVerificationCodeSql =
+    'DELETE FROM email_verification_codes WHERE uid=@uid';
+
 class AppDatabase {
   AppDatabase(this.connection);
 
@@ -48,6 +68,27 @@ CREATE TABLE IF NOT EXISTS users (
     await connection.execute(
       "ALTER TABLE users ALTER COLUMN level SET DEFAULT 'Intermediate'",
     );
+
+    // Email verification: backfill EXISTING users to verified (ADD COLUMN with
+    // DEFAULT TRUE sets existing rows TRUE), then flip the default so NEW
+    // registrations are created unverified. Idempotent across restarts.
+    await connection.execute(
+      'ALTER TABLE users ADD COLUMN IF NOT EXISTS email_verified BOOLEAN NOT NULL DEFAULT TRUE',
+    );
+    await connection.execute(
+      'ALTER TABLE users ALTER COLUMN email_verified SET DEFAULT FALSE',
+    );
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS email_verification_codes (
+  uid TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  code_hash TEXT NOT NULL,
+  code_salt TEXT NOT NULL,
+  expires_at TIMESTAMPTZ NOT NULL,
+  attempts INTEGER NOT NULL DEFAULT 0,
+  last_sent_at TIMESTAMPTZ NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL
+);
+''');
 
     await connection.execute('''
 CREATE TABLE IF NOT EXISTS custom_words (
@@ -429,6 +470,55 @@ ON CONFLICT (id) DO UPDATE SET
     );
     if (rows.isEmpty) return null;
     return rows.first.toColumnMap();
+  }
+
+  Future<void> setEmailVerified(String uid) async {
+    await connection.execute(
+      Sql.named(setEmailVerifiedSql),
+      parameters: {'uid': uid, 'now': DateTime.now().toUtc()},
+    );
+  }
+
+  Future<void> upsertVerificationCode(
+    String uid, {
+    required String codeHash,
+    required String codeSalt,
+    required DateTime expiresAt,
+    required DateTime sentAt,
+  }) async {
+    await connection.execute(
+      Sql.named(upsertVerificationCodeSql),
+      parameters: {
+        'uid': uid,
+        'codeHash': codeHash,
+        'codeSalt': codeSalt,
+        'expiresAt': expiresAt,
+        'sentAt': sentAt,
+      },
+    );
+  }
+
+  Future<Map<String, dynamic>?> verificationCodeFor(String uid) async {
+    final rows = await connection.execute(
+      Sql.named('SELECT * FROM email_verification_codes WHERE uid=@uid LIMIT 1'),
+      parameters: {'uid': uid},
+    );
+    if (rows.isEmpty) return null;
+    return rows.first.toColumnMap();
+  }
+
+  Future<void> incrementVerificationAttempts(String uid) async {
+    await connection.execute(
+      Sql.named(incrementVerificationAttemptsSql),
+      parameters: {'uid': uid},
+    );
+  }
+
+  Future<void> deleteVerificationCode(String uid) async {
+    await connection.execute(
+      Sql.named(deleteVerificationCodeSql),
+      parameters: {'uid': uid},
+    );
   }
 
   Future<Map<String, dynamic>> updateUser(
