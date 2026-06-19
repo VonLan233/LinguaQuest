@@ -58,6 +58,7 @@ class AppConfig {
           int.tryParse(_env('AI_DAILY_LIMIT_PER_USER', '20')) ?? 20,
     );
   }
+
   AppConfig copyWith({
     int? port,
     String? databaseUrl,

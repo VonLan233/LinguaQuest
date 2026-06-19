@@ -52,7 +52,7 @@ void main() {
       _base.copyWith(resendApiKey: 're_test_key'),
       client: client,
     );
-    expect(
+    await expectLater(
       () => sender.sendVerificationCode(to: 'a@b.com', code: '654321'),
       throwsA(predicate((e) => e.toString().contains('422'))),
     );
