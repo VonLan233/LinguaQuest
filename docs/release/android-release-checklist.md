@@ -1,8 +1,30 @@
 # Android Release Checklist
 
+## 0. Environment Prerequisites
+
+Before starting a release build, verify all tools are at the locked versions:
+
+| Tool | Required version |
+|------|-----------------|
+| Flutter SDK | 3.41.6 (stable) |
+| Dart SDK | 3.11.4 (bundled with Flutter 3.41.6) |
+| Android Studio | Ladybug (2024.2) or later |
+| NDK | 27.0.12077973 (auto-installed by Gradle) |
+| Java | 17 (Temurin recommended) |
+
+```bash
+flutter --version          # must print Flutter 3.41.6 • Dart 3.11.4
+java -version              # must print openjdk 17.x.x
+```
+
+If Flutter version does not match, switch via `fvm` or re-install the SDK from
+<https://docs.flutter.dev/release/archive>.
+
+---
+
 ## 1. Generate Android Keystore
 
-Run once and keep the keystore file secure (never commit it to git):
+Run **once** and keep the keystore file secure (never commit it to git):
 
 ```bash
 keytool -genkey -v \
@@ -12,6 +34,11 @@ keytool -genkey -v \
   -keysize 2048 \
   -validity 10000
 ```
+
+> Store the keystore file in a password manager or secure vault.  
+> If the keystore is lost, you cannot update the Play Store listing.
+
+---
 
 ## 2. key.properties File
 
@@ -25,11 +52,17 @@ storeFile=/absolute/path/to/linguaquest-release.keystore
 ```
 
 Verify `linguaquest/android/.gitignore` contains:
+
 ```
 key.properties
 *.keystore
 *.jks
 ```
+
+- [ ] `key.properties` created
+- [ ] `key.properties` is **not** staged in `git status`
+
+---
 
 ## 3. Build Commands
 
@@ -61,6 +94,8 @@ flutter build apk --release
 # API_BASE_URL is empty → app runs in mock/offline mode
 ```
 
+---
+
 ## 4. Pre-build Checklist
 
 - [ ] `flutter analyze` passes with no errors
@@ -69,8 +104,66 @@ flutter build apk --release
 - [ ] `key.properties` in place and NOT staged for commit
 - [ ] `API_BASE_URL` points to production endpoint
 - [ ] Backend deployed and healthy (`curl https://api.linguaquest.app/health`)
+- [ ] `dart test` passes in `server/`
 
-## 5. Google Play Upload Steps
+---
+
+## 5. Smoke Test Checklist
+
+Run through all 12 items on a **fresh install** of the release APK before submitting to Play Store.
+See `docs/release/smoke-test.md` for detailed steps per item.
+
+- [ ] **1.** Registration + Email Verification OTP flow completes and lands on `/home`
+- [ ] **2.** Wordbook selection shows HSK 1–6 books; selecting one saves the preference
+- [ ] **3.** Learning session: complete one full lesson, XP is awarded, progress updates
+- [ ] **4.** Review session: complete one spaced-repetition review pass
+- [ ] **5.** AI Q&A: ask a question in the AI Learning tab (mock or live mode)
+- [ ] **6.** AI Sentence Analysis: submit a Chinese sentence and see analysis output
+- [ ] **7.** AI Fill-in-the-blank: a cloze exercise loads and accepts a correct answer
+- [ ] **8.** AI Essay Correction: submit a short paragraph and receive feedback
+- [ ] **9.** Community: create a post, comment on another post, like a post
+- [ ] **10.** Analytics page: heatmap, achievements list, and leaderboard all render
+- [ ] **11.** Public profile: view another user's public profile card
+- [ ] **12.** Settings: toggle privacy setting, open Data settings and verify options
+
+---
+
+## 6. Server Deployment
+
+### Development / staging
+
+```bash
+cd server
+docker compose up --build -d
+```
+
+Health check:
+
+```bash
+curl http://localhost:8080/health
+# expected: {"status":"ok"}
+```
+
+### Production
+
+```bash
+cd server
+cp .env.example .env.prod
+# Edit .env.prod — fill in real DATABASE_URL, JWT_SECRET, SMTP_PASSWORD, etc.
+
+docker compose -f docker-compose.prod.yml --env-file .env.prod up -d
+```
+
+Health check against production host:
+
+```bash
+curl https://api.linguaquest.app/health
+# expected: {"status":"ok"}
+```
+
+---
+
+## 7. Google Play Upload Steps
 
 1. Open [Google Play Console](https://play.google.com/console)
 2. Select **LinguaQuest** app → **Release** → **Production** (or Internal/Alpha for staged rollout)
@@ -80,7 +173,9 @@ flutter build apk --release
 6. Complete the **Release checklist** in Play Console (content rating, target audience, etc.)
 7. Submit for review
 
-## 6. Environment Variables / Secrets Inventory
+---
+
+## 8. Environment Variables / Secrets Inventory
 
 | Secret | Where stored | Notes |
 |--------|-------------|-------|
@@ -94,7 +189,9 @@ flutter build apk --release
 | `SMTP_PASSWORD` | Server env / CI secret | Mail provider credential |
 | `AI_API_KEY` | Server env / CI secret | AI provider key (optional) |
 
-## 7. CI Signing Setup (GitHub Actions)
+---
+
+## 9. CI Signing Setup (GitHub Actions)
 
 To enable automated signed builds, add a build step in `.github/workflows/flutter-apk.yml`:
 
