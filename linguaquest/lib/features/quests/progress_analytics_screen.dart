@@ -557,7 +557,7 @@ class _RecommendationCard extends StatelessWidget {
           const SizedBox(height: 12),
           AppSecondaryButton(
             label: 'Start Practice',
-            onPressed: () => context.push('/study'),
+            onPressed: () => context.push('/study/review'),
           ),
         ],
       ),
