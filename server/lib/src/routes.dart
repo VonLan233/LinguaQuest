@@ -960,10 +960,23 @@ Router buildRouter(
 
   // ── AI 路由 ──────────────────────────────────────────────────────────────
 
+  AiProvider _buildAiProvider() {
+    if (config.aiProvider == 'remote' && config.aiApiKey.isNotEmpty) {
+      return RemoteAiProvider(
+        client: client,
+        apiKey: config.aiApiKey,
+        baseUrl: config.aiApiBaseUrl,
+        model: config.aiModel,
+      );
+    }
+    return MockAiProvider();
+  }
+
   final effectiveAiPolicy = aiPolicy ??
       AiPolicyService(
-        provider: MockAiProvider(),
+        provider: _buildAiProvider(),
         dailyLimitPerUser: config.aiDailyLimitPerUser,
+        dailyCountLookup: database.countAiHistoryToday,
       );
 
   Future<Response> _handleAiRequest(
@@ -985,11 +998,14 @@ Router buildRouter(
     );
     final response = await effectiveAiPolicy.handle(aiRequest);
     if (!response.success) {
-      final status = response.errorCode == 'too_long' ? 400 : 422;
-      return jsonResponse(
-        {'error': response.errorCode ?? 'ai_error'},
-        status: status,
-      );
+      final code = response.errorCode ?? 'ai_error';
+      final status = switch (code) {
+        'too_long' || 'blocked' => 400,
+        'rate_limited' => 429,
+        'ai_unavailable' => 503,
+        _ => 422,
+      };
+      return jsonResponse({'error': code}, status: status);
     }
     final record = await database.insertAiHistory(
       uid,
@@ -1302,11 +1318,14 @@ Router buildRouter(
       );
       final response = await effectiveAiPolicy.handle(aiRequest);
       if (!response.success) {
-        final status = response.errorCode == 'too_long' ? 400 : 422;
-        return jsonResponse(
-          {'error': response.errorCode ?? 'ai_error'},
-          status: status,
-        );
+        final code = response.errorCode ?? 'ai_error';
+        final status = switch (code) {
+          'too_long' || 'blocked' => 400,
+          'rate_limited' => 429,
+          'ai_unavailable' => 503,
+          _ => 422,
+        };
+        return jsonResponse({'error': code}, status: status);
       }
       final record = await database.insertAiHistory(
         uid,
