@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+
 class AiRequest {
   const AiRequest({
     required this.featureType,
@@ -154,5 +158,114 @@ class AiPolicyService {
       }
     }
     return provider.generate(request);
+  }
+}
+
+/// Talks to an OpenAI-compatible endpoint (OpenCode Zen / DeepSeek).
+///
+/// Safety: the API key is only ever placed in the Authorization header.
+/// Upstream response bodies and the key are never copied into the returned
+/// AiResponse, error codes, or logs. Any failure collapses to
+/// `errorCode: 'ai_unavailable'`.
+class RemoteAiProvider implements AiProvider {
+  RemoteAiProvider({
+    required this.client,
+    required this.apiKey,
+    required this.baseUrl,
+    required this.model,
+    this.timeout = const Duration(seconds: 30),
+  });
+
+  final http.Client client;
+  final String apiKey;
+  final String baseUrl;
+  final String model;
+  final Duration timeout;
+
+  static const Map<String, String> _systemPrompts = {
+    'chat':
+        'You are a Chinese-learning assistant. Reply ONLY with strict JSON: '
+        '{"answer": string, "cautions": string[], "relatedWords": string[]}. '
+        'No markdown, no code fences.',
+    'sentence_analysis':
+        'Analyze the sentence. Reply ONLY with strict JSON: '
+        '{"mainClause": string, "clauses": string[], "modifiers": string[], '
+        '"translation": string, "vocabularyNotes": string[]}. '
+        'No markdown, no code fences.',
+    'cloze':
+        'Create a cloze exercise for the target word. Reply ONLY with strict '
+        'JSON: {"passage": string, "blanks": [{"index": number, "answer": '
+        'string, "options": string[]}], "explanations": string[]}. '
+        'No markdown, no code fences.',
+    'writing_review':
+        'You are an exam writing grader. Reply ONLY with strict JSON: '
+        '{"totalScore": number, "rubricScores": {"content": number, '
+        '"language": number, "structure": number, "vocabulary": number, '
+        '"accuracy": number}, "mainIssues": string[], "paragraphSuggestions": '
+        '[{"paragraph": number, "suggestion": string}], "highScoreExpressions": '
+        'string[], "grammarIssues": [{"original": string, "corrected": string, '
+        '"rule": string}], "rewrittenSample": string}. No markdown, no fences.',
+  };
+
+  @override
+  Future<AiResponse> generate(AiRequest request) async {
+    final system = _systemPrompts[request.featureType];
+    if (system == null) {
+      return const AiResponse(
+        success: false,
+        data: {},
+        errorCode: 'unknown_feature',
+      );
+    }
+    final userContent = request.targetWord != null
+        ? '${request.prompt}\n\nTarget word: ${request.targetWord}'
+        : request.prompt;
+    final body = jsonEncode({
+      'model': model,
+      'messages': [
+        {'role': 'system', 'content': system},
+        {'role': 'user', 'content': userContent},
+      ],
+      'temperature': 0.3,
+    });
+    try {
+      final res = await _postWithRetry(body);
+      if (res.statusCode != 200) {
+        return const AiResponse(
+          success: false,
+          data: {},
+          errorCode: 'ai_unavailable',
+        );
+      }
+      final outer = jsonDecode(res.body) as Map<String, dynamic>;
+      final choices = outer['choices'] as List;
+      final content =
+          (choices.first as Map)['message']['content'] as String;
+      final data = jsonDecode(content) as Map<String, dynamic>;
+      return AiResponse(success: true, data: data);
+    } catch (_) {
+      return const AiResponse(
+        success: false,
+        data: {},
+        errorCode: 'ai_unavailable',
+      );
+    }
+  }
+
+  Future<http.Response> _postWithRetry(String body) async {
+    final uri = Uri.parse('$baseUrl/chat/completions');
+    final headers = {
+      'Authorization': 'Bearer $apiKey',
+      'Content-Type': 'application/json',
+    };
+    var res = await client
+        .post(uri, headers: headers, body: body)
+        .timeout(timeout);
+    if (res.statusCode >= 500) {
+      res = await client
+          .post(uri, headers: headers, body: body)
+          .timeout(timeout);
+    }
+    return res;
   }
 }
