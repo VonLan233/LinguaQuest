@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../theme/app_icons.dart';
 import '../theme/app_theme.dart';
+import '../utils/text_language.dart';
 
 enum _PronunciationAccent { uk, us }
 
@@ -63,6 +64,36 @@ class _PronunciationControlsState extends State<PronunciationControls> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final failedAccent = _failedAccent;
+
+    // Chinese (HSK) words have a single Mandarin pronunciation — show one
+    // button instead of the UK/US pair.
+    if (containsCjkText(widget.word)) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _PronunciationButton(
+            accent: _PronunciationAccent.us,
+            compact: widget.compact,
+            isLoading: _loadingAccent != null,
+            hasFailed: failedAccent != null,
+            onPressed: () => _play(_PronunciationAccent.us),
+            labelOverride: 'Audio',
+          ),
+          if (failedAccent != null) ...[
+            const SizedBox(height: 6),
+            Text(
+              'Audio unavailable, tap to retry.',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.error,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ],
+        ],
+      );
+    }
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -180,6 +211,7 @@ class _PronunciationButton extends StatelessWidget {
     required this.isLoading,
     required this.hasFailed,
     required this.onPressed,
+    this.labelOverride,
   });
 
   final _PronunciationAccent accent;
@@ -187,6 +219,10 @@ class _PronunciationButton extends StatelessWidget {
   final bool isLoading;
   final bool hasFailed;
   final VoidCallback onPressed;
+
+  /// When set, the button shows this label (and neutral loading/retry text)
+  /// instead of the UK/US accent label — used for the single Chinese button.
+  final String? labelOverride;
 
   @override
   Widget build(BuildContext context) {
@@ -221,10 +257,14 @@ class _PronunciationButton extends StatelessWidget {
             ),
       label: Text(
         isLoading
-            ? l10n.pronunciationLoading(accentLabel)
+            ? (labelOverride == null
+                  ? l10n.pronunciationLoading(accentLabel)
+                  : 'Loading…')
             : hasFailed
-            ? l10n.pronunciationRetry(accentLabel)
-            : accentLabel,
+            ? (labelOverride == null
+                  ? l10n.pronunciationRetry(accentLabel)
+                  : 'Retry')
+            : (labelOverride ?? accentLabel),
       ),
     );
   }

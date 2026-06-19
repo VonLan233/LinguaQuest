@@ -5,6 +5,7 @@ import 'package:linguaquest/core/theme/app_icons.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/utils/text_language.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/ai_word_support_link.dart';
 import '../../core/widgets/app_button.dart';
@@ -441,6 +442,19 @@ class _PhoneticLine extends StatelessWidget {
     final us = word.phoneticUS.trim();
     final fallback = word.phonetic.trim();
     if (uk.isEmpty && us.isEmpty && fallback.isEmpty) return const SizedBox();
+
+    // Chinese (HSK) words carry pinyin, not regional IPA — show it once,
+    // without the UK/US split.
+    if (containsCjkText(word.word)) {
+      final pinyin = uk.isNotEmpty
+          ? uk
+          : us.isNotEmpty
+          ? us
+          : fallback;
+      if (pinyin.isEmpty) return const SizedBox();
+      return Text(pinyin, textAlign: TextAlign.center);
+    }
+
     return Wrap(
       alignment: WrapAlignment.center,
       spacing: 10,
@@ -469,6 +483,31 @@ class _DefinitionSections extends StatelessWidget {
         ? [word.definition]
         : word.englishDefinitions;
     final ms = word.malayDefinitions;
+
+    // Chinese (HSK) words: the "Chinese definitions" list duplicates the English
+    // meanings, so show only the English definitions.
+    if (containsCjkText(word.word)) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _DefinitionList(
+            title: l10n.wordbookEnglishDefinitions,
+            values: en,
+            highFrequency: true,
+            l10n: l10n,
+          ),
+          if (ms.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            _DefinitionList(
+              title: l10n.wordbookMalayDefinitions,
+              values: ms,
+              l10n: l10n,
+            ),
+          ],
+        ],
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
