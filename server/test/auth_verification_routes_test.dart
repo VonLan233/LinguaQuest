@@ -75,6 +75,39 @@ void main() {
     expect(db.users.values.single['email_verified'], true);
     expect(db.codes, isEmpty);
   });
+
+  test('login is blocked until verified, then succeeds', () async {
+    final db = _AuthTestDatabase();
+    final email = FakeEmailSender();
+    final router = buildRouter(_config, db, emailSender: email);
+    await _post(router, '/auth/register',
+        {'name': 'Ada', 'email': 'ada@lingua.quest', 'password': 'secret1'});
+
+    final blocked = await _post(router, '/auth/login',
+        {'email': 'ada@lingua.quest', 'password': 'secret1'});
+    expect(blocked.statusCode, 403);
+    expect(jsonDecode(await blocked.readAsString())['error'],
+        'email_not_verified');
+
+    await _post(router, '/auth/verify',
+        {'email': 'ada@lingua.quest', 'code': email.lastCode});
+    final ok = await _post(router, '/auth/login',
+        {'email': 'ada@lingua.quest', 'password': 'secret1'});
+    expect(ok.statusCode, 200);
+    expect((jsonDecode(await ok.readAsString())['token'] as String).isNotEmpty,
+        isTrue);
+  });
+
+  test('resend within cooldown returns 429', () async {
+    final db = _AuthTestDatabase();
+    final email = FakeEmailSender();
+    final router = buildRouter(_config, db, emailSender: email);
+    await _post(router, '/auth/register',
+        {'name': 'Ada', 'email': 'ada@lingua.quest', 'password': 'secret1'});
+
+    final res = await _post(router, '/auth/resend', {'email': 'ada@lingua.quest'});
+    expect(res.statusCode, 429);
+  });
 }
 
 class _AuthTestDatabase extends AppDatabase {

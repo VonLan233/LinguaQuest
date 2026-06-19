@@ -228,10 +228,44 @@ Router buildRouter(
     if (expected != user['password_hash']) {
       return jsonResponse({'error': 'invalid email or password'}, status: 401);
     }
+    if (user['email_verified'] != true) {
+      await _issueAndSendCode(
+        config, database, mailer,
+        uid: user['id'] as String, email: email,
+      );
+      return jsonResponse(
+        {'error': 'email_not_verified', 'email': email},
+        status: 403,
+      );
+    }
     return jsonResponse({
       'token': issueToken(config, uid: user['id'] as String, email: email),
       'user': userDto(user),
     });
+  });
+
+  router.post('/auth/resend', (Request request) async {
+    final body = await readJsonMap(request);
+    final email = (body['email'] as String? ?? '').trim().toLowerCase();
+    final user = await database.userByEmail(email);
+    // Don't leak account existence / verified state.
+    if (user == null || user['email_verified'] == true) {
+      return jsonResponse({'status': 'sent'});
+    }
+    final uid = user['id'] as String;
+    final existing = await database.verificationCodeFor(uid);
+    if (existing != null) {
+      final last = existing['last_sent_at'] as DateTime;
+      final elapsed = DateTime.now().toUtc().difference(last);
+      if (elapsed < const Duration(seconds: 60)) {
+        return jsonResponse(
+          {'error': 'resend_cooldown', 'retryAfter': 60 - elapsed.inSeconds},
+          status: 429,
+        );
+      }
+    }
+    await _issueAndSendCode(config, database, mailer, uid: uid, email: email);
+    return jsonResponse({'status': 'sent'});
   });
 
   router.get('/me', (Request request) async {
