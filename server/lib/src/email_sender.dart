@@ -61,3 +61,18 @@ class SmtpEmailSender implements EmailSender {
     await send(message, server);
   }
 }
+
+/// Test double that captures the last code instead of sending anything.
+class FakeEmailSender implements EmailSender {
+  String? lastTo;
+  String? lastCode;
+
+  @override
+  Future<void> sendVerificationCode({
+    required String to,
+    required String code,
+  }) async {
+    lastTo = to;
+    lastCode = code;
+  }
+}
