@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
@@ -202,6 +203,23 @@ void main() {
       );
       expect(res.success, isFalse);
       expect(res.errorCode, equals('ai_unavailable'));
+    });
+
+    test('retries once on TimeoutException and succeeds on second call', () async {
+      var callCount = 0;
+      final client = MockClient((req) async {
+        callCount++;
+        if (callCount == 1) {
+          throw TimeoutException('request timed out');
+        }
+        return _chatOk();
+      });
+      final res = await _provider(client).generate(
+        const AiRequest(featureType: 'chat', userId: 'u1', prompt: 'hello?'),
+      );
+      expect(res.success, isTrue);
+      expect(res.data['answer'], equals('Hello means a greeting.'));
+      expect(callCount, equals(2));
     });
   });
 }
