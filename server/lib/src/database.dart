@@ -19,6 +19,12 @@ WHERE uid=@uid
 const setEmailVerifiedSql =
     'UPDATE users SET email_verified=TRUE, updated_at=@now WHERE id=@uid';
 
+const countAiHistoryTodaySql =
+    'SELECT COUNT(*) FROM ai_history '
+    'WHERE user_id=@userId '
+    'AND is_deleted=FALSE '
+    'AND created_at::date = CURRENT_DATE';
+
 const upsertVerificationCodeSql = '''
 INSERT INTO email_verification_codes (uid, code_hash, code_salt, expires_at, attempts, last_sent_at, created_at)
 VALUES (@uid, @codeHash, @codeSalt, @expiresAt, 0, @sentAt, @sentAt)
@@ -1854,6 +1860,15 @@ SELECT
       parameters: {'id': historyId, 'userId': userId},
     );
     return result.affectedRows > 0;
+  }
+
+  Future<int> countAiHistoryToday(String userId) async {
+    final result = await connection.execute(
+      Sql.named(countAiHistoryTodaySql),
+      parameters: {'userId': userId},
+    );
+    if (result.isEmpty) return 0;
+    return (result.first[0] as int?) ?? 0;
   }
 
   // ---------------------------------------------------------------------------
