@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -6,11 +7,22 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
 import '../../core/utils/date_formatting.dart';
+import '../../core/utils/ui_labels.dart';
+import '../../core/utils/wordbook_progress.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
+import '../../core/widgets/app_progress_bar.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
+import '../../core/widgets/wordbook_cover_card.dart';
+import '../../data/models/lesson.dart';
 import '../../data/models/study_plan.dart';
+import '../../data/models/user_word.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class StudyPlanSettingsScreen extends ConsumerStatefulWidget {
   const StudyPlanSettingsScreen({super.key});
@@ -54,26 +66,33 @@ class _StudyPlanSettingsScreenState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final user = state.user;
     if (user == null) {
-      return const Scaffold(
-        appBar: _StudyPlanAppBar(),
-        body: Center(child: Text('请先登录后再设置学习计划。')),
+      return Scaffold(
+        appBar: const _StudyPlanAppBar(),
+        body: Center(child: Text(l10n.studyPlanLoginRequired)),
       );
     }
 
+    final localeCode = Localizations.localeOf(context).languageCode;
+    final selectedWordBook = _wordBookForId(state.wordBooks, _wordBookId);
     final lessons = learningLessonsForTarget(state.lessons, _wordBookId);
-    final totalWords = lessons.fold<int>(
-      0,
-      (total, lesson) => total + lesson.words.length,
+    final fallbackWords = lessons.expand((lesson) => lesson.words).toList();
+    final selectedWordIds =
+        selectedWordBook?.wordIds.toSet() ??
+        fallbackWords.map((word) => word.id).toSet();
+    final totalWords = selectedWordBook?.totalWords ?? fallbackWords.length;
+    final completedWords = learnedWordCountForBook(
+      userWords: state.userWords,
+      wordBookId: _wordBookId,
+      wordIds: selectedWordIds,
     );
-    final completedWords = lessons
-        .where((lesson) => state.completedLessonIds.contains(lesson.id))
-        .fold<int>(0, (total, lesson) => total + lesson.words.length);
-    final progress = totalWords == 0
-        ? 0.0
-        : (completedWords / totalWords).clamp(0.0, 1.0);
+    final progress = wordbookProgressValue(
+      learnedWords: completedWords,
+      totalWords: totalWords,
+    );
     final book = studyBookInfoForId(_wordBookId);
     final plan = state.studyPlan;
 
@@ -82,10 +101,16 @@ class _StudyPlanSettingsScreenState
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-          child: FilledButton.icon(
-            onPressed: state.isLoading ? null : _save,
-            icon: const Icon(Icons.save_outlined),
-            label: const Text('保存学习计划'),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              AppPrimaryButton(
+                label: l10n.studyPlanSave,
+                icon: AppIcons.save,
+                onPressed: state.isLoading ? null : _save,
+              ),
+            ],
           ),
         ),
       ),
@@ -101,12 +126,12 @@ class _StudyPlanSettingsScreenState
                   child: LinearProgressIndicator(),
                 ),
               SectionHeader(
-                title: '学习计划设置',
-                subtitle: '管理当前词书、每日任务、复习节奏和提醒时间。',
+                title: l10n.studyPlanSettings,
+                subtitle: l10n.studyPlanSettingsDesc,
                 trailing: QuestIconButton(
-                  tooltip: '查看完整词汇表',
+                  tooltip: l10n.studyPlanViewWords,
                   onPressed: () => context.push('/wordbook'),
-                  icon: Icons.style_outlined,
+                  icon: AppIcons.style,
                   color: AppTheme.cyan,
                 ),
               ),
@@ -120,29 +145,36 @@ class _StudyPlanSettingsScreenState
                 daysLeft: (plan ?? _fallbackPlan(user.uid)).daysLeft(
                   DateTime.now(),
                 ),
+                l10n: l10n,
               ),
               const SizedBox(height: 24),
               _StudyBookSelector(
+                books: state.wordBooks,
+                userWords: state.userWords,
                 selectedId: _wordBookId,
+                localeCode: localeCode,
                 onSelected: (value) => setState(() => _wordBookId = value),
+                l10n: l10n,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 40),
               _NumberField(
                 controller: _dailyNewController,
-                label: '每日新学词数',
-                helperText: '建议 5-30 词，最多 200 词。',
-                icon: Icons.add_task_outlined,
+                label: l10n.studyPlanDailyNew,
+                helperText: l10n.studyPlanDailyNewHint,
+                icon: AppIcons.addTask,
                 min: 1,
                 max: 200,
+                l10n: l10n,
               ),
               const SizedBox(height: 16),
               _NumberField(
                 controller: _dailyReviewController,
-                label: '每日复习上限',
-                helperText: '复习队列超过上限时会保留到后续日期。',
-                icon: Icons.replay_outlined,
+                label: l10n.studyPlanDailyReview,
+                helperText: l10n.studyPlanDailyReviewHint,
+                icon: AppIcons.replay,
                 min: 0,
                 max: 500,
+                l10n: l10n,
               ),
               const SizedBox(height: 22),
               _PlanDateTimeSection(
@@ -150,6 +182,7 @@ class _StudyPlanSettingsScreenState
                 reminderTimeLabel: _reminderTimeLabel,
                 onPickDate: _pickTargetFinishDate,
                 onPickTime: _pickReminderTime,
+                l10n: l10n,
               ),
               const SizedBox(height: 24),
               _PlanActions(
@@ -158,6 +191,7 @@ class _StudyPlanSettingsScreenState
                 onOpenWords: () => context.push('/wordbook'),
                 onTogglePause: _togglePause,
                 onReset: _confirmReset,
+                l10n: l10n,
               ),
             ],
           ),
@@ -217,7 +251,7 @@ class _StudyPlanSettingsScreenState
       originalFinishDate: basePlan.targetFinishDate,
       today: today,
     )) {
-      _showMessage('目标完成日期不能早于今天。');
+      _showMessage(AppLocalizations.of(context).studyPlanInvalidDate);
       return;
     }
 
@@ -236,11 +270,15 @@ class _StudyPlanSettingsScreenState
     if (!mounted) return;
     final latestState = ref.read(appControllerProvider);
     _showMessage(
-      succeeded ? '学习计划已保存。' : latestState.errorMessage ?? '暂时无法保存计划。',
+      succeeded
+          ? AppLocalizations.of(context).studyPlanSaved
+          : latestState.errorMessage ??
+                AppLocalizations.of(context).studyPlanSaveFailed,
     );
   }
 
   Future<void> _togglePause() async {
+    final l10n = AppLocalizations.of(context);
     final wasPaused =
         ref.read(appControllerProvider).studyPlan?.isPaused ?? false;
     final succeeded = await ref
@@ -250,28 +288,27 @@ class _StudyPlanSettingsScreenState
     _showMessage(
       succeeded
           ? wasPaused
-                ? '学习计划已恢复。'
-                : '学习计划已暂停，今日提醒和任务入口会暂时关闭。'
-          : '暂时无法更新计划状态。',
+                ? l10n.studyPlanResumed
+                : l10n.studyPlanPaused
+          : l10n.studyPlanPauseFailed,
     );
   }
 
   Future<void> _confirmReset() async {
+    final l10n = AppLocalizations.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('确认重置学习计划？'),
-        content: const Text(
-          '重置后会清空当前词书的学习路径进度，并把生词本掌握度、正确/错误次数和复习时间重置；复习队列会重新生成。这个操作会影响学习进度和复习安排。',
-        ),
+        title: Text(l10n.studyPlanResetConfirm),
+        content: Text(l10n.studyPlanResetDesc),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
+            child: Text(l10n.studyPlanCancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('确认重置'),
+            child: Text(l10n.studyPlanConfirm),
           ),
         ],
       ),
@@ -281,7 +318,9 @@ class _StudyPlanSettingsScreenState
         .read(appControllerProvider.notifier)
         .resetStudyPlan();
     if (!mounted) return;
-    _showMessage(succeeded ? '学习计划已重置。' : '暂时无法重置计划。');
+    _showMessage(
+      succeeded ? l10n.studyPlanResetDone : l10n.studyPlanResetFailed,
+    );
   }
 
   Future<void> _pickTargetFinishDate() async {
@@ -305,6 +344,7 @@ class _StudyPlanSettingsScreenState
     final picked = await showTimePicker(
       context: context,
       initialTime: _reminderTime,
+      initialEntryMode: studyPlanReminderTimePickerEntryMode,
     );
     if (picked == null || !mounted) return;
     setState(() => _reminderTime = picked);
@@ -326,6 +366,17 @@ class _StudyPlanSettingsScreenState
   DateTime _dateOnly(DateTime value) {
     return _studyPlanDateOnly(value);
   }
+}
+
+const studyPlanReminderTimePickerEntryMode = TimePickerEntryMode.inputOnly;
+
+WordBook? _wordBookForId(List<WordBook> books, String id) {
+  for (final book in books) {
+    if (normalizedStudyBookId(book.id) == normalizedStudyBookId(id)) {
+      return book;
+    }
+  }
+  return null;
 }
 
 bool rejectChangedExpiredTargetFinishDate({
@@ -394,7 +445,7 @@ class _StudyPlanAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       leading: const FallbackBackButton(fallbackLocation: '/settings'),
-      title: const Text('学习计划'),
+      title: Text(AppLocalizations.of(context).commonStudyPlan),
     );
   }
 
@@ -410,6 +461,7 @@ class _PlanHeroCard extends StatelessWidget {
     required this.progress,
     required this.status,
     required this.daysLeft,
+    required this.l10n,
   });
 
   final StudyBookInfo book;
@@ -418,17 +470,12 @@ class _PlanHeroCard extends StatelessWidget {
   final double progress;
   final String status;
   final int daysLeft;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.primaryContainer.withValues(alpha: 0.42),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: theme.colorScheme.outlineVariant),
-      ),
+    return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -445,10 +492,13 @@ class _PlanHeroCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(book.name, style: theme.textTheme.titleLarge),
+                    Text(
+                      displayWordbookTitle(book.id, l10n: l10n),
+                      style: theme.textTheme.titleLarge,
+                    ),
                     const SizedBox(height: 4),
                     Text(
-                      book.description,
+                      displayWordbookDescription(book.id, l10n: l10n),
                       style: TextStyle(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
@@ -458,9 +508,9 @@ class _PlanHeroCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppTokens.s16),
           ClipRRect(
-            borderRadius: BorderRadius.circular(999),
+            borderRadius: BorderRadius.circular(AppTokens.radiusPill),
             child: LinearProgressIndicator(
               value: progress,
               minHeight: 11,
@@ -468,27 +518,31 @@ class _PlanHeroCard extends StatelessWidget {
               valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.teal),
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppTokens.s12),
           Wrap(
-            spacing: 8,
-            runSpacing: 8,
+            spacing: AppTokens.s8,
+            runSpacing: AppTokens.s8,
             children: [
-              PillLabel(
-                label: '已学 $completedWords/$totalWords 词',
-                icon: Icons.school_outlined,
-                color: AppTheme.teal,
+              AppPill(
+                label: l10n.wordbookWordsLearned(completedWords, totalWords),
+                icon: AppIcons.school,
+                variant: PillVariant.primary,
               ),
-              PillLabel(
-                label: '剩余 $daysLeft 天',
-                icon: Icons.event_outlined,
-                color: AppTheme.mango,
+              AppPill(
+                label: l10n.studyPlanDaysLeft(daysLeft),
+                icon: AppIcons.event,
+                variant: PillVariant.streak,
               ),
-              PillLabel(
-                label: status == 'paused' ? '已暂停' : '进行中',
+              AppPill(
+                label: status == 'paused'
+                    ? l10n.studyPlanPausedLabel
+                    : l10n.studyPlanActive,
                 icon: status == 'paused'
-                    ? Icons.pause_circle_outline
-                    : Icons.play_circle_outline,
-                color: status == 'paused' ? AppTheme.coral : AppTheme.success,
+                    ? AppIcons.pauseCircle
+                    : AppIcons.playCircle,
+                variant: status == 'paused'
+                    ? PillVariant.neutral
+                    : PillVariant.success,
               ),
             ],
           ),
@@ -500,82 +554,181 @@ class _PlanHeroCard extends StatelessWidget {
 
 class _StudyBookSelector extends StatelessWidget {
   const _StudyBookSelector({
+    required this.books,
+    required this.userWords,
     required this.selectedId,
+    required this.localeCode,
     required this.onSelected,
+    required this.l10n,
   });
 
+  final List<WordBook> books;
+  final List<UserWord> userWords;
   final String selectedId;
+  final String localeCode;
   final ValueChanged<String> onSelected;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('切换词书', style: Theme.of(context).textTheme.titleMedium),
+        Text(
+          l10n.wordbookSwitch,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
         const SizedBox(height: 10),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            for (final book in studyBooks)
-              _StudyBookPill(
+        SizedBox(
+          height: 168,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: _books.length,
+            separatorBuilder: (_, _) => const SizedBox(width: AppTokens.s12),
+            itemBuilder: (context, index) {
+              final book = _books[index];
+              final selected =
+                  normalizedStudyBookId(selectedId) ==
+                  normalizedStudyBookId(book.id);
+              final learned = learnedWordCountForBook(
+                userWords: userWords,
+                wordBookId: book.id,
+                wordIds: book.wordIds.toSet(),
+              );
+              final progress = wordbookProgressValue(
+                learnedWords: learned,
+                totalWords: book.totalWords,
+              );
+              return _StudyBookCoverOption(
                 book: book,
-                selected: selectedId == book.id,
+                localeCode: localeCode,
+                learnedWords: learned,
+                progress: progress,
+                selected: selected,
                 onTap: () => onSelected(book.id),
-              ),
-          ],
+                l10n: l10n,
+              );
+            },
+          ),
         ),
       ],
     );
   }
+
+  List<WordBook> get _books {
+    if (books.isNotEmpty) return books;
+    final now = DateTime.now().toUtc();
+    return [
+      for (final book in studyBooks)
+        WordBook(
+          id: book.id,
+          title: book.name,
+          category: 'exam',
+          examType: book.id,
+          coverUrl: '',
+          totalWords: 0,
+          includedWords: 0,
+          description: book.description,
+          wordIds: const [],
+          createdAt: now,
+          words: const [],
+        ),
+    ];
+  }
 }
 
-class _StudyBookPill extends StatelessWidget {
-  const _StudyBookPill({
+class _StudyBookCoverOption extends StatelessWidget {
+  const _StudyBookCoverOption({
     required this.book,
+    required this.localeCode,
+    required this.learnedWords,
+    required this.progress,
     required this.selected,
     required this.onTap,
+    required this.l10n,
   });
 
-  final StudyBookInfo book;
+  final WordBook book;
+  final String localeCode;
+  final int learnedWords;
+  final double progress;
   final bool selected;
   final VoidCallback onTap;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Material(
-      color: selected
-          ? theme.colorScheme.secondaryContainer
-          : Colors.transparent,
-      borderRadius: BorderRadius.circular(999),
+      color: selected ? AppTokens.primarySoft : theme.colorScheme.surface,
+      borderRadius: BorderRadius.circular(AppTokens.radiusTile + 4),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+          width: 148,
+          padding: const EdgeInsets.all(AppTokens.s8),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(999),
+            borderRadius: BorderRadius.circular(AppTokens.radiusTile + 4),
             border: Border.all(
-              color: selected
-                  ? theme.colorScheme.secondary
-                  : theme.colorScheme.outlineVariant,
+              color: selected ? AppTokens.azure : AppTokens.hairline,
+              width: selected ? 2 : 1,
             ),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(book.cover),
-              const SizedBox(width: 6),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  WordbookCoverCard(
+                    examType: book.examType,
+                    bookId: book.id,
+                    title: book.nameFor(localeCode),
+                    width: 56,
+                    height: 74,
+                  ),
+                  const SizedBox(width: AppTokens.s12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          displayWordbookTitle(book.id, l10n: l10n),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            fontWeight: FontWeight.w800,
+                            color: selected
+                                ? AppTokens.primarySoftText
+                                : theme.colorScheme.onSurface,
+                          ),
+                        ),
+                        const SizedBox(height: AppTokens.s4),
+                        Text(
+                          displayWordbookDescription(book.id, l10n: l10n),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const Spacer(),
               Text(
-                book.name,
-                style: theme.textTheme.labelLarge?.copyWith(
-                  color: selected
-                      ? theme.colorScheme.onSecondaryContainer
-                      : theme.colorScheme.onSurface,
+                l10n.wordbookWordsLearned(learnedWords, book.totalWords),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
+              const SizedBox(height: AppTokens.s4),
+              AppProgressBar(value: progress, solid: true, height: 5),
             ],
           ),
         ),
@@ -592,6 +745,7 @@ class _NumberField extends StatelessWidget {
     required this.icon,
     required this.min,
     required this.max,
+    required this.l10n,
   });
 
   final TextEditingController controller;
@@ -600,6 +754,7 @@ class _NumberField extends StatelessWidget {
   final IconData icon;
   final int min;
   final int max;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -614,8 +769,10 @@ class _NumberField extends StatelessWidget {
       ),
       validator: (value) {
         final parsed = int.tryParse(value?.trim() ?? '');
-        if (parsed == null) return '请输入数字';
-        if (parsed < min || parsed > max) return '范围必须是 $min-$max';
+        if (parsed == null) return l10n.studyPlanEnterNumber;
+        if (parsed < min || parsed > max) {
+          return l10n.studyPlanNumberRange(min, max);
+        }
         return null;
       },
     );
@@ -628,31 +785,39 @@ class _PlanDateTimeSection extends StatelessWidget {
     required this.reminderTimeLabel,
     required this.onPickDate,
     required this.onPickTime,
+    required this.l10n,
   });
 
   final DateTime targetFinishDate;
   final String reminderTimeLabel;
   final VoidCallback onPickDate;
   final VoidCallback onPickTime;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _PlanActionRow(
-          icon: Icons.event_outlined,
-          title: '考试/目标完成日期',
-          subtitle: formatShortDate(targetFinishDate),
-          onTap: onPickDate,
-        ),
-        const Divider(height: 18),
-        _PlanActionRow(
-          icon: Icons.schedule_outlined,
-          title: '学习提醒时间',
-          subtitle: reminderTimeLabel,
-          onTap: onPickTime,
-        ),
-      ],
+    return AppCard(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppTokens.s16,
+        vertical: AppTokens.s8,
+      ),
+      child: Column(
+        children: [
+          _PlanActionRow(
+            icon: AppIcons.event,
+            title: l10n.studyPlanTargetDate,
+            subtitle: formatShortDate(targetFinishDate),
+            onTap: onPickDate,
+          ),
+          const Divider(height: 18),
+          _PlanActionRow(
+            icon: AppIcons.schedule,
+            title: l10n.studyPlanReminderTime,
+            subtitle: reminderTimeLabel,
+            onTap: onPickTime,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -664,6 +829,7 @@ class _PlanActions extends StatelessWidget {
     required this.onOpenWords,
     required this.onTogglePause,
     required this.onReset,
+    required this.l10n,
   });
 
   final bool isPaused;
@@ -671,30 +837,29 @@ class _PlanActions extends StatelessWidget {
   final VoidCallback onOpenWords;
   final VoidCallback onTogglePause;
   final VoidCallback onReset;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        OutlinedButton.icon(
+        AppSecondaryButton(
+          label: l10n.studyPlanViewWords,
+          icon: AppIcons.style,
           onPressed: onOpenWords,
-          icon: const Icon(Icons.style_outlined),
-          label: const Text('查看完整词汇表'),
         ),
-        const SizedBox(height: 10),
-        OutlinedButton.icon(
+        const SizedBox(height: AppTokens.s12),
+        AppSecondaryButton(
+          label: isPaused ? l10n.studyPlanResume : l10n.studyPlanPause,
+          icon: isPaused ? AppIcons.playCircle : AppIcons.pauseCircle,
           onPressed: isLoading ? null : onTogglePause,
-          icon: Icon(
-            isPaused ? Icons.play_circle_outline : Icons.pause_circle_outline,
-          ),
-          label: Text(isPaused ? '恢复计划' : '暂停计划'),
         ),
-        const SizedBox(height: 10),
-        FilledButton.tonalIcon(
+        const SizedBox(height: AppTokens.s12),
+        AppPrimaryButton(
+          label: l10n.studyPlanReset,
+          icon: AppIcons.restartAlt,
           onPressed: isLoading ? null : onReset,
-          icon: const Icon(Icons.restart_alt_outlined),
-          label: const Text('重置计划'),
         ),
       ],
     );
@@ -744,7 +909,7 @@ class _PlanActionRow extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right_rounded),
+              const Icon(AppIcons.chevronRight),
             ],
           ),
         ),

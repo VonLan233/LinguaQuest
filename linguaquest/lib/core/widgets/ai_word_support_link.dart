@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../l10n/generated/app_localizations.dart';
+import '../theme/app_icons.dart';
 import '../theme/app_theme.dart';
 import 'learning_badges.dart';
 
@@ -19,6 +21,7 @@ class AiWordSupportLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     return Material(
       color: Colors.transparent,
       borderRadius: BorderRadius.circular(12),
@@ -31,7 +34,7 @@ class AiWordSupportLink extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const IconCueBadge(
-                icon: Icons.auto_awesome_outlined,
+                icon: AppIcons.autoAwesome,
                 color: AppTheme.cyan,
               ),
               const SizedBox(width: 12),
@@ -39,10 +42,13 @@ class AiWordSupportLink extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('AI 学习', style: theme.textTheme.titleMedium),
+                    Text(
+                      l10n.aiLearningTitle,
+                      style: theme.textTheme.titleMedium,
+                    ),
                     const SizedBox(height: 3),
                     Text(
-                      _description,
+                      _description(l10n),
                       style: TextStyle(
                         color: theme.colorScheme.onSurfaceVariant,
                         height: 1.35,
@@ -51,7 +57,7 @@ class AiWordSupportLink extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right_rounded),
+              const Icon(AppIcons.chevronRight),
             ],
           ),
         ),
@@ -68,12 +74,12 @@ class AiWordSupportLink extends StatelessWidget {
     context.push(location);
   }
 
-  String get _description {
+  String _description(AppLocalizations l10n) {
     final example = exampleSentence.trim();
     if (example.isEmpty) {
-      return '围绕 $word 提问用法、语法、近义词区别和例句拆解。';
+      return l10n.aiWordSupportDesc(word);
     }
-    return '携带 $word 和当前例句，提问用法、语法、近义词区别和例句拆解。';
+    return l10n.aiWordSupportWithExampleDesc(word);
   }
 
   String _aiLearningLocation() {

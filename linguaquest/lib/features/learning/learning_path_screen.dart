@@ -1,72 +1,61 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
-import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 const _pathRailWidth = 74.0;
-const _pathNodeHorizontalPadding = 8.0;
 const _pathConnectorWidth = 6.0;
+// Align the connector under the rail circle: the node content sits inside the
+// card's s12 horizontal padding, so add it to the rail-centering offset.
 const _pathConnectorLeft =
-    _pathNodeHorizontalPadding + (_pathRailWidth - _pathConnectorWidth) / 2;
+    AppTokens.s12 + (_pathRailWidth - _pathConnectorWidth) / 2;
 
 class LearningPathScreen extends ConsumerWidget {
   const LearningPathScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final lessons = state.formalLessons;
-    final currentBook = state.currentWordBook;
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/home'),
-        title: const Text('学习路径'),
-        actions: [
-          QuestIconButton(
-            tooltip: '回到首页',
-            onPressed: () => context.go('/home'),
-            icon: Icons.home_outlined,
-          ),
-          const SizedBox(width: 12),
-        ],
+        title: Text(l10n.learningPathTitle),
       ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
           children: [
-            SectionHeader(
-              title: currentBook == null ? '词书路径' : '${currentBook.title} 路径',
-              subtitle: state.isStudyPlanPaused
-                  ? '学习计划已暂停，路径进度会保留。'
-                  : currentBook?.description ?? '这里只展示词书进度；正式新学和复习回到首页的两个独立入口。',
-              trailing: QuestIconButton(
-                tooltip: '学习计划',
-                onPressed: () => context.push('/settings/study-plan'),
-                icon: Icons.flag_outlined,
-              ),
-            ),
-            const SizedBox(height: 18),
+            if (state.isStudyPlanPaused) ...[
+              _PausedBanner(l10n: l10n),
+              const SizedBox(height: 16),
+            ],
             for (var index = 0; index < lessons.length; index++) ...[
-              _PathNode(lesson: lessons[index], index: index),
+              _PathNode(lesson: lessons[index], index: index, l10n: l10n),
               if (index != lessons.length - 1) const _PathConnector(),
             ],
             const SizedBox(height: 10),
-            OutlinedButton.icon(
+            AppSecondaryButton(
+              label: l10n.learningPathOpenWordbook,
               onPressed: () => context.push('/wordbook'),
-              icon: const Icon(Icons.style_outlined),
-              label: const Text('打开单词本和生词本'),
             ),
             const SizedBox(height: 10),
             TextButton.icon(
               onPressed: () => context.push('/settings/study-plan'),
-              icon: const Icon(Icons.tune_outlined),
-              label: const Text('调整当前学习计划'),
+              icon: const Icon(AppIcons.tune),
+              label: Text(l10n.learningPathAdjustPlan),
             ),
           ],
         ),
@@ -75,11 +64,38 @@ class LearningPathScreen extends ConsumerWidget {
   }
 }
 
+class _PausedBanner extends StatelessWidget {
+  const _PausedBanner({required this.l10n});
+
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      child: Row(
+        children: [
+          Icon(
+            AppIcons.pauseCircle,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          const SizedBox(width: AppTokens.s12),
+          Expanded(child: Text(l10n.reviewCenterPlanPaused)),
+        ],
+      ),
+    );
+  }
+}
+
 class _PathNode extends StatelessWidget {
-  const _PathNode({required this.lesson, required this.index});
+  const _PathNode({
+    required this.lesson,
+    required this.index,
+    required this.l10n,
+  });
 
   final Lesson lesson;
   final int index;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -97,97 +113,108 @@ class _PathNode extends StatelessWidget {
     } else {
       color = AppTheme.cyan;
     }
-    return Material(
-      color: Colors.transparent,
-      borderRadius: BorderRadius.circular(14),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: locked ? null : () => _showPreview(context),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: _pathRailWidth,
-                child: Center(
-                  child: Container(
-                    width: current ? _pathRailWidth : 62,
-                    height: current ? _pathRailWidth : 62,
-                    decoration: BoxDecoration(
-                      color: color,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: theme.colorScheme.surface,
-                        width: 4,
-                      ),
+    return AppCard(
+      padding: EdgeInsets.zero,
+      onTap: locked ? null : () => _showPreview(context),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppTokens.s12,
+          vertical: AppTokens.s16,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: _pathRailWidth,
+              child: Center(
+                child: Container(
+                  width: current ? _pathRailWidth : 62,
+                  height: current ? _pathRailWidth : 62,
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: theme.colorScheme.surface,
+                      width: 4,
                     ),
-                    child: Icon(
-                      locked
-                          ? Icons.lock_rounded
-                          : current
-                          ? Icons.play_arrow_rounded
-                          : completed
-                          ? Icons.check_rounded
-                          : Icons.star_rounded,
-                      color: current ? AppTheme.ink : Colors.white,
-                      size: current ? 38 : 30,
-                    ),
+                  ),
+                  child: Icon(
+                    locked
+                        ? AppIcons.lock
+                        : current
+                        ? AppIcons.playArrow
+                        : completed
+                        ? AppIcons.check
+                        : AppIcons.star,
+                    color: current ? AppTheme.ink : theme.colorScheme.onPrimary,
+                    size: current ? 38 : 30,
                   ),
                 ),
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            lesson.section,
-                            style: theme.textTheme.labelLarge?.copyWith(
-                              color: color,
-                              fontWeight: FontWeight.w900,
-                            ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          lesson.section,
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            color: color,
+                            fontWeight: FontWeight.w900,
                           ),
                         ),
-                        PillLabel(
-                          label: _statusLabel(lesson.status),
-                          icon: locked ? Icons.lock_outline : Icons.bolt,
-                          color: color,
-                        ),
-                      ],
+                      ),
+                      AppPill(
+                        label: _statusLabel(lesson.status, l10n),
+                        variant: _statusVariant(lesson.status),
+                        icon: locked ? AppIcons.lock : AppIcons.bolt,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppTokens.s8),
+                  Text(
+                    lesson.title,
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w800,
                     ),
-                    const SizedBox(height: 8),
-                    Text(lesson.title, style: theme.textTheme.titleLarge),
-                    const SizedBox(height: 5),
-                    Text(lesson.description),
-                    const SizedBox(height: 14),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: [
-                        PillLabel(
-                          label: '${lesson.xpReward} XP',
-                          icon: Icons.bolt,
-                          color: AppTheme.mango,
-                        ),
-                        PillLabel(
-                          label: '${lesson.estimatedMinutes} 分钟',
-                          icon: Icons.timer_outlined,
-                        ),
-                        PillLabel(
-                          label: '${lesson.words.length} 词',
-                          icon: Icons.style_outlined,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: AppTokens.s4),
+                  Text(
+                    lesson.description,
+                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 14),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      AppPill(
+                        label: '${lesson.xpReward} ${l10n.commonXP}',
+                        variant: PillVariant.xp,
+                        icon: AppIcons.bolt,
+                      ),
+                      AppPill(
+                        label: '${lesson.estimatedMinutes} min',
+                        variant: PillVariant.primary,
+                        icon: AppIcons.timer,
+                      ),
+                      AppPill(
+                        label: '${lesson.words.length} ${l10n.commonWords}',
+                        variant: PillVariant.primary,
+                        icon: AppIcons.style,
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -220,13 +247,13 @@ class _PathNode extends StatelessWidget {
                   const SizedBox(height: 6),
                   Text(lesson.description),
                   const SizedBox(height: 16),
-                  FilledButton.icon(
+                  AppPrimaryButton(
+                    label: l10n.learningPathStartLearning,
+                    icon: AppIcons.playArrow,
                     onPressed: () {
                       Navigator.pop(sheetContext);
                       parentContext.push('/lesson/${lesson.id}');
                     },
-                    icon: const Icon(Icons.play_arrow_rounded),
-                    label: const Text('开始学习'),
                   ),
                 ],
               ),
@@ -238,16 +265,29 @@ class _PathNode extends StatelessWidget {
   }
 }
 
-String _statusLabel(String status) {
+String _statusLabel(String status, AppLocalizations l10n) {
   switch (status) {
     case 'completed':
-      return '已完成';
+      return l10n.learningPathLessonCompleted;
     case 'current':
-      return '当前';
+      return l10n.learningPathLessonCurrent;
     case 'locked':
-      return '未解锁';
+      return l10n.learningPathLessonLocked;
     default:
       return status;
+  }
+}
+
+PillVariant _statusVariant(String status) {
+  switch (status) {
+    case 'completed':
+      return PillVariant.success;
+    case 'current':
+      return PillVariant.primary;
+    case 'locked':
+      return PillVariant.primary;
+    default:
+      return PillVariant.primary;
   }
 }
 
@@ -265,7 +305,7 @@ class _PathConnector extends StatelessWidget {
           height: 28,
           margin: const EdgeInsets.symmetric(vertical: 4),
           decoration: BoxDecoration(
-            color: AppTheme.teal.withValues(alpha: 0.22),
+            color: AppTokens.hairline,
             borderRadius: BorderRadius.circular(99),
           ),
         ),

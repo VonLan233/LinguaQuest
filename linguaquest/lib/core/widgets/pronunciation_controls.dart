@@ -1,16 +1,22 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 
+import '../../l10n/generated/app_localizations.dart';
+import '../theme/app_icons.dart';
 import '../theme/app_theme.dart';
+import '../utils/text_language.dart';
 
-enum _PronunciationAccent {
-  uk('英音'),
-  us('美音');
+enum _PronunciationAccent { uk, us }
 
-  const _PronunciationAccent(this.label);
-
-  final String label;
+String _accentLabel(AppLocalizations l10n, _PronunciationAccent accent) {
+  switch (accent) {
+    case _PronunciationAccent.uk:
+      return l10n.pronunciationAccentUk;
+    case _PronunciationAccent.us:
+      return l10n.pronunciationAccentUs;
+  }
 }
 
 class PronunciationControls extends StatefulWidget {
@@ -34,10 +40,60 @@ class PronunciationControls extends StatefulWidget {
 class _PronunciationControlsState extends State<PronunciationControls> {
   _PronunciationAccent? _loadingAccent;
   _PronunciationAccent? _failedAccent;
+  final AudioPlayer _player = AudioPlayer();
+
+  @override
+  void didUpdateWidget(covariant PronunciationControls oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.word != widget.word ||
+        oldWidget.audioUKUrl != widget.audioUKUrl ||
+        oldWidget.audioUSUrl != widget.audioUSUrl) {
+      _loadingAccent = null;
+      _failedAccent = null;
+      _player.stop();
+    }
+  }
+
+  @override
+  void dispose() {
+    _player.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final failedAccent = _failedAccent;
+
+    // Chinese (HSK) words have a single Mandarin pronunciation — show one
+    // button instead of the UK/US pair.
+    if (containsCjkText(widget.word)) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _PronunciationButton(
+            accent: _PronunciationAccent.us,
+            compact: widget.compact,
+            isLoading: _loadingAccent != null,
+            hasFailed: failedAccent != null,
+            onPressed: () => _play(_PronunciationAccent.us),
+            labelOverride: 'Audio',
+          ),
+          if (failedAccent != null) ...[
+            const SizedBox(height: 6),
+            Text(
+              'Audio unavailable, tap to retry.',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.error,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ],
+        ],
+      );
+    }
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,7 +121,7 @@ class _PronunciationControlsState extends State<PronunciationControls> {
         if (failedAccent != null) ...[
           const SizedBox(height: 6),
           Text(
-            '${failedAccent.label}发音失败，请重试',
+            l10n.pronunciationFailedRetry(_accentLabel(l10n, failedAccent)),
             style: TextStyle(
               color: Theme.of(context).colorScheme.error,
               fontWeight: FontWeight.w800,
@@ -79,13 +135,12 @@ class _PronunciationControlsState extends State<PronunciationControls> {
   Future<void> _play(_PronunciationAccent accent) async {
     if (_loadingAccent != null) return;
     final view = View.of(context);
+    final l10n = AppLocalizations.of(context);
+    final accentLabel = _accentLabel(l10n, accent);
     setState(() {
       _loadingAccent = accent;
       _failedAccent = null;
     });
-
-    await Future<void>.delayed(const Duration(milliseconds: 420));
-    if (!mounted) return;
 
     final word = widget.word.trim();
     final audioUrl = switch (accent) {
@@ -93,36 +148,56 @@ class _PronunciationControlsState extends State<PronunciationControls> {
       _PronunciationAccent.us => widget.audioUSUrl.trim(),
     };
     final hasWord = word.isNotEmpty;
+    final hasAudioUrl = audioUrl.isNotEmpty;
+
     if (hasWord) {
       await HapticFeedback.selectionClick();
       if (!mounted) return;
       SemanticsService.sendAnnouncement(
         view,
-        '${accent.label} $word',
+        l10n.pronunciationAnnounce(accentLabel, word),
         TextDirection.ltr,
       );
     }
 
-    setState(() {
-      _loadingAccent = null;
-      _failedAccent = hasWord ? null : accent;
-    });
-
-    final label = accent.label;
-    final String message;
-    if (!hasWord) {
-      message = '$label发音失败，请重试';
-    } else if (audioUrl.isEmpty) {
-      message = '$label发音：$word';
+    if (hasAudioUrl) {
+      try {
+        await _player.stop();
+        if (!mounted || widget.word.trim() != word) return;
+        await _player.play(UrlSource(audioUrl));
+        if (!mounted || widget.word.trim() != word) return;
+        setState(() {
+          _loadingAccent = null;
+          _failedAccent = null;
+        });
+        _showMessage(l10n.pronunciationPlaying(accentLabel, word));
+      } catch (_) {
+        if (!mounted || widget.word.trim() != word) return;
+        setState(() {
+          _loadingAccent = null;
+          _failedAccent = accent;
+        });
+        _showMessage(l10n.pronunciationFailedRetry(accentLabel));
+      }
     } else {
-      message = '$label发音已加载';
+      if (!mounted || widget.word.trim() != word) return;
+      setState(() {
+        _loadingAccent = null;
+        _failedAccent = hasWord ? null : accent;
+      });
+      final message = hasWord
+          ? l10n.pronunciationPlaying(accentLabel, word)
+          : l10n.pronunciationUnavailable(accentLabel);
+      _showMessage(message);
     }
+  }
 
+  void _showMessage(String message) {
     final messenger = ScaffoldMessenger.maybeOf(context);
     messenger?.clearSnackBars();
     messenger?.showSnackBar(
       SnackBar(
-        duration: const Duration(milliseconds: 900),
+        duration: const Duration(milliseconds: 1200),
         content: Text(message),
       ),
     );
@@ -136,6 +211,7 @@ class _PronunciationButton extends StatelessWidget {
     required this.isLoading,
     required this.hasFailed,
     required this.onPressed,
+    this.labelOverride,
   });
 
   final _PronunciationAccent accent;
@@ -144,9 +220,15 @@ class _PronunciationButton extends StatelessWidget {
   final bool hasFailed;
   final VoidCallback onPressed;
 
+  /// When set, the button shows this label (and neutral loading/retry text)
+  /// instead of the UK/US accent label — used for the single Chinese button.
+  final String? labelOverride;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+    final accentLabel = _accentLabel(l10n, accent);
     final color = hasFailed ? theme.colorScheme.error : AppTheme.teal;
     return OutlinedButton.icon(
       key: ValueKey('pronunciation-${accent.name}'),
@@ -170,15 +252,19 @@ class _PronunciationButton extends StatelessWidget {
               child: CircularProgressIndicator(strokeWidth: compact ? 2 : 2.2),
             )
           : Icon(
-              hasFailed ? Icons.refresh_rounded : Icons.volume_up_outlined,
+              hasFailed ? AppIcons.refresh : AppIcons.volumeUp,
               size: compact ? 16 : 18,
             ),
       label: Text(
         isLoading
-            ? '${accent.label}加载'
+            ? (labelOverride == null
+                  ? l10n.pronunciationLoading(accentLabel)
+                  : 'Loading…')
             : hasFailed
-            ? '${accent.label}重试'
-            : accent.label,
+            ? (labelOverride == null
+                  ? l10n.pronunciationRetry(accentLabel)
+                  : 'Retry')
+            : (labelOverride ?? accentLabel),
       ),
     );
   }

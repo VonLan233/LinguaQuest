@@ -91,7 +91,10 @@ QuizQuestionType _typeForWord(Word word) {
     case 1:
       return QuizQuestionType.chineseChoice;
     case 2:
-      return QuizQuestionType.contextChoice;
+      // Context questions need an example sentence; the HSK seed rarely has one.
+      return word.exampleSentence.trim().isEmpty
+          ? QuizQuestionType.meaningChoice
+          : QuizQuestionType.contextChoice;
     default:
       return QuizQuestionType.spelling;
   }
@@ -109,22 +112,22 @@ QuizQuestion _questionForWord({
       return QuizQuestion(
         id: '$lessonId-q$index',
         type: type,
-        prompt: '根据中文释义选择英文单词：${word.meaning}',
+        prompt: 'Select the Chinese word for: ${word.meaning}',
         answer: word.word,
         options: _choiceOptions(
           seed: _optionSeed(lessonId, word.id, word.word),
           answer: word.word,
           fallbackDistractors: distractorWords.map((item) => item.word),
         ),
-        explanation:
-            '“${word.meaning}”对应“${word.word}”。${word.exampleSentence}',
+        explanation: '"${word.meaning}" is "${word.word}" (${word.phonetic}).',
         word: word,
       );
     case QuizQuestionType.contextChoice:
       return QuizQuestion(
         id: '$lessonId-q$index',
         type: type,
-        prompt: '根据语境选择“${word.word}”的中文释义：${word.exampleSentence}',
+        prompt:
+            'Choose the English meaning of "${word.word}" in: ${word.exampleSentence}',
         answer: word.meaning,
         options: _choiceOptions(
           seed: _optionSeed(lessonId, word.id, word.meaning),
@@ -132,45 +135,45 @@ QuizQuestion _questionForWord({
           fallbackDistractors: distractorWords.map((item) => item.meaning),
         ),
         explanation:
-            '这里的“${word.word}”表示${word.meaning}。${word.exampleTranslation}',
+            'Here "${word.word}" means ${word.meaning}. ${word.exampleTranslation}',
         word: word,
       );
     case QuizQuestionType.spelling:
       return QuizQuestion(
         id: '$lessonId-q$index',
         type: type,
-        prompt: '根据释义拼写单词：${word.meaning}',
-        answer: word.word,
+        prompt: 'Type the pinyin for "${word.word}" (${word.meaning}).',
+        answer: word.phonetic,
         options: const [],
-        explanation: '正确拼写是“${word.word}”。${word.exampleSentence}',
+        explanation: 'The pinyin is "${word.phonetic}".',
         word: word,
       );
     case QuizQuestionType.listeningWordChoice:
       return QuizQuestion(
         id: '$lessonId-q$index',
         type: type,
-        prompt: '播放发音，选择听到的英文单词。',
+        prompt: 'Play the audio and choose the word you hear.',
         answer: word.word,
         options: _choiceOptions(
           seed: _optionSeed(lessonId, word.id, word.word),
           answer: word.word,
           fallbackDistractors: distractorWords.map((item) => item.word),
         ),
-        explanation: '你听到的是“${word.word}”。${word.exampleSentence}',
+        explanation: 'You heard "${word.word}" (${word.phonetic}).',
         word: word,
       );
     case QuizQuestionType.listeningMeaningChoice:
       return QuizQuestion(
         id: '$lessonId-q$index',
         type: type,
-        prompt: '播放发音，选择对应的中文释义。',
+        prompt: 'Play the audio and choose the English meaning.',
         answer: word.meaning,
         options: _choiceOptions(
           seed: _optionSeed(lessonId, word.id, word.meaning),
           answer: word.meaning,
           fallbackDistractors: distractorWords.map((item) => item.meaning),
         ),
-        explanation: '“${word.word}”对应${word.meaning}。',
+        explanation: '"${word.word}" means ${word.meaning}.',
         word: word,
       );
     case QuizQuestionType.meaningChoice:
@@ -178,15 +181,14 @@ QuizQuestion _questionForWord({
       return QuizQuestion(
         id: '$lessonId-q$index',
         type: QuizQuestionType.meaningChoice,
-        prompt: '选择“${word.word}”的中文释义。',
+        prompt: 'Select the English meaning of "${word.word}".',
         answer: word.meaning,
         options: _choiceOptions(
           seed: _optionSeed(lessonId, word.id, word.meaning),
           answer: word.meaning,
           fallbackDistractors: distractorWords.map((item) => item.meaning),
         ),
-        explanation:
-            '“${word.word}”的意思是${word.meaning}。${word.exampleSentence}',
+        explanation: '"${word.word}" means ${word.meaning}. ${word.exampleSentence}',
         word: word,
       );
   }
@@ -282,11 +284,11 @@ Lesson _spellingLesson({
         QuizQuestion(
           id: '$id-q$index',
           type: QuizQuestionType.spelling,
-          prompt: '根据释义拼写单词：${words[index].meaning}',
-          answer: words[index].word,
+          prompt:
+              'Type the pinyin for "${words[index].word}" (${words[index].meaning}).',
+          answer: words[index].phonetic,
           options: const [],
-          explanation:
-              '正确拼写是“${words[index].word}”。${words[index].exampleSentence}',
+          explanation: 'The pinyin is "${words[index].phonetic}".',
           word: words[index],
         ),
     ],

@@ -3,13 +3,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/date_formatting.dart';
-import '../../core/widgets/empty_state.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/mascot_empty_state.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/app_notification.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class NotificationsScreen extends ConsumerStatefulWidget {
   const NotificationsScreen({super.key});
@@ -24,12 +29,13 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final notifications = _filter.apply(state.notifications);
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/home'),
-        title: const Text('消息通知'),
+        title: Text(l10n.notificationTitle),
         actions: [
           TextButton(
             onPressed: state.unreadNotificationCount == 0
@@ -37,7 +43,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                 : () => ref
                       .read(appControllerProvider.notifier)
                       .markAllNotificationsRead(),
-            child: const Text('全部已读'),
+            child: Text(l10n.notificationMarkAllRead),
           ),
         ],
       ),
@@ -50,15 +56,18 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SectionHeader(
-                    title: '消息中心',
+                    title: l10n.notificationCenter,
                     subtitle: state.unreadNotificationCount == 0
-                        ? '学习提醒、复习到期、打卡和活动消息都会集中在这里。'
-                        : '${state.unreadNotificationCount} 条未读消息',
+                        ? l10n.notificationCenterDesc
+                        : l10n.notificationUnreadCount(
+                            state.unreadNotificationCount,
+                          ),
                   ),
                   const SizedBox(height: 14),
                   _NotificationFilterTabs(
                     selected: _filter,
                     onSelected: (filter) => setState(() => _filter = filter),
+                    l10n: l10n,
                   ),
                 ],
               ),
@@ -68,21 +77,20 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                   ? ListView(
                       padding: const EdgeInsets.fromLTRB(20, 12, 20, 88),
                       children: [
-                        EmptyState(
-                          icon: Icons.notifications_none_outlined,
-                          title: '没有符合条件的消息',
+                        MascotEmptyState(
+                          title: l10n.notificationEmptyTitle,
                           message: _filter == _NotificationFilter.unread
-                              ? '当前没有未读消息。'
-                              : '完成学习和复习后，这里会继续沉淀学习提醒和活动消息。',
-                          action: OutlinedButton.icon(
+                              ? l10n.notificationEmptyUnread
+                              : l10n.notificationEmptyAll,
+                          action: AppSecondaryButton(
+                            label: l10n.notificationBackHome,
+                            icon: AppIcons.home,
                             onPressed: () => context.go('/home'),
-                            icon: const Icon(Icons.home_outlined),
-                            label: const Text('回到首页'),
                           ),
                         ),
                       ],
                     )
-                  : _NotificationList(notifications: notifications),
+                  : _NotificationList(notifications: notifications, l10n: l10n),
             ),
           ],
         ),
@@ -95,10 +103,12 @@ class _NotificationFilterTabs extends StatelessWidget {
   const _NotificationFilterTabs({
     required this.selected,
     required this.onSelected,
+    required this.l10n,
   });
 
   final _NotificationFilter selected;
   final ValueChanged<_NotificationFilter> onSelected;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -121,6 +131,7 @@ class _NotificationFilterTabs extends StatelessWidget {
                 filter: filter,
                 selected: selected == filter,
                 onPressed: () => onSelected(filter),
+                l10n: l10n,
               ),
             ),
         ],
@@ -134,11 +145,13 @@ class _NotificationFilterTab extends StatelessWidget {
     required this.filter,
     required this.selected,
     required this.onPressed,
+    required this.l10n,
   });
 
   final _NotificationFilter filter;
   final bool selected;
   final VoidCallback onPressed;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +167,7 @@ class _NotificationFilterTab extends StatelessWidget {
         onTap: onPressed,
         child: Center(
           child: Text(
-            filter.label,
+            filter.label(l10n),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: theme.textTheme.labelLarge?.copyWith(
@@ -171,9 +184,10 @@ class _NotificationFilterTab extends StatelessWidget {
 }
 
 class _NotificationList extends StatelessWidget {
-  const _NotificationList({required this.notifications});
+  const _NotificationList({required this.notifications, required this.l10n});
 
   final List<AppNotification> notifications;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -181,99 +195,87 @@ class _NotificationList extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 4, 20, 88),
       itemCount: notifications.length,
       itemBuilder: (context, index) =>
-          _NotificationRow(notification: notifications[index]),
-      separatorBuilder: (context, index) => Divider(
-        height: 10,
-        color: Theme.of(
-          context,
-        ).colorScheme.outlineVariant.withValues(alpha: 0.7),
-      ),
+          _NotificationRow(notification: notifications[index], l10n: l10n),
+      separatorBuilder: (context, index) => const SizedBox(height: 10),
     );
   }
 }
 
 class _NotificationRow extends ConsumerWidget {
-  const _NotificationRow({required this.notification});
+  const _NotificationRow({required this.notification, required this.l10n});
 
   final AppNotification notification;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final color = _notificationColor(notification.type);
-    return Material(
-      color: Colors.transparent,
-      borderRadius: BorderRadius.circular(12),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () => _open(context, ref),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              IconCueBadge(
-                icon: _notificationIcon(notification.type),
-                color: color,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
+    return AppCard(
+      padding: const EdgeInsets.all(12),
+      onTap: () => _open(context, ref),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          IconCueBadge(
+            icon: _notificationIcon(notification.type),
+            color: color,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            notification.title,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: notification.isRead
-                                  ? FontWeight.w700
-                                  : FontWeight.w900,
-                            ),
-                          ),
+                    Expanded(
+                      child: Text(
+                        localizedNotificationTitle(notification, l10n),
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: notification.isRead
+                              ? FontWeight.w700
+                              : FontWeight.w900,
                         ),
-                        if (!notification.isRead) ...[
-                          const SizedBox(width: 8),
-                          _UnreadDot(color: color),
-                        ],
-                      ],
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      notification.body,
-                      style: TextStyle(
-                        color: theme.colorScheme.onSurfaceVariant,
                       ),
                     ),
-                    const SizedBox(height: 7),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 6,
-                      children: [
-                        PillLabel(
-                          label: appNotificationTypeLabel(notification.type),
-                          icon: Icons.label_outline,
-                          color: color,
-                        ),
-                        PillLabel(
-                          label: formatFullDate(
-                            notification.createdAt.toLocal(),
-                          ),
-                          icon: Icons.schedule_outlined,
-                          color: AppTheme.cyan,
-                        ),
-                      ],
+                    if (!notification.isRead) ...[
+                      const SizedBox(width: 8),
+                      _UnreadDot(color: color),
+                    ],
+                  ],
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  localizedNotificationBody(notification, l10n),
+                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                ),
+                const SizedBox(height: 7),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 6,
+                  children: [
+                    AppPill(
+                      label: appNotificationTypeLabel(
+                        notification.type,
+                        l10n: l10n,
+                      ),
+                      variant: _notificationPillVariant(notification.type),
+                      icon: AppIcons.label,
+                    ),
+                    AppPill(
+                      label: formatFullDate(notification.createdAt.toLocal()),
+                      variant: PillVariant.neutral,
+                      icon: AppIcons.schedule,
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(width: 6),
-              const Icon(Icons.chevron_right_rounded),
-            ],
+              ],
+            ),
           ),
-        ),
+          const SizedBox(width: 6),
+          const Icon(AppIcons.chevronRight),
+        ],
       ),
     );
   }
@@ -312,14 +314,23 @@ class _UnreadDot extends StatelessWidget {
 }
 
 enum _NotificationFilter {
-  all('全部'),
-  unread('未读'),
-  learning('学习'),
-  activity('活动');
+  all,
+  unread,
+  learning,
+  activity;
 
-  const _NotificationFilter(this.label);
-
-  final String label;
+  String label(AppLocalizations l10n) {
+    switch (this) {
+      case _NotificationFilter.all:
+        return l10n.notificationFilterAll;
+      case _NotificationFilter.unread:
+        return l10n.notificationFilterUnread;
+      case _NotificationFilter.learning:
+        return l10n.notificationFilterLearning;
+      case _NotificationFilter.activity:
+        return l10n.notificationFilterActivity;
+    }
+  }
 
   List<AppNotification> apply(List<AppNotification> notifications) {
     return notifications.where((notification) {
@@ -340,13 +351,13 @@ enum _NotificationFilter {
 IconData _notificationIcon(AppNotificationType type) {
   switch (type) {
     case AppNotificationType.learningReminder:
-      return Icons.school_outlined;
+      return AppIcons.school;
     case AppNotificationType.reviewDue:
-      return Icons.replay_outlined;
+      return AppIcons.replay;
     case AppNotificationType.checkInReminder:
-      return Icons.local_fire_department_outlined;
+      return AppIcons.localFireDepartment;
     case AppNotificationType.activity:
-      return Icons.emoji_events_outlined;
+      return AppIcons.emojiEvents;
   }
 }
 
@@ -360,5 +371,18 @@ Color _notificationColor(AppNotificationType type) {
       return AppTheme.coral;
     case AppNotificationType.activity:
       return AppTheme.cyan;
+  }
+}
+
+PillVariant _notificationPillVariant(AppNotificationType type) {
+  switch (type) {
+    case AppNotificationType.learningReminder:
+      return PillVariant.success;
+    case AppNotificationType.reviewDue:
+      return PillVariant.streak;
+    case AppNotificationType.checkInReminder:
+      return PillVariant.streak;
+    case AppNotificationType.activity:
+      return PillVariant.primary;
   }
 }

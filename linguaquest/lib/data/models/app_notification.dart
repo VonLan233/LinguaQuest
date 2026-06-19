@@ -1,3 +1,5 @@
+import '../../l10n/generated/app_localizations.dart';
+
 enum AppNotificationType {
   learningReminder,
   reviewDue,
@@ -17,6 +19,7 @@ class AppNotification {
     required this.createdAt,
     this.readAt,
     this.sourceKey,
+    this.params,
   });
 
   final String id;
@@ -29,6 +32,7 @@ class AppNotification {
   final DateTime createdAt;
   final DateTime? readAt;
   final String? sourceKey;
+  final Map<String, dynamic>? params;
 
   bool get isLearningType =>
       type == AppNotificationType.learningReminder ||
@@ -53,6 +57,7 @@ class AppNotification {
     bool clearReadAt = false,
     String? sourceKey,
     bool clearSourceKey = false,
+    Map<String, dynamic>? params,
   }) {
     return AppNotification(
       id: id ?? this.id,
@@ -65,6 +70,7 @@ class AppNotification {
       createdAt: createdAt ?? this.createdAt,
       readAt: clearReadAt ? null : readAt ?? this.readAt,
       sourceKey: clearSourceKey ? null : sourceKey ?? this.sourceKey,
+      params: params ?? this.params,
     );
   }
 
@@ -80,6 +86,7 @@ class AppNotification {
       'createdAt': createdAt.toIso8601String(),
       'readAt': readAt?.toIso8601String(),
       'sourceKey': sourceKey,
+      'params': params,
     };
   }
 
@@ -95,6 +102,7 @@ class AppNotification {
       createdAt: _date(json['createdAt']) ?? DateTime.now().toUtc(),
       readAt: _date(json['readAt']),
       sourceKey: json['sourceKey'] as String?,
+      params: (json['params'] as Map?)?.cast<String, dynamic>(),
     );
   }
 }
@@ -106,7 +114,19 @@ AppNotificationType appNotificationTypeFromName(String? value) {
   return AppNotificationType.activity;
 }
 
-String appNotificationTypeLabel(AppNotificationType type) {
+String appNotificationTypeLabel(AppNotificationType type, {AppLocalizations? l10n}) {
+  if (l10n != null) {
+    switch (type) {
+      case AppNotificationType.learningReminder:
+        return l10n.notificationTypeLearningReminder;
+      case AppNotificationType.reviewDue:
+        return l10n.notificationTypeReviewDue;
+      case AppNotificationType.checkInReminder:
+        return l10n.notificationTypeCheckIn;
+      case AppNotificationType.activity:
+        return l10n.notificationTypeActivity;
+    }
+  }
   switch (type) {
     case AppNotificationType.learningReminder:
       return '学习提醒';
@@ -116,6 +136,52 @@ String appNotificationTypeLabel(AppNotificationType type) {
       return '打卡提醒';
     case AppNotificationType.activity:
       return '活动消息';
+  }
+}
+
+/// Renders the localized title for [n] from its type + params, falling back to
+/// the stored [AppNotification.title] for legacy notifications without params.
+String localizedNotificationTitle(AppNotification n, AppLocalizations l10n) {
+  if (n.params == null) return n.title;
+  switch (n.type) {
+    case AppNotificationType.learningReminder:
+      return l10n.notificationLearningReminderTitle;
+    case AppNotificationType.reviewDue:
+      return l10n.notificationReviewDueTitle(
+        (n.params?['dueCount'] as num?)?.toInt() ?? 0,
+      );
+    case AppNotificationType.checkInReminder:
+      return l10n.notificationCheckInTitle;
+    case AppNotificationType.activity:
+      // The activity type covers both the daily Discover refresh and the
+      // lottery result — disambiguate via the 'kind' param flag.
+      if (n.params?['kind'] == 'lottery') {
+        return l10n.notificationLotteryTitle;
+      }
+      return l10n.notificationActivityTitle;
+  }
+}
+
+/// Renders the localized body for [n] from its type + params, falling back to
+/// the stored [AppNotification.body] for legacy notifications without params.
+String localizedNotificationBody(AppNotification n, AppLocalizations l10n) {
+  if (n.params == null) return n.body;
+  switch (n.type) {
+    case AppNotificationType.learningReminder:
+      return l10n.notificationLearningReminderBody(
+        (n.params?['dailyGoal'] as num?)?.toInt() ?? 0,
+      );
+    case AppNotificationType.reviewDue:
+      return l10n.notificationReviewDueBody;
+    case AppNotificationType.checkInReminder:
+      return l10n.notificationCheckInBody;
+    case AppNotificationType.activity:
+      if (n.params?['kind'] == 'lottery') {
+        return l10n.notificationLotteryBody(
+          (n.params?['prizeName'] as String?) ?? '',
+        );
+      }
+      return l10n.notificationActivityBody;
   }
 }
 

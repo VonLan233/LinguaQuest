@@ -51,6 +51,9 @@ class CustomWord {
     this.isInNewWordbook = false,
     this.isIgnored = false,
     this.lastReviewedAt,
+    this.definitions = const [],
+    this.englishDefinitions = const [],
+    this.malayDefinitions = const [],
   });
 
   final String id;
@@ -86,6 +89,13 @@ class CustomWord {
   final bool isIgnored;
   final DateTime? lastReviewedAt;
 
+  /// Per-language meaning lists carried over from a source dictionary [Word]
+  /// (zh / en / ms). Empty for manually-added words, which fall back to
+  /// [meaning].
+  final List<String> definitions;
+  final List<String> englishDefinitions;
+  final List<String> malayDefinitions;
+
   factory CustomWord.create({
     required String id,
     required String uid,
@@ -96,6 +106,9 @@ class CustomWord {
     String tag = '自定义',
     String difficulty = 'Medium',
     DateTime? now,
+    List<String> definitions = const [],
+    List<String> englishDefinitions = const [],
+    List<String> malayDefinitions = const [],
   }) {
     final timestamp = now ?? DateTime.now();
     return CustomWord(
@@ -124,6 +137,9 @@ class CustomWord {
       nextReviewAt: timestamp,
       createdAt: timestamp,
       updatedAt: timestamp,
+      definitions: definitions,
+      englishDefinitions: englishDefinitions,
+      malayDefinitions: malayDefinitions,
     );
   }
 
@@ -163,6 +179,9 @@ class CustomWord {
       isInNewWordbook: json[_isInNewWordbookJsonKey] as bool? ?? false,
       isIgnored: json['isIgnored'] as bool? ?? false,
       lastReviewedAt: _date(json['lastReviewedAt']),
+      definitions: _stringList(json['definitions']),
+      englishDefinitions: _stringList(json['englishDefinitions']),
+      malayDefinitions: _stringList(json['malayDefinitions']),
     );
   }
 
@@ -200,6 +219,9 @@ class CustomWord {
       _isInNewWordbookJsonKey: isInNewWordbook,
       'isIgnored': isIgnored,
       'lastReviewedAt': lastReviewedAt?.toIso8601String(),
+      'definitions': definitions,
+      'englishDefinitions': englishDefinitions,
+      'malayDefinitions': malayDefinitions,
     };
   }
 
@@ -318,6 +340,9 @@ class CustomWord {
     bool? isIgnored,
     DateTime? lastReviewedAt,
     bool clearLastReviewedAt = false,
+    List<String>? definitions,
+    List<String>? englishDefinitions,
+    List<String>? malayDefinitions,
   }) {
     return CustomWord(
       id: id ?? this.id,
@@ -355,7 +380,20 @@ class CustomWord {
       lastReviewedAt: clearLastReviewedAt
           ? null
           : lastReviewedAt ?? this.lastReviewedAt,
+      definitions: definitions ?? this.definitions,
+      englishDefinitions: englishDefinitions ?? this.englishDefinitions,
+      malayDefinitions: malayDefinitions ?? this.malayDefinitions,
     );
+  }
+
+  static List<String> _stringList(Object? value) {
+    if (value is List) {
+      return value
+          .map((item) => item?.toString() ?? '')
+          .where((item) => item.isNotEmpty)
+          .toList(growable: false);
+    }
+    return const [];
   }
 
   static DateTime? _date(Object? value) {

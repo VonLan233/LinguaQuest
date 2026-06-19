@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:linguaquest/core/theme/app_icons.dart';
+
+import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/section_header.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class ClassModeScreen extends StatefulWidget {
   const ClassModeScreen({super.key});
@@ -22,40 +28,51 @@ class _ClassModeScreenState extends State<ClassModeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/quest'),
-        title: const Text('班级模式'),
+        title: Text(l10n.questClassMode),
       ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            const SectionHeader(
-              title: '班级学习',
-              subtitle: '输入班级码加入小组，查看班级进度和弱项摘要。',
+            SectionHeader(
+              title: l10n.classModeTitle,
+              subtitle: l10n.classModeSubtitle,
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _codeController,
-              decoration: const InputDecoration(
-                labelText: '班级码',
-                prefixIcon: Icon(Icons.key_outlined),
+            const SizedBox(height: AppTokens.s16),
+            AppCard(
+              child: Column(
+                children: [
+                  TextField(
+                    controller: _codeController,
+                    decoration: InputDecoration(
+                      labelText: l10n.questClassCode,
+                      prefixIcon: const Icon(AppIcons.key),
+                    ),
+                  ),
+                  const SizedBox(height: AppTokens.s12),
+                  AppPrimaryButton(
+                    onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          l10n.classModeJoined(_codeController.text),
+                        ),
+                      ),
+                    ),
+                    icon: AppIcons.groupAdd,
+                    label: l10n.classModeJoin,
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 12),
-            FilledButton.icon(
-              onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('已加入班级 ${_codeController.text}')),
-              ),
-              icon: const Icon(Icons.group_add_outlined),
-              label: const Text('加入班级'),
-            ),
-            const SizedBox(height: 16),
-            OutlinedButton.icon(
+            const SizedBox(height: AppTokens.s16),
+            AppSecondaryButton(
               onPressed: () => context.push('/class-progress'),
-              icon: const Icon(Icons.query_stats_outlined),
-              label: const Text('查看班级进度'),
+              icon: AppIcons.queryStats,
+              label: l10n.classModeViewProgress,
             ),
           ],
         ),

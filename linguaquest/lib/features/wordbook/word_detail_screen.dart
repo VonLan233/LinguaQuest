@@ -2,15 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:linguaquest/core/theme/app_icons.dart';
 import '../../core/state/app_controller.dart';
-import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
+import '../../core/utils/custom_word_localization.dart';
 import '../../core/utils/date_formatting.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/ai_word_support_link.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/pronunciation_controls.dart';
 import '../../data/models/custom_word.dart';
+import '../../l10n/generated/app_localizations.dart';
 import 'word_knowledge_sections.dart';
 
 class WordDetailScreen extends ConsumerWidget {
@@ -20,11 +26,13 @@ class WordDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final word = _find(ref);
     if (word == null) {
-      return const Scaffold(body: Center(child: Text('没有找到这个词')));
+      return Scaffold(body: Center(child: Text(l10n.wordDetailNotFound)));
     }
     final state = ref.watch(appControllerProvider);
+    final localeCode = Localizations.localeOf(context).languageCode;
     final canReview = word.isDue(DateTime.now()) && !state.isLoading;
 
     return Scaffold(
@@ -32,20 +40,20 @@ class WordDetailScreen extends ConsumerWidget {
         leading: const FallbackBackButton(fallbackLocation: '/custom-words'),
         title: Text(word.word),
         actions: [
-          QuestIconButton(
-            tooltip: '编辑',
+          IconButton(
+            tooltip: l10n.commonEdit,
             onPressed: () => context.push('/custom-words/${word.id}/edit'),
-            icon: Icons.edit_outlined,
+            icon: const Icon(AppIcons.edit),
           ),
           const SizedBox(width: 12),
         ],
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(AppTokens.s20),
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
+            AppCard(
+              padding: const EdgeInsets.all(AppTokens.s20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -68,7 +76,7 @@ class WordDetailScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    word.meaning,
+                    customWordMeaningFor(word, localeCode),
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
@@ -90,19 +98,27 @@ class WordDetailScreen extends ConsumerWidget {
               spacing: 8,
               runSpacing: 8,
               children: [
-                PillLabel(label: displayCustomTag(word.tag)),
-                PillLabel(
-                  label: displayDifficulty(word.difficulty),
-                  color: AppTheme.coral,
+                AppPill(
+                  label: displayCustomTag(word.tag, l10n: l10n),
+                  variant: PillVariant.neutral,
                 ),
-                PillLabel(
-                  label: '掌握 ${word.masteryLevel}/5',
-                  icon: Icons.psychology_outlined,
+                AppPill(
+                  label: displayDifficulty(word.difficulty, l10n: l10n),
+                  variant: _difficultyVariant(word.difficulty),
                 ),
-                PillLabel(
-                  label:
-                      '下次 ${formatRelativeDue(word.nextReviewAt, DateTime.now())}',
-                  icon: Icons.schedule_outlined,
+                AppPill(
+                  label: l10n.wordDetailMasteryLabel('${word.masteryLevel}'),
+                  variant: word.masteryLevel > 0
+                      ? PillVariant.success
+                      : PillVariant.neutral,
+                  icon: AppIcons.psychology,
+                ),
+                AppPill(
+                  label: l10n.wordDetailNextReview(
+                    formatRelativeDue(word.nextReviewAt, DateTime.now(), l10n),
+                  ),
+                  variant: PillVariant.neutral,
+                  icon: AppIcons.schedule,
                 ),
               ],
             ),
@@ -111,30 +127,32 @@ class WordDetailScreen extends ConsumerWidget {
             const SizedBox(height: 20),
             AiWordSupportLink(word: word.word),
             const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
+            AppCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('复习统计', style: Theme.of(context).textTheme.titleMedium),
+                  Text(
+                    l10n.wordDetailReviewStats,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                   const SizedBox(height: 10),
                   Row(
                     children: [
                       Expanded(
                         child: _StatLine(
-                          label: '记住',
+                          label: l10n.wordDetailStatRemembered,
                           value: '${word.correctCount}',
                         ),
                       ),
                       Expanded(
                         child: _StatLine(
-                          label: '没记住',
+                          label: l10n.wordDetailStatForgot,
                           value: '${word.wrongCount}',
                         ),
                       ),
                       Expanded(
                         child: _StatLine(
-                          label: '掌握度',
+                          label: l10n.wordDetailStatMastery,
                           value: '${word.masteryLevel}/5',
                         ),
                       ),
@@ -144,24 +162,38 @@ class WordDetailScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 20),
-            FilledButton.icon(
+            AppPrimaryButton(
               onPressed: canReview
                   ? () => _review(context, ref, word.id, isCorrect: true)
                   : null,
-              icon: const Icon(Icons.check_circle_outline),
-              label: const Text('标记为记住'),
+              icon: AppIcons.checkCircle,
+              label: l10n.wordDetailMarkRemembered,
             ),
-            OutlinedButton.icon(
+            const SizedBox(height: 12),
+            AppSecondaryButton(
               onPressed: canReview
                   ? () => _review(context, ref, word.id, isCorrect: false)
                   : null,
-              icon: const Icon(Icons.replay),
-              label: const Text('安排近期再练'),
+              icon: AppIcons.replay,
+              label: l10n.wordDetailScheduleSoon,
             ),
           ],
         ),
       ),
     );
+  }
+
+  PillVariant _difficultyVariant(String difficulty) {
+    switch (difficulty) {
+      case 'Hard':
+        return PillVariant.streak;
+      case 'Medium':
+        return PillVariant.primary;
+      case 'Easy':
+        return PillVariant.success;
+      default:
+        return PillVariant.neutral;
+    }
   }
 
   CustomWord? _find(WidgetRef ref) {
@@ -181,11 +213,13 @@ class WordDetailScreen extends ConsumerWidget {
         .read(appControllerProvider.notifier)
         .reviewWord(id, isCorrect);
     if (!context.mounted) return;
+    final l10n = AppLocalizations.of(context);
     final message = succeeded
         ? isCorrect
-              ? '已标记为记住'
-              : '已安排近期再练'
-        : ref.read(appControllerProvider).errorMessage ?? '暂时无法更新这张卡片';
+              ? l10n.wordDetailMarkedRemembered
+              : l10n.wordDetailScheduledSoon
+        : ref.read(appControllerProvider).errorMessage ??
+              l10n.wordDetailUpdateFailed;
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));

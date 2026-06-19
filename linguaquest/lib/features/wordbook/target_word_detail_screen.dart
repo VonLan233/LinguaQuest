@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:linguaquest/core/theme/app_icons.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
-import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
+import '../../core/utils/text_language.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/ai_word_support_link.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/pronunciation_controls.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/user_word.dart';
+import '../../l10n/generated/app_localizations.dart';
 import 'word_knowledge_sections.dart';
 
 class TargetWordDetailScreen extends ConsumerWidget {
@@ -21,10 +27,11 @@ class TargetWordDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
-    final detail = _find(state);
+    final detail = _find(state, l10n);
     if (detail == null) {
-      return const Scaffold(body: Center(child: Text('没有找到这个词')));
+      return Scaffold(body: Center(child: Text(l10n.wordbookWordNotFound)));
     }
     final word = detail.word;
     final lesson = _findLesson(state);
@@ -47,38 +54,50 @@ class TargetWordDetailScreen extends ConsumerWidget {
           child: Row(
             children: [
               Expanded(
-                child: OutlinedButton.icon(
+                child: AppSecondaryButton(
                   onPressed: () => _toggleFavorite(
                     context,
                     ref,
                     word,
                     wordBookId,
                     progress?.isFavorite ?? false,
+                    l10n,
                   ),
-                  icon: Icon(
-                    progress?.isFavorite == true
-                        ? Icons.star_rounded
-                        : Icons.star_outline_rounded,
-                  ),
-                  label: Text(progress?.isFavorite == true ? '已收藏' : '收藏'),
+                  label: progress?.isFavorite == true
+                      ? l10n.wordbookFavorited
+                      : l10n.wordbookFavorite,
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: FilledButton.icon(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: AppTokens.azure,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        AppTokens.radiusButton,
+                      ),
+                    ),
+                  ),
                   onPressed: () => _toggleNewWordbook(
                     context,
                     ref,
                     word,
                     wordBookId,
                     isInNewWordbook,
+                    l10n,
                   ),
                   icon: Icon(
                     isInNewWordbook
-                        ? Icons.check_circle_outline
-                        : Icons.add_circle_outline,
+                        ? AppIcons.checkCircle
+                        : AppIcons.addCircle,
                   ),
-                  label: Text(isInNewWordbook ? '移出生词本' : '加入生词本'),
+                  label: Text(
+                    isInNewWordbook
+                        ? l10n.wordbookRemoveCustomWord
+                        : l10n.wordbookAddToCustomWords,
+                  ),
                 ),
               ),
             ],
@@ -87,32 +106,47 @@ class TargetWordDetailScreen extends ConsumerWidget {
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 112),
+          padding: const EdgeInsets.fromLTRB(
+            AppTokens.s20,
+            AppTokens.s20,
+            AppTokens.s20,
+            112,
+          ),
           children: [
-            _WordHero(word: word, bookTitle: detail.book.title),
-            const SizedBox(height: 18),
-            _DefinitionSections(word: word),
-            const SizedBox(height: 18),
-            _ExampleSections(word: word),
-            const SizedBox(height: 18),
+            AppCard(
+              child: _WordHero(
+                word: word,
+                bookTitle: detail.book.nameFor(
+                  Localizations.localeOf(context).languageCode,
+                ),
+                l10n: l10n,
+              ),
+            ),
+            const SizedBox(height: AppTokens.s16),
+            AppCard(
+              child: _DefinitionSections(word: word, l10n: l10n),
+            ),
+            const SizedBox(height: AppTokens.s16),
+            AppCard(
+              child: _ExampleSections(word: word, l10n: l10n),
+            ),
+            const SizedBox(height: AppTokens.s16),
             WordKnowledgeSections(word: word),
-            const SizedBox(height: 22),
-            _WordTags(word: word, progress: progress),
-            const SizedBox(height: 22),
-            OutlinedButton.icon(
+            const SizedBox(height: AppTokens.s24),
+            _WordTags(word: word, progress: progress, l10n: l10n),
+            const SizedBox(height: AppTokens.s24),
+            AppSecondaryButton(
               onPressed: () => _toggleIgnored(
                 context,
                 ref,
                 word,
                 wordBookId,
                 progress?.isIgnored ?? false,
+                l10n,
               ),
-              icon: Icon(
-                progress?.isIgnored == true
-                    ? Icons.undo_rounded
-                    : Icons.block_outlined,
-              ),
-              label: Text(progress?.isIgnored == true ? '恢复学习' : '忽略太简单'),
+              label: progress?.isIgnored == true
+                  ? l10n.wordbookResumeLearning
+                  : l10n.wordbookIgnoreEasy,
             ),
             const SizedBox(height: 12),
             _AiWordSupportLink(word: word),
@@ -128,6 +162,7 @@ class TargetWordDetailScreen extends ConsumerWidget {
     Word word,
     String wordBookId,
     bool current,
+    AppLocalizations l10n,
   ) async {
     await _updateFlags(
       context,
@@ -135,7 +170,11 @@ class TargetWordDetailScreen extends ConsumerWidget {
       word,
       wordBookId,
       isFavorite: !current,
-      successMessage: current ? '已取消收藏' : '已收藏',
+      successMessage: current
+          ? l10n.wordbookFavoriteRemoved
+          : l10n.wordbookFavorited,
+      failureMessage: l10n.wordbookUpdateTargetFailed,
+      l10n: l10n,
     );
   }
 
@@ -145,6 +184,7 @@ class TargetWordDetailScreen extends ConsumerWidget {
     Word word,
     String wordBookId,
     bool current,
+    AppLocalizations l10n,
   ) async {
     await _updateFlags(
       context,
@@ -152,7 +192,11 @@ class TargetWordDetailScreen extends ConsumerWidget {
       word,
       wordBookId,
       isInNewWordbook: !current,
-      successMessage: current ? '已移出生词本' : '已加入生词本',
+      successMessage: current
+          ? l10n.wordbookRemovedFromCustomWords
+          : l10n.wordbookAddedToCustomWords,
+      failureMessage: l10n.wordbookUpdateTargetFailed,
+      l10n: l10n,
     );
   }
 
@@ -162,6 +206,7 @@ class TargetWordDetailScreen extends ConsumerWidget {
     Word word,
     String wordBookId,
     bool current,
+    AppLocalizations l10n,
   ) async {
     await _updateFlags(
       context,
@@ -169,7 +214,11 @@ class TargetWordDetailScreen extends ConsumerWidget {
       word,
       wordBookId,
       isIgnored: !current,
-      successMessage: current ? '已恢复学习' : '已忽略，后续不进入复习队列',
+      successMessage: current
+          ? l10n.wordbookLearningResumed
+          : l10n.wordbookIgnored,
+      failureMessage: l10n.wordbookUpdateTargetFailed,
+      l10n: l10n,
     );
   }
 
@@ -182,6 +231,8 @@ class TargetWordDetailScreen extends ConsumerWidget {
     bool? isInNewWordbook,
     bool? isIgnored,
     required String successMessage,
+    required String failureMessage,
+    required AppLocalizations l10n,
   }) async {
     final succeeded = await ref
         .read(appControllerProvider.notifier)
@@ -205,8 +256,13 @@ class TargetWordDetailScreen extends ConsumerWidget {
               meaning: word.meaning,
               exampleSentence: word.exampleSentence,
               note: '${word.definition}\n${word.exampleTranslation}',
-              tag: word.tags.isEmpty ? '目标词' : displayWordTag(word.tags.first),
+              tag: word.tags.isEmpty
+                  ? l10n.reviewCenterTargetWord
+                  : displayWordTag(word.tags.first, l10n: l10n),
               difficulty: word.difficulty,
+              definitions: word.definitions,
+              englishDefinitions: word.englishDefinitions,
+              malayDefinitions: word.malayDefinitions,
             );
       }
     } else if (succeeded && isInNewWordbook == false) {
@@ -224,7 +280,7 @@ class TargetWordDetailScreen extends ConsumerWidget {
     if (!context.mounted) return;
     final message = succeeded
         ? successMessage
-        : ref.read(appControllerProvider).errorMessage ?? '暂时无法更新目标词';
+        : ref.read(appControllerProvider).errorMessage ?? failureMessage;
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
@@ -238,7 +294,7 @@ class TargetWordDetailScreen extends ConsumerWidget {
     return null;
   }
 
-  _TargetWordDetail? _find(AppState state) {
+  _TargetWordDetail? _find(AppState state, AppLocalizations l10n) {
     final currentBook = state.currentWordBook;
     if (currentBook != null) {
       for (final word in currentBook.words) {
@@ -257,7 +313,7 @@ class TargetWordDetailScreen extends ConsumerWidget {
         if (word.id == wordId) {
           return _TargetWordDetail(
             word: word,
-            book: currentBook ?? _fallbackBook(word),
+            book: currentBook ?? _fallbackBook(word, l10n),
           );
         }
       }
@@ -274,10 +330,10 @@ class TargetWordDetailScreen extends ConsumerWidget {
     return null;
   }
 
-  WordBook _fallbackBook(Word word) {
+  WordBook _fallbackBook(Word word, AppLocalizations l10n) {
     return WordBook(
       id: 'unknown',
-      title: '当前词书',
+      title: l10n.wordbookCurrentPlan,
       category: 'exam',
       examType: '',
       coverUrl: '',
@@ -307,10 +363,15 @@ class _AiWordSupportLink extends StatelessWidget {
 }
 
 class _WordHero extends StatelessWidget {
-  const _WordHero({required this.word, required this.bookTitle});
+  const _WordHero({
+    required this.word,
+    required this.bookTitle,
+    required this.l10n,
+  });
 
   final Word word;
   final String bookTitle;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -335,15 +396,18 @@ class _WordHero extends StatelessWidget {
             spacing: 8,
             runSpacing: 8,
             children: [
-              PillLabel(label: word.partOfSpeech),
-              PillLabel(label: bookTitle, color: AppTheme.cyan),
-              const PillLabel(
-                label: '当前计划中',
-                icon: Icons.playlist_add_check_rounded,
-                color: AppTheme.cyan,
+              AppPill(label: word.partOfSpeech, variant: PillVariant.neutral),
+              AppPill(label: bookTitle, variant: PillVariant.neutral),
+              AppPill(
+                label: l10n.wordbookCurrentPlan,
+                icon: AppIcons.playlistAddCheck,
+                variant: PillVariant.primary,
               ),
               if (word.tags.isNotEmpty)
-                const PillLabel(label: '考试高频释义', color: AppTheme.coral),
+                AppPill(
+                  label: l10n.wordbookHighFrequencyDefinition,
+                  variant: PillVariant.primary,
+                ),
             ],
           ),
         ],
@@ -378,13 +442,28 @@ class _PhoneticLine extends StatelessWidget {
     final us = word.phoneticUS.trim();
     final fallback = word.phonetic.trim();
     if (uk.isEmpty && us.isEmpty && fallback.isEmpty) return const SizedBox();
+
+    // Chinese (HSK) words carry pinyin, not regional IPA — show it once,
+    // without the UK/US split.
+    if (containsCjkText(word.word)) {
+      final pinyin = uk.isNotEmpty
+          ? uk
+          : us.isNotEmpty
+          ? us
+          : fallback;
+      if (pinyin.isEmpty) return const SizedBox();
+      return Text(pinyin, textAlign: TextAlign.center);
+    }
+
     return Wrap(
       alignment: WrapAlignment.center,
       spacing: 10,
       runSpacing: 6,
       children: [
-        if (uk.isNotEmpty) Text('英 /$uk/'),
-        if (us.isNotEmpty) Text('美 /$us/'),
+        if (uk.isNotEmpty)
+          Text(AppLocalizations.of(context).wordbookUkPhonetic(uk)),
+        if (us.isNotEmpty)
+          Text(AppLocalizations.of(context).wordbookUsPhonetic(us)),
         if (uk.isEmpty && us.isEmpty) Text('/$fallback/'),
       ],
     );
@@ -392,9 +471,10 @@ class _PhoneticLine extends StatelessWidget {
 }
 
 class _DefinitionSections extends StatelessWidget {
-  const _DefinitionSections({required this.word});
+  const _DefinitionSections({required this.word, required this.l10n});
 
   final Word word;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -402,14 +482,60 @@ class _DefinitionSections extends StatelessWidget {
     final en = word.englishDefinitions.isEmpty
         ? [word.definition]
         : word.englishDefinitions;
+    final ms = word.malayDefinitions;
+
+    // Chinese (HSK) words: the "Chinese definitions" list duplicates the English
+    // meanings, so show only the English definitions.
+    if (containsCjkText(word.word)) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _DefinitionList(
+            title: l10n.wordbookEnglishDefinitions,
+            values: en,
+            highFrequency: true,
+            l10n: l10n,
+          ),
+          if (ms.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            _DefinitionList(
+              title: l10n.wordbookMalayDefinitions,
+              values: ms,
+              l10n: l10n,
+            ),
+          ],
+        ],
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('中英释义', style: Theme.of(context).textTheme.titleLarge),
+        Text(
+          l10n.wordbookBilingualDefinitions,
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
         const SizedBox(height: 12),
-        _DefinitionList(title: '中文释义', values: cn, highFrequency: true),
+        _DefinitionList(
+          title: l10n.wordbookChineseDefinitions,
+          values: cn,
+          highFrequency: true,
+          l10n: l10n,
+        ),
         const SizedBox(height: 12),
-        _DefinitionList(title: '英文释义', values: en),
+        _DefinitionList(
+          title: l10n.wordbookEnglishDefinitions,
+          values: en,
+          l10n: l10n,
+        ),
+        if (ms.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          _DefinitionList(
+            title: l10n.wordbookMalayDefinitions,
+            values: ms,
+            l10n: l10n,
+          ),
+        ],
       ],
     );
   }
@@ -419,11 +545,13 @@ class _DefinitionList extends StatelessWidget {
   const _DefinitionList({
     required this.title,
     required this.values,
+    required this.l10n,
     this.highFrequency = false,
   });
 
   final String title;
   final List<String> values;
+  final AppLocalizations l10n;
   final bool highFrequency;
 
   @override
@@ -441,7 +569,10 @@ class _DefinitionList extends StatelessWidget {
             Text(title, style: theme.textTheme.titleMedium),
             if (highFrequency) ...[
               const SizedBox(width: 8),
-              const PillLabel(label: '高频', color: AppTheme.coral),
+              AppPill(
+                label: l10n.wordbookHighFrequency,
+                variant: PillVariant.primary,
+              ),
             ],
           ],
         ),
@@ -457,21 +588,27 @@ class _DefinitionList extends StatelessWidget {
 }
 
 class _ExampleSections extends StatelessWidget {
-  const _ExampleSections({required this.word});
+  const _ExampleSections({required this.word, required this.l10n});
 
   final Word word;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
     final examples = word.examples.isEmpty
         ? [WordExample(en: word.exampleSentence, cn: word.exampleTranslation)]
         : word.examples;
-    final cleanExamples = examples.where((item) => item.en.trim().isNotEmpty).toList();
+    final cleanExamples = examples
+        .where((item) => item.en.trim().isNotEmpty)
+        .toList();
     if (cleanExamples.isEmpty) return const SizedBox();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('语境例句', style: Theme.of(context).textTheme.titleLarge),
+        Text(
+          l10n.wordbookContextExamples,
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
         const SizedBox(height: 10),
         for (final example in cleanExamples.take(3))
           Padding(
@@ -479,7 +616,7 @@ class _ExampleSections extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.format_quote, color: AppTheme.coral),
+                const Icon(AppIcons.formatQuote, color: AppTokens.coral),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -509,10 +646,15 @@ class _ExampleSections extends StatelessWidget {
 }
 
 class _WordTags extends StatelessWidget {
-  const _WordTags({required this.word, required this.progress});
+  const _WordTags({
+    required this.word,
+    required this.progress,
+    required this.l10n,
+  });
 
   final Word word;
   final UserWord? progress;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -521,19 +663,26 @@ class _WordTags extends StatelessWidget {
       runSpacing: 8,
       children: [
         if (progress != null) ...[
-          PillLabel(
-            label: displayWordStatus(progress!.status),
-            icon: Icons.psychology_outlined,
-            color: AppTheme.mango,
+          AppPill(
+            label: displayWordStatus(progress!.status, l10n: l10n),
+            icon: AppIcons.psychology,
+            variant: PillVariant.success,
           ),
-          PillLabel(label: '掌握 ${progress!.masteryLevel}/5'),
+          AppPill(
+            label: l10n.wordbookMasteryLevel(progress!.masteryLevel),
+            variant: PillVariant.neutral,
+          ),
         ],
-        PillLabel(label: word.partOfSpeech),
-        PillLabel(
-          label: displayDifficulty(word.difficulty),
-          color: AppTheme.coral,
+        AppPill(label: word.partOfSpeech, variant: PillVariant.neutral),
+        AppPill(
+          label: displayDifficulty(word.difficulty, l10n: l10n),
+          variant: PillVariant.primary,
         ),
-        for (final tag in word.tags) PillLabel(label: displayWordTag(tag)),
+        for (final tag in word.tags)
+          AppPill(
+            label: displayWordTag(tag, l10n: l10n),
+            variant: PillVariant.neutral,
+          ),
       ],
     );
   }

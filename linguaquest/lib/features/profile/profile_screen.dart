@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
 import '../../core/utils/ui_labels.dart';
-import '../../core/widgets/brand_mark.dart';
-import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
+import '../../core/widgets/mascot_empty_state.dart';
+import '../../core/widgets/mascot_image.dart';
+import '../../core/widgets/progress_ring.dart';
 import '../../core/widgets/section_header.dart';
+import '../../core/widgets/stat_tile.dart';
+import '../../core/widgets/target_language_picker.dart';
+import '../../data/models/lottery.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 int newWordbookCount(AppState state) => state.customWords.length;
 
@@ -17,175 +27,146 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final user = state.user;
-    final completedPlans = state.learningPathProgress >= 1 ? 1 : 0;
     final reviewWords = state.reviewWords;
     final masteredWords = reviewWords
         .where((word) => word.masteryLevel >= 4 || word.status == 'Mastered')
         .length;
-    final totalAttempts = reviewWords.fold<int>(
-      0,
-      (total, word) => total + word.correctCount + word.wrongCount,
-    );
-    final correctAttempts = reviewWords.fold<int>(
-      0,
-      (total, word) => total + word.correctCount,
-    );
-    final averageAccuracy = totalAttempts == 0
-        ? 0
-        : (correctAttempts / totalAttempts * 100).round();
-    final weakestWord = state.weakWords.isEmpty ? null : state.weakWords.first;
+
     return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
+      key: const ValueKey('profileDashboard'),
+      padding: const EdgeInsets.fromLTRB(
+        AppTokens.s20,
+        AppTokens.s20,
+        AppTokens.s20,
+        88,
+      ),
       children: [
-        _ProfileIdentityHeader(
-          name: user?.name ?? '学习者',
-          email: user?.email ?? '未设置邮箱',
-          target: displayTarget(user?.targetExam),
-          level: displayLevel(user?.level),
+        // Hero: mascot avatar + name/email/target·level + XP/streak pills.
+        _ProfileHeader(
+          name: displayUserName(user, l10n: l10n),
+          email: user?.email ?? l10n.profileNoEmail,
+          target: displayTarget(user?.targetExam, l10n: l10n),
+          level: displayLevel(user?.level, l10n: l10n),
           xp: user?.xp ?? 0,
           streak: user?.streak ?? 0,
+          l10n: l10n,
         ),
-        const SizedBox(height: 20),
-        const SectionHeader(title: '学习仪表盘', subtitle: '把关键进度放在一屏内，设置入口放到后面。'),
-        const SizedBox(height: 12),
-        _ProfileScoreboard(
-          stats: [
-            _ProfileStatData(
-              label: '已学单词',
-              value: '${state.completedLearningWords}',
-              icon: Icons.school_outlined,
-              color: AppTheme.teal,
+        const SizedBox(height: AppTokens.s32),
+        // Key stats in a clean row.
+        _ProfileStatsRow(
+          learned: state.completedLearningWords,
+          mastered: masteredWords,
+          streak: user?.streak ?? 0,
+          l10n: l10n,
+        ),
+        const SizedBox(height: AppTokens.s32),
+        // Progress card.
+        if (state.totalLearningWords > 0) ...[
+          _ProfileProgressCard(
+            progress: state.learningPathProgress,
+            completedWords: state.completedLearningWords,
+            totalWords: state.totalLearningWords,
+            l10n: l10n,
+          ),
+          const SizedBox(height: AppTokens.s32),
+        ],
+        // Settings group: study plan / wordbook / custom words / mistake book.
+        _SettingsGroup(
+          children: [
+            _SettingsItem(
+              icon: AppIcons.flag,
+              title: l10n.profilePlanLabel,
+              value: displayWordbookTitle(
+                state.currentStudyBook.id,
+                l10n: l10n,
+              ),
+              onTap: () => context.push('/settings/study-plan'),
             ),
-            _ProfileStatData(
-              label: '已掌握',
-              value: '$masteredWords',
-              icon: Icons.verified_outlined,
-              color: AppTheme.success,
+            _SettingsItem(
+              icon: AppIcons.menuBook,
+              title: l10n.commonWordbook,
+              value: '${state.totalLearningWords} ${l10n.commonWords}',
+              onTap: () => context.push('/wordbook'),
             ),
-            _ProfileStatData(
-              label: '生词本',
+            _SettingsItem(
+              icon: AppIcons.style,
+              title: l10n.commonCustomWords,
               value: '${newWordbookCount(state)}',
-              icon: Icons.style_outlined,
-              color: AppTheme.cyan,
+              onTap: () => context.push('/custom-words'),
             ),
-            _ProfileStatData(
-              label: '平均正确率',
-              value: '$averageAccuracy%',
-              icon: Icons.percent_outlined,
-              color: AppTheme.mango,
-            ),
-            _ProfileStatData(
-              label: '完成计划',
-              value: '$completedPlans',
-              icon: Icons.flag_outlined,
-              color: AppTheme.teal,
-            ),
-            _ProfileStatData(
-              label: '连续打卡',
-              value: '${user?.streak ?? 0} 天',
-              icon: Icons.local_fire_department,
-              color: AppTheme.coral,
+            _SettingsItem(
+              icon: AppIcons.warningAmber,
+              title: l10n.commonMistakeBook,
+              value: '${state.weakWords.length}',
+              onTap: () => context.push('/mistake-book'),
             ),
           ],
         ),
-        const SizedBox(height: 22),
-        _ProfileProgressSummary(
-          progress: state.learningPathProgress,
-          completedWords: state.completedLearningWords,
-          totalWords: state.totalLearningWords,
-          todayLessons: state.todayCompletedFormalLessonIds.length,
-          todayReviews: state.todayReviewWordIds.length,
+        const SizedBox(height: AppTokens.s16),
+        _SettingsGroup(
+          children: [
+            _SettingsItem(
+              icon: AppIcons.notifications,
+              title: l10n.commonDailyReminder,
+              value: state.reminderSettings.enabled
+                  ? state.reminderSettings.formattedTime
+                  : l10n.settingsReminderOff,
+              onTap: () => context.push('/settings/reminder'),
+            ),
+            _LanguageSettingsItem(
+              targetLanguage: state.targetLanguage,
+              onChanged: (code) => ref
+                  .read(appControllerProvider.notifier)
+                  .updateTargetLanguage(code),
+            ),
+          ],
         ),
-        const SizedBox(height: 22),
-        _WeaknessStatusLine(
-          text: weakestWord == null
-              ? '弱项分析：暂无常错词，继续完成学习和复习后会生成。'
-              : '最常错词：${weakestWord.word} · ${weakestWord.wrongCount} 次错误 · ${displayWordStatus(weakestWord.status)}',
+        const SizedBox(height: AppTokens.s16),
+        _SettingsGroup(
+          children: [
+            _SettingsItem(
+              icon: AppIcons.help,
+              title: l10n.profileHelpTitle,
+              onTap: () => context.push('/help'),
+            ),
+            _SettingsItem(
+              icon: AppIcons.info,
+              title: l10n.profileAboutTitle,
+              onTap: () => context.push('/about'),
+            ),
+          ],
         ),
-        const SizedBox(height: 22),
-        if (state.studyPlan != null) ...[
-          _LearningPlanLine(
-            wordBookName: state.currentStudyBook.name,
-            dailyNewTarget: state.studyPlan!.dailyNewTarget,
-            dailyReviewLimit: state.studyPlan!.dailyReviewLimit,
-            status: state.studyPlan!.status,
-          ),
-          const SizedBox(height: 22),
-        ],
-        const SectionHeader(title: '设置与支持'),
-        const SizedBox(height: 10),
-        _ProfileAction(
-          icon: Icons.flag_outlined,
-          title: '学习计划',
-          subtitle: state.currentStudyBook.name,
-          route: '/settings/study-plan',
+        const SizedBox(height: AppTokens.s32),
+        SectionHeader(
+          title: l10n.profileAssetsTitle,
         ),
-        const _ProfileAction(
-          icon: Icons.menu_book_outlined,
-          title: '单词本',
-          subtitle: '当前词书与目标词汇',
-          route: '/wordbook',
-        ),
-        const _ProfileAction(
-          icon: Icons.style_outlined,
-          title: '生词本',
-          subtitle: '收藏的单词与个人词汇卡片',
-          route: '/custom-words',
-        ),
-        const _ProfileAction(
-          icon: Icons.warning_amber_outlined,
-          title: '错题本',
-          subtitle: '课程错词与弱项词',
-          route: '/mistake-book',
-        ),
-        const _ProfileAction(
-          icon: Icons.notifications_outlined,
-          title: '每日提醒',
-          subtitle: '选择提醒时间和开启状态',
-          route: '/settings/reminder',
-        ),
-        const _ProfileAction(
-          icon: Icons.dark_mode_outlined,
-          title: '深色模式',
-          subtitle: '跟随系统、浅色或深色主题',
-          route: '/settings/theme',
-        ),
-        const _ProfileAction(
-          icon: Icons.help_outline,
-          title: '帮助与反馈',
-          subtitle: '常见问题和支持入口',
-          route: '/help',
-        ),
-        const _ProfileAction(
-          icon: Icons.info_outline,
-          title: '关于我们',
-          subtitle: 'LinguaQuest 产品愿景与版本 1.0.0',
-          route: '/about',
-        ),
-        const SizedBox(height: 20),
-        OutlinedButton.icon(
+        const SizedBox(height: AppTokens.s12),
+        _AssetInventory(assets: state.userAssets),
+        const SizedBox(height: AppTokens.s32),
+        AppSecondaryButton(
+          label: l10n.profileLogout,
           onPressed: () async {
             await ref.read(appControllerProvider.notifier).logout();
             if (context.mounted) context.go('/onboarding');
           },
-          icon: const Icon(Icons.logout),
-          label: const Text('退出登录'),
         ),
       ],
     );
   }
 }
 
-class _ProfileIdentityHeader extends StatelessWidget {
-  const _ProfileIdentityHeader({
+class _ProfileHeader extends StatelessWidget {
+  const _ProfileHeader({
     required this.name,
     required this.email,
     required this.target,
     required this.level,
     required this.xp,
     required this.streak,
+    required this.l10n,
   });
 
   final String name;
@@ -194,242 +175,384 @@ class _ProfileIdentityHeader extends StatelessWidget {
   final String level;
   final int xp;
   final int streak;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const BrandMark(size: 60),
-        const SizedBox(width: 14),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(name, style: theme.textTheme.headlineSmall),
-              const SizedBox(height: 3),
-              Text(
-                '$email · $target · $level',
-                style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
-              ),
-              const SizedBox(height: 10),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  PillLabel(
-                    label: '$xp XP',
-                    icon: Icons.bolt,
-                    color: AppTheme.mango,
-                  ),
-                  PillLabel(
-                    label: '$streak 天连续',
-                    icon: Icons.local_fire_department,
-                    color: AppTheme.coral,
-                  ),
-                ],
-              ),
-            ],
-          ),
+    return AppCard(
+      padding: EdgeInsets.zero,
+      child: Container(
+        padding: const EdgeInsets.all(AppTokens.s24),
+        decoration: BoxDecoration(
+          color: AppTokens.brandNavy,
+          borderRadius: BorderRadius.circular(AppTokens.radiusCard),
         ),
-      ],
-    );
-  }
-}
-
-class _ProfileScoreboard extends StatelessWidget {
-  const _ProfileScoreboard({required this.stats});
-
-  final List<_ProfileStatData> stats;
-
-  @override
-  Widget build(BuildContext context) {
-    final rows = <Widget>[];
-    for (var index = 0; index < stats.length; index += 2) {
-      rows.add(
-        Row(
+        child: Column(
           children: [
-            Expanded(child: _ProfileStatLine(data: stats[index])),
-            const SizedBox(width: 14),
-            Expanded(
-              child: index + 1 < stats.length
-                  ? _ProfileStatLine(data: stats[index + 1])
-                  : const SizedBox.shrink(),
+            const MascotImage(size: 72),
+            const SizedBox(height: AppTokens.s16),
+            Text(
+              name,
+              style: theme.textTheme.headlineSmall?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            const SizedBox(height: AppTokens.s8),
+            Text(
+              email,
+              style: const TextStyle(color: Colors.white70, fontSize: 15),
+            ),
+            const SizedBox(height: AppTokens.s4),
+            Text(
+              '$target · $level',
+              style: const TextStyle(color: Colors.white70, fontSize: 13),
+            ),
+            const SizedBox(height: AppTokens.s12),
+            Wrap(
+              spacing: AppTokens.s12,
+              runSpacing: AppTokens.s12,
+              alignment: WrapAlignment.center,
+              children: [
+                AppPill(
+                  label: '$xp ${l10n.commonXP}',
+                  variant: PillVariant.xp,
+                  icon: AppIcons.bolt,
+                ),
+                AppPill(
+                  label: '$streak ${l10n.profileStreakDays}',
+                  variant: PillVariant.streak,
+                  icon: AppIcons.localFireDepartment,
+                ),
+              ],
             ),
           ],
         ),
-      );
-      if (index + 2 < stats.length) {
-        rows.add(
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Divider(
-              height: 1,
-              color: Theme.of(
-                context,
-              ).colorScheme.outlineVariant.withValues(alpha: 0.7),
-            ),
-          ),
-        );
-      }
-    }
-
-    return Column(children: rows);
-  }
-}
-
-class _ProfileStatLine extends StatelessWidget {
-  const _ProfileStatLine({required this.data});
-
-  final _ProfileStatData data;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Row(
-      children: [
-        IconCueBadge(icon: data.icon, color: data.color, size: 36),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                data.value,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.titleMedium,
-              ),
-              const SizedBox(height: 1),
-              Text(
-                data.label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
-              ),
-            ],
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
 
-class _ProfileStatData {
-  const _ProfileStatData({
-    required this.label,
-    required this.value,
-    required this.icon,
-    required this.color,
+class _ProfileStatsRow extends StatelessWidget {
+  const _ProfileStatsRow({
+    required this.learned,
+    required this.mastered,
+    required this.streak,
+    required this.l10n,
   });
 
-  final String label;
-  final String value;
-  final IconData icon;
-  final Color color;
+  final int learned;
+  final int mastered;
+  final int streak;
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: StatTile(
+              value: '$learned',
+              label: l10n.profileLearnedWords,
+              accent: AppTheme.teal,
+            ),
+          ),
+          const SizedBox(width: AppTokens.s8),
+          Expanded(
+            child: StatTile(
+              value: '$mastered',
+              label: l10n.profileMasteredWords,
+              accent: AppTheme.success,
+            ),
+          ),
+          const SizedBox(width: AppTokens.s8),
+          Expanded(
+            child: StatTile(
+              value: '$streak',
+              label: l10n.onboardingTagPillStreak,
+              accent: AppTheme.coral,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
-class _ProfileProgressSummary extends StatelessWidget {
-  const _ProfileProgressSummary({
+class _ProfileProgressCard extends StatelessWidget {
+  const _ProfileProgressCard({
     required this.progress,
     required this.completedWords,
     required this.totalWords,
-    required this.todayLessons,
-    required this.todayReviews,
+    required this.l10n,
   });
 
   final double progress;
   final int completedWords;
   final int totalWords;
-  final int todayLessons;
-  final int todayReviews;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('当前词书进度', style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 12),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(999),
-          child: LinearProgressIndicator(
-            value: progress,
-            minHeight: 12,
-            backgroundColor: AppTheme.progressTrack(context),
-            valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.teal),
-          ),
-        ),
-        const SizedBox(height: 10),
-        Text(
-          '$completedWords/$totalWords 词 · 今日学习 $todayLessons 课 · 今日复习 $todayReviews 词',
-        ),
-      ],
-    );
-  }
-}
-
-class _WeaknessStatusLine extends StatelessWidget {
-  const _WeaknessStatusLine({required this.text});
-
-  final String text;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        IconCueBadge(
-          icon: Icons.analytics_outlined,
-          color: theme.colorScheme.primary,
-          size: 38,
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            text,
-            style: TextStyle(
-              color: theme.colorScheme.onSurfaceVariant,
-              height: 1.42,
+    final percent = (progress.clamp(0.0, 1.0) * 100).round();
+    return AppCard(
+      child: Row(
+        children: [
+          ProgressRing(
+            progress: progress,
+            color: AppTheme.success,
+            centerLabel: '$percent%',
+          ),
+          const SizedBox(width: AppTokens.s16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.profileCurrentBookProgress,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: AppTokens.s8),
+                Text(
+                  '$completedWords / $totalWords ${l10n.commonWords}',
+                  style: TextStyle(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    fontSize: 13,
+                  ),
+                ),
+              ],
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
 
-class _LearningPlanLine extends StatelessWidget {
-  const _LearningPlanLine({
-    required this.wordBookName,
-    required this.dailyNewTarget,
-    required this.dailyReviewLimit,
-    required this.status,
+class _SettingsGroup extends StatelessWidget {
+  const _SettingsGroup({required this.children});
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      padding: EdgeInsets.zero,
+      child: Column(
+        children: [
+          for (var i = 0; i < children.length; i++) ...[
+            children[i],
+            if (i < children.length - 1)
+              const Divider(
+                height: 0.5,
+                thickness: 0.5,
+                indent: 56,
+                color: AppTokens.hairline,
+              ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _SettingsItem extends StatelessWidget {
+  const _SettingsItem({
+    required this.icon,
+    required this.title,
+    this.value,
+    required this.onTap,
   });
 
-  final String wordBookName;
-  final int dailyNewTarget;
-  final int dailyReviewLimit;
-  final String status;
+  final IconData icon;
+  final String title;
+  final String? value;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppTokens.s16,
+            vertical: AppTokens.s12,
+          ),
+          child: Row(
+            children: [
+              Icon(icon, color: theme.colorScheme.primary, size: 22),
+              const SizedBox(width: AppTokens.s16),
+              Expanded(child: Text(title, style: theme.textTheme.bodyMedium)),
+              if (value != null)
+                Text(
+                  value!,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              const SizedBox(width: AppTokens.s4),
+              Icon(
+                AppIcons.chevronRight,
+                color: theme.colorScheme.onSurfaceVariant,
+                size: 20,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _LanguageSettingsItem extends StatelessWidget {
+  const _LanguageSettingsItem({
+    required this.targetLanguage,
+    required this.onChanged,
+  });
+
+  final String targetLanguage;
+  final ValueChanged<String> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () => showTargetLanguageSheet(
+          context,
+          targetLanguage: targetLanguage,
+          onChanged: onChanged,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppTokens.s16,
+            vertical: AppTokens.s12,
+          ),
+          child: Row(
+            children: [
+              Icon(
+                AppIcons.language,
+                color: theme.colorScheme.primary,
+                size: 22,
+              ),
+              const SizedBox(width: AppTokens.s16),
+              Expanded(
+                child: Text(
+                  'Target Language',
+                  style: theme.textTheme.bodyMedium,
+                ),
+              ),
+              Text(
+                targetLanguageLabel(targetLanguage),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(width: AppTokens.s4),
+              Icon(
+                AppIcons.chevronRight,
+                color: theme.colorScheme.onSurfaceVariant,
+                size: 20,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AssetInventory extends StatelessWidget {
+  const _AssetInventory({required this.assets});
+
+  final List<UserAsset> assets;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    if (assets.isEmpty) {
+      return AppCard(
+        child: MascotEmptyState(
+          title: l10n.profileAssetsEmpty,
+        ),
+      );
+    }
+    return AppCard(
+      child: Column(
+        children: [
+          for (var index = 0; index < assets.length; index++) ...[
+            _AssetRow(asset: assets[index]),
+            if (index != assets.length - 1)
+              const Divider(
+                height: AppTokens.s16,
+                thickness: 0.5,
+                color: AppTokens.hairline,
+              ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _AssetRow extends StatelessWidget {
+  const _AssetRow({required this.asset});
+
+  final UserAsset asset;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(Icons.event_available_outlined, color: theme.colorScheme.primary),
-        const SizedBox(width: 12),
+        Container(
+          width: 38,
+          height: 38,
+          decoration: BoxDecoration(
+            color: _assetColor(asset.rarity).withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
+          ),
+          alignment: Alignment.center,
+          child: Icon(
+            _assetIcon(asset.category),
+            color: _assetColor(asset.rarity),
+            size: 20,
+          ),
+        ),
+        const SizedBox(width: AppTokens.s12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('学习计划', style: theme.textTheme.titleMedium),
+              Text(asset.name, style: theme.textTheme.titleMedium),
               const SizedBox(height: 2),
               Text(
-                '$wordBookName · 新学 $dailyNewTarget · 复习上限 $dailyReviewLimit · ${status == 'paused' ? '已暂停' : '进行中'}',
+                l10n.profileAssetMeta(
+                  displayLotteryCategory(asset.category, l10n: l10n),
+                  asset.quantity,
+                  asset.totalFragments,
+                ),
+                style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                asset.description,
                 style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
               ),
             ],
@@ -438,59 +561,34 @@ class _LearningPlanLine extends StatelessWidget {
       ],
     );
   }
-}
 
-class _ProfileAction extends StatelessWidget {
-  const _ProfileAction({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.route,
-  });
+  IconData _assetIcon(String category) {
+    switch (category) {
+      case 'avatarFrame':
+        return AppIcons.accountCircle;
+      case 'profileBackground':
+        return AppIcons.wallpaper;
+      case 'badge':
+        return AppIcons.workspacePremium;
+      case 'title':
+        return AppIcons.militaryTech;
+      case 'cardSkin':
+        return AppIcons.style;
+      default:
+        return AppIcons.autoAwesome;
+    }
+  }
 
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final String route;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: () => context.push(route),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6),
-            child: Row(
-              children: [
-                IconCueBadge(icon: icon, color: theme.colorScheme.primary),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(title, style: theme.textTheme.titleMedium),
-                      const SizedBox(height: 3),
-                      Text(
-                        subtitle,
-                        style: TextStyle(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const Icon(Icons.chevron_right_rounded),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+  Color _assetColor(String rarity) {
+    switch (rarity) {
+      case 'rare':
+        return AppTheme.coral;
+      case 'uncommon':
+        return AppTheme.teal;
+      case 'common':
+        return AppTheme.cyan;
+      default:
+        return AppTheme.mango;
+    }
   }
 }

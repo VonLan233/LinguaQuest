@@ -1,53 +1,126 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 
+import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_card.dart';
 import '../../core/widgets/fallback_back_button.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final infos = <(IconData, Color, String, String)>[
+      (
+        AppIcons.flag,
+        AppTokens.azure,
+        l10n.aboutGoalTitle,
+        l10n.aboutGoalSubtitle,
+      ),
+      (
+        AppIcons.groups,
+        AppTokens.successColor(context),
+        l10n.aboutTeamTitle,
+        l10n.aboutTeamSubtitle,
+      ),
+      (
+        AppIcons.extension,
+        AppTokens.mangoColor(context),
+        l10n.aboutCoreTitle,
+        l10n.aboutCoreSubtitle,
+      ),
+      (
+        AppIcons.privacyTip,
+        AppTokens.coralColor(context),
+        l10n.aboutPrivacyTitle,
+        l10n.aboutPrivacySubtitle,
+      ),
+    ];
+
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/profile'),
-        title: const Text('关于我们'),
+        title: Text(l10n.profileAboutTitle),
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(AppTokens.s20),
           children: [
-            Text(
-              'LinguaQuest',
-              style: Theme.of(
-                context,
-              ).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w900),
+            AppCard(
+              padding: EdgeInsets.zero,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(AppTokens.s20),
+                decoration: BoxDecoration(
+                  color: AppTokens.brandNavy,
+                  borderRadius: BorderRadius.circular(AppTokens.radiusCard),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'LinguaQuest',
+                      style: theme.textTheme.displaySmall?.copyWith(
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: AppTokens.s8),
+                    Text(
+                      l10n.aboutVersion,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            const SizedBox(height: 8),
-            const Text('词境星球 · 版本 1.0.0'),
-            const SizedBox(height: 20),
-            const Text(
-              'LinguaQuest 将图像词卡、学习路径、间隔复习、XP、连续打卡和个人生词卡整合到一个移动优先的英语学习应用中。',
+            const SizedBox(height: AppTokens.s20),
+            AppCard(
+              padding: const EdgeInsets.all(AppTokens.s20),
+              child: Text(l10n.aboutIntro, style: theme.textTheme.bodyMedium),
             ),
-            const SizedBox(height: 20),
-            const ListTile(
-              leading: Icon(Icons.flag_outlined),
-              title: Text('项目目标'),
-              subtitle: Text('通过短课节、错题修复和可见进度，帮助学习者建立每日英语学习习惯。'),
-            ),
-            const ListTile(
-              leading: Icon(Icons.groups_outlined),
-              title: Text('开发团队'),
-              subtitle: Text('ASM2 Mobile 团队。专注移动优先的英语学习体验。'),
-            ),
-            const ListTile(
-              leading: Icon(Icons.extension_outlined),
-              title: Text('核心体验'),
-              subtitle: Text('目标规划、视觉词汇、测验练习、复习排程和个人词卡。'),
-            ),
-            const ListTile(
-              leading: Icon(Icons.privacy_tip_outlined),
-              title: Text('隐私'),
-              subtitle: Text('生词本和学习记录仅归属于当前登录用户。'),
+            const SizedBox(height: AppTokens.s16),
+            AppCard(
+              padding: const EdgeInsets.all(AppTokens.s16),
+              child: Column(
+                children: [
+                  for (var i = 0; i < infos.length; i++) ...[
+                    if (i > 0) const SizedBox(height: AppTokens.s16),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(infos[i].$1, color: infos[i].$2),
+                        const SizedBox(width: AppTokens.s12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                infos[i].$3,
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(height: AppTokens.s4),
+                              Text(
+                                infos[i].$4,
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
             ),
           ],
         ),

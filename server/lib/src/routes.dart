@@ -1,23 +1,110 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
+import 'dart:typed_data';
 
+import 'package:http/http.dart' as http;
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
 import 'auth.dart';
 import 'config.dart';
 import 'database.dart';
+import 'email_sender.dart';
 import 'json_response.dart';
 import 'lesson_catalog.dart';
+import 'lottery_policy.dart';
 import 'notification_policy.dart';
+import 'reward_policy.dart';
+import 'reward_task_policy.dart';
 import 'study_plan_policy.dart';
 
-Router buildRouter(AppConfig config, AppDatabase database) {
+final _httpClient = http.Client();
+
+Router buildRouter(
+  AppConfig config,
+  AppDatabase database, {
+  http.Client? httpClient,
+  EmailSender? emailSender,
+}) {
+  final client = httpClient ?? _httpClient;
+  final mailer = emailSender ?? EmailSender.fromConfig(config);
   final router = Router();
 
   router.get('/health', (Request request) {
     return jsonResponse({'status': 'ok'});
+  });
+
+  router.get('/tts', (Request request) async {
+    final word = request.url.queryParameters['word']?.trim() ?? '';
+    final type = request.url.queryParameters['type']?.trim() ?? '1';
+    if (word.isEmpty || word.length > 100) {
+      return jsonResponse({
+        'error': 'word is required and must be under 100 characters',
+      }, status: 400);
+    }
+    if (type != '1' && type != '2') {
+      return jsonResponse({
+        'error': 'type must be 1 (UK) or 2 (US)',
+      }, status: 400);
+    }
+    try {
+      final uri = Uri.https('dict.youdao.com', '/dictvoice', {
+        'audio': word,
+        'type': type,
+      });
+      final streamedResponse = await client
+          .send(http.Request('GET', uri))
+          .timeout(const Duration(seconds: 5));
+      if (streamedResponse.statusCode != 200) {
+        await streamedResponse.stream.listen((_) {}).cancel();
+        return jsonResponse({'error': 'tts unavailable'}, status: 502);
+      }
+      final contentLength = streamedResponse.contentLength;
+      if (contentLength != null && contentLength > 5 * 1024 * 1024) {
+        await streamedResponse.stream.listen((_) {}).cancel();
+        return jsonResponse({'error': 'tts response too large'}, status: 502);
+      }
+      final contentType =
+          (streamedResponse.headers['content-type'] ??
+                  streamedResponse.headers['Content-Type'] ??
+                  'audio/mpeg')
+              .toLowerCase();
+      if (!contentType.startsWith('audio/')) {
+        await streamedResponse.stream.listen((_) {}).cancel();
+        return jsonResponse({'error': 'tts unavailable'}, status: 502);
+      }
+      final bytesBuilder = BytesBuilder();
+      var totalBytes = 0;
+      const maxBytes = 5 * 1024 * 1024;
+      await for (final chunk in streamedResponse.stream.timeout(
+        const Duration(seconds: 5),
+      )) {
+        totalBytes += chunk.length;
+        if (totalBytes > maxBytes) {
+          return jsonResponse({
+            'error': 'tts response invalid or too large',
+          }, status: 502);
+        }
+        bytesBuilder.add(chunk);
+      }
+      final bytes = bytesBuilder.takeBytes();
+      if (bytes.isEmpty) {
+        return jsonResponse({
+          'error': 'tts response invalid or too large',
+        }, status: 502);
+      }
+      return Response.ok(
+        bytes,
+        headers: {
+          'Content-Type': contentType,
+          'Cache-Control': 'public, max-age=86400',
+        },
+      );
+    } catch (e, stackTrace) {
+      stderr.writeln('TTS proxy error: $e\n$stackTrace');
+      return jsonResponse({'error': 'tts unavailable'}, status: 502);
+    }
   });
 
   router.get('/lessons', (Request request) {
@@ -68,7 +155,7 @@ Router buildRouter(AppConfig config, AppDatabase database) {
     final email = (body['email'] as String? ?? '').trim().toLowerCase();
     final password = body['password'] as String? ?? '';
     final name = (body['name'] as String? ?? '').trim();
-    if (email.isEmpty || password.length < 6 || name.isEmpty) {
+    if (name.isEmpty || !isValidEmail(email) || password.length < 6) {
       return jsonResponse({
         'error': 'name, valid email, and 6+ character password are required',
       }, status: 400);
@@ -85,11 +172,48 @@ Router buildRouter(AppConfig config, AppDatabase database) {
       passwordSalt: salt,
       name: name,
     );
-    final user = await database.userById(uid);
+    await _issueAndSendCode(config, database, mailer, uid: uid, email: email);
+    return jsonResponse(
+      {'status': 'verification_required', 'email': email},
+      status: 202,
+    );
+  });
+
+  router.post('/auth/verify', (Request request) async {
+    final body = await readJsonMap(request);
+    final email = (body['email'] as String? ?? '').trim().toLowerCase();
+    final code = (body['code'] as String? ?? '').trim();
+    final user = await database.userByEmail(email);
+    if (user == null) {
+      return jsonResponse({'error': 'invalid_code'}, status: 400);
+    }
+    final uid = user['id'] as String;
+    if (user['email_verified'] == true) {
+      return jsonResponse({
+        'token': issueToken(config, uid: uid, email: email),
+        'user': userDto(user),
+      });
+    }
+    final row = await database.verificationCodeFor(uid);
+    if (row == null ||
+        (row['expires_at'] as DateTime).isBefore(DateTime.now().toUtc())) {
+      return jsonResponse({'error': 'code_expired'}, status: 410);
+    }
+    if ((row['attempts'] as int) >= 5) {
+      return jsonResponse({'error': 'too_many_attempts'}, status: 429);
+    }
+    final expected = hashPassword(code, row['code_salt'] as String);
+    if (expected != row['code_hash']) {
+      await database.incrementVerificationAttempts(uid);
+      return jsonResponse({'error': 'invalid_code'}, status: 400);
+    }
+    await database.setEmailVerified(uid);
+    await database.deleteVerificationCode(uid);
+    final verified = await database.userById(uid);
     return jsonResponse({
       'token': issueToken(config, uid: uid, email: email),
-      'user': userDto(user!),
-    }, status: 201);
+      'user': userDto(verified!),
+    });
   });
 
   router.post('/auth/login', (Request request) async {
@@ -104,10 +228,44 @@ Router buildRouter(AppConfig config, AppDatabase database) {
     if (expected != user['password_hash']) {
       return jsonResponse({'error': 'invalid email or password'}, status: 401);
     }
+    if (user['email_verified'] != true) {
+      await _issueAndSendCode(
+        config, database, mailer,
+        uid: user['id'] as String, email: email,
+      );
+      return jsonResponse(
+        {'error': 'email_not_verified', 'email': email},
+        status: 403,
+      );
+    }
     return jsonResponse({
       'token': issueToken(config, uid: user['id'] as String, email: email),
       'user': userDto(user),
     });
+  });
+
+  router.post('/auth/resend', (Request request) async {
+    final body = await readJsonMap(request);
+    final email = (body['email'] as String? ?? '').trim().toLowerCase();
+    final user = await database.userByEmail(email);
+    // Don't leak account existence / verified state.
+    if (user == null || user['email_verified'] == true) {
+      return jsonResponse({'status': 'sent'});
+    }
+    final uid = user['id'] as String;
+    final existing = await database.verificationCodeFor(uid);
+    if (existing != null) {
+      final last = existing['last_sent_at'] as DateTime;
+      final elapsed = DateTime.now().toUtc().difference(last);
+      if (elapsed < const Duration(seconds: 60)) {
+        return jsonResponse(
+          {'error': 'resend_cooldown', 'retryAfter': 60 - elapsed.inSeconds},
+          status: 429,
+        );
+      }
+    }
+    await _issueAndSendCode(config, database, mailer, uid: uid, email: email);
+    return jsonResponse({'status': 'sent'});
   });
 
   router.get('/me', (Request request) async {
@@ -299,6 +457,116 @@ Router buildRouter(AppConfig config, AppDatabase database) {
     });
   });
 
+  router.get('/lottery/prizes', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final prizes = await database.lotteryPrizes();
+      return jsonResponse({
+        'cost': lotteryDrawCost,
+        'prizes': prizes.map(prizeDto).toList(),
+      });
+    });
+  });
+
+  router.get('/lottery/assets', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final assets = await database.userAssets(uid);
+      return jsonResponse({'assets': assets.map(assetDto).toList()});
+    });
+  });
+
+  router.post('/lottery/draw', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final result = await database.drawLottery(
+        uid: uid,
+        drawId: newId(),
+        assetId: newId(),
+        notificationId: newId(),
+      );
+      if (result == null) {
+        return jsonResponse({
+          'error': 'not enough XP for this draw',
+          'cost': lotteryDrawCost,
+        }, status: 409);
+      }
+      final user = await database.userById(uid);
+      final notifications = await database.notifications(uid, unreadOnly: true);
+      return jsonResponse({
+        'result': {
+          'draw': result['draw'],
+          'prize': prizeDto(result['prize'] as Map<String, dynamic>),
+          'asset': assetDto(result['asset'] as Map<String, dynamic>),
+          'balanceAfter': result['balanceAfter'],
+        },
+        'user': user == null ? null : userDto(user),
+        'notifications': notifications.map(notificationDto).toList(),
+      }, status: 201);
+    });
+  });
+
+  router.post('/rewards/points', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      final sourceType = (body['sourceType'] as String? ?? '').trim();
+      final sourceId = (body['sourceId'] as String? ?? '').trim();
+      final requestedPoints = body['points'] as int? ?? 0;
+      final description = (body['description'] as String? ?? '').trim();
+      final reward = validatedRewardPoints(
+        sourceType: sourceType,
+        sourceId: sourceId,
+        requestedPoints: requestedPoints,
+      );
+      if (sourceType.isEmpty || sourceId.isEmpty || reward == null) {
+        return jsonResponse({
+          'error': 'invalid reward source or point rule',
+        }, status: 400);
+      }
+      final result = await database.grantPoints(
+        uid,
+        sourceType: sourceType,
+        sourceId: reward.canonicalSourceId,
+        points: reward.points,
+        description: description,
+      );
+      final awarded = result['awarded'] == true;
+      return jsonResponse({
+        'pointsAwarded': result['points_awarded'] ?? 0,
+        'alreadyGranted': !awarded,
+        'user': userDto(result),
+      }, status: awarded ? 201 : 200);
+    });
+  });
+
+  router.post('/exercise-records', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      final rawRecords = body['records'];
+      if (rawRecords is! List) {
+        return jsonResponse({'error': 'records must be a list'}, status: 400);
+      }
+      if (rawRecords.length > 250) {
+        return jsonResponse({
+          'error': 'too many exercise records',
+        }, status: 400);
+      }
+      final records = <Map<String, dynamic>>[];
+      for (final rawRecord in rawRecords) {
+        if (rawRecord is! Map) {
+          return jsonResponse({
+            'error': 'invalid exercise record',
+          }, status: 400);
+        }
+        final record = Map<String, dynamic>.from(rawRecord);
+        final validationError = _validateExerciseRecord(record);
+        if (validationError != null) {
+          return jsonResponse({'error': validationError}, status: 400);
+        }
+        records.add(record);
+      }
+      await database.insertExerciseRecords(uid, records);
+      return jsonResponse({'recorded': true}, status: 201);
+    });
+  });
+
   router.get('/learning-progress', (Request request) async {
     return _protected(config, request, (uid) async {
       final dayWindow = _dayWindowFromQuery(request);
@@ -396,6 +664,160 @@ Router buildRouter(AppConfig config, AppDatabase database) {
         return jsonResponse({'error': 'notification not found'}, status: 404);
       }
       return jsonResponse({'notification': notificationDto(notification)});
+    });
+  });
+
+  router.get('/rewards/tasks', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final dayWindow = _dayWindowFromQuery(request);
+      if (dayWindow == null) {
+        return jsonResponse({
+          'error': 'valid localDate and timezoneOffsetMinutes are required',
+        }, status: 400);
+      }
+      final tasks = await _dailyRewardTasks(database, uid, dayWindow);
+      return jsonResponse({'dateKey': dayWindow.dateKey, 'tasks': tasks});
+    });
+  });
+
+  router.post('/rewards/check-in', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      final dayWindow = _dayWindowFromBody(body);
+      if (dayWindow == null) {
+        return jsonResponse({
+          'error': 'valid localDate and timezoneOffsetMinutes are required',
+        }, status: 400);
+      }
+      final user = await database.userById(uid);
+      if (user == null) {
+        return jsonResponse({'error': 'user not found'}, status: 404);
+      }
+      final inserted = await database.upsertCheckIn(uid, dayWindow.dateKey);
+      final hadCheckedInToday = !inserted;
+      var updatedUser = user;
+      if (!hadCheckedInToday) {
+        final now = DateTime.now().toUtc();
+        final currentStreak = user['streak'] is int ? user['streak'] as int : 0;
+        final hasStudyToday = await database.hasStudySessionInRange(
+          uid,
+          dayWindow.startUtc,
+          dayWindow.endUtc,
+        );
+        var newStreak = currentStreak;
+        if (!hasStudyToday) {
+          final hasPreviousDayCheckIn = await database.hasCheckIn(
+            uid,
+            _previousDateKey(dayWindow.dateKey),
+          );
+          final hasPreviousDayStudy = await database.hasStudySessionInRange(
+            uid,
+            dayWindow.startUtc.subtract(const Duration(days: 1)),
+            dayWindow.endUtc.subtract(const Duration(days: 1)),
+          );
+          newStreak = hasPreviousDayCheckIn || hasPreviousDayStudy
+              ? currentStreak + 1
+              : 1;
+        }
+        updatedUser = await database.updateUser(uid, {
+          'streak': newStreak,
+          'lastStudyDate': now,
+        });
+      }
+      final tasks = await _dailyRewardTasks(database, uid, dayWindow);
+      return jsonResponse({
+        'checkedIn': true,
+        'dateKey': dayWindow.dateKey,
+        'tasks': tasks,
+        'user': userDto(updatedUser),
+      });
+    });
+  });
+
+  router.post('/reward-events', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      final type = body['type']?.toString() ?? '';
+      if (!{
+        'trainingChallenge',
+        'wrongCleanup',
+        'forumInteraction',
+      }.contains(type)) {
+        return jsonResponse({
+          'error': 'invalid reward event type',
+        }, status: 400);
+      }
+      final dayWindow = _dayWindowFromBody(body);
+      if (dayWindow == null) {
+        return jsonResponse({
+          'error': 'valid localDate and timezoneOffsetMinutes are required',
+        }, status: 400);
+      }
+      await database.recordDailyActivity(uid, dayWindow.dateKey, type);
+      final tasks = await _dailyRewardTasks(database, uid, dayWindow);
+      return jsonResponse({
+        'recorded': true,
+        'dateKey': dayWindow.dateKey,
+        'tasks': tasks,
+      }, status: 201);
+    });
+  });
+
+  router.post('/rewards/tasks/<id>/claim', (Request request, String id) async {
+    return _protected(config, request, (uid) async {
+      final definition = rewardTaskDefinitionById(id);
+      if (definition == null) {
+        return jsonResponse({'error': 'reward task not found'}, status: 404);
+      }
+      final body = await readJsonMap(request);
+      final dayWindow = _dayWindowFromBody(body);
+      if (dayWindow == null) {
+        return jsonResponse({
+          'error': 'valid localDate and timezoneOffsetMinutes are required',
+        }, status: 400);
+      }
+      final user = await database.userById(uid);
+      if (user == null) {
+        return jsonResponse({'error': 'user not found'}, status: 404);
+      }
+      final claimed = await database.rewardClaimsForDate(
+        uid,
+        dayWindow.dateKey,
+      );
+      if (claimed.contains(id)) {
+        final tasks = await _dailyRewardTasks(database, uid, dayWindow);
+        return jsonResponse({
+          'claimed': false,
+          'alreadyClaimed': true,
+          'dateKey': dayWindow.dateKey,
+          'tasks': tasks,
+          'user': userDto(user),
+        });
+      }
+      final behavior = await _dailyRewardBehavior(database, uid, dayWindow);
+      if (!isRewardTaskDone(id, behavior)) {
+        return jsonResponse({
+          'error': 'task_not_complete',
+          'tasks': dailyRewardTaskDtos(
+            behavior: behavior,
+            claimedTaskIds: claimed,
+          ),
+        }, status: 409);
+      }
+      final claim = await database.claimRewardTask(
+        id: newId(),
+        uid: uid,
+        dateKey: dayWindow.dateKey,
+        taskId: id,
+        points: definition.points,
+      );
+      final tasks = await _dailyRewardTasks(database, uid, dayWindow);
+      return jsonResponse({
+        'claimed': claim.inserted,
+        'dateKey': dayWindow.dateKey,
+        'tasks': tasks,
+        'user': userDto(claim.user ?? user),
+      });
     });
   });
 
@@ -592,6 +1014,7 @@ Map<String, dynamic> userDto(Map<String, dynamic> row) {
     'dailyGoal': row['daily_goal'],
     'xp': row['xp'],
     'streak': row['streak'],
+    'emailVerified': row['email_verified'] ?? true,
     'lastStudyDate': (row['last_study_date'] as DateTime?)?.toIso8601String(),
     'createdAt': (row['created_at'] as DateTime).toIso8601String(),
     'updatedAt': (row['updated_at'] as DateTime).toIso8601String(),
@@ -684,8 +1107,52 @@ Map<String, dynamic> notificationDto(Map<String, dynamic> row) {
     'targetRoute': row['target_route'] ?? row['targetRoute'] ?? '/home',
     'isRead': row['is_read'] ?? row['isRead'] ?? false,
     'sourceKey': row['source_key'] ?? row['sourceKey'],
+    'params': _notificationParams(row['params']),
     'readAt': (row['read_at'] as DateTime?)?.toIso8601String(),
     'createdAt': _dateValue(row['created_at'] ?? row['createdAt']),
+  };
+}
+
+Map<String, dynamic> _notificationParams(Object? value) {
+  if (value is Map<String, dynamic>) return value;
+  if (value is Map) return Map<String, dynamic>.from(value);
+  if (value is String && value.trim().isNotEmpty) {
+    try {
+      final decoded = jsonDecode(value);
+      if (decoded is Map) return Map<String, dynamic>.from(decoded);
+    } catch (_) {
+      return const <String, dynamic>{};
+    }
+  }
+  return const <String, dynamic>{};
+}
+
+Map<String, dynamic> prizeDto(Map<String, dynamic> row) {
+  return {
+    'id': row['id'],
+    'name': row['name'],
+    'category': row['category'],
+    'rarity': row['rarity'],
+    'description': row['description'],
+    'probability': row['probability'],
+    'fragmentValue': row['fragment_value'] ?? row['fragmentValue'] ?? 0,
+    'isActive': row['is_active'] ?? row['isActive'] ?? true,
+  };
+}
+
+Map<String, dynamic> assetDto(Map<String, dynamic> row) {
+  return {
+    'id': row['id'],
+    'uid': row['uid'],
+    'prizeId': row['prize_id'] ?? row['prizeId'],
+    'category': row['category'],
+    'rarity': row['rarity'],
+    'name': row['name'],
+    'description': row['description'],
+    'quantity': row['quantity'] ?? 1,
+    'fragmentValue': row['fragment_value'] ?? row['fragmentValue'] ?? 0,
+    'acquiredAt': _dateValue(row['acquired_at'] ?? row['acquiredAt']),
+    'updatedAt': _dateValue(row['updated_at'] ?? row['updatedAt']),
   };
 }
 
@@ -727,11 +1194,7 @@ Future<void> _ensureNotificationsForToday(
   final dueReviewCount = planPaused
       ? 0
       : math.min(await database.dueReviewCount(uid), reviewLimit);
-  final lastStudyDate = user['last_study_date'];
-  final hasCheckedIn =
-      lastStudyDate is DateTime &&
-      !lastStudyDate.toUtc().isBefore(dayWindow.startUtc) &&
-      lastStudyDate.toUtc().isBefore(dayWindow.endUtc);
+  final hasCheckedIn = await database.hasCheckIn(uid, dayWindow.dateKey);
   final dailyGoal = studyPlan?['daily_new_target'] ?? user['daily_goal'] ?? 10;
   final generated = generatedNotificationsForToday(
     dateKey: dayWindow.dateKey,
@@ -750,14 +1213,84 @@ Future<void> _ensureNotificationsForToday(
         'targetRoute': notification['targetRoute'],
         'isRead': false,
         'sourceKey': notification['sourceKey'],
+        'params': notification['params'],
         'createdAt': now,
       },
   ]);
 }
 
+Future<List<Map<String, dynamic>>> _dailyRewardTasks(
+  AppDatabase database,
+  String uid,
+  NotificationDayWindow dayWindow,
+) async {
+  final behavior = await _dailyRewardBehavior(database, uid, dayWindow);
+  final claimed = await database.rewardClaimsForDate(uid, dayWindow.dateKey);
+  return dailyRewardTaskDtos(behavior: behavior, claimedTaskIds: claimed);
+}
+
+Future<DailyRewardBehavior> _dailyRewardBehavior(
+  AppDatabase database,
+  String uid,
+  NotificationDayWindow dayWindow,
+) async {
+  final activity = await database.dailyActivity(uid, dayWindow.dateKey);
+  return DailyRewardBehavior(
+    checkedIn: await database.hasCheckIn(uid, dayWindow.dateKey),
+    newLearningDone: await database.hasStudySessionInRange(
+      uid,
+      dayWindow.startUtc,
+      dayWindow.endUtc,
+      trainingOnly: false,
+    ),
+    reviewDone: await database.hasReviewEventInRange(
+      uid,
+      dayWindow.startUtc,
+      dayWindow.endUtc,
+    ),
+    trainingChallengeDone:
+        activity['training_challenge_completed'] == true ||
+        await database.hasStudySessionInRange(
+          uid,
+          dayWindow.startUtc,
+          dayWindow.endUtc,
+          trainingOnly: true,
+        ),
+    wrongCleanupDone: activity['wrong_cleanup_completed'] == true,
+    forumInteractionDone: activity['forum_interaction_completed'] == true,
+  );
+}
+
+String _previousDateKey(String dateKey) {
+  final parts = dateKey.split('-').map(int.parse).toList();
+  final previous = DateTime.utc(
+    parts[0],
+    parts[1],
+    parts[2],
+  ).subtract(const Duration(days: 1));
+  return notificationDateKey(previous);
+}
+
 String _dateValue(Object? value) {
   if (value is DateTime) return value.toIso8601String();
   return value?.toString() ?? DateTime.now().toUtc().toIso8601String();
+}
+
+String? _validateExerciseRecord(Map<String, dynamic> record) {
+  for (final field in ['id', 'sessionId', 'gameId', 'wordId', 'promptType']) {
+    final value = record[field];
+    if (value is! String || value.trim().isEmpty) return '$field is required';
+  }
+  if (record['isCorrect'] is! bool) return 'isCorrect must be a boolean';
+  final answerTimeMs = record['answerTimeMs'];
+  if (answerTimeMs is! int || answerTimeMs < 0) {
+    return 'answerTimeMs must be a non-negative integer';
+  }
+  final createdAt = record['createdAt'];
+  if (createdAt is! String || DateTime.tryParse(createdAt) == null) {
+    return 'createdAt must be an ISO timestamp';
+  }
+  return null;
 }
 
 NotificationDayWindow? _dayWindowFromQuery(Request request) {
@@ -802,12 +1335,6 @@ String _targetExamForWordBook(String wordBookId) {
       return 'TOEFL';
     case 'gre':
       return 'GRE';
-    case 'cet4':
-      return 'CET-4';
-    case 'cet6':
-      return 'CET-6';
-    case 'kaoyan':
-      return '考研';
     case 'ielts':
     case 'exam-core':
       return 'IELTS';
@@ -835,4 +1362,33 @@ String? nullableDateValue(Object? value) {
   if (value == null) return null;
   if (value is DateTime) return value.toIso8601String();
   return value.toString();
+}
+
+final _emailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+
+bool isValidEmail(String email) => _emailPattern.hasMatch(email.trim());
+
+String generateOtpCode() {
+  final rng = math.Random.secure();
+  return (rng.nextInt(900000) + 100000).toString();
+}
+
+Future<void> _issueAndSendCode(
+  AppConfig config,
+  AppDatabase database,
+  EmailSender mailer, {
+  required String uid,
+  required String email,
+}) async {
+  final code = generateOtpCode();
+  final salt = newSalt();
+  final now = DateTime.now().toUtc();
+  await database.upsertVerificationCode(
+    uid,
+    codeHash: hashPassword(code, salt),
+    codeSalt: salt,
+    expiresAt: now.add(const Duration(minutes: 10)),
+    sentAt: now,
+  );
+  await mailer.sendVerificationCode(to: email, code: code);
 }

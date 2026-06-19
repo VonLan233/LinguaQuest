@@ -4,14 +4,19 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/date_formatting.dart';
 import '../../core/utils/ui_labels.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/study_plan.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class GoalSetupScreen extends ConsumerStatefulWidget {
   const GoalSetupScreen({super.key});
@@ -21,25 +26,14 @@ class GoalSetupScreen extends ConsumerStatefulWidget {
 }
 
 class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
-  String _target = 'Daily English';
-  String _level = 'Elementary';
+  String _target = 'HSK 1';
+  String _level = 'Intermediate';
   int _dailyGoal = 10;
   DateTime? _deadline;
   var _initializedFromState = false;
   late final ProviderSubscription<AppState> _stateSubscription;
 
-  static const targets = [
-    'CET-4',
-    'CET-6',
-    'IELTS',
-    'TOEFL',
-    'GRE',
-    '考研',
-    'Beginner',
-    'Daily English',
-    'Business English',
-  ];
-  static const levels = ['Beginner', 'Elementary', 'Intermediate', 'Advanced'];
+  static const targets = ['HSK 1'];
   static const goals = [5, 10, 15, 20];
 
   @override
@@ -61,6 +55,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final selectedBook = _bookForTarget(state.wordBooks, _target);
     final selectedLessons = learningLessonsForTarget(state.lessons, _target);
@@ -82,37 +77,41 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/home'),
-        title: const Text('目标设置'),
+        title: Text(l10n.goalSetupTitle),
       ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
           children: [
-            SectionHeader(title: '选择学习计划', subtitle: '系统会把目标拆成每日新学、到期复习和积分任务。'),
+            SectionHeader(
+              title: l10n.goalSetupSelectPlan,
+              subtitle: l10n.goalSetupSelectPlanSubtitle,
+            ),
             const SizedBox(height: 12),
             Wrap(
               spacing: 8,
               runSpacing: 8,
               children: [
-                PillLabel(
-                  label: '第 2 步 / 共 2 步',
-                  icon: Icons.track_changes_rounded,
-                  color: AppTheme.cyan,
+                AppPill(
+                  label: l10n.authStep2of2,
+                  icon: AppIcons.trackChanges,
+                  variant: PillVariant.primary,
                 ),
-                PillLabel(
-                  label: displayTarget(_target),
-                  icon: Icons.flag_outlined,
+                AppPill(
+                  label: displayTarget(_target, l10n: l10n),
+                  icon: AppIcons.flag,
+                  variant: PillVariant.neutral,
                 ),
-                PillLabel(
-                  label: '$dailyWords/天',
-                  icon: Icons.today_outlined,
-                  color: AppTheme.mango,
+                AppPill(
+                  label: '$dailyWords${l10n.commonWords}/${l10n.commonDay}',
+                  icon: AppIcons.today,
+                  variant: PillVariant.xp,
                 ),
               ],
             ),
             const SizedBox(height: 16),
             _PlanSnapshotLine(
-              target: displayTarget(_target),
+              target: displayTarget(_target, l10n: l10n),
               totalWords: totalWords,
               completedWords: completedWords,
               dailyWords: dailyWords,
@@ -121,30 +120,25 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
             ),
             const SizedBox(height: 20),
             _ChoiceSection<String>(
-              title: '目标',
+              title: l10n.goalSetupTarget,
               values: targets,
               selected: _target,
-              labelFor: displayTarget,
+              labelFor: (v) => displayTarget(v, l10n: l10n),
               onSelected: (value) => setState(() => _target = value),
-            ),
-            const SizedBox(height: 24),
-            _ChoiceSection<String>(
-              title: '水平',
-              values: levels,
-              selected: _level,
-              labelFor: displayLevel,
-              onSelected: (value) => setState(() => _level = value),
             ),
             const SizedBox(height: 24),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('每日目标', style: Theme.of(context).textTheme.titleMedium),
+                Text(
+                  l10n.goalSetupDailyGoal,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
                 const SizedBox(height: 8),
                 _ChoiceList<int>(
                   values: goals,
                   selected: _dailyGoal,
-                  labelFor: (goal) => '$goal 词',
+                  labelFor: (goal) => '$goal ${l10n.commonWords}',
                   onSelected: (goal) => setState(() => _dailyGoal = goal),
                 ),
               ],
@@ -153,29 +147,34 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('按截止日期规划', style: Theme.of(context).textTheme.titleMedium),
+                Text(
+                  l10n.goalSetupDeadlinePlan,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
                 const SizedBox(height: 8),
                 Text(
                   _deadline == null
-                      ? '选择目标日期后，系统会自动计算每天需要学习的词数。'
-                      : '${formatShortDate(_deadline!)} · 每天 ${plannedDailyWords ?? _dailyGoal} 词',
+                      ? l10n.goalSetupDeadlineHint
+                      : '${formatShortDate(_deadline!)} · ${plannedDailyWords ?? _dailyGoal} ${l10n.commonWords}/${l10n.commonDay}',
                 ),
                 const SizedBox(height: 12),
                 Row(
                   children: [
                     Expanded(
-                      child: OutlinedButton.icon(
+                      child: AppSecondaryButton(
                         onPressed: _pickDeadline,
-                        icon: const Icon(Icons.event_outlined),
-                        label: Text(_deadline == null ? '选择日期' : '更改日期'),
+                        icon: AppIcons.event,
+                        label: _deadline == null
+                            ? l10n.goalSetupPickDate
+                            : l10n.goalSetupChangeDate,
                       ),
                     ),
                     if (_deadline != null) ...[
                       const SizedBox(width: 10),
                       QuestIconButton(
-                        tooltip: '清除日期规划',
+                        tooltip: l10n.goalSetupClearDate,
                         onPressed: () => setState(() => _deadline = null),
-                        icon: Icons.close_rounded,
+                        icon: AppIcons.close,
                         color: AppTheme.coral,
                       ),
                     ],
@@ -184,10 +183,10 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
               ],
             ),
             const SizedBox(height: 28),
-            FilledButton.icon(
+            AppPrimaryButton(
               onPressed: _save,
-              icon: const Icon(Icons.check_circle_outline),
-              label: const Text('进入 LinguaQuest'),
+              icon: AppIcons.checkCircle,
+              label: l10n.goalSetupEnterApp,
             ),
           ],
         ),
@@ -307,71 +306,79 @@ class _PlanSnapshotLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final progress = totalWords == 0
         ? 0.0
         : (completedWords / totalWords).clamp(0.0, 1.0);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            IconCueBadge(
-              icon: Icons.menu_book_outlined,
-              color: AppTheme.cyan,
-              size: 44,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('当前词书', style: theme.textTheme.titleMedium),
-                  const SizedBox(height: 3),
-                  Text(
-                    '$target · 已学 $completedWords/$totalWords 词',
-                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
-                  ),
-                ],
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              IconCueBadge(
+                icon: AppIcons.menuBook,
+                color: AppTheme.cyan,
+                size: 44,
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(999),
-          child: LinearProgressIndicator(
-            value: progress,
-            minHeight: 10,
-            backgroundColor: AppTheme.progressTrack(context),
-            valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.teal),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.goalSetupCurrentBook,
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      '$target · ${l10n.goalSetupLearned} $completedWords/$totalWords ${l10n.commonWords}',
+                      style: TextStyle(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ),
-        const SizedBox(height: 10),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            PillLabel(
-              label: '新学 $dailyWords 词',
-              icon: Icons.add_task_rounded,
-              color: AppTheme.teal,
+          const SizedBox(height: 12),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(999),
+            child: LinearProgressIndicator(
+              value: progress,
+              minHeight: 10,
+              backgroundColor: AppTheme.progressTrack(context),
+              valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.teal),
             ),
-            PillLabel(
-              label: '复习上限 $reviewLimit 词',
-              icon: Icons.replay_rounded,
-              color: AppTheme.mango,
-            ),
-            TextButton.icon(
-              onPressed: onOpenWordbook,
-              icon: const Icon(Icons.style_outlined),
-              label: const Text('查看完整词汇表'),
-            ),
-          ],
-        ),
-      ],
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              AppPill(
+                label: l10n.goalSetupNewWordsCount(dailyWords),
+                icon: AppIcons.addTask,
+                variant: PillVariant.success,
+              ),
+              AppPill(
+                label: l10n.goalSetupReviewLimitCount(reviewLimit),
+                icon: AppIcons.replay,
+                variant: PillVariant.xp,
+              ),
+              TextButton.icon(
+                onPressed: onOpenWordbook,
+                icon: const Icon(AppIcons.style),
+                label: Text(l10n.goalSetupViewWordbook),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -494,8 +501,8 @@ class _StableChoiceButton extends StatelessWidget {
               children: [
                 Icon(
                   selected
-                      ? Icons.check_circle_rounded
-                      : Icons.radio_button_unchecked_rounded,
+                      ? AppIcons.checkCircle
+                      : AppIcons.radioButtonUnchecked,
                   color: selected
                       ? theme.colorScheme.primary
                       : theme.colorScheme.outline,

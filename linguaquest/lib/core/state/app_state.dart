@@ -1,12 +1,17 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../../data/models/app_notification.dart';
 import '../../data/models/custom_word.dart';
+import '../../data/models/daily_reward_task.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
+import '../../data/models/lottery.dart';
 import '../../data/models/study_plan.dart';
 import '../../data/models/user_word.dart';
 import '../../data/models/user_profile.dart';
+import '../utils/custom_word_localization.dart';
 
 class DailyReminderSettings {
   const DailyReminderSettings({
@@ -66,15 +71,26 @@ class AppState {
     required this.completedLessonIds,
     required this.todayCompletedLessonIds,
     required this.todayReviewWordIds,
+    required this.todayTrainingSessionIds,
+    required this.todayTrainingGameIds,
+    required this.todayTrainingXp,
     required this.todayClaimedRewardIds,
+    required this.rewardTasks,
+    required this.pendingRewardTaskIds,
+    required this.isRewardLoading,
     required this.notifications,
+    required this.lotteryPrizes,
+    required this.userAssets,
+    this.targetLanguage = 'zh',
+    this.locale,
     this.user,
     this.lastResult,
+    this.lastLotteryResult,
     this.studyPlan,
     this.errorMessage,
     List<CustomWord>? reviewWords,
   }) : _reviewWords = List.unmodifiable(
-         reviewWords ?? _buildReviewWords(userWords, customWords),
+         reviewWords ?? _buildReviewWords(userWords, customWords, wordBooks),
        );
 
   final bool isBootstrapped;
@@ -86,14 +102,25 @@ class AppState {
   final List<CustomWord> customWords;
   final List<UserWord> userWords;
   final ThemeMode themeMode;
+  final Locale? locale;
   final DailyReminderSettings reminderSettings;
   final StudyPlan? studyPlan;
   final Set<String> completedLessonIds;
   final Set<String> todayCompletedLessonIds;
   final Set<String> todayReviewWordIds;
+  final Set<String> todayTrainingSessionIds;
+  final Set<String> todayTrainingGameIds;
+  final int todayTrainingXp;
   final Set<String> todayClaimedRewardIds;
+  final List<DailyRewardTask> rewardTasks;
+  final Set<String> pendingRewardTaskIds;
+  final bool isRewardLoading;
   final List<AppNotification> notifications;
+  final List<LotteryPrize> lotteryPrizes;
+  final List<UserAsset> userAssets;
+  final String targetLanguage;
   final LessonResult? lastResult;
+  final LotteryDrawResult? lastLotteryResult;
   final String? errorMessage;
   final List<CustomWord> _reviewWords;
 
@@ -178,10 +205,49 @@ class AppState {
 
   List<CustomWord> get reviewQueue => dueWords.take(dailyReviewLimit).toList();
 
+  /// The number of reviews planned for *today* — those already completed today
+  /// plus those still due (capped by the plan's review limit). Unlike the live
+  /// [reviewQueue], this stays constant as the user reviews: a word simply moves
+  /// from "due" to "done". Use this for the home progress denominator so it
+  /// never shrinks mid-session (which previously produced a nonsensical "5/4").
+  int get dailyReviewTarget {
+    if (isStudyPlanPaused) return 0;
+    // Count words still due that haven't been reviewed today, so a word can't be
+    // counted both as "done" and "still due" (it normally leaves the due set on
+    // review; this guards synthetic/edge states too).
+    final stillDue = reviewQueue
+        .where((word) => !todayReviewWordIds.contains(word.id))
+        .length;
+    final planned = todayReviewWordIds.length + stillDue;
+    final planLimit = studyPlan?.dailyReviewLimit;
+    return planLimit == null ? planned : math.min(planLimit, planned);
+  }
+
   List<CustomWord> get weakWords {
     final weak = reviewWords.where((word) => word.isWeak).toList()
       ..sort((a, b) => b.wrongCount.compareTo(a.wrongCount));
     return weak;
+  }
+
+  List<Word> get trainingWords {
+    final learnedWords = formalLessons
+        .where(
+          (lesson) =>
+              completedLessonIds.contains(lesson.id) ||
+              lesson.id == currentLesson?.id,
+        )
+        .expand((lesson) => lesson.words);
+    final customTrainingWords = customWords.map(_wordFromCustomWord);
+    final weakFirst = weakWords.map(_wordFromCustomWord);
+    final merged = <String, Word>{};
+    for (final word in [
+      ...weakFirst,
+      ...customTrainingWords,
+      ...learnedWords,
+    ]) {
+      merged.putIfAbsent(word.word.toLowerCase(), () => word);
+    }
+    return merged.values.toList(growable: false);
   }
 
   AppState copyWith({
@@ -195,45 +261,69 @@ class AppState {
     List<CustomWord>? customWords,
     List<UserWord>? userWords,
     ThemeMode? themeMode,
+    Locale? locale,
     DailyReminderSettings? reminderSettings,
     StudyPlan? studyPlan,
     bool clearStudyPlan = false,
     Set<String>? completedLessonIds,
     Set<String>? todayCompletedLessonIds,
     Set<String>? todayReviewWordIds,
+    Set<String>? todayTrainingSessionIds,
+    Set<String>? todayTrainingGameIds,
+    int? todayTrainingXp,
     Set<String>? todayClaimedRewardIds,
+    List<DailyRewardTask>? rewardTasks,
+    Set<String>? pendingRewardTaskIds,
+    bool? isRewardLoading,
     List<AppNotification>? notifications,
+    List<LotteryPrize>? lotteryPrizes,
+    List<UserAsset>? userAssets,
+    String? targetLanguage,
     LessonResult? lastResult,
+    LotteryDrawResult? lastLotteryResult,
     bool clearLastResult = false,
     String? errorMessage,
     bool clearError = false,
   }) {
     final nextCustomWords = customWords ?? this.customWords;
     final nextUserWords = userWords ?? this.userWords;
+    final nextWordBooks = wordBooks ?? this.wordBooks;
     return AppState(
       isBootstrapped: isBootstrapped ?? this.isBootstrapped,
       isLoading: isLoading ?? this.isLoading,
       user: clearUser ? null : user ?? this.user,
-      wordBooks: wordBooks ?? this.wordBooks,
+      wordBooks: nextWordBooks,
       currentWordBookId: currentWordBookId ?? this.currentWordBookId,
       lessons: lessons ?? this.lessons,
       customWords: nextCustomWords,
       userWords: nextUserWords,
       themeMode: themeMode ?? this.themeMode,
+      locale: locale ?? this.locale,
       reminderSettings: reminderSettings ?? this.reminderSettings,
       studyPlan: clearStudyPlan ? null : studyPlan ?? this.studyPlan,
       completedLessonIds: completedLessonIds ?? this.completedLessonIds,
       todayCompletedLessonIds:
           todayCompletedLessonIds ?? this.todayCompletedLessonIds,
       todayReviewWordIds: todayReviewWordIds ?? this.todayReviewWordIds,
+      todayTrainingSessionIds:
+          todayTrainingSessionIds ?? this.todayTrainingSessionIds,
+      todayTrainingGameIds: todayTrainingGameIds ?? this.todayTrainingGameIds,
+      todayTrainingXp: todayTrainingXp ?? this.todayTrainingXp,
       todayClaimedRewardIds:
           todayClaimedRewardIds ?? this.todayClaimedRewardIds,
+      rewardTasks: rewardTasks ?? this.rewardTasks,
+      pendingRewardTaskIds: pendingRewardTaskIds ?? this.pendingRewardTaskIds,
+      isRewardLoading: isRewardLoading ?? this.isRewardLoading,
       notifications: notifications ?? this.notifications,
+      lotteryPrizes: lotteryPrizes ?? this.lotteryPrizes,
+      userAssets: userAssets ?? this.userAssets,
+      targetLanguage: targetLanguage ?? this.targetLanguage,
       lastResult: clearLastResult ? null : lastResult ?? this.lastResult,
+      lastLotteryResult: lastLotteryResult ?? this.lastLotteryResult,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
-      reviewWords: customWords == null && userWords == null
+      reviewWords: customWords == null && userWords == null && wordBooks == null
           ? _reviewWords
-          : _buildReviewWords(nextUserWords, nextCustomWords),
+          : _buildReviewWords(nextUserWords, nextCustomWords, nextWordBooks),
     );
   }
 
@@ -242,30 +332,50 @@ class AppState {
       isBootstrapped: false,
       isLoading: false,
       wordBooks: [],
-      currentWordBookId: 'beginner',
+      currentWordBookId: 'hsk1',
       lessons: [],
       customWords: [],
       userWords: [],
       themeMode: ThemeMode.system,
+      locale: null,
       reminderSettings: DailyReminderSettings.defaults,
       completedLessonIds: {},
       todayCompletedLessonIds: {},
       todayReviewWordIds: {},
+      todayTrainingSessionIds: {},
+      todayTrainingGameIds: {},
+      todayTrainingXp: 0,
       todayClaimedRewardIds: {},
+      rewardTasks: [],
+      pendingRewardTaskIds: {},
+      isRewardLoading: false,
       notifications: [],
+      lotteryPrizes: [],
+      userAssets: [],
     );
   }
+}
+
+Word _wordFromCustomWord(CustomWord word) {
+  return wordFromCustomWord(word);
 }
 
 List<CustomWord> _buildReviewWords(
   List<UserWord> userWords,
   List<CustomWord> customWords,
+  List<WordBook> wordBooks,
 ) {
+  final sourceById = <String, Word>{};
+  for (final book in wordBooks) {
+    for (final word in book.words) {
+      sourceById.putIfAbsent(word.id, () => word);
+    }
+  }
   final seen = <String>{};
   final words = <CustomWord>[];
   for (final word in userWords) {
     if (!_isReviewEligibleStatus(word.status) || word.isIgnored) continue;
-    final card = word.toReviewCard();
+    final card = word.toReviewCard(source: sourceById[word.wordId]);
     if (seen.add(_reviewWordKey(card.word))) {
       words.add(card);
     }

@@ -6,14 +6,20 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
+import '../../core/utils/custom_word_localization.dart';
 import '../../core/utils/ui_labels.dart';
-import '../../core/widgets/empty_state.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/mascot_empty_state.dart';
 import '../../data/dictionary_search.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -56,7 +62,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       AppState state,
     ) {
       if (!mounted) return;
-      final shouldSearch = _lastCurrentWordBookId != state.currentWordBookId ||
+      final shouldSearch =
+          _lastCurrentWordBookId != state.currentWordBookId ||
           !_listEquals(_lastWordBooks, state.wordBooks) ||
           !_listEquals(_lastCustomWords, state.customWords) ||
           !identical(_lastFormalLessons, state.formalLessons);
@@ -79,15 +86,20 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final query = normalizeDictionaryQuery(_query);
     final hasQuery = query.isNotEmpty;
     final hasResults = _targetWords.isNotEmpty || _customWords.isNotEmpty;
+    final localeCode = Localizations.localeOf(context).languageCode;
+    final currentBookTitle = state.currentWordBook?.title.isNotEmpty == true
+        ? state.currentWordBook!.nameFor(localeCode)
+        : null;
 
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/home'),
-        title: Text(state.currentWordBook?.title ?? '搜索'),
+        title: Text(currentBookTitle ?? l10n.searchTitle),
       ),
       body: SafeArea(
         child: ListView(
@@ -95,9 +107,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           children: [
             TextField(
               autofocus: true,
-              decoration: const InputDecoration(
-                labelText: '搜索单词、短语、中文释义或例句片段',
-                prefixIcon: Icon(Icons.search),
+              decoration: InputDecoration(
+                labelText: l10n.searchFieldLabel,
+                prefixIcon: const Icon(AppIcons.search),
               ),
               textInputAction: TextInputAction.search,
               onChanged: (value) {
@@ -108,7 +120,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             const SizedBox(height: 12),
             _SearchScopeSelector(
               selected: _scope,
-              currentBookTitle: state.currentWordBook?.title ?? '当前词书',
+              currentBookTitle:
+                  currentBookTitle ?? l10n.reviewCenterCurrentBook,
+              l10n: l10n,
               onSelected: (scope) {
                 if (scope == _scope) return;
                 setState(() => _scope = scope);
@@ -124,20 +138,18 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 ),
               )
             else if (!hasQuery)
-              const EmptyState(
-                icon: Icons.search,
-                title: '输入关键词开始搜索',
-                message: '可以搜索英文单词、词组、中文释义、例句片段和生词本。',
+              MascotEmptyState(
+                title: l10n.searchStartTitle,
+                message: l10n.searchStartMessage,
               )
             else if (!hasResults)
-              EmptyState(
-                icon: Icons.manage_search_outlined,
-                title: '没有找到结果',
-                message: '切到全词库再试，或添加一张个人词卡。',
+              MascotEmptyState(
+                title: l10n.searchNoResultsTitle,
+                message: l10n.searchNoResultsMessage,
                 action: OutlinedButton.icon(
                   onPressed: () => context.push('/custom-words/new'),
-                  icon: const Icon(Icons.add),
-                  label: const Text('添加生词'),
+                  icon: const Icon(AppIcons.add),
+                  label: Text(l10n.wordbookAddCustom),
                 ),
               )
             else ...[
@@ -147,11 +159,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   count: _targetWords.length,
                 ),
                 for (final result in _targetWords.take(20))
-                  _TargetWordTile(result: result),
+                  _TargetWordTile(result: result, l10n: l10n),
               ],
               if (_customWords.isNotEmpty) ...[
                 const SizedBox(height: 12),
-                _SearchSectionTitle(title: '生词本', count: _customWords.length),
+                _SearchSectionTitle(
+                  title: l10n.commonCustomWords,
+                  count: _customWords.length,
+                ),
                 for (final result in _customWords.take(20))
                   _CustomWordTile(result: result),
               ],
@@ -189,6 +204,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   void _runSearch(String query) {
     if (!mounted) return;
+    final l10n = AppLocalizations.of(context);
     final requestVersion = ++_searchVersion;
     final state = ref.read(appControllerProvider);
     final currentWords = _collectCurrentWords(state);
@@ -200,7 +216,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         scope: _scope,
         query: query,
         currentWords: currentWords,
-        tagLabeler: _displayTargetTag,
+        tagLabeler: (tag) => displayWordTag(tag, l10n: l10n),
       );
       final customWords = searchCustomWords(
         customWords: state.customWords,
@@ -251,17 +267,18 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 }
 
-String _displayTargetTag(String tag) => displayWordTag(tag);
 
 class _SearchScopeSelector extends StatelessWidget {
   const _SearchScopeSelector({
     required this.selected,
     required this.currentBookTitle,
+    required this.l10n,
     required this.onSelected,
   });
 
   final DictionarySearchScope selected;
   final String currentBookTitle;
+  final AppLocalizations l10n;
   final ValueChanged<DictionarySearchScope> onSelected;
 
   @override
@@ -270,7 +287,10 @@ class _SearchScopeSelector extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '搜索范围：$currentBookTitle / 全词库',
+          l10n.searchScopeSummary(
+            l10n.searchAllWordbooksScope,
+            currentBookTitle,
+          ),
           style: Theme.of(context).textTheme.bodySmall,
         ),
         const SizedBox(height: 8),
@@ -279,13 +299,13 @@ class _SearchScopeSelector extends StatelessWidget {
           runSpacing: 8,
           children: [
             FilterPillButton(
-              label: '当前词书',
+              label: l10n.searchCurrentWordbookScope,
               selected: selected == DictionarySearchScope.currentWordBook,
               onSelected: () =>
                   onSelected(DictionarySearchScope.currentWordBook),
             ),
             FilterPillButton(
-              label: '全词库',
+              label: l10n.searchAllWordbooksScope,
               selected: selected == DictionarySearchScope.allWordBooks,
               onSelected: () => onSelected(DictionarySearchScope.allWordBooks),
               color: AppTheme.cyan,
@@ -311,7 +331,7 @@ class _SearchSectionTitle extends StatelessWidget {
         children: [
           Text(title, style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(width: 8),
-          PillLabel(label: '$count', color: AppTheme.cyan),
+          AppPill(label: '$count', variant: PillVariant.neutral),
         ],
       ),
     );
@@ -319,72 +339,67 @@ class _SearchSectionTitle extends StatelessWidget {
 }
 
 class _TargetWordTile extends StatelessWidget {
-  const _TargetWordTile({required this.result});
+  const _TargetWordTile({required this.result, required this.l10n});
 
   final DictionaryWordSearchResult result;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localeCode = Localizations.localeOf(context).languageCode;
     final word = result.word;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: () => context.push('/wordbook/${word.id}'),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ImageCueBadge(cue: word.imageCue, size: 54),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(word.word, style: theme.textTheme.titleMedium),
-                      const SizedBox(height: 2),
-                      Text(word.meaning),
-                      const SizedBox(height: 4),
-                      Text(
-                        '${result.matchedBy} · ${result.preview}',
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        result.book.title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodySmall,
-                      ),
-                    ],
+      padding: const EdgeInsets.only(bottom: AppTokens.s12),
+      child: AppCard(
+        onTap: () => context.push('/wordbook/${word.id}'),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ImageCueBadge(cue: word.imageCue, size: 54),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(word.word, style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 2),
+                  Text(word.primaryDefinitionFor(localeCode)),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${result.matchedBy} · ${result.preview}',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                   ),
+                  const SizedBox(height: 4),
+                  Text(
+                    result.book.nameFor(localeCode),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                AppPill(
+                  label: displayDifficulty(word.difficulty, l10n: l10n),
+                  variant: PillVariant.neutral,
                 ),
-                const SizedBox(width: 8),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    PillLabel(
-                      label: displayDifficulty(word.difficulty),
-                      color: AppTheme.coral,
-                    ),
-                    if (result.inCurrentWordBook) ...[
-                      const SizedBox(height: 6),
-                      const PillLabel(label: '当前计划', color: AppTheme.cyan),
-                    ],
-                  ],
-                ),
+                if (result.inCurrentWordBook) ...[
+                  const SizedBox(height: 6),
+                  AppPill(
+                    label: l10n.searchCurrentPlan,
+                    variant: PillVariant.success,
+                  ),
+                ],
               ],
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -399,52 +414,44 @@ class _CustomWordTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+    final localeCode = Localizations.localeOf(context).languageCode;
     final word = result.word;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: () => context.push('/custom-words/${word.id}'),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ImageCueBadge(cue: wordInitialCue(word.word), size: 54),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(word.word, style: theme.textTheme.titleMedium),
-                      const SizedBox(height: 2),
-                      Text(word.meaning),
-                      const SizedBox(height: 4),
-                      Text(
-                        '${result.matchedBy} · ${result.preview}',
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '${displayDifficulty(word.difficulty)} · ${displayCustomTag(word.tag)}',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodySmall,
-                      ),
-                    ],
+      padding: const EdgeInsets.only(bottom: AppTokens.s12),
+      child: AppCard(
+        onTap: () => context.push('/custom-words/${word.id}'),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ImageCueBadge(cue: wordInitialCue(word.word), size: 54),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(word.word, style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 2),
+                  Text(customWordMeaningFor(word, localeCode)),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${result.matchedBy} · ${result.preview}',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                   ),
-                ),
-                const Icon(Icons.chevron_right_rounded),
-              ],
+                  const SizedBox(height: 4),
+                  Text(
+                    '${displayDifficulty(word.difficulty, l10n: l10n)} · ${displayCustomTag(word.tag, l10n: l10n)}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ],
+              ),
             ),
-          ),
+            const Icon(AppIcons.chevronRight),
+          ],
         ),
       ),
     );

@@ -31,6 +31,22 @@ void main() {
           'activity:2026-06-02',
         ]),
       );
+      final learning = notifications.singleWhere(
+        (notification) => notification['type'] == 'learningReminder',
+      );
+      final review = notifications.singleWhere(
+        (notification) => notification['type'] == 'reviewDue',
+      );
+      final checkIn = notifications.singleWhere(
+        (notification) => notification['type'] == 'checkInReminder',
+      );
+      final activity = notifications.singleWhere(
+        (notification) => notification['type'] == 'activity',
+      );
+      expect(learning['params'], {'dailyGoal': 12});
+      expect(review['params'], {'dueCount': 3});
+      expect(checkIn['params'], <String, dynamic>{});
+      expect(activity['params'], {'kind': 'activity'});
     },
   );
 

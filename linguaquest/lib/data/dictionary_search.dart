@@ -164,6 +164,7 @@ _SearchMatch? _targetWordMatch(
       _matchList('中文释义', word.definitions, query) ??
       _matchText('英文释义', word.definition, query) ??
       _matchList('英文释义', word.englishDefinitions, query) ??
+      _matchList('马来语释义', word.malayDefinitions, query) ??
       _matchText('例句片段', word.exampleSentence, query) ??
       _matchText('例句翻译', word.exampleTranslation, query) ??
       _matchExamples(word.examples, query) ??

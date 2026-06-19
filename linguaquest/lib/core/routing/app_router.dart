@@ -5,8 +5,12 @@ import '../../data/models/lesson_result.dart';
 import '../../features/auth/goal_setup_screen.dart';
 import '../../features/auth/login_screen.dart';
 import '../../features/auth/register_screen.dart';
+import '../../features/auth/verify_email_screen.dart';
 import '../../features/ai_learning/ai_learning_screen.dart';
 import '../../features/discover/discover_screen.dart';
+import '../../features/discover/xp_tasks_screen.dart';
+import '../../features/discover/lucky_draw_screen.dart';
+import '../../features/discover/community_screen.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/learning/learning_path_screen.dart';
 import '../../features/learning/lesson_preview_screen.dart';
@@ -33,6 +37,7 @@ import '../../features/shell/app_shell.dart';
 import '../../features/study/mixed_study_session_screen.dart';
 import '../../features/study/session/session_queue_builder.dart';
 import '../../features/training/training_screen.dart';
+import '../../features/training/training_session_screen.dart';
 import '../../features/wordbook/add_edit_custom_word_screen.dart';
 import '../../features/wordbook/custom_word_list_screen.dart';
 import '../../features/wordbook/target_word_detail_screen.dart';
@@ -53,6 +58,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/register',
         builder: (context, state) => const RegisterScreen(),
+      ),
+      GoRoute(
+        path: '/verify-email',
+        builder: (context, state) => VerifyEmailScreen(
+          email: state.uri.queryParameters['email'] ?? '',
+        ),
       ),
       GoRoute(
         path: '/goal-setup',
@@ -146,10 +157,6 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const StudyPlanSettingsScreen(),
       ),
       GoRoute(
-        path: '/settings/theme',
-        builder: (context, state) => const ThemeSettingsScreen(),
-      ),
-      GoRoute(
         path: '/settings/reminder',
         builder: (context, state) => const ReminderSettingsScreen(),
       ),
@@ -161,6 +168,18 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/search',
         builder: (context, state) => const SearchScreen(),
+      ),
+      GoRoute(
+        path: '/discover/xp-tasks',
+        builder: (context, state) => const XpTasksScreen(),
+      ),
+      GoRoute(
+        path: '/discover/lucky-draw',
+        builder: (context, state) => const LuckyDrawScreen(),
+      ),
+      GoRoute(
+        path: '/discover/community',
+        builder: (context, state) => const CommunityScreen(),
       ),
       GoRoute(
         path: '/wordbook',
@@ -207,6 +226,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         ),
       ),
       GoRoute(
+        path: '/training/:game',
+        builder: (context, state) => TrainingSessionScreen(
+          gameId: state.pathParameters['game']!,
+          mistakesOnly: state.uri.queryParameters['source'] == 'mistakes',
+        ),
+      ),
+      GoRoute(
         path: '/lesson/:id/result',
         builder: (context, state) {
           final extra = state.extra;
@@ -214,10 +240,12 @@ final routerProvider = Provider<GoRouter>((ref) {
             return LessonResultScreen(
               result: extra.result,
               source: extra.source,
+              expectedLessonId: state.pathParameters['id'],
             );
           }
           return LessonResultScreen(
             result: extra is LessonResult ? extra : null,
+            expectedLessonId: state.pathParameters['id'],
           );
         },
       ),

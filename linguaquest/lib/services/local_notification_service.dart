@@ -6,6 +6,8 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest.dart' as timezone_data;
 import 'package:timezone/timezone.dart' as timezone;
 
+import '../l10n/generated/app_localizations.dart';
+
 final localNotificationTapRouteProvider =
     NotifierProvider<LocalNotificationTapRoute, String?>(
       LocalNotificationTapRoute.new,
@@ -28,6 +30,35 @@ final localNotificationServiceProvider = Provider<LocalNotificationService>(
   (ref) => FlutterLocalNotificationService(),
 );
 
+/// Localized, locale-resolved copy for OS push notifications and the Android
+/// notification channel. Resolved by the scheduler from [AppLocalizations] so
+/// the service stays free of widget context.
+class LocalNotificationStrings {
+  const LocalNotificationStrings({
+    required this.studyReminderTitle,
+    required this.studyReminderBody,
+    required this.reviewDueBody,
+    required this.channelName,
+    required this.channelDescription,
+  });
+
+  factory LocalNotificationStrings.fromL10n(AppLocalizations l10n) {
+    return LocalNotificationStrings(
+      studyReminderTitle: l10n.osNotificationStudyReminderTitle,
+      studyReminderBody: l10n.osNotificationStudyReminderBody,
+      reviewDueBody: l10n.osNotificationReviewDueBody,
+      channelName: l10n.osNotificationChannelName,
+      channelDescription: l10n.osNotificationChannelDescription,
+    );
+  }
+
+  final String studyReminderTitle;
+  final String studyReminderBody;
+  final String reviewDueBody;
+  final String channelName;
+  final String channelDescription;
+}
+
 abstract class LocalNotificationService {
   Future<void> initialize({required void Function(String route) onSelectRoute});
 
@@ -35,9 +66,14 @@ abstract class LocalNotificationService {
     required bool enabled,
     required int hour,
     required int minute,
+    required LocalNotificationStrings strings,
   });
 
-  Future<void> scheduleReviewDueReminder({required int dueCount});
+  Future<void> scheduleReviewDueReminder({
+    required int dueCount,
+    required String title,
+    required LocalNotificationStrings strings,
+  });
 }
 
 class NoopLocalNotificationService implements LocalNotificationService {
@@ -51,10 +87,15 @@ class NoopLocalNotificationService implements LocalNotificationService {
     required bool enabled,
     required int hour,
     required int minute,
+    required LocalNotificationStrings strings,
   }) async {}
 
   @override
-  Future<void> scheduleReviewDueReminder({required int dueCount}) async {}
+  Future<void> scheduleReviewDueReminder({
+    required int dueCount,
+    required String title,
+    required LocalNotificationStrings strings,
+  }) async {}
 }
 
 class FlutterLocalNotificationService implements LocalNotificationService {
@@ -63,7 +104,6 @@ class FlutterLocalNotificationService implements LocalNotificationService {
   static const _studyReminderId = 8101;
   static const _reviewReminderId = 8102;
   static const _androidChannelId = 'linguaquest_study_reminders';
-  static const _androidChannelName = '学习提醒';
 
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
@@ -134,6 +174,7 @@ class FlutterLocalNotificationService implements LocalNotificationService {
     required bool enabled,
     required int hour,
     required int minute,
+    required LocalNotificationStrings strings,
   }) async {
     if (!_isPluginAvailable) return;
     await _guarded(() async {
@@ -143,10 +184,10 @@ class FlutterLocalNotificationService implements LocalNotificationService {
       }
       await _plugin.zonedSchedule(
         id: _studyReminderId,
-        title: '今天的学习任务等你开始',
-        body: '完成新学、复习和打卡，保持你的连续学习节奏。',
+        title: strings.studyReminderTitle,
+        body: strings.studyReminderBody,
         scheduledDate: _nextTime(hour: hour, minute: minute),
-        notificationDetails: _notificationDetails(),
+        notificationDetails: _notificationDetails(strings),
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
         matchDateTimeComponents: DateTimeComponents.time,
         payload: '/home',
@@ -155,7 +196,11 @@ class FlutterLocalNotificationService implements LocalNotificationService {
   }
 
   @override
-  Future<void> scheduleReviewDueReminder({required int dueCount}) async {
+  Future<void> scheduleReviewDueReminder({
+    required int dueCount,
+    required String title,
+    required LocalNotificationStrings strings,
+  }) async {
     if (!_isPluginAvailable) return;
     await _guarded(() async {
       if (dueCount <= 0) {
@@ -164,10 +209,10 @@ class FlutterLocalNotificationService implements LocalNotificationService {
       }
       await _plugin.zonedSchedule(
         id: _reviewReminderId,
-        title: '$dueCount 个词到期复习',
-        body: '先清掉复习队列，再开始今天的新词。',
+        title: title,
+        body: strings.reviewDueBody,
         scheduledDate: _nextTime(hour: 9, minute: 0),
-        notificationDetails: _notificationDetails(),
+        notificationDetails: _notificationDetails(strings),
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
         matchDateTimeComponents: DateTimeComponents.time,
         payload: '/study/review',
@@ -175,11 +220,11 @@ class FlutterLocalNotificationService implements LocalNotificationService {
     });
   }
 
-  NotificationDetails _notificationDetails() {
-    const android = AndroidNotificationDetails(
+  NotificationDetails _notificationDetails(LocalNotificationStrings strings) {
+    final android = AndroidNotificationDetails(
       _androidChannelId,
-      _androidChannelName,
-      channelDescription: '学习提醒、复习到期和打卡提醒',
+      strings.channelName,
+      channelDescription: strings.channelDescription,
       importance: Importance.defaultImportance,
       priority: Priority.defaultPriority,
     );
@@ -188,7 +233,7 @@ class FlutterLocalNotificationService implements LocalNotificationService {
       presentBadge: true,
       presentSound: true,
     );
-    return const NotificationDetails(android: android, iOS: darwin);
+    return NotificationDetails(android: android, iOS: darwin);
   }
 
   timezone.TZDateTime _nextTime({required int hour, required int minute}) {

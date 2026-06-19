@@ -3,123 +3,216 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
+import '../../core/widgets/compact_entry_card.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class TrainingScreen extends ConsumerWidget {
   const TrainingScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final user = state.user;
-    final currentBook = state.currentWordBook;
     final trainingLessons = state.lessons
         .where((lesson) => lesson.isTrainingPack)
         .toList();
     final speedLesson = trainingLessons.isEmpty ? null : trainingLessons.first;
+
     return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
+      padding: const EdgeInsets.fromLTRB(
+        AppTokens.s16,
+        AppTokens.s20,
+        AppTokens.s16,
+        88,
+      ),
       children: [
-        SectionHeader(
-          title: '训练场',
-          subtitle: '${currentBook?.title ?? '当前词书'} · 限时测试、专项训练和排行榜放在这里。',
-          trailing: QuestIconButton(
-            tooltip: '排行榜',
-            onPressed: () => context.push('/leaderboard'),
-            icon: Icons.leaderboard_outlined,
-            color: AppTheme.coral,
-          ),
+        _TrainingGoalHeader(
+          weeklyXp: user?.xp ?? 0,
+          dailyAvailable: l10n.trainingDailyXpAvailable,
+          weeklyPrefix: l10n.trainingWeeklyXpPrefix,
+          streak: user?.streak ?? 0,
+          streakLabel: l10n.homeStreakLabel,
         ),
-        const SizedBox(height: 14),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            PillLabel(
-              label: '本周 ${user?.xp ?? 0} XP',
-              icon: Icons.bolt,
-              color: AppTheme.mango,
-            ),
-            const PillLabel(
-              label: '今日可得 60 XP',
-              icon: Icons.add_circle_outline,
-            ),
-          ],
-        ),
-        const SizedBox(height: 18),
-        _TrainingReadinessLine(
-          dueWords: state.dueWords.length,
-          weakWords: state.weakWords.length,
-          comboTarget: 10,
-        ),
-        const SizedBox(height: 22),
-        const SectionHeader(
-          title: '限时测试',
-          subtitle: '校园词包和抢词挑战归入训练场，不再占用新学入口。',
-        ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppTokens.s32),
+        SectionHeader(title: l10n.trainingTimedTests),
+        const SizedBox(height: AppTokens.s12),
         _TrainingGameList(
-          games: [
-            _TrainingGameData(
-              icon: Icons.school_outlined,
-              title: '校园速测',
-              body: '从当前词书抽题，适合课后快速检测，不影响正式复习节奏。',
-              source: currentBook == null
-                  ? '当前词书 · 限时测试'
-                  : '${currentBook.title} · 限时测试',
-              actionLabel: speedLesson == null ? '暂无词书' : '开始测试',
+          children: [
+            _TrainingGameRow(
+              icon: AppIcons.school,
+              title: l10n.trainingCampusSpeed,
+              color: AppTokens.successColor(context),
               onTap: speedLesson == null
                   ? null
                   : () => context.push('/timed-test/${speedLesson.id}'),
             ),
-            const _TrainingGameData(
-              icon: Icons.timer_outlined,
-              title: '抢词',
-              body: '60 秒内尽可能答对英文选义题，按正确数、连击和准确率给积分。',
-              source: '已学词 + 到期词',
-              actionLabel: '即将开放',
+            _TrainingGameRow(
+              icon: AppIcons.timer,
+              title: l10n.trainingSpeedGame,
+              color: AppTokens.mangoColor(context),
+              onTap: () => context.push('/training/word-rush'),
             ),
           ],
         ),
-        const SizedBox(height: 12),
-        const SectionHeader(title: '专项训练', subtitle: '围绕拼写、听音、搭配和短文挖词补弱项。'),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppTokens.s24),
+        SectionHeader(title: l10n.trainingSpecialDrills),
+        const SizedBox(height: AppTokens.s12),
         _TrainingGameList(
-          games: [
-            const _TrainingGameData(
-              icon: Icons.stairs_outlined,
-              title: '一站到底',
-              body: '从简单到困难连续答题，错词会进入弱项词和错词本。',
-              source: '当前词书 + 弱项词',
-              actionLabel: '即将开放',
+          children: [
+            _TrainingGameRow(
+              icon: AppIcons.stairs,
+              title: l10n.trainingSurvivor,
+              color: AppTokens.coralColor(context),
+              onTap: () => context.push('/training/survival'),
             ),
-            _TrainingGameData(
-              icon: Icons.edit_note_outlined,
-              title: '单词拼写',
-              body: '看中文、听发音或看例句空格后输入英文，强化可产出能力。',
-              source: '拼写弱项词',
-              actionLabel: '进入生词本',
-              onTap: () => context.push('/custom-words'),
+            _TrainingGameRow(
+              icon: AppIcons.editNote,
+              title: l10n.trainingSpelling,
+              color: AppTheme.cyan,
+              onTap: () => context.push('/training/spelling'),
             ),
-            const _TrainingGameData(
-              icon: Icons.article_outlined,
-              title: '文章挖词',
-              body: '用今日词汇生成短文并挖空，连接背词和阅读理解。',
-              source: '今日学习词 + AI 短文',
-              actionLabel: '即将开放',
+            _TrainingGameRow(
+              icon: AppIcons.article,
+              title: l10n.trainingPassageCloze,
+              color: AppTokens.successColor(context),
+              onTap: null,
             ),
-            const _TrainingGameData(
-              icon: Icons.hearing_outlined,
-              title: '听音速答',
-              body: '播放发音后选择单词或释义，反应时间影响得分。',
-              source: '听力弱项词',
-              actionLabel: '即将开放',
+            _TrainingGameRow(
+              icon: AppIcons.hearing,
+              title: l10n.trainingListening,
+              color: AppTokens.mangoColor(context),
+              onTap: null,
             ),
           ],
+        ),
+        const SizedBox(height: AppTokens.s32),
+        _TrainingReadinessLine(
+          dueWords: state.dueWords.length,
+          weakWords: state.weakWords.length,
+          comboTarget: 10,
+          l10n: l10n,
         ),
       ],
+    );
+  }
+}
+
+class _TrainingGoalHeader extends StatelessWidget {
+  const _TrainingGoalHeader({
+    required this.weeklyXp,
+    required this.dailyAvailable,
+    required this.weeklyPrefix,
+    required this.streak,
+    required this.streakLabel,
+  });
+
+  final int weeklyXp;
+  final String dailyAvailable;
+  final String weeklyPrefix;
+  final int streak;
+  final String streakLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return AppCard(
+      padding: const EdgeInsets.fromLTRB(
+        AppTokens.s20,
+        AppTokens.s16,
+        AppTokens.s20,
+        AppTokens.s20,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const IconCueBadge(icon: AppIcons.bolt, color: AppTokens.mango),
+              const Spacer(),
+              AppPill(
+                label: '$streak $streakLabel',
+                variant: PillVariant.streak,
+                icon: AppIcons.localFireDepartment,
+              ),
+            ],
+          ),
+          const SizedBox(height: AppTokens.s16),
+          Text(
+            '$weeklyPrefix $weeklyXp XP',
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(height: AppTokens.s4),
+          Text(
+            dailyAvailable,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TrainingGameList extends StatelessWidget {
+  const _TrainingGameList({required this.children});
+
+  final List<_TrainingGameRow> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        for (var index = 0; index < children.length; index++) ...[
+          children[index],
+          if (index < children.length - 1)
+            const SizedBox(height: AppTokens.s12),
+        ],
+      ],
+    );
+  }
+}
+
+class _TrainingGameRow extends StatelessWidget {
+  const _TrainingGameRow({
+    required this.icon,
+    required this.title,
+    required this.color,
+    this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final Color color;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final locked = onTap == null;
+    return CompactEntryCard(
+      icon: icon,
+      title: title,
+      color: color,
+      onTap: onTap,
+      enabled: !locked,
+      trailing: locked
+          ? AppPill(
+              label: AppLocalizations.of(context).trainingComingSoon,
+              variant: PillVariant.primary,
+              icon: AppIcons.lockClock,
+            )
+          : null,
     );
   }
 }
@@ -129,210 +222,102 @@ class _TrainingReadinessLine extends StatelessWidget {
     required this.dueWords,
     required this.weakWords,
     required this.comboTarget,
+    required this.l10n,
   });
 
   final int dueWords;
   final int weakWords;
   final int comboTarget;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: _TrainingSignal(
-            label: '到期词',
-            value: '$dueWords',
-            icon: Icons.today_outlined,
-            color: AppTheme.teal,
-          ),
-        ),
-        const _TrainingSignalDivider(),
-        Expanded(
-          child: _TrainingSignal(
-            label: '弱项词',
-            value: '$weakWords',
-            icon: Icons.warning_amber_outlined,
-            color: AppTheme.coral,
-          ),
-        ),
-        const _TrainingSignalDivider(),
-        Expanded(
-          child: _TrainingSignal(
-            label: '连击目标',
-            value: '$comboTarget',
-            icon: Icons.bolt,
-            color: AppTheme.mango,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _TrainingSignal extends StatelessWidget {
-  const _TrainingSignal({
-    required this.label,
-    required this.value,
-    required this.icon,
-    required this.color,
-  });
-
-  final String label;
-  final String value;
-  final IconData icon;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, color: color, size: 20),
-        const SizedBox(width: 6),
-        Flexible(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                value,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.titleMedium,
-              ),
-              Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _TrainingSignalDivider extends StatelessWidget {
-  const _TrainingSignalDivider();
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 34,
-      child: VerticalDivider(
-        width: 16,
-        thickness: 1,
-        color: Theme.of(context).colorScheme.outlineVariant,
+    return AppCard(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppTokens.s12,
+        vertical: AppTokens.s16,
       ),
-    );
-  }
-}
-
-class _TrainingGameList extends StatelessWidget {
-  const _TrainingGameList({required this.games});
-
-  final List<_TrainingGameData> games;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        for (var index = 0; index < games.length; index++) ...[
-          _TrainingGameRow(game: games[index]),
-          if (index != games.length - 1)
-            Divider(
-              height: 10,
-              color: Theme.of(
-                context,
-              ).colorScheme.outlineVariant.withValues(alpha: 0.7),
-            ),
-        ],
-      ],
-    );
-  }
-}
-
-class _TrainingGameRow extends StatelessWidget {
-  const _TrainingGameRow({required this.game});
-
-  final _TrainingGameData game;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final content = Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          IconCueBadge(icon: game.icon, color: AppTheme.coral),
-          const SizedBox(width: 14),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(game.title, style: theme.textTheme.titleMedium),
-                const SizedBox(height: 4),
-                Text(
-                  game.body,
-                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
-                ),
-                const SizedBox(height: 10),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [
-                    PillLabel(label: game.source, icon: Icons.source_outlined),
-                    PillLabel(
-                      label: game.actionLabel,
-                      icon: game.onTap == null
-                          ? Icons.lock_clock_outlined
-                          : Icons.play_arrow_rounded,
-                      color: game.onTap == null
-                          ? Colors.blueGrey
-                          : AppTheme.teal,
-                    ),
-                  ],
-                ),
-              ],
+            child: _TrainingReadinessItem(
+              value: '$dueWords',
+              label: l10n.trainingDueWords,
+              icon: AppIcons.today,
+              accent: AppTokens.azure,
+            ),
+          ),
+          Expanded(
+            child: _TrainingReadinessItem(
+              value: '$weakWords',
+              label: l10n.trainingWeakWords,
+              icon: AppIcons.warningAmber,
+              accent: AppTokens.coralColor(context),
+            ),
+          ),
+          Expanded(
+            child: _TrainingReadinessItem(
+              value: '$comboTarget',
+              label: l10n.trainingComboTarget,
+              icon: AppIcons.bolt,
+              accent: AppTokens.mangoColor(context),
             ),
           ),
         ],
       ),
     );
-
-    if (game.onTap == null) return content;
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(8),
-        onTap: game.onTap,
-        child: content,
-      ),
-    );
   }
 }
 
-class _TrainingGameData {
-  const _TrainingGameData({
+class _TrainingReadinessItem extends StatelessWidget {
+  const _TrainingReadinessItem({
+    required this.value,
+    required this.label,
     required this.icon,
-    required this.title,
-    required this.body,
-    required this.source,
-    required this.actionLabel,
-    this.onTap,
+    required this.accent,
   });
 
+  final String value;
+  final String label;
   final IconData icon;
-  final String title;
-  final String body;
-  final String source;
-  final String actionLabel;
-  final VoidCallback? onTap;
+  final Color accent;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 34,
+          height: 34,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: accent.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
+          ),
+          child: Icon(icon, color: accent, size: 20),
+        ),
+        const SizedBox(height: AppTokens.s8),
+        Text(
+          value,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+        const SizedBox(height: AppTokens.s2),
+        Text(
+          label,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ],
+    );
+  }
 }

@@ -1,3 +1,5 @@
+import '../../l10n/generated/app_localizations.dart';
+
 String formatShortDate(DateTime date) => '${date.month}月${date.day}日';
 
 String formatFullDate(DateTime date) {
@@ -6,16 +8,16 @@ String formatFullDate(DateTime date) {
   return '${date.month}月${date.day}日 $hour:$minute';
 }
 
-String formatRelativeDue(DateTime date, DateTime now) {
+String formatRelativeDue(DateTime date, DateTime now, AppLocalizations l10n) {
   if (!date.isAfter(now)) {
-    return '现在到期';
+    return l10n.dueNow;
   }
   final difference = date.difference(now);
   if (difference.inDays >= 1) {
-    return '${difference.inDays} 天后';
+    return l10n.dueInDays(difference.inDays);
   }
   if (difference.inHours >= 1) {
-    return '${difference.inHours} 小时后';
+    return l10n.dueInHours(difference.inHours);
   }
-  return '${difference.inMinutes.clamp(1, 59)} 分钟后';
+  return l10n.dueInMinutes(difference.inMinutes.clamp(1, 59));
 }

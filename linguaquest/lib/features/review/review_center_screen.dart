@@ -1,22 +1,29 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
-import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
+import '../../core/utils/custom_word_localization.dart';
 import '../../core/utils/date_formatting.dart';
-import '../../core/widgets/empty_state.dart';
+import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/learning_badges.dart';
-import '../../core/widgets/section_header.dart';
+import '../../core/widgets/mascot_empty_state.dart';
+import '../../core/widgets/stat_tile.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/lesson.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class ReviewCenterScreen extends ConsumerWidget {
   const ReviewCenterScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final due = state.isStudyPlanPaused
         ? const <CustomWord>[]
@@ -25,99 +32,131 @@ class ReviewCenterScreen extends ConsumerWidget {
     final weak = state.weakWords;
     final lessonMistakes = state.lastResult?.mistakes ?? const [];
     final hiddenDueCount = (totalDue - due.length).clamp(0, 9999).toInt();
-    final currentBook = state.currentWordBook;
 
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/home'),
-        title: const Text('复习'),
+        title: Text(l10n.reviewCenterTitle),
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
+          padding: const EdgeInsets.fromLTRB(
+            AppTokens.s20,
+            AppTokens.s20,
+            AppTokens.s20,
+            88,
+          ),
           children: [
-            SectionHeader(
-              title: state.isStudyPlanPaused
-                  ? '学习计划已暂停'
-                  : due.isEmpty
-                  ? '今日复习已清空'
-                  : '${due.length} 张卡片待复习',
-              subtitle: state.isStudyPlanPaused
-                  ? '恢复学习计划后，复习队列会按每日上限继续开放。'
-                  : hiddenDueCount > 0
-                  ? '今日复习上限 ${state.dailyReviewLimit} 词，另有 $hiddenDueCount 词会排到后续。'
-                  : '${currentBook?.title ?? '当前词书'} · 答错词会自动进入复习队列。',
-              trailing: due.isEmpty
-                  ? TextButton.icon(
-                      onPressed: () => context.push('/custom-words/new'),
-                      icon: const Icon(Icons.add),
-                      label: const Text('添加'),
-                    )
-                  : null,
+            _ReviewStatusHeader(
+              isPaused: state.isStudyPlanPaused,
+              dueCount: due.length,
+              hiddenDueCount: hiddenDueCount,
+              dailyReviewLimit: state.dailyReviewLimit,
+              l10n: l10n,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppTokens.s16),
             _ReviewQueueSignals(
               dueCount: due.length,
               weakCount: weak.length,
               cardCount: state.customWords.length,
+              l10n: l10n,
             ),
-            if (hiddenDueCount > 0) ...[
-              const SizedBox(height: 12),
-              _ReviewLimitNotice(
-                hiddenDueCount: hiddenDueCount,
-                dailyReviewLimit: state.dailyReviewLimit,
-              ),
-            ],
-            const SizedBox(height: 22),
+            const SizedBox(height: AppTokens.s24),
             Text(
-              '今日到期',
+              l10n.reviewCenterTodayDue,
               style: Theme.of(
                 context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 10),
             if (due.isEmpty)
-              EmptyState(
-                icon: Icons.check_circle_outline,
-                title: '复习队列已清空',
-                message: '添加生词本词卡，或把错题加入错词本后，这里会生成复习队列。',
-                action: OutlinedButton.icon(
+              MascotEmptyState(
+                title: l10n.reviewCenterTodayDone,
+                message: l10n.reviewCenterEmpty,
+                action: AppSecondaryButton(
+                  label: l10n.wordbookAddCustom,
                   onPressed: () => context.push('/custom-words/new'),
-                  icon: const Icon(Icons.add),
-                  label: const Text('添加生词'),
                 ),
               )
             else
-              for (final word in due) _ReviewTile(word: word),
+              for (final word in due) _ReviewTile(word: word, l10n: l10n),
             const SizedBox(height: 22),
-            Text(
-              '错词本',
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
-            ),
-            const SizedBox(height: 10),
-            if (lessonMistakes.isEmpty && weak.isEmpty)
-              const Text('还没有弱项词或课程错题。')
-            else ...[
-              if (lessonMistakes.isNotEmpty)
-                _MistakeWordImporter(mistakes: lessonMistakes),
-              for (final mistake in lessonMistakes.take(5))
-                _LessonMistakeRow(mistake: mistake),
-              if (lessonMistakes.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: OutlinedButton.icon(
-                    onPressed: () => context.push('/mistake-book'),
-                    icon: const Icon(Icons.menu_book_outlined),
-                    label: const Text('打开错词本'),
+            if (lessonMistakes.isNotEmpty || weak.isNotEmpty) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    l10n.mistakeBookTitle,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
-                ),
-              for (final word in weak.take(5)) _WeakWordRow(word: word),
+                  TextButton(
+                    onPressed: () => context.push('/mistake-book'),
+                    child: Text(l10n.commonReview),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              if (lessonMistakes.isNotEmpty)
+                _MistakeWordImporter(mistakes: lessonMistakes, l10n: l10n),
+              for (final mistake in lessonMistakes.take(3))
+                _LessonMistakeRow(mistake: mistake, l10n: l10n),
+              for (final word in weak.take(3))
+                _WeakWordRow(word: word, l10n: l10n),
             ],
           ],
         ),
       ),
+    );
+  }
+}
+
+class _ReviewStatusHeader extends StatelessWidget {
+  const _ReviewStatusHeader({
+    required this.isPaused,
+    required this.dueCount,
+    required this.hiddenDueCount,
+    required this.dailyReviewLimit,
+    required this.l10n,
+  });
+
+  final bool isPaused;
+  final int dueCount;
+  final int hiddenDueCount;
+  final int dailyReviewLimit;
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    String title;
+    String? subtitle;
+
+    if (isPaused) {
+      title = l10n.reviewCenterPlanPaused;
+      subtitle = l10n.reviewCenterPlanPausedHint;
+    } else if (dueCount == 0) {
+      title = l10n.reviewCenterTodayDone;
+    } else {
+      title = l10n.reviewCenterCardsDue(dueCount);
+      if (hiddenDueCount > 0) {
+        subtitle = l10n.reviewCenterDailyCap(dailyReviewLimit, hiddenDueCount);
+      }
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title, style: theme.textTheme.headlineSmall),
+        if (subtitle != null) ...[
+          const SizedBox(height: 6),
+          Text(
+            subtitle,
+            style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+          ),
+        ],
+      ],
     );
   }
 }
@@ -127,143 +166,57 @@ class _ReviewQueueSignals extends StatelessWidget {
     required this.dueCount,
     required this.weakCount,
     required this.cardCount,
+    required this.l10n,
   });
 
   final int dueCount;
   final int weakCount;
   final int cardCount;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: _ReviewSignal(
-            label: '今日到期',
-            value: '$dueCount',
-            icon: Icons.today_outlined,
-            color: AppTheme.teal,
+    return AppCard(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(
+            child: StatTile(
+              value: '$dueCount',
+              label: l10n.reviewCenterTodayDue,
+              icon: AppIcons.today,
+              accent: AppTokens.azure,
+            ),
           ),
-        ),
-        const _ReviewSignalDivider(),
-        Expanded(
-          child: _ReviewSignal(
-            label: '错词',
-            value: '$weakCount',
-            icon: Icons.warning_amber_outlined,
-            color: AppTheme.coral,
+          const SizedBox(width: AppTokens.s12),
+          Flexible(
+            child: StatTile(
+              value: '$weakCount',
+              label: l10n.mistakeBookTitle,
+              icon: AppIcons.warningAmber,
+              accent: AppTokens.coral,
+            ),
           ),
-        ),
-        const _ReviewSignalDivider(),
-        Expanded(
-          child: _ReviewSignal(
-            label: '词卡',
-            value: '$cardCount',
-            icon: Icons.style_outlined,
-            color: AppTheme.cyan,
+          const SizedBox(width: AppTokens.s12),
+          Flexible(
+            child: StatTile(
+              value: '$cardCount',
+              label: l10n.commonCustomWords,
+              icon: AppIcons.style,
+              accent: AppTokens.azure,
+            ),
           ),
-        ),
-      ],
-    );
-  }
-}
-
-class _ReviewLimitNotice extends StatelessWidget {
-  const _ReviewLimitNotice({
-    required this.hiddenDueCount,
-    required this.dailyReviewLimit,
-  });
-
-  final int hiddenDueCount;
-  final int dailyReviewLimit;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(Icons.tune_outlined, color: AppTheme.mango),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Text(
-            '已按学习计划限制今日复习 $dailyReviewLimit 词；剩余 $hiddenDueCount 词不会丢失，会继续留在复习队列。',
-            style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _ReviewSignal extends StatelessWidget {
-  const _ReviewSignal({
-    required this.label,
-    required this.value,
-    required this.icon,
-    required this.color,
-  });
-
-  final String label;
-  final String value;
-  final IconData icon;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, color: color, size: 20),
-        const SizedBox(width: 6),
-        Flexible(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                value,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.titleMedium,
-              ),
-              Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _ReviewSignalDivider extends StatelessWidget {
-  const _ReviewSignalDivider();
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 34,
-      child: VerticalDivider(
-        width: 16,
-        thickness: 1,
-        color: Theme.of(context).colorScheme.outlineVariant,
+        ],
       ),
     );
   }
 }
 
 class _ReviewTile extends ConsumerWidget {
-  const _ReviewTile({required this.word});
+  const _ReviewTile({required this.word, required this.l10n});
 
   final CustomWord word;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -272,79 +225,68 @@ class _ReviewTile extends ConsumerWidget {
     );
     final canReview = word.isDue(DateTime.now()) && !isLoading;
     final theme = Theme.of(context);
+    final localeCode = Localizations.localeOf(context).languageCode;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              ImageCueBadge(cue: wordInitialCue(word.word), size: 54),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(word.word, style: theme.textTheme.titleMedium),
-                    const SizedBox(height: 3),
-                    Text(
-                      '${word.meaning} · ${formatRelativeDue(word.nextReviewAt, DateTime.now())}',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: theme.colorScheme.onSurfaceVariant,
+      padding: const EdgeInsets.only(bottom: AppTokens.s16),
+      child: AppCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                ImageCueBadge(cue: wordInitialCue(word.word), size: 54),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(word.word, style: theme.textTheme.titleMedium),
+                      const SizedBox(height: 3),
+                      Text(
+                        '${customWordMeaningFor(word, localeCode)} · ${formatRelativeDue(word.nextReviewAt, DateTime.now(), l10n)}',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              PillLabel(
-                label: '掌握 ${word.masteryLevel}/5',
-                icon: Icons.psychology_outlined,
-                color: AppTheme.mango,
-              ),
-              const SizedBox(width: 6),
-              PillLabel(
-                label: word.source == 'target' ? '目标词' : '生词卡',
-                icon: word.source == 'target'
-                    ? Icons.route_outlined
-                    : Icons.style_outlined,
-                color: word.source == 'target' ? AppTheme.cyan : AppTheme.teal,
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(48),
+                    ],
                   ),
-                  onPressed: canReview
-                      ? () => _review(context, ref, isCorrect: false)
-                      : null,
-                  icon: const Icon(Icons.close),
-                  label: const FittedBox(child: Text('没记住')),
                 ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: FilledButton.icon(
-                  style: FilledButton.styleFrom(
-                    minimumSize: const Size.fromHeight(48),
+                AppPill(
+                  label: '${word.masteryLevel}/5',
+                  icon: AppIcons.psychology,
+                  variant: word.masteryLevel >= 3
+                      ? PillVariant.success
+                      : PillVariant.streak,
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(
+                  child: AppSecondaryButton(
+                    label: l10n.reviewCenterForgot,
+                    onPressed: canReview
+                        ? () => _review(context, ref, isCorrect: false)
+                        : null,
                   ),
-                  onPressed: canReview
-                      ? () => _review(context, ref, isCorrect: true)
-                      : null,
-                  icon: const Icon(Icons.check),
-                  label: const FittedBox(child: Text('记住了')),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 14),
-          Divider(height: 1, color: theme.colorScheme.outlineVariant),
-        ],
+                const SizedBox(width: 10),
+                Expanded(
+                  child: AppPrimaryButton(
+                    label: l10n.reviewCenterRemembered,
+                    icon: AppIcons.check,
+                    onPressed: canReview
+                        ? () => _review(context, ref, isCorrect: true)
+                        : null,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -358,11 +300,13 @@ class _ReviewTile extends ConsumerWidget {
         .read(appControllerProvider.notifier)
         .reviewWord(word.id, isCorrect);
     if (!context.mounted) return;
+    final l10n = AppLocalizations.of(context);
     final message = succeeded
         ? isCorrect
-              ? '已标记为记住，下次复习会延后'
-              : '已加入更近的复习计划'
-        : ref.read(appControllerProvider).errorMessage ?? '暂时无法更新这张卡片';
+              ? l10n.reviewCenterPostponedMessage
+              : l10n.reviewCenterCloserReviewMessage
+        : ref.read(appControllerProvider).errorMessage ??
+              l10n.reviewCenterUpdateFailed;
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
@@ -370,90 +314,86 @@ class _ReviewTile extends ConsumerWidget {
 }
 
 class _LessonMistakeRow extends StatelessWidget {
-  const _LessonMistakeRow({required this.mistake});
+  const _LessonMistakeRow({required this.mistake, required this.l10n});
 
   final QuizQuestion mistake;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.only(bottom: 14),
-      child: Row(
-        children: [
-          ImageCueBadge(cue: mistake.word.imageCue, size: 52),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(mistake.word.word, style: theme.textTheme.titleMedium),
-                const SizedBox(height: 3),
-                Text(
-                  mistake.explanation,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
-                ),
-              ],
+      padding: const EdgeInsets.only(bottom: AppTokens.s12),
+      child: AppCard(
+        child: Row(
+          children: [
+            ImageCueBadge(cue: mistake.word.imageCue, size: 52),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(mistake.word.word, style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 3),
+                  Text(
+                    mistake.explanation,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(width: 10),
-          PillLabel(
-            label: '课程',
-            icon: Icons.school_outlined,
-            color: AppTheme.coral,
-          ),
-        ],
+            const SizedBox(width: 10),
+            AppPill(
+              label: l10n.commonLesson,
+              icon: AppIcons.school,
+              variant: PillVariant.streak,
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
 class _WeakWordRow extends StatelessWidget {
-  const _WeakWordRow({required this.word});
+  const _WeakWordRow({required this.word, required this.l10n});
 
   final CustomWord word;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localeCode = Localizations.localeOf(context).languageCode;
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(12),
-          onTap: () => word.source == 'target'
-              ? context.push('/wordbook/${word.sourceWordId ?? word.id}')
-              : context.push('/custom-words/${word.id}'),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6),
-            child: Row(
-              children: [
-                ImageCueBadge(cue: wordInitialCue(word.word), size: 52),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(word.word, style: theme.textTheme.titleMedium),
-                      const SizedBox(height: 3),
-                      Text(
-                        '错 ${word.wrongCount} 次 · ${word.meaning}',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
+      child: AppCard(
+        onTap: () => word.source == 'target'
+            ? context.push('/wordbook/${word.sourceWordId ?? word.id}')
+            : context.push('/custom-words/${word.id}'),
+        child: Row(
+          children: [
+            ImageCueBadge(cue: wordInitialCue(word.word), size: 52),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(word.word, style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 3),
+                  Text(
+                    customWordMeaningFor(word, localeCode),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                   ),
-                ),
-                const Icon(Icons.chevron_right_rounded),
-              ],
+                ],
+              ),
             ),
-          ),
+            const Icon(AppIcons.chevronRight),
+          ],
         ),
       ),
     );
@@ -461,9 +401,10 @@ class _WeakWordRow extends StatelessWidget {
 }
 
 class _MistakeWordImporter extends ConsumerStatefulWidget {
-  const _MistakeWordImporter({required this.mistakes});
+  const _MistakeWordImporter({required this.mistakes, required this.l10n});
 
   final List<QuizQuestion> mistakes;
+  final AppLocalizations l10n;
 
   @override
   ConsumerState<_MistakeWordImporter> createState() =>
@@ -513,48 +454,65 @@ class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
         .length;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('加入错词卡', style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 4),
-          Text(selectableCount == 0 ? '最近错题已经全部在生词本里。' : '选择错词后，可以直接加入复习卡片。'),
-          const SizedBox(height: 10),
-          for (final mistake in visibleMistakes) ...[
-            Builder(
-              builder: (context) {
-                final exists = existingWords.contains(
-                  mistake.word.word.trim().toLowerCase(),
-                );
-                return _MistakeSelectionRow(
-                  key: ValueKey('mistake-select-${mistake.word.id}'),
-                  word: mistake.word.word,
-                  meaning: exists ? '已加入' : mistake.word.meaning,
-                  selected: !exists && _selectedIds.contains(mistake.word.id),
-                  enabled: !exists,
-                  onChanged: (checked) {
-                    setState(() {
-                      if (checked) {
-                        _selectedIds.add(mistake.word.id);
-                      } else {
-                        _selectedIds.remove(mistake.word.id);
-                      }
-                    });
-                  },
-                );
-              },
+      padding: const EdgeInsets.only(bottom: AppTokens.s12),
+      child: AppCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.l10n.reviewCenterAddMistakeCards,
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
             ),
+            const SizedBox(height: 6),
+            Text(
+              selectableCount == 0
+                  ? widget.l10n.mistakeBookNoLessonMistakes
+                  : widget.l10n.mistakeBookMistakes(selectableCount),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 10),
+            for (final mistake in visibleMistakes) ...[
+              Builder(
+                builder: (context) {
+                  final exists = existingWords.contains(
+                    mistake.word.word.trim().toLowerCase(),
+                  );
+                  return _MistakeSelectionRow(
+                    key: ValueKey('mistake-select-${mistake.word.id}'),
+                    word: mistake.word.word,
+                    meaning: exists ? 'Already added' : mistake.word.meaning,
+                    selected: !exists && _selectedIds.contains(mistake.word.id),
+                    enabled: !exists,
+                    onChanged: (checked) {
+                      setState(() {
+                        if (checked) {
+                          _selectedIds.add(mistake.word.id);
+                        } else {
+                          _selectedIds.remove(mistake.word.id);
+                        }
+                      });
+                    },
+                  );
+                },
+              ),
+            ],
+            const SizedBox(height: 8),
+            if (selectableCount > 0)
+              FilledButton.icon(
+                onPressed: selectedAddableCount == 0 || state.isLoading
+                    ? null
+                    : _addSelected,
+                icon: const Icon(AppIcons.addCard),
+                label: Text(
+                  '${widget.l10n.reviewCenterAddSelected} ($selectedAddableCount)',
+                ),
+              ),
           ],
-          const SizedBox(height: 8),
-          FilledButton.icon(
-            onPressed: selectedAddableCount == 0 || state.isLoading
-                ? null
-                : _addSelected,
-            icon: const Icon(Icons.add_card_outlined),
-            label: Text('加入已选 ($selectedAddableCount)'),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -568,7 +526,7 @@ class _MistakeWordImporterState extends ConsumerState<_MistakeWordImporter> {
     if (!mounted) return;
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text('已加入 $added 张错词卡')));
+    ).showSnackBar(SnackBar(content: Text('$added added')));
     if (added > 0) setState(() => _selectedIds.clear());
   }
 
@@ -599,14 +557,14 @@ class _MistakeSelectionRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final color = selected ? AppTheme.teal : theme.colorScheme.outline;
+    final color = selected ? AppTokens.azure : theme.colorScheme.outline;
     return Semantics(
       button: true,
       checked: selected,
       enabled: enabled,
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: enabled ? () => onChanged(!selected) : null,
@@ -621,14 +579,14 @@ class _MistakeSelectionRow extends StatelessWidget {
                   height: 30,
                   decoration: BoxDecoration(
                     color: selected
-                        ? AppTheme.selectedSurface(context)
+                        ? AppTokens.primarySoft
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(color: color, width: selected ? 2 : 1),
                   ),
                   child: Icon(
-                    selected ? Icons.check_rounded : Icons.add_rounded,
-                    color: selected ? AppTheme.teal : color,
+                    selected ? AppIcons.check : AppIcons.add,
+                    color: selected ? AppTokens.azure : color,
                     size: 19,
                   ),
                 ),
@@ -651,10 +609,10 @@ class _MistakeSelectionRow extends StatelessWidget {
                   ),
                 ),
                 if (!enabled)
-                  const PillLabel(
-                    label: '已加入',
-                    icon: Icons.check_circle_outline,
-                    color: AppTheme.cyan,
+                  const AppPill(
+                    label: 'Added',
+                    icon: AppIcons.checkCircle,
+                    variant: PillVariant.success,
                   ),
               ],
             ),

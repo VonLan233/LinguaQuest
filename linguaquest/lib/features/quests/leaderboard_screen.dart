@@ -3,36 +3,54 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/utils/ui_labels.dart';
+import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
-import '../../core/widgets/learning_badges.dart';
+import '../../core/widgets/mascot_empty_state.dart';
 import '../../core/widgets/section_header.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class LeaderboardScreen extends ConsumerWidget {
   const LeaderboardScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(appControllerProvider).user;
-    final entries = [
-      _Entry(name: user?.name ?? '学习者', xp: user?.xp ?? 0, rank: 1),
-      const _Entry(name: 'Maya', xp: 860, rank: 2),
-      const _Entry(name: 'Chen', xp: 790, rank: 3),
-      const _Entry(name: 'Aisha', xp: 650, rank: 4),
-    ]..sort((a, b) => b.xp.compareTo(a.xp));
+    final l10n = AppLocalizations.of(context);
+    final state = ref.watch(appControllerProvider);
+    final user = state.user;
+    final entries = state.todayTrainingXp > 0
+        ? [
+            _Entry(
+              name: displayUserName(user, l10n: l10n),
+              xp: state.todayTrainingXp,
+              rank: 1,
+            ),
+          ]
+        : const <_Entry>[];
 
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/quest'),
-        title: const Text('排行榜'),
+        title: Text(l10n.questLeaderboard),
       ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            const SectionHeader(title: '本周 XP', subtitle: '好友和班级小组的轻量排名。'),
+            SectionHeader(
+              title: l10n.leaderboardTitle,
+              subtitle: l10n.leaderboardSubtitle,
+            ),
             const SizedBox(height: 16),
-            for (var index = 0; index < entries.length; index++)
-              _LeaderboardTile(entry: entries[index], rank: index + 1),
+            if (entries.isEmpty)
+              MascotEmptyState(
+                title: l10n.leaderboardEmptyTitle,
+                message: l10n.leaderboardEmptyBody,
+              )
+            else
+              for (var index = 0; index < entries.length; index++)
+                _LeaderboardTile(entry: entries[index], rank: index + 1),
           ],
         ),
       ),
@@ -59,29 +77,31 @@ class _LeaderboardTile extends StatelessWidget {
     final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: AppTheme.iconBadgeSurface(context),
-            foregroundColor: theme.colorScheme.primary,
-            child: Text('$rank'),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(entry.name, style: theme.textTheme.titleMedium),
-                const SizedBox(height: 3),
-                Text(
-                  '仅统计有效学习 XP',
-                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
-                ),
-              ],
+      child: AppCard(
+        child: Row(
+          children: [
+            CircleAvatar(
+              backgroundColor: AppTheme.iconBadgeSurface(context),
+              foregroundColor: theme.colorScheme.primary,
+              child: Text('$rank'),
             ),
-          ),
-          PillLabel(label: '${entry.xp} XP', color: AppTheme.mango),
-        ],
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(entry.name, style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 3),
+                  Text(
+                    AppLocalizations.of(context).leaderboardOnlyValidXp,
+                    style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                  ),
+                ],
+              ),
+            ),
+            AppPill(label: '${entry.xp} XP', variant: PillVariant.xp),
+          ],
+        ),
       ),
     );
   }
