@@ -424,6 +424,15 @@ class _QuestionPromptPanel extends StatelessWidget {
         return AppIcons.hearing;
       case QuizQuestionType.spelling:
         return AppIcons.edit;
+      // 新题型图标：复用语义最接近的已有图标
+      case QuizQuestionType.sentenceCloze:
+        return AppIcons.formatQuote; // 填空与上下文题同属句子语境
+      case QuizQuestionType.confusableChoice:
+        return AppIcons.swapHoriz;   // 易混词辨析类似中英互选
+      case QuizQuestionType.collocationChoice:
+        return AppIcons.translate;   // 搭配选择偏向词义辨析
+      case QuizQuestionType.derivativeChoice:
+        return AppIcons.edit;        // 词形变化类似拼写题
     }
   }
 }

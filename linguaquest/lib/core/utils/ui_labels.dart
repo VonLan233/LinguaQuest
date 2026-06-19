@@ -85,6 +85,15 @@ String displayQuestionType(QuizQuestionType type, {AppLocalizations? l10n}) {
         return l10n.labelQuestionTypeListeningMeaningChoice;
       case QuizQuestionType.spelling:
         return l10n.labelQuestionTypeSpelling;
+      // 新题型使用硬编码文本（i18n 翻译冻结，不添加新 ARB key）
+      case QuizQuestionType.sentenceCloze:
+        return '例句填空';
+      case QuizQuestionType.confusableChoice:
+        return '易混词辨析';
+      case QuizQuestionType.collocationChoice:
+        return '搭配选择';
+      case QuizQuestionType.derivativeChoice:
+        return '词形变化';
     }
   }
   switch (type) {
@@ -102,6 +111,15 @@ String displayQuestionType(QuizQuestionType type, {AppLocalizations? l10n}) {
       return '听音选义';
     case QuizQuestionType.spelling:
       return '拼写';
+    // 新题型（i18n 翻译冻结，不添加 ARB key，直接硬编码中文显示名）
+    case QuizQuestionType.sentenceCloze:
+      return '例句填空';
+    case QuizQuestionType.confusableChoice:
+      return '易混词辨析';
+    case QuizQuestionType.collocationChoice:
+      return '搭配选择';
+    case QuizQuestionType.derivativeChoice:
+      return '词形变化';
   }
 }
 
