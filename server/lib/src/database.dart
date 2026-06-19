@@ -464,6 +464,52 @@ CREATE TABLE IF NOT EXISTS content_reports (
 ''');
 
     await _seedLotteryPrizes();
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS forum_posts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  author_id TEXT NOT NULL,
+  title TEXT NOT NULL,
+  body TEXT NOT NULL,
+  tag TEXT NOT NULL DEFAULT 'General',
+  status TEXT NOT NULL DEFAULT 'pending',
+  like_count INT NOT NULL DEFAULT 0,
+  comment_count INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+''');
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS forum_comments (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  post_id UUID NOT NULL REFERENCES forum_posts(id) ON DELETE CASCADE,
+  author_id TEXT NOT NULL,
+  body TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'pending',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+''');
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS forum_likes (
+  user_id TEXT NOT NULL,
+  post_id UUID NOT NULL REFERENCES forum_posts(id) ON DELETE CASCADE,
+  PRIMARY KEY (user_id, post_id)
+);
+''');
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS forum_favorites (
+  user_id TEXT NOT NULL,
+  post_id UUID NOT NULL REFERENCES forum_posts(id) ON DELETE CASCADE,
+  PRIMARY KEY (user_id, post_id)
+);
+''');
+
+    await connection.execute('''
+CREATE INDEX IF NOT EXISTS forum_posts_status_idx ON forum_posts(status);
+''');
   }
 
   Future<Map<String, dynamic>?> getUserPrivacy(String userId) async {
@@ -1808,6 +1854,205 @@ SELECT
       parameters: {'id': historyId, 'userId': userId},
     );
     return result.affectedRows > 0;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Forum
+  // ---------------------------------------------------------------------------
+
+  Future<List<Map<String, dynamic>>> listForumPosts({String? status}) async {
+    final whereClause = status != null ? 'WHERE status=@status' : '';
+    final rows = await connection.execute(
+      Sql.named(
+        'SELECT * FROM forum_posts $whereClause ORDER BY created_at DESC',
+      ),
+      parameters: {if (status != null) 'status': status},
+    );
+    return rows.map((row) => row.toColumnMap()).toList();
+  }
+
+  Future<Map<String, dynamic>?> getForumPost(String id) async {
+    final rows = await connection.execute(
+      Sql.named('SELECT * FROM forum_posts WHERE id=@id::uuid LIMIT 1'),
+      parameters: {'id': id},
+    );
+    if (rows.isEmpty) return null;
+    return rows.first.toColumnMap();
+  }
+
+  Future<Map<String, dynamic>> insertForumPost(
+    Map<String, dynamic> data,
+  ) async {
+    final result = await connection.execute(
+      Sql.named('''
+INSERT INTO forum_posts (author_id, title, body, tag, status)
+VALUES (@authorId, @title, @body, @tag, @status)
+RETURNING id, author_id, title, body, tag, status, like_count, comment_count, created_at, updated_at
+'''),
+      parameters: {
+        'authorId': data['authorId'],
+        'title': data['title'],
+        'body': data['body'],
+        'tag': data['tag'] ?? 'General',
+        'status': data['status'] ?? 'approved',
+      },
+    );
+    final row = result.first;
+    return _forumPostRowToMap(row);
+  }
+
+  Future<Map<String, dynamic>> insertForumComment(
+    Map<String, dynamic> data,
+  ) async {
+    final result = await connection.execute(
+      Sql.named('''
+INSERT INTO forum_comments (post_id, author_id, body, status)
+VALUES (@postId::uuid, @authorId, @body, @status)
+RETURNING id, post_id, author_id, body, status, created_at
+'''),
+      parameters: {
+        'postId': data['postId'],
+        'authorId': data['authorId'],
+        'body': data['body'],
+        'status': data['status'] ?? 'approved',
+      },
+    );
+    await connection.execute(
+      Sql.named('''
+UPDATE forum_posts
+SET comment_count = comment_count + 1, updated_at = NOW()
+WHERE id = @postId::uuid
+'''),
+      parameters: {'postId': data['postId']},
+    );
+    final row = result.first;
+    return {
+      'id': row[0].toString(),
+      'postId': row[1].toString(),
+      'authorId': row[2],
+      'body': row[3],
+      'status': row[4],
+      'createdAt': (row[5] as DateTime).toIso8601String(),
+    };
+  }
+
+  Future<List<Map<String, dynamic>>> listForumComments(String postId) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT * FROM forum_comments
+WHERE post_id=@postId::uuid AND status='approved'
+ORDER BY created_at ASC
+'''),
+      parameters: {'postId': postId},
+    );
+    return rows.map((row) => row.toColumnMap()).toList();
+  }
+
+  /// Returns true if the like was added, false if it was removed.
+  Future<bool> toggleLike(String userId, String postId) async {
+    return connection.runTx((tx) async {
+      final existing = await tx.execute(
+        Sql.named(
+          'SELECT user_id FROM forum_likes WHERE user_id=@userId AND post_id=@postId::uuid LIMIT 1',
+        ),
+        parameters: {'userId': userId, 'postId': postId},
+      );
+      if (existing.isNotEmpty) {
+        await tx.execute(
+          Sql.named(
+            'DELETE FROM forum_likes WHERE user_id=@userId AND post_id=@postId::uuid',
+          ),
+          parameters: {'userId': userId, 'postId': postId},
+        );
+        await tx.execute(
+          Sql.named(
+            'UPDATE forum_posts SET like_count = GREATEST(like_count - 1, 0), updated_at=NOW() WHERE id=@postId::uuid',
+          ),
+          parameters: {'postId': postId},
+        );
+        return false;
+      } else {
+        await tx.execute(
+          Sql.named(
+            'INSERT INTO forum_likes (user_id, post_id) VALUES (@userId, @postId::uuid) ON CONFLICT DO NOTHING',
+          ),
+          parameters: {'userId': userId, 'postId': postId},
+        );
+        await tx.execute(
+          Sql.named(
+            'UPDATE forum_posts SET like_count = like_count + 1, updated_at=NOW() WHERE id=@postId::uuid',
+          ),
+          parameters: {'postId': postId},
+        );
+        return true;
+      }
+    });
+  }
+
+  /// Returns true if the favorite was added, false if it was removed.
+  Future<bool> toggleFavorite(String userId, String postId) async {
+    return connection.runTx((tx) async {
+      final existing = await tx.execute(
+        Sql.named(
+          'SELECT user_id FROM forum_favorites WHERE user_id=@userId AND post_id=@postId::uuid LIMIT 1',
+        ),
+        parameters: {'userId': userId, 'postId': postId},
+      );
+      if (existing.isNotEmpty) {
+        await tx.execute(
+          Sql.named(
+            'DELETE FROM forum_favorites WHERE user_id=@userId AND post_id=@postId::uuid',
+          ),
+          parameters: {'userId': userId, 'postId': postId},
+        );
+        return false;
+      } else {
+        await tx.execute(
+          Sql.named(
+            'INSERT INTO forum_favorites (user_id, post_id) VALUES (@userId, @postId::uuid) ON CONFLICT DO NOTHING',
+          ),
+          parameters: {'userId': userId, 'postId': postId},
+        );
+        return true;
+      }
+    });
+  }
+
+  Future<bool> hasLiked(String userId, String postId) async {
+    final rows = await connection.execute(
+      Sql.named(
+        'SELECT user_id FROM forum_likes WHERE user_id=@userId AND post_id=@postId::uuid LIMIT 1',
+      ),
+      parameters: {'userId': userId, 'postId': postId},
+    );
+    return rows.isNotEmpty;
+  }
+
+  Future<bool> hasFavorited(String userId, String postId) async {
+    final rows = await connection.execute(
+      Sql.named(
+        'SELECT user_id FROM forum_favorites WHERE user_id=@userId AND post_id=@postId::uuid LIMIT 1',
+      ),
+      parameters: {'userId': userId, 'postId': postId},
+    );
+    return rows.isNotEmpty;
+  }
+
+  static Map<String, dynamic> _forumPostRowToMap(dynamic row) {
+    if (row is Map) return Map<String, dynamic>.from(row);
+    final list = row as List;
+    return {
+      'id': list[0].toString(),
+      'author_id': list[1],
+      'title': list[2],
+      'body': list[3],
+      'tag': list[4],
+      'status': list[5],
+      'like_count': list[6],
+      'comment_count': list[7],
+      'created_at': list[8],
+      'updated_at': list[9],
+    };
   }
 }
 

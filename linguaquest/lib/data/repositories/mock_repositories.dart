@@ -22,6 +22,8 @@ import 'ai_repository.dart';
 import 'auth_repository.dart';
 import 'custom_word_repository.dart';
 import '../models/ai_feature.dart';
+import '../models/forum.dart';
+import 'forum_repository.dart';
 import 'learning_repository.dart';
 import 'lottery_repository.dart';
 import 'notification_repository.dart';
@@ -1099,3 +1101,171 @@ class MockAiRepository implements AiRepository {
     _history.removeWhere((entry) => entry.id == id);
   }
 }
+
+class MockForumRepository implements ForumRepository {
+  final List<ForumPost> _posts = _buildSeedPosts();
+
+  final Map<String, List<ForumComment>> _comments = {};
+  final Set<String> _likedPostIds = {};
+  final Set<String> _favoritedPostIds = {};
+  int _postIdCounter = 10;
+  int _commentIdCounter = 100;
+
+  @override
+  Future<List<ForumPost>> listPosts() async {
+    return _posts
+        .map(
+          (post) => post.copyWith(
+            isLiked: _likedPostIds.contains(post.id),
+            isFavorited: _favoritedPostIds.contains(post.id),
+          ),
+        )
+        .toList();
+  }
+
+  @override
+  Future<ForumPost> getPost(String id) async {
+    final post = _posts.firstWhere(
+      (post) => post.id == id,
+      orElse: () => throw StateError('post not found: $id'),
+    );
+    return post.copyWith(
+      isLiked: _likedPostIds.contains(id),
+      isFavorited: _favoritedPostIds.contains(id),
+    );
+  }
+
+  @override
+  Future<ForumPost> createPost({
+    required String title,
+    required String body,
+    required String tag,
+  }) async {
+    final id = 'mock-post-${++_postIdCounter}';
+    final post = ForumPost(
+      id: id,
+      authorId: 'current-user',
+      authorName: 'You',
+      title: title,
+      body: body,
+      tag: tag,
+      status: 'approved',
+      likeCount: 0,
+      commentCount: 0,
+      isLiked: false,
+      isFavorited: false,
+      createdAt: DateTime.now(),
+    );
+    _posts.insert(0, post);
+    return post;
+  }
+
+  @override
+  Future<ForumComment> createComment({
+    required String postId,
+    required String body,
+  }) async {
+    final id = 'mock-comment-${++_commentIdCounter}';
+    final comment = ForumComment(
+      id: id,
+      postId: postId,
+      authorId: 'current-user',
+      authorName: 'You',
+      body: body,
+      createdAt: DateTime.now(),
+    );
+    _comments.putIfAbsent(postId, () => []).add(comment);
+    final idx = _posts.indexWhere((p) => p.id == postId);
+    if (idx >= 0) {
+      _posts[idx] = _posts[idx].copyWith(
+        commentCount: _posts[idx].commentCount + 1,
+      );
+    }
+    return comment;
+  }
+
+  @override
+  Future<List<ForumComment>> listComments(String postId) async {
+    return List.unmodifiable(_comments[postId] ?? const []);
+  }
+
+  @override
+  Future<bool> toggleLike(String postId) async {
+    final idx = _posts.indexWhere((p) => p.id == postId);
+    if (idx < 0) return false;
+    if (_likedPostIds.contains(postId)) {
+      _likedPostIds.remove(postId);
+      _posts[idx] = _posts[idx].copyWith(
+        likeCount: (_posts[idx].likeCount - 1).clamp(0, 999999),
+        isLiked: false,
+      );
+      return false;
+    } else {
+      _likedPostIds.add(postId);
+      _posts[idx] = _posts[idx].copyWith(
+        likeCount: _posts[idx].likeCount + 1,
+        isLiked: true,
+      );
+      return true;
+    }
+  }
+
+  @override
+  Future<bool> toggleFavorite(String postId) async {
+    if (_favoritedPostIds.contains(postId)) {
+      _favoritedPostIds.remove(postId);
+      return false;
+    } else {
+      _favoritedPostIds.add(postId);
+      return true;
+    }
+  }
+}
+
+List<ForumPost> _buildSeedPosts() => [
+  ForumPost(
+    id: 'mock-post-1',
+    authorId: 'demo-user',
+    authorName: 'Demo User',
+    title: 'How to use Present Perfect tense?',
+    body:
+        'I always mix up "have done" and "did". What is the rule? Any tips for remembering when to use each?',
+    tag: 'Grammar',
+    status: 'approved',
+    likeCount: 12,
+    commentCount: 4,
+    isLiked: false,
+    isFavorited: false,
+    createdAt: DateTime.utc(2026, 6, 18, 10, 0, 0),
+  ),
+  ForumPost(
+    id: 'mock-post-2',
+    authorId: 'demo-user-2',
+    authorName: 'LinguaLearner',
+    title: 'Best vocabulary strategy for HSK 4?',
+    body:
+        'I am preparing for HSK 4 and struggling with the new vocabulary. I find spaced repetition helps but I want more tips. How did others pass this level?',
+    tag: 'Vocabulary',
+    status: 'approved',
+    likeCount: 8,
+    commentCount: 6,
+    isLiked: false,
+    isFavorited: false,
+    createdAt: DateTime.utc(2026, 6, 17, 14, 30, 0),
+  ),
+  ForumPost(
+    id: 'mock-post-3',
+    authorId: 'demo-user-3',
+    authorName: 'CultureExplorer',
+    title: 'Chinese New Year greetings — what do they really mean?',
+    body:
+        '新年快乐 is common but I have heard 恭喜发财 and 万事如意 too. What is the cultural significance of each greeting? When do you use them?',
+    tag: 'Culture',
+    status: 'approved',
+    likeCount: 15,
+    commentCount: 9,
+    isLiked: false,
+    isFavorited: false,
+    createdAt: DateTime.utc(2026, 6, 15, 9, 0, 0),
+  ),
+];

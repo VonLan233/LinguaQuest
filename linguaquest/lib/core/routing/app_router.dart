@@ -14,6 +14,8 @@ import '../../features/discover/discover_screen.dart';
 import '../../features/discover/xp_tasks_screen.dart';
 import '../../features/discover/lucky_draw_screen.dart';
 import '../../features/discover/community_screen.dart';
+import '../../features/discover/forum_post_detail_screen.dart';
+import '../../features/discover/forum_compose_screen.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/learning/learning_path_screen.dart';
 import '../../features/learning/lesson_preview_screen.dart';
@@ -210,6 +212,16 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/discover/community',
         builder: (context, state) => const CommunityScreen(),
+      ),
+      GoRoute(
+        path: '/forum/posts/:id',
+        builder: (context, state) => ForumPostDetailScreen(
+          postId: state.pathParameters['id']!,
+        ),
+      ),
+      GoRoute(
+        path: '/forum/compose',
+        builder: (context, state) => const ForumComposeScreen(),
       ),
       GoRoute(
         path: '/wordbook',

@@ -12,6 +12,7 @@ import 'auth.dart';
 import 'config.dart';
 import 'database.dart';
 import 'email_sender.dart';
+import 'forum_policy.dart';
 import 'json_response.dart';
 import 'lesson_catalog.dart';
 import 'lottery_policy.dart';
@@ -896,6 +897,116 @@ Router buildRouter(
     });
   });
 
+  // ── Forum routes ──────────────────────────────────────────────────────────
+
+  router.get('/forum/posts', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final posts = await database.listForumPosts(status: 'approved');
+      final result = <Map<String, dynamic>>[];
+      for (final post in posts) {
+        final postId = post['id'].toString();
+        final liked = await database.hasLiked(uid, postId);
+        final favorited = await database.hasFavorited(uid, postId);
+        result.add(_forumPostDto(post, isLiked: liked, isFavorited: favorited));
+      }
+      return jsonResponse({'posts': result});
+    });
+  });
+
+  router.post('/forum/posts', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      final title = (body['title'] as String? ?? '').trim();
+      final postBody = (body['body'] as String? ?? '').trim();
+      final tag = (body['tag'] as String? ?? 'General').trim();
+      final status = ForumPolicy.autoModeratePost(title, postBody);
+      if (status == ContentStatus.rejected) {
+        return jsonResponse({
+          'error': 'title and body are required, title ≤ 200 chars, body ≤ 5000 chars',
+        }, status: 400);
+      }
+      final post = await database.insertForumPost({
+        'authorId': uid,
+        'title': title,
+        'body': postBody,
+        'tag': tag,
+        'status': 'approved',
+      });
+      return jsonResponse(
+        {'post': _forumPostDto(post, isLiked: false, isFavorited: false)},
+        status: 201,
+      );
+    });
+  });
+
+  router.get('/forum/posts/<id>', (Request request, String id) async {
+    return _protected(config, request, (uid) async {
+      final post = await database.getForumPost(id);
+      if (post == null) {
+        return jsonResponse({'error': 'post not found'}, status: 404);
+      }
+      final comments = await database.listForumComments(id);
+      final liked = await database.hasLiked(uid, id);
+      final favorited = await database.hasFavorited(uid, id);
+      return jsonResponse({
+        'post': _forumPostDto(post, isLiked: liked, isFavorited: favorited),
+        'comments': comments.map(_forumCommentDto).toList(),
+      });
+    });
+  });
+
+  router.post(
+    '/forum/posts/<id>/comments',
+    (Request request, String id) async {
+      return _protected(config, request, (uid) async {
+        final post = await database.getForumPost(id);
+        if (post == null) {
+          return jsonResponse({'error': 'post not found'}, status: 404);
+        }
+        final body = await readJsonMap(request);
+        final commentBody = (body['body'] as String? ?? '').trim();
+        final status = ForumPolicy.autoModerateComment(commentBody);
+        if (status == ContentStatus.rejected) {
+          return jsonResponse({
+            'error': 'body is required and must be under 5000 chars',
+          }, status: 400);
+        }
+        final comment = await database.insertForumComment({
+          'postId': id,
+          'authorId': uid,
+          'body': commentBody,
+          'status': 'approved',
+        });
+        return jsonResponse({'comment': comment}, status: 201);
+      });
+    },
+  );
+
+  router.post('/forum/posts/<id>/like', (Request request, String id) async {
+    return _protected(config, request, (uid) async {
+      final post = await database.getForumPost(id);
+      if (post == null) {
+        return jsonResponse({'error': 'post not found'}, status: 404);
+      }
+      final liked = await database.toggleLike(uid, id);
+      return jsonResponse({'liked': liked});
+    });
+  });
+
+  router.post(
+    '/forum/posts/<id>/favorite',
+    (Request request, String id) async {
+      return _protected(config, request, (uid) async {
+        final post = await database.getForumPost(id);
+        if (post == null) {
+          return jsonResponse({'error': 'post not found'}, status: 404);
+        }
+        final favorited = await database.toggleFavorite(uid, id);
+        return jsonResponse({'favorited': favorited});
+      });
+    },
+  );
+
   router.post('/reports', (Request request) async {
     return _protected(config, request, (uid) async {
       final body = await readJsonMap(request);
@@ -975,6 +1086,44 @@ Router buildRouter(
   });
 
   return router;
+}
+
+Map<String, dynamic> _forumPostDto(
+  Map<String, dynamic> row, {
+  required bool isLiked,
+  required bool isFavorited,
+}) {
+  return {
+    'id': row['id'].toString(),
+    'authorId': row['author_id'],
+    'title': row['title'],
+    'body': row['body'],
+    'tag': row['tag'],
+    'status': row['status'],
+    'likeCount': row['like_count'],
+    'commentCount': row['comment_count'],
+    'isLiked': isLiked,
+    'isFavorited': isFavorited,
+    'createdAt': _isoString(row['created_at']),
+    'updatedAt': _isoString(row['updated_at']),
+  };
+}
+
+Map<String, dynamic> _forumCommentDto(Map<String, dynamic> row) {
+  return {
+    'id': row['id'].toString(),
+    'postId': row['post_id'].toString(),
+    'authorId': row['author_id'],
+    'body': row['body'],
+    'status': row['status'],
+    'createdAt': _isoString(row['created_at']),
+  };
+}
+
+String _isoString(Object? value) {
+  if (value == null) return '';
+  if (value is DateTime) return value.toIso8601String();
+  return value.toString();
 }
 
 Future<Map<String, dynamic>> learningProgressDto(

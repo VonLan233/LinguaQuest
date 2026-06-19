@@ -22,10 +22,12 @@ import '../../data/models/user_privacy.dart';
 import '../../data/models/user_profile.dart';
 import '../../data/models/user_word.dart';
 import '../../data/remote/api_client.dart';
+import '../../data/models/forum.dart';
 import '../../data/repositories/ai_repository.dart';
 import '../../data/repositories/api_repositories.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../data/repositories/custom_word_repository.dart';
+import '../../data/repositories/forum_repository.dart';
 import '../../data/repositories/learning_repository.dart';
 import '../../data/repositories/lottery_repository.dart';
 import '../../data/repositories/mock_repositories.dart';
@@ -124,6 +126,13 @@ final aiRepositoryProvider = Provider<AiRepository>((ref) {
   return MockAiRepository();
 });
 
+final forumRepositoryProvider = Provider<ForumRepository>((ref) {
+  if (AppConstants.apiBaseUrl.isNotEmpty) {
+    return ApiForumRepository(ref.read(apiClientProvider));
+  }
+  return MockForumRepository();
+});
+
 final appControllerProvider = NotifierProvider<AppController, AppState>(
   AppController.new,
 );
@@ -155,6 +164,7 @@ class AppController extends Notifier<AppState> {
   late final LotteryRepository _lotteryRepository;
   late final RewardRepository _rewardRepository;
   late final RewardTaskRepository _rewardTaskRepository;
+  late final ForumRepository _forumRepository;
   late final LocalNotificationService _localNotificationService;
   var _localNotificationsInitialized = false;
 
@@ -170,6 +180,7 @@ class AppController extends Notifier<AppState> {
     _lotteryRepository = ref.watch(lotteryRepositoryProvider);
     _rewardRepository = ref.watch(rewardRepositoryProvider);
     _rewardTaskRepository = ref.watch(rewardTaskRepositoryProvider);
+    _forumRepository = ref.watch(forumRepositoryProvider);
     _localNotificationService = ref.watch(localNotificationServiceProvider);
     return AppState.initial();
   }
@@ -2414,6 +2425,116 @@ class AppController extends Notifier<AppState> {
     await repo.deleteHistory(id);
     final history = await repo.listHistory();
     state = state.copyWith(aiHistory: history);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Forum
+  // ---------------------------------------------------------------------------
+
+  Future<void> refreshForumPosts() async {
+    try {
+      final posts = await _forumRepository.listPosts();
+      if (!ref.mounted) return;
+      state = state.copyWith(forumPosts: posts);
+    } catch (error) {
+      debugPrint('Failed to refresh forum posts: $error');
+    }
+  }
+
+  Future<ForumPost?> createForumPost({
+    required String title,
+    required String body,
+    required String tag,
+  }) async {
+    try {
+      final post = await _forumRepository.createPost(
+        title: title,
+        body: body,
+        tag: tag,
+      );
+      if (!ref.mounted) return null;
+      state = state.copyWith(forumPosts: [post, ...state.forumPosts]);
+      return post;
+    } catch (error) {
+      debugPrint('Failed to create forum post: $error');
+      return null;
+    }
+  }
+
+  Future<ForumComment?> createForumComment({
+    required String postId,
+    required String body,
+  }) async {
+    try {
+      final comment = await _forumRepository.createComment(
+        postId: postId,
+        body: body,
+      );
+      if (!ref.mounted) return null;
+      // Increment comment count locally for immediate feedback
+      state = state.copyWith(
+        forumPosts: [
+          for (final post in state.forumPosts)
+            if (post.id == postId)
+              post.copyWith(commentCount: post.commentCount + 1)
+            else
+              post,
+        ],
+      );
+      return comment;
+    } catch (error) {
+      debugPrint('Failed to create forum comment: $error');
+      return null;
+    }
+  }
+
+  Future<void> toggleForumLike(String postId) async {
+    // Optimistic update
+    final oldPosts = state.forumPosts;
+    state = state.copyWith(
+      forumPosts: [
+        for (final post in state.forumPosts)
+          if (post.id == postId)
+            post.copyWith(
+              isLiked: !post.isLiked,
+              likeCount: post.isLiked
+                  ? (post.likeCount - 1).clamp(0, 999999)
+                  : post.likeCount + 1,
+            )
+          else
+            post,
+      ],
+    );
+    try {
+      await _forumRepository.toggleLike(postId);
+    } catch (error) {
+      debugPrint('Failed to toggle like: $error');
+      if (ref.mounted) {
+        state = state.copyWith(forumPosts: oldPosts);
+      }
+    }
+  }
+
+  Future<void> toggleForumFavorite(String postId) async {
+    // Optimistic update
+    final oldPosts = state.forumPosts;
+    state = state.copyWith(
+      forumPosts: [
+        for (final post in state.forumPosts)
+          if (post.id == postId)
+            post.copyWith(isFavorited: !post.isFavorited)
+          else
+            post,
+      ],
+    );
+    try {
+      await _forumRepository.toggleFavorite(postId);
+    } catch (error) {
+      debugPrint('Failed to toggle favorite: $error');
+      if (ref.mounted) {
+        state = state.copyWith(forumPosts: oldPosts);
+      }
+    }
   }
 }
 

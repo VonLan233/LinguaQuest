@@ -6,6 +6,7 @@ import '../../data/models/ai_feature.dart';
 import '../../data/models/app_notification.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/daily_reward_task.dart';
+import '../../data/models/forum.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
 import '../../data/models/lottery.dart';
@@ -121,6 +122,7 @@ class AppState {
     required this.lotteryPrizes,
     required this.userAssets,
     required this.aiHistory,
+    required this.forumPosts,
     this.targetLanguage = 'zh',
     this.sensorySettings = SensorySettings.defaults,
     this.privacySettings = UserPrivacySettings.defaults,
@@ -167,6 +169,7 @@ class AppState {
   final LotteryDrawResult? lastLotteryResult;
   final String? errorMessage;
   final List<AiHistoryEntry> aiHistory;
+  final List<ForumPost> forumPosts;
   final List<CustomWord> _reviewWords;
 
   bool get isAuthenticated => user != null;
@@ -332,6 +335,7 @@ class AppState {
     String? errorMessage,
     bool clearError = false,
     List<AiHistoryEntry>? aiHistory,
+    List<ForumPost>? forumPosts,
   }) {
     final nextCustomWords = customWords ?? this.customWords;
     final nextUserWords = userWords ?? this.userWords;
@@ -372,6 +376,7 @@ class AppState {
       lastLotteryResult: lastLotteryResult ?? this.lastLotteryResult,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
       aiHistory: aiHistory ?? this.aiHistory,
+      forumPosts: forumPosts ?? this.forumPosts,
       reviewWords: customWords == null && userWords == null && wordBooks == null
           ? _reviewWords
           : _buildReviewWords(nextUserWords, nextCustomWords, nextWordBooks),
@@ -404,6 +409,7 @@ class AppState {
       lotteryPrizes: [],
       userAssets: [],
       aiHistory: const [],
+      forumPosts: const [],
     );
   }
 }

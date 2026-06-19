@@ -28,6 +28,8 @@ import 'review_repository.dart';
 import 'study_plan_repository.dart';
 import 'user_word_repository.dart';
 import '../models/ai_feature.dart';
+import '../models/forum.dart';
+import 'forum_repository.dart';
 
 class ApiAuthRepository implements AuthRepository {
   ApiAuthRepository(this._client);
@@ -652,6 +654,88 @@ class ApiAiRepository implements AiRepository {
   @override
   Future<void> deleteHistory(String id) async {
     await _client.dio.delete<void>('/ai/history/$id');
+  }
+}
+
+class ApiForumRepository implements ForumRepository {
+  ApiForumRepository(this._client);
+
+  final ApiClient _client;
+
+  @override
+  Future<List<ForumPost>> listPosts() async {
+    final response = await _client.dio.get<Map<String, dynamic>>('/forum/posts');
+    final posts = response.data!['posts'] as List<dynamic>? ?? const [];
+    return posts
+        .whereType<Map>()
+        .map((item) => ForumPost.fromJson(Map<String, dynamic>.from(item)))
+        .toList();
+  }
+
+  @override
+  Future<ForumPost> getPost(String id) async {
+    final response =
+        await _client.dio.get<Map<String, dynamic>>('/forum/posts/$id');
+    return ForumPost.fromJson(
+      response.data!['post'] as Map<String, dynamic>,
+    );
+  }
+
+  @override
+  Future<ForumPost> createPost({
+    required String title,
+    required String body,
+    required String tag,
+  }) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/forum/posts',
+      data: {'title': title, 'body': body, 'tag': tag},
+    );
+    return ForumPost.fromJson(
+      response.data!['post'] as Map<String, dynamic>,
+    );
+  }
+
+  @override
+  Future<ForumComment> createComment({
+    required String postId,
+    required String body,
+  }) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/forum/posts/$postId/comments',
+      data: {'body': body},
+    );
+    return ForumComment.fromJson(
+      response.data!['comment'] as Map<String, dynamic>,
+    );
+  }
+
+  @override
+  Future<List<ForumComment>> listComments(String postId) async {
+    final response =
+        await _client.dio.get<Map<String, dynamic>>('/forum/posts/$postId');
+    final comments =
+        response.data!['comments'] as List<dynamic>? ?? const [];
+    return comments
+        .whereType<Map>()
+        .map((item) => ForumComment.fromJson(Map<String, dynamic>.from(item)))
+        .toList();
+  }
+
+  @override
+  Future<bool> toggleLike(String postId) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/forum/posts/$postId/like',
+    );
+    return response.data!['liked'] as bool? ?? false;
+  }
+
+  @override
+  Future<bool> toggleFavorite(String postId) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/forum/posts/$postId/favorite',
+    );
+    return response.data!['favorited'] as bool? ?? false;
   }
 }
 
