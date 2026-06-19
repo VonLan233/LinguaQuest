@@ -18,8 +18,10 @@ import '../models/user_word.dart';
 import '../models/user_profile.dart';
 import '../lesson_factory.dart';
 import '../wordbook_asset_loader.dart';
+import 'ai_repository.dart';
 import 'auth_repository.dart';
 import 'custom_word_repository.dart';
+import '../models/ai_feature.dart';
 import 'learning_repository.dart';
 import 'lottery_repository.dart';
 import 'notification_repository.dart';
@@ -1002,5 +1004,98 @@ class MockRewardRepository implements RewardRepository {
     granted.add(key);
     await prefs.setStringList(_grantedSourceKeys, granted.toList());
     return PointGrantResult(pointsAwarded: points, alreadyGranted: false);
+  }
+}
+
+class MockAiRepository implements AiRepository {
+  final List<AiHistoryEntry> _history = [];
+  int _idCounter = 0;
+
+  @override
+  Future<Map<String, dynamic>> chat({
+    required String prompt,
+    String? targetWord,
+  }) async {
+    final snippet = prompt.length > 30 ? prompt.substring(0, 30) : prompt;
+    final result = <String, dynamic>{
+      'answer': 'Mock answer for: $snippet',
+      'cautions': <String>[],
+      'relatedWords': <String>[],
+    };
+    _history.insert(
+      0,
+      AiHistoryEntry(
+        id: 'mock-${_idCounter++}',
+        featureType: 'chat',
+        prompt: prompt,
+        response: result,
+        createdAt: DateTime.now(),
+      ),
+    );
+    return result;
+  }
+
+  @override
+  Future<Map<String, dynamic>> analyzeStatement({
+    required String prompt,
+  }) async {
+    final result = <String, dynamic>{
+      'mainClause': 'Mock main clause',
+      'clauses': <String>[],
+      'modifiers': <String>[],
+      'translation': 'Mock translation',
+      'vocabularyNotes': <String>[],
+    };
+    _history.insert(
+      0,
+      AiHistoryEntry(
+        id: 'mock-${_idCounter++}',
+        featureType: 'sentence_analysis',
+        prompt: prompt,
+        response: result,
+        createdAt: DateTime.now(),
+      ),
+    );
+    return result;
+  }
+
+  @override
+  Future<Map<String, dynamic>> generateCloze({
+    required String prompt,
+    String? targetWord,
+  }) async {
+    final word = targetWord ?? 'word';
+    final result = <String, dynamic>{
+      'passage': 'The ___ was very interesting.',
+      'blanks': [
+        {
+          'index': 0,
+          'answer': word,
+          'options': [word, 'thing', 'idea', 'place'],
+        },
+      ],
+      'explanations': <String>[],
+    };
+    _history.insert(
+      0,
+      AiHistoryEntry(
+        id: 'mock-${_idCounter++}',
+        featureType: 'cloze',
+        prompt: prompt,
+        response: result,
+        createdAt: DateTime.now(),
+      ),
+    );
+    return result;
+  }
+
+  @override
+  Future<List<AiHistoryEntry>> listHistory() async {
+    return List.unmodifiable(_history);
+  }
+
+  @override
+  Future<void> deleteHistory(String id) async {
+    _history.removeWhere((entry) => entry.id == id);
   }
 }

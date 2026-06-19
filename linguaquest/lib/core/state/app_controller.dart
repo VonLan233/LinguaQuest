@@ -21,6 +21,7 @@ import '../../data/models/study_plan.dart';
 import '../../data/models/user_profile.dart';
 import '../../data/models/user_word.dart';
 import '../../data/remote/api_client.dart';
+import '../../data/repositories/ai_repository.dart';
 import '../../data/repositories/api_repositories.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../data/repositories/custom_word_repository.dart';
@@ -113,6 +114,13 @@ final rewardTaskRepositoryProvider = Provider<RewardTaskRepository>((ref) {
     return ApiRewardTaskRepository(ref.watch(apiClientProvider));
   }
   return MockRewardTaskRepository();
+});
+
+final aiRepositoryProvider = Provider<AiRepository>((ref) {
+  if (AppConstants.apiBaseUrl.isNotEmpty) {
+    return ApiAiRepository(ref.read(apiClientProvider));
+  }
+  return MockAiRepository();
 });
 
 final appControllerProvider = NotifierProvider<AppController, AppState>(
@@ -2320,6 +2328,38 @@ class AppController extends Notifier<AppState> {
     final month = date.month.toString().padLeft(2, '0');
     final day = date.day.toString().padLeft(2, '0');
     return '${date.year}-$month-$day';
+  }
+
+  Future<Map<String, dynamic>> askAi({
+    required String featureType,
+    required String prompt,
+    String? targetWord,
+  }) async {
+    final repo = ref.read(aiRepositoryProvider);
+    Map<String, dynamic> result;
+    switch (featureType) {
+      case 'chat':
+        result = await repo.chat(prompt: prompt, targetWord: targetWord);
+      case 'sentence_analysis':
+        result = await repo.analyzeStatement(prompt: prompt);
+      case 'cloze':
+        result = await repo.generateCloze(
+          prompt: prompt,
+          targetWord: targetWord,
+        );
+      default:
+        result = {};
+    }
+    final history = await repo.listHistory();
+    state = state.copyWith(aiHistory: history);
+    return result;
+  }
+
+  Future<void> deleteAiHistory(String id) async {
+    final repo = ref.read(aiRepositoryProvider);
+    await repo.deleteHistory(id);
+    final history = await repo.listHistory();
+    state = state.copyWith(aiHistory: history);
   }
 }
 

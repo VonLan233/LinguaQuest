@@ -10,6 +10,10 @@ class AppConfig {
     this.smtpUsername = '',
     this.smtpPassword = '',
     this.smtpFrom = 'no-reply@linguaquest.app',
+    this.aiProvider = 'mock',
+    this.aiApiKey = '',
+    this.aiApiBaseUrl = '',
+    this.aiDailyLimitPerUser = 20,
   });
 
   final int port;
@@ -20,6 +24,10 @@ class AppConfig {
   final String smtpUsername;
   final String smtpPassword;
   final String smtpFrom;
+  final String aiProvider;
+  final String aiApiKey;
+  final String aiApiBaseUrl;
+  final int aiDailyLimitPerUser;
 
   factory AppConfig.fromEnvironment() {
     return AppConfig(
@@ -34,6 +42,11 @@ class AppConfig {
       smtpUsername: _env('SMTP_USERNAME', ''),
       smtpPassword: _env('SMTP_PASSWORD', ''),
       smtpFrom: _env('SMTP_FROM', 'no-reply@linguaquest.app'),
+      aiProvider: _env('AI_PROVIDER', 'mock'),
+      aiApiKey: _env('AI_API_KEY', ''),
+      aiApiBaseUrl: _env('AI_API_BASE_URL', ''),
+      aiDailyLimitPerUser:
+          int.tryParse(_env('AI_DAILY_LIMIT_PER_USER', '20')) ?? 20,
     );
   }
 }

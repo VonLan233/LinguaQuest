@@ -424,6 +424,21 @@ END
 \$\$;
 ''');
 
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS ai_history (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id TEXT NOT NULL,
+  feature_type TEXT NOT NULL,
+  prompt TEXT NOT NULL,
+  response JSONB NOT NULL,
+  is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+''');
+    await connection.execute(
+      'CREATE INDEX IF NOT EXISTS ai_history_user_id_idx ON ai_history(user_id)',
+    );
+
     await _seedLotteryPrizes();
   }
 
@@ -1631,6 +1646,71 @@ SELECT
     final value = rows.first.toColumnMap()['count'];
     if (value is int) return value;
     return int.tryParse(value.toString()) ?? 0;
+  }
+
+  Future<Map<String, dynamic>> insertAiHistory(
+    String userId,
+    String featureType,
+    String prompt,
+    Map<String, dynamic> response,
+  ) async {
+    final result = await connection.execute(
+      Sql.named(
+        "INSERT INTO ai_history (user_id, feature_type, prompt, response) "
+        "VALUES (@userId, @featureType, @prompt, @response::jsonb) "
+        "RETURNING id, user_id, feature_type, prompt, response, is_deleted, created_at",
+      ),
+      parameters: {
+        'userId': userId,
+        'featureType': featureType,
+        'prompt': prompt,
+        'response': jsonEncode(response),
+      },
+    );
+    final row = result.first;
+    return {
+      'id': row[0].toString(),
+      'userId': row[1],
+      'featureType': row[2],
+      'prompt': row[3],
+      'response': row[4],
+      'isDeleted': row[5],
+      'createdAt': row[6].toString(),
+    };
+  }
+
+  Future<List<Map<String, dynamic>>> listAiHistory(String userId) async {
+    final result = await connection.execute(
+      Sql.named(
+        'SELECT id, user_id, feature_type, prompt, response, is_deleted, created_at '
+        'FROM ai_history '
+        'WHERE user_id=@userId AND is_deleted=FALSE '
+        'ORDER BY created_at DESC',
+      ),
+      parameters: {'userId': userId},
+    );
+    return result.map((row) {
+      return {
+        'id': row[0].toString(),
+        'userId': row[1],
+        'featureType': row[2],
+        'prompt': row[3],
+        'response': row[4],
+        'isDeleted': row[5],
+        'createdAt': row[6].toString(),
+      };
+    }).toList();
+  }
+
+  Future<bool> softDeleteAiHistory(String userId, String historyId) async {
+    final result = await connection.execute(
+      Sql.named(
+        'UPDATE ai_history SET is_deleted=TRUE '
+        'WHERE id=@id::uuid AND user_id=@userId AND is_deleted=FALSE',
+      ),
+      parameters: {'id': historyId, 'userId': userId},
+    );
+    return result.affectedRows > 0;
   }
 }
 

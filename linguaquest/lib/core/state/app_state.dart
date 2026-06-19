@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../data/models/ai_feature.dart';
 import '../../data/models/app_notification.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/daily_reward_task.dart';
@@ -81,6 +82,7 @@ class AppState {
     required this.notifications,
     required this.lotteryPrizes,
     required this.userAssets,
+    required this.aiHistory,
     this.targetLanguage = 'zh',
     this.locale,
     this.user,
@@ -122,6 +124,7 @@ class AppState {
   final LessonResult? lastResult;
   final LotteryDrawResult? lastLotteryResult;
   final String? errorMessage;
+  final List<AiHistoryEntry> aiHistory;
   final List<CustomWord> _reviewWords;
 
   bool get isAuthenticated => user != null;
@@ -284,6 +287,7 @@ class AppState {
     bool clearLastResult = false,
     String? errorMessage,
     bool clearError = false,
+    List<AiHistoryEntry>? aiHistory,
   }) {
     final nextCustomWords = customWords ?? this.customWords;
     final nextUserWords = userWords ?? this.userWords;
@@ -321,6 +325,7 @@ class AppState {
       lastResult: clearLastResult ? null : lastResult ?? this.lastResult,
       lastLotteryResult: lastLotteryResult ?? this.lastLotteryResult,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
+      aiHistory: aiHistory ?? this.aiHistory,
       reviewWords: customWords == null && userWords == null && wordBooks == null
           ? _reviewWords
           : _buildReviewWords(nextUserWords, nextCustomWords, nextWordBooks),
@@ -352,6 +357,7 @@ class AppState {
       notifications: [],
       lotteryPrizes: [],
       userAssets: [],
+      aiHistory: const [],
     );
   }
 }

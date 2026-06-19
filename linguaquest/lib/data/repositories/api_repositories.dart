@@ -16,6 +16,7 @@ import '../models/user_profile.dart';
 import '../lesson_factory.dart';
 import '../remote/api_client.dart';
 import '../wordbook_asset_loader.dart';
+import 'ai_repository.dart';
 import 'auth_repository.dart';
 import 'custom_word_repository.dart';
 import 'learning_repository.dart';
@@ -26,6 +27,7 @@ import 'reward_task_repository.dart';
 import 'review_repository.dart';
 import 'study_plan_repository.dart';
 import 'user_word_repository.dart';
+import '../models/ai_feature.dart';
 
 class ApiAuthRepository implements AuthRepository {
   ApiAuthRepository(this._client);
@@ -588,6 +590,68 @@ class ApiRewardRepository implements RewardRepository {
           ? UserProfile.fromJson(data['user'] as Map<String, dynamic>)
           : null,
     );
+  }
+}
+
+class ApiAiRepository implements AiRepository {
+  ApiAiRepository(this._client);
+
+  final ApiClient _client;
+
+  @override
+  Future<Map<String, dynamic>> chat({
+    required String prompt,
+    String? targetWord,
+  }) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/ai/chat',
+      data: {
+        'prompt': prompt,
+        'targetWord': targetWord,
+      },
+    );
+    return response.data!['data'] as Map<String, dynamic>;
+  }
+
+  @override
+  Future<Map<String, dynamic>> analyzeStatement({
+    required String prompt,
+  }) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/ai/sentence-analysis',
+      data: {'prompt': prompt},
+    );
+    return response.data!['data'] as Map<String, dynamic>;
+  }
+
+  @override
+  Future<Map<String, dynamic>> generateCloze({
+    required String prompt,
+    String? targetWord,
+  }) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/ai/cloze',
+      data: {
+        'prompt': prompt,
+        'targetWord': targetWord,
+      },
+    );
+    return response.data!['data'] as Map<String, dynamic>;
+  }
+
+  @override
+  Future<List<AiHistoryEntry>> listHistory() async {
+    final response = await _client.dio.get<Map<String, dynamic>>('/ai/history');
+    final items = response.data!['history'] as List<dynamic>? ?? const [];
+    return items
+        .whereType<Map>()
+        .map((item) => AiHistoryEntry.fromJson(Map<String, dynamic>.from(item)))
+        .toList();
+  }
+
+  @override
+  Future<void> deleteHistory(String id) async {
+    await _client.dio.delete<void>('/ai/history/$id');
   }
 }
 

@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
+import 'ai_policy.dart';
 import 'auth.dart';
 import 'config.dart';
 import 'database.dart';
@@ -26,6 +27,7 @@ Router buildRouter(
   AppDatabase database, {
   http.Client? httpClient,
   EmailSender? emailSender,
+  AiPolicyService? aiPolicy,
 }) {
   final client = httpClient ?? _httpClient;
   final mailer = emailSender ?? EmailSender.fromConfig(config);
@@ -818,6 +820,104 @@ Router buildRouter(
         'tasks': tasks,
         'user': userDto(claim.user ?? user),
       });
+    });
+  });
+
+  // ── AI 路由 ──────────────────────────────────────────────────────────────
+
+  final effectiveAiPolicy = aiPolicy ??
+      AiPolicyService(
+        provider: MockAiProvider(),
+        dailyLimitPerUser: config.aiDailyLimitPerUser,
+      );
+
+  Future<Response> _handleAiRequest(
+    Request request,
+    String featureType,
+    String uid,
+  ) async {
+    final body = await readJsonMap(request);
+    final prompt = body['prompt'] as String? ?? '';
+    final targetWord = body['targetWord'] as String?;
+    if (prompt.isEmpty) {
+      return jsonResponse({'error': 'prompt is required'}, status: 400);
+    }
+    final aiRequest = AiRequest(
+      featureType: featureType,
+      userId: uid,
+      prompt: prompt,
+      targetWord: targetWord,
+    );
+    final response = await effectiveAiPolicy.handle(aiRequest);
+    if (!response.success) {
+      final status = response.errorCode == 'too_long' ? 400 : 422;
+      return jsonResponse(
+        {'error': response.errorCode ?? 'ai_error'},
+        status: status,
+      );
+    }
+    final record = await database.insertAiHistory(
+      uid,
+      featureType,
+      prompt,
+      response.data,
+    );
+    return jsonResponse({
+      'historyId': record['id'],
+      'featureType': featureType,
+      'data': response.data,
+      'createdAt': record['createdAt'],
+    });
+  }
+
+  router.post('/ai/chat', (Request request) async {
+    return _protected(
+      config,
+      request,
+      (uid) => _handleAiRequest(request, 'chat', uid),
+    );
+  });
+
+  router.post('/ai/sentence-analysis', (Request request) async {
+    return _protected(
+      config,
+      request,
+      (uid) => _handleAiRequest(request, 'sentence_analysis', uid),
+    );
+  });
+
+  router.post('/ai/cloze', (Request request) async {
+    return _protected(
+      config,
+      request,
+      (uid) => _handleAiRequest(request, 'cloze', uid),
+    );
+  });
+
+  router.get('/ai/history', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final history = await database.listAiHistory(uid);
+      return jsonResponse({
+        'history': history.map((h) {
+          return {
+            'id': h['id'],
+            'featureType': h['featureType'],
+            'prompt': h['prompt'],
+            'response': h['response'],
+            'createdAt': h['createdAt'],
+          };
+        }).toList(),
+      });
+    });
+  });
+
+  router.delete('/ai/history/<id>', (Request request, String id) async {
+    return _protected(config, request, (uid) async {
+      final deleted = await database.softDeleteAiHistory(uid, id);
+      if (!deleted) {
+        return jsonResponse({'error': 'not found'}, status: 404);
+      }
+      return jsonResponse({'deleted': true});
     });
   });
 

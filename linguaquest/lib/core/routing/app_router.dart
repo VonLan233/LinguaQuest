@@ -6,7 +6,10 @@ import '../../features/auth/goal_setup_screen.dart';
 import '../../features/auth/login_screen.dart';
 import '../../features/auth/register_screen.dart';
 import '../../features/auth/verify_email_screen.dart';
+import '../../features/ai_learning/ai_chat_screen.dart';
+import '../../features/ai_learning/ai_cloze_screen.dart';
 import '../../features/ai_learning/ai_learning_screen.dart';
+import '../../features/ai_learning/ai_sentence_analysis_screen.dart';
 import '../../features/discover/discover_screen.dart';
 import '../../features/discover/xp_tasks_screen.dart';
 import '../../features/discover/lucky_draw_screen.dart';
@@ -147,6 +150,23 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/ai-tutor',
         builder: (context, state) => const AiTutorScreen(),
+      ),
+      GoRoute(
+        path: '/ai-chat',
+        builder: (context, state) => AiChatScreen(
+          word: state.uri.queryParameters['word'],
+          example: state.uri.queryParameters['example'],
+        ),
+      ),
+      GoRoute(
+        path: '/ai-analysis',
+        builder: (context, state) => const AiSentenceAnalysisScreen(),
+      ),
+      GoRoute(
+        path: '/ai-cloze',
+        builder: (context, state) => AiClozeScreen(
+          word: state.uri.queryParameters['word'],
+        ),
       ),
       GoRoute(
         path: '/settings',
