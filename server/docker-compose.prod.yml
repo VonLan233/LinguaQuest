@@ -14,15 +14,13 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:${PORT:-8080}/health || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
+    # No container healthcheck: the API runs on a `FROM scratch` image with no
+    # shell or curl, so a CMD-SHELL healthcheck can never succeed (it would mark
+    # the container permanently unhealthy). Health is observed externally via
+    # the /health endpoint (e.g. nginx/uptime monitoring).
 
   db:
-    image: postgres:15-alpine
+    image: postgres:16-alpine
     restart: always
     volumes:
       - pgdata_prod:/var/lib/postgresql/data

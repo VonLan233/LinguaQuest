@@ -18,11 +18,23 @@ if [[ ! -f ".env" ]]; then
   exit 1
 fi
 
-"${COMPOSE[@]}" --env-file .env -f "$COMPOSE_FILE" build
-# docker-compose v1 can fail to recreate containers on newer Docker engines
-# with a stale ContainerConfig error, so remove the API container explicitly.
+if [[ ! -f ".env.prod" ]]; then
+  echo "Missing .env.prod (container env_file). Create it with the runtime env (e.g. AI_PROVIDER, AI_API_KEY)." >&2
+  exit 1
+fi
+
+# Build the API image while the old container keeps serving.
+"${COMPOSE[@]}" --env-file .env -f "$COMPOSE_FILE" build api
+
+# docker-compose v1 can fail to RECREATE containers on newer Docker engines with
+# a stale `KeyError: ContainerConfig` error, which can leave the database stopped
+# and risk it being recreated against an incompatible image. To stay safe:
+#   1. Ensure db is up but NEVER recreate a running db (--no-recreate).
+#   2. Remove and freshly create ONLY the api container (--no-deps), so the deploy
+#      never touches the database container or its volume.
+"${COMPOSE[@]}" --env-file .env -f "$COMPOSE_FILE" up -d --no-deps --no-recreate db
 "${COMPOSE[@]}" --env-file .env -f "$COMPOSE_FILE" rm -sf api || true
-"${COMPOSE[@]}" --env-file .env -f "$COMPOSE_FILE" up -d
+"${COMPOSE[@]}" --env-file .env -f "$COMPOSE_FILE" up -d --no-deps api
 "${COMPOSE[@]}" --env-file .env -f "$COMPOSE_FILE" ps
 
 echo "LinguaQuest server deployed from $APP_DIR"
