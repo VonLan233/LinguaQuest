@@ -8,6 +8,7 @@ import '../../features/auth/register_screen.dart';
 import '../../features/auth/verify_email_screen.dart';
 import '../../features/ai_learning/ai_chat_screen.dart';
 import '../../features/ai_learning/ai_cloze_screen.dart';
+import '../../features/ai_learning/ai_writing_review_screen.dart';
 import '../../features/ai_learning/ai_learning_screen.dart';
 import '../../features/ai_learning/ai_sentence_analysis_screen.dart';
 import '../../features/discover/discover_screen.dart';
@@ -177,6 +178,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => AiClozeScreen(
           word: state.uri.queryParameters['word'],
         ),
+      ),
+      GoRoute(
+        path: '/ai-writing-review',
+        builder: (context, state) => const AiWritingReviewScreen(),
       ),
       GoRoute(
         path: '/settings',

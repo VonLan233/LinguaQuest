@@ -1285,6 +1285,44 @@ Router buildRouter(
     });
   });
 
+  router.post('/ai/writing-review', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      final prompt = body['prompt'] as String? ?? '';
+      final examType = body['examType'] as String?;
+      final targetScore = body['targetScore'];
+      if (prompt.isEmpty) {
+        return jsonResponse({'error': 'prompt is required'}, status: 400);
+      }
+      final aiRequest = AiRequest(
+        featureType: 'writing_review',
+        userId: uid,
+        prompt: prompt,
+        targetWord: examType,
+      );
+      final response = await effectiveAiPolicy.handle(aiRequest);
+      if (!response.success) {
+        final status = response.errorCode == 'too_long' ? 400 : 422;
+        return jsonResponse(
+          {'error': response.errorCode ?? 'ai_error'},
+          status: status,
+        );
+      }
+      final record = await database.insertAiHistory(
+        uid,
+        'writing_review',
+        prompt,
+        response.data,
+      );
+      return jsonResponse({
+        'historyId': record['id'],
+        'featureType': 'writing_review',
+        'data': response.data,
+        'createdAt': record['createdAt'],
+      });
+    });
+  });
+
   return router;
 }
 

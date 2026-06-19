@@ -36,6 +36,14 @@ class DataSettingsScreen extends ConsumerWidget {
                   const Divider(height: AppTokens.s16),
                   ListTile(
                     contentPadding: EdgeInsets.zero,
+                    title: const Text('Clear AI history'),
+                    subtitle: const Text('Remove all AI interaction history'),
+                    trailing: const Icon(Icons.history_outlined),
+                    onTap: () => _confirmClearAiHistory(context, ref),
+                  ),
+                  const Divider(height: AppTokens.s16),
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
                     title: const Text('Export account data'),
                     subtitle: const Text('Download a copy of your data'),
                     trailing: const Icon(Icons.download_outlined),
@@ -113,6 +121,50 @@ class DataSettingsScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _confirmClearAiHistory(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
+    final controller = ref.read(appControllerProvider);
+    final historyIds = controller.aiHistory.map((e) => e.id).toList();
+    if (historyIds.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No AI history to clear')),
+      );
+      return;
+    }
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Clear AI history'),
+        content: Text(
+          'This will permanently delete ${historyIds.length} AI interaction record(s). This cannot be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Clear'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true && context.mounted) {
+      final notifier = ref.read(appControllerProvider.notifier);
+      for (final id in historyIds) {
+        await notifier.deleteAiHistory(id);
+      }
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('AI history cleared')),
+        );
+      }
+    }
   }
 
   void _confirmDeleteAccount(BuildContext context) {

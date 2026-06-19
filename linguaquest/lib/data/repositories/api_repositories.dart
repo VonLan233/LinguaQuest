@@ -661,6 +661,23 @@ class ApiAiRepository implements AiRepository {
   Future<void> deleteHistory(String id) async {
     await _client.dio.delete<void>('/ai/history/$id');
   }
+
+  @override
+  Future<Map<String, dynamic>> reviewWriting({
+    required String essay,
+    String? examType,
+    double? targetScore,
+  }) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/ai/writing-review',
+      data: {
+        'prompt': essay,
+        if (examType != null) 'examType': examType,
+        if (targetScore != null) 'targetScore': targetScore,
+      },
+    );
+    return (response.data?['data'] as Map<String, dynamic>?) ?? {};
+  }
 }
 
 class ApiForumRepository implements ForumRepository {

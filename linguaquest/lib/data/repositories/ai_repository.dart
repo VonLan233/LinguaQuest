@@ -16,4 +16,10 @@ abstract class AiRepository {
   Future<List<AiHistoryEntry>> listHistory();
 
   Future<void> deleteHistory(String id);
+
+  Future<Map<String, dynamic>> reviewWriting({
+    required String essay,
+    String? examType,
+    double? targetScore,
+  });
 }

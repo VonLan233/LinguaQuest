@@ -114,7 +114,8 @@ class AiLearningScreen extends StatelessWidget {
           icon: AppIcons.rateReview,
           title: l10n.aiLearningToolAiWriting,
           color: AppTokens.coralColor(context),
-          status: l10n.aiLearningStatusLater,
+          status: l10n.aiLearningStatusSoon,
+          onTap: () => context.push('/ai-writing-review'),
         ),
         const SizedBox(height: AppTokens.s12),
         _AiToolRow(

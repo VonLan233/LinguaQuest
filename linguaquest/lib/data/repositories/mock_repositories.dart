@@ -1106,6 +1106,42 @@ class MockAiRepository implements AiRepository {
   Future<void> deleteHistory(String id) async {
     _history.removeWhere((entry) => entry.id == id);
   }
+
+  @override
+  Future<Map<String, dynamic>> reviewWriting({
+    required String essay,
+    String? examType,
+    double? targetScore,
+  }) async {
+    final result = <String, dynamic>{
+      'totalScore': 75,
+      'rubricScores': <String, int>{
+        'content': 18,
+        'language': 15,
+        'structure': 14,
+        'vocabulary': 15,
+        'accuracy': 13,
+      },
+      'mainIssues': <String>['Limited vocabulary variety'],
+      'paragraphSuggestions': <Map<String, String>>[],
+      'highScoreExpressions': <String>[
+        'Furthermore, it is worth noting that...',
+      ],
+      'grammarIssues': <Map<String, String>>[],
+      'rewrittenSample': 'Mock rewritten sample.',
+    };
+    _history.insert(
+      0,
+      AiHistoryEntry(
+        id: 'mock-wr-${_idCounter++}',
+        featureType: 'writing_review',
+        prompt: essay,
+        response: result,
+        createdAt: DateTime.now(),
+      ),
+    );
+    return result;
+  }
 }
 
 class MockForumRepository implements ForumRepository {

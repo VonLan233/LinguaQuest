@@ -67,6 +67,32 @@ class MockAiProvider implements AiProvider {
             'explanations': <String>[],
           },
         );
+      case 'writing_review':
+        return AiResponse(success: true, data: {
+          'totalScore': 75,
+          'rubricScores': {
+            'content': 18,
+            'language': 15,
+            'structure': 14,
+            'vocabulary': 15,
+            'accuracy': 13,
+          },
+          'mainIssues': [
+            'Limited vocabulary variety',
+            'Some grammar errors in complex sentences',
+          ],
+          'paragraphSuggestions': [
+            {'paragraph': 1, 'suggestion': 'Strengthen your opening argument'},
+          ],
+          'highScoreExpressions': [
+            'Furthermore, it is worth noting that...',
+            'From the perspective of...',
+          ],
+          'grammarIssues': [
+            {'original': 'I am agree', 'corrected': 'I agree', 'rule': 'Stative verb'},
+          ],
+          'rewrittenSample': 'Mock rewritten essay paragraph...',
+        });
       default:
         return const AiResponse(
           success: false,
@@ -86,7 +112,8 @@ class AiPolicyService {
   final int dailyLimitPerUser;
 
   String? validateRequest(AiRequest request) {
-    if (request.prompt.length > _maxPromptLength) return 'too_long';
+    final maxLength = request.featureType == 'writing_review' ? 3000 : _maxPromptLength;
+    if (request.prompt.length > maxLength) return 'too_long';
     return null;
   }
 

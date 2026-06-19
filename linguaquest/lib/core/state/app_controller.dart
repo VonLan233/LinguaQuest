@@ -2430,6 +2430,26 @@ class AppController extends Notifier<AppState> {
     return result;
   }
 
+  Future<Map<String, dynamic>> reviewWriting({
+    required String essay,
+    String? examType,
+    double? targetScore,
+  }) async {
+    try {
+      final result = await ref.read(aiRepositoryProvider).reviewWriting(
+        essay: essay,
+        examType: examType,
+        targetScore: targetScore,
+      );
+      final history = await ref.read(aiRepositoryProvider).listHistory();
+      state = state.copyWith(aiHistory: history);
+      return result;
+    } catch (e) {
+      state = state.copyWith(errorMessage: _friendlyError(e));
+      return {};
+    }
+  }
+
   Future<void> deleteAiHistory(String id) async {
     final repo = ref.read(aiRepositoryProvider);
     await repo.deleteHistory(id);
