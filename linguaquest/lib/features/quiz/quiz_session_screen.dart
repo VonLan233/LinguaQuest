@@ -12,6 +12,7 @@ import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
+import '../../core/widgets/pronunciation_controls.dart';
 import '../../core/widgets/app_progress_bar.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/word_choice_button.dart';
@@ -142,7 +143,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        _QuestionPromptPanel(question: question),
+                        QuizPromptPanel(question: question),
                         const SizedBox(height: 18),
                         _QuestionInput(
                           question: question,
@@ -368,8 +369,8 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
   }
 }
 
-class _QuestionPromptPanel extends StatelessWidget {
-  const _QuestionPromptPanel({required this.question});
+class QuizPromptPanel extends StatelessWidget {
+  const QuizPromptPanel({required this.question, super.key});
 
   final QuizQuestion question;
 
@@ -404,6 +405,15 @@ class _QuestionPromptPanel extends StatelessWidget {
               ),
             ],
           ),
+          if (question.type == QuizQuestionType.listeningWordChoice ||
+              question.type == QuizQuestionType.listeningMeaningChoice) ...[
+            const SizedBox(height: 12),
+            PronunciationControls(
+              word: question.word.word,
+              audioUKUrl: question.word.audioUKUrl,
+              audioUSUrl: question.word.audioUSUrl,
+            ),
+          ],
         ],
       ),
     );
