@@ -2381,11 +2381,11 @@ void main() {
     final controller = container.read(appControllerProvider.notifier);
     expect(
       await controller.register('Ava', 'ava@lingua.quest', 'password123'),
-      true,
+      AuthStep.authenticated,
     );
     expect(
       await controller.register('Ava', 'ava@lingua.quest', 'password123'),
-      false,
+      AuthStep.failed,
     );
     expect(
       container.read(appControllerProvider).errorMessage,
@@ -2395,7 +2395,7 @@ void main() {
     await controller.logout();
     expect(
       await controller.register('Ava', 'ava@lingua.quest', 'password123'),
-      false,
+      AuthStep.failed,
     );
     expect(
       container.read(appControllerProvider).errorMessage,
