@@ -1357,6 +1357,9 @@ Router buildRouter(
   router.post('/study-spots', (Request request) async {
     return _protected(config, request, (uid) async {
       final body = await readJsonMap(request);
+      if (body['latitude'] == null || body['longitude'] == null) {
+        return jsonResponse({'error': 'invalid_coordinates'}, status: 400);
+      }
       final name = (body['name'] as String? ?? '').trim();
       final lat = (body['latitude'] as num?)?.toDouble() ?? 0;
       final lng = (body['longitude'] as num?)?.toDouble() ?? 0;

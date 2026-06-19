@@ -145,7 +145,7 @@ final analyticsRepositoryProvider = Provider<AnalyticsRepository>((ref) {
 
 final studySpotRepositoryProvider = Provider<StudySpotRepository>((ref) {
   if (AppConstants.apiBaseUrl.isNotEmpty) {
-    return ApiStudySpotRepository(ref.watch(apiClientProvider));
+    return ApiStudySpotRepository(ref.read(apiClientProvider));
   }
   return MockStudySpotRepository();
 });

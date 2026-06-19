@@ -47,7 +47,21 @@ class _StudyMapScreenState extends ConsumerState<StudyMapScreen> {
   }
 
   Future<void> _saveHere() async {
-    final loc = await _currentLatLng() ?? _map.camera.center;
+    final loc = await _currentLatLng();
+    if (!mounted) return;
+    if (loc == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Location unavailable — long-press the map to pick a spot.',
+          ),
+        ),
+      );
+    }
+    await _saveAt(loc ?? _map.camera.center);
+  }
+
+  Future<void> _saveAt(LatLng loc) async {
     if (!mounted) return;
     final name = await _askName();
     if (name == null || name.trim().isEmpty) return;
@@ -62,37 +76,41 @@ class _StudyMapScreenState extends ConsumerState<StudyMapScreen> {
     if (mounted) _map.move(loc, 15);
   }
 
-  Future<String?> _askName() {
+  Future<String?> _askName() async {
     final controller = TextEditingController();
-    return showDialog<String>(
-      context: context,
-      builder: (ctx) => Dialog(
-        backgroundColor: Colors.transparent,
-        child: AppCard(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Text(
-                'Save study spot',
-                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
-              ),
-              const SizedBox(height: AppTokens.s16),
-              TextField(
-                controller: controller,
-                autofocus: true,
-                decoration: const InputDecoration(hintText: 'e.g. Library'),
-              ),
-              const SizedBox(height: AppTokens.s16),
-              AppPrimaryButton(
-                label: 'Save',
-                onPressed: () => Navigator.of(ctx).pop(controller.text),
-              ),
-            ],
+    try {
+      return await showDialog<String>(
+        context: context,
+        builder: (ctx) => Dialog(
+          backgroundColor: Colors.transparent,
+          child: AppCard(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Text(
+                  'Save study spot',
+                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+                ),
+                const SizedBox(height: AppTokens.s16),
+                TextField(
+                  controller: controller,
+                  autofocus: true,
+                  decoration: const InputDecoration(hintText: 'e.g. Library'),
+                ),
+                const SizedBox(height: AppTokens.s16),
+                AppPrimaryButton(
+                  label: 'Save',
+                  onPressed: () => Navigator.of(ctx).pop(controller.text),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    } finally {
+      controller.dispose();
+    }
   }
 
   @override
@@ -113,6 +131,8 @@ class _StudyMapScreenState extends ConsumerState<StudyMapScreen> {
               ? LatLng(spots.first.latitude, spots.first.longitude)
               : _fallbackCenter,
           initialZoom: 13,
+          onLongPress: (TapPosition tapPosition, LatLng latlng) =>
+              _saveAt(latlng),
         ),
         children: [
           TileLayer(
