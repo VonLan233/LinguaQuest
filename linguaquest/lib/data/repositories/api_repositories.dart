@@ -36,6 +36,43 @@ import '../models/analytics.dart';
 import '../models/forum.dart';
 import '../models/recommendation.dart';
 import 'forum_repository.dart';
+import '../models/study_spot.dart';
+import 'study_spot_repository.dart';
+
+class ApiStudySpotRepository implements StudySpotRepository {
+  ApiStudySpotRepository(this._client);
+
+  final ApiClient _client;
+
+  @override
+  Future<List<StudySpot>> list() async {
+    final response =
+        await _client.dio.get<Map<String, dynamic>>('/study-spots');
+    final list = (response.data?['spots'] as List?) ?? [];
+    return list
+        .map((e) => StudySpot.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
+  @override
+  Future<StudySpot> add(StudySpot spot) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/study-spots',
+      data: {
+        'name': spot.name,
+        'latitude': spot.latitude,
+        'longitude': spot.longitude,
+        'studyMinutes': spot.studyMinutes,
+      },
+    );
+    return StudySpot.fromJson(response.data!);
+  }
+
+  @override
+  Future<void> remove(String id) async {
+    await _client.dio.delete<void>('/study-spots/$id');
+  }
+}
 
 class ApiAuthRepository implements AuthRepository {
   ApiAuthRepository(this._client);

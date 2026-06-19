@@ -14,6 +14,7 @@ import '../../data/models/lesson_result.dart';
 import '../../data/models/lottery.dart';
 import '../../data/models/recommendation.dart';
 import '../../data/models/study_plan.dart';
+import '../../data/models/study_spot.dart';
 import '../../data/models/user_privacy.dart';
 import '../../data/models/user_word.dart';
 import '../../data/models/user_profile.dart';
@@ -139,6 +140,7 @@ class AppState {
     this.achievements = const [],
     this.leaderboardSnapshot,
     this.recommendations = const [],
+    this.studySpots = const [],
     List<CustomWord>? reviewWords,
   }) : _reviewWords = List.unmodifiable(
          reviewWords ?? _buildReviewWords(userWords, customWords, wordBooks),
@@ -181,6 +183,7 @@ class AppState {
   final List<Achievement> achievements;
   final LeaderboardResult? leaderboardSnapshot;
   final List<Recommendation> recommendations;
+  final List<StudySpot> studySpots;
   final List<CustomWord> _reviewWords;
 
   bool get isAuthenticated => user != null;
@@ -353,6 +356,7 @@ class AppState {
     LeaderboardResult? leaderboardSnapshot,
     bool clearLeaderboardSnapshot = false,
     List<Recommendation>? recommendations,
+    List<StudySpot>? studySpots,
   }) {
     final nextCustomWords = customWords ?? this.customWords;
     final nextUserWords = userWords ?? this.userWords;
@@ -402,6 +406,7 @@ class AppState {
           ? null
           : leaderboardSnapshot ?? this.leaderboardSnapshot,
       recommendations: recommendations ?? this.recommendations,
+      studySpots: studySpots ?? this.studySpots,
       reviewWords: customWords == null && userWords == null && wordBooks == null
           ? _reviewWords
           : _buildReviewWords(nextUserWords, nextCustomWords, nextWordBooks),
@@ -436,6 +441,7 @@ class AppState {
       aiHistory: const [],
       forumPosts: const [],
       recommendations: const [],
+      studySpots: const [],
     );
   }
 }
