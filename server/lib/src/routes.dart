@@ -1310,11 +1310,15 @@ Router buildRouter(
       if (prompt.isEmpty) {
         return jsonResponse({'error': 'prompt is required'}, status: 400);
       }
+      final aiPrompt = buildWritingReviewPrompt(
+        prompt,
+        examType: examType,
+        targetScore: targetScore,
+      );
       final aiRequest = AiRequest(
         featureType: 'writing_review',
         userId: uid,
-        prompt: prompt,
-        targetWord: examType,
+        prompt: aiPrompt,
       );
       final response = await effectiveAiPolicy.handle(aiRequest);
       if (!response.success) {

@@ -1,6 +1,25 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+
+/// Builds the writing-review prompt sent to the grader, prepending exam
+/// context when provided. Returns the essay unchanged when no context exists.
+String buildWritingReviewPrompt(
+  String essay, {
+  String? examType,
+  Object? targetScore,
+}) {
+  final lines = <String>[];
+  if (examType != null && examType.isNotEmpty) {
+    lines.add('Exam type: $examType');
+  }
+  if (targetScore != null) {
+    lines.add('Target score: $targetScore');
+  }
+  if (lines.isEmpty) return essay;
+  return '${lines.join('\n')}\n\nEssay:\n$essay';
+}
 
 class AiRequest {
   const AiRequest({
@@ -258,14 +277,14 @@ class RemoteAiProvider implements AiProvider {
       'Authorization': 'Bearer $apiKey',
       'Content-Type': 'application/json',
     };
-    var res = await client
-        .post(uri, headers: headers, body: body)
-        .timeout(timeout);
-    if (res.statusCode >= 500) {
-      res = await client
-          .post(uri, headers: headers, body: body)
-          .timeout(timeout);
+    try {
+      final res = await client.post(uri, headers: headers, body: body).timeout(timeout);
+      if (res.statusCode >= 500) {
+        return client.post(uri, headers: headers, body: body).timeout(timeout);
+      }
+      return res;
+    } on TimeoutException {
+      return client.post(uri, headers: headers, body: body).timeout(timeout);
     }
-    return res;
   }
 }

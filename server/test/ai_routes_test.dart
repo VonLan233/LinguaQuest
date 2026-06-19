@@ -143,6 +143,33 @@ void main() {
     });
   });
 
+  group('buildWritingReviewPrompt', () {
+    test('with examType and targetScore includes both headers and essay', () {
+      final result = buildWritingReviewPrompt(
+        'My essay text.',
+        examType: 'IELTS',
+        targetScore: 7,
+      );
+      expect(result, contains('Exam type: IELTS'));
+      expect(result, contains('Target score: 7'));
+      expect(result, contains('Essay:\nMy essay text.'));
+    });
+
+    test('without any context returns essay unchanged', () {
+      final result = buildWritingReviewPrompt('My essay text.');
+      expect(result, equals('My essay text.'));
+    });
+
+    test('with examType only includes exam type but not target score line', () {
+      final result = buildWritingReviewPrompt(
+        'My essay text.',
+        examType: 'TOEFL',
+      );
+      expect(result, contains('Exam type: TOEFL'));
+      expect(result, isNot(contains('Target score')));
+    });
+  });
+
   group('AiPolicyService safety controls', () {
     test('blocked keyword returns blocked error', () async {
       final policy = AiPolicyService(
