@@ -34,6 +34,10 @@ class MockAuthRepository implements AuthRepository {
   static const _registeredEmailsKey = 'linguaquest.mock.registered_emails';
   UserProfile? _profile;
 
+  /// In offline/demo mode, any 6-digit all-digit code is accepted as correct.
+  /// Passing any non-numeric or wrong-length value throws [EmailVerificationException]
+  /// with reason 'invalid_code', so UI error paths can be exercised in tests.
+
   @override
   Future<UserProfile?> loadSession() async {
     final prefs = await SharedPreferences.getInstance();
@@ -124,12 +128,35 @@ class MockAuthRepository implements AuthRepository {
     required String email,
     required String code,
   }) async {
+    // In demo/offline mode we accept any all-digit 6-character code.
+    // Any other value simulates a wrong-code error so UI error-handling paths
+    // can be exercised in unit tests.
+    final trimmed = code.trim();
+    final isNumeric = RegExp(r'^\d{6}$').hasMatch(trimmed);
+    if (!isNumeric) {
+      throw const EmailVerificationException('invalid_code');
+    }
     final existing = await loadSession();
     if (existing != null) return existing;
-    return login(email: email, password: '');
+    // Register was called earlier — look up the profile via the registered list.
+    final normalizedEmail = email.trim().toLowerCase();
+    final prefs = await SharedPreferences.getInstance();
+    final registered = (prefs.getStringList(_registeredEmailsKey) ?? const [])
+        .map((e) => e.trim().toLowerCase())
+        .toSet();
+    if (!registered.contains(normalizedEmail)) {
+      throw StateError('account not found');
+    }
+    final profile = UserProfile.demo().copyWith(
+      email: normalizedEmail,
+      updatedAt: DateTime.now(),
+    );
+    return updateProfile(profile);
   }
 
   @override
+  // In offline/demo mode resendCode is a no-op — the mock OTP is always
+  // accepted, so there is nothing to re-issue.
   Future<void> resendCode(String email) async {}
 
   @override
