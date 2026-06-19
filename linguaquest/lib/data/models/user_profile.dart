@@ -12,6 +12,7 @@ class UserProfile {
     required this.updatedAt,
     this.avatarUrl,
     this.lastStudyDate,
+    this.emailVerified = true,
   });
 
   final String uid;
@@ -26,6 +27,7 @@ class UserProfile {
   final DateTime? lastStudyDate;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final bool emailVerified;
 
   factory UserProfile.demo() {
     final now = DateTime.now();
@@ -54,6 +56,7 @@ class UserProfile {
       dailyGoal: json['dailyGoal'] as int? ?? 10,
       xp: json['xp'] as int? ?? 0,
       streak: json['streak'] as int? ?? 0,
+      emailVerified: json['emailVerified'] as bool? ?? true,
       lastStudyDate: _date(json['lastStudyDate']),
       createdAt: _date(json['createdAt']) ?? DateTime.now(),
       updatedAt: _date(json['updatedAt']) ?? DateTime.now(),
@@ -71,6 +74,7 @@ class UserProfile {
       'dailyGoal': dailyGoal,
       'xp': xp,
       'streak': streak,
+      'emailVerified': emailVerified,
       'lastStudyDate': lastStudyDate?.toIso8601String(),
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
@@ -90,6 +94,7 @@ class UserProfile {
     DateTime? lastStudyDate,
     DateTime? createdAt,
     DateTime? updatedAt,
+    bool? emailVerified,
   }) {
     return UserProfile(
       uid: uid ?? this.uid,
@@ -104,6 +109,7 @@ class UserProfile {
       lastStudyDate: lastStudyDate ?? this.lastStudyDate,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      emailVerified: emailVerified ?? this.emailVerified,
     );
   }
 
