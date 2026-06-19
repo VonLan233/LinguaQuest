@@ -39,6 +39,10 @@ import '../constants/app_constants.dart';
 import '../utils/ui_labels.dart';
 import 'app_state.dart';
 
+/// Outcome of a register/login attempt, used by the auth screens to decide
+/// navigation (home vs the verify-email screen vs showing an error).
+enum AuthStep { authenticated, needsVerification, failed }
+
 final apiClientProvider = Provider<ApiClient>((ref) => ApiClient());
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
@@ -319,47 +323,91 @@ class AppController extends Notifier<AppState> {
     }
   }
 
-  Future<bool> register(String name, String email, String password) async {
-    return _run(() async {
-      final user = await _authRepository.register(
+  Future<void> _applyAuthenticatedUser(UserProfile user) async {
+    final lotteryData = await _loadLotteryData(user);
+    state = state.copyWith(
+      user: user,
+      customWords: await _customWordRepository.list(user.uid),
+      lotteryPrizes: lotteryData.prizes,
+      userAssets: lotteryData.assets,
+      userWords: await _userWordRepository.list(user.uid),
+    );
+    await _ensureStudyPlan(user);
+    await refreshNotifications();
+    await refreshRewardTasks();
+    unawaited(_scheduleLocalNotifications());
+  }
+
+  Future<AuthStep> register(String name, String email, String password) async {
+    state = state.copyWith(isLoading: true, clearError: true);
+    try {
+      final result = await _authRepository.register(
         name: name,
         email: email,
         password: password,
       );
-      final lotteryData = await _loadLotteryData(user);
+      if (result is AuthVerificationRequired) {
+        state = state.copyWith(isLoading: false);
+        return AuthStep.needsVerification;
+      }
+      await _applyAuthenticatedUser((result as AuthSuccess).profile);
+      state = state.copyWith(isLoading: false);
+      return AuthStep.authenticated;
+    } catch (error) {
       state = state.copyWith(
-        user: user,
-        customWords: await _customWordRepository.list(user.uid),
-        lotteryPrizes: lotteryData.prizes,
-        userAssets: lotteryData.assets,
-        userWords: await _userWordRepository.list(user.uid),
+        isLoading: false,
+        errorMessage: _friendlyError(error),
       );
-      await _ensureStudyPlan(user);
-      await refreshNotifications();
-      await refreshRewardTasks();
-      unawaited(_scheduleLocalNotifications());
-    });
+      return AuthStep.failed;
+    }
   }
 
-  Future<bool> login(String email, String password) async {
-    return _run(() async {
-      final user = await _authRepository.login(
-        email: email,
-        password: password,
-      );
-      final lotteryData = await _loadLotteryData(user);
+  Future<AuthStep> login(String email, String password) async {
+    state = state.copyWith(isLoading: true, clearError: true);
+    try {
+      final user =
+          await _authRepository.login(email: email, password: password);
+      await _applyAuthenticatedUser(user);
+      state = state.copyWith(isLoading: false);
+      return AuthStep.authenticated;
+    } on EmailNotVerifiedException {
+      state = state.copyWith(isLoading: false);
+      return AuthStep.needsVerification;
+    } catch (error) {
       state = state.copyWith(
-        user: user,
-        customWords: await _customWordRepository.list(user.uid),
-        lotteryPrizes: lotteryData.prizes,
-        userAssets: lotteryData.assets,
-        userWords: await _userWordRepository.list(user.uid),
+        isLoading: false,
+        errorMessage: _friendlyError(error),
       );
-      await _ensureStudyPlan(user);
-      await refreshNotifications();
-      await refreshRewardTasks();
-      unawaited(_scheduleLocalNotifications());
-    });
+      return AuthStep.failed;
+    }
+  }
+
+  Future<bool> verifyEmail({
+    required String email,
+    required String code,
+  }) async {
+    state = state.copyWith(isLoading: true, clearError: true);
+    try {
+      final user =
+          await _authRepository.verifyEmail(email: email, code: code);
+      await _applyAuthenticatedUser(user);
+      state = state.copyWith(isLoading: false);
+      return true;
+    } catch (error) {
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: _friendlyError(error),
+      );
+      return false;
+    }
+  }
+
+  Future<void> resendCode(String email) async {
+    try {
+      await _authRepository.resendCode(email);
+    } catch (_) {
+      // Best-effort; the screen shows its own cooldown feedback.
+    }
   }
 
   Future<bool> enterDemo() async {
