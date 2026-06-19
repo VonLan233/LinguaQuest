@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/app_notification.dart';
@@ -47,7 +48,7 @@ class ApiAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<UserProfile> register({
+  Future<AuthResult> register({
     required String name,
     required String email,
     required String password,
@@ -56,7 +57,11 @@ class ApiAuthRepository implements AuthRepository {
       '/auth/register',
       data: {'name': name, 'email': email, 'password': password},
     );
-    return _saveAuthResponse(response.data!);
+    final data = response.data!;
+    if (data['status'] == 'verification_required') {
+      return AuthVerificationRequired(data['email'] as String? ?? email);
+    }
+    return AuthSuccess(await _saveAuthResponse(data));
   }
 
   @override
@@ -64,11 +69,49 @@ class ApiAuthRepository implements AuthRepository {
     required String email,
     required String password,
   }) async {
-    final response = await _client.dio.post<Map<String, dynamic>>(
-      '/auth/login',
-      data: {'email': email, 'password': password},
+    try {
+      final response = await _client.dio.post<Map<String, dynamic>>(
+        '/auth/login',
+        data: {'email': email, 'password': password},
+      );
+      return _saveAuthResponse(response.data!);
+    } on DioException catch (error) {
+      final data = error.response?.data;
+      if (error.response?.statusCode == 403 &&
+          data is Map &&
+          data['error'] == 'email_not_verified') {
+        throw EmailNotVerifiedException(data['email'] as String? ?? email);
+      }
+      rethrow;
+    }
+  }
+
+  @override
+  Future<UserProfile> verifyEmail({
+    required String email,
+    required String code,
+  }) async {
+    try {
+      final response = await _client.dio.post<Map<String, dynamic>>(
+        '/auth/verify',
+        data: {'email': email, 'code': code},
+      );
+      return _saveAuthResponse(response.data!);
+    } on DioException catch (error) {
+      final data = error.response?.data;
+      if (data is Map && data['error'] is String) {
+        throw EmailVerificationException(data['error'] as String);
+      }
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> resendCode(String email) async {
+    await _client.dio.post<Map<String, dynamic>>(
+      '/auth/resend',
+      data: {'email': email},
     );
-    return _saveAuthResponse(response.data!);
   }
 
   @override

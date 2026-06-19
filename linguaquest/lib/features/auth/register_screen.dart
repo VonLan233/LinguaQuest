@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/utils/email_validation.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/mascot_image.dart';
@@ -157,26 +158,32 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
-    final succeeded = await ref
-        .read(appControllerProvider.notifier)
-        .register(
+    final step = await ref.read(appControllerProvider.notifier).register(
           _nameController.text,
           _emailController.text,
           _passwordController.text,
         );
     if (!mounted) return;
-    if (!succeeded) return;
-    final l10n = AppLocalizations.of(context);
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(l10n.authAccountCreated)));
-    context.go('/goal-setup');
+    switch (step) {
+      case AuthStep.needsVerification:
+        context.go(
+          '/verify-email?email=${Uri.encodeComponent(_emailController.text.trim())}',
+        );
+      case AuthStep.authenticated:
+        final l10n = AppLocalizations.of(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.authAccountCreated)),
+        );
+        context.go('/goal-setup');
+      case AuthStep.failed:
+        break;
+    }
   }
 }
 
 String? _emailValidator(String? value, AppLocalizations l10n) {
   if (value == null || value.trim().isEmpty) return l10n.authEmailRequired;
-  if (!value.contains('@')) return l10n.authEmailInvalid;
+  if (!isValidEmail(value)) return l10n.authEmailInvalid;
   return null;
 }
 

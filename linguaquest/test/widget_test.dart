@@ -2381,11 +2381,11 @@ void main() {
     final controller = container.read(appControllerProvider.notifier);
     expect(
       await controller.register('Ava', 'ava@lingua.quest', 'password123'),
-      true,
+      AuthStep.authenticated,
     );
     expect(
       await controller.register('Ava', 'ava@lingua.quest', 'password123'),
-      false,
+      AuthStep.failed,
     );
     expect(
       container.read(appControllerProvider).errorMessage,
@@ -2395,7 +2395,7 @@ void main() {
     await controller.logout();
     expect(
       await controller.register('Ava', 'ava@lingua.quest', 'password123'),
-      false,
+      AuthStep.failed,
     );
     expect(
       container.read(appControllerProvider).errorMessage,
@@ -4768,12 +4768,25 @@ class _FailingAuth implements AuthRepository {
   }
 
   @override
-  Future<UserProfile> register({
+  Future<AuthResult> register({
     required String name,
     required String email,
     required String password,
   }) {
     throw Exception('register failed');
+  }
+
+  @override
+  Future<UserProfile> verifyEmail({
+    required String email,
+    required String code,
+  }) {
+    throw Exception('verifyEmail failed');
+  }
+
+  @override
+  Future<void> resendCode(String email) async {
+    throw Exception('resendCode failed');
   }
 
   @override
@@ -4798,12 +4811,25 @@ class _SnapshotAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<UserProfile> register({
+  Future<AuthResult> register({
     required String name,
     required String email,
     required String password,
   }) {
     throw Exception('register not expected');
+  }
+
+  @override
+  Future<UserProfile> verifyEmail({
+    required String email,
+    required String code,
+  }) {
+    throw Exception('verifyEmail not expected');
+  }
+
+  @override
+  Future<void> resendCode(String email) async {
+    throw Exception('resendCode not expected');
   }
 
   @override

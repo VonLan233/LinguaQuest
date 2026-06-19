@@ -10,6 +10,7 @@ import 'package:shelf_router/shelf_router.dart';
 import 'auth.dart';
 import 'config.dart';
 import 'database.dart';
+import 'email_sender.dart';
 import 'json_response.dart';
 import 'lesson_catalog.dart';
 import 'lottery_policy.dart';
@@ -24,8 +25,10 @@ Router buildRouter(
   AppConfig config,
   AppDatabase database, {
   http.Client? httpClient,
+  EmailSender? emailSender,
 }) {
   final client = httpClient ?? _httpClient;
+  final mailer = emailSender ?? EmailSender.fromConfig(config);
   final router = Router();
 
   router.get('/health', (Request request) {
@@ -152,7 +155,7 @@ Router buildRouter(
     final email = (body['email'] as String? ?? '').trim().toLowerCase();
     final password = body['password'] as String? ?? '';
     final name = (body['name'] as String? ?? '').trim();
-    if (email.isEmpty || password.length < 6 || name.isEmpty) {
+    if (name.isEmpty || !isValidEmail(email) || password.length < 6) {
       return jsonResponse({
         'error': 'name, valid email, and 6+ character password are required',
       }, status: 400);
@@ -169,11 +172,48 @@ Router buildRouter(
       passwordSalt: salt,
       name: name,
     );
-    final user = await database.userById(uid);
+    await _issueAndSendCode(config, database, mailer, uid: uid, email: email);
+    return jsonResponse(
+      {'status': 'verification_required', 'email': email},
+      status: 202,
+    );
+  });
+
+  router.post('/auth/verify', (Request request) async {
+    final body = await readJsonMap(request);
+    final email = (body['email'] as String? ?? '').trim().toLowerCase();
+    final code = (body['code'] as String? ?? '').trim();
+    final user = await database.userByEmail(email);
+    if (user == null) {
+      return jsonResponse({'error': 'invalid_code'}, status: 400);
+    }
+    final uid = user['id'] as String;
+    if (user['email_verified'] == true) {
+      return jsonResponse({
+        'token': issueToken(config, uid: uid, email: email),
+        'user': userDto(user),
+      });
+    }
+    final row = await database.verificationCodeFor(uid);
+    if (row == null ||
+        (row['expires_at'] as DateTime).isBefore(DateTime.now().toUtc())) {
+      return jsonResponse({'error': 'code_expired'}, status: 410);
+    }
+    if ((row['attempts'] as int) >= 5) {
+      return jsonResponse({'error': 'too_many_attempts'}, status: 429);
+    }
+    final expected = hashPassword(code, row['code_salt'] as String);
+    if (expected != row['code_hash']) {
+      await database.incrementVerificationAttempts(uid);
+      return jsonResponse({'error': 'invalid_code'}, status: 400);
+    }
+    await database.setEmailVerified(uid);
+    await database.deleteVerificationCode(uid);
+    final verified = await database.userById(uid);
     return jsonResponse({
       'token': issueToken(config, uid: uid, email: email),
-      'user': userDto(user!),
-    }, status: 201);
+      'user': userDto(verified!),
+    });
   });
 
   router.post('/auth/login', (Request request) async {
@@ -188,10 +228,44 @@ Router buildRouter(
     if (expected != user['password_hash']) {
       return jsonResponse({'error': 'invalid email or password'}, status: 401);
     }
+    if (user['email_verified'] != true) {
+      await _issueAndSendCode(
+        config, database, mailer,
+        uid: user['id'] as String, email: email,
+      );
+      return jsonResponse(
+        {'error': 'email_not_verified', 'email': email},
+        status: 403,
+      );
+    }
     return jsonResponse({
       'token': issueToken(config, uid: user['id'] as String, email: email),
       'user': userDto(user),
     });
+  });
+
+  router.post('/auth/resend', (Request request) async {
+    final body = await readJsonMap(request);
+    final email = (body['email'] as String? ?? '').trim().toLowerCase();
+    final user = await database.userByEmail(email);
+    // Don't leak account existence / verified state.
+    if (user == null || user['email_verified'] == true) {
+      return jsonResponse({'status': 'sent'});
+    }
+    final uid = user['id'] as String;
+    final existing = await database.verificationCodeFor(uid);
+    if (existing != null) {
+      final last = existing['last_sent_at'] as DateTime;
+      final elapsed = DateTime.now().toUtc().difference(last);
+      if (elapsed < const Duration(seconds: 60)) {
+        return jsonResponse(
+          {'error': 'resend_cooldown', 'retryAfter': 60 - elapsed.inSeconds},
+          status: 429,
+        );
+      }
+    }
+    await _issueAndSendCode(config, database, mailer, uid: uid, email: email);
+    return jsonResponse({'status': 'sent'});
   });
 
   router.get('/me', (Request request) async {
@@ -940,6 +1014,7 @@ Map<String, dynamic> userDto(Map<String, dynamic> row) {
     'dailyGoal': row['daily_goal'],
     'xp': row['xp'],
     'streak': row['streak'],
+    'emailVerified': row['email_verified'] ?? true,
     'lastStudyDate': (row['last_study_date'] as DateTime?)?.toIso8601String(),
     'createdAt': (row['created_at'] as DateTime).toIso8601String(),
     'updatedAt': (row['updated_at'] as DateTime).toIso8601String(),
@@ -1287,4 +1362,33 @@ String? nullableDateValue(Object? value) {
   if (value == null) return null;
   if (value is DateTime) return value.toIso8601String();
   return value.toString();
+}
+
+final _emailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+
+bool isValidEmail(String email) => _emailPattern.hasMatch(email.trim());
+
+String generateOtpCode() {
+  final rng = math.Random.secure();
+  return (rng.nextInt(900000) + 100000).toString();
+}
+
+Future<void> _issueAndSendCode(
+  AppConfig config,
+  AppDatabase database,
+  EmailSender mailer, {
+  required String uid,
+  required String email,
+}) async {
+  final code = generateOtpCode();
+  final salt = newSalt();
+  final now = DateTime.now().toUtc();
+  await database.upsertVerificationCode(
+    uid,
+    codeHash: hashPassword(code, salt),
+    codeSalt: salt,
+    expiresAt: now.add(const Duration(minutes: 10)),
+    sentAt: now,
+  );
+  await mailer.sendVerificationCode(to: email, code: code);
 }
