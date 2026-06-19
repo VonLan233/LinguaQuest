@@ -15,4 +15,5 @@ abstract class ForumRepository {
   Future<List<ForumComment>> listComments(String postId);
   Future<bool> toggleLike(String postId);
   Future<bool> toggleFavorite(String postId);
+  Future<void> reportPost(String postId, String reason, {String? detail});
 }

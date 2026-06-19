@@ -2581,6 +2581,19 @@ class AppController extends Notifier<AppState> {
     }
   }
 
+  Future<void> reportForumPost(
+    String postId,
+    String reason, {
+    String? detail,
+  }) async {
+    try {
+      await _forumRepository.reportPost(postId, reason, detail: detail);
+    } catch (error) {
+      debugPrint('Failed to report post: $error');
+      rethrow;
+    }
+  }
+
   // ── Analytics / Achievement / Leaderboard ─────────────────────────────────
 
   Future<void> refreshAnalytics() async {

@@ -1262,6 +1262,11 @@ class MockForumRepository implements ForumRepository {
       return true;
     }
   }
+
+  @override
+  Future<void> reportPost(String postId, String reason, {String? detail}) async {
+    // No-op in mock — report acknowledged silently.
+  }
 }
 
 List<ForumPost> _buildSeedPosts() => [

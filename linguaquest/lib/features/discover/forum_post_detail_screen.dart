@@ -76,6 +76,63 @@ class _ForumPostDetailScreenState extends ConsumerState<ForumPostDetailScreen> {
     }
   }
 
+  void _showReportSheet(BuildContext context, String postId) {
+    const reasons = ['Spam', 'Inappropriate', 'Other'];
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppTokens.s16,
+                AppTokens.s20,
+                AppTokens.s16,
+                AppTokens.s8,
+              ),
+              child: Text(
+                'Report post',
+                style: Theme.of(ctx).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            for (final reason in reasons)
+              ListTile(
+                title: Text(reason),
+                onTap: () {
+                  Navigator.of(ctx).pop();
+                  _submitReport(postId, reason);
+                },
+              ),
+            const SizedBox(height: AppTokens.s8),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _submitReport(String postId, String reason) async {
+    try {
+      await ref
+          .read(appControllerProvider.notifier)
+          .reportForumPost(postId, reason);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Report submitted. Thank you.')),
+        );
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to submit report. Try again.')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final post = ref
@@ -91,10 +148,10 @@ class _ForumPostDetailScreenState extends ConsumerState<ForumPostDetailScreen> {
         leading: const FallbackBackButton(fallbackLocation: '/discover/community'),
         title: const Text('Post'),
         actions: [
-          if (post != null)
+          if (post != null) ...[
             IconButton(
               icon: Icon(
-                post.isLiked ? AppIcons.thumbUpAlt : AppIcons.thumbUpAlt,
+                post.isLiked ? AppIcons.thumbUpAlt : AppIcons.thumbUpOffAlt,
                 color: post.isLiked
                     ? theme.colorScheme.primary
                     : theme.colorScheme.onSurfaceVariant,
@@ -105,6 +162,40 @@ class _ForumPostDetailScreenState extends ConsumerState<ForumPostDetailScreen> {
                     .toggleForumLike(widget.postId);
               },
             ),
+            IconButton(
+              icon: Icon(
+                post.isFavorited ? AppIcons.bookmark : AppIcons.bookmarkBorder,
+                color: post.isFavorited
+                    ? theme.colorScheme.primary
+                    : theme.colorScheme.onSurfaceVariant,
+              ),
+              onPressed: () {
+                ref
+                    .read(appControllerProvider.notifier)
+                    .toggleForumFavorite(widget.postId);
+              },
+            ),
+            PopupMenuButton<String>(
+              icon: const Icon(Icons.more_vert_rounded),
+              onSelected: (value) {
+                if (value == 'report') {
+                  _showReportSheet(context, widget.postId);
+                }
+              },
+              itemBuilder: (context) => const [
+                PopupMenuItem(
+                  value: 'report',
+                  child: Row(
+                    children: [
+                      Icon(Icons.flag_outlined, size: 18),
+                      SizedBox(width: 8),
+                      Text('Report'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
         ],
       ),
       body: post == null

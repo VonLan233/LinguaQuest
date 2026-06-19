@@ -760,6 +760,19 @@ class ApiForumRepository implements ForumRepository {
     );
     return response.data!['favorited'] as bool? ?? false;
   }
+
+  @override
+  Future<void> reportPost(String postId, String reason, {String? detail}) async {
+    await _client.dio.post<Map<String, dynamic>>(
+      '/reports',
+      data: {
+        'contentType': 'post',
+        'contentId': postId,
+        'reason': reason,
+        'detail': ?detail,
+      },
+    );
+  }
 }
 
 class ApiAnalyticsRepository implements AnalyticsRepository {
