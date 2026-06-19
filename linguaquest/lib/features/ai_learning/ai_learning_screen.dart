@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/constants/app_constants.dart';
 import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
@@ -30,6 +31,27 @@ class AiLearningScreen extends StatelessWidget {
         88,
       ),
       children: [
+        if (AppConstants.apiBaseUrl.isEmpty) ...[
+          AppCard(
+            child: Row(
+              children: [
+                Icon(
+                  AppIcons.info,
+                  color: Theme.of(context).colorScheme.primary,
+                  size: 20,
+                ),
+                const SizedBox(width: AppTokens.s12),
+                const Expanded(
+                  child: Text(
+                    'AI features use demo responses. Connect to a server for real AI.',
+                    style: TextStyle(fontSize: 13),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppTokens.s12),
+        ],
         SectionHeader(
           title: l10n.aiLearningTitle,
           trailing: QuestIconButton(

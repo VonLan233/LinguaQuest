@@ -132,6 +132,7 @@ class AppController extends Notifier<AppState> {
   static const _localeKey = 'linguaquest.locale';
   static const _targetLanguageKey = 'linguaquest.target_language';
   static const _reminderKey = 'linguaquest.reminderSettings';
+  static const _sensoryKey = 'linguaquest.sensory_settings';
   static const _currentWordBookIdKey = 'linguaquest.currentWordBookId';
   static const _completedLessonIdsKey = 'linguaquest.completedLessons';
   static const _todayDateKey = 'linguaquest.today.date';
@@ -242,6 +243,7 @@ class AppController extends Notifier<AppState> {
       final reminderSettings = studyPlan == null
           ? _loadReminderSettings(prefs)
           : _reminderSettingsForPlan(studyPlan);
+      final sensorySettings = _loadSensorySettings(prefs);
       final userWords = user == null
           ? <UserWord>[]
           : await _userWordRepository.list(user.uid);
@@ -260,6 +262,7 @@ class AppController extends Notifier<AppState> {
         locale: _localeFromName(prefs.getString(_localeKey)),
         targetLanguage: prefs.getString(_targetLanguageKey) ?? 'zh',
         reminderSettings: reminderSettings,
+        sensorySettings: sensorySettings,
         studyPlan: studyPlan,
         completedLessonIds: completedLessonIds,
         todayCompletedLessonIds: todayCompletedLessonIds,
@@ -329,6 +332,12 @@ class AppController extends Notifier<AppState> {
         errorMessage: _friendlyError(error),
       );
     }
+  }
+
+  Future<void> updateSensorySettings(SensorySettings settings) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_sensoryKey, jsonEncode(settings.toJson()));
+    state = state.copyWith(sensorySettings: settings);
   }
 
   Future<void> _applyAuthenticatedUser(UserProfile user) async {
@@ -2274,6 +2283,18 @@ class AppController extends Notifier<AppState> {
       return DailyReminderSettings.fromJson(Map<String, dynamic>.from(decoded));
     } catch (_) {
       return DailyReminderSettings.defaults;
+    }
+  }
+
+  SensorySettings _loadSensorySettings(SharedPreferences prefs) {
+    final raw = prefs.getString(_sensoryKey);
+    if (raw == null) return SensorySettings.defaults;
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! Map) return SensorySettings.defaults;
+      return SensorySettings.fromJson(Map<String, dynamic>.from(decoded));
+    } catch (_) {
+      return SensorySettings.defaults;
     }
   }
 

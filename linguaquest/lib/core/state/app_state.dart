@@ -14,6 +14,43 @@ import '../../data/models/user_word.dart';
 import '../../data/models/user_profile.dart';
 import '../utils/custom_word_localization.dart';
 
+class SensorySettings {
+  const SensorySettings({
+    this.soundEnabled = true,
+    this.vibrationEnabled = true,
+    this.highContrastMode = false,
+  });
+
+  final bool soundEnabled;
+  final bool vibrationEnabled;
+  final bool highContrastMode;
+
+  static const defaults = SensorySettings();
+
+  SensorySettings copyWith({
+    bool? soundEnabled,
+    bool? vibrationEnabled,
+    bool? highContrastMode,
+  }) => SensorySettings(
+    soundEnabled: soundEnabled ?? this.soundEnabled,
+    vibrationEnabled: vibrationEnabled ?? this.vibrationEnabled,
+    highContrastMode: highContrastMode ?? this.highContrastMode,
+  );
+
+  Map<String, dynamic> toJson() => {
+    'soundEnabled': soundEnabled,
+    'vibrationEnabled': vibrationEnabled,
+    'highContrastMode': highContrastMode,
+  };
+
+  factory SensorySettings.fromJson(Map<String, dynamic> json) =>
+      SensorySettings(
+        soundEnabled: json['soundEnabled'] as bool? ?? true,
+        vibrationEnabled: json['vibrationEnabled'] as bool? ?? true,
+        highContrastMode: json['highContrastMode'] as bool? ?? false,
+      );
+}
+
 class DailyReminderSettings {
   const DailyReminderSettings({
     required this.enabled,
@@ -84,6 +121,7 @@ class AppState {
     required this.userAssets,
     required this.aiHistory,
     this.targetLanguage = 'zh',
+    this.sensorySettings = SensorySettings.defaults,
     this.locale,
     this.user,
     this.lastResult,
@@ -121,6 +159,7 @@ class AppState {
   final List<LotteryPrize> lotteryPrizes;
   final List<UserAsset> userAssets;
   final String targetLanguage;
+  final SensorySettings sensorySettings;
   final LessonResult? lastResult;
   final LotteryDrawResult? lastLotteryResult;
   final String? errorMessage;
@@ -282,6 +321,7 @@ class AppState {
     List<LotteryPrize>? lotteryPrizes,
     List<UserAsset>? userAssets,
     String? targetLanguage,
+    SensorySettings? sensorySettings,
     LessonResult? lastResult,
     LotteryDrawResult? lastLotteryResult,
     bool clearLastResult = false,
@@ -322,6 +362,7 @@ class AppState {
       lotteryPrizes: lotteryPrizes ?? this.lotteryPrizes,
       userAssets: userAssets ?? this.userAssets,
       targetLanguage: targetLanguage ?? this.targetLanguage,
+      sensorySettings: sensorySettings ?? this.sensorySettings,
       lastResult: clearLastResult ? null : lastResult ?? this.lastResult,
       lastLotteryResult: lastLotteryResult ?? this.lastLotteryResult,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,

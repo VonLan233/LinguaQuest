@@ -52,11 +52,7 @@ class SettingsScreen extends ConsumerWidget {
                   .updateTargetLanguage(code),
             ),
             const SizedBox(height: AppTokens.s12),
-            _SettingsInfoLine(
-              icon: AppIcons.volumeUp,
-              title: l10n.settingsSoundFeedback,
-              subtitle: l10n.settingsSoundFeedbackSubtitle,
-            ),
+            _SensorySettingsCard(sensorySettings: state.sensorySettings),
           ],
         ),
       ),
@@ -230,36 +226,47 @@ class _SettingsAction extends StatelessWidget {
   }
 }
 
-class _SettingsInfoLine extends StatelessWidget {
-  const _SettingsInfoLine({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-  });
+class _SensorySettingsCard extends ConsumerWidget {
+  const _SensorySettingsCard({required this.sensorySettings});
 
-  final IconData icon;
-  final String title;
-  final String subtitle;
+  final SensorySettings sensorySettings;
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+  Widget build(BuildContext context, WidgetRef ref) {
+    void update(SensorySettings updated) =>
+        ref.read(appControllerProvider.notifier).updateSensorySettings(updated);
+
     return AppCard(
-      child: Row(
+      child: Column(
         children: [
-          Icon(icon, color: theme.colorScheme.onSurfaceVariant),
-          const SizedBox(width: AppTokens.s12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: theme.textTheme.titleMedium),
-                Text(
-                  subtitle,
-                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
-                ),
-              ],
-            ),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            secondary: const Icon(AppIcons.volumeUp),
+            title: const Text('Sound Effects'),
+            subtitle: const Text('Play sounds during quizzes'),
+            value: sensorySettings.soundEnabled,
+            onChanged: (v) =>
+                update(sensorySettings.copyWith(soundEnabled: v)),
+          ),
+          const Divider(height: AppTokens.s16),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            secondary: const Icon(AppIcons.vibration),
+            title: const Text('Vibration'),
+            subtitle: const Text('Haptic feedback on answers'),
+            value: sensorySettings.vibrationEnabled,
+            onChanged: (v) =>
+                update(sensorySettings.copyWith(vibrationEnabled: v)),
+          ),
+          const Divider(height: AppTokens.s16),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            secondary: const Icon(AppIcons.contrastCircle),
+            title: const Text('High Contrast'),
+            subtitle: const Text('Enhanced color contrast for answer feedback'),
+            value: sensorySettings.highContrastMode,
+            onChanged: (v) =>
+                update(sensorySettings.copyWith(highContrastMode: v)),
           ),
         ],
       ),

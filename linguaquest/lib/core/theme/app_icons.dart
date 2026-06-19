@@ -29,6 +29,7 @@ class AppIcons {
   static const IconData bolt = Symbols.bolt_rounded;
   static const IconData calendarMonth = Symbols.calendar_month_rounded;
   static const IconData cancel = Symbols.cancel_rounded;
+  static const IconData contrastCircle = Symbols.contrast_rounded;
   static const IconData cardGiftcard = Symbols.card_giftcard_rounded;
   static const IconData casino = Symbols.casino_rounded;
   static const IconData chatBubble = Symbols.chat_bubble_rounded;
@@ -130,6 +131,7 @@ class AppIcons {
   static const IconData tune = Symbols.tune_rounded;
   static const IconData verified = Symbols.verified_rounded;
   static const IconData visibility = Symbols.visibility_rounded;
+  static const IconData vibration = Symbols.vibration_rounded;
   static const IconData volumeUp = Symbols.volume_up_rounded;
   static const IconData wallpaper = Symbols.wallpaper_rounded;
   static const IconData warningAmber = Symbols.warning_amber_rounded;
