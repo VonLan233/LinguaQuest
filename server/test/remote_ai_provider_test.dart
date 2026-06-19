@@ -118,5 +118,90 @@ void main() {
       final blanks = res.data['blanks'] as List;
       expect(blanks.first['answer'], equals('movie'));
     });
+
+    test('sentence_analysis round-trip parses structure', () async {
+      final content = jsonEncode({
+        'mainClause': 'The fox jumps',
+        'clauses': <String>[],
+        'modifiers': ['quick', 'brown'],
+        'translation': '狐狸跳',
+        'vocabularyNotes': <String>[],
+      });
+      final client = MockClient(
+        (req) async => http.Response(
+          jsonEncode({
+            'choices': [
+              {'message': {'content': content}},
+            ],
+          }),
+          200,
+          headers: {'content-type': 'application/json'},
+        ),
+      );
+      final res = await _provider(client).generate(
+        const AiRequest(
+          featureType: 'sentence_analysis',
+          userId: 'u1',
+          prompt: 'The quick brown fox jumps',
+        ),
+      );
+      expect(res.success, isTrue);
+      expect(res.data['mainClause'], equals('The fox jumps'));
+      expect(res.data['translation'], equals('狐狸跳'));
+      expect(res.data['modifiers'], isA<List>());
+    });
+
+    test('writing_review round-trip parses rubric and suggestions', () async {
+      final content = jsonEncode({
+        'totalScore': 82,
+        'rubricScores': {
+          'content': 18,
+          'language': 17,
+          'structure': 16,
+          'vocabulary': 16,
+          'accuracy': 15,
+        },
+        'mainIssues': ['x'],
+        'paragraphSuggestions': <dynamic>[],
+        'highScoreExpressions': <String>[],
+        'grammarIssues': <dynamic>[],
+        'rewrittenSample': 'rewritten',
+      });
+      final client = MockClient(
+        (req) async => http.Response(
+          jsonEncode({
+            'choices': [
+              {'message': {'content': content}},
+            ],
+          }),
+          200,
+        ),
+      );
+      final res = await _provider(client).generate(
+        const AiRequest(
+          featureType: 'writing_review',
+          userId: 'u1',
+          prompt: 'My essay',
+        ),
+      );
+      expect(res.success, isTrue);
+      expect(res.data['totalScore'], equals(82));
+      expect(res.data['rubricScores'], isA<Map>());
+      expect(res.data['rewrittenSample'], equals('rewritten'));
+    });
+
+    test('empty choices list returns ai_unavailable', () async {
+      final client = MockClient(
+        (req) async => http.Response(
+          jsonEncode({'choices': []}),
+          200,
+        ),
+      );
+      final res = await _provider(client).generate(
+        const AiRequest(featureType: 'chat', userId: 'u1', prompt: 'hello?'),
+      );
+      expect(res.success, isFalse);
+      expect(res.errorCode, equals('ai_unavailable'));
+    });
   });
 }
