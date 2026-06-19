@@ -131,6 +131,26 @@ class ProfileScreen extends ConsumerWidget {
         _SettingsGroup(
           children: [
             _SettingsItem(
+              icon: AppIcons.privacyTip,
+              title: l10n.aboutPrivacyTitle,
+              onTap: () => context.push('/profile/privacy'),
+            ),
+            _SettingsItem(
+              icon: AppIcons.inventory2,
+              title: 'Data & storage',
+              onTap: () => context.push('/profile/data'),
+            ),
+            _SettingsItem(
+              icon: AppIcons.notifications,
+              title: l10n.notificationTitle,
+              onTap: () => context.push('/notifications'),
+            ),
+          ],
+        ),
+        const SizedBox(height: AppTokens.s16),
+        _SettingsGroup(
+          children: [
+            _SettingsItem(
               icon: AppIcons.help,
               title: l10n.profileHelpTitle,
               onTap: () => context.push('/help'),
