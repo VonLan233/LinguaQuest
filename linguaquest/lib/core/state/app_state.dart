@@ -2,7 +2,9 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../data/models/achievement.dart';
 import '../../data/models/ai_feature.dart';
+import '../../data/models/analytics.dart';
 import '../../data/models/app_notification.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/daily_reward_task.dart';
@@ -132,6 +134,9 @@ class AppState {
     this.lastLotteryResult,
     this.studyPlan,
     this.errorMessage,
+    this.analyticsSnapshot,
+    this.achievements = const [],
+    this.leaderboardSnapshot,
     List<CustomWord>? reviewWords,
   }) : _reviewWords = List.unmodifiable(
          reviewWords ?? _buildReviewWords(userWords, customWords, wordBooks),
@@ -170,6 +175,9 @@ class AppState {
   final String? errorMessage;
   final List<AiHistoryEntry> aiHistory;
   final List<ForumPost> forumPosts;
+  final LearningAnalytics? analyticsSnapshot;
+  final List<Achievement> achievements;
+  final LeaderboardResult? leaderboardSnapshot;
   final List<CustomWord> _reviewWords;
 
   bool get isAuthenticated => user != null;
@@ -336,6 +344,11 @@ class AppState {
     bool clearError = false,
     List<AiHistoryEntry>? aiHistory,
     List<ForumPost>? forumPosts,
+    LearningAnalytics? analyticsSnapshot,
+    bool clearAnalyticsSnapshot = false,
+    List<Achievement>? achievements,
+    LeaderboardResult? leaderboardSnapshot,
+    bool clearLeaderboardSnapshot = false,
   }) {
     final nextCustomWords = customWords ?? this.customWords;
     final nextUserWords = userWords ?? this.userWords;
@@ -377,6 +390,13 @@ class AppState {
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
       aiHistory: aiHistory ?? this.aiHistory,
       forumPosts: forumPosts ?? this.forumPosts,
+      analyticsSnapshot: clearAnalyticsSnapshot
+          ? null
+          : analyticsSnapshot ?? this.analyticsSnapshot,
+      achievements: achievements ?? this.achievements,
+      leaderboardSnapshot: clearLeaderboardSnapshot
+          ? null
+          : leaderboardSnapshot ?? this.leaderboardSnapshot,
       reviewWords: customWords == null && userWords == null && wordBooks == null
           ? _reviewWords
           : _buildReviewWords(nextUserWords, nextCustomWords, nextWordBooks),

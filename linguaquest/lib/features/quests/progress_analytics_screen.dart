@@ -5,17 +5,34 @@ import '../../core/state/app_controller.dart';
 import 'package:linguaquest/core/theme/app_icons.dart';
 
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_progress_bar.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/section_header.dart';
+import '../../data/models/analytics.dart';
 import '../../l10n/generated/app_localizations.dart';
 
-class ProgressAnalyticsScreen extends ConsumerWidget {
+class ProgressAnalyticsScreen extends ConsumerStatefulWidget {
   const ProgressAnalyticsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ProgressAnalyticsScreen> createState() =>
+      _ProgressAnalyticsScreenState();
+}
+
+class _ProgressAnalyticsScreenState
+    extends ConsumerState<ProgressAnalyticsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(appControllerProvider.notifier).refreshAnalytics();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final state = ref.watch(appControllerProvider);
     final reviewWords = state.reviewWords;
     final mastered = reviewWords.where((word) => word.masteryLevel >= 4).length;
@@ -29,6 +46,7 @@ class ProgressAnalyticsScreen extends ConsumerWidget {
     );
     final accuracy = attempts == 0 ? 0 : (correct / attempts * 100).round();
     final l10n = AppLocalizations.of(context);
+    final analytics = state.analyticsSnapshot;
 
     return Scaffold(
       appBar: AppBar(
@@ -73,9 +91,195 @@ class ProgressAnalyticsScreen extends ConsumerWidget {
                 reviewWords.length,
               ),
             ),
+            if (analytics != null) ...[
+              const SizedBox(height: 24),
+              _ExtendedAnalyticsSection(analytics: analytics),
+            ] else ...[
+              const SizedBox(height: 24),
+              const Center(child: CircularProgressIndicator()),
+            ],
           ],
         ),
       ),
+    );
+  }
+}
+
+class _ExtendedAnalyticsSection extends StatelessWidget {
+  const _ExtendedAnalyticsSection({required this.analytics});
+
+  final LearningAnalytics analytics;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Detailed Stats',
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        const SizedBox(height: 12),
+        // Stat grid
+        AppCard(
+          child: Column(
+            children: [
+              _StatRow(label: 'Streak', value: '${analytics.streakDays} days', icon: AppIcons.localFireDepartment, color: AppTheme.mango),
+              const Divider(height: 20),
+              _StatRow(label: 'Total Study Days', value: '${analytics.totalStudyDays} days', icon: AppIcons.calendarMonth, color: AppTheme.cyan),
+              const Divider(height: 20),
+              _StatRow(label: 'Learned Words', value: '${analytics.learnedWords}', icon: AppIcons.menuBook, color: AppTheme.success),
+              const Divider(height: 20),
+              _StatRow(label: 'Today Study Time', value: '${analytics.todayMinutes} min', icon: AppIcons.timer, color: AppTheme.coral),
+              const Divider(height: 20),
+              _StatRow(label: 'Total Study Time', value: '${analytics.totalMinutes} min', icon: AppIcons.schedule, color: AppTheme.mango),
+              const Divider(height: 20),
+              _StatRow(label: 'Wordbook Progress', value: '${analytics.wordbookProgressPct}%', icon: AppIcons.insights, color: AppTokens.primarySoftText),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        // 7-day XP chart
+        Text(
+          '7-Day XP Trend',
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(height: 8),
+        AppCard(
+          child: _SevenDayXpChart(xpData: analytics.sevenDayXp),
+        ),
+        const SizedBox(height: 16),
+        // Weakest exercise type
+        AppCard(
+          child: Row(
+            children: [
+              Icon(AppIcons.warningAmber, color: AppTheme.coral, size: 20),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Focus Area',
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    Text(
+                      'Needs work: ${analytics.weakestExerciseType}',
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                  ],
+                ),
+              ),
+              if (analytics.achievementCount > 0)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: AppTheme.mango.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    '🏆 ${analytics.achievementCount}',
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _StatRow extends StatelessWidget {
+  const _StatRow({
+    required this.label,
+    required this.value,
+    required this.icon,
+    required this.color,
+  });
+
+  final String label;
+  final String value;
+  final IconData icon;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Row(
+      children: [
+        Icon(icon, color: color, size: 18),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Text(label, style: theme.textTheme.bodyMedium),
+        ),
+        Text(
+          value,
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _SevenDayXpChart extends StatelessWidget {
+  const _SevenDayXpChart({required this.xpData});
+
+  final List<int> xpData;
+
+  @override
+  Widget build(BuildContext context) {
+    if (xpData.isEmpty) return const SizedBox.shrink();
+    final maxXp = xpData.reduce((a, b) => a > b ? a : b);
+    final maxBarHeight = 60.0;
+    final dayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    final theme = Theme.of(context);
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: List.generate(xpData.length.clamp(0, 7), (i) {
+        final xp = xpData[i];
+        final fraction = maxXp == 0 ? 0.0 : xp / maxXp;
+        final barH = (fraction * maxBarHeight).clamp(4.0, maxBarHeight);
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              '$xp',
+              style: theme.textTheme.labelSmall?.copyWith(fontSize: 9),
+            ),
+            const SizedBox(height: 2),
+            Container(
+              width: 26,
+              height: barH,
+              decoration: BoxDecoration(
+                color: AppTheme.mango.withValues(alpha: 0.8),
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              i < dayLabels.length ? dayLabels[i] : '${i + 1}',
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        );
+      }),
     );
   }
 }

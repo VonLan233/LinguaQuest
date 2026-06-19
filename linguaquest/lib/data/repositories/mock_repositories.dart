@@ -19,9 +19,12 @@ import '../models/user_profile.dart';
 import '../lesson_factory.dart';
 import '../wordbook_asset_loader.dart';
 import 'ai_repository.dart';
+import 'analytics_repository.dart';
 import 'auth_repository.dart';
 import 'custom_word_repository.dart';
+import '../models/achievement.dart';
 import '../models/ai_feature.dart';
+import '../models/analytics.dart';
 import '../models/forum.dart';
 import 'forum_repository.dart';
 import 'learning_repository.dart';
@@ -1269,3 +1272,64 @@ List<ForumPost> _buildSeedPosts() => [
     createdAt: DateTime.utc(2026, 6, 15, 9, 0, 0),
   ),
 ];
+
+class MockAnalyticsRepository implements AnalyticsRepository {
+  @override
+  Future<LearningAnalytics> getAnalytics(String uid) async {
+    return LearningAnalytics.mock();
+  }
+
+  @override
+  Future<List<Achievement>> getAchievements(String uid) async {
+    // Use mock analytics data to evaluate achievements
+    final analytics = LearningAnalytics.mock();
+    return AchievementEvaluator.evaluate(
+      streakDays: analytics.streakDays,
+      masteredWords: analytics.masteredWords,
+      totalStudyDays: analytics.totalStudyDays,
+      trainingXp: analytics.trainingXp,
+    );
+  }
+
+  @override
+  Future<LeaderboardResult> getLeaderboard({
+    required String dimension,
+    required String uid,
+  }) async {
+    final List<LeaderboardEntry> entries;
+    switch (dimension) {
+      case 'friends':
+        entries = const [
+          LeaderboardEntry(rank: 1, userId: 'mock_f1', name: 'Alex', xp: 450, isCurrentUser: false),
+          LeaderboardEntry(rank: 2, userId: 'mock_f2', name: 'Jordan', xp: 350, isCurrentUser: false),
+          LeaderboardEntry(rank: 3, userId: 'mock_me', name: 'You', xp: 300, isCurrentUser: true),
+          LeaderboardEntry(rank: 4, userId: 'mock_f3', name: 'Morgan', xp: 220, isCurrentUser: false),
+        ];
+      case 'class':
+        entries = const [
+          LeaderboardEntry(rank: 1, userId: 'mock_c1', name: 'Sam', xp: 500, isCurrentUser: false),
+          LeaderboardEntry(rank: 2, userId: 'mock_me', name: 'You', xp: 300, isCurrentUser: true),
+          LeaderboardEntry(rank: 3, userId: 'mock_c2', name: 'Taylor', xp: 180, isCurrentUser: false),
+        ];
+      default: // global
+        entries = const [
+          LeaderboardEntry(rank: 1, userId: 'mock_g1', name: 'Alice', xp: 800, isCurrentUser: false),
+          LeaderboardEntry(rank: 2, userId: 'mock_g2', name: 'Bob', xp: 600, isCurrentUser: false),
+          LeaderboardEntry(rank: 3, userId: 'mock_g3', name: 'Charlie', xp: 400, isCurrentUser: false),
+          LeaderboardEntry(rank: 4, userId: 'mock_g4', name: 'Diana', xp: 320, isCurrentUser: false),
+          LeaderboardEntry(rank: 5, userId: 'mock_me', name: 'You', xp: 300, isCurrentUser: true),
+        ];
+    }
+    final currentUserRank = entries
+        .firstWhere(
+          (e) => e.isCurrentUser,
+          orElse: () => const LeaderboardEntry(rank: -1, userId: '', name: '', xp: 0, isCurrentUser: true),
+        )
+        .rank;
+    return LeaderboardResult(
+      dimension: dimension,
+      entries: entries,
+      currentUserRank: currentUserRank,
+    );
+  }
+}

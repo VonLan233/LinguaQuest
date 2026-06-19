@@ -32,6 +32,7 @@ import '../../features/profile/study_plan_settings_screen.dart';
 import '../../features/quests/ai_tutor_screen.dart';
 import '../../features/quests/class_mode_screen.dart';
 import '../../features/quests/class_progress_screen.dart';
+import '../../features/quests/achievements_screen.dart';
 import '../../features/quests/leaderboard_screen.dart';
 import '../../features/quests/progress_analytics_screen.dart';
 import '../../features/quests/quest_screen.dart';
@@ -134,6 +135,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/mistake-book',
         builder: (context, state) => const MistakeBookScreen(),
+      ),
+      GoRoute(
+        path: '/achievements',
+        builder: (context, state) => const AchievementsScreen(),
       ),
       GoRoute(
         path: '/leaderboard',

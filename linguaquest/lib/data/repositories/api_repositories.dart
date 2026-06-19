@@ -17,6 +17,7 @@ import '../lesson_factory.dart';
 import '../remote/api_client.dart';
 import '../wordbook_asset_loader.dart';
 import 'ai_repository.dart';
+import 'analytics_repository.dart';
 import 'auth_repository.dart';
 import 'custom_word_repository.dart';
 import 'learning_repository.dart';
@@ -27,7 +28,9 @@ import 'reward_task_repository.dart';
 import 'review_repository.dart';
 import 'study_plan_repository.dart';
 import 'user_word_repository.dart';
+import '../models/achievement.dart';
 import '../models/ai_feature.dart';
+import '../models/analytics.dart';
 import '../models/forum.dart';
 import 'forum_repository.dart';
 
@@ -736,6 +739,39 @@ class ApiForumRepository implements ForumRepository {
       '/forum/posts/$postId/favorite',
     );
     return response.data!['favorited'] as bool? ?? false;
+  }
+}
+
+class ApiAnalyticsRepository implements AnalyticsRepository {
+  ApiAnalyticsRepository(this._client);
+
+  final ApiClient _client;
+
+  @override
+  Future<LearningAnalytics> getAnalytics(String uid) async {
+    final response = await _client.dio.get<Map<String, dynamic>>('/analytics');
+    return LearningAnalytics.fromJson(response.data!);
+  }
+
+  @override
+  Future<List<Achievement>> getAchievements(String uid) async {
+    final response = await _client.dio.get<List<dynamic>>('/achievements');
+    return (response.data ?? const <dynamic>[])
+        .whereType<Map<String, dynamic>>()
+        .map(Achievement.fromJson)
+        .toList();
+  }
+
+  @override
+  Future<LeaderboardResult> getLeaderboard({
+    required String dimension,
+    required String uid,
+  }) async {
+    final response = await _client.dio.get<Map<String, dynamic>>(
+      '/leaderboard',
+      queryParameters: {'dimension': dimension},
+    );
+    return LeaderboardResult.fromJson(response.data!);
   }
 }
 

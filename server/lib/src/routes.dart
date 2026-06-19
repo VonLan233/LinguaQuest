@@ -7,7 +7,9 @@ import 'package:http/http.dart' as http;
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
+import 'achievement_policy.dart';
 import 'ai_policy.dart';
+import 'analytics_policy.dart';
 import 'auth.dart';
 import 'config.dart';
 import 'database.dart';
@@ -822,6 +824,85 @@ Router buildRouter(
         'dateKey': dayWindow.dateKey,
         'tasks': tasks,
         'user': userDto(claim.user ?? user),
+      });
+    });
+  });
+
+  // ── Analytics & Achievement & Leaderboard 路由 ────────────────────────────
+
+  router.get('/analytics', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final analytics = LearningAnalytics.mock();
+      return jsonResponse(analytics.toJson());
+    });
+  });
+
+  router.get('/achievements', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final user = await database.userById(uid);
+      final streak = user == null ? 0 : (user['streak'] as int? ?? 0);
+      final xp = user == null ? 0 : (user['xp'] as int? ?? 0);
+      final userWords = await database.userWords(uid);
+      final masteredWords = userWords
+          .where((w) => (w['mastery_level'] as int? ?? 0) >= 4)
+          .length;
+      final studySessions = await database.completedLessonIds(uid);
+      final totalStudyDays = studySessions.length > 0 ? 1 : 0;
+      final achievements = AchievementPolicy.evaluate(
+        streakDays: streak,
+        masteredWords: masteredWords,
+        totalStudyDays: totalStudyDays,
+        trainingXp: xp,
+      );
+      return jsonResponse(achievements.map((a) => a.toJson()).toList());
+    });
+  });
+
+  router.get('/leaderboard', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final dimension =
+          request.url.queryParameters['dimension'] ?? 'global';
+      final user = await database.userById(uid);
+      final currentXp = user == null ? 0 : (user['xp'] as int? ?? 0);
+      final currentName = user == null
+          ? 'You'
+          : (user['name'] as String? ?? 'You');
+
+      final List<Map<String, dynamic>> mockEntries;
+      switch (dimension) {
+        case 'friends':
+          mockEntries = [
+            {'rank': 1, 'userId': 'mock_f1', 'name': 'Alex', 'xp': currentXp + 150, 'isCurrentUser': false},
+            {'rank': 2, 'userId': 'mock_f2', 'name': 'Jordan', 'xp': currentXp + 50, 'isCurrentUser': false},
+            {'rank': 3, 'userId': uid, 'name': currentName, 'xp': currentXp, 'isCurrentUser': true},
+            {'rank': 4, 'userId': 'mock_f3', 'name': 'Morgan', 'xp': currentXp - 80, 'isCurrentUser': false},
+          ];
+        case 'class':
+          mockEntries = [
+            {'rank': 1, 'userId': 'mock_c1', 'name': 'Sam', 'xp': currentXp + 200, 'isCurrentUser': false},
+            {'rank': 2, 'userId': uid, 'name': currentName, 'xp': currentXp, 'isCurrentUser': true},
+            {'rank': 3, 'userId': 'mock_c2', 'name': 'Taylor', 'xp': currentXp - 120, 'isCurrentUser': false},
+          ];
+        default: // global
+          mockEntries = [
+            {'rank': 1, 'userId': 'mock_g1', 'name': 'Alice', 'xp': currentXp + 500, 'isCurrentUser': false},
+            {'rank': 2, 'userId': 'mock_g2', 'name': 'Bob', 'xp': currentXp + 300, 'isCurrentUser': false},
+            {'rank': 3, 'userId': 'mock_g3', 'name': 'Charlie', 'xp': currentXp + 100, 'isCurrentUser': false},
+            {'rank': 4, 'userId': 'mock_g4', 'name': 'Diana', 'xp': currentXp + 20, 'isCurrentUser': false},
+            {'rank': 5, 'userId': uid, 'name': currentName, 'xp': currentXp, 'isCurrentUser': true},
+          ];
+      }
+
+      final currentUserRank = mockEntries
+          .firstWhere(
+            (e) => e['isCurrentUser'] == true,
+            orElse: () => {'rank': -1},
+          )['rank'] as int;
+
+      return jsonResponse({
+        'dimension': dimension,
+        'entries': mockEntries,
+        'currentUserRank': currentUserRank,
       });
     });
   });

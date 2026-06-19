@@ -24,6 +24,7 @@ import '../../data/models/user_word.dart';
 import '../../data/remote/api_client.dart';
 import '../../data/models/forum.dart';
 import '../../data/repositories/ai_repository.dart';
+import '../../data/repositories/analytics_repository.dart';
 import '../../data/repositories/api_repositories.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../data/repositories/custom_word_repository.dart';
@@ -133,6 +134,13 @@ final forumRepositoryProvider = Provider<ForumRepository>((ref) {
   return MockForumRepository();
 });
 
+final analyticsRepositoryProvider = Provider<AnalyticsRepository>((ref) {
+  if (AppConstants.apiBaseUrl.isNotEmpty) {
+    return ApiAnalyticsRepository(ref.read(apiClientProvider));
+  }
+  return MockAnalyticsRepository();
+});
+
 final appControllerProvider = NotifierProvider<AppController, AppState>(
   AppController.new,
 );
@@ -165,6 +173,7 @@ class AppController extends Notifier<AppState> {
   late final RewardRepository _rewardRepository;
   late final RewardTaskRepository _rewardTaskRepository;
   late final ForumRepository _forumRepository;
+  late final AnalyticsRepository _analyticsRepository;
   late final LocalNotificationService _localNotificationService;
   var _localNotificationsInitialized = false;
 
@@ -181,6 +190,7 @@ class AppController extends Notifier<AppState> {
     _rewardRepository = ref.watch(rewardRepositoryProvider);
     _rewardTaskRepository = ref.watch(rewardTaskRepositoryProvider);
     _forumRepository = ref.watch(forumRepositoryProvider);
+    _analyticsRepository = ref.watch(analyticsRepositoryProvider);
     _localNotificationService = ref.watch(localNotificationServiceProvider);
     return AppState.initial();
   }
@@ -2534,6 +2544,44 @@ class AppController extends Notifier<AppState> {
       if (ref.mounted) {
         state = state.copyWith(forumPosts: oldPosts);
       }
+    }
+  }
+
+  // ── Analytics / Achievement / Leaderboard ─────────────────────────────────
+
+  Future<void> refreshAnalytics() async {
+    final uid = state.user?.uid ?? '';
+    try {
+      final analytics = await _analyticsRepository.getAnalytics(uid);
+      if (!ref.mounted) return;
+      state = state.copyWith(analyticsSnapshot: analytics);
+    } catch (error) {
+      debugPrint('Failed to refresh analytics: $error');
+    }
+  }
+
+  Future<void> refreshAchievements() async {
+    final uid = state.user?.uid ?? '';
+    try {
+      final achievements = await _analyticsRepository.getAchievements(uid);
+      if (!ref.mounted) return;
+      state = state.copyWith(achievements: achievements);
+    } catch (error) {
+      debugPrint('Failed to refresh achievements: $error');
+    }
+  }
+
+  Future<void> refreshLeaderboard({String dimension = 'global'}) async {
+    final uid = state.user?.uid ?? '';
+    try {
+      final result = await _analyticsRepository.getLeaderboard(
+        dimension: dimension,
+        uid: uid,
+      );
+      if (!ref.mounted) return;
+      state = state.copyWith(leaderboardSnapshot: result);
+    } catch (error) {
+      debugPrint('Failed to refresh leaderboard: $error');
     }
   }
 }
