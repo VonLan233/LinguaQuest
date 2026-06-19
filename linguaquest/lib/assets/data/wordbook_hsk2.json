@@ -1,0 +1,103 @@
+{
+  "id": "hsk2",
+  "title": "HSK 2",
+  "titleEn": "HSK 2",
+  "titleMs": "HSK 2",
+  "category": "hsk",
+  "examType": "HSK 2",
+  "coverUrl": "",
+  "totalWords": 150,
+  "includedWords": 3,
+  "description": "Core vocabulary for HSK Level 2. [STUB — 3 placeholder words; full 150-word list pending data fill]",
+  "wordIds": [
+    "hsk2_000_b",
+    "hsk2_001_ci",
+    "hsk2_002_dng"
+  ],
+  "words": [
+    {
+      "id": "hsk2_000_b",
+      "word": "把",
+      "phoneticUK": "bǎ",
+      "phoneticUS": "bǎ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%8A%8A&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%8A%8A&type=2",
+      "partOfSpeech": "prep/m/n/v",
+      "definitions": [
+        "(indicates an action to the object); to hold; to handle",
+        "measure word for objects with handles"
+      ],
+      "englishDefinitions": [
+        "(indicates an action to the object); to hold; to handle",
+        "measure word for objects with handles"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": "",
+      "hskLevel": 2
+    },
+    {
+      "id": "hsk2_001_ci",
+      "word": "次",
+      "phoneticUK": "cì",
+      "phoneticUS": "cì",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%AC%A1&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%AC%A1&type=2",
+      "partOfSpeech": "m/n",
+      "definitions": [
+        "measure word for times/occurrences",
+        "order; sequence"
+      ],
+      "englishDefinitions": [
+        "measure word for times/occurrences",
+        "order; sequence"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": "",
+      "hskLevel": 2
+    },
+    {
+      "id": "hsk2_002_dng",
+      "word": "等",
+      "phoneticUK": "děng",
+      "phoneticUS": "děng",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E7%AD%89&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E7%AD%89&type=2",
+      "partOfSpeech": "v/aux",
+      "definitions": [
+        "to wait; to wait for",
+        "et cetera; and so on"
+      ],
+      "englishDefinitions": [
+        "to wait; to wait for",
+        "et cetera; and so on"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": "",
+      "hskLevel": 2
+    }
+  ]
+}

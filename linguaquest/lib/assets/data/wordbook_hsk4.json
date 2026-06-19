@@ -1,0 +1,101 @@
+{
+  "id": "hsk4",
+  "title": "HSK 4",
+  "titleEn": "HSK 4",
+  "titleMs": "HSK 4",
+  "category": "hsk",
+  "examType": "HSK 4",
+  "coverUrl": "",
+  "totalWords": 600,
+  "includedWords": 3,
+  "description": "Core vocabulary for HSK Level 4. [STUB — 3 placeholder words; full 600-word list pending data fill]",
+  "wordIds": [
+    "hsk4_000_biu",
+    "hsk4_001_cgun",
+    "hsk4_002_dtin"
+  ],
+  "words": [
+    {
+      "id": "hsk4_000_biu",
+      "word": "标准",
+      "phoneticUK": "biāo zhǔn",
+      "phoneticUS": "biāo zhǔn",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%A0%87%E5%87%86&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%A0%87%E5%87%86&type=2",
+      "partOfSpeech": "n/adj",
+      "definitions": [
+        "standard; norm; criterion",
+        "standard; up to standard"
+      ],
+      "englishDefinitions": [
+        "standard; norm; criterion",
+        "standard; up to standard"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Medium",
+      "imageUrl": "",
+      "hskLevel": 4
+    },
+    {
+      "id": "hsk4_001_cgun",
+      "word": "传统",
+      "phoneticUK": "chuán tǒng",
+      "phoneticUS": "chuán tǒng",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E4%BC%A0%E7%BB%9F&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E4%BC%A0%E7%BB%9F&type=2",
+      "partOfSpeech": "n/adj",
+      "definitions": [
+        "tradition; convention",
+        "traditional; conventional"
+      ],
+      "englishDefinitions": [
+        "tradition; convention",
+        "traditional; conventional"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Medium",
+      "imageUrl": "",
+      "hskLevel": 4
+    },
+    {
+      "id": "hsk4_002_dtin",
+      "word": "独特",
+      "phoneticUK": "dú tè",
+      "phoneticUS": "dú tè",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E7%8B%AC%E7%89%B9&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E7%8B%AC%E7%89%B9&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "unique; distinctive; special"
+      ],
+      "englishDefinitions": [
+        "unique; distinctive; special"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Hard",
+      "imageUrl": "",
+      "hskLevel": 4
+    }
+  ]
+}

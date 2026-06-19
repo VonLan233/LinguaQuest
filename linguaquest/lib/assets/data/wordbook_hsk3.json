@@ -1,0 +1,101 @@
+{
+  "id": "hsk3",
+  "title": "HSK 3",
+  "titleEn": "HSK 3",
+  "titleMs": "HSK 3",
+  "category": "hsk",
+  "examType": "HSK 3",
+  "coverUrl": "",
+  "totalWords": 300,
+  "includedWords": 3,
+  "description": "Core vocabulary for HSK Level 3. [STUB — 3 placeholder words; full 300-word list pending data fill]",
+  "wordIds": [
+    "hsk3_000_bn",
+    "hsk3_001_fjn",
+    "hsk3_002_gu"
+  ],
+  "words": [
+    {
+      "id": "hsk3_000_bn",
+      "word": "班",
+      "phoneticUK": "bān",
+      "phoneticUS": "bān",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E7%8F%AD&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E7%8F%AD&type=2",
+      "partOfSpeech": "n/m",
+      "definitions": [
+        "class; team; squad",
+        "measure word for groups/classes"
+      ],
+      "englishDefinitions": [
+        "class; team; squad",
+        "measure word for groups/classes"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Medium",
+      "imageUrl": "",
+      "hskLevel": 3
+    },
+    {
+      "id": "hsk3_001_fjn",
+      "word": "附近",
+      "phoneticUK": "fù jìn",
+      "phoneticUS": "fù jìn",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%99%84%E8%BF%91&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%99%84%E8%BF%91&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "nearby; in the vicinity; close to"
+      ],
+      "englishDefinitions": [
+        "nearby; in the vicinity; close to"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Medium",
+      "imageUrl": "",
+      "hskLevel": 3
+    },
+    {
+      "id": "hsk3_002_gu",
+      "word": "鼓励",
+      "phoneticUK": "gǔ lì",
+      "phoneticUS": "gǔ lì",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%BC%93%E5%8A%B1&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%BC%93%E5%8A%B1&type=2",
+      "partOfSpeech": "v/n",
+      "definitions": [
+        "to encourage; to urge",
+        "encouragement"
+      ],
+      "englishDefinitions": [
+        "to encourage; to urge",
+        "encouragement"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Medium",
+      "imageUrl": "",
+      "hskLevel": 3
+    }
+  ]
+}

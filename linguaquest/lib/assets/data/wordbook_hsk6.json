@@ -1,0 +1,101 @@
+{
+  "id": "hsk6",
+  "title": "HSK 6",
+  "titleEn": "HSK 6",
+  "titleMs": "HSK 6",
+  "category": "hsk",
+  "examType": "HSK 6",
+  "coverUrl": "",
+  "totalWords": 2500,
+  "includedWords": 3,
+  "description": "Core vocabulary for HSK Level 6. [STUB — 3 placeholder words; full 2500-word list pending data fill]",
+  "wordIds": [
+    "hsk6_000_bh",
+    "hsk6_001_csh",
+    "hsk6_002_jjx"
+  ],
+  "words": [
+    {
+      "id": "hsk6_000_bh",
+      "word": "博弈",
+      "phoneticUK": "bó yì",
+      "phoneticUS": "bó yì",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%8D%9A%E5%BC%88&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%8D%9A%E5%BC%88&type=2",
+      "partOfSpeech": "n/v",
+      "definitions": [
+        "game theory; contest; gambling game",
+        "to play a game of strategy; to compete"
+      ],
+      "englishDefinitions": [
+        "game theory; contest; gambling game",
+        "to play a game of strategy; to compete"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Hard",
+      "imageUrl": "",
+      "hskLevel": 6
+    },
+    {
+      "id": "hsk6_001_csh",
+      "word": "筹措",
+      "phoneticUK": "chóu cuò",
+      "phoneticUS": "chóu cuò",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E7%AD%B9%E6%8E%AA&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E7%AD%B9%E6%8E%AA&type=2",
+      "partOfSpeech": "v",
+      "definitions": [
+        "to raise (funds); to collect; to gather"
+      ],
+      "englishDefinitions": [
+        "to raise (funds); to collect; to gather"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Hard",
+      "imageUrl": "",
+      "hskLevel": 6
+    },
+    {
+      "id": "hsk6_002_jjx",
+      "word": "兼容",
+      "phoneticUK": "jiān róng",
+      "phoneticUS": "jiān róng",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%85%BC%E5%AE%B9&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%85%BC%E5%AE%B9&type=2",
+      "partOfSpeech": "v/adj",
+      "definitions": [
+        "to be compatible with; to accommodate",
+        "compatible; inclusive"
+      ],
+      "englishDefinitions": [
+        "to be compatible with; to accommodate",
+        "compatible; inclusive"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Hard",
+      "imageUrl": "",
+      "hskLevel": 6
+    }
+  ]
+}
