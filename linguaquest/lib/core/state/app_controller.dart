@@ -2436,7 +2436,7 @@ class AppController extends Notifier<AppState> {
           result = {};
       }
       final history = await repo.listHistory();
-      state = state.copyWith(aiHistory: history);
+      state = state.copyWith(aiHistory: history, clearError: true);
       return result;
     } catch (e) {
       state = state.copyWith(errorMessage: _friendlyError(e));
@@ -2456,7 +2456,7 @@ class AppController extends Notifier<AppState> {
         targetScore: targetScore,
       );
       final history = await ref.read(aiRepositoryProvider).listHistory();
-      state = state.copyWith(aiHistory: history);
+      state = state.copyWith(aiHistory: history, clearError: true);
       return result;
     } catch (e) {
       state = state.copyWith(errorMessage: _friendlyError(e));
