@@ -3227,8 +3227,10 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('英 /${word.phoneticUK}/'), findsOneWidget);
-      expect(find.text('美 /${word.phoneticUS}/'), findsOneWidget);
+      // Chinese (HSK) words show pinyin once, without the UK/US split.
+      expect(find.text(word.phoneticUK), findsWidgets);
+      expect(find.text('英 /${word.phoneticUK}/'), findsNothing);
+      expect(find.text('美 /${word.phoneticUS}/'), findsNothing);
       expect(find.text('中文释义'), findsOneWidget);
       expect(find.text('英文释义'), findsOneWidget);
 
