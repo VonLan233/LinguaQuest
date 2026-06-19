@@ -672,8 +672,8 @@ class ApiAiRepository implements AiRepository {
       '/ai/writing-review',
       data: {
         'prompt': essay,
-        'examType': examType,
-        'targetScore': targetScore,
+        'examType': ?examType,
+        'targetScore': ?targetScore,
       },
     );
     return (response.data?['data'] as Map<String, dynamic>?) ?? {};
