@@ -12,7 +12,8 @@ class AppConfig {
     this.smtpFrom = 'no-reply@linguaquest.app',
     this.aiProvider = 'mock',
     this.aiApiKey = '',
-    this.aiApiBaseUrl = '',
+    this.aiApiBaseUrl = 'https://opencode.ai/zen/v1',
+    this.aiModel = 'deepseek-v4-flash-free',
     this.aiDailyLimitPerUser = 20,
   });
 
@@ -27,6 +28,7 @@ class AppConfig {
   final String aiProvider;
   final String aiApiKey;
   final String aiApiBaseUrl;
+  final String aiModel;
   final int aiDailyLimitPerUser;
 
   factory AppConfig.fromEnvironment() {
@@ -44,7 +46,8 @@ class AppConfig {
       smtpFrom: _env('SMTP_FROM', 'no-reply@linguaquest.app'),
       aiProvider: _env('AI_PROVIDER', 'mock'),
       aiApiKey: _env('AI_API_KEY', ''),
-      aiApiBaseUrl: _env('AI_API_BASE_URL', ''),
+      aiApiBaseUrl: _env('AI_API_BASE_URL', 'https://opencode.ai/zen/v1'),
+      aiModel: _env('AI_MODEL', 'deepseek-v4-flash-free'),
       aiDailyLimitPerUser:
           int.tryParse(_env('AI_DAILY_LIMIT_PER_USER', '20')) ?? 20,
     );
