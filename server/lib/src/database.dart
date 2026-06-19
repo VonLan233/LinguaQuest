@@ -439,7 +439,104 @@ CREATE TABLE IF NOT EXISTS ai_history (
       'CREATE INDEX IF NOT EXISTS ai_history_user_id_idx ON ai_history(user_id)',
     );
 
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS user_privacy (
+  user_id TEXT PRIMARY KEY,
+  public_stats BOOLEAN NOT NULL DEFAULT TRUE,
+  public_streak BOOLEAN NOT NULL DEFAULT TRUE,
+  public_wordbook BOOLEAN NOT NULL DEFAULT FALSE,
+  public_posts BOOLEAN NOT NULL DEFAULT TRUE,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+''');
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS content_reports (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  reporter_user_id TEXT NOT NULL,
+  content_type TEXT NOT NULL,
+  content_id TEXT NOT NULL,
+  reason TEXT NOT NULL,
+  detail TEXT,
+  status TEXT NOT NULL DEFAULT 'pending',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+''');
+
     await _seedLotteryPrizes();
+  }
+
+  Future<Map<String, dynamic>?> getUserPrivacy(String userId) async {
+    final result = await connection.execute(
+      Sql.named(
+        'SELECT user_id, public_stats, public_streak, public_wordbook, public_posts FROM user_privacy WHERE user_id=@userId',
+      ),
+      parameters: {'userId': userId},
+    );
+    if (result.isEmpty) return null;
+    final row = result.first;
+    return {
+      'userId': row[0],
+      'publicStats': row[1],
+      'publicStreak': row[2],
+      'publicWordbook': row[3],
+      'publicPosts': row[4],
+    };
+  }
+
+  Future<void> upsertUserPrivacy(
+    String userId,
+    Map<String, dynamic> flags,
+  ) async {
+    await connection.execute(
+      Sql.named('''
+INSERT INTO user_privacy (user_id, public_stats, public_streak, public_wordbook, public_posts, updated_at)
+VALUES (@userId, @publicStats, @publicStreak, @publicWordbook, @publicPosts, NOW())
+ON CONFLICT (user_id) DO UPDATE SET
+  public_stats=@publicStats,
+  public_streak=@publicStreak,
+  public_wordbook=@publicWordbook,
+  public_posts=@publicPosts,
+  updated_at=NOW()
+'''),
+      parameters: {
+        'userId': userId,
+        'publicStats': flags['publicStats'] as bool? ?? true,
+        'publicStreak': flags['publicStreak'] as bool? ?? true,
+        'publicWordbook': flags['publicWordbook'] as bool? ?? false,
+        'publicPosts': flags['publicPosts'] as bool? ?? true,
+      },
+    );
+  }
+
+  Future<Map<String, dynamic>> insertContentReport(
+    Map<String, dynamic> report,
+  ) async {
+    final result = await connection.execute(
+      Sql.named('''
+INSERT INTO content_reports (reporter_user_id, content_type, content_id, reason, detail, status, created_at)
+VALUES (@reporterUserId, @contentType, @contentId, @reason, @detail, 'pending', NOW())
+RETURNING id, reporter_user_id, content_type, content_id, reason, detail, status, created_at
+'''),
+      parameters: {
+        'reporterUserId': report['reporterUserId'],
+        'contentType': report['contentType'],
+        'contentId': report['contentId'],
+        'reason': report['reason'],
+        'detail': report['detail'],
+      },
+    );
+    final row = result.first;
+    return {
+      'id': row[0].toString(),
+      'reporterUserId': row[1],
+      'contentType': row[2],
+      'contentId': row[3],
+      'reason': row[4],
+      'detail': row[5],
+      'status': row[6],
+      'createdAt': (row[7] as DateTime).toIso8601String(),
+    };
   }
 
   Future<void> _seedLotteryPrizes() async {

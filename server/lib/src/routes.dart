@@ -15,7 +15,9 @@ import 'email_sender.dart';
 import 'json_response.dart';
 import 'lesson_catalog.dart';
 import 'lottery_policy.dart';
+import 'moderation_policy.dart';
 import 'notification_policy.dart';
+import 'privacy_policy.dart';
 import 'reward_policy.dart';
 import 'reward_task_policy.dart';
 import 'study_plan_policy.dart';
@@ -869,6 +871,57 @@ Router buildRouter(
       'createdAt': record['createdAt'],
     });
   }
+
+  router.get('/privacy', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final row = await database.getUserPrivacy(uid);
+      final flags = row == null
+          ? const UserPrivacyFlags()
+          : UserPrivacyFlags.fromJson({
+              'publicStats': row['publicStats'],
+              'publicStreak': row['publicStreak'],
+              'publicWordbook': row['publicWordbook'],
+              'publicPosts': row['publicPosts'],
+            });
+      return jsonResponse(flags.toJson());
+    });
+  });
+
+  router.put('/privacy', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      final flags = UserPrivacyFlags.fromJson(body);
+      await database.upsertUserPrivacy(uid, flags.toJson());
+      return jsonResponse(flags.toJson());
+    });
+  });
+
+  router.post('/reports', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      final contentType = body['contentType'] as String? ?? '';
+      final contentId = body['contentId'] as String? ?? '';
+      final reason = body['reason'] as String? ?? '';
+      final detail = body['detail'] as String?;
+      if (contentType.isEmpty || contentId.isEmpty) {
+        return jsonResponse(
+          {'error': 'contentType and contentId are required'},
+          status: 400,
+        );
+      }
+      if (!ModerationPolicy.isValidReport(reason, detail)) {
+        return jsonResponse({'error': 'invalid reason'}, status: 400);
+      }
+      final report = await database.insertContentReport({
+        'reporterUserId': uid,
+        'contentType': contentType,
+        'contentId': contentId,
+        'reason': reason,
+        'detail': detail,
+      });
+      return jsonResponse(report, status: 201);
+    });
+  });
 
   router.post('/ai/chat', (Request request) async {
     return _protected(

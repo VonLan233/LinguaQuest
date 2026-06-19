@@ -18,6 +18,7 @@ import '../../data/models/point_grant_result.dart';
 import '../../data/models/review_event.dart';
 import '../../data/models/study_session.dart';
 import '../../data/models/study_plan.dart';
+import '../../data/models/user_privacy.dart';
 import '../../data/models/user_profile.dart';
 import '../../data/models/user_word.dart';
 import '../../data/remote/api_client.dart';
@@ -133,6 +134,7 @@ class AppController extends Notifier<AppState> {
   static const _targetLanguageKey = 'linguaquest.target_language';
   static const _reminderKey = 'linguaquest.reminderSettings';
   static const _sensoryKey = 'linguaquest.sensory_settings';
+  static const _privacyKey = 'linguaquest.privacy_settings';
   static const _currentWordBookIdKey = 'linguaquest.currentWordBookId';
   static const _completedLessonIdsKey = 'linguaquest.completedLessons';
   static const _todayDateKey = 'linguaquest.today.date';
@@ -244,6 +246,7 @@ class AppController extends Notifier<AppState> {
           ? _loadReminderSettings(prefs)
           : _reminderSettingsForPlan(studyPlan);
       final sensorySettings = _loadSensorySettings(prefs);
+      final privacySettings = _loadPrivacySettings(prefs);
       final userWords = user == null
           ? <UserWord>[]
           : await _userWordRepository.list(user.uid);
@@ -263,6 +266,7 @@ class AppController extends Notifier<AppState> {
         targetLanguage: prefs.getString(_targetLanguageKey) ?? 'zh',
         reminderSettings: reminderSettings,
         sensorySettings: sensorySettings,
+        privacySettings: privacySettings,
         studyPlan: studyPlan,
         completedLessonIds: completedLessonIds,
         todayCompletedLessonIds: todayCompletedLessonIds,
@@ -338,6 +342,23 @@ class AppController extends Notifier<AppState> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_sensoryKey, jsonEncode(settings.toJson()));
     state = state.copyWith(sensorySettings: settings);
+  }
+
+  Future<void> updatePrivacySettings(UserPrivacySettings settings) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_privacyKey, jsonEncode(settings.toJson()));
+    if (AppConstants.apiBaseUrl.isNotEmpty) {
+      try {
+        final client = ref.read(apiClientProvider);
+        await client.dio.put<void>(
+          '/privacy',
+          data: settings.toJson(),
+        );
+      } catch (e) {
+        debugPrint('Failed to sync privacy settings to backend: $e');
+      }
+    }
+    state = state.copyWith(privacySettings: settings);
   }
 
   Future<void> _applyAuthenticatedUser(UserProfile user) async {
@@ -2295,6 +2316,18 @@ class AppController extends Notifier<AppState> {
       return SensorySettings.fromJson(Map<String, dynamic>.from(decoded));
     } catch (_) {
       return SensorySettings.defaults;
+    }
+  }
+
+  UserPrivacySettings _loadPrivacySettings(SharedPreferences prefs) {
+    final raw = prefs.getString(_privacyKey);
+    if (raw == null) return UserPrivacySettings.defaults;
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! Map) return UserPrivacySettings.defaults;
+      return UserPrivacySettings.fromJson(Map<String, dynamic>.from(decoded));
+    } catch (_) {
+      return UserPrivacySettings.defaults;
     }
   }
 

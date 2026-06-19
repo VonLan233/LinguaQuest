@@ -22,7 +22,9 @@ import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/onboarding/splash_screen.dart';
 import '../../features/profile/profile_screen.dart';
 import '../../features/profile/about_screen.dart';
+import '../../features/profile/data_settings_screen.dart';
 import '../../features/profile/help_support_screen.dart';
+import '../../features/profile/privacy_settings_screen.dart';
 import '../../features/profile/settings_screen.dart';
 import '../../features/profile/study_plan_settings_screen.dart';
 import '../../features/quests/ai_tutor_screen.dart';
@@ -179,6 +181,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/settings/reminder',
         builder: (context, state) => const ReminderSettingsScreen(),
+      ),
+      GoRoute(
+        path: '/profile/privacy',
+        builder: (context, state) => const PrivacySettingsScreen(),
+      ),
+      GoRoute(
+        path: '/profile/data',
+        builder: (context, state) => const DataSettingsScreen(),
       ),
       GoRoute(
         path: '/help',

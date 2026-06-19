@@ -10,6 +10,7 @@ import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
 import '../../data/models/lottery.dart';
 import '../../data/models/study_plan.dart';
+import '../../data/models/user_privacy.dart';
 import '../../data/models/user_word.dart';
 import '../../data/models/user_profile.dart';
 import '../utils/custom_word_localization.dart';
@@ -122,6 +123,7 @@ class AppState {
     required this.aiHistory,
     this.targetLanguage = 'zh',
     this.sensorySettings = SensorySettings.defaults,
+    this.privacySettings = UserPrivacySettings.defaults,
     this.locale,
     this.user,
     this.lastResult,
@@ -160,6 +162,7 @@ class AppState {
   final List<UserAsset> userAssets;
   final String targetLanguage;
   final SensorySettings sensorySettings;
+  final UserPrivacySettings privacySettings;
   final LessonResult? lastResult;
   final LotteryDrawResult? lastLotteryResult;
   final String? errorMessage;
@@ -322,6 +325,7 @@ class AppState {
     List<UserAsset>? userAssets,
     String? targetLanguage,
     SensorySettings? sensorySettings,
+    UserPrivacySettings? privacySettings,
     LessonResult? lastResult,
     LotteryDrawResult? lastLotteryResult,
     bool clearLastResult = false,
@@ -363,6 +367,7 @@ class AppState {
       userAssets: userAssets ?? this.userAssets,
       targetLanguage: targetLanguage ?? this.targetLanguage,
       sensorySettings: sensorySettings ?? this.sensorySettings,
+      privacySettings: privacySettings ?? this.privacySettings,
       lastResult: clearLastResult ? null : lastResult ?? this.lastResult,
       lastLotteryResult: lastLotteryResult ?? this.lastLotteryResult,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
