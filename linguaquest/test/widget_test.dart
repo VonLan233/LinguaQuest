@@ -3231,7 +3231,9 @@ void main() {
       expect(find.text(word.phoneticUK), findsWidgets);
       expect(find.text('英 /${word.phoneticUK}/'), findsNothing);
       expect(find.text('美 /${word.phoneticUS}/'), findsNothing);
-      expect(find.text('中文释义'), findsOneWidget);
+      // Chinese (HSK) words drop the redundant Chinese-definitions block; only
+      // the English definitions remain.
+      expect(find.text('中文释义'), findsNothing);
       expect(find.text('英文释义'), findsOneWidget);
 
       await tester.scrollUntilVisible(

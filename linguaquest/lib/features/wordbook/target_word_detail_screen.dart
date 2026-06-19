@@ -483,6 +483,31 @@ class _DefinitionSections extends StatelessWidget {
         ? [word.definition]
         : word.englishDefinitions;
     final ms = word.malayDefinitions;
+
+    // Chinese (HSK) words: the "Chinese definitions" list duplicates the English
+    // meanings, so show only the English definitions.
+    if (containsCjkText(word.word)) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _DefinitionList(
+            title: l10n.wordbookEnglishDefinitions,
+            values: en,
+            highFrequency: true,
+            l10n: l10n,
+          ),
+          if (ms.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            _DefinitionList(
+              title: l10n.wordbookMalayDefinitions,
+              values: ms,
+              l10n: l10n,
+            ),
+          ],
+        ],
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
