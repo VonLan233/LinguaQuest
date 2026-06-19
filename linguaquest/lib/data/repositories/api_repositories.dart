@@ -34,6 +34,7 @@ import '../models/achievement.dart';
 import '../models/ai_feature.dart';
 import '../models/analytics.dart';
 import '../models/forum.dart';
+import '../models/recommendation.dart';
 import 'forum_repository.dart';
 
 class ApiAuthRepository implements AuthRepository {
@@ -774,6 +775,15 @@ class ApiAnalyticsRepository implements AnalyticsRepository {
       queryParameters: {'dimension': dimension},
     );
     return LeaderboardResult.fromJson(response.data!);
+  }
+
+  @override
+  Future<List<Recommendation>> getRecommendations(String uid) async {
+    final response = await _client.dio.get<List<dynamic>>('/recommendations');
+    return (response.data ?? const <dynamic>[])
+        .whereType<Map>()
+        .map((e) => Recommendation.fromJson(Map<String, dynamic>.from(e)))
+        .toList();
   }
 }
 

@@ -11,6 +11,7 @@ import 'achievement_policy.dart';
 import 'ai_policy.dart';
 import 'analytics_policy.dart';
 import 'auth.dart';
+import 'recommendation_policy.dart';
 import 'config.dart';
 import 'database.dart';
 import 'email_sender.dart';
@@ -834,6 +835,56 @@ Router buildRouter(
     return _protected(config, request, (uid) async {
       final analytics = LearningAnalytics.mock();
       return jsonResponse(analytics.toJson());
+    });
+  });
+
+  router.get('/recommendations', (Request request) async {
+    return _protected(config, request, (uid) async {
+      // Build word stats from the user's custom words in the database.
+      // For mock/initial deployments we return 3 representative recommendations.
+      final customWords = await database.customWords(uid);
+      final wordStats = customWords.map((w) {
+        return <String, dynamic>{
+          'wordId': w['id']?.toString() ?? '',
+          'listeningScore': _intValue(w['listening_score'] ?? w['listeningScore']) ?? 100,
+          'contextScore': _intValue(w['context_score'] ?? w['contextScore']) ?? 100,
+          'meaningRecallScore': _intValue(w['meaning_recall_score'] ?? w['meaningRecallScore']) ?? 100,
+          'wrongCount': _intValue(w['wrong_count'] ?? w['wrongCount']) ?? 0,
+        };
+      }).toList();
+
+      final recs = RecommendationPolicy.generate(wordStats: wordStats);
+
+      // When there are no real weak words (e.g. new user), return mock recs
+      // so the UI always has something useful to show.
+      if (recs.isEmpty) {
+        final mockRecs = [
+          const Recommendation(
+            targetWordIds: ['mock_w1', 'mock_w2'],
+            exerciseType: 'listeningWordChoice',
+            reason: 'Strengthen your listening recognition with these words',
+            priority: 1,
+            estimatedMinutes: 2,
+          ),
+          const Recommendation(
+            targetWordIds: ['mock_w3', 'mock_w4'],
+            exerciseType: 'sentenceCloze',
+            reason: 'Practice using these words in context',
+            priority: 2,
+            estimatedMinutes: 2,
+          ),
+          const Recommendation(
+            targetWordIds: ['mock_w5'],
+            exerciseType: 'meaningChoice',
+            reason: 'Review the meanings of these recently learned words',
+            priority: 3,
+            estimatedMinutes: 1,
+          ),
+        ];
+        return jsonResponse(mockRecs.map((r) => r.toJson()).toList());
+      }
+
+      return jsonResponse(recs.map((r) => r.toJson()).toList());
     });
   });
 

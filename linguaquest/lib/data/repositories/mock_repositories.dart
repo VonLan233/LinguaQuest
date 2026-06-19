@@ -28,6 +28,7 @@ import '../models/achievement.dart';
 import '../models/ai_feature.dart';
 import '../models/analytics.dart';
 import '../models/forum.dart';
+import '../models/recommendation.dart';
 import 'forum_repository.dart';
 import 'learning_repository.dart';
 import 'lottery_repository.dart';
@@ -1291,6 +1292,33 @@ class MockAnalyticsRepository implements AnalyticsRepository {
       totalStudyDays: analytics.totalStudyDays,
       trainingXp: analytics.trainingXp,
     );
+  }
+
+  @override
+  Future<List<Recommendation>> getRecommendations(String uid) async {
+    return const [
+      Recommendation(
+        targetWordIds: ['mock_w1', 'mock_w2'],
+        exerciseType: 'listeningWordChoice',
+        reason: 'Strengthen your listening recognition with these words',
+        priority: 1,
+        estimatedMinutes: 2,
+      ),
+      Recommendation(
+        targetWordIds: ['mock_w3', 'mock_w4'],
+        exerciseType: 'sentenceCloze',
+        reason: 'Practice using these words in context',
+        priority: 2,
+        estimatedMinutes: 2,
+      ),
+      Recommendation(
+        targetWordIds: ['mock_w5'],
+        exerciseType: 'meaningChoice',
+        reason: 'Review the meanings of these recently learned words',
+        priority: 3,
+        estimatedMinutes: 1,
+      ),
+    ];
   }
 
   @override

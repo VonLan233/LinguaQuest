@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:linguaquest/data/models/achievement.dart';
 import 'package:linguaquest/data/models/analytics.dart';
+import 'package:linguaquest/data/models/recommendation.dart';
 import 'package:linguaquest/data/repositories/mock_repositories.dart';
 
 void main() {
@@ -54,6 +55,70 @@ void main() {
       expect(restored.masteredWords, equals(original.masteredWords));
       expect(restored.sevenDayXp, equals(original.sevenDayXp));
       expect(restored.trainingRank, equals(original.trainingRank));
+    });
+  });
+
+  group('Recommendation', () {
+    test('fromJson/toJson round-trip', () {
+      const original = Recommendation(
+        targetWordIds: ['w1', 'w2', 'w3'],
+        exerciseType: 'listeningWordChoice',
+        reason: 'Your listening recognition for these words is weak',
+        priority: 1,
+        estimatedMinutes: 3,
+      );
+      final json = original.toJson();
+      final restored = Recommendation.fromJson(json);
+      expect(restored.targetWordIds, equals(original.targetWordIds));
+      expect(restored.exerciseType, equals(original.exerciseType));
+      expect(restored.reason, equals(original.reason));
+      expect(restored.priority, equals(original.priority));
+      expect(restored.estimatedMinutes, equals(original.estimatedMinutes));
+    });
+
+    test('priority 1 is higher than priority 2', () {
+      const high = Recommendation(
+        targetWordIds: ['w1'],
+        exerciseType: 'listeningWordChoice',
+        reason: 'Listening weak',
+        priority: 1,
+        estimatedMinutes: 1,
+      );
+      const medium = Recommendation(
+        targetWordIds: ['w2'],
+        exerciseType: 'sentenceCloze',
+        reason: 'Context weak',
+        priority: 2,
+        estimatedMinutes: 1,
+      );
+      expect(high.priority, lessThan(medium.priority));
+    });
+  });
+
+  group('MockAnalyticsRepository.getRecommendations', () {
+    final repo = MockAnalyticsRepository();
+
+    test('returns non-empty list of recommendations', () async {
+      final recs = await repo.getRecommendations('test-uid');
+      expect(recs, isNotEmpty);
+    });
+
+    test('each recommendation has non-empty exerciseType and reason', () async {
+      final recs = await repo.getRecommendations('test-uid');
+      for (final rec in recs) {
+        expect(rec.exerciseType, isNotEmpty);
+        expect(rec.reason, isNotEmpty);
+        expect(rec.targetWordIds, isNotEmpty);
+        expect(rec.priority, greaterThan(0));
+        expect(rec.estimatedMinutes, greaterThan(0));
+      }
+    });
+
+    test('recommendations are ordered by ascending priority', () async {
+      final recs = await repo.getRecommendations('test-uid');
+      for (var i = 0; i < recs.length - 1; i++) {
+        expect(recs[i].priority, lessThanOrEqualTo(recs[i + 1].priority));
+      }
     });
   });
 

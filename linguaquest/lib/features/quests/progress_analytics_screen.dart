@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import 'package:linguaquest/core/theme/app_icons.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_card.dart';
+import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/app_progress_bar.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/analytics.dart';
+import '../../data/models/recommendation.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 class ProgressAnalyticsScreen extends ConsumerStatefulWidget {
@@ -28,6 +32,7 @@ class _ProgressAnalyticsScreenState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(appControllerProvider.notifier).refreshAnalytics();
+      ref.read(appControllerProvider.notifier).refreshRecommendations();
     });
   }
 
@@ -47,6 +52,7 @@ class _ProgressAnalyticsScreenState
     final accuracy = attempts == 0 ? 0 : (correct / attempts * 100).round();
     final l10n = AppLocalizations.of(context);
     final analytics = state.analyticsSnapshot;
+    final recommendations = state.recommendations;
 
     return Scaffold(
       appBar: AppBar(
@@ -98,6 +104,8 @@ class _ProgressAnalyticsScreenState
               const SizedBox(height: 24),
               const Center(child: CircularProgressIndicator()),
             ],
+            const SizedBox(height: 24),
+            _RecommendedPracticeSection(recommendations: recommendations),
           ],
         ),
       ),
@@ -403,6 +411,155 @@ class _ProgressSignalDivider extends StatelessWidget {
         width: 16,
         thickness: 1,
         color: Theme.of(context).colorScheme.outlineVariant,
+      ),
+    );
+  }
+}
+
+// ── Recommended Practice Section ─────────────────────────────────────────────
+
+class _RecommendedPracticeSection extends StatelessWidget {
+  const _RecommendedPracticeSection({required this.recommendations});
+
+  final List<Recommendation> recommendations;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Recommended Practice',
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        const SizedBox(height: 12),
+        if (recommendations.isEmpty)
+          AppCard(
+            child: Row(
+              children: [
+                Icon(
+                  AppIcons.verified,
+                  color: AppTheme.success,
+                  size: 20,
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    'Great job! No weak areas detected.',
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                ),
+              ],
+            ),
+          )
+        else
+          ...recommendations.map(
+            (rec) => Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: _RecommendationCard(recommendation: rec),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _RecommendationCard extends StatelessWidget {
+  const _RecommendationCard({required this.recommendation});
+
+  final Recommendation recommendation;
+
+  String get _exerciseTypeLabel {
+    switch (recommendation.exerciseType) {
+      case 'listeningWordChoice':
+      case 'listeningMeaningChoice':
+        return 'Listening';
+      case 'sentenceCloze':
+        return 'Context';
+      case 'meaningChoice':
+      case 'chineseChoice':
+        return 'Meaning';
+      case 'confusableChoice':
+        return 'Confusables';
+      case 'collocationChoice':
+        return 'Collocation';
+      default:
+        return recommendation.exerciseType;
+    }
+  }
+
+  Color _priorityColor(BuildContext context) {
+    switch (recommendation.priority) {
+      case 1:
+        return AppTheme.coral;
+      case 2:
+        return AppTheme.mango;
+      default:
+        return AppTheme.cyan;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              AppPill(
+                label: _exerciseTypeLabel,
+                variant: PillVariant.primary,
+              ),
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 2,
+                ),
+                decoration: BoxDecoration(
+                  color: _priorityColor(context).withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(AppTokens.radiusPill),
+                ),
+                child: Text(
+                  'P${recommendation.priority}',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: _priorityColor(context),
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              const Spacer(),
+              Text(
+                '~${recommendation.estimatedMinutes} min',
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            recommendation.reason,
+            style: theme.textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '${recommendation.targetWordIds.length} word${recommendation.targetWordIds.length == 1 ? '' : 's'}',
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 12),
+          AppSecondaryButton(
+            label: 'Start Practice',
+            onPressed: () => context.push('/study'),
+          ),
+        ],
       ),
     );
   }

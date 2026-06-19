@@ -2584,6 +2584,19 @@ class AppController extends Notifier<AppState> {
       debugPrint('Failed to refresh leaderboard: $error');
     }
   }
+
+  Future<void> refreshRecommendations() async {
+    final user = state.user;
+    if (user == null) return;
+    try {
+      final recs = await _analyticsRepository.getRecommendations(user.uid);
+      if (!ref.mounted) return;
+      state = state.copyWith(recommendations: recs);
+    } catch (error) {
+      // Recommendation failures are non-critical — do not surface to the user.
+      debugPrint('Failed to refresh recommendations: $error');
+    }
+  }
 }
 
 class _PointGrantOutcome {
