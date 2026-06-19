@@ -54,6 +54,12 @@ class _AiWritingReviewScreenState
           _selectedExamType == 'General' ? null : _selectedExamType,
     );
     if (mounted) {
+      if (raw.isEmpty) {
+        final errMsg = ref.read(appControllerProvider).errorMessage;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(errMsg ?? 'An error occurred. Please try again.')),
+        );
+      }
       setState(() {
         _isLoading = false;
         if (raw.isNotEmpty) {

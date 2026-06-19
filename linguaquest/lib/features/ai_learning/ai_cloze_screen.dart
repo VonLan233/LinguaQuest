@@ -49,23 +49,24 @@ class _AiClozeScreenState extends ConsumerState<AiClozeScreen> {
       _selectedAnswers.clear();
       _answerCorrectness.clear();
     });
-    try {
-      final result = await ref
-          .read(appControllerProvider.notifier)
-          .askAi(
-            featureType: 'cloze',
-            prompt: 'Generate cloze for: ${_controller.text.trim()}',
-            targetWord: _controller.text.trim(),
-          );
-      if (mounted) setState(() => _result = result);
-    } catch (e) {
-      if (mounted) {
+    final result = await ref
+        .read(appControllerProvider.notifier)
+        .askAi(
+          featureType: 'cloze',
+          prompt: 'Generate cloze for: ${_controller.text.trim()}',
+          targetWord: _controller.text.trim(),
+        );
+    if (mounted) {
+      if (result.isEmpty) {
+        final errMsg = ref.read(appControllerProvider).errorMessage;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
+          SnackBar(content: Text(errMsg ?? 'An error occurred. Please try again.')),
         );
       }
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
+      setState(() {
+        _isLoading = false;
+        _result = result.isEmpty ? null : result;
+      });
     }
   }
 

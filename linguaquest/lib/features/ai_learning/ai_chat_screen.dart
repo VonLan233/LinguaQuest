@@ -45,19 +45,20 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
       _isLoading = true;
       _result = null;
     });
-    try {
-      final result = await ref
-          .read(appControllerProvider.notifier)
-          .askAi(featureType: 'chat', prompt: _controller.text.trim());
-      if (mounted) setState(() => _result = result);
-    } catch (e) {
-      if (mounted) {
+    final result = await ref
+        .read(appControllerProvider.notifier)
+        .askAi(featureType: 'chat', prompt: _controller.text.trim());
+    if (mounted) {
+      if (result.isEmpty) {
+        final errMsg = ref.read(appControllerProvider).errorMessage;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
+          SnackBar(content: Text(errMsg ?? 'An error occurred. Please try again.')),
         );
       }
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
+      setState(() {
+        _isLoading = false;
+        _result = result.isEmpty ? null : result;
+      });
     }
   }
 
