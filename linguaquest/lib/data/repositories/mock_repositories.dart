@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../core/utils/email_validation.dart';
 import '../models/app_notification.dart';
 import '../models/custom_word.dart';
 import '../models/daily_reward_task.dart';
@@ -53,12 +54,15 @@ class MockAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<UserProfile> register({
+  Future<AuthResult> register({
     required String name,
     required String email,
     required String password,
   }) async {
     final normalizedEmail = email.trim().toLowerCase();
+    if (!isValidEmail(normalizedEmail)) {
+      throw StateError('invalid email');
+    }
     final prefs = await SharedPreferences.getInstance();
     final registeredEmails =
         prefs.getStringList(_registeredEmailsKey) ?? const <String>[];
@@ -85,7 +89,7 @@ class MockAuthRepository implements AuthRepository {
       ...normalizedRegisteredEmails,
       normalizedEmail,
     ]);
-    return updateProfile(profile);
+    return AuthSuccess(await updateProfile(profile));
   }
 
   @override
@@ -93,16 +97,40 @@ class MockAuthRepository implements AuthRepository {
     required String email,
     required String password,
   }) async {
+    final normalizedEmail = email.trim().toLowerCase();
+    if (!isValidEmail(normalizedEmail)) {
+      throw StateError('invalid email');
+    }
+    final prefs = await SharedPreferences.getInstance();
+    final registered = (prefs.getStringList(_registeredEmailsKey) ?? const [])
+        .map((e) => e.trim().toLowerCase())
+        .toSet();
     final existing = await loadSession();
-    if (existing != null && existing.email == email.trim().toLowerCase()) {
+    if (existing != null && existing.email == normalizedEmail) {
       return existing;
     }
+    if (!registered.contains(normalizedEmail)) {
+      throw StateError('account not found');
+    }
     final profile = UserProfile.demo().copyWith(
-      email: email.trim().toLowerCase(),
+      email: normalizedEmail,
       updatedAt: DateTime.now(),
     );
     return updateProfile(profile);
   }
+
+  @override
+  Future<UserProfile> verifyEmail({
+    required String email,
+    required String code,
+  }) async {
+    final existing = await loadSession();
+    if (existing != null) return existing;
+    return login(email: email, password: '');
+  }
+
+  @override
+  Future<void> resendCode(String email) async {}
 
   @override
   Future<UserProfile> updateProfile(UserProfile profile) async {
