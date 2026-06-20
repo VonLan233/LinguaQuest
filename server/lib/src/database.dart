@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS users (
   password_hash TEXT NOT NULL,
   password_salt TEXT NOT NULL,
   name TEXT NOT NULL,
-  target_exam TEXT NOT NULL DEFAULT 'Daily English',
+  target_exam TEXT NOT NULL DEFAULT 'HSK 1',
   level TEXT NOT NULL DEFAULT 'Intermediate',
   daily_goal INTEGER NOT NULL DEFAULT 10,
   xp INTEGER NOT NULL DEFAULT 0,
@@ -73,6 +73,11 @@ CREATE TABLE IF NOT EXISTS users (
 
     await connection.execute(
       "ALTER TABLE users ALTER COLUMN level SET DEFAULT 'Intermediate'",
+    );
+    // HSK pivot: new users default to the HSK 1 exam target (was 'Daily
+    // English'). Existing rows keep their stored value. Idempotent.
+    await connection.execute(
+      "ALTER TABLE users ALTER COLUMN target_exam SET DEFAULT 'HSK 1'",
     );
 
     // Email verification: backfill EXISTING users to verified (ADD COLUMN with
