@@ -71,7 +71,7 @@ key.properties
 ```bash
 cd linguaquest
 flutter build apk --release \
-  --dart-define=API_BASE_URL=https://api.linguaquest.app
+  --dart-define=API_BASE_URL=https://api.vonlan233.top
 ```
 
 Output: `build/app/outputs/flutter-apk/app-release.apk`
@@ -81,7 +81,7 @@ Output: `build/app/outputs/flutter-apk/app-release.apk`
 ```bash
 cd linguaquest
 flutter build appbundle --release \
-  --dart-define=API_BASE_URL=https://api.linguaquest.app
+  --dart-define=API_BASE_URL=https://api.vonlan233.top
 ```
 
 Output: `build/app/outputs/bundle/release/app-release.aab`
@@ -103,7 +103,7 @@ flutter build apk --release
 - [ ] Version and build number bumped in `linguaquest/pubspec.yaml` (`version: X.Y.Z+N`)
 - [ ] `key.properties` in place and NOT staged for commit
 - [ ] `API_BASE_URL` points to production endpoint
-- [ ] Backend deployed and healthy (`curl https://api.linguaquest.app/health`)
+- [ ] Backend deployed and healthy (`curl https://api.vonlan233.top/health`)
 - [ ] `dart test` passes in `server/`
 
 ---
@@ -157,7 +157,7 @@ docker compose -f docker-compose.prod.yml --env-file .env.prod up -d
 Health check against production host:
 
 ```bash
-curl https://api.linguaquest.app/health
+curl https://api.vonlan233.top/health
 # expected: {"status":"ok"}
 ```
 
