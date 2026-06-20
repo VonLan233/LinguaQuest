@@ -606,6 +606,10 @@ class ApiAiRepository implements AiRepository {
 
   final ApiClient _client;
 
+  // AI requests hit a remote LLM that can take far longer than the global
+  // 8s receiveTimeout. Without this override they fail as "network error".
+  static const _aiTimeout = Duration(seconds: 60);
+
   @override
   Future<Map<String, dynamic>> chat({
     required String prompt,
@@ -617,6 +621,7 @@ class ApiAiRepository implements AiRepository {
         'prompt': prompt,
         'targetWord': targetWord,
       },
+      options: Options(receiveTimeout: _aiTimeout),
     );
     return response.data!['data'] as Map<String, dynamic>;
   }
@@ -628,6 +633,7 @@ class ApiAiRepository implements AiRepository {
     final response = await _client.dio.post<Map<String, dynamic>>(
       '/ai/sentence-analysis',
       data: {'prompt': prompt},
+      options: Options(receiveTimeout: _aiTimeout),
     );
     return response.data!['data'] as Map<String, dynamic>;
   }
@@ -643,6 +649,7 @@ class ApiAiRepository implements AiRepository {
         'prompt': prompt,
         'targetWord': targetWord,
       },
+      options: Options(receiveTimeout: _aiTimeout),
     );
     return response.data!['data'] as Map<String, dynamic>;
   }
@@ -675,6 +682,7 @@ class ApiAiRepository implements AiRepository {
         'examType': ?examType,
         'targetScore': ?targetScore,
       },
+      options: Options(receiveTimeout: _aiTimeout),
     );
     return (response.data?['data'] as Map<String, dynamic>?) ?? {};
   }
