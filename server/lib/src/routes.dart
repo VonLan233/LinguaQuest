@@ -1894,6 +1894,20 @@ DateTime? _dateTimeValue(Object? value) {
 
 String _targetExamForWordBook(String wordBookId) {
   switch (wordBookId) {
+    case 'hsk1':
+      return 'HSK 1';
+    case 'hsk2':
+      return 'HSK 2';
+    case 'hsk3':
+      return 'HSK 3';
+    case 'hsk4':
+      return 'HSK 4';
+    case 'hsk5':
+      return 'HSK 5';
+    case 'hsk6':
+      return 'HSK 6';
+    // Legacy pre-HSK targets, retained for safety. Study-plan validation now
+    // normalizes these wordbook ids to hsk1 before this is reached.
     case 'toefl':
       return 'TOEFL';
     case 'gre':
@@ -1905,7 +1919,7 @@ String _targetExamForWordBook(String wordBookId) {
     case 'daily-english':
       return 'Daily English';
   }
-  return 'Daily English';
+  return 'HSK 1';
 }
 
 String _dateKey(DateTime date) {

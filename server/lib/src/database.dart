@@ -330,7 +330,7 @@ CREATE TABLE IF NOT EXISTS daily_activity (
 ''');
 
     await connection.execute('''
-CREATE TABLE IF NOT EXISTS reward_claims (
+CREATE TABLE IF NOT EXISTS daily_task_claims (
   id TEXT PRIMARY KEY,
   uid TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   date_key TEXT NOT NULL,
@@ -1666,7 +1666,7 @@ ON CONFLICT (uid, date_key) DO UPDATE SET
   Future<Set<String>> rewardClaimsForDate(String uid, String dateKey) async {
     final rows = await connection.execute(
       Sql.named('''
-SELECT task_id FROM reward_claims
+SELECT task_id FROM daily_task_claims
 WHERE uid=@uid AND date_key=@dateKey
 '''),
       parameters: {'uid': uid, 'dateKey': dateKey},
@@ -1686,7 +1686,7 @@ WHERE uid=@uid AND date_key=@dateKey
   }) async {
     final rows = await connection.execute(
       Sql.named('''
-INSERT INTO reward_claims (id, uid, date_key, task_id, points, claimed_at)
+INSERT INTO daily_task_claims (id, uid, date_key, task_id, points, claimed_at)
 VALUES (@id, @uid, @dateKey, @taskId, @points, @claimedAt)
 ON CONFLICT (uid, date_key, task_id) DO NOTHING
 RETURNING id
@@ -1713,7 +1713,7 @@ RETURNING id
     return connection.runTx((tx) async {
       final insertedRows = await tx.execute(
         Sql.named('''
-INSERT INTO reward_claims (id, uid, date_key, task_id, points, claimed_at)
+INSERT INTO daily_task_claims (id, uid, date_key, task_id, points, claimed_at)
 VALUES (@id, @uid, @dateKey, @taskId, @points, @claimedAt)
 ON CONFLICT (uid, date_key, task_id) DO NOTHING
 RETURNING id
