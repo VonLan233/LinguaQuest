@@ -2424,13 +2424,21 @@ class AppController extends Notifier<AppState> {
       Map<String, dynamic> result;
       switch (featureType) {
         case 'chat':
-          result = await repo.chat(prompt: prompt, targetWord: targetWord);
+          result = await repo.chat(
+            prompt: prompt,
+            targetWord: targetWord,
+            targetLanguage: state.targetLanguage,
+          );
         case 'sentence_analysis':
-          result = await repo.analyzeStatement(prompt: prompt);
+          result = await repo.analyzeStatement(
+            prompt: prompt,
+            targetLanguage: state.targetLanguage,
+          );
         case 'cloze':
           result = await repo.generateCloze(
             prompt: prompt,
             targetWord: targetWord,
+            targetLanguage: state.targetLanguage,
           );
         default:
           result = {};
@@ -2454,6 +2462,7 @@ class AppController extends Notifier<AppState> {
         essay: essay,
         examType: examType,
         targetScore: targetScore,
+        targetLanguage: state.targetLanguage,
       );
       final history = await ref.read(aiRepositoryProvider).listHistory();
       state = state.copyWith(aiHistory: history, clearError: true);

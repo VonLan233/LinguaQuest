@@ -613,6 +613,7 @@ class ApiAiRepository implements AiRepository {
   @override
   Future<Map<String, dynamic>> chat({
     required String prompt,
+    required String targetLanguage,
     String? targetWord,
   }) async {
     final response = await _client.dio.post<Map<String, dynamic>>(
@@ -620,6 +621,7 @@ class ApiAiRepository implements AiRepository {
       data: {
         'prompt': prompt,
         'targetWord': targetWord,
+        'targetLanguage': targetLanguage,
       },
       options: Options(receiveTimeout: _aiTimeout),
     );
@@ -629,10 +631,11 @@ class ApiAiRepository implements AiRepository {
   @override
   Future<Map<String, dynamic>> analyzeStatement({
     required String prompt,
+    required String targetLanguage,
   }) async {
     final response = await _client.dio.post<Map<String, dynamic>>(
       '/ai/sentence-analysis',
-      data: {'prompt': prompt},
+      data: {'prompt': prompt, 'targetLanguage': targetLanguage},
       options: Options(receiveTimeout: _aiTimeout),
     );
     return response.data!['data'] as Map<String, dynamic>;
@@ -641,6 +644,7 @@ class ApiAiRepository implements AiRepository {
   @override
   Future<Map<String, dynamic>> generateCloze({
     required String prompt,
+    required String targetLanguage,
     String? targetWord,
   }) async {
     final response = await _client.dio.post<Map<String, dynamic>>(
@@ -648,6 +652,7 @@ class ApiAiRepository implements AiRepository {
       data: {
         'prompt': prompt,
         'targetWord': targetWord,
+        'targetLanguage': targetLanguage,
       },
       options: Options(receiveTimeout: _aiTimeout),
     );
@@ -672,6 +677,7 @@ class ApiAiRepository implements AiRepository {
   @override
   Future<Map<String, dynamic>> reviewWriting({
     required String essay,
+    required String targetLanguage,
     String? examType,
     double? targetScore,
   }) async {
@@ -681,6 +687,7 @@ class ApiAiRepository implements AiRepository {
         'prompt': essay,
         'examType': ?examType,
         'targetScore': ?targetScore,
+        'targetLanguage': targetLanguage,
       },
       options: Options(receiveTimeout: _aiTimeout),
     );

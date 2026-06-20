@@ -1022,6 +1022,7 @@ class MockAiRepository implements AiRepository {
   @override
   Future<Map<String, dynamic>> chat({
     required String prompt,
+    required String targetLanguage,
     String? targetWord,
   }) async {
     final snippet = prompt.length > 30 ? prompt.substring(0, 30) : prompt;
@@ -1046,6 +1047,7 @@ class MockAiRepository implements AiRepository {
   @override
   Future<Map<String, dynamic>> analyzeStatement({
     required String prompt,
+    required String targetLanguage,
   }) async {
     final result = <String, dynamic>{
       'mainClause': 'Mock main clause',
@@ -1070,6 +1072,7 @@ class MockAiRepository implements AiRepository {
   @override
   Future<Map<String, dynamic>> generateCloze({
     required String prompt,
+    required String targetLanguage,
     String? targetWord,
   }) async {
     final word = targetWord ?? 'word';
@@ -1110,6 +1113,7 @@ class MockAiRepository implements AiRepository {
   @override
   Future<Map<String, dynamic>> reviewWriting({
     required String essay,
+    required String targetLanguage,
     String? examType,
     double? targetScore,
   }) async {

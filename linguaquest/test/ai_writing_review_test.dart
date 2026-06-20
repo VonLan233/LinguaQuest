@@ -145,6 +145,7 @@ void main() {
       final repo = MockAiRepository();
       final result = await repo.reviewWriting(
         essay: 'My test essay content here.',
+        targetLanguage: 'zh',
       );
 
       expect(result['totalScore'], equals(75));
@@ -157,7 +158,10 @@ void main() {
 
     test('reviewWriting result can be parsed into WritingReviewResult', () async {
       final repo = MockAiRepository();
-      final raw = await repo.reviewWriting(essay: 'Some essay content.');
+      final raw = await repo.reviewWriting(
+        essay: 'Some essay content.',
+        targetLanguage: 'zh',
+      );
       final result = WritingReviewResult.fromJson(raw);
 
       expect(result.totalScore, greaterThan(0));
@@ -168,7 +172,10 @@ void main() {
       final repo = MockAiRepository();
 
       expect((await repo.listHistory()).length, equals(0));
-      await repo.reviewWriting(essay: 'My test essay content here.');
+      await repo.reviewWriting(
+        essay: 'My test essay content here.',
+        targetLanguage: 'zh',
+      );
       final history = await repo.listHistory();
 
       expect(history.length, equals(1));
@@ -178,7 +185,7 @@ void main() {
     test('reviewWriting stores essay as prompt in history entry', () async {
       final repo = MockAiRepository();
       const essay = 'Test essay for prompt storage.';
-      await repo.reviewWriting(essay: essay);
+      await repo.reviewWriting(essay: essay, targetLanguage: 'zh');
       final history = await repo.listHistory();
 
       expect(history.first.prompt, equals(essay));
@@ -186,7 +193,11 @@ void main() {
 
     test('reviewWriting with examType still stores essay as prompt', () async {
       final repo = MockAiRepository();
-      await repo.reviewWriting(essay: 'Test essay', examType: 'IELTS');
+      await repo.reviewWriting(
+        essay: 'Test essay',
+        examType: 'IELTS',
+        targetLanguage: 'zh',
+      );
       final history = await repo.listHistory();
 
       expect(history.first.prompt, equals('Test essay'));
@@ -195,8 +206,8 @@ void main() {
 
     test('multiple reviewWriting calls accumulate in history', () async {
       final repo = MockAiRepository();
-      await repo.reviewWriting(essay: 'First essay.');
-      await repo.reviewWriting(essay: 'Second essay.');
+      await repo.reviewWriting(essay: 'First essay.', targetLanguage: 'zh');
+      await repo.reviewWriting(essay: 'Second essay.', targetLanguage: 'zh');
       final history = await repo.listHistory();
 
       expect(history.length, equals(2));
@@ -206,7 +217,7 @@ void main() {
 
     test('reviewWriting history entry has valid id', () async {
       final repo = MockAiRepository();
-      await repo.reviewWriting(essay: 'Essay with id check.');
+      await repo.reviewWriting(essay: 'Essay with id check.', targetLanguage: 'zh');
       final history = await repo.listHistory();
 
       expect(history.first.id, isNotEmpty);

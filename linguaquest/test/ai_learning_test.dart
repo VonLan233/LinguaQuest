@@ -11,7 +11,10 @@ void main() {
     });
 
     test('chat returns structured mock response', () async {
-      final result = await repo.chat(prompt: 'What does hello mean?');
+      final result = await repo.chat(
+        prompt: 'What does hello mean?',
+        targetLanguage: 'zh',
+      );
       expect(result['answer'], isA<String>());
       expect(result['cautions'], isA<List>());
       expect(result['relatedWords'], isA<List>());
@@ -20,6 +23,7 @@ void main() {
     test('analyzeStatement returns mock analysis', () async {
       final result = await repo.analyzeStatement(
         prompt: 'The quick brown fox jumps over the lazy dog.',
+        targetLanguage: 'zh',
       );
       expect(result['mainClause'], isA<String>());
       expect(result['translation'], isA<String>());
@@ -29,6 +33,7 @@ void main() {
     test('generateCloze returns mock cloze with blanks', () async {
       final result = await repo.generateCloze(
         prompt: 'Generate cloze for: interesting',
+        targetLanguage: 'zh',
         targetWord: 'interesting',
       );
       expect(result['passage'], isA<String>());
@@ -39,15 +44,15 @@ void main() {
     });
 
     test('listHistory returns inserted entries after chat', () async {
-      await repo.chat(prompt: 'test question 1');
-      await repo.chat(prompt: 'test question 2');
+      await repo.chat(prompt: 'test question 1', targetLanguage: 'zh');
+      await repo.chat(prompt: 'test question 2', targetLanguage: 'zh');
       final history = await repo.listHistory();
       expect(history.length, equals(2));
       expect(history.first.featureType, equals('chat'));
     });
 
     test('deleteHistory removes entry from list', () async {
-      await repo.chat(prompt: 'test question');
+      await repo.chat(prompt: 'test question', targetLanguage: 'zh');
       final history = await repo.listHistory();
       expect(history.length, equals(1));
       await repo.deleteHistory(history.first.id);
@@ -56,8 +61,11 @@ void main() {
     });
 
     test('listHistory returns entries in reverse chronological order', () async {
-      await repo.chat(prompt: 'first question');
-      await repo.analyzeStatement(prompt: 'second sentence');
+      await repo.chat(prompt: 'first question', targetLanguage: 'zh');
+      await repo.analyzeStatement(
+        prompt: 'second sentence',
+        targetLanguage: 'zh',
+      );
       final history = await repo.listHistory();
       expect(history.length, equals(2));
       // Most recent first
