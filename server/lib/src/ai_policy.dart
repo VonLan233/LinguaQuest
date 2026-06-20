@@ -27,12 +27,14 @@ class AiRequest {
     required this.userId,
     required this.prompt,
     this.targetWord,
+    this.targetLanguage = 'zh',
   });
 
   final String featureType;
   final String userId;
   final String prompt;
   final String? targetWord;
+  final String targetLanguage;
 }
 
 class AiResponse {
@@ -180,6 +182,60 @@ class AiPolicyService {
   }
 }
 
+const _languageNames = <String, String>{
+  'zh': 'Chinese',
+  'ms': 'Malay',
+  'es': 'Spanish',
+  'fr': 'French',
+  'ja': 'Japanese',
+};
+
+/// Resolves a target-language code (e.g. 'zh') to its English name. Unknown or
+/// empty codes fall back to Chinese (the only language shipping today).
+String languageNameFor(String code) => _languageNames[code] ?? 'Chinese';
+
+/// Builds the LLM system prompt for [featureType] in [language] (an English
+/// language name). Explanatory fields are English; taught content stays in
+/// [language]. Returns null for an unknown feature.
+String? buildSystemPrompt(String featureType, String language) {
+  switch (featureType) {
+    case 'chat':
+      return 'You are a $language-learning assistant for English speakers. '
+          'Write "answer" and "cautions" in English. Keep "relatedWords" as '
+          '$language words. Reply ONLY with strict JSON: '
+          '{"answer": string, "cautions": string[], "relatedWords": string[]}. '
+          'No markdown, no code fences.';
+    case 'sentence_analysis':
+      return 'Analyze the $language sentence. Keep "mainClause", "clauses", '
+          'and "modifiers" in the original $language; write "translation" and '
+          '"vocabularyNotes" in English. Reply ONLY with strict JSON: '
+          '{"mainClause": string, "clauses": string[], "modifiers": string[], '
+          '"translation": string, "vocabularyNotes": string[]}. '
+          'No markdown, no code fences.';
+    case 'cloze':
+      return 'Create a $language cloze exercise for the target word. Keep the '
+          '"passage" and each blank\'s "answer" and "options" in $language; '
+          'write "explanations" in English. Reply ONLY with strict JSON: '
+          '{"passage": string, "blanks": [{"index": number, "answer": string, '
+          '"options": string[]}], "explanations": string[]}. '
+          'No markdown, no code fences.';
+    case 'writing_review':
+      return 'You are a $language writing grader for English speakers. Write '
+          'all feedback ("mainIssues", "paragraphSuggestions", '
+          '"highScoreExpressions", and each grammar issue\'s "rule") in '
+          'English; keep "rewrittenSample" and any quoted student text in the '
+          'language of the original essay. Reply ONLY with strict JSON: '
+          '{"totalScore": number, "rubricScores": {"content": number, '
+          '"language": number, "structure": number, "vocabulary": number, '
+          '"accuracy": number}, "mainIssues": string[], "paragraphSuggestions": '
+          '[{"paragraph": number, "suggestion": string}], '
+          '"highScoreExpressions": string[], "grammarIssues": [{"original": '
+          'string, "corrected": string, "rule": string}], "rewrittenSample": '
+          'string}. No markdown, no fences.';
+  }
+  return null;
+}
+
 /// Talks to an OpenAI-compatible endpoint (OpenCode Zen / DeepSeek).
 ///
 /// Safety: the API key is only ever placed in the Authorization header.
@@ -201,34 +257,12 @@ class RemoteAiProvider implements AiProvider {
   final String model;
   final Duration timeout;
 
-  static const Map<String, String> _systemPrompts = {
-    'chat':
-        'You are a Chinese-learning assistant. Reply ONLY with strict JSON: '
-        '{"answer": string, "cautions": string[], "relatedWords": string[]}. '
-        'No markdown, no code fences.',
-    'sentence_analysis':
-        'Analyze the sentence. Reply ONLY with strict JSON: '
-        '{"mainClause": string, "clauses": string[], "modifiers": string[], '
-        '"translation": string, "vocabularyNotes": string[]}. '
-        'No markdown, no code fences.',
-    'cloze':
-        'Create a cloze exercise for the target word. Reply ONLY with strict '
-        'JSON: {"passage": string, "blanks": [{"index": number, "answer": '
-        'string, "options": string[]}], "explanations": string[]}. '
-        'No markdown, no code fences.',
-    'writing_review':
-        'You are an exam writing grader. Reply ONLY with strict JSON: '
-        '{"totalScore": number, "rubricScores": {"content": number, '
-        '"language": number, "structure": number, "vocabulary": number, '
-        '"accuracy": number}, "mainIssues": string[], "paragraphSuggestions": '
-        '[{"paragraph": number, "suggestion": string}], "highScoreExpressions": '
-        'string[], "grammarIssues": [{"original": string, "corrected": string, '
-        '"rule": string}], "rewrittenSample": string}. No markdown, no fences.',
-  };
-
   @override
   Future<AiResponse> generate(AiRequest request) async {
-    final system = _systemPrompts[request.featureType];
+    final system = buildSystemPrompt(
+      request.featureType,
+      languageNameFor(request.targetLanguage),
+    );
     if (system == null) {
       return const AiResponse(
         success: false,

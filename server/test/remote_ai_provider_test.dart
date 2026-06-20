@@ -59,6 +59,64 @@ void main() {
       expect(bodyContainsKey, isFalse);
     });
 
+    test('system prompt names the target language and locks explanations to '
+        'English (default zh -> Chinese)', () async {
+      String? body;
+      final client = MockClient((req) async {
+        body = req.body;
+        return _chatOk();
+      });
+      await _provider(client).generate(
+        const AiRequest(featureType: 'chat', userId: 'u1', prompt: 'hi'),
+      );
+      final decoded = jsonDecode(body!) as Map<String, dynamic>;
+      final system =
+          (decoded['messages'] as List).first as Map<String, dynamic>;
+      expect(system['role'], 'system');
+      expect(system['content'], contains('Chinese-learning assistant'));
+      expect(system['content'], contains('in English'));
+    });
+
+    test('honors a non-default targetLanguage', () async {
+      String? body;
+      final client = MockClient((req) async {
+        body = req.body;
+        return _chatOk();
+      });
+      await _provider(client).generate(
+        const AiRequest(
+          featureType: 'chat',
+          userId: 'u1',
+          prompt: 'hi',
+          targetLanguage: 'ja',
+        ),
+      );
+      final decoded = jsonDecode(body!) as Map<String, dynamic>;
+      final system =
+          (decoded['messages'] as List).first as Map<String, dynamic>;
+      expect(system['content'], contains('Japanese-learning assistant'));
+    });
+
+    test('unknown targetLanguage falls back to Chinese', () async {
+      String? body;
+      final client = MockClient((req) async {
+        body = req.body;
+        return _chatOk();
+      });
+      await _provider(client).generate(
+        const AiRequest(
+          featureType: 'chat',
+          userId: 'u1',
+          prompt: 'hi',
+          targetLanguage: 'xx',
+        ),
+      );
+      final decoded = jsonDecode(body!) as Map<String, dynamic>;
+      final system =
+          (decoded['messages'] as List).first as Map<String, dynamic>;
+      expect(system['content'], contains('Chinese-learning assistant'));
+    });
+
     test('non-200 returns ai_unavailable without leaking upstream body', () async {
       final client = MockClient(
         (req) async => http.Response('upstream secret error 401', 401),

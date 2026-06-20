@@ -987,6 +987,7 @@ Router buildRouter(
     final body = await readJsonMap(request);
     final prompt = body['prompt'] as String? ?? '';
     final targetWord = body['targetWord'] as String?;
+    final targetLanguage = body['targetLanguage'] as String? ?? 'zh';
     if (prompt.isEmpty) {
       return jsonResponse({'error': 'prompt is required'}, status: 400);
     }
@@ -995,6 +996,7 @@ Router buildRouter(
       userId: uid,
       prompt: prompt,
       targetWord: targetWord,
+      targetLanguage: targetLanguage,
     );
     final response = await effectiveAiPolicy.handle(aiRequest);
     if (!response.success) {
@@ -1307,6 +1309,7 @@ Router buildRouter(
       final prompt = body['prompt'] as String? ?? '';
       final examType = body['examType'] as String?;
       final targetScore = body['targetScore'];
+      final targetLanguage = body['targetLanguage'] as String? ?? 'zh';
       if (prompt.isEmpty) {
         return jsonResponse({'error': 'prompt is required'}, status: 400);
       }
@@ -1319,6 +1322,7 @@ Router buildRouter(
         featureType: 'writing_review',
         userId: uid,
         prompt: aiPrompt,
+        targetLanguage: targetLanguage,
       );
       final response = await effectiveAiPolicy.handle(aiRequest);
       if (!response.success) {
