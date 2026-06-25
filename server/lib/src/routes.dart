@@ -1148,7 +1148,7 @@ Router buildRouter(
         'title': title,
         'body': postBody,
         'tag': tag,
-        'status': 'approved',
+        'status': status.name,
       });
       return jsonResponse(
         {'post': _forumPostDto(post, isLiked: false, isFavorited: false)},
@@ -1193,7 +1193,7 @@ Router buildRouter(
           'postId': id,
           'authorId': uid,
           'body': commentBody,
-          'status': 'approved',
+          'status': status.name,
         });
         return jsonResponse({'comment': comment}, status: 201);
       });

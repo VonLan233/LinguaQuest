@@ -156,9 +156,7 @@ class DataSettingsScreen extends ConsumerWidget {
     );
     if (confirmed == true && context.mounted) {
       final notifier = ref.read(appControllerProvider.notifier);
-      for (final id in historyIds) {
-        await notifier.deleteAiHistory(id);
-      }
+      await notifier.clearAiHistory();
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('AI history cleared')),

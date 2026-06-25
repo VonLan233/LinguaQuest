@@ -2480,6 +2480,17 @@ class AppController extends Notifier<AppState> {
     state = state.copyWith(aiHistory: history);
   }
 
+  /// Deletes every AI history record in one pass: the deletes run in parallel
+  /// and the list is refetched once, instead of refetching after each delete.
+  Future<void> clearAiHistory() async {
+    final repo = ref.read(aiRepositoryProvider);
+    final ids = state.aiHistory.map((e) => e.id).toList();
+    if (ids.isEmpty) return;
+    await Future.wait(ids.map(repo.deleteHistory));
+    final history = await repo.listHistory();
+    state = state.copyWith(aiHistory: history);
+  }
+
   // ---------------------------------------------------------------------------
   // Forum
   // ---------------------------------------------------------------------------
