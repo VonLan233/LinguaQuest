@@ -8,6 +8,10 @@ enum QuizQuestionType {
   listeningWordChoice,
   listeningMeaningChoice,
   spelling,
+  sentenceCloze,       // 例句填空：把目标词替换为 ____ 让学习者选择
+  confusableChoice,    // 易混词辨析：从语义相近词中选出正确答案
+  collocationChoice,   // 搭配选择：从常用搭配中选出正确的动词/名词搭配
+  derivativeChoice,    // 词形变化：选择正确的词形（名词/动词/形容词等）
 }
 
 class WordExample {

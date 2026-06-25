@@ -357,3 +357,36 @@ String _initialCue(String value) {
   if (trimmed.isEmpty) return '?';
   return String.fromCharCode(trimmed.runes.first).toUpperCase();
 }
+
+/// 根据 [CustomWord] 的维度得分，建议适合当前复习阶段的练习题型。
+///
+/// 优先级规则（越靠前越优先）：
+/// - listeningScore < 30 → 听音题（listeningWordChoice / listeningMeaningChoice）
+/// - contextScore < 30 → 语境题（sentenceCloze / collocationChoice）
+/// - 有错误记录（wrongCount > 0）且相近词错误 → 易混词辨析（confusableChoice）
+/// - 默认 → meaningChoice / chineseChoice 交替
+///
+/// 注意：此方法仅返回建议题型，最终由 lesson_factory 的 _questionForWord
+/// 决定是否降级（如无例句则 sentenceCloze → meaningChoice）。
+QuizQuestionType exerciseTypeForWord(CustomWord word) {
+  if (word.listeningScore < 30) {
+    // 听力得分偏低，优先强化听音识别
+    return word.listeningScore < 15
+        ? QuizQuestionType.listeningWordChoice
+        : QuizQuestionType.listeningMeaningChoice;
+  }
+  if (word.contextScore < 30) {
+    // 语境得分偏低，优先强化例句填空或搭配选择
+    return word.contextScore < 15
+        ? QuizQuestionType.sentenceCloze
+        : QuizQuestionType.collocationChoice;
+  }
+  if (word.wrongCount > 0) {
+    // 有答错记录，使用易混词辨析帮助区分相近词
+    return QuizQuestionType.confusableChoice;
+  }
+  // 默认：按 wrongCount 的奇偶性在 meaningChoice / chineseChoice 间交替
+  return word.wrongCount.isEven
+      ? QuizQuestionType.meaningChoice
+      : QuizQuestionType.chineseChoice;
+}

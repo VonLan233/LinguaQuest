@@ -1,0 +1,101 @@
+{
+  "id": "hsk5",
+  "title": "HSK 5",
+  "titleEn": "HSK 5",
+  "titleMs": "HSK 5",
+  "category": "hsk",
+  "examType": "HSK 5",
+  "coverUrl": "",
+  "totalWords": 1300,
+  "includedWords": 3,
+  "description": "Core vocabulary for HSK Level 5. [STUB — 3 placeholder words; full 1300-word list pending data fill]",
+  "wordIds": [
+    "hsk5_000_bdo",
+    "hsk5_001_cji",
+    "hsk5_002_fzp"
+  ],
+  "words": [
+    {
+      "id": "hsk5_000_bdo",
+      "word": "报道",
+      "phoneticUK": "bào dào",
+      "phoneticUS": "bào dào",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%8A%A5%E9%81%93&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%8A%A5%E9%81%93&type=2",
+      "partOfSpeech": "v/n",
+      "definitions": [
+        "to report; to cover (a news story)",
+        "news report; coverage"
+      ],
+      "englishDefinitions": [
+        "to report; to cover (a news story)",
+        "news report; coverage"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Hard",
+      "imageUrl": "",
+      "hskLevel": 5
+    },
+    {
+      "id": "hsk5_001_cji",
+      "word": "彻底",
+      "phoneticUK": "chè dǐ",
+      "phoneticUS": "chè dǐ",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%BD%BB%E5%BA%95&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%BD%BB%E5%BA%95&type=2",
+      "partOfSpeech": "adj/adv",
+      "definitions": [
+        "thorough; thoroughgoing; complete",
+        "thoroughly; completely"
+      ],
+      "englishDefinitions": [
+        "thorough; thoroughgoing; complete",
+        "thoroughly; completely"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Hard",
+      "imageUrl": "",
+      "hskLevel": 5
+    },
+    {
+      "id": "hsk5_002_fzp",
+      "word": "复杂",
+      "phoneticUK": "fù zá",
+      "phoneticUS": "fù zá",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%A4%8D%E6%9D%82&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%A4%8D%E6%9D%82&type=2",
+      "partOfSpeech": "adj",
+      "definitions": [
+        "complex; complicated; intricate"
+      ],
+      "englishDefinitions": [
+        "complex; complicated; intricate"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Hard",
+      "imageUrl": "",
+      "hskLevel": 5
+    }
+  ]
+}

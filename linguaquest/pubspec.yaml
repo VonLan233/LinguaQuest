@@ -73,6 +73,11 @@ flutter:
   assets:
     - lib/assets/image/
     - lib/assets/data/wordbook_hsk1.json
+    - lib/assets/data/wordbook_hsk2.json
+    - lib/assets/data/wordbook_hsk3.json
+    - lib/assets/data/wordbook_hsk4.json
+    - lib/assets/data/wordbook_hsk5.json
+    - lib/assets/data/wordbook_hsk6.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

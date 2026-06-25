@@ -2,16 +2,59 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../data/models/achievement.dart';
+import '../../data/models/ai_feature.dart';
+import '../../data/models/analytics.dart';
 import '../../data/models/app_notification.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/daily_reward_task.dart';
+import '../../data/models/forum.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
 import '../../data/models/lottery.dart';
+import '../../data/models/recommendation.dart';
 import '../../data/models/study_plan.dart';
+import '../../data/models/user_privacy.dart';
 import '../../data/models/user_word.dart';
 import '../../data/models/user_profile.dart';
 import '../utils/custom_word_localization.dart';
+
+class SensorySettings {
+  const SensorySettings({
+    this.soundEnabled = true,
+    this.vibrationEnabled = true,
+    this.highContrastMode = false,
+  });
+
+  final bool soundEnabled;
+  final bool vibrationEnabled;
+  final bool highContrastMode;
+
+  static const defaults = SensorySettings();
+
+  SensorySettings copyWith({
+    bool? soundEnabled,
+    bool? vibrationEnabled,
+    bool? highContrastMode,
+  }) => SensorySettings(
+    soundEnabled: soundEnabled ?? this.soundEnabled,
+    vibrationEnabled: vibrationEnabled ?? this.vibrationEnabled,
+    highContrastMode: highContrastMode ?? this.highContrastMode,
+  );
+
+  Map<String, dynamic> toJson() => {
+    'soundEnabled': soundEnabled,
+    'vibrationEnabled': vibrationEnabled,
+    'highContrastMode': highContrastMode,
+  };
+
+  factory SensorySettings.fromJson(Map<String, dynamic> json) =>
+      SensorySettings(
+        soundEnabled: json['soundEnabled'] as bool? ?? true,
+        vibrationEnabled: json['vibrationEnabled'] as bool? ?? true,
+        highContrastMode: json['highContrastMode'] as bool? ?? false,
+      );
+}
 
 class DailyReminderSettings {
   const DailyReminderSettings({
@@ -81,13 +124,21 @@ class AppState {
     required this.notifications,
     required this.lotteryPrizes,
     required this.userAssets,
+    required this.aiHistory,
+    required this.forumPosts,
     this.targetLanguage = 'zh',
+    this.sensorySettings = SensorySettings.defaults,
+    this.privacySettings = UserPrivacySettings.defaults,
     this.locale,
     this.user,
     this.lastResult,
     this.lastLotteryResult,
     this.studyPlan,
     this.errorMessage,
+    this.analyticsSnapshot,
+    this.achievements = const [],
+    this.leaderboardSnapshot,
+    this.recommendations = const [],
     List<CustomWord>? reviewWords,
   }) : _reviewWords = List.unmodifiable(
          reviewWords ?? _buildReviewWords(userWords, customWords, wordBooks),
@@ -119,9 +170,17 @@ class AppState {
   final List<LotteryPrize> lotteryPrizes;
   final List<UserAsset> userAssets;
   final String targetLanguage;
+  final SensorySettings sensorySettings;
+  final UserPrivacySettings privacySettings;
   final LessonResult? lastResult;
   final LotteryDrawResult? lastLotteryResult;
   final String? errorMessage;
+  final List<AiHistoryEntry> aiHistory;
+  final List<ForumPost> forumPosts;
+  final LearningAnalytics? analyticsSnapshot;
+  final List<Achievement> achievements;
+  final LeaderboardResult? leaderboardSnapshot;
+  final List<Recommendation> recommendations;
   final List<CustomWord> _reviewWords;
 
   bool get isAuthenticated => user != null;
@@ -279,11 +338,21 @@ class AppState {
     List<LotteryPrize>? lotteryPrizes,
     List<UserAsset>? userAssets,
     String? targetLanguage,
+    SensorySettings? sensorySettings,
+    UserPrivacySettings? privacySettings,
     LessonResult? lastResult,
     LotteryDrawResult? lastLotteryResult,
     bool clearLastResult = false,
     String? errorMessage,
     bool clearError = false,
+    List<AiHistoryEntry>? aiHistory,
+    List<ForumPost>? forumPosts,
+    LearningAnalytics? analyticsSnapshot,
+    bool clearAnalyticsSnapshot = false,
+    List<Achievement>? achievements,
+    LeaderboardResult? leaderboardSnapshot,
+    bool clearLeaderboardSnapshot = false,
+    List<Recommendation>? recommendations,
   }) {
     final nextCustomWords = customWords ?? this.customWords;
     final nextUserWords = userWords ?? this.userWords;
@@ -318,9 +387,21 @@ class AppState {
       lotteryPrizes: lotteryPrizes ?? this.lotteryPrizes,
       userAssets: userAssets ?? this.userAssets,
       targetLanguage: targetLanguage ?? this.targetLanguage,
+      sensorySettings: sensorySettings ?? this.sensorySettings,
+      privacySettings: privacySettings ?? this.privacySettings,
       lastResult: clearLastResult ? null : lastResult ?? this.lastResult,
       lastLotteryResult: lastLotteryResult ?? this.lastLotteryResult,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
+      aiHistory: aiHistory ?? this.aiHistory,
+      forumPosts: forumPosts ?? this.forumPosts,
+      analyticsSnapshot: clearAnalyticsSnapshot
+          ? null
+          : analyticsSnapshot ?? this.analyticsSnapshot,
+      achievements: achievements ?? this.achievements,
+      leaderboardSnapshot: clearLeaderboardSnapshot
+          ? null
+          : leaderboardSnapshot ?? this.leaderboardSnapshot,
+      recommendations: recommendations ?? this.recommendations,
       reviewWords: customWords == null && userWords == null && wordBooks == null
           ? _reviewWords
           : _buildReviewWords(nextUserWords, nextCustomWords, nextWordBooks),
@@ -352,6 +433,9 @@ class AppState {
       notifications: [],
       lotteryPrizes: [],
       userAssets: [],
+      aiHistory: const [],
+      forumPosts: const [],
+      recommendations: const [],
     );
   }
 }

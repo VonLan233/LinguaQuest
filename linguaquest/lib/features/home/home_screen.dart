@@ -58,7 +58,14 @@ class HomeScreen extends ConsumerWidget {
               message: l10n.homePersonalSpace,
               child: InkWell(
                 borderRadius: BorderRadius.circular(999),
-                onTap: () => context.go('/profile'),
+                onTap: () {
+                  final uid = state.user?.uid;
+                  if (uid != null && uid.isNotEmpty) {
+                    context.push('/profile/$uid');
+                  } else {
+                    context.go('/profile');
+                  }
+                },
                 child: const Padding(
                   padding: EdgeInsets.all(2),
                   child: MascotImage(size: 40),

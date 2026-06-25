@@ -13,6 +13,11 @@ bool quizOptionsAreMeanings(QuizQuestionType type) {
     case QuizQuestionType.chineseChoice:
     case QuizQuestionType.listeningWordChoice:
     case QuizQuestionType.spelling:
+    // 新题型：选项为英文单词本身，不需要释义本地化
+    case QuizQuestionType.sentenceCloze:
+    case QuizQuestionType.confusableChoice:
+    case QuizQuestionType.collocationChoice:
+    case QuizQuestionType.derivativeChoice:
       return false;
   }
 }

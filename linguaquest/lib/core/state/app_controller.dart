@@ -18,12 +18,17 @@ import '../../data/models/point_grant_result.dart';
 import '../../data/models/review_event.dart';
 import '../../data/models/study_session.dart';
 import '../../data/models/study_plan.dart';
+import '../../data/models/user_privacy.dart';
 import '../../data/models/user_profile.dart';
 import '../../data/models/user_word.dart';
 import '../../data/remote/api_client.dart';
+import '../../data/models/forum.dart';
+import '../../data/repositories/ai_repository.dart';
+import '../../data/repositories/analytics_repository.dart';
 import '../../data/repositories/api_repositories.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../data/repositories/custom_word_repository.dart';
+import '../../data/repositories/forum_repository.dart';
 import '../../data/repositories/learning_repository.dart';
 import '../../data/repositories/lottery_repository.dart';
 import '../../data/repositories/mock_repositories.dart';
@@ -115,6 +120,27 @@ final rewardTaskRepositoryProvider = Provider<RewardTaskRepository>((ref) {
   return MockRewardTaskRepository();
 });
 
+final aiRepositoryProvider = Provider<AiRepository>((ref) {
+  if (AppConstants.apiBaseUrl.isNotEmpty) {
+    return ApiAiRepository(ref.read(apiClientProvider));
+  }
+  return MockAiRepository();
+});
+
+final forumRepositoryProvider = Provider<ForumRepository>((ref) {
+  if (AppConstants.apiBaseUrl.isNotEmpty) {
+    return ApiForumRepository(ref.read(apiClientProvider));
+  }
+  return MockForumRepository();
+});
+
+final analyticsRepositoryProvider = Provider<AnalyticsRepository>((ref) {
+  if (AppConstants.apiBaseUrl.isNotEmpty) {
+    return ApiAnalyticsRepository(ref.read(apiClientProvider));
+  }
+  return MockAnalyticsRepository();
+});
+
 final appControllerProvider = NotifierProvider<AppController, AppState>(
   AppController.new,
 );
@@ -124,6 +150,8 @@ class AppController extends Notifier<AppState> {
   static const _localeKey = 'linguaquest.locale';
   static const _targetLanguageKey = 'linguaquest.target_language';
   static const _reminderKey = 'linguaquest.reminderSettings';
+  static const _sensoryKey = 'linguaquest.sensory_settings';
+  static const _privacyKey = 'linguaquest.privacy_settings';
   static const _currentWordBookIdKey = 'linguaquest.currentWordBookId';
   static const _completedLessonIdsKey = 'linguaquest.completedLessons';
   static const _todayDateKey = 'linguaquest.today.date';
@@ -144,6 +172,8 @@ class AppController extends Notifier<AppState> {
   late final LotteryRepository _lotteryRepository;
   late final RewardRepository _rewardRepository;
   late final RewardTaskRepository _rewardTaskRepository;
+  late final ForumRepository _forumRepository;
+  late final AnalyticsRepository _analyticsRepository;
   late final LocalNotificationService _localNotificationService;
   var _localNotificationsInitialized = false;
 
@@ -159,6 +189,8 @@ class AppController extends Notifier<AppState> {
     _lotteryRepository = ref.watch(lotteryRepositoryProvider);
     _rewardRepository = ref.watch(rewardRepositoryProvider);
     _rewardTaskRepository = ref.watch(rewardTaskRepositoryProvider);
+    _forumRepository = ref.watch(forumRepositoryProvider);
+    _analyticsRepository = ref.watch(analyticsRepositoryProvider);
     _localNotificationService = ref.watch(localNotificationServiceProvider);
     return AppState.initial();
   }
@@ -234,6 +266,8 @@ class AppController extends Notifier<AppState> {
       final reminderSettings = studyPlan == null
           ? _loadReminderSettings(prefs)
           : _reminderSettingsForPlan(studyPlan);
+      final sensorySettings = _loadSensorySettings(prefs);
+      final privacySettings = _loadPrivacySettings(prefs);
       final userWords = user == null
           ? <UserWord>[]
           : await _userWordRepository.list(user.uid);
@@ -252,6 +286,8 @@ class AppController extends Notifier<AppState> {
         locale: _localeFromName(prefs.getString(_localeKey)),
         targetLanguage: prefs.getString(_targetLanguageKey) ?? 'zh',
         reminderSettings: reminderSettings,
+        sensorySettings: sensorySettings,
+        privacySettings: privacySettings,
         studyPlan: studyPlan,
         completedLessonIds: completedLessonIds,
         todayCompletedLessonIds: todayCompletedLessonIds,
@@ -321,6 +357,29 @@ class AppController extends Notifier<AppState> {
         errorMessage: _friendlyError(error),
       );
     }
+  }
+
+  Future<void> updateSensorySettings(SensorySettings settings) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_sensoryKey, jsonEncode(settings.toJson()));
+    state = state.copyWith(sensorySettings: settings);
+  }
+
+  Future<void> updatePrivacySettings(UserPrivacySettings settings) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_privacyKey, jsonEncode(settings.toJson()));
+    if (AppConstants.apiBaseUrl.isNotEmpty) {
+      try {
+        final client = ref.read(apiClientProvider);
+        await client.dio.put<void>(
+          '/privacy',
+          data: settings.toJson(),
+        );
+      } catch (e) {
+        debugPrint('Failed to sync privacy settings to backend: $e');
+      }
+    }
+    state = state.copyWith(privacySettings: settings);
   }
 
   Future<void> _applyAuthenticatedUser(UserProfile user) async {
@@ -1685,6 +1744,15 @@ class AppController extends Notifier<AppState> {
       if (message == 'task_not_complete') {
         return '该任务尚未完成，无法领取奖励。';
       }
+      if (message == 'rate_limited') {
+        return '请求过于频繁，请稍后再试。';
+      }
+      if (message == 'blocked') {
+        return '内容不符合使用规范，请修改后重试。';
+      }
+      if (message == 'ai_unavailable') {
+        return 'AI 服务暂时不可用，请稍后重试。';
+      }
       if (message != null && message.isNotEmpty) return message;
       return '网络请求失败，请稍后重试。';
     }
@@ -2269,6 +2337,30 @@ class AppController extends Notifier<AppState> {
     }
   }
 
+  SensorySettings _loadSensorySettings(SharedPreferences prefs) {
+    final raw = prefs.getString(_sensoryKey);
+    if (raw == null) return SensorySettings.defaults;
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! Map) return SensorySettings.defaults;
+      return SensorySettings.fromJson(Map<String, dynamic>.from(decoded));
+    } catch (_) {
+      return SensorySettings.defaults;
+    }
+  }
+
+  UserPrivacySettings _loadPrivacySettings(SharedPreferences prefs) {
+    final raw = prefs.getString(_privacyKey);
+    if (raw == null) return UserPrivacySettings.defaults;
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! Map) return UserPrivacySettings.defaults;
+      return UserPrivacySettings.fromJson(Map<String, dynamic>.from(decoded));
+    } catch (_) {
+      return UserPrivacySettings.defaults;
+    }
+  }
+
   Future<void> _persistReminderSettings(DailyReminderSettings settings) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_reminderKey, jsonEncode(settings.toJson()));
@@ -2320,6 +2412,257 @@ class AppController extends Notifier<AppState> {
     final month = date.month.toString().padLeft(2, '0');
     final day = date.day.toString().padLeft(2, '0');
     return '${date.year}-$month-$day';
+  }
+
+  Future<Map<String, dynamic>> askAi({
+    required String featureType,
+    required String prompt,
+    String? targetWord,
+  }) async {
+    try {
+      final repo = ref.read(aiRepositoryProvider);
+      Map<String, dynamic> result;
+      switch (featureType) {
+        case 'chat':
+          result = await repo.chat(
+            prompt: prompt,
+            targetWord: targetWord,
+            targetLanguage: state.targetLanguage,
+          );
+        case 'sentence_analysis':
+          result = await repo.analyzeStatement(
+            prompt: prompt,
+            targetLanguage: state.targetLanguage,
+          );
+        case 'cloze':
+          result = await repo.generateCloze(
+            prompt: prompt,
+            targetWord: targetWord,
+            targetLanguage: state.targetLanguage,
+          );
+        default:
+          result = {};
+      }
+      final history = await repo.listHistory();
+      state = state.copyWith(aiHistory: history, clearError: true);
+      return result;
+    } catch (e) {
+      state = state.copyWith(errorMessage: _friendlyError(e));
+      return {};
+    }
+  }
+
+  Future<Map<String, dynamic>> reviewWriting({
+    required String essay,
+    String? examType,
+    double? targetScore,
+  }) async {
+    try {
+      final result = await ref.read(aiRepositoryProvider).reviewWriting(
+        essay: essay,
+        examType: examType,
+        targetScore: targetScore,
+        targetLanguage: state.targetLanguage,
+      );
+      final history = await ref.read(aiRepositoryProvider).listHistory();
+      state = state.copyWith(aiHistory: history, clearError: true);
+      return result;
+    } catch (e) {
+      state = state.copyWith(errorMessage: _friendlyError(e));
+      return {};
+    }
+  }
+
+  Future<void> deleteAiHistory(String id) async {
+    final repo = ref.read(aiRepositoryProvider);
+    await repo.deleteHistory(id);
+    final history = await repo.listHistory();
+    state = state.copyWith(aiHistory: history);
+  }
+
+  /// Deletes every AI history record in one pass: the deletes run in parallel
+  /// and the list is refetched once, instead of refetching after each delete.
+  Future<void> clearAiHistory() async {
+    final repo = ref.read(aiRepositoryProvider);
+    final ids = state.aiHistory.map((e) => e.id).toList();
+    if (ids.isEmpty) return;
+    await Future.wait(ids.map(repo.deleteHistory));
+    final history = await repo.listHistory();
+    state = state.copyWith(aiHistory: history);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Forum
+  // ---------------------------------------------------------------------------
+
+  Future<void> refreshForumPosts() async {
+    try {
+      final posts = await _forumRepository.listPosts();
+      if (!ref.mounted) return;
+      state = state.copyWith(forumPosts: posts);
+    } catch (error) {
+      debugPrint('Failed to refresh forum posts: $error');
+    }
+  }
+
+  Future<ForumPost?> createForumPost({
+    required String title,
+    required String body,
+    required String tag,
+  }) async {
+    try {
+      final post = await _forumRepository.createPost(
+        title: title,
+        body: body,
+        tag: tag,
+      );
+      if (!ref.mounted) return null;
+      state = state.copyWith(forumPosts: [post, ...state.forumPosts]);
+      return post;
+    } catch (error) {
+      debugPrint('Failed to create forum post: $error');
+      return null;
+    }
+  }
+
+  Future<ForumComment?> createForumComment({
+    required String postId,
+    required String body,
+  }) async {
+    try {
+      final comment = await _forumRepository.createComment(
+        postId: postId,
+        body: body,
+      );
+      if (!ref.mounted) return null;
+      // Increment comment count locally for immediate feedback
+      state = state.copyWith(
+        forumPosts: [
+          for (final post in state.forumPosts)
+            if (post.id == postId)
+              post.copyWith(commentCount: post.commentCount + 1)
+            else
+              post,
+        ],
+      );
+      return comment;
+    } catch (error) {
+      debugPrint('Failed to create forum comment: $error');
+      return null;
+    }
+  }
+
+  Future<void> toggleForumLike(String postId) async {
+    // Optimistic update
+    final oldPosts = state.forumPosts;
+    state = state.copyWith(
+      forumPosts: [
+        for (final post in state.forumPosts)
+          if (post.id == postId)
+            post.copyWith(
+              isLiked: !post.isLiked,
+              likeCount: post.isLiked
+                  ? (post.likeCount - 1).clamp(0, 999999)
+                  : post.likeCount + 1,
+            )
+          else
+            post,
+      ],
+    );
+    try {
+      await _forumRepository.toggleLike(postId);
+    } catch (error) {
+      debugPrint('Failed to toggle like: $error');
+      if (ref.mounted) {
+        state = state.copyWith(forumPosts: oldPosts);
+      }
+    }
+  }
+
+  Future<void> toggleForumFavorite(String postId) async {
+    // Optimistic update
+    final oldPosts = state.forumPosts;
+    state = state.copyWith(
+      forumPosts: [
+        for (final post in state.forumPosts)
+          if (post.id == postId)
+            post.copyWith(isFavorited: !post.isFavorited)
+          else
+            post,
+      ],
+    );
+    try {
+      await _forumRepository.toggleFavorite(postId);
+    } catch (error) {
+      debugPrint('Failed to toggle favorite: $error');
+      if (ref.mounted) {
+        state = state.copyWith(forumPosts: oldPosts);
+      }
+    }
+  }
+
+  Future<void> reportForumPost(
+    String postId,
+    String reason, {
+    String? detail,
+  }) async {
+    try {
+      await _forumRepository.reportPost(postId, reason, detail: detail);
+    } catch (error) {
+      debugPrint('Failed to report post: $error');
+      rethrow;
+    }
+  }
+
+  // ── Analytics / Achievement / Leaderboard ─────────────────────────────────
+
+  Future<void> refreshAnalytics() async {
+    final uid = state.user?.uid ?? '';
+    try {
+      final analytics = await _analyticsRepository.getAnalytics(uid);
+      if (!ref.mounted) return;
+      state = state.copyWith(analyticsSnapshot: analytics);
+    } catch (error) {
+      debugPrint('Failed to refresh analytics: $error');
+    }
+  }
+
+  Future<void> refreshAchievements() async {
+    final uid = state.user?.uid ?? '';
+    try {
+      final achievements = await _analyticsRepository.getAchievements(uid);
+      if (!ref.mounted) return;
+      state = state.copyWith(achievements: achievements);
+    } catch (error) {
+      debugPrint('Failed to refresh achievements: $error');
+    }
+  }
+
+  Future<void> refreshLeaderboard({String dimension = 'global'}) async {
+    final uid = state.user?.uid ?? '';
+    try {
+      final result = await _analyticsRepository.getLeaderboard(
+        dimension: dimension,
+        uid: uid,
+      );
+      if (!ref.mounted) return;
+      state = state.copyWith(leaderboardSnapshot: result);
+    } catch (error) {
+      debugPrint('Failed to refresh leaderboard: $error');
+    }
+  }
+
+  Future<void> refreshRecommendations() async {
+    final user = state.user;
+    if (user == null) return;
+    try {
+      final recs = await _analyticsRepository.getRecommendations(user.uid);
+      if (!ref.mounted) return;
+      state = state.copyWith(recommendations: recs);
+    } catch (error) {
+      // Recommendation failures are non-critical — do not surface to the user.
+      debugPrint('Failed to refresh recommendations: $error');
+    }
   }
 }
 

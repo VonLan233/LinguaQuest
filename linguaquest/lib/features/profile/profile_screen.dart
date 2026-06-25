@@ -53,6 +53,9 @@ class ProfileScreen extends ConsumerWidget {
           xp: user?.xp ?? 0,
           streak: user?.streak ?? 0,
           l10n: l10n,
+          onAvatarTap: user?.uid != null
+              ? () => context.push('/profile/${user!.uid}')
+              : null,
         ),
         const SizedBox(height: AppTokens.s32),
         // Key stats in a clean row.
@@ -128,6 +131,26 @@ class ProfileScreen extends ConsumerWidget {
         _SettingsGroup(
           children: [
             _SettingsItem(
+              icon: AppIcons.privacyTip,
+              title: l10n.aboutPrivacyTitle,
+              onTap: () => context.push('/profile/privacy'),
+            ),
+            _SettingsItem(
+              icon: AppIcons.inventory2,
+              title: 'Data & storage',
+              onTap: () => context.push('/profile/data'),
+            ),
+            _SettingsItem(
+              icon: AppIcons.notifications,
+              title: l10n.notificationTitle,
+              onTap: () => context.push('/notifications'),
+            ),
+          ],
+        ),
+        const SizedBox(height: AppTokens.s16),
+        _SettingsGroup(
+          children: [
+            _SettingsItem(
               icon: AppIcons.help,
               title: l10n.profileHelpTitle,
               onTap: () => context.push('/help'),
@@ -167,6 +190,7 @@ class _ProfileHeader extends StatelessWidget {
     required this.xp,
     required this.streak,
     required this.l10n,
+    this.onAvatarTap,
   });
 
   final String name;
@@ -176,6 +200,7 @@ class _ProfileHeader extends StatelessWidget {
   final int xp;
   final int streak;
   final AppLocalizations l10n;
+  final VoidCallback? onAvatarTap;
 
   @override
   Widget build(BuildContext context) {
@@ -190,7 +215,10 @@ class _ProfileHeader extends StatelessWidget {
         ),
         child: Column(
           children: [
-            const MascotImage(size: 72),
+            GestureDetector(
+              onTap: onAvatarTap,
+              child: const MascotImage(size: 72),
+            ),
             const SizedBox(height: AppTokens.s16),
             Text(
               name,

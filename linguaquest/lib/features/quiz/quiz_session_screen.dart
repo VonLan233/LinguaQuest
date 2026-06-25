@@ -12,6 +12,7 @@ import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
+import '../../core/widgets/pronunciation_controls.dart';
 import '../../core/widgets/app_progress_bar.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/word_choice_button.dart';
@@ -142,7 +143,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        _QuestionPromptPanel(question: question),
+                        QuizPromptPanel(question: question),
                         const SizedBox(height: 18),
                         _QuestionInput(
                           question: question,
@@ -368,8 +369,8 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
   }
 }
 
-class _QuestionPromptPanel extends StatelessWidget {
-  const _QuestionPromptPanel({required this.question});
+class QuizPromptPanel extends StatelessWidget {
+  const QuizPromptPanel({required this.question, super.key});
 
   final QuizQuestion question;
 
@@ -404,6 +405,15 @@ class _QuestionPromptPanel extends StatelessWidget {
               ),
             ],
           ),
+          if (question.type == QuizQuestionType.listeningWordChoice ||
+              question.type == QuizQuestionType.listeningMeaningChoice) ...[
+            const SizedBox(height: 12),
+            PronunciationControls(
+              word: question.word.word,
+              audioUKUrl: question.word.audioUKUrl,
+              audioUSUrl: question.word.audioUSUrl,
+            ),
+          ],
         ],
       ),
     );
@@ -424,6 +434,15 @@ class _QuestionPromptPanel extends StatelessWidget {
         return AppIcons.hearing;
       case QuizQuestionType.spelling:
         return AppIcons.edit;
+      // 新题型图标：复用语义最接近的已有图标
+      case QuizQuestionType.sentenceCloze:
+        return AppIcons.formatQuote; // 填空与上下文题同属句子语境
+      case QuizQuestionType.confusableChoice:
+        return AppIcons.swapHoriz;   // 易混词辨析类似中英互选
+      case QuizQuestionType.collocationChoice:
+        return AppIcons.translate;   // 搭配选择偏向词义辨析
+      case QuizQuestionType.derivativeChoice:
+        return AppIcons.edit;        // 词形变化类似拼写题
     }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/constants/app_constants.dart';
 import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
@@ -30,6 +31,27 @@ class AiLearningScreen extends StatelessWidget {
         88,
       ),
       children: [
+        if (AppConstants.apiBaseUrl.isEmpty) ...[
+          AppCard(
+            child: Row(
+              children: [
+                Icon(
+                  AppIcons.info,
+                  color: Theme.of(context).colorScheme.primary,
+                  size: 20,
+                ),
+                const SizedBox(width: AppTokens.s12),
+                const Expanded(
+                  child: Text(
+                    'AI features use demo responses. Connect to a server for real AI.',
+                    style: TextStyle(fontSize: 13),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppTokens.s12),
+        ],
         SectionHeader(
           title: l10n.aiLearningTitle,
           trailing: QuestIconButton(
@@ -65,6 +87,9 @@ class AiLearningScreen extends StatelessWidget {
           title: l10n.aiLearningToolAiQA,
           color: AppTheme.cyan,
           status: l10n.aiLearningStatusSoon,
+          onTap: () => context.push(
+            '/ai-chat${word.isNotEmpty ? '?word=${Uri.encodeComponent(word)}' : ''}',
+          ),
         ),
         const SizedBox(height: AppTokens.s12),
         _AiToolRow(
@@ -72,13 +97,7 @@ class AiLearningScreen extends StatelessWidget {
           title: l10n.aiLearningToolAiAnalysis,
           color: AppTokens.azure,
           status: l10n.aiLearningStatusSoon,
-        ),
-        const SizedBox(height: AppTokens.s12),
-        _AiToolRow(
-          icon: AppIcons.rateReview,
-          title: l10n.aiLearningToolAiWriting,
-          color: AppTokens.coralColor(context),
-          status: l10n.aiLearningStatusLater,
+          onTap: () => context.push('/ai-analysis'),
         ),
         const SizedBox(height: AppTokens.s12),
         _AiToolRow(
@@ -86,6 +105,17 @@ class AiLearningScreen extends StatelessWidget {
           title: l10n.aiLearningToolCloze,
           color: AppTokens.mangoColor(context),
           status: l10n.aiLearningStatusPlanning,
+          onTap: () => context.push(
+            '/ai-cloze${word.isNotEmpty ? '?word=${Uri.encodeComponent(word)}' : ''}',
+          ),
+        ),
+        const SizedBox(height: AppTokens.s12),
+        _AiToolRow(
+          icon: AppIcons.rateReview,
+          title: l10n.aiLearningToolAiWriting,
+          color: AppTokens.coralColor(context),
+          status: l10n.aiLearningStatusSoon,
+          onTap: () => context.push('/ai-writing-review'),
         ),
         const SizedBox(height: AppTokens.s12),
         _AiToolRow(
@@ -106,28 +136,38 @@ class AiLearningScreen extends StatelessWidget {
   }
 }
 
-/// A compact "coming soon" AI tool entry: icon + name + status pill, no blurb.
+/// A compact AI tool entry: icon + name + status pill, no blurb.
+/// When [onTap] is provided, the row is enabled and shows a success pill.
 class _AiToolRow extends StatelessWidget {
   const _AiToolRow({
     required this.icon,
     required this.title,
     required this.color,
     required this.status,
+    this.onTap,
   });
 
   final IconData icon;
   final String title;
   final Color color;
   final String status;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return CompactEntryCard(
-      icon: icon,
-      title: title,
-      color: color,
-      enabled: false,
-      trailing: AppPill(label: status, variant: PillVariant.neutral),
+    final enabled = onTap != null;
+    return GestureDetector(
+      onTap: onTap,
+      child: CompactEntryCard(
+        icon: icon,
+        title: title,
+        color: color,
+        enabled: enabled,
+        trailing: AppPill(
+          label: enabled ? 'Available' : status,
+          variant: enabled ? PillVariant.success : PillVariant.neutral,
+        ),
+      ),
     );
   }
 }

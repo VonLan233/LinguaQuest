@@ -26,9 +26,12 @@ class AppIcons {
   static const IconData autoStories = Symbols.auto_stories_rounded;
   static const IconData badge = Symbols.badge_rounded;
   static const IconData balance = Symbols.balance_rounded;
+  static const IconData bookmark = Symbols.bookmark_rounded;
+  static const IconData bookmarkBorder = Symbols.bookmark_border_rounded;
   static const IconData bolt = Symbols.bolt_rounded;
   static const IconData calendarMonth = Symbols.calendar_month_rounded;
   static const IconData cancel = Symbols.cancel_rounded;
+  static const IconData contrastCircle = Symbols.contrast_rounded;
   static const IconData cardGiftcard = Symbols.card_giftcard_rounded;
   static const IconData casino = Symbols.casino_rounded;
   static const IconData chatBubble = Symbols.chat_bubble_rounded;
@@ -121,6 +124,7 @@ class AppIcons {
   static const IconData swapHoriz = Symbols.swap_horiz_rounded;
   static const IconData tag = Symbols.tag_rounded;
   static const IconData thumbUpAlt = Symbols.thumb_up_alt_rounded;
+  static const IconData thumbUpOffAlt = Symbols.thumb_up_off_alt_rounded;
   static const IconData timer = Symbols.timer_rounded;
   static const IconData tipsAndUpdates = Symbols.tips_and_updates_rounded;
   static const IconData today = Symbols.today_rounded;
@@ -130,6 +134,7 @@ class AppIcons {
   static const IconData tune = Symbols.tune_rounded;
   static const IconData verified = Symbols.verified_rounded;
   static const IconData visibility = Symbols.visibility_rounded;
+  static const IconData vibration = Symbols.vibration_rounded;
   static const IconData volumeUp = Symbols.volume_up_rounded;
   static const IconData wallpaper = Symbols.wallpaper_rounded;
   static const IconData warningAmber = Symbols.warning_amber_rounded;

@@ -10,6 +10,11 @@ class WordBookAssetLoader {
 
   static const _bookIds = [
     'hsk1',
+    'hsk2',
+    'hsk3',
+    'hsk4',
+    'hsk5',
+    'hsk6',
   ];
 
   final AssetBundle _bundle;
