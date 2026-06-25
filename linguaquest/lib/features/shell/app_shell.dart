@@ -5,6 +5,7 @@ import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../l10n/generated/app_localizations.dart';
+import 'app_drawer.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({required this.selectedIndex, required this.child, super.key});
@@ -50,6 +51,7 @@ class _AppShellState extends State<AppShell> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const AppDrawer(),
       backgroundColor: AppTheme.paper,
       body: SafeArea(
         bottom: false,

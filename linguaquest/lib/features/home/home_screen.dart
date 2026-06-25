@@ -54,6 +54,20 @@ class HomeScreen extends ConsumerWidget {
       children: [
         Row(
           children: [
+            Builder(
+              builder: (ctx) => Tooltip(
+                message: 'Menu',
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(AppTokens.radiusPill),
+                  onTap: () => Scaffold.of(ctx).openDrawer(),
+                  child: const Padding(
+                    padding: EdgeInsets.all(AppTokens.s4),
+                    child: Icon(AppIcons.menu, size: 24),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: AppTokens.s4),
             Tooltip(
               message: l10n.homePersonalSpace,
               child: InkWell(

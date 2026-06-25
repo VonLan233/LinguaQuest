@@ -37,7 +37,9 @@ import '../../data/repositories/reward_repository.dart';
 import '../../data/repositories/reward_task_repository.dart';
 import '../../data/repositories/review_repository.dart';
 import '../../data/repositories/study_plan_repository.dart';
+import '../../data/repositories/study_spot_repository.dart';
 import '../../data/repositories/user_word_repository.dart';
+import '../../data/models/study_spot.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../services/local_notification_service.dart';
 import '../constants/app_constants.dart';
@@ -139,6 +141,13 @@ final analyticsRepositoryProvider = Provider<AnalyticsRepository>((ref) {
     return ApiAnalyticsRepository(ref.read(apiClientProvider));
   }
   return MockAnalyticsRepository();
+});
+
+final studySpotRepositoryProvider = Provider<StudySpotRepository>((ref) {
+  if (AppConstants.apiBaseUrl.isNotEmpty) {
+    return ApiStudySpotRepository(ref.read(apiClientProvider));
+  }
+  return MockStudySpotRepository();
 });
 
 final appControllerProvider = NotifierProvider<AppController, AppState>(
@@ -2663,6 +2672,21 @@ class AppController extends Notifier<AppState> {
       // Recommendation failures are non-critical — do not surface to the user.
       debugPrint('Failed to refresh recommendations: $error');
     }
+  }
+
+  Future<void> loadStudySpots() async {
+    final spots = await ref.read(studySpotRepositoryProvider).list();
+    state = state.copyWith(studySpots: spots);
+  }
+
+  Future<void> saveStudySpot(StudySpot spot) async {
+    await ref.read(studySpotRepositoryProvider).add(spot);
+    await loadStudySpots();
+  }
+
+  Future<void> deleteStudySpot(String id) async {
+    await ref.read(studySpotRepositoryProvider).remove(id);
+    await loadStudySpots();
   }
 }
 

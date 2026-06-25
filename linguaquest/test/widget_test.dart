@@ -486,7 +486,8 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('pronunciation-uk')));
     await tester.pumpAndSettle();
 
-    expect(find.text('英音发音暂不可用'), findsOneWidget);
+    // SnackBars are gone; failure now shows as inline retry indicator.
+    expect(find.text('英音发音失败，请重试'), findsOneWidget);
   });
 
   testWidgets('home new-study entry opens standalone new learning flow', (
