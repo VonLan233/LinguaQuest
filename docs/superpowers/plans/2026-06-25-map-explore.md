@@ -1,3 +1,10 @@
+> **⚠️ SUPERSEDED (2026-06-25):** Not implemented. A complete, already-reviewed map
+> feature (`StudyMapScreen`, flutter_map + OSM + geolocator, reachable via the app
+> Drawer → "Study Map" → `/map`) was found on branch
+> `feat/P3-Multimedia-Map-Data_Persistence` and **merged into `feat/P2-roadmap`**
+> (merge commit `bf0d1ed`). That satisfies the SWE311 compulsory Map feature, so this
+> from-scratch scenario-pin plan was not built. Kept for history only.
+
 # Scenario Explore Map Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
