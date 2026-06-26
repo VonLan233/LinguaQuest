@@ -3044,4 +3044,65 @@ class AppLocalizationsEn extends AppLocalizations {
   String dueInMinutes(int count) {
     return 'In $count minutes';
   }
+
+  @override
+  String get languageMapTitle => 'Choose Language';
+
+  @override
+  String get languageMapSelectPrompt =>
+      'Tap a country to choose the language you want to learn.';
+
+  @override
+  String get languageMapChinese => 'Chinese (中文)';
+
+  @override
+  String languageMapConfirm(String language) {
+    return 'Learn $language';
+  }
+
+  @override
+  String languageMapSelected(String language) {
+    return 'Now learning $language';
+  }
+
+  @override
+  String languageMapComingSoon(String language) {
+    return '$language — coming soon';
+  }
+
+  @override
+  String get aboutCompanyName => 'LinguaQuest';
+
+  @override
+  String get aboutCompanyAddress =>
+      'Xiamen University Malaysia, Bandar Sunsuria, 43900 Sepang, Selangor, Malaysia (virtual)';
+
+  @override
+  String get aboutCompanyDescription =>
+      'Our virtual campus where LinguaQuest is built.';
+
+  @override
+  String get aiLearningStatusAvailable => 'Available';
+
+  @override
+  String get aiExplainWithAi => 'Explain with AI';
+
+  @override
+  String get aiErrorGeneric => 'Something went wrong. Please try again.';
+
+  @override
+  String get aiEmptyChat =>
+      'Ask anything about Chinese — meanings, grammar, or usage.';
+
+  @override
+  String get aiEmptyAnalysis =>
+      'Paste a Chinese sentence to see its structure broken down.';
+
+  @override
+  String get aiEmptyCloze =>
+      'Enter a word to generate a fill-in-the-blank exercise.';
+
+  @override
+  String get aiEmptyWriting =>
+      'Paste your essay and pick an exam type to get scored feedback.';
 }

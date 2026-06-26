@@ -926,5 +926,23 @@
   "dueNow": "现在到期",
   "dueInDays": "{count} 天后",
   "dueInHours": "{count} 小时后",
-  "dueInMinutes": "{count} 分钟后"
+  "dueInMinutes": "{count} 分钟后",
+
+  "languageMapTitle": "选择学习语言",
+  "languageMapSelectPrompt": "点击国家选择你想学习的语言。",
+  "languageMapChinese": "中文",
+  "languageMapConfirm": "学习{language}",
+  "languageMapSelected": "已切换到{language}",
+  "languageMapComingSoon": "{language}：暂未开放",
+  "aboutCompanyName": "LinguaQuest",
+  "aboutCompanyAddress": "厦门大学马来西亚分校，雪兰莪州雪邦 43900（虚拟地址）",
+  "aboutCompanyDescription": "我们打造 LinguaQuest 的虚拟园区。",
+
+  "aiLearningStatusAvailable": "可用",
+  "aiExplainWithAi": "用 AI 讲解",
+  "aiErrorGeneric": "出错了，请重试。",
+  "aiEmptyChat": "关于中文的任何问题都可以问——词义、语法或用法。",
+  "aiEmptyAnalysis": "粘贴一个中文句子，查看它的结构拆解。",
+  "aiEmptyCloze": "输入一个词，生成填空练习。",
+  "aiEmptyWriting": "粘贴你的作文并选择考试类型，获取评分反馈。"
 }

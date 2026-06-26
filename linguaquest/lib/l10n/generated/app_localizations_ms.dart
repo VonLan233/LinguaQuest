@@ -3057,4 +3057,65 @@ class AppLocalizationsMs extends AppLocalizations {
   String dueInMinutes(int count) {
     return '$count minit lagi';
   }
+
+  @override
+  String get languageMapTitle => 'Pilih Bahasa';
+
+  @override
+  String get languageMapSelectPrompt =>
+      'Ketik sebuah negara untuk memilih bahasa yang ingin dipelajari.';
+
+  @override
+  String get languageMapChinese => 'Bahasa Cina (中文)';
+
+  @override
+  String languageMapConfirm(String language) {
+    return 'Belajar $language';
+  }
+
+  @override
+  String languageMapSelected(String language) {
+    return 'Kini belajar $language';
+  }
+
+  @override
+  String languageMapComingSoon(String language) {
+    return '$language — akan datang';
+  }
+
+  @override
+  String get aboutCompanyName => 'LinguaQuest';
+
+  @override
+  String get aboutCompanyAddress =>
+      'Universiti Xiamen Malaysia, Bandar Sunsuria, 43900 Sepang, Selangor, Malaysia (maya)';
+
+  @override
+  String get aboutCompanyDescription =>
+      'Kampus maya tempat LinguaQuest dibina.';
+
+  @override
+  String get aiLearningStatusAvailable => 'Tersedia';
+
+  @override
+  String get aiExplainWithAi => 'Jelaskan dengan AI';
+
+  @override
+  String get aiErrorGeneric => 'Sesuatu tidak kena. Sila cuba lagi.';
+
+  @override
+  String get aiEmptyChat =>
+      'Tanya apa sahaja tentang bahasa Cina — maksud, tatabahasa atau penggunaan.';
+
+  @override
+  String get aiEmptyAnalysis =>
+      'Tampal ayat bahasa Cina untuk melihat huraian strukturnya.';
+
+  @override
+  String get aiEmptyCloze =>
+      'Masukkan perkataan untuk menjana latihan isi tempat kosong.';
+
+  @override
+  String get aiEmptyWriting =>
+      'Tampal karangan anda dan pilih jenis peperiksaan untuk maklum balas bermarkah.';
 }

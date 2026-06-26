@@ -996,5 +996,38 @@
     "placeholders": {
       "count": { "type": "int" }
     }
-  }
+  },
+
+  "languageMapTitle": "Choose Language",
+  "languageMapSelectPrompt": "Tap a country to choose the language you want to learn.",
+  "languageMapChinese": "Chinese (中文)",
+  "languageMapConfirm": "Learn {language}",
+  "@languageMapConfirm": {
+    "placeholders": {
+      "language": { "type": "String" }
+    }
+  },
+  "languageMapSelected": "Now learning {language}",
+  "@languageMapSelected": {
+    "placeholders": {
+      "language": { "type": "String" }
+    }
+  },
+  "languageMapComingSoon": "{language} — coming soon",
+  "@languageMapComingSoon": {
+    "placeholders": {
+      "language": { "type": "String" }
+    }
+  },
+  "aboutCompanyName": "LinguaQuest",
+  "aboutCompanyAddress": "Xiamen University Malaysia, Bandar Sunsuria, 43900 Sepang, Selangor, Malaysia (virtual)",
+  "aboutCompanyDescription": "Our virtual campus where LinguaQuest is built.",
+
+  "aiLearningStatusAvailable": "Available",
+  "aiExplainWithAi": "Explain with AI",
+  "aiErrorGeneric": "Something went wrong. Please try again.",
+  "aiEmptyChat": "Ask anything about Chinese — meanings, grammar, or usage.",
+  "aiEmptyAnalysis": "Paste a Chinese sentence to see its structure broken down.",
+  "aiEmptyCloze": "Enter a word to generate a fill-in-the-blank exercise.",
+  "aiEmptyWriting": "Paste your essay and pick an exam type to get scored feedback."
 }

@@ -2887,4 +2887,58 @@ class AppLocalizationsZh extends AppLocalizations {
   String dueInMinutes(int count) {
     return '$count 分钟后';
   }
+
+  @override
+  String get languageMapTitle => '选择学习语言';
+
+  @override
+  String get languageMapSelectPrompt => '点击国家选择你想学习的语言。';
+
+  @override
+  String get languageMapChinese => '中文';
+
+  @override
+  String languageMapConfirm(String language) {
+    return '学习$language';
+  }
+
+  @override
+  String languageMapSelected(String language) {
+    return '已切换到$language';
+  }
+
+  @override
+  String languageMapComingSoon(String language) {
+    return '$language：暂未开放';
+  }
+
+  @override
+  String get aboutCompanyName => 'LinguaQuest';
+
+  @override
+  String get aboutCompanyAddress => '厦门大学马来西亚分校，雪兰莪州雪邦 43900（虚拟地址）';
+
+  @override
+  String get aboutCompanyDescription => '我们打造 LinguaQuest 的虚拟园区。';
+
+  @override
+  String get aiLearningStatusAvailable => '可用';
+
+  @override
+  String get aiExplainWithAi => '用 AI 讲解';
+
+  @override
+  String get aiErrorGeneric => '出错了，请重试。';
+
+  @override
+  String get aiEmptyChat => '关于中文的任何问题都可以问——词义、语法或用法。';
+
+  @override
+  String get aiEmptyAnalysis => '粘贴一个中文句子，查看它的结构拆解。';
+
+  @override
+  String get aiEmptyCloze => '输入一个词，生成填空练习。';
+
+  @override
+  String get aiEmptyWriting => '粘贴你的作文并选择考试类型，获取评分反馈。';
 }

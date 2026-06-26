@@ -5454,6 +5454,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'In {count} minutes'**
   String dueInMinutes(int count);
+
+  /// No description provided for @languageMapTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Language'**
+  String get languageMapTitle;
+
+  /// No description provided for @languageMapSelectPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a country to choose the language you want to learn.'**
+  String get languageMapSelectPrompt;
+
+  /// No description provided for @languageMapChinese.
+  ///
+  /// In en, this message translates to:
+  /// **'Chinese (中文)'**
+  String get languageMapChinese;
+
+  /// No description provided for @languageMapConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn {language}'**
+  String languageMapConfirm(String language);
+
+  /// No description provided for @languageMapSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'Now learning {language}'**
+  String languageMapSelected(String language);
+
+  /// No description provided for @languageMapComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'{language} — coming soon'**
+  String languageMapComingSoon(String language);
+
+  /// No description provided for @aboutCompanyName.
+  ///
+  /// In en, this message translates to:
+  /// **'LinguaQuest'**
+  String get aboutCompanyName;
+
+  /// No description provided for @aboutCompanyAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Xiamen University Malaysia, Bandar Sunsuria, 43900 Sepang, Selangor, Malaysia (virtual)'**
+  String get aboutCompanyAddress;
+
+  /// No description provided for @aboutCompanyDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Our virtual campus where LinguaQuest is built.'**
+  String get aboutCompanyDescription;
+
+  /// No description provided for @aiLearningStatusAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Available'**
+  String get aiLearningStatusAvailable;
+
+  /// No description provided for @aiExplainWithAi.
+  ///
+  /// In en, this message translates to:
+  /// **'Explain with AI'**
+  String get aiExplainWithAi;
+
+  /// No description provided for @aiErrorGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get aiErrorGeneric;
+
+  /// No description provided for @aiEmptyChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask anything about Chinese — meanings, grammar, or usage.'**
+  String get aiEmptyChat;
+
+  /// No description provided for @aiEmptyAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste a Chinese sentence to see its structure broken down.'**
+  String get aiEmptyAnalysis;
+
+  /// No description provided for @aiEmptyCloze.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a word to generate a fill-in-the-blank exercise.'**
+  String get aiEmptyCloze;
+
+  /// No description provided for @aiEmptyWriting.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste your essay and pick an exam type to get scored feedback.'**
+  String get aiEmptyWriting;
 }
 
 class _AppLocalizationsDelegate

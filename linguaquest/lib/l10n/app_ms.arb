@@ -926,5 +926,23 @@
   "dueNow": "Perlu sekarang",
   "dueInDays": "{count} hari lagi",
   "dueInHours": "{count} jam lagi",
-  "dueInMinutes": "{count} minit lagi"
+  "dueInMinutes": "{count} minit lagi",
+
+  "languageMapTitle": "Pilih Bahasa",
+  "languageMapSelectPrompt": "Ketik sebuah negara untuk memilih bahasa yang ingin dipelajari.",
+  "languageMapChinese": "Bahasa Cina (中文)",
+  "languageMapConfirm": "Belajar {language}",
+  "languageMapSelected": "Kini belajar {language}",
+  "languageMapComingSoon": "{language} — akan datang",
+  "aboutCompanyName": "LinguaQuest",
+  "aboutCompanyAddress": "Universiti Xiamen Malaysia, Bandar Sunsuria, 43900 Sepang, Selangor, Malaysia (maya)",
+  "aboutCompanyDescription": "Kampus maya tempat LinguaQuest dibina.",
+
+  "aiLearningStatusAvailable": "Tersedia",
+  "aiExplainWithAi": "Jelaskan dengan AI",
+  "aiErrorGeneric": "Sesuatu tidak kena. Sila cuba lagi.",
+  "aiEmptyChat": "Tanya apa sahaja tentang bahasa Cina — maksud, tatabahasa atau penggunaan.",
+  "aiEmptyAnalysis": "Tampal ayat bahasa Cina untuk melihat huraian strukturnya.",
+  "aiEmptyCloze": "Masukkan perkataan untuk menjana latihan isi tempat kosong.",
+  "aiEmptyWriting": "Tampal karangan anda dan pilih jenis peperiksaan untuk maklum balas bermarkah."
 }
