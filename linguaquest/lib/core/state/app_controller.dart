@@ -25,7 +25,10 @@ import '../../data/remote/api_client.dart';
 import '../../data/models/forum.dart';
 import '../../data/repositories/ai_repository.dart';
 import '../../data/repositories/analytics_repository.dart';
+import '../../data/article_asset_loader.dart';
+import '../../data/models/article.dart';
 import '../../data/repositories/api_repositories.dart';
+import '../../data/repositories/article_repository.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../data/repositories/custom_word_repository.dart';
 import '../../data/repositories/forum_repository.dart';
@@ -151,6 +154,16 @@ final studySpotRepositoryProvider = Provider<StudySpotRepository>((ref) {
   return MockStudySpotRepository();
 });
 
+final articleRepositoryProvider = Provider<ArticleRepository>((ref) {
+  if (AppConstants.apiBaseUrl.isNotEmpty) {
+    return ApiArticleRepository(
+      ref.watch(apiClientProvider),
+      ArticleAssetLoader(),
+    );
+  }
+  return MockArticleRepository(ArticleAssetLoader());
+});
+
 final appControllerProvider = NotifierProvider<AppController, AppState>(
   AppController.new,
 );
@@ -200,6 +213,7 @@ class AppController extends Notifier<AppState> {
   late final RewardTaskRepository _rewardTaskRepository;
   late final ForumRepository _forumRepository;
   late final AnalyticsRepository _analyticsRepository;
+  late final ArticleRepository _articleRepository;
   late final LocalNotificationService _localNotificationService;
   var _localNotificationsInitialized = false;
 
@@ -217,6 +231,7 @@ class AppController extends Notifier<AppState> {
     _rewardTaskRepository = ref.watch(rewardTaskRepositoryProvider);
     _forumRepository = ref.watch(forumRepositoryProvider);
     _analyticsRepository = ref.watch(analyticsRepositoryProvider);
+    _articleRepository = ref.watch(articleRepositoryProvider);
     _localNotificationService = ref.watch(localNotificationServiceProvider);
     return AppState.initial();
   }
@@ -2870,6 +2885,61 @@ class AppController extends Notifier<AppState> {
   Future<void> deleteStudySpot(String id) async {
     await ref.read(studySpotRepositoryProvider).remove(id);
     await loadStudySpots();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Reading module (P3a): article listing/lookup. UI lands in P3b+.
+  // ---------------------------------------------------------------------------
+
+  /// All bundled reading articles, optionally filtered by language/level/theme.
+  Future<List<Article>> loadArticles({
+    String? language,
+    String? level,
+    String? theme,
+  }) {
+    return _articleRepository.listArticles(
+      language: language,
+      level: level,
+      theme: theme,
+    );
+  }
+
+  /// A single article by id, or null if not found.
+  Future<Article?> getArticle(String id) => _articleRepository.getArticle(id);
+
+  /// Articles recommended for the current scope (active language + wordbook).
+  Future<List<Article>> recommendedArticles() {
+    return _articleRepository.listArticles(
+      language: state.currentLanguage,
+      level: state.currentWordBookId,
+    );
+  }
+
+  /// Persist reading progress for an article in the current scope.
+  Future<void> saveReadingProgress(
+    String articleId,
+    int paragraphIndex, {
+    bool done = false,
+  }) async {
+    final uid = state.user?.uid ?? '';
+    final scope = progressScope(state.currentLanguage, state.currentWordBookId);
+    await _articleRepository.saveProgress(
+      ReadingProgress(
+        uid: uid,
+        scope: scope,
+        articleId: articleId,
+        lastParagraphIndex: paragraphIndex,
+        completed: done,
+        updatedAt: DateTime.now().toUtc(),
+      ),
+    );
+  }
+
+  /// Reading progress entries for the current scope.
+  Future<List<ReadingProgress>> readingProgressForScope() {
+    final uid = state.user?.uid ?? '';
+    final scope = progressScope(state.currentLanguage, state.currentWordBookId);
+    return _articleRepository.loadProgressForScope(uid, scope);
   }
 }
 
