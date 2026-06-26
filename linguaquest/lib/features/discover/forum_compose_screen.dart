@@ -7,6 +7,7 @@ import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../reading/reading_labels.dart';
 
 const _kTags = ['Grammar', 'Vocabulary', 'Culture', 'General', 'Progress'];
 
@@ -80,6 +81,13 @@ class _ForumComposeScreenState extends ConsumerState<ForumComposeScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
+    // §8 (P4f): offer the user's current learning scope as a one-tap tag
+    // (e.g. "HSK 4" / "JLPT N5"), in addition to the fixed topic tags.
+    final scopeTag = ref.watch(
+      appControllerProvider.select(
+        (s) => readingLevelLabel(s.currentLanguage, s.currentWordBookId),
+      ),
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -126,6 +134,12 @@ class _ForumComposeScreenState extends ConsumerState<ForumComposeScreen> {
                     selected: _selectedTag == tag,
                     onSelected: (_) => setState(() => _selectedTag = tag),
                   ),
+                ChoiceChip(
+                  key: const ValueKey('compose-scope-chip'),
+                  label: Text(scopeTag),
+                  selected: _selectedTag == scopeTag,
+                  onSelected: (_) => setState(() => _selectedTag = scopeTag),
+                ),
               ],
             ),
             const SizedBox(height: AppTokens.s16),

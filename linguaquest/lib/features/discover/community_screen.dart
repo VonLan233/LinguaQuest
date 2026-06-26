@@ -11,6 +11,7 @@ import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/mascot_empty_state.dart';
 import '../../data/models/forum.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../reading/reading_labels.dart';
 
 /// The ordered list of filter options. 'All' is the sentinel for "no filter".
 const _kFilterOptions = [
@@ -34,8 +35,11 @@ PillVariant _tagVariant(String tag) {
     case 'Progress':
       return PillVariant.success;
     case 'General':
-    default:
       return PillVariant.success;
+    default:
+      // §8 (P4f): scope tags (e.g. "HSK 4" / "JLPT N5") and any other free-form
+      // tag get a neutral-primary badge.
+      return PillVariant.primary;
   }
 }
 
@@ -51,8 +55,11 @@ String _tagLabel(AppLocalizations l10n, String tag) {
     case 'Progress':
       return l10n.communityTagProgress;
     case 'General':
-    default:
       return l10n.communityTagGeneral;
+    default:
+      // §8 (P4f): scope tags (e.g. "HSK 4" / "JLPT N5") are already
+      // display-ready — show them verbatim.
+      return tag;
   }
 }
 
@@ -92,6 +99,17 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
     final posts = ref.watch(
       appControllerProvider.select((s) => s.forumPosts),
     );
+    // §8 (P4f): include the user's current learning scope (e.g. "HSK 4" /
+    // "JLPT N5") as a filter option alongside the fixed topic tags.
+    final scopeTag = ref.watch(
+      appControllerProvider.select(
+        (s) => readingLevelLabel(s.currentLanguage, s.currentWordBookId),
+      ),
+    );
+    final filterOptions = [
+      ..._kFilterOptions,
+      if (!_kFilterOptions.contains(scopeTag)) scopeTag,
+    ];
 
     final displayedPosts = _selectedFilter == 'All'
         ? posts
@@ -134,7 +152,7 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: AppTokens.s20),
                 children: [
-                  for (final option in _kFilterOptions) ...[
+                  for (final option in filterOptions) ...[
                     ChoiceChip(
                       label: Text(
                         option == 'All'
