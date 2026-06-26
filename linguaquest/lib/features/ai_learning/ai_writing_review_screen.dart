@@ -5,11 +5,13 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/ai_error_card.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_progress_bar.dart';
 import '../../data/models/ai_feature.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class AiWritingReviewScreen extends ConsumerStatefulWidget {
   const AiWritingReviewScreen({super.key});
@@ -27,6 +29,7 @@ class _AiWritingReviewScreenState
   bool _isLoading = false;
   WritingReviewResult? _result;
   bool _showRewrite = false;
+  String? _errorMessage;
 
   static const _examTypes = [
     'General',
@@ -47,6 +50,7 @@ class _AiWritingReviewScreenState
     setState(() {
       _isLoading = true;
       _result = null;
+      _errorMessage = null;
     });
     final raw = await ref.read(appControllerProvider.notifier).reviewWriting(
       essay: _essayController.text.trim(),
@@ -56,16 +60,18 @@ class _AiWritingReviewScreenState
     if (mounted) {
       if (raw.isEmpty) {
         final errMsg = ref.read(appControllerProvider).errorMessage;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errMsg ?? 'An error occurred. Please try again.')),
-        );
-      }
-      setState(() {
-        _isLoading = false;
-        if (raw.isNotEmpty) {
+        setState(() {
+          _isLoading = false;
+          _errorMessage =
+              errMsg ?? AppLocalizations.of(context).aiErrorGeneric;
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
           _result = WritingReviewResult.fromJson(raw);
-        }
-      });
+          _errorMessage = null;
+        });
+      }
     }
   }
 
@@ -73,6 +79,7 @@ class _AiWritingReviewScreenState
     setState(() {
       _result = null;
       _showRewrite = false;
+      _errorMessage = null;
     });
   }
 
@@ -107,6 +114,8 @@ class _AiWritingReviewScreenState
                     setState(() => _selectedExamType = v),
                 isLoading: _isLoading,
                 onSubmit: _submit,
+                errorMessage: _errorMessage,
+                onRetry: _submit,
               ),
       ),
     );
@@ -124,6 +133,8 @@ class _InputView extends StatelessWidget {
     required this.onExamTypeChanged,
     required this.isLoading,
     required this.onSubmit,
+    this.errorMessage,
+    required this.onRetry,
   });
 
   final GlobalKey<FormState> formKey;
@@ -133,15 +144,30 @@ class _InputView extends StatelessWidget {
   final ValueChanged<String> onExamTypeChanged;
   final bool isLoading;
   final VoidCallback onSubmit;
+  final String? errorMessage;
+  final VoidCallback onRetry;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     return Form(
       key: formKey,
       child: ListView(
         padding: const EdgeInsets.all(AppTokens.s20),
         children: [
+          // Guidance text (aiEmptyWriting)
+          AppCard(
+            padding: const EdgeInsets.all(AppTokens.s12),
+            child: Text(
+              l10n.aiEmptyWriting,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+          const SizedBox(height: AppTokens.s16),
           // Exam type selector
           AppCard(
             child: Column(
@@ -219,9 +245,17 @@ class _InputView extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppTokens.s24),
+          // ERROR state (shown in input view instead of result)
+          if (errorMessage != null) ...[
+            AiErrorCard(
+              message: errorMessage!,
+              onRetry: onRetry,
+            ),
+            const SizedBox(height: AppTokens.s16),
+          ],
           if (isLoading)
             const Center(child: CircularProgressIndicator())
-          else
+          else if (errorMessage == null)
             AppPrimaryButton(
               label: 'Submit for Review',
               onPressed: onSubmit,

@@ -4,11 +4,13 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/ai_error_card.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/word_choice_button.dart';
 import '../../data/models/ai_feature.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class AiClozeScreen extends ConsumerStatefulWidget {
   const AiClozeScreen({super.key, this.word});
@@ -24,6 +26,7 @@ class _AiClozeScreenState extends ConsumerState<AiClozeScreen> {
   final _formKey = GlobalKey<FormState>();
   Map<String, dynamic>? _result;
   bool _isLoading = false;
+  String? _errorMessage;
   final Map<int, String?> _selectedAnswers = {};
   final Map<int, bool> _answerCorrectness = {};
 
@@ -46,6 +49,7 @@ class _AiClozeScreenState extends ConsumerState<AiClozeScreen> {
     setState(() {
       _isLoading = true;
       _result = null;
+      _errorMessage = null;
       _selectedAnswers.clear();
       _answerCorrectness.clear();
     });
@@ -59,14 +63,18 @@ class _AiClozeScreenState extends ConsumerState<AiClozeScreen> {
     if (mounted) {
       if (result.isEmpty) {
         final errMsg = ref.read(appControllerProvider).errorMessage;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errMsg ?? 'An error occurred. Please try again.')),
-        );
+        setState(() {
+          _isLoading = false;
+          _errorMessage =
+              errMsg ?? AppLocalizations.of(context).aiErrorGeneric;
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+          _result = result;
+          _errorMessage = null;
+        });
       }
-      setState(() {
-        _isLoading = false;
-        _result = result.isEmpty ? null : result;
-      });
     }
   }
 
@@ -80,6 +88,7 @@ class _AiClozeScreenState extends ConsumerState<AiClozeScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     final history = ref.watch(
       appControllerProvider.select(
         (s) =>
@@ -142,6 +151,29 @@ class _AiClozeScreenState extends ConsumerState<AiClozeScreen> {
                 ],
               ),
             ),
+            // EMPTY state: no result, no error, not loading
+            if (_result == null && _errorMessage == null && !_isLoading) ...[
+              const SizedBox(height: AppTokens.s20),
+              AppCard(
+                padding: const EdgeInsets.all(AppTokens.s16),
+                child: Text(
+                  l10n.aiEmptyCloze,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ],
+            // ERROR state
+            if (_errorMessage != null) ...[
+              const SizedBox(height: AppTokens.s20),
+              AiErrorCard(
+                message: _errorMessage!,
+                onRetry: _generate,
+              ),
+            ],
+            // RESULT state
             if (_result != null) ...[
               const SizedBox(height: AppTokens.s20),
               _ClozeCard(
