@@ -2941,6 +2941,117 @@ class AppController extends Notifier<AppState> {
     final scope = progressScope(state.currentLanguage, state.currentWordBookId);
     return _articleRepository.loadProgressForScope(uid, scope);
   }
+
+  /// Saved reading-comprehension results for the current scope (analytics feed).
+  Future<List<ReadingResult>> readingResultsForScope() {
+    final uid = state.user?.uid ?? '';
+    final scope = progressScope(state.currentLanguage, state.currentWordBookId);
+    return _articleRepository.loadResults(uid, scope);
+  }
+
+  /// Records a completed reading comprehension (P3e).
+  ///
+  /// Reuses the training/analytics recording path: persists a [StudySession] +
+  /// [ExerciseRecord]s (so accuracy/XP/streak aggregation counts it) AND a
+  /// [ReadingResult] (per-kind correctness + theme) for the reading metrics.
+  /// Also marks the article read and awards the earned XP.
+  Future<bool> completeReading({
+    required Article article,
+    required List<QuizQuestion> questions,
+    required List<bool> correctness,
+    required Map<String, int> perKindCorrect,
+    required DateTime startedAt,
+  }) async {
+    final user = state.user;
+    if (user == null) return false;
+    final total = questions.length;
+    final correct = correctness.where((c) => c).length;
+    final xpEarned = correct * 5; // small reward per correct comprehension item
+    return _run(() async {
+      final now = DateTime.now();
+      final scope =
+          progressScope(state.currentLanguage, state.currentWordBookId);
+      final gameId = 'reading-${article.id}';
+      final sessionId = 'reading-${now.microsecondsSinceEpoch}';
+
+      await _learningRepository.recordStudySession(
+        StudySession(
+          id: sessionId,
+          uid: user.uid,
+          lessonId: gameId,
+          startedAt: startedAt,
+          endedAt: now,
+          totalQuestions: total,
+          correctAnswers: correct,
+          xpEarned: xpEarned,
+          mistakeWordIds: const [],
+        ),
+      );
+
+      final records = <ExerciseRecord>[];
+      for (var i = 0; i < questions.length; i++) {
+        final q = questions[i];
+        records.add(
+          ExerciseRecord(
+            id: 'reading-${article.id}-$i-${now.microsecondsSinceEpoch}',
+            uid: user.uid,
+            sessionId: sessionId,
+            gameId: gameId,
+            wordId: q.word.id,
+            promptType: q.type.name,
+            isCorrect: correctness[i],
+            answer: '',
+            correctAnswer: q.answer,
+            answerTimeMs: 0,
+            dimension: ReviewDimension.context,
+            createdAt: now,
+            prompt: q.prompt,
+            options: q.options,
+          ),
+        );
+      }
+      await _learningRepository.recordExerciseRecords(records);
+
+      await _articleRepository.recordComprehensionResult(
+        ReadingResult(
+          uid: user.uid,
+          scope: scope,
+          articleId: article.id,
+          totalQuestions: total,
+          correctAnswers: correct,
+          theme: article.theme,
+          perKindCorrect: perKindCorrect,
+          createdAt: now.toUtc(),
+        ),
+      );
+
+      // Mark the article fully read.
+      await _articleRepository.saveProgress(
+        ReadingProgress(
+          uid: user.uid,
+          scope: scope,
+          articleId: article.id,
+          lastParagraphIndex: article.paragraphs.isEmpty
+              ? 0
+              : article.paragraphs.length - 1,
+          completed: true,
+          updatedAt: now.toUtc(),
+        ),
+      );
+
+      final streak = _nextStreak(user.lastStudyDate, now, user.streak);
+      final updatedUser = await _authRepository.updateProfile(
+        user.copyWith(
+          xp: user.xp + xpEarned,
+          streak: streak,
+          lastStudyDate: now,
+          updatedAt: now,
+        ),
+      );
+      state = state.copyWith(user: updatedUser);
+      await refreshNotifications();
+    });
+  }
 }
 
 class _PointGrantOutcome {
