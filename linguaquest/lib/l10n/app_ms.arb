@@ -659,6 +659,19 @@
   "wordbookSwitchDesc": "Buku perkataan semasa memacu laman utama, laluan pembelajaran, carian, latihan, dan kemasukan ulangkaji.",
   "wordbookSwitched": "Buku perkataan ditukar",
   "wordbookSwitchFailed": "Tidak dapat menukar buku perkataan",
+  "pickerChooseLanguage": "Pilih Bahasa",
+  "pickerChooseWordbook": "Pilih Buku Perkataan",
+  "pickerLanguageChinese": "Bahasa Cina (中文)",
+  "pickerLanguageJapanese": "Bahasa Jepun (日本語)",
+  "pickerComingSoon": "Akan Datang",
+  "pickerCurrentBadge": "Semasa",
+  "pickerSwitchSuccess": "Ditukar kepada {wordbook}",
+  "@pickerSwitchSuccess": {
+    "placeholders": {
+      "wordbook": { "type": "String" }
+    }
+  },
+  "pickerSwitchFailed": "Tidak dapat menukar buku perkataan sekarang",
   "wordbookTargetSection": "Perkataan Sasaran",
   "wordbookTargetDesc": "{count} perkataan · Laluan pembelajaran {percent}% selesai",
   "wordbookNameBeginner": "Asas Pemula",

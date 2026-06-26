@@ -659,6 +659,19 @@
   "wordbookSwitchDesc": "当前词书会驱动首页、学习路径、搜索、训练场和复习入口。",
   "wordbookSwitched": "已切换当前词书",
   "wordbookSwitchFailed": "暂时无法切换词书",
+  "pickerChooseLanguage": "选择语言",
+  "pickerChooseWordbook": "选择词书",
+  "pickerLanguageChinese": "中文",
+  "pickerLanguageJapanese": "日语",
+  "pickerComingSoon": "即将上线",
+  "pickerCurrentBadge": "当前",
+  "pickerSwitchSuccess": "已切换到{wordbook}",
+  "@pickerSwitchSuccess": {
+    "placeholders": {
+      "wordbook": { "type": "String" }
+    }
+  },
+  "pickerSwitchFailed": "暂时无法切换词书",
   "wordbookTargetSection": "目标词",
   "wordbookTargetDesc": "{count} 词 · 学习路径完成 {percent}%",
   "wordbookNameBeginner": "入门基础词汇",

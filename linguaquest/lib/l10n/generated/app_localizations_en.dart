@@ -2118,6 +2118,32 @@ class AppLocalizationsEn extends AppLocalizations {
   String get wordbookSwitchFailed => 'Unable to switch wordbook';
 
   @override
+  String get pickerChooseLanguage => 'Choose Language';
+
+  @override
+  String get pickerChooseWordbook => 'Choose Wordbook';
+
+  @override
+  String get pickerLanguageChinese => 'Chinese (中文)';
+
+  @override
+  String get pickerLanguageJapanese => 'Japanese (日本語)';
+
+  @override
+  String get pickerComingSoon => 'Coming Soon';
+
+  @override
+  String get pickerCurrentBadge => 'Current';
+
+  @override
+  String pickerSwitchSuccess(String wordbook) {
+    return 'Switched to $wordbook';
+  }
+
+  @override
+  String get pickerSwitchFailed => 'Unable to switch wordbook right now';
+
+  @override
   String get wordbookTargetSection => 'Target Words';
 
   @override

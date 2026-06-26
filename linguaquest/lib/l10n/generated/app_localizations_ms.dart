@@ -2124,6 +2124,33 @@ class AppLocalizationsMs extends AppLocalizations {
   String get wordbookSwitchFailed => 'Tidak dapat menukar buku perkataan';
 
   @override
+  String get pickerChooseLanguage => 'Pilih Bahasa';
+
+  @override
+  String get pickerChooseWordbook => 'Pilih Buku Perkataan';
+
+  @override
+  String get pickerLanguageChinese => 'Bahasa Cina (中文)';
+
+  @override
+  String get pickerLanguageJapanese => 'Bahasa Jepun (日本語)';
+
+  @override
+  String get pickerComingSoon => 'Akan Datang';
+
+  @override
+  String get pickerCurrentBadge => 'Semasa';
+
+  @override
+  String pickerSwitchSuccess(String wordbook) {
+    return 'Ditukar kepada $wordbook';
+  }
+
+  @override
+  String get pickerSwitchFailed =>
+      'Tidak dapat menukar buku perkataan sekarang';
+
+  @override
   String get wordbookTargetSection => 'Perkataan Sasaran';
 
   @override

@@ -3859,6 +3859,54 @@ abstract class AppLocalizations {
   /// **'Unable to switch wordbook'**
   String get wordbookSwitchFailed;
 
+  /// No description provided for @pickerChooseLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Language'**
+  String get pickerChooseLanguage;
+
+  /// No description provided for @pickerChooseWordbook.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Wordbook'**
+  String get pickerChooseWordbook;
+
+  /// No description provided for @pickerLanguageChinese.
+  ///
+  /// In en, this message translates to:
+  /// **'Chinese (中文)'**
+  String get pickerLanguageChinese;
+
+  /// No description provided for @pickerLanguageJapanese.
+  ///
+  /// In en, this message translates to:
+  /// **'Japanese (日本語)'**
+  String get pickerLanguageJapanese;
+
+  /// No description provided for @pickerComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming Soon'**
+  String get pickerComingSoon;
+
+  /// No description provided for @pickerCurrentBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Current'**
+  String get pickerCurrentBadge;
+
+  /// No description provided for @pickerSwitchSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Switched to {wordbook}'**
+  String pickerSwitchSuccess(String wordbook);
+
+  /// No description provided for @pickerSwitchFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to switch wordbook right now'**
+  String get pickerSwitchFailed;
+
   /// No description provided for @wordbookTargetSection.
   ///
   /// In en, this message translates to:

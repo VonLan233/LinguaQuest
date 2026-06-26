@@ -2019,6 +2019,32 @@ class AppLocalizationsZh extends AppLocalizations {
   String get wordbookSwitchFailed => '暂时无法切换词书';
 
   @override
+  String get pickerChooseLanguage => '选择语言';
+
+  @override
+  String get pickerChooseWordbook => '选择词书';
+
+  @override
+  String get pickerLanguageChinese => '中文';
+
+  @override
+  String get pickerLanguageJapanese => '日语';
+
+  @override
+  String get pickerComingSoon => '即将上线';
+
+  @override
+  String get pickerCurrentBadge => '当前';
+
+  @override
+  String pickerSwitchSuccess(String wordbook) {
+    return '已切换到$wordbook';
+  }
+
+  @override
+  String get pickerSwitchFailed => '暂时无法切换词书';
+
+  @override
   String get wordbookTargetSection => '目标词';
 
   @override

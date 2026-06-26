@@ -661,6 +661,19 @@
   "wordbookSwitchDesc": "Current wordbook drives home, learning path, search, training, and review entries.",
   "wordbookSwitched": "Wordbook switched",
   "wordbookSwitchFailed": "Unable to switch wordbook",
+  "pickerChooseLanguage": "Choose Language",
+  "pickerChooseWordbook": "Choose Wordbook",
+  "pickerLanguageChinese": "Chinese (中文)",
+  "pickerLanguageJapanese": "Japanese (日本語)",
+  "pickerComingSoon": "Coming Soon",
+  "pickerCurrentBadge": "Current",
+  "pickerSwitchSuccess": "Switched to {wordbook}",
+  "@pickerSwitchSuccess": {
+    "placeholders": {
+      "wordbook": { "type": "String" }
+    }
+  },
+  "pickerSwitchFailed": "Unable to switch wordbook right now",
   "wordbookTargetSection": "Target Words",
   "wordbookTargetDesc": "{count} words · Learning path {percent}% complete",
   "wordbookNameBeginner": "Beginner Basic Words",
