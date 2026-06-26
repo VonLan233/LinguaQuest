@@ -6,8 +6,9 @@ import '../../core/state/app_controller.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/fallback_back_button.dart';
+import '../../l10n/generated/app_localizations.dart';
 
-const _kTags = ['Grammar', 'Vocabulary', 'Culture', 'General'];
+const _kTags = ['Grammar', 'Vocabulary', 'Culture', 'General', 'Progress'];
 
 class ForumComposeScreen extends ConsumerStatefulWidget {
   const ForumComposeScreen({super.key});
@@ -78,11 +79,12 @@ class _ForumComposeScreenState extends ConsumerState<ForumComposeScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/discover/community'),
-        title: const Text('New Post'),
+        title: Text(l10n.communityNewPost),
       ),
       body: SafeArea(
         child: ListView(

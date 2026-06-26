@@ -862,6 +862,51 @@ class AppLocalizationsZh extends AppLocalizations {
   String get discoverCommunityPostsSubtitle => '社区动态';
 
   @override
+  String get communityFilterAll => '全部';
+
+  @override
+  String get communityTagGrammar => '语法';
+
+  @override
+  String get communityTagVocabulary => '词汇';
+
+  @override
+  String get communityTagCulture => '文化';
+
+  @override
+  String get communityTagGeneral => '综合';
+
+  @override
+  String get communityTagProgress => '学习进展';
+
+  @override
+  String get communityShareUpdate => '分享学习进展';
+
+  @override
+  String get communityNewPost => '发帖';
+
+  @override
+  String get communityNoPostsInFilter => '该分类还没有帖子';
+
+  @override
+  String get communityTimeJustNow => '刚刚';
+
+  @override
+  String communityTimeMinutesAgo(int count) {
+    return '$count 分钟前';
+  }
+
+  @override
+  String communityTimeHoursAgo(int count) {
+    return '$count 小时前';
+  }
+
+  @override
+  String communityTimeDaysAgo(int count) {
+    return '$count 天前';
+  }
+
+  @override
   String get discoverXpUsage => 'XP 用途';
 
   @override

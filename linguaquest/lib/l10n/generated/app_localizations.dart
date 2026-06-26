@@ -1762,6 +1762,84 @@ abstract class AppLocalizations {
   /// **'Community'**
   String get discoverCommunityPostsSubtitle;
 
+  /// No description provided for @communityFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get communityFilterAll;
+
+  /// No description provided for @communityTagGrammar.
+  ///
+  /// In en, this message translates to:
+  /// **'Grammar'**
+  String get communityTagGrammar;
+
+  /// No description provided for @communityTagVocabulary.
+  ///
+  /// In en, this message translates to:
+  /// **'Vocabulary'**
+  String get communityTagVocabulary;
+
+  /// No description provided for @communityTagCulture.
+  ///
+  /// In en, this message translates to:
+  /// **'Culture'**
+  String get communityTagCulture;
+
+  /// No description provided for @communityTagGeneral.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get communityTagGeneral;
+
+  /// No description provided for @communityTagProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get communityTagProgress;
+
+  /// No description provided for @communityShareUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Share an update'**
+  String get communityShareUpdate;
+
+  /// No description provided for @communityNewPost.
+  ///
+  /// In en, this message translates to:
+  /// **'New Post'**
+  String get communityNewPost;
+
+  /// No description provided for @communityNoPostsInFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'No posts in this category yet'**
+  String get communityNoPostsInFilter;
+
+  /// No description provided for @communityTimeJustNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Just now'**
+  String get communityTimeJustNow;
+
+  /// No description provided for @communityTimeMinutesAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}m ago'**
+  String communityTimeMinutesAgo(int count);
+
+  /// No description provided for @communityTimeHoursAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}h ago'**
+  String communityTimeHoursAgo(int count);
+
+  /// No description provided for @communityTimeDaysAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}d ago'**
+  String communityTimeDaysAgo(int count);
+
   /// No description provided for @discoverXpUsage.
   ///
   /// In en, this message translates to:

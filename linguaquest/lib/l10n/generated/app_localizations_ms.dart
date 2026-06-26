@@ -923,6 +923,51 @@ class AppLocalizationsMs extends AppLocalizations {
       'Daftar masuk pembelajaran dan perbincangan kesilapan dipaparkan di sini.';
 
   @override
+  String get communityFilterAll => 'Semua';
+
+  @override
+  String get communityTagGrammar => 'Tatabahasa';
+
+  @override
+  String get communityTagVocabulary => 'Kosa kata';
+
+  @override
+  String get communityTagCulture => 'Budaya';
+
+  @override
+  String get communityTagGeneral => 'Umum';
+
+  @override
+  String get communityTagProgress => 'Kemajuan';
+
+  @override
+  String get communityShareUpdate => 'Kongsi kemajuan';
+
+  @override
+  String get communityNewPost => 'Catatan baharu';
+
+  @override
+  String get communityNoPostsInFilter => 'Tiada catatan dalam kategori ini';
+
+  @override
+  String get communityTimeJustNow => 'Sebentar tadi';
+
+  @override
+  String communityTimeMinutesAgo(int count) {
+    return '$count minit lalu';
+  }
+
+  @override
+  String communityTimeHoursAgo(int count) {
+    return '$count jam lalu';
+  }
+
+  @override
+  String communityTimeDaysAgo(int count) {
+    return '$count hari lalu';
+  }
+
+  @override
   String get discoverXpUsage => 'Kegunaan XP';
 
   @override

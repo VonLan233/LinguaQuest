@@ -288,6 +288,34 @@
   "discoverLuckyDrawCost": "消耗 30 积分抽一次；稀有概率透明展示，未中奖也给碎片。",
   "discoverCommunityPosts": "社区帖子",
   "discoverCommunityPostsSubtitle": "社区动态",
+  "communityFilterAll": "全部",
+  "communityTagGrammar": "语法",
+  "communityTagVocabulary": "词汇",
+  "communityTagCulture": "文化",
+  "communityTagGeneral": "综合",
+  "communityTagProgress": "学习进展",
+  "communityShareUpdate": "分享学习进展",
+  "communityNewPost": "发帖",
+  "communityNoPostsInFilter": "该分类还没有帖子",
+  "communityTimeJustNow": "刚刚",
+  "communityTimeMinutesAgo": "{count} 分钟前",
+  "@communityTimeMinutesAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "communityTimeHoursAgo": "{count} 小时前",
+  "@communityTimeHoursAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "communityTimeDaysAgo": "{count} 天前",
+  "@communityTimeDaysAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
   "discoverXpUsage": "XP 用途",
   "discoverXpUsageDesc": "领取后同步到个人主页和排行榜；积分抽奖会消耗当前 XP。当前余额",
   "discoverGoComplete": "去完成 +{points} XP",

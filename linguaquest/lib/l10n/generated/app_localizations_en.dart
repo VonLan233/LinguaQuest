@@ -914,6 +914,51 @@ class AppLocalizationsEn extends AppLocalizations {
   String get discoverCommunityPostsSubtitle => 'Community';
 
   @override
+  String get communityFilterAll => 'All';
+
+  @override
+  String get communityTagGrammar => 'Grammar';
+
+  @override
+  String get communityTagVocabulary => 'Vocabulary';
+
+  @override
+  String get communityTagCulture => 'Culture';
+
+  @override
+  String get communityTagGeneral => 'General';
+
+  @override
+  String get communityTagProgress => 'Progress';
+
+  @override
+  String get communityShareUpdate => 'Share an update';
+
+  @override
+  String get communityNewPost => 'New Post';
+
+  @override
+  String get communityNoPostsInFilter => 'No posts in this category yet';
+
+  @override
+  String get communityTimeJustNow => 'Just now';
+
+  @override
+  String communityTimeMinutesAgo(int count) {
+    return '${count}m ago';
+  }
+
+  @override
+  String communityTimeHoursAgo(int count) {
+    return '${count}h ago';
+  }
+
+  @override
+  String communityTimeDaysAgo(int count) {
+    return '${count}d ago';
+  }
+
+  @override
   String get discoverXpUsage => 'XP Usage';
 
   @override

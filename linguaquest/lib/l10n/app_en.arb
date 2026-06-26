@@ -288,6 +288,34 @@
   "discoverLuckyDrawCost": "30 XP per draw; rare probability displayed transparently, fragments given even without a prize.",
   "discoverCommunityPosts": "Community Posts",
   "discoverCommunityPostsSubtitle": "Community",
+  "communityFilterAll": "All",
+  "communityTagGrammar": "Grammar",
+  "communityTagVocabulary": "Vocabulary",
+  "communityTagCulture": "Culture",
+  "communityTagGeneral": "General",
+  "communityTagProgress": "Progress",
+  "communityShareUpdate": "Share an update",
+  "communityNewPost": "New Post",
+  "communityNoPostsInFilter": "No posts in this category yet",
+  "communityTimeJustNow": "Just now",
+  "communityTimeMinutesAgo": "{count}m ago",
+  "@communityTimeMinutesAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "communityTimeHoursAgo": "{count}h ago",
+  "@communityTimeHoursAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "communityTimeDaysAgo": "{count}d ago",
+  "@communityTimeDaysAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
   "discoverXpUsage": "XP Usage",
   "discoverXpUsageDesc": "Claimed XP syncs to profile and leaderboard; lucky draw consumes current XP. Current balance",
   "discoverGoComplete": "Go +{points} XP",
