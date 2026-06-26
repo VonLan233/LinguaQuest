@@ -5,7 +5,7 @@ import '../lib/src/analytics_policy.dart';
 
 void main() {
   group('LearningAnalytics', () {
-    test('mock() returns all 16 fields populated', () {
+    test('mock() returns all 19 fields populated', () {
       final a = LearningAnalytics.mock();
       expect(a.streakDays, equals(5));
       expect(a.totalStudyDays, equals(12));
@@ -23,9 +23,17 @@ void main() {
       expect(a.achievementCount, equals(3));
       expect(a.trainingXp, equals(300));
       expect(a.trainingRank, equals(-1));
+      // New fields: modalityAccuracy, dailyXp, topErrorTypes
+      expect(a.modalityAccuracy, isNotEmpty);
+      expect(a.modalityAccuracy['meaning'], equals(84));
+      expect(a.modalityAccuracy['listening'], equals(71));
+      expect(a.modalityAccuracy['spelling'], equals(63));
+      expect(a.modalityAccuracy['context'], equals(77));
+      expect(a.dailyXp, hasLength(14));
+      expect(a.topErrorTypes, equals(['spelling', 'listening']));
     });
 
-    test('toJson/fromJson round-trip', () {
+    test('toJson/fromJson round-trip preserves all 19 fields', () {
       final original = LearningAnalytics.mock();
       final json = original.toJson();
       final restored = LearningAnalytics.fromJson(json);
@@ -33,6 +41,65 @@ void main() {
       expect(restored.masteredWords, equals(original.masteredWords));
       expect(restored.sevenDayXp, equals(original.sevenDayXp));
       expect(restored.trainingRank, equals(original.trainingRank));
+      // New fields round-trip
+      expect(restored.modalityAccuracy, equals(original.modalityAccuracy));
+      expect(restored.dailyXp, equals(original.dailyXp));
+      expect(restored.topErrorTypes, equals(original.topErrorTypes));
+    });
+
+    test('fromJson is backward-compatible: missing new fields default to empty', () {
+      // Simulate an old JSON payload without the three new fields
+      final oldJson = <String, dynamic>{
+        'streakDays': 3,
+        'totalStudyDays': 5,
+        'learnedWords': 10,
+        'masteredWords': 2,
+        'newWordsToday': 1,
+        'reviewsToday': 4,
+        'wordbookProgressPct': 5,
+        'todayMinutes': 8,
+        'totalMinutes': 40,
+        'averageAccuracyPct': 70,
+        'sevenDayXp': [10, 20, 30, 40, 50, 60, 70],
+        'weakestExerciseType': 'spelling',
+        'mostMissedWordIds': [],
+        'achievementCount': 0,
+        'trainingXp': 0,
+        'trainingRank': -1,
+        // modalityAccuracy, dailyXp, topErrorTypes intentionally absent
+      };
+      final analytics = LearningAnalytics.fromJson(oldJson);
+      expect(analytics.modalityAccuracy, isEmpty);
+      expect(analytics.dailyXp, isEmpty);
+      expect(analytics.topErrorTypes, isEmpty);
+      expect(analytics.streakDays, equals(3));
+    });
+
+    test('zero-state LearningAnalytics has no crash on all-zero fields', () {
+      const zero = LearningAnalytics(
+        streakDays: 0,
+        totalStudyDays: 0,
+        learnedWords: 0,
+        masteredWords: 0,
+        newWordsToday: 0,
+        reviewsToday: 0,
+        wordbookProgressPct: 0,
+        todayMinutes: 0,
+        totalMinutes: 0,
+        averageAccuracyPct: 0,
+        sevenDayXp: [],
+        weakestExerciseType: '',
+        mostMissedWordIds: [],
+        achievementCount: 0,
+        trainingXp: 0,
+        trainingRank: -1,
+      );
+      final json = zero.toJson();
+      final restored = LearningAnalytics.fromJson(json);
+      expect(restored.modalityAccuracy, isEmpty);
+      expect(restored.dailyXp, isEmpty);
+      expect(restored.topErrorTypes, isEmpty);
+      expect(restored.averageAccuracyPct, equals(0));
     });
   });
 
