@@ -6,12 +6,14 @@ import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_tokens.dart';
 import '../../core/utils/date_formatting.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
+import '../../core/widgets/language_wordbook_picker.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson.dart';
@@ -33,7 +35,6 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
   var _initializedFromState = false;
   late final ProviderSubscription<AppState> _stateSubscription;
 
-  static const targets = ['HSK 1'];
   static const goals = [5, 10, 15, 20];
 
   @override
@@ -57,7 +58,11 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
+    final localeCode = Localizations.localeOf(context).languageCode;
     final selectedBook = _bookForTarget(state.wordBooks, _target);
+    final currentBook = state.currentWordBook;
+    final currentBookName =
+        currentBook?.nameFor(localeCode) ?? displayTarget(_target, l10n: l10n);
     final selectedLessons = learningLessonsForTarget(state.lessons, _target);
     final totalWords =
         selectedBook?.totalWords ??
@@ -119,12 +124,16 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
               onOpenWordbook: () => context.push('/wordbook'),
             ),
             const SizedBox(height: 20),
-            _ChoiceSection<String>(
-              title: l10n.goalSetupTarget,
-              values: targets,
-              selected: _target,
-              labelFor: (v) => displayTarget(v, l10n: l10n),
-              onSelected: (value) => setState(() => _target = value),
+            Text(
+              l10n.goalSetupTarget,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8),
+            _LanguageBookPickerTile(
+              currentLanguage: state.currentLanguage,
+              currentBookName: currentBookName,
+              l10n: l10n,
+              onTap: () => showLanguageWordbookPicker(context),
             ),
             const SizedBox(height: 24),
             Column(
@@ -216,10 +225,17 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
   }
 
   Future<void> _save() async {
+    // The two-level picker commits the chosen (language, wordbook) to state via
+    // switchWordBook, so the active wordbook id is the source of truth for the
+    // target exam here — fall back to _target if no wordbook is set yet.
+    final state = ref.read(appControllerProvider);
+    final targetExam = state.currentWordBookId.isEmpty
+        ? _target
+        : targetForStudyBookId(state.currentWordBookId);
     final succeeded = await ref
         .read(appControllerProvider.notifier)
         .completeGoalSetup(
-          targetExam: _target,
+          targetExam: targetExam,
           level: _level,
           dailyGoal: _dailyGoal,
           deadline: _deadline,
@@ -285,6 +301,55 @@ DateTime clampDeadlinePickerInitialDate({
   if (selectedDay.isBefore(today)) return today.add(const Duration(days: 30));
   if (selectedDay.isAfter(lastDate)) return lastDate;
   return selectedDay;
+}
+
+class _LanguageBookPickerTile extends StatelessWidget {
+  const _LanguageBookPickerTile({
+    required this.currentLanguage,
+    required this.currentBookName,
+    required this.l10n,
+    required this.onTap,
+  });
+
+  final String currentLanguage;
+  final String currentBookName;
+  final AppLocalizations l10n;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      onTap: onTap,
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AppPill(
+                  label: languageLabel(currentLanguage, l10n),
+                  variant: PillVariant.primary,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  currentBookName,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                ),
+              ],
+            ),
+          ),
+          const Icon(
+            AppIcons.chevronRight,
+            size: 20,
+            color: AppTokens.textSecondaryLight,
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _PlanSnapshotLine extends StatelessWidget {
@@ -379,39 +444,6 @@ class _PlanSnapshotLine extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _ChoiceSection<T> extends StatelessWidget {
-  const _ChoiceSection({
-    required this.title,
-    required this.values,
-    required this.selected,
-    required this.onSelected,
-    this.labelFor,
-  });
-
-  final String title;
-  final List<T> values;
-  final T selected;
-  final ValueChanged<T> onSelected;
-  final String Function(T value)? labelFor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(title, style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 8),
-        _ChoiceList<T>(
-          values: values,
-          selected: selected,
-          labelFor: labelFor ?? (value) => value.toString(),
-          onSelected: onSelected,
-        ),
-      ],
     );
   }
 }
