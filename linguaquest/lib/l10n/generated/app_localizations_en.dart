@@ -3272,4 +3272,88 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get analyticsTopErrors => 'Top error types';
+
+  @override
+  String get readingTitle => 'Reading';
+
+  @override
+  String get readingDiscoverEntry => 'Reading';
+
+  @override
+  String get readingRecommended => 'Recommended for you';
+
+  @override
+  String get readingAllArticles => 'All articles';
+
+  @override
+  String get readingFilterLevel => 'Level';
+
+  @override
+  String get readingFilterTheme => 'Theme';
+
+  @override
+  String get readingFilterAll => 'All';
+
+  @override
+  String readingMinutes(int count) {
+    return '$count min';
+  }
+
+  @override
+  String get readingEmpty => 'No articles for this filter yet.';
+
+  @override
+  String get readingProgressInProgress => 'In progress';
+
+  @override
+  String get readingProgressDone => 'Read';
+
+  @override
+  String get readingToggleTranslation => 'Translation';
+
+  @override
+  String get readingToggleReading => 'Reading';
+
+  @override
+  String get readingParagraphAudio => 'Play';
+
+  @override
+  String get readingTapWordHint => 'Tap a highlighted word for its meaning.';
+
+  @override
+  String get readingWordAddToVocab => 'Add to vocab notebook';
+
+  @override
+  String get readingWordAdded => 'Added to vocab notebook';
+
+  @override
+  String get readingComprehensionCta => 'Start comprehension';
+
+  @override
+  String get readingComprehensionSoon =>
+      'Comprehension questions arrive in the next phase.';
+
+  @override
+  String get readingThemeCampus => 'Campus';
+
+  @override
+  String get readingThemeLife => 'Life';
+
+  @override
+  String get readingThemeTravel => 'Travel';
+
+  @override
+  String get readingThemeTech => 'Tech';
+
+  @override
+  String get readingThemeCulture => 'Culture';
+
+  @override
+  String get readingThemeNews => 'News';
+
+  @override
+  String get readingThemeBusiness => 'Business';
+
+  @override
+  String get readingThemeExam => 'Exam';
 }

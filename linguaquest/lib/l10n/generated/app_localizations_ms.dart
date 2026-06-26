@@ -3284,4 +3284,88 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get analyticsTopErrors => 'Jenis ralat utama';
+
+  @override
+  String get readingTitle => 'Bacaan';
+
+  @override
+  String get readingDiscoverEntry => 'Bacaan';
+
+  @override
+  String get readingRecommended => 'Disyorkan untuk anda';
+
+  @override
+  String get readingAllArticles => 'Semua artikel';
+
+  @override
+  String get readingFilterLevel => 'Tahap';
+
+  @override
+  String get readingFilterTheme => 'Tema';
+
+  @override
+  String get readingFilterAll => 'Semua';
+
+  @override
+  String readingMinutes(int count) {
+    return '$count min';
+  }
+
+  @override
+  String get readingEmpty => 'Tiada artikel untuk penapis ini lagi.';
+
+  @override
+  String get readingProgressInProgress => 'Sedang dibaca';
+
+  @override
+  String get readingProgressDone => 'Sudah dibaca';
+
+  @override
+  String get readingToggleTranslation => 'Terjemahan';
+
+  @override
+  String get readingToggleReading => 'Bacaan';
+
+  @override
+  String get readingParagraphAudio => 'Main';
+
+  @override
+  String get readingTapWordHint => 'Ketik perkataan diserlah untuk maksudnya.';
+
+  @override
+  String get readingWordAddToVocab => 'Tambah ke buku kosa kata';
+
+  @override
+  String get readingWordAdded => 'Ditambah ke buku kosa kata';
+
+  @override
+  String get readingComprehensionCta => 'Mula kefahaman';
+
+  @override
+  String get readingComprehensionSoon =>
+      'Soalan kefahaman akan hadir pada fasa seterusnya.';
+
+  @override
+  String get readingThemeCampus => 'Kampus';
+
+  @override
+  String get readingThemeLife => 'Kehidupan';
+
+  @override
+  String get readingThemeTravel => 'Pelancongan';
+
+  @override
+  String get readingThemeTech => 'Teknologi';
+
+  @override
+  String get readingThemeCulture => 'Budaya';
+
+  @override
+  String get readingThemeNews => 'Berita';
+
+  @override
+  String get readingThemeBusiness => 'Perniagaan';
+
+  @override
+  String get readingThemeExam => 'Peperiksaan';
 }

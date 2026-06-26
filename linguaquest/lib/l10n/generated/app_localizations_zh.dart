@@ -3106,4 +3106,87 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get analyticsTopErrors => '主要错误类型';
+
+  @override
+  String get readingTitle => '时文阅读';
+
+  @override
+  String get readingDiscoverEntry => '时文阅读';
+
+  @override
+  String get readingRecommended => '为你推荐';
+
+  @override
+  String get readingAllArticles => '全部文章';
+
+  @override
+  String get readingFilterLevel => '级别';
+
+  @override
+  String get readingFilterTheme => '主题';
+
+  @override
+  String get readingFilterAll => '全部';
+
+  @override
+  String readingMinutes(int count) {
+    return '$count 分钟';
+  }
+
+  @override
+  String get readingEmpty => '该筛选下暂无文章。';
+
+  @override
+  String get readingProgressInProgress => '阅读中';
+
+  @override
+  String get readingProgressDone => '已读';
+
+  @override
+  String get readingToggleTranslation => '翻译';
+
+  @override
+  String get readingToggleReading => '注音';
+
+  @override
+  String get readingParagraphAudio => '播放';
+
+  @override
+  String get readingTapWordHint => '点击高亮词查看释义。';
+
+  @override
+  String get readingWordAddToVocab => '加入生词本';
+
+  @override
+  String get readingWordAdded => '已加入生词本';
+
+  @override
+  String get readingComprehensionCta => '开始练习';
+
+  @override
+  String get readingComprehensionSoon => '阅读理解题将在下个阶段上线。';
+
+  @override
+  String get readingThemeCampus => '校园';
+
+  @override
+  String get readingThemeLife => '生活';
+
+  @override
+  String get readingThemeTravel => '旅行';
+
+  @override
+  String get readingThemeTech => '科技';
+
+  @override
+  String get readingThemeCulture => '文化';
+
+  @override
+  String get readingThemeNews => '新闻';
+
+  @override
+  String get readingThemeBusiness => '商务';
+
+  @override
+  String get readingThemeExam => '考试';
 }

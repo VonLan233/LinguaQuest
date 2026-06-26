@@ -5856,6 +5856,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Top error types'**
   String get analyticsTopErrors;
+
+  /// No description provided for @readingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading'**
+  String get readingTitle;
+
+  /// No description provided for @readingDiscoverEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading'**
+  String get readingDiscoverEntry;
+
+  /// No description provided for @readingRecommended.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended for you'**
+  String get readingRecommended;
+
+  /// No description provided for @readingAllArticles.
+  ///
+  /// In en, this message translates to:
+  /// **'All articles'**
+  String get readingAllArticles;
+
+  /// No description provided for @readingFilterLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Level'**
+  String get readingFilterLevel;
+
+  /// No description provided for @readingFilterTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get readingFilterTheme;
+
+  /// No description provided for @readingFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get readingFilterAll;
+
+  /// No description provided for @readingMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} min'**
+  String readingMinutes(int count);
+
+  /// No description provided for @readingEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No articles for this filter yet.'**
+  String get readingEmpty;
+
+  /// No description provided for @readingProgressInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In progress'**
+  String get readingProgressInProgress;
+
+  /// No description provided for @readingProgressDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Read'**
+  String get readingProgressDone;
+
+  /// No description provided for @readingToggleTranslation.
+  ///
+  /// In en, this message translates to:
+  /// **'Translation'**
+  String get readingToggleTranslation;
+
+  /// No description provided for @readingToggleReading.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading'**
+  String get readingToggleReading;
+
+  /// No description provided for @readingParagraphAudio.
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get readingParagraphAudio;
+
+  /// No description provided for @readingTapWordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a highlighted word for its meaning.'**
+  String get readingTapWordHint;
+
+  /// No description provided for @readingWordAddToVocab.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to vocab notebook'**
+  String get readingWordAddToVocab;
+
+  /// No description provided for @readingWordAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to vocab notebook'**
+  String get readingWordAdded;
+
+  /// No description provided for @readingComprehensionCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Start comprehension'**
+  String get readingComprehensionCta;
+
+  /// No description provided for @readingComprehensionSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Comprehension questions arrive in the next phase.'**
+  String get readingComprehensionSoon;
+
+  /// No description provided for @readingThemeCampus.
+  ///
+  /// In en, this message translates to:
+  /// **'Campus'**
+  String get readingThemeCampus;
+
+  /// No description provided for @readingThemeLife.
+  ///
+  /// In en, this message translates to:
+  /// **'Life'**
+  String get readingThemeLife;
+
+  /// No description provided for @readingThemeTravel.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel'**
+  String get readingThemeTravel;
+
+  /// No description provided for @readingThemeTech.
+  ///
+  /// In en, this message translates to:
+  /// **'Tech'**
+  String get readingThemeTech;
+
+  /// No description provided for @readingThemeCulture.
+  ///
+  /// In en, this message translates to:
+  /// **'Culture'**
+  String get readingThemeCulture;
+
+  /// No description provided for @readingThemeNews.
+  ///
+  /// In en, this message translates to:
+  /// **'News'**
+  String get readingThemeNews;
+
+  /// No description provided for @readingThemeBusiness.
+  ///
+  /// In en, this message translates to:
+  /// **'Business'**
+  String get readingThemeBusiness;
+
+  /// No description provided for @readingThemeExam.
+  ///
+  /// In en, this message translates to:
+  /// **'Exam'**
+  String get readingThemeExam;
 }
 
 class _AppLocalizationsDelegate

@@ -32,6 +32,8 @@ import '../../features/profile/help_support_screen.dart';
 import '../../features/profile/privacy_settings_screen.dart';
 import '../../features/profile/settings_screen.dart';
 import '../../features/profile/study_plan_settings_screen.dart';
+import '../../features/reading/reading_list_screen.dart';
+import '../../features/reading/article_reader_screen.dart';
 import '../../features/quests/ai_tutor_screen.dart';
 import '../../features/quests/achievements_screen.dart';
 import '../../features/quests/leaderboard_screen.dart';
@@ -131,6 +133,15 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/review',
         builder: (context, state) => const ReviewCenterScreen(),
+      ),
+      GoRoute(
+        path: '/reading',
+        builder: (context, state) => const ReadingListScreen(),
+      ),
+      GoRoute(
+        path: '/reading/:id',
+        builder: (context, state) =>
+            ArticleReaderScreen(articleId: state.pathParameters['id']!),
       ),
       GoRoute(
         path: '/notifications',

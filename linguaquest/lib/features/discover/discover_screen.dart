@@ -44,6 +44,13 @@ class DiscoverScreen extends ConsumerWidget {
         ),
         const SizedBox(height: AppTokens.s32),
         CompactEntryCard(
+          icon: AppIcons.autoStories,
+          title: l10n.readingDiscoverEntry,
+          color: AppTokens.primarySoftText,
+          onTap: () => context.push('/reading'),
+        ),
+        const SizedBox(height: AppTokens.s12),
+        CompactEntryCard(
           icon: AppIcons.emojiEvents,
           title: l10n.discoverXpTasks,
           color: AppTokens.xpSoftText,
