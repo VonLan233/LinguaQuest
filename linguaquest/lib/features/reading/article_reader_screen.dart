@@ -8,6 +8,7 @@ import '../../core/state/app_controller.dart';
 import '../../core/services/pronunciation_service.dart';
 import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/ai_error_card.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_pill.dart';
@@ -231,6 +232,12 @@ class _ReaderBody extends ConsumerWidget {
                   onVisible: () => onParagraphSeen(paragraph.index),
                   onTapWord: (token) =>
                       _showWordSheet(context, ref, token, language),
+                  onExplain: () => _showExplainSheet(
+                    context,
+                    ref,
+                    paragraph.text,
+                    language,
+                  ),
                 ),
               const SizedBox(height: AppTokens.s16),
               // P3e: graded comprehension over article.comprehension, reusing the
@@ -273,6 +280,26 @@ class _ReaderBody extends ConsumerWidget {
         token: token,
         language: language,
         article: article,
+      ),
+    );
+  }
+
+  /// P3f: opens the AI per-paragraph explanation sheet. The explain runs in the
+  /// article's [language] (not the global target-language setting), and reuses the
+  /// existing AI pipeline via [AppController.explainParagraph].
+  Future<void> _showExplainSheet(
+    BuildContext context,
+    WidgetRef ref,
+    String paragraphText,
+    String language,
+  ) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (sheetContext) => _ExplainSheet(
+        paragraphText: paragraphText,
+        language: language,
       ),
     );
   }
@@ -412,6 +439,7 @@ class _ParagraphCard extends StatefulWidget {
     required this.reviewWords,
     required this.onVisible,
     required this.onTapWord,
+    required this.onExplain,
   });
 
   final ArticleParagraph paragraph;
@@ -424,6 +452,7 @@ class _ParagraphCard extends StatefulWidget {
   final List<CustomWord> reviewWords;
   final VoidCallback onVisible;
   final ValueChanged<ReadingToken> onTapWord;
+  final VoidCallback onExplain;
 
   @override
   State<_ParagraphCard> createState() => _ParagraphCardState();
@@ -480,10 +509,23 @@ class _ParagraphCardState extends State<_ParagraphCard> {
               ),
             ],
             const SizedBox(height: AppTokens.s8),
-            _ParagraphAudioButton(
-              text: widget.paragraph.text,
-              audioUrl: widget.paragraph.audioUrl,
-              language: widget.language,
+            Row(
+              children: [
+                _ParagraphAudioButton(
+                  text: widget.paragraph.text,
+                  audioUrl: widget.paragraph.audioUrl,
+                  language: widget.language,
+                ),
+                const Spacer(),
+                IconButton(
+                  key: ValueKey('reading-explain-${widget.paragraph.index}'),
+                  icon: const Icon(AppIcons.autoAwesome),
+                  iconSize: 20,
+                  color: theme.colorScheme.primary,
+                  tooltip: AppLocalizations.of(context).readingExplainTooltip,
+                  onPressed: widget.onExplain,
+                ),
+              ],
             ),
           ],
         ),
@@ -778,6 +820,237 @@ class _WordSheet extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// P3f: AI per-paragraph explanation bottom sheet. Owns the loading/error/result
+/// state for one explain request and reuses [AiErrorCard] for error + retry,
+/// mirroring `ai_sentence_analysis_screen.dart`'s flow.
+class _ExplainSheet extends ConsumerStatefulWidget {
+  const _ExplainSheet({
+    required this.paragraphText,
+    required this.language,
+  });
+
+  final String paragraphText;
+  final String language;
+
+  @override
+  ConsumerState<_ExplainSheet> createState() => _ExplainSheetState();
+}
+
+class _ExplainSheetState extends ConsumerState<_ExplainSheet> {
+  Map<String, dynamic>? _result;
+  bool _isLoading = true;
+  String? _errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _run());
+  }
+
+  Future<void> _run() async {
+    setState(() {
+      _isLoading = true;
+      _result = null;
+      _errorMessage = null;
+    });
+    final result = await ref
+        .read(appControllerProvider.notifier)
+        .explainParagraph(
+          paragraph: widget.paragraphText,
+          language: widget.language,
+        );
+    if (!mounted) return;
+    if (result.isEmpty) {
+      final errMsg = ref.read(appControllerProvider).errorMessage;
+      setState(() {
+        _isLoading = false;
+        _errorMessage = errMsg ?? AppLocalizations.of(context).aiErrorGeneric;
+      });
+    } else {
+      setState(() {
+        _isLoading = false;
+        _result = result;
+        _errorMessage = null;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        AppTokens.s20,
+        0,
+        AppTokens.s20,
+        AppTokens.s20 + MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.8,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(AppIcons.autoAwesome,
+                      size: 20, color: theme.colorScheme.primary),
+                  const SizedBox(width: AppTokens.s8),
+                  Text(
+                    l10n.readingExplainTitle,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppTokens.s12),
+              if (_isLoading)
+                Padding(
+                  key: const ValueKey('reading-explain-loading'),
+                  padding: const EdgeInsets.symmetric(vertical: AppTokens.s24),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        const CircularProgressIndicator(),
+                        const SizedBox(height: AppTokens.s12),
+                        Text(
+                          l10n.readingExplainLoading,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              else if (_errorMessage != null)
+                AiErrorCard(
+                  key: const ValueKey('reading-explain-error'),
+                  message: _errorMessage!,
+                  onRetry: _run,
+                )
+              else if (_result != null)
+                _ExplainResultCard(result: _result!),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Renders the structured `reading_explain` result: gist / key words / grammar
+/// points / sentence structure / translation / practice. Styled to match
+/// `ai_sentence_analysis_screen.dart`'s `_AnalysisResultCard`.
+class _ExplainResultCard extends StatelessWidget {
+  const _ExplainResultCard({required this.result});
+
+  final Map<String, dynamic> result;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final gist = result['gist'] as String? ?? '';
+    final structure = result['structure'] as String? ?? '';
+    final translation = result['translation'] as String? ?? '';
+    final grammarPoints =
+        (result['grammarPoints'] as List<dynamic>?)?.cast<dynamic>() ?? const [];
+    final keyWords =
+        (result['keyWords'] as List<dynamic>?)?.cast<dynamic>() ?? const [];
+    final practice =
+        (result['practice'] as List<dynamic>?)?.cast<dynamic>() ?? const [];
+
+    final keyWordLines = keyWords.map((w) {
+      final m = (w as Map).cast<String, dynamic>();
+      final word = m['word'] as String? ?? '';
+      final reading = m['reading'] as String? ?? '';
+      final meaning = m['meaning'] as String? ?? '';
+      final readingPart = reading.isEmpty ? '' : ' [$reading]';
+      return '$word$readingPart — $meaning';
+    }).join('\n');
+
+    final practiceLines = practice.map((p) {
+      final m = (p as Map).cast<String, dynamic>();
+      final prompt = m['prompt'] as String? ?? '';
+      final answer = m['answer'] as String? ?? '';
+      final options =
+          (m['options'] as List<dynamic>?)?.cast<String>() ?? const [];
+      final optionsPart = options.isEmpty ? '' : '\n  (${options.join(' / ')})';
+      return '$prompt$optionsPart\n  ✓ $answer';
+    }).join('\n\n');
+
+    return AppCard(
+      key: const ValueKey('reading-explain-result'),
+      padding: const EdgeInsets.all(AppTokens.s16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (gist.isNotEmpty)
+            _ExplainSection(label: l10n.readingExplainGist, content: gist),
+          if (keyWordLines.isNotEmpty) ...[
+            const SizedBox(height: AppTokens.s8),
+            _ExplainSection(
+                label: l10n.readingExplainKeyWords, content: keyWordLines),
+          ],
+          if (grammarPoints.isNotEmpty) ...[
+            const SizedBox(height: AppTokens.s8),
+            _ExplainSection(
+              label: l10n.readingExplainGrammar,
+              content: grammarPoints.map((e) => '• $e').join('\n'),
+            ),
+          ],
+          if (structure.isNotEmpty) ...[
+            const SizedBox(height: AppTokens.s8),
+            _ExplainSection(
+                label: l10n.readingExplainStructure, content: structure),
+          ],
+          if (translation.isNotEmpty) ...[
+            const SizedBox(height: AppTokens.s8),
+            _ExplainSection(
+                label: l10n.readingExplainTranslation, content: translation),
+          ],
+          if (practiceLines.isNotEmpty) ...[
+            const SizedBox(height: AppTokens.s8),
+            _ExplainSection(
+                label: l10n.readingExplainPractice, content: practiceLines),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _ExplainSection extends StatelessWidget {
+  const _ExplainSection({required this.label, required this.content});
+
+  final String label;
+  final String content;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: theme.textTheme.labelMedium?.copyWith(
+            fontWeight: FontWeight.w700,
+            color: theme.colorScheme.primary,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(content, style: theme.textTheme.bodyMedium),
+      ],
     );
   }
 }

@@ -6144,6 +6144,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Complete a reading comprehension to see stats here.'**
   String get readingAnalyticsEmpty;
+
+  /// No description provided for @readingExplainTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Explain with AI'**
+  String get readingExplainTooltip;
+
+  /// No description provided for @readingExplainTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'AI explanation'**
+  String get readingExplainTitle;
+
+  /// No description provided for @readingExplainLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Explaining this paragraph...'**
+  String get readingExplainLoading;
+
+  /// No description provided for @readingExplainGist.
+  ///
+  /// In en, this message translates to:
+  /// **'Gist'**
+  String get readingExplainGist;
+
+  /// No description provided for @readingExplainKeyWords.
+  ///
+  /// In en, this message translates to:
+  /// **'Key words'**
+  String get readingExplainKeyWords;
+
+  /// No description provided for @readingExplainGrammar.
+  ///
+  /// In en, this message translates to:
+  /// **'Grammar points'**
+  String get readingExplainGrammar;
+
+  /// No description provided for @readingExplainStructure.
+  ///
+  /// In en, this message translates to:
+  /// **'Sentence structure'**
+  String get readingExplainStructure;
+
+  /// No description provided for @readingExplainTranslation.
+  ///
+  /// In en, this message translates to:
+  /// **'Translation'**
+  String get readingExplainTranslation;
+
+  /// No description provided for @readingExplainPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice'**
+  String get readingExplainPractice;
 }
 
 class _AppLocalizationsDelegate

@@ -3439,4 +3439,31 @@ class AppLocalizationsMs extends AppLocalizations {
   @override
   String get readingAnalyticsEmpty =>
       'Lengkapkan kefahaman bacaan untuk melihat statistik di sini.';
+
+  @override
+  String get readingExplainTooltip => 'Terangkan dengan AI';
+
+  @override
+  String get readingExplainTitle => 'Penerangan AI';
+
+  @override
+  String get readingExplainLoading => 'Menerangkan perenggan ini...';
+
+  @override
+  String get readingExplainGist => 'Inti pati';
+
+  @override
+  String get readingExplainKeyWords => 'Perkataan penting';
+
+  @override
+  String get readingExplainGrammar => 'Tatabahasa';
+
+  @override
+  String get readingExplainStructure => 'Struktur ayat';
+
+  @override
+  String get readingExplainTranslation => 'Terjemahan';
+
+  @override
+  String get readingExplainPractice => 'Latihan';
 }

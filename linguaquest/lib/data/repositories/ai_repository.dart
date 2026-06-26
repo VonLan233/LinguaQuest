@@ -18,6 +18,15 @@ abstract class AiRepository {
     String? targetWord,
   });
 
+  /// Explains a reading paragraph in [language] (the article's language, not the
+  /// global target-language setting). Returns the structured strict-JSON shape:
+  /// gist / keyWords / grammarPoints / structure / translation / practice.
+  Future<Map<String, dynamic>> explainParagraph({
+    required String paragraph,
+    required String language,
+    String? level,
+  });
+
   Future<List<AiHistoryEntry>> listHistory();
 
   Future<void> deleteHistory(String id);

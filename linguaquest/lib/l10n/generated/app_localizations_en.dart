@@ -3427,4 +3427,31 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get readingAnalyticsEmpty =>
       'Complete a reading comprehension to see stats here.';
+
+  @override
+  String get readingExplainTooltip => 'Explain with AI';
+
+  @override
+  String get readingExplainTitle => 'AI explanation';
+
+  @override
+  String get readingExplainLoading => 'Explaining this paragraph...';
+
+  @override
+  String get readingExplainGist => 'Gist';
+
+  @override
+  String get readingExplainKeyWords => 'Key words';
+
+  @override
+  String get readingExplainGrammar => 'Grammar points';
+
+  @override
+  String get readingExplainStructure => 'Sentence structure';
+
+  @override
+  String get readingExplainTranslation => 'Translation';
+
+  @override
+  String get readingExplainPractice => 'Practice';
 }

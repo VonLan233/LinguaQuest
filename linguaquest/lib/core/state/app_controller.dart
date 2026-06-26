@@ -2659,6 +2659,31 @@ class AppController extends Notifier<AppState> {
     }
   }
 
+  /// Explains a reading paragraph via the AI pipeline (P3f). Runs in [language]
+  /// (the article's language, not the global target-language setting). Returns
+  /// the structured strict-JSON map, or `{}` on failure (with [AppState.errorMessage]
+  /// set, mirroring the other AI screens' error flow). Reading-explain history is
+  /// recorded but intentionally filtered out of the AI history list to avoid noise.
+  Future<Map<String, dynamic>> explainParagraph({
+    required String paragraph,
+    required String language,
+    String? level,
+  }) async {
+    try {
+      final repo = ref.read(aiRepositoryProvider);
+      final result = await repo.explainParagraph(
+        paragraph: paragraph,
+        language: language,
+        level: level,
+      );
+      state = state.copyWith(clearError: true);
+      return result;
+    } catch (e) {
+      state = state.copyWith(errorMessage: _friendlyError(e));
+      return {};
+    }
+  }
+
   Future<Map<String, dynamic>> reviewWriting({
     required String essay,
     String? examType,

@@ -697,6 +697,23 @@ class ApiAiRepository implements AiRepository {
   }
 
   @override
+  Future<Map<String, dynamic>> explainParagraph({
+    required String paragraph,
+    required String language,
+    String? level,
+  }) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/ai/reading-explain',
+      data: {
+        'prompt': paragraph,
+        'targetLanguage': language,
+      },
+      options: Options(receiveTimeout: _aiTimeout),
+    );
+    return (response.data?['data'] as Map<String, dynamic>?) ?? {};
+  }
+
+  @override
   Future<List<AiHistoryEntry>> listHistory() async {
     final response = await _client.dio.get<Map<String, dynamic>>('/ai/history');
     final items = response.data!['history'] as List<dynamic>? ?? const [];

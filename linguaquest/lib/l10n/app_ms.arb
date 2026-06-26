@@ -1091,5 +1091,14 @@
   "readingAnalyticsArticlesRead": "Artikel dibaca",
   "readingAnalyticsAccuracy": "Ketepatan kefahaman",
   "readingAnalyticsThemes": "Mengikut tema",
-  "readingAnalyticsEmpty": "Lengkapkan kefahaman bacaan untuk melihat statistik di sini."
+  "readingAnalyticsEmpty": "Lengkapkan kefahaman bacaan untuk melihat statistik di sini.",
+  "readingExplainTooltip": "Terangkan dengan AI",
+  "readingExplainTitle": "Penerangan AI",
+  "readingExplainLoading": "Menerangkan perenggan ini...",
+  "readingExplainGist": "Inti pati",
+  "readingExplainKeyWords": "Perkataan penting",
+  "readingExplainGrammar": "Tatabahasa",
+  "readingExplainStructure": "Struktur ayat",
+  "readingExplainTranslation": "Terjemahan",
+  "readingExplainPractice": "Latihan"
 }

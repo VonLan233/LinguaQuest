@@ -1184,6 +1184,41 @@ class MockAiRepository implements AiRepository {
   }
 
   @override
+  Future<Map<String, dynamic>> explainParagraph({
+    required String paragraph,
+    required String language,
+    String? level,
+  }) async {
+    final result = <String, dynamic>{
+      'gist': 'Mock gist of the paragraph.',
+      'keyWords': <Map<String, String>>[
+        {'word': '示例', 'reading': 'shìlì', 'meaning': 'example'},
+      ],
+      'grammarPoints': <String>['Mock grammar point'],
+      'structure': 'Mock sentence structure analysis.',
+      'translation': 'Mock English translation of the paragraph.',
+      'practice': <Map<String, dynamic>>[
+        {
+          'prompt': 'Mock practice question?',
+          'answer': '示例',
+          'options': <String>['示例', '其它', '别的', '另一个'],
+        },
+      ],
+    };
+    _history.insert(
+      0,
+      AiHistoryEntry(
+        id: 'mock-re-${_idCounter++}',
+        featureType: 'reading_explain',
+        prompt: paragraph,
+        response: result,
+        createdAt: DateTime.now(),
+      ),
+    );
+    return result;
+  }
+
+  @override
   Future<List<AiHistoryEntry>> listHistory() async {
     return List.unmodifiable(_history);
   }

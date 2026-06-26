@@ -53,6 +53,14 @@ class _ThrowThenSucceedAiRepository implements AiRepository {
       throw UnimplementedError();
 
   @override
+  Future<Map<String, dynamic>> explainParagraph({
+    required String paragraph,
+    required String language,
+    String? level,
+  }) async =>
+      throw UnimplementedError();
+
+  @override
   Future<List<AiHistoryEntry>> listHistory() async => [];
 
   @override

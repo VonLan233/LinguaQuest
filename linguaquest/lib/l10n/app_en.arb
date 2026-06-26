@@ -1176,5 +1176,14 @@
   "readingAnalyticsArticlesRead": "Articles read",
   "readingAnalyticsAccuracy": "Comprehension accuracy",
   "readingAnalyticsThemes": "By theme",
-  "readingAnalyticsEmpty": "Complete a reading comprehension to see stats here."
+  "readingAnalyticsEmpty": "Complete a reading comprehension to see stats here.",
+  "readingExplainTooltip": "Explain with AI",
+  "readingExplainTitle": "AI explanation",
+  "readingExplainLoading": "Explaining this paragraph...",
+  "readingExplainGist": "Gist",
+  "readingExplainKeyWords": "Key words",
+  "readingExplainGrammar": "Grammar points",
+  "readingExplainStructure": "Sentence structure",
+  "readingExplainTranslation": "Translation",
+  "readingExplainPractice": "Practice"
 }

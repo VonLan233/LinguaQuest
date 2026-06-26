@@ -3258,4 +3258,31 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get readingAnalyticsEmpty => '完成一次阅读理解后这里会显示数据。';
+
+  @override
+  String get readingExplainTooltip => 'AI 讲解';
+
+  @override
+  String get readingExplainTitle => 'AI 讲解';
+
+  @override
+  String get readingExplainLoading => '正在讲解这一段...';
+
+  @override
+  String get readingExplainGist => '大意';
+
+  @override
+  String get readingExplainKeyWords => '重点词';
+
+  @override
+  String get readingExplainGrammar => '语法点';
+
+  @override
+  String get readingExplainStructure => '句子结构';
+
+  @override
+  String get readingExplainTranslation => '翻译';
+
+  @override
+  String get readingExplainPractice => '练习';
 }

@@ -1091,5 +1091,14 @@
   "readingAnalyticsArticlesRead": "已读文章",
   "readingAnalyticsAccuracy": "理解正确率",
   "readingAnalyticsThemes": "按主题",
-  "readingAnalyticsEmpty": "完成一次阅读理解后这里会显示数据。"
+  "readingAnalyticsEmpty": "完成一次阅读理解后这里会显示数据。",
+  "readingExplainTooltip": "AI 讲解",
+  "readingExplainTitle": "AI 讲解",
+  "readingExplainLoading": "正在讲解这一段...",
+  "readingExplainGist": "大意",
+  "readingExplainKeyWords": "重点词",
+  "readingExplainGrammar": "语法点",
+  "readingExplainStructure": "句子结构",
+  "readingExplainTranslation": "翻译",
+  "readingExplainPractice": "练习"
 }
