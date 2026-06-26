@@ -10,6 +10,7 @@ import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
+import '../../core/widgets/language_wordbook_picker.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/mascot_empty_state.dart';
 import '../../core/widgets/mascot_image.dart';
@@ -130,6 +131,7 @@ class HomeScreen extends ConsumerWidget {
             totalWork: totalWork,
             progress: dailyProgress,
             isPaused: state.isStudyPlanPaused,
+            onTargetTap: () => showLanguageWordbookPicker(context),
             l10n: l10n,
           ),
         ),
@@ -506,6 +508,7 @@ class _DailyFocusHeader extends StatelessWidget {
     required this.progress,
     required this.isPaused,
     required this.l10n,
+    this.onTargetTap,
   });
 
   final int streak;
@@ -516,6 +519,7 @@ class _DailyFocusHeader extends StatelessWidget {
   final double progress;
   final bool isPaused;
   final AppLocalizations l10n;
+  final VoidCallback? onTargetTap;
 
   @override
   Widget build(BuildContext context) {
@@ -527,9 +531,12 @@ class _DailyFocusHeader extends StatelessWidget {
           spacing: AppTokens.s8,
           runSpacing: AppTokens.s8,
           children: [
-            AppPill(
-              label: '$target · $level',
-              icon: AppIcons.trackChanges,
+            GestureDetector(
+              onTap: onTargetTap,
+              child: AppPill(
+                label: '$target · $level',
+                icon: AppIcons.trackChanges,
+              ),
             ),
             AppPill(
               variant: PillVariant.streak,
