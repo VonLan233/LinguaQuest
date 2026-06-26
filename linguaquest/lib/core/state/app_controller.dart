@@ -2634,18 +2634,18 @@ class AppController extends Notifier<AppState> {
           result = await repo.chat(
             prompt: prompt,
             targetWord: targetWord,
-            targetLanguage: state.targetLanguage,
+            targetLanguage: state.currentLanguage,
           );
         case 'sentence_analysis':
           result = await repo.analyzeStatement(
             prompt: prompt,
-            targetLanguage: state.targetLanguage,
+            targetLanguage: state.currentLanguage,
           );
         case 'cloze':
           result = await repo.generateCloze(
             prompt: prompt,
             targetWord: targetWord,
-            targetLanguage: state.targetLanguage,
+            targetLanguage: state.currentLanguage,
           );
         default:
           result = {};
@@ -2694,7 +2694,7 @@ class AppController extends Notifier<AppState> {
         essay: essay,
         examType: examType,
         targetScore: targetScore,
-        targetLanguage: state.targetLanguage,
+        targetLanguage: state.currentLanguage,
       );
       final history = await ref.read(aiRepositoryProvider).listHistory();
       state = state.copyWith(aiHistory: history, clearError: true);
