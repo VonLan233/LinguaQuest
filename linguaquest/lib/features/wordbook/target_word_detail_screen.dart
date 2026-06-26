@@ -116,6 +116,7 @@ class TargetWordDetailScreen extends ConsumerWidget {
             AppCard(
               child: _WordHero(
                 word: word,
+                bookLanguage: detail.book.language,
                 bookTitle: detail.book.nameFor(
                   Localizations.localeOf(context).languageCode,
                 ),
@@ -365,11 +366,14 @@ class _AiWordSupportLink extends StatelessWidget {
 class _WordHero extends StatelessWidget {
   const _WordHero({
     required this.word,
+    required this.bookLanguage,
     required this.bookTitle,
     required this.l10n,
   });
 
   final Word word;
+  /// ISO language code of the WordBook this word belongs to (e.g. 'zh', 'ja').
+  final String bookLanguage;
   final String bookTitle;
   final AppLocalizations l10n;
 
@@ -387,7 +391,7 @@ class _WordHero extends StatelessWidget {
             style: Theme.of(context).textTheme.displaySmall,
           ),
           const SizedBox(height: 8),
-          _PhoneticLine(word: word),
+          _PhoneticLine(word: word, bookLanguage: bookLanguage),
           const SizedBox(height: 12),
           _PronunciationControls(word: word),
           const SizedBox(height: 12),
@@ -432,12 +436,42 @@ class _PronunciationControls extends StatelessWidget {
 }
 
 class _PhoneticLine extends StatelessWidget {
-  const _PhoneticLine({required this.word});
+  const _PhoneticLine({required this.word, required this.bookLanguage});
 
   final Word word;
+  /// ISO language code of the book this word belongs to (e.g. 'zh', 'ja').
+  final String bookLanguage;
 
   @override
   Widget build(BuildContext context) {
+    // --- Japanese: show kana (primary) + romaji (secondary) ---
+    if (bookLanguage == 'ja') {
+      final kana = word.kana.trim();
+      final romaji = word.romaji.trim();
+      if (kana.isEmpty && romaji.isEmpty) return const SizedBox();
+      return Column(
+        children: [
+          if (kana.isNotEmpty)
+            Text(
+              kana,
+              textAlign: TextAlign.center,
+              key: const Key('phonetic-kana'),
+            ),
+          if (romaji.isNotEmpty)
+            Text(
+              romaji,
+              textAlign: TextAlign.center,
+              key: const Key('phonetic-romaji'),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontSize: 13,
+              ),
+            ),
+        ],
+      );
+    }
+
+    // --- Chinese (HSK) and other languages: existing behaviour ---
     final uk = word.phoneticUK.trim();
     final us = word.phoneticUS.trim();
     final fallback = word.phonetic.trim();
@@ -445,14 +479,18 @@ class _PhoneticLine extends StatelessWidget {
 
     // Chinese (HSK) words carry pinyin, not regional IPA — show it once,
     // without the UK/US split.
-    if (containsCjkText(word.word)) {
+    if (bookLanguage == 'zh' || containsCjkText(word.word)) {
       final pinyin = uk.isNotEmpty
           ? uk
           : us.isNotEmpty
           ? us
           : fallback;
       if (pinyin.isEmpty) return const SizedBox();
-      return Text(pinyin, textAlign: TextAlign.center);
+      return Text(
+        pinyin,
+        textAlign: TextAlign.center,
+        key: const Key('phonetic-pinyin'),
+      );
     }
 
     return Wrap(

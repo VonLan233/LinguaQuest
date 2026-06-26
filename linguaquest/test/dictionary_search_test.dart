@@ -76,6 +76,111 @@ void main() {
         ['exact', 'prefix', 'middle', 'note'],
       );
     });
+
+    // -----------------------------------------------------------------------
+    // P2f: Japanese kana/romaji search
+    // -----------------------------------------------------------------------
+
+    test('P2f: Japanese word is found by kanji (word field)', () {
+      final jaWord = _jaWord(
+        id: 'nihongo',
+        kanji: '日本語',
+        kana: 'にほんご',
+        romaji: 'nihongo',
+        meaning: '日语',
+      );
+      final book = _wordBook(id: 'jlpt_n4', words: [jaWord]);
+
+      final results = searchDictionaryWords(
+        wordBooks: [book],
+        currentWordBookId: 'jlpt_n4',
+        scope: DictionarySearchScope.allWordBooks,
+        query: '日本語',
+      );
+
+      expect(results, hasLength(1));
+      expect(results.single.word.id, 'nihongo');
+    });
+
+    test('P2f: Japanese word is found by kana', () {
+      final jaWord = _jaWord(
+        id: 'nihongo',
+        kanji: '日本語',
+        kana: 'にほんご',
+        romaji: 'nihongo',
+        meaning: '日语',
+      );
+      final book = _wordBook(id: 'jlpt_n4', words: [jaWord]);
+
+      final results = searchDictionaryWords(
+        wordBooks: [book],
+        currentWordBookId: 'jlpt_n4',
+        scope: DictionarySearchScope.allWordBooks,
+        query: 'にほんご',
+      );
+
+      expect(results, hasLength(1));
+      expect(results.single.word.id, 'nihongo');
+      expect(results.single.matchedBy, 'かな');
+    });
+
+    test('P2f: Japanese word is found by romaji (full)', () {
+      final jaWord = _jaWord(
+        id: 'nihongo',
+        kanji: '日本語',
+        kana: 'にほんご',
+        romaji: 'nihongo',
+        meaning: '日语',
+      );
+      final book = _wordBook(id: 'jlpt_n4', words: [jaWord]);
+
+      final results = searchDictionaryWords(
+        wordBooks: [book],
+        currentWordBookId: 'jlpt_n4',
+        scope: DictionarySearchScope.allWordBooks,
+        query: 'nihongo',
+      );
+
+      expect(results, hasLength(1));
+      expect(results.single.word.id, 'nihongo');
+      expect(results.single.matchedBy, 'ローマ字');
+    });
+
+    test('P2f: Japanese word is found by partial romaji prefix', () {
+      final jaWord = _jaWord(
+        id: 'sakura',
+        kanji: '桜',
+        kana: 'さくら',
+        romaji: 'sakura',
+        meaning: 'cherry blossom',
+      );
+      final book = _wordBook(id: 'jlpt_n5', words: [jaWord]);
+
+      final results = searchDictionaryWords(
+        wordBooks: [book],
+        currentWordBookId: 'jlpt_n5',
+        scope: DictionarySearchScope.allWordBooks,
+        query: 'saku',
+      );
+
+      expect(results, hasLength(1));
+      expect(results.single.word.id, 'sakura');
+    });
+
+    test('P2f: zh word without kana/romaji is NOT found by kana query', () {
+      final zhWord = _word(id: 'apple', text: 'apple', meaning: '苹果');
+      final book = _wordBook(id: 'hsk1', words: [zhWord]);
+
+      // A kana query should not match Chinese words (kana is empty).
+      final results = searchDictionaryWords(
+        wordBooks: [book],
+        currentWordBookId: 'hsk1',
+        scope: DictionarySearchScope.allWordBooks,
+        query: 'あ',
+      );
+
+      expect(results, isEmpty);
+    });
   });
 }
 
@@ -112,6 +217,33 @@ Word _word({
     imageCue: 'A',
     difficulty: 'Medium',
     tags: const [],
+  );
+}
+
+/// Creates a Japanese word with kanji, kana, romaji, and meaning.
+Word _jaWord({
+  required String id,
+  required String kanji,
+  required String kana,
+  required String romaji,
+  required String meaning,
+}) {
+  return Word(
+    id: id,
+    word: kanji,
+    phonetic: '',
+    kana: kana,
+    romaji: romaji,
+    meaning: meaning,
+    definition: meaning,
+    englishDefinitions: [meaning],
+    partOfSpeech: 'noun',
+    exampleSentence: '',
+    exampleTranslation: '',
+    imageCue: 'J',
+    difficulty: 'Easy',
+    tags: const [],
+    examLevel: 4,
   );
 }
 
