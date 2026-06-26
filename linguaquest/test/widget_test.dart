@@ -3828,8 +3828,9 @@ void main() {
     expect(state.todayClaimedRewardIds, contains('daily-checkin'));
 
     final prefs = await SharedPreferences.getInstance();
+    // P2b: rewards are now saved under the scoped key (zh::hsk1).
     expect(
-      prefs.getStringList('linguaquest.today.rewards'),
+      prefs.getStringList('linguaquest.today.rewards.zh::hsk1'),
       contains('daily-checkin'),
     );
   });
@@ -4316,15 +4317,17 @@ void main() {
       final prefs = await SharedPreferences.getInstance();
 
       expect(prefs.getString('linguaquest.today.date'), _todayDateKey(now));
-      expect(prefs.getStringList('linguaquest.today.lessons'), isNull);
-      expect(prefs.getStringList('linguaquest.today.reviews'), isNull);
-      expect(prefs.getStringList('linguaquest.today.rewards'), isNull);
+      // P2b: daily state keys are now scoped (zh::hsk1). Rollover clears scoped
+      // keys; the legacy global keys are kept as a safety copy but not used.
+      expect(prefs.getStringList('linguaquest.today.lessons.zh::hsk1'), isNull);
+      expect(prefs.getStringList('linguaquest.today.reviews.zh::hsk1'), isNull);
+      expect(prefs.getStringList('linguaquest.today.rewards.zh::hsk1'), isNull);
       expect(
-        prefs.getStringList('linguaquest.today.training'),
+        prefs.getStringList('linguaquest.today.training.zh::hsk1'),
         contains(training.id),
       );
       expect(
-        prefs.getStringList('linguaquest.today.training'),
+        prefs.getStringList('linguaquest.today.training.zh::hsk1'),
         isNot(contains('yesterday-training')),
       );
     },
