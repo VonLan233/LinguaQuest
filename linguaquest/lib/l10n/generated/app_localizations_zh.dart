@@ -445,15 +445,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get questTrend => '趋势';
 
   @override
-  String get questClassMode => '课堂模式';
-
-  @override
-  String get questClassModeBody => '通过班级码加入，查看教师进度看板和小组学习情况。';
-
-  @override
-  String get questClassCode => '班级码';
-
-  @override
   String get questAiTutor => 'AI 助教';
 
   @override
@@ -471,46 +462,6 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get aiTutorSampleAnswer =>
       'Affect is usually a verb: \"The weather affects my mood.\" Effect is usually a noun: \"The effect was immediate.\" 你可以分别用两个词各造一个句子。';
-
-  @override
-  String get classModeTitle => '班级学习';
-
-  @override
-  String get classModeSubtitle => '输入班级码加入小组，查看班级进度和弱项摘要。';
-
-  @override
-  String classModeJoined(Object code) {
-    return '已加入班级 $code';
-  }
-
-  @override
-  String get classModeJoin => '加入班级';
-
-  @override
-  String get classModeViewProgress => '查看班级进度';
-
-  @override
-  String get classProgressTitle => '班级进度';
-
-  @override
-  String get classProgressOverview => '班级概览';
-
-  @override
-  String get classProgressSubtitle => '教师端完成度和弱项词摘要。';
-
-  @override
-  String classProgressWeakWord(Object word) {
-    return '弱项词：$word';
-  }
-
-  @override
-  String get classTopicExamSignals => '考试信号词';
-
-  @override
-  String get classTopicTravelBasics => '旅行基础';
-
-  @override
-  String get classTopicWorkplace => '职场表达';
 
   @override
   String get leaderboardDefaultName => '探索者';

@@ -463,16 +463,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get questTrend => 'Trends';
 
   @override
-  String get questClassMode => 'Class Mode';
-
-  @override
-  String get questClassModeBody =>
-      'Join with a class code to see the teacher dashboard and group learning.';
-
-  @override
-  String get questClassCode => 'Class code';
-
-  @override
   String get questAiTutor => 'AI tutor';
 
   @override
@@ -493,48 +483,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get aiTutorSampleAnswer =>
       'Affect is usually a verb: \"The weather affects my mood.\" Effect is usually a noun: \"The effect was immediate.\" Try writing a sentence with each word.';
-
-  @override
-  String get classModeTitle => 'Class learning';
-
-  @override
-  String get classModeSubtitle =>
-      'Enter a class code to join a group and view class progress and weak-spot summaries.';
-
-  @override
-  String classModeJoined(Object code) {
-    return 'Joined class $code';
-  }
-
-  @override
-  String get classModeJoin => 'Join class';
-
-  @override
-  String get classModeViewProgress => 'View class progress';
-
-  @override
-  String get classProgressTitle => 'Class progress';
-
-  @override
-  String get classProgressOverview => 'Class overview';
-
-  @override
-  String get classProgressSubtitle =>
-      'Teacher-side completion and weak-word summary.';
-
-  @override
-  String classProgressWeakWord(Object word) {
-    return 'Weak word: $word';
-  }
-
-  @override
-  String get classTopicExamSignals => 'Exam signal words';
-
-  @override
-  String get classTopicTravelBasics => 'Travel basics';
-
-  @override
-  String get classTopicWorkplace => 'Workplace expressions';
 
   @override
   String get leaderboardDefaultName => 'Explorer';

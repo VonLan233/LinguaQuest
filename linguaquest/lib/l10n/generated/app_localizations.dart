@@ -946,24 +946,6 @@ abstract class AppLocalizations {
   /// **'Trends'**
   String get questTrend;
 
-  /// No description provided for @questClassMode.
-  ///
-  /// In en, this message translates to:
-  /// **'Class Mode'**
-  String get questClassMode;
-
-  /// No description provided for @questClassModeBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Join with a class code to see the teacher dashboard and group learning.'**
-  String get questClassModeBody;
-
-  /// No description provided for @questClassCode.
-  ///
-  /// In en, this message translates to:
-  /// **'Class code'**
-  String get questClassCode;
-
   /// No description provided for @questAiTutor.
   ///
   /// In en, this message translates to:
@@ -999,78 +981,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Affect is usually a verb: \"The weather affects my mood.\" Effect is usually a noun: \"The effect was immediate.\" Try writing a sentence with each word.'**
   String get aiTutorSampleAnswer;
-
-  /// No description provided for @classModeTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Class learning'**
-  String get classModeTitle;
-
-  /// No description provided for @classModeSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Enter a class code to join a group and view class progress and weak-spot summaries.'**
-  String get classModeSubtitle;
-
-  /// No description provided for @classModeJoined.
-  ///
-  /// In en, this message translates to:
-  /// **'Joined class {code}'**
-  String classModeJoined(Object code);
-
-  /// No description provided for @classModeJoin.
-  ///
-  /// In en, this message translates to:
-  /// **'Join class'**
-  String get classModeJoin;
-
-  /// No description provided for @classModeViewProgress.
-  ///
-  /// In en, this message translates to:
-  /// **'View class progress'**
-  String get classModeViewProgress;
-
-  /// No description provided for @classProgressTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Class progress'**
-  String get classProgressTitle;
-
-  /// No description provided for @classProgressOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Class overview'**
-  String get classProgressOverview;
-
-  /// No description provided for @classProgressSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Teacher-side completion and weak-word summary.'**
-  String get classProgressSubtitle;
-
-  /// No description provided for @classProgressWeakWord.
-  ///
-  /// In en, this message translates to:
-  /// **'Weak word: {word}'**
-  String classProgressWeakWord(Object word);
-
-  /// No description provided for @classTopicExamSignals.
-  ///
-  /// In en, this message translates to:
-  /// **'Exam signal words'**
-  String get classTopicExamSignals;
-
-  /// No description provided for @classTopicTravelBasics.
-  ///
-  /// In en, this message translates to:
-  /// **'Travel basics'**
-  String get classTopicTravelBasics;
-
-  /// No description provided for @classTopicWorkplace.
-  ///
-  /// In en, this message translates to:
-  /// **'Workplace expressions'**
-  String get classTopicWorkplace;
 
   /// No description provided for @leaderboardDefaultName.
   ///

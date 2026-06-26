@@ -469,16 +469,6 @@ class AppLocalizationsMs extends AppLocalizations {
   String get questTrend => 'Trend';
 
   @override
-  String get questClassMode => 'Mod Kelas';
-
-  @override
-  String get questClassModeBody =>
-      'Sertai dengan kod kelas untuk lihat papan pemuka guru dan pembelajaran kumpulan.';
-
-  @override
-  String get questClassCode => 'Kod kelas';
-
-  @override
   String get questAiTutor => 'Tutor AI';
 
   @override
@@ -500,48 +490,6 @@ class AppLocalizationsMs extends AppLocalizations {
   @override
   String get aiTutorSampleAnswer =>
       'Affect is usually a verb: \"The weather affects my mood.\" Effect is usually a noun: \"The effect was immediate.\" Cuba tulis satu ayat dengan setiap perkataan.';
-
-  @override
-  String get classModeTitle => 'Pembelajaran kelas';
-
-  @override
-  String get classModeSubtitle =>
-      'Masukkan kod kelas untuk menyertai kumpulan dan lihat kemajuan kelas serta ringkasan kelemahan.';
-
-  @override
-  String classModeJoined(Object code) {
-    return 'Menyertai kelas $code';
-  }
-
-  @override
-  String get classModeJoin => 'Sertai kelas';
-
-  @override
-  String get classModeViewProgress => 'Lihat kemajuan kelas';
-
-  @override
-  String get classProgressTitle => 'Kemajuan kelas';
-
-  @override
-  String get classProgressOverview => 'Gambaran kelas';
-
-  @override
-  String get classProgressSubtitle =>
-      'Penyiapan pihak guru dan ringkasan perkataan lemah.';
-
-  @override
-  String classProgressWeakWord(Object word) {
-    return 'Perkataan lemah: $word';
-  }
-
-  @override
-  String get classTopicExamSignals => 'Perkataan isyarat peperiksaan';
-
-  @override
-  String get classTopicTravelBasics => 'Asas perjalanan';
-
-  @override
-  String get classTopicWorkplace => 'Ungkapan tempat kerja';
 
   @override
   String get leaderboardDefaultName => 'Penjelajah';

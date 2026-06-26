@@ -1,5 +1,7 @@
 # Class Mode — Full Backend Design Spec
 
+> **SUPERSEDED (2026-06-26): Issue #77 §5(a) cancels the class-code feature. The class backend was never implemented; see 2026-06-26-issue77-community-design.md. This spec is retained for history only. (Unrelated to the deployed /study-spots map backend.)**
+
 > **Status: optional polish — earns no SWE311 rubric marks; implement after the graded Map feature.**
 
 Date: 2026-06-25

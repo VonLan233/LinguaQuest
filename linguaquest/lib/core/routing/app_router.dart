@@ -32,8 +32,6 @@ import '../../features/profile/privacy_settings_screen.dart';
 import '../../features/profile/settings_screen.dart';
 import '../../features/profile/study_plan_settings_screen.dart';
 import '../../features/quests/ai_tutor_screen.dart';
-import '../../features/quests/class_mode_screen.dart';
-import '../../features/quests/class_progress_screen.dart';
 import '../../features/quests/achievements_screen.dart';
 import '../../features/quests/leaderboard_screen.dart';
 import '../../features/quests/progress_analytics_screen.dart';
@@ -152,14 +150,6 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/progress',
         builder: (context, state) => const ProgressAnalyticsScreen(),
-      ),
-      GoRoute(
-        path: '/class-mode',
-        builder: (context, state) => const ClassModeScreen(),
-      ),
-      GoRoute(
-        path: '/class-progress',
-        builder: (context, state) => const ClassProgressScreen(),
       ),
       GoRoute(
         path: '/ai-tutor',
