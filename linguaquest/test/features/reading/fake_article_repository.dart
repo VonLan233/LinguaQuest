@@ -66,4 +66,7 @@ class FakeArticleRepository implements ArticleRepository {
   @override
   Future<List<ReadingResult>> loadResults(String uid, String scope) async =>
       savedResults;
+
+  @override
+  Future<void> clearOfflineCache() async {}
 }

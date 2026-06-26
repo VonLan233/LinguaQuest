@@ -4865,6 +4865,9 @@ class _StaticLearningRepository implements LearningRepository {
   Future<List<Lesson>> listLessons() async => lessons;
 
   @override
+  Future<void> clearOfflineCache() async {}
+
+  @override
   Future<LearningProgress?> loadLearningProgress(DateTime now) async => null;
 
   @override
@@ -4892,6 +4895,9 @@ class _FlakyLearningRepository implements LearningRepository {
 
   @override
   Future<List<WordBook>> listWordBooks() async => const [];
+
+  @override
+  Future<void> clearOfflineCache() async {}
 
   @override
   Future<List<Lesson>> listLessons() async {
