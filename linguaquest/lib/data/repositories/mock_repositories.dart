@@ -1460,6 +1460,8 @@ class MockAnalyticsRepository implements AnalyticsRepository {
       hasPerfectQuiz: true,
       hasListening: true,
       hasMapLanguage: false,
+      hasJapaneseStudy: true,
+      hasReadingComprehension: true,
     );
   }
 
