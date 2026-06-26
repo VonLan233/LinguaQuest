@@ -1016,6 +1016,7 @@
 
   "analyticsReportTitle": "学习报告",
   "analyticsReportSubtitle": "你的进度、图表与重点",
+  "analyticsScopeLabel": "范围：{scope}",
   "analyticsXpTrendTitle": "经验值趋势",
   "analyticsAbilityTitle": "能力维度",
   "analyticsModalityTitle": "各题型正确率",

@@ -3214,6 +3214,11 @@ class AppLocalizationsMs extends AppLocalizations {
   String get analyticsReportSubtitle => 'Kemajuan, carta dan fokus anda';
 
   @override
+  String analyticsScopeLabel(Object scope) {
+    return 'Skop: $scope';
+  }
+
+  @override
   String get analyticsXpTrendTitle => 'Trend XP';
 
   @override

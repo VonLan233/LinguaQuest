@@ -3036,6 +3036,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get analyticsReportSubtitle => '你的进度、图表与重点';
 
   @override
+  String analyticsScopeLabel(Object scope) {
+    return '范围：$scope';
+  }
+
+  @override
   String get analyticsXpTrendTitle => '经验值趋势';
 
   @override

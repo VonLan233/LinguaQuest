@@ -1101,6 +1101,7 @@
 
   "analyticsReportTitle": "Learning report",
   "analyticsReportSubtitle": "Your progress, charts, and focus areas",
+  "analyticsScopeLabel": "Scope: {scope}",
   "analyticsXpTrendTitle": "XP trend",
   "analyticsAbilityTitle": "Ability dimensions",
   "analyticsModalityTitle": "Accuracy by type",

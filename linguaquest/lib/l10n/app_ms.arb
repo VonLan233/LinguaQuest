@@ -1016,6 +1016,7 @@
 
   "analyticsReportTitle": "Laporan pembelajaran",
   "analyticsReportSubtitle": "Kemajuan, carta dan fokus anda",
+  "analyticsScopeLabel": "Skop: {scope}",
   "analyticsXpTrendTitle": "Trend XP",
   "analyticsAbilityTitle": "Dimensi keupayaan",
   "analyticsModalityTitle": "Ketepatan ikut jenis",

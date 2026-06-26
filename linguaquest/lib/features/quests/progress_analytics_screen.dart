@@ -55,7 +55,17 @@ class _ProgressAnalyticsScreenState
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(appControllerProvider);
-    final reviewWords = state.reviewWords;
+    // §6 (P4d): scope analytics to the current (language, wordbook). reviewWords
+    // is built globally from all userWords/customWords, so filter to the active
+    // wordbook (keeping personal cards that aren't bound to a wordbook).
+    final reviewWords = state.reviewWords
+        .where((w) =>
+            w.wordBookId == null || w.wordBookId == state.currentWordBookId)
+        .toList();
+    final scopeLabel = readingLevelLabel(
+      state.currentLanguage,
+      state.currentWordBookId,
+    );
     final mastered = reviewWords.where((w) => w.masteryLevel >= 4).length;
     final attempts = reviewWords.fold<int>(
       0,
@@ -82,6 +92,16 @@ class _ProgressAnalyticsScreenState
             SectionHeader(
               title: l10n.analyticsReportTitle,
               subtitle: l10n.analyticsReportSubtitle,
+            ),
+            const SizedBox(height: 8),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: AppPill(
+                key: const ValueKey('analytics-scope-pill'),
+                label: l10n.analyticsScopeLabel(scopeLabel),
+                icon: AppIcons.menuBook,
+                variant: PillVariant.primary,
+              ),
             ),
             const SizedBox(height: 16),
 

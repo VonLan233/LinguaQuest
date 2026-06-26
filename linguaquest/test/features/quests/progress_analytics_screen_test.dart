@@ -250,6 +250,27 @@ void main() {
     });
   });
 
+  group('ProgressAnalyticsScreen — scope header (§6 P4d)', () {
+    testWidgets('shows the current (language, wordbook) scope label',
+        (tester) async {
+      final state = _seededState().copyWith(
+        currentLanguage: 'ja',
+        currentWordBookId: 'jlpt_n5',
+      );
+      await tester.pumpWidget(
+        _buildHarness(const ProgressAnalyticsScreen(), state),
+      );
+      await tester.pump();
+
+      final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+      expect(
+        find.byKey(const ValueKey('analytics-scope-pill')),
+        findsOneWidget,
+      );
+      expect(find.text(l10n.analyticsScopeLabel('JLPT N5')), findsOneWidget);
+    });
+  });
+
   group('ProgressAnalyticsScreen — zero data (new user)', () {
     testWidgets('renders without crashing on all-zero data', (tester) async {
       await tester.pumpWidget(

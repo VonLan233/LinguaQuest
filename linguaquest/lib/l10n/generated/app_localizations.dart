@@ -5713,6 +5713,12 @@ abstract class AppLocalizations {
   /// **'Your progress, charts, and focus areas'**
   String get analyticsReportSubtitle;
 
+  /// No description provided for @analyticsScopeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Scope: {scope}'**
+  String analyticsScopeLabel(Object scope);
+
   /// No description provided for @analyticsXpTrendTitle.
   ///
   /// In en, this message translates to:

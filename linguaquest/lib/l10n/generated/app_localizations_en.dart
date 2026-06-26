@@ -3202,6 +3202,11 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your progress, charts, and focus areas';
 
   @override
+  String analyticsScopeLabel(Object scope) {
+    return 'Scope: $scope';
+  }
+
+  @override
   String get analyticsXpTrendTitle => 'XP trend';
 
   @override
