@@ -759,6 +759,27 @@ class AppController extends Notifier<AppState> {
     });
   }
 
+  /// §7 (P4e): manually refreshes offline (bundled) content. Drops the memoized
+  /// asset-loader caches for wordbooks and articles, then reloads the bundled
+  /// wordbooks and the current wordbook's lessons back into state. Articles are
+  /// loaded on-demand by the reading screens, so clearing their cache is enough
+  /// for the next read to re-read from the bundle. No persistence, no network.
+  Future<bool> refreshOfflineContent() async {
+    return _run(() async {
+      await _learningRepository.clearOfflineCache();
+      await _articleRepository.clearOfflineCache();
+
+      final wordBooks = await _learningRepository.listWordBooks();
+      final lessons = _applyLessonProgression(
+        await _learningRepository.listLessonsForWordBook(
+          state.currentWordBookId,
+        ),
+        state.completedLessonIds,
+      );
+      state = state.copyWith(wordBooks: wordBooks, lessons: lessons);
+    });
+  }
+
   /// Switches to [language] and picks that language's remembered wordbook (or
   /// its first available book). Equivalent to [switchWordBook] but also updates
   /// [AppState.currentLanguage] and persists the new language pointer.

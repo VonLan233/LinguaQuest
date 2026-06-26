@@ -53,6 +53,10 @@ class RewardClaimResult {
 abstract class LearningRepository {
   Future<List<WordBook>> listWordBooks() async => const [];
 
+  /// Drops any in-memory cache of bundled content so the next read re-loads
+  /// from the asset bundle. No-op for repositories without an asset cache.
+  Future<void> clearOfflineCache() async {}
+
   Future<List<Lesson>> listLessons();
 
   Future<LearningProgress?> loadLearningProgress(DateTime now);

@@ -45,6 +45,12 @@ class WordBookAssetLoader {
     return _loadFuture!;
   }
 
+  /// Drops the memoized load future so the next [loadWordBooks] re-reads the
+  /// bundled assets from disk (used by the manual "Refresh content" action).
+  void clearCache() {
+    _loadFuture = null;
+  }
+
   Future<String> _loadAssetString(String bookId) async {
     final data = await _bundle.load('lib/assets/data/wordbook_$bookId.json');
     return utf8.decode(Uint8List.sublistView(data));

@@ -65,6 +65,12 @@ class ArticleAssetLoader {
     return _loadFuture!;
   }
 
+  /// Drops the memoized load future so the next [loadArticles] re-reads the
+  /// bundled assets from disk (used by the manual "Refresh content" action).
+  void clearCache() {
+    _loadFuture = null;
+  }
+
   Future<String> _loadAssetString(String levelId) async {
     final data = await _bundle.load('lib/assets/data/articles_$levelId.json');
     return utf8.decode(Uint8List.sublistView(data));

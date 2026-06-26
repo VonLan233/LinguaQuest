@@ -6,12 +6,18 @@ import '../../core/state/app_controller.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/fallback_back_button.dart';
+import '../reading/reading_labels.dart';
 
 class DataSettingsScreen extends ConsumerWidget {
   const DataSettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final scopeLabel = ref.watch(
+      appControllerProvider.select(
+        (s) => readingLevelLabel(s.currentLanguage, s.currentWordBookId),
+      ),
+    );
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/settings'),
@@ -21,6 +27,32 @@ class DataSettingsScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.all(AppTokens.s20),
           children: [
+            // §7 (P4e): offline content status + manual refresh.
+            AppCard(
+              key: const ValueKey('offline-content-card'),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: const Icon(Icons.offline_pin_outlined),
+                    title: const Text('Available offline'),
+                    subtitle: Text('Current scope: $scopeLabel'),
+                  ),
+                  const Divider(height: AppTokens.s16),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton.icon(
+                      key: const ValueKey('offline-refresh-button'),
+                      onPressed: () => _refreshOfflineContent(context, ref),
+                      icon: const Icon(Icons.refresh),
+                      label: const Text('Refresh content'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: AppTokens.s16),
             AppCard(
               child: Column(
                 children: [
@@ -71,6 +103,22 @@ class DataSettingsScreen extends ConsumerWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _refreshOfflineContent(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
+    final ok =
+        await ref.read(appControllerProvider.notifier).refreshOfflineContent();
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          ok ? 'Offline content refreshed' : 'Could not refresh content',
         ),
       ),
     );

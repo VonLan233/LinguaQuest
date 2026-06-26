@@ -263,6 +263,12 @@ class ApiLearningRepository implements LearningRepository {
   }
 
   @override
+  Future<void> clearOfflineCache() async {
+    _cache = null;
+    _fallbackLoader.clearCache();
+  }
+
+  @override
   Future<List<Lesson>> listLessons() async {
     final books = await listWordBooks();
     if (books.isEmpty) return const [];

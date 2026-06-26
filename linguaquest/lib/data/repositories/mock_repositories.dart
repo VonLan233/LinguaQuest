@@ -276,6 +276,9 @@ class MockLearningRepository implements LearningRepository {
   Future<List<WordBook>> listWordBooks() => _loader.loadWordBooks();
 
   @override
+  Future<void> clearOfflineCache() async => _loader.clearCache();
+
+  @override
   Future<List<Lesson>> listLessons() async {
     final books = await listWordBooks();
     if (books.isEmpty) return const [];

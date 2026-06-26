@@ -145,6 +145,10 @@ abstract class ArticleRepository {
   Future<void> recordComprehensionResult(ReadingResult result);
 
   Future<List<ReadingResult>> loadResults(String uid, String scope);
+
+  /// Drops any in-memory cache of bundled articles so the next read re-loads
+  /// from the asset bundle (used by the manual "Refresh content" action).
+  Future<void> clearOfflineCache() async {}
 }
 
 /// Offline implementation: bundled articles via [ArticleAssetLoader] + local
@@ -158,6 +162,9 @@ class MockArticleRepository implements ArticleRepository {
       'linguaquest.reading.progress.$scope';
   static String _resultsKey(String uid, String scope) =>
       'linguaquest.reading.results.$uid.$scope';
+
+  @override
+  Future<void> clearOfflineCache() async => _loader.clearCache();
 
   @override
   Future<List<Article>> listArticles({
@@ -303,6 +310,9 @@ class ApiArticleRepository implements ArticleRepository {
 
   final ApiClient _client;
   final MockArticleRepository _local;
+
+  @override
+  Future<void> clearOfflineCache() => _local.clearOfflineCache();
 
   @override
   Future<List<Article>> listArticles({
