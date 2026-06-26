@@ -113,14 +113,27 @@ class AppTheme {
     final baseTextTheme = scheme.brightness == Brightness.dark
         ? Typography.material2021().white
         : Typography.material2021().black;
+    // Base on a complete label style so the resolved color actually applies —
+    // a bare TextStyle(color:) can be dropped by the chip's default style merge,
+    // which renders chip labels in a washed-out / near-invisible colour.
+    // `Typography.material2021().black/white` carries colour only — its label
+    // styles have a null fontSize (geometry is merged elsewhere). Pin the M3
+    // chip label size (14) so the style is complete and its colour applies.
+    final chipBaseStyle =
+        (baseTextTheme.labelLarge ?? const TextStyle()).copyWith(fontSize: 14);
     final chipLabelStyle = WidgetStateTextStyle.resolveWith((states) {
       if (states.contains(WidgetState.disabled)) {
-        return TextStyle(color: scheme.onSurface.withValues(alpha: 0.38));
+        return chipBaseStyle.copyWith(
+          color: scheme.onSurface.withValues(alpha: 0.38),
+        );
       }
-      if (isDark && states.contains(WidgetState.selected)) {
-        return TextStyle(color: scheme.onPrimaryContainer);
+      if (states.contains(WidgetState.selected)) {
+        return chipBaseStyle.copyWith(
+          color: isDark ? scheme.onPrimaryContainer : scheme.primary,
+          fontWeight: FontWeight.w700,
+        );
       }
-      return TextStyle(color: scheme.onSurface);
+      return chipBaseStyle.copyWith(color: scheme.onSurface);
     });
 
     return ThemeData(

@@ -21,4 +21,22 @@ void main() {
     expect(theme.colorScheme.surfaceContainerHighest, const Color(0xFFE8E2D9));
     expect(theme.colorScheme.outline, AppTokens.hairline);
   });
+
+  test('light theme chip labels are readable, not washed-out light', () {
+    final theme = AppTheme.light();
+    final labelStyle = theme.chipTheme.labelStyle;
+    expect(labelStyle, isA<WidgetStateTextStyle>());
+    final resolvable = labelStyle as WidgetStateTextStyle;
+    final unselected = resolvable.resolve(<WidgetState>{});
+    final selected = resolvable.resolve(<WidgetState>{WidgetState.selected});
+    // Unselected label: dark navy ink, clearly readable on a light card.
+    expect(unselected.color, AppTokens.textPrimaryLight);
+    expect(unselected.color!.computeLuminance(), lessThan(0.4));
+    // Selected label: strong primary emphasis, never a faint light color.
+    expect(selected.color, theme.colorScheme.primary);
+    expect(selected.color!.computeLuminance(), lessThan(0.5));
+    // A concrete font size must be carried so the color actually applies
+    // (a bare TextStyle(color:) can be dropped by the chip's default merge).
+    expect(unselected.fontSize, isNotNull);
+  });
 }
