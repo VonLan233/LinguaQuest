@@ -998,5 +998,32 @@
     }
   },
   "assetInventoryQuantityBadge": "×{count}",
-  "luckyDrawViewMyAssets": "Lihat aset saya"
+  "luckyDrawViewMyAssets": "Lihat aset saya",
+
+  "analyticsReportTitle": "Laporan pembelajaran",
+  "analyticsReportSubtitle": "Kemajuan, carta dan fokus anda",
+  "analyticsXpTrendTitle": "Trend XP",
+  "analyticsAbilityTitle": "Dimensi keupayaan",
+  "analyticsModalityTitle": "Ketepatan ikut jenis",
+  "analyticsMasteryTitle": "Penguasaan perkataan",
+  "analyticsDetailTitle": "Statistik terperinci",
+  "analyticsFocusTitle": "Latihan disyorkan",
+  "analyticsReviewLoad": "Beban ulang kaji",
+  "analyticsWeekXp": "XP minggu ini",
+  "analyticsTodayXp": "XP hari ini",
+  "analyticsWeakWords": "Perkataan lemah",
+  "analyticsDueNow": "Perlu ulang kaji",
+  "analyticsMasteryNew": "Baharu",
+  "analyticsMasteryLearning": "Belajar",
+  "analyticsMasteryMastered": "Dikuasai",
+  "analyticsDimMeaningRecognition": "Pengecaman",
+  "analyticsDimMeaningRecall": "Ingatan",
+  "analyticsDimContext": "Konteks",
+  "analyticsDimListening": "Mendengar",
+  "analyticsDimSpelling": "Ejaan",
+  "analyticsModalityMeaning": "Makna",
+  "analyticsModalityListening": "Mendengar",
+  "analyticsModalitySpelling": "Ejaan",
+  "analyticsModalityContext": "Konteks",
+  "analyticsTopErrors": "Jenis ralat utama"
 }

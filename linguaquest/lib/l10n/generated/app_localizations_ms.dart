@@ -3176,4 +3176,82 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get luckyDrawViewMyAssets => 'Lihat aset saya';
+
+  @override
+  String get analyticsReportTitle => 'Laporan pembelajaran';
+
+  @override
+  String get analyticsReportSubtitle => 'Kemajuan, carta dan fokus anda';
+
+  @override
+  String get analyticsXpTrendTitle => 'Trend XP';
+
+  @override
+  String get analyticsAbilityTitle => 'Dimensi keupayaan';
+
+  @override
+  String get analyticsModalityTitle => 'Ketepatan ikut jenis';
+
+  @override
+  String get analyticsMasteryTitle => 'Penguasaan perkataan';
+
+  @override
+  String get analyticsDetailTitle => 'Statistik terperinci';
+
+  @override
+  String get analyticsFocusTitle => 'Latihan disyorkan';
+
+  @override
+  String get analyticsReviewLoad => 'Beban ulang kaji';
+
+  @override
+  String get analyticsWeekXp => 'XP minggu ini';
+
+  @override
+  String get analyticsTodayXp => 'XP hari ini';
+
+  @override
+  String get analyticsWeakWords => 'Perkataan lemah';
+
+  @override
+  String get analyticsDueNow => 'Perlu ulang kaji';
+
+  @override
+  String get analyticsMasteryNew => 'Baharu';
+
+  @override
+  String get analyticsMasteryLearning => 'Belajar';
+
+  @override
+  String get analyticsMasteryMastered => 'Dikuasai';
+
+  @override
+  String get analyticsDimMeaningRecognition => 'Pengecaman';
+
+  @override
+  String get analyticsDimMeaningRecall => 'Ingatan';
+
+  @override
+  String get analyticsDimContext => 'Konteks';
+
+  @override
+  String get analyticsDimListening => 'Mendengar';
+
+  @override
+  String get analyticsDimSpelling => 'Ejaan';
+
+  @override
+  String get analyticsModalityMeaning => 'Makna';
+
+  @override
+  String get analyticsModalityListening => 'Mendengar';
+
+  @override
+  String get analyticsModalitySpelling => 'Ejaan';
+
+  @override
+  String get analyticsModalityContext => 'Konteks';
+
+  @override
+  String get analyticsTopErrors => 'Jenis ralat utama';
 }

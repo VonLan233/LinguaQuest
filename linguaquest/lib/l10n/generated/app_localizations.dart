@@ -5646,6 +5646,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'View my assets'**
   String get luckyDrawViewMyAssets;
+
+  /// No description provided for @analyticsReportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning report'**
+  String get analyticsReportTitle;
+
+  /// No description provided for @analyticsReportSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your progress, charts, and focus areas'**
+  String get analyticsReportSubtitle;
+
+  /// No description provided for @analyticsXpTrendTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'XP trend'**
+  String get analyticsXpTrendTitle;
+
+  /// No description provided for @analyticsAbilityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ability dimensions'**
+  String get analyticsAbilityTitle;
+
+  /// No description provided for @analyticsModalityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Accuracy by type'**
+  String get analyticsModalityTitle;
+
+  /// No description provided for @analyticsMasteryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Word mastery'**
+  String get analyticsMasteryTitle;
+
+  /// No description provided for @analyticsDetailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed stats'**
+  String get analyticsDetailTitle;
+
+  /// No description provided for @analyticsFocusTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended practice'**
+  String get analyticsFocusTitle;
+
+  /// No description provided for @analyticsReviewLoad.
+  ///
+  /// In en, this message translates to:
+  /// **'Review load'**
+  String get analyticsReviewLoad;
+
+  /// No description provided for @analyticsWeekXp.
+  ///
+  /// In en, this message translates to:
+  /// **'This week XP'**
+  String get analyticsWeekXp;
+
+  /// No description provided for @analyticsTodayXp.
+  ///
+  /// In en, this message translates to:
+  /// **'Today XP'**
+  String get analyticsTodayXp;
+
+  /// No description provided for @analyticsWeakWords.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak words'**
+  String get analyticsWeakWords;
+
+  /// No description provided for @analyticsDueNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Due now'**
+  String get analyticsDueNow;
+
+  /// No description provided for @analyticsMasteryNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get analyticsMasteryNew;
+
+  /// No description provided for @analyticsMasteryLearning.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning'**
+  String get analyticsMasteryLearning;
+
+  /// No description provided for @analyticsMasteryMastered.
+  ///
+  /// In en, this message translates to:
+  /// **'Mastered'**
+  String get analyticsMasteryMastered;
+
+  /// No description provided for @analyticsDimMeaningRecognition.
+  ///
+  /// In en, this message translates to:
+  /// **'Recognition'**
+  String get analyticsDimMeaningRecognition;
+
+  /// No description provided for @analyticsDimMeaningRecall.
+  ///
+  /// In en, this message translates to:
+  /// **'Recall'**
+  String get analyticsDimMeaningRecall;
+
+  /// No description provided for @analyticsDimContext.
+  ///
+  /// In en, this message translates to:
+  /// **'Context'**
+  String get analyticsDimContext;
+
+  /// No description provided for @analyticsDimListening.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening'**
+  String get analyticsDimListening;
+
+  /// No description provided for @analyticsDimSpelling.
+  ///
+  /// In en, this message translates to:
+  /// **'Spelling'**
+  String get analyticsDimSpelling;
+
+  /// No description provided for @analyticsModalityMeaning.
+  ///
+  /// In en, this message translates to:
+  /// **'Meaning'**
+  String get analyticsModalityMeaning;
+
+  /// No description provided for @analyticsModalityListening.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening'**
+  String get analyticsModalityListening;
+
+  /// No description provided for @analyticsModalitySpelling.
+  ///
+  /// In en, this message translates to:
+  /// **'Spelling'**
+  String get analyticsModalitySpelling;
+
+  /// No description provided for @analyticsModalityContext.
+  ///
+  /// In en, this message translates to:
+  /// **'Context'**
+  String get analyticsModalityContext;
+
+  /// No description provided for @analyticsTopErrors.
+  ///
+  /// In en, this message translates to:
+  /// **'Top error types'**
+  String get analyticsTopErrors;
 }
 
 class _AppLocalizationsDelegate

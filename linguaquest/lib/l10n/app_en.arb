@@ -1083,5 +1083,32 @@
     }
   },
   "assetInventoryQuantityBadge": "×{count}",
-  "luckyDrawViewMyAssets": "View my assets"
+  "luckyDrawViewMyAssets": "View my assets",
+
+  "analyticsReportTitle": "Learning report",
+  "analyticsReportSubtitle": "Your progress, charts, and focus areas",
+  "analyticsXpTrendTitle": "XP trend",
+  "analyticsAbilityTitle": "Ability dimensions",
+  "analyticsModalityTitle": "Accuracy by type",
+  "analyticsMasteryTitle": "Word mastery",
+  "analyticsDetailTitle": "Detailed stats",
+  "analyticsFocusTitle": "Recommended practice",
+  "analyticsReviewLoad": "Review load",
+  "analyticsWeekXp": "This week XP",
+  "analyticsTodayXp": "Today XP",
+  "analyticsWeakWords": "Weak words",
+  "analyticsDueNow": "Due now",
+  "analyticsMasteryNew": "New",
+  "analyticsMasteryLearning": "Learning",
+  "analyticsMasteryMastered": "Mastered",
+  "analyticsDimMeaningRecognition": "Recognition",
+  "analyticsDimMeaningRecall": "Recall",
+  "analyticsDimContext": "Context",
+  "analyticsDimListening": "Listening",
+  "analyticsDimSpelling": "Spelling",
+  "analyticsModalityMeaning": "Meaning",
+  "analyticsModalityListening": "Listening",
+  "analyticsModalitySpelling": "Spelling",
+  "analyticsModalityContext": "Context",
+  "analyticsTopErrors": "Top error types"
 }

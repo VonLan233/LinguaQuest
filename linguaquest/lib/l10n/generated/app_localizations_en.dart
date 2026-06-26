@@ -3164,4 +3164,83 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get luckyDrawViewMyAssets => 'View my assets';
+
+  @override
+  String get analyticsReportTitle => 'Learning report';
+
+  @override
+  String get analyticsReportSubtitle =>
+      'Your progress, charts, and focus areas';
+
+  @override
+  String get analyticsXpTrendTitle => 'XP trend';
+
+  @override
+  String get analyticsAbilityTitle => 'Ability dimensions';
+
+  @override
+  String get analyticsModalityTitle => 'Accuracy by type';
+
+  @override
+  String get analyticsMasteryTitle => 'Word mastery';
+
+  @override
+  String get analyticsDetailTitle => 'Detailed stats';
+
+  @override
+  String get analyticsFocusTitle => 'Recommended practice';
+
+  @override
+  String get analyticsReviewLoad => 'Review load';
+
+  @override
+  String get analyticsWeekXp => 'This week XP';
+
+  @override
+  String get analyticsTodayXp => 'Today XP';
+
+  @override
+  String get analyticsWeakWords => 'Weak words';
+
+  @override
+  String get analyticsDueNow => 'Due now';
+
+  @override
+  String get analyticsMasteryNew => 'New';
+
+  @override
+  String get analyticsMasteryLearning => 'Learning';
+
+  @override
+  String get analyticsMasteryMastered => 'Mastered';
+
+  @override
+  String get analyticsDimMeaningRecognition => 'Recognition';
+
+  @override
+  String get analyticsDimMeaningRecall => 'Recall';
+
+  @override
+  String get analyticsDimContext => 'Context';
+
+  @override
+  String get analyticsDimListening => 'Listening';
+
+  @override
+  String get analyticsDimSpelling => 'Spelling';
+
+  @override
+  String get analyticsModalityMeaning => 'Meaning';
+
+  @override
+  String get analyticsModalityListening => 'Listening';
+
+  @override
+  String get analyticsModalitySpelling => 'Spelling';
+
+  @override
+  String get analyticsModalityContext => 'Context';
+
+  @override
+  String get analyticsTopErrors => 'Top error types';
 }

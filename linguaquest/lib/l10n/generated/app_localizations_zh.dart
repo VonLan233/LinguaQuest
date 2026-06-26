@@ -2999,4 +2999,82 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get luckyDrawViewMyAssets => '查看我的资产';
+
+  @override
+  String get analyticsReportTitle => '学习报告';
+
+  @override
+  String get analyticsReportSubtitle => '你的进度、图表与重点';
+
+  @override
+  String get analyticsXpTrendTitle => '经验值趋势';
+
+  @override
+  String get analyticsAbilityTitle => '能力维度';
+
+  @override
+  String get analyticsModalityTitle => '各题型正确率';
+
+  @override
+  String get analyticsMasteryTitle => '单词掌握度';
+
+  @override
+  String get analyticsDetailTitle => '详细数据';
+
+  @override
+  String get analyticsFocusTitle => '推荐练习';
+
+  @override
+  String get analyticsReviewLoad => '复习负荷';
+
+  @override
+  String get analyticsWeekXp => '本周经验';
+
+  @override
+  String get analyticsTodayXp => '今日经验';
+
+  @override
+  String get analyticsWeakWords => '薄弱单词';
+
+  @override
+  String get analyticsDueNow => '待复习';
+
+  @override
+  String get analyticsMasteryNew => '新词';
+
+  @override
+  String get analyticsMasteryLearning => '学习中';
+
+  @override
+  String get analyticsMasteryMastered => '已掌握';
+
+  @override
+  String get analyticsDimMeaningRecognition => '认词';
+
+  @override
+  String get analyticsDimMeaningRecall => '回忆';
+
+  @override
+  String get analyticsDimContext => '语境';
+
+  @override
+  String get analyticsDimListening => '听力';
+
+  @override
+  String get analyticsDimSpelling => '拼写';
+
+  @override
+  String get analyticsModalityMeaning => '词义';
+
+  @override
+  String get analyticsModalityListening => '听力';
+
+  @override
+  String get analyticsModalitySpelling => '拼写';
+
+  @override
+  String get analyticsModalityContext => '语境';
+
+  @override
+  String get analyticsTopErrors => '主要错误类型';
 }

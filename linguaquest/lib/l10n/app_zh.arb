@@ -998,5 +998,32 @@
     }
   },
   "assetInventoryQuantityBadge": "×{count}",
-  "luckyDrawViewMyAssets": "查看我的资产"
+  "luckyDrawViewMyAssets": "查看我的资产",
+
+  "analyticsReportTitle": "学习报告",
+  "analyticsReportSubtitle": "你的进度、图表与重点",
+  "analyticsXpTrendTitle": "经验值趋势",
+  "analyticsAbilityTitle": "能力维度",
+  "analyticsModalityTitle": "各题型正确率",
+  "analyticsMasteryTitle": "单词掌握度",
+  "analyticsDetailTitle": "详细数据",
+  "analyticsFocusTitle": "推荐练习",
+  "analyticsReviewLoad": "复习负荷",
+  "analyticsWeekXp": "本周经验",
+  "analyticsTodayXp": "今日经验",
+  "analyticsWeakWords": "薄弱单词",
+  "analyticsDueNow": "待复习",
+  "analyticsMasteryNew": "新词",
+  "analyticsMasteryLearning": "学习中",
+  "analyticsMasteryMastered": "已掌握",
+  "analyticsDimMeaningRecognition": "认词",
+  "analyticsDimMeaningRecall": "回忆",
+  "analyticsDimContext": "语境",
+  "analyticsDimListening": "听力",
+  "analyticsDimSpelling": "拼写",
+  "analyticsModalityMeaning": "词义",
+  "analyticsModalityListening": "听力",
+  "analyticsModalitySpelling": "拼写",
+  "analyticsModalityContext": "语境",
+  "analyticsTopErrors": "主要错误类型"
 }
