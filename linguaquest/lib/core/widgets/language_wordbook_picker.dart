@@ -34,7 +34,7 @@ class SupportedLanguage {
 /// a non-selectable "coming soon" entry.
 const List<SupportedLanguage> kSupportedLanguages = [
   SupportedLanguage(code: 'zh', hasBooks: true),
-  SupportedLanguage(code: 'ja', hasBooks: false),
+  SupportedLanguage(code: 'ja', hasBooks: true),  // P2d: JLPT books are now shipped
 ];
 
 /// Returns a localized, human-readable label for a language [code].

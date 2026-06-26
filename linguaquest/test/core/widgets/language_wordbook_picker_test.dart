@@ -84,23 +84,34 @@ AppState _zhState({String current = 'hsk1', int books = 6}) {
   );
 }
 
+AppState _bothLangState() {
+  return AppState.initial().copyWith(
+    wordBooks: [
+      for (var i = 1; i <= 6; i++) _fakeBook('hsk$i', language: 'zh'),
+      for (var n in [5, 4, 3, 2, 1]) _fakeBook('jlpt_n$n', language: 'ja'),
+    ],
+    currentWordBookId: 'hsk1',
+    currentLanguage: 'zh',
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
 
 void main() {
   group('LanguageWordbookPicker', () {
-    testWidgets('shows Chinese (active) and Japanese (coming-soon)',
+    testWidgets('shows Chinese (active) and Japanese (active) in language list',
         (tester) async {
-      await tester.pumpWidget(_harness(state: _zhState(books: 3)));
+      await tester.pumpWidget(_harness(state: _bothLangState()));
 
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
 
       expect(find.text('Chinese (中文)'), findsOneWidget);
       expect(find.text('Japanese (日本語)'), findsOneWidget);
-      // Japanese is the only coming-soon language → its pill is present.
-      expect(find.text('Coming Soon'), findsWidgets);
+      // Neither language is coming-soon any more.
+      expect(find.text('Coming Soon'), findsNothing);
     });
 
     testWidgets('selecting Chinese language shows hsk wordbooks',
@@ -123,22 +134,17 @@ void main() {
       expect(find.text('HSK6'), findsOneWidget);
     });
 
-    testWidgets('Japanese shows coming-soon, not a wordbook list',
-        (tester) async {
-      await tester.pumpWidget(_harness(state: _zhState(books: 6)));
+    testWidgets('selecting Japanese shows jlpt wordbooks', (tester) async {
+      await tester.pumpWidget(_harness(state: _bothLangState()));
 
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
 
-      // Japanese row is non-selectable (coming-soon) — tapping it must not
-      // navigate to a wordbook list.
       await tester.tap(find.text('Japanese (日本語)'));
       await tester.pumpAndSettle();
 
-      // No HSK books appear; still on the language list (Chinese visible).
-      expect(find.text('HSK1'), findsNothing);
-      expect(find.text('Chinese (中文)'), findsOneWidget);
-      expect(find.text('Coming Soon'), findsWidgets);
+      // Should now show the JLPT book list.
+      expect(find.text('JLPT_N5'), findsOneWidget);
     });
 
     testWidgets(
