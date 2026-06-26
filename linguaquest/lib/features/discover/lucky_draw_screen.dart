@@ -134,6 +134,11 @@ class _LotteryPanel extends ConsumerWidget {
             ),
           ),
         ],
+        const SizedBox(height: AppTokens.s12),
+        AppSecondaryButton(
+          label: l10n.luckyDrawViewMyAssets,
+          onPressed: () => context.go('/discover/assets'),
+        ),
       ],
     );
   }
@@ -181,7 +186,7 @@ class _LotteryPanel extends ConsumerWidget {
             onPressed: () {
               Navigator.of(dialogContext).pop();
               if (context.mounted) {
-                context.go('/profile');
+                context.go('/discover/assets');
               }
             },
             child: Text(l10n.luckyDrawViewAssets),
@@ -209,34 +214,85 @@ class _ProbabilityList extends StatelessWidget {
         ),
       );
     }
-    return Column(
-      children: [
-        for (final prize in prizes)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: AppTokens.s4),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    '${prize.name} · '
-                    '${displayLotteryCategory(prize.category, l10n: l10n)}',
-                    overflow: TextOverflow.ellipsis,
-                  ),
+
+    const categoryOrder = [
+      'avatarFrame',
+      'profileBackground',
+      'badge',
+      'title',
+      'cardSkin',
+      'fragment',
+    ];
+    final grouped = <String, List<LotteryPrize>>{};
+    for (final prize in prizes) {
+      grouped.putIfAbsent(prize.category, () => []).add(prize);
+    }
+    final orderedCategories = [
+      ...categoryOrder.where(grouped.containsKey),
+      ...grouped.keys.where((k) => !categoryOrder.contains(k)),
+    ];
+
+    return Padding(
+      padding: const EdgeInsets.all(AppTokens.s12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (final category in orderedCategories) ...[
+            Padding(
+              padding: const EdgeInsets.only(
+                top: AppTokens.s8,
+                bottom: AppTokens.s4,
+              ),
+              child: Text(
+                displayLotteryCategory(category, l10n: l10n),
+                style: theme.textTheme.labelMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: theme.colorScheme.primary,
                 ),
-                const SizedBox(width: AppTokens.s8),
-                Text(
-                  '${displayLotteryRarity(prize.rarity, l10n: l10n)} '
-                  '${_formatProbability(prize.probability)}%',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-      ],
+            for (final prize in grouped[category]!)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: AppTokens.s4),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        prize.name,
+                        style: theme.textTheme.bodySmall,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(width: AppTokens.s8),
+                    AppPill(
+                      label: displayLotteryRarity(prize.rarity, l10n: l10n),
+                      variant: _rarityVariant(prize.rarity),
+                    ),
+                    const SizedBox(width: AppTokens.s8),
+                    Text(
+                      '${_formatProbability(prize.probability)}%',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                        fontFamily: 'monospace',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ],
+      ),
     );
   }
+}
+
+PillVariant _rarityVariant(String rarity) {
+  return switch (rarity) {
+    'rare' => PillVariant.primary,
+    'uncommon' => PillVariant.xp,
+    'comfort' => PillVariant.streak,
+    _ => PillVariant.neutral,
+  };
 }
 
 String _formatProbability(double probability) {

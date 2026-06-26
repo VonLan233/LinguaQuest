@@ -14,6 +14,7 @@ import '../../features/ai_learning/ai_sentence_analysis_screen.dart';
 import '../../features/discover/discover_screen.dart';
 import '../../features/discover/xp_tasks_screen.dart';
 import '../../features/discover/lucky_draw_screen.dart';
+import '../../features/discover/asset_inventory_screen.dart';
 import '../../features/discover/community_screen.dart';
 import '../../features/discover/forum_post_detail_screen.dart';
 import '../../features/discover/forum_compose_screen.dart';
@@ -221,6 +222,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/discover/lucky-draw',
         builder: (context, state) => const LuckyDrawScreen(),
+      ),
+      GoRoute(
+        path: '/discover/assets',
+        builder: (context, state) => const AssetInventoryScreen(),
       ),
       GoRoute(
         path: '/discover/community',
