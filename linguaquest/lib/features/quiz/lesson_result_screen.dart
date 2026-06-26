@@ -299,6 +299,7 @@ class _MistakeResultRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
       child: AppCard(
@@ -319,6 +320,13 @@ class _MistakeResultRow extends StatelessWidget {
                     style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                   ),
                 ],
+              ),
+            ),
+            IconButton(
+              icon: const Icon(AppIcons.autoAwesome),
+              tooltip: l10n.aiExplainWithAi,
+              onPressed: () => context.push(
+                '/ai-chat?word=${Uri.encodeComponent(mistake.word.word)}',
               ),
             ),
           ],

@@ -118,6 +118,13 @@ class _MistakeWordRow extends StatelessWidget {
               label: l10n.mistakeBookLessonMistakes,
               variant: PillVariant.streak,
             ),
+            IconButton(
+              icon: const Icon(AppIcons.autoAwesome),
+              tooltip: l10n.aiExplainWithAi,
+              onPressed: () => context.push(
+                '/ai-chat?word=${Uri.encodeComponent(mistake.word.word)}',
+              ),
+            ),
           ],
         ),
       ),
