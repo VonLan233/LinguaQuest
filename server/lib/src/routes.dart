@@ -834,7 +834,7 @@ Router buildRouter(
 
   router.get('/analytics', (Request request) async {
     return _protected(config, request, (uid) async {
-      final analytics = LearningAnalytics.mock();
+      final analytics = await computeAnalytics(database, uid);
       return jsonResponse(analytics.toJson());
     });
   });
