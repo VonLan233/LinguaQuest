@@ -29,6 +29,11 @@ void main() {
       lotteryPrizeSeed.map((prize) => prize['category']),
       isNot(contains('scoreBoost')),
     );
+    expect(lotteryPrizeSeed.length, 15);
+    expect(
+      lotteryPrizeSeed.map((prize) => prize['id']).toSet().length,
+      15,
+    );
   });
 
   test(
