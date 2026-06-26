@@ -16,9 +16,9 @@ void main() {
       expect(analytics.weakestExerciseType, isNotEmpty);
     });
 
-    test('getAchievements returns 6 achievements', () async {
+    test('getAchievements returns 10 achievements', () async {
       final achievements = await repo.getAchievements('test-uid');
-      expect(achievements, hasLength(6));
+      expect(achievements, hasLength(10));
     });
 
     test('getLeaderboard global returns entries with current user', () async {
@@ -142,9 +142,12 @@ void main() {
     test('unlocked achievement has non-null unlockedAt', () {
       final achievements = AchievementEvaluator.evaluate(
         streakDays: 10,
-        masteredWords: 60,
+        masteredWords: 100,
         totalStudyDays: 5,
         trainingXp: 2000,
+        hasPerfectQuiz: true,
+        hasListening: true,
+        hasMapLanguage: true,
       );
       for (final a in achievements) {
         expect(a.unlocked, isTrue);

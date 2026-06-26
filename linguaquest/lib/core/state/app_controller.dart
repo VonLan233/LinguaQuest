@@ -158,6 +158,7 @@ class AppController extends Notifier<AppState> {
   static const _themeModeKey = 'linguaquest.themeMode';
   static const _localeKey = 'linguaquest.locale';
   static const _targetLanguageKey = 'linguaquest.target_language';
+  static const _firstMapLanguageKey = 'linguaquest.first_map_language_at';
   static const _reminderKey = 'linguaquest.reminderSettings';
   static const _sensoryKey = 'linguaquest.sensory_settings';
   static const _privacyKey = 'linguaquest.privacy_settings';
@@ -336,6 +337,13 @@ class AppController extends Notifier<AppState> {
     state = state.copyWith(targetLanguage: code);
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_targetLanguageKey, code);
+    // Record first map language selection (one-shot flag for achievement)
+    if (prefs.getString(_firstMapLanguageKey) == null) {
+      await prefs.setString(
+        _firstMapLanguageKey,
+        DateTime.now().toIso8601String(),
+      );
+    }
   }
 
   Future<void> updateReminderSettings(DailyReminderSettings settings) async {
