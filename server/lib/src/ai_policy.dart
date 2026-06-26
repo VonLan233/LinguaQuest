@@ -92,6 +92,30 @@ class MockAiProvider implements AiProvider {
             'explanations': <String>[],
           },
         );
+      case 'reading_explain':
+        return const AiResponse(
+          success: true,
+          data: {
+            'gist': 'Mock gist of the paragraph.',
+            'keyWords': [
+              {
+                'word': '示例',
+                'reading': 'shìlì',
+                'meaning': 'example',
+              },
+            ],
+            'grammarPoints': ['Mock grammar point'],
+            'structure': 'Mock sentence structure analysis.',
+            'translation': 'Mock English translation of the paragraph.',
+            'practice': [
+              {
+                'prompt': 'Mock practice question?',
+                'answer': '示例',
+                'options': ['示例', '其它', '别的', '另一个'],
+              },
+            ],
+          },
+        );
       case 'writing_review':
         return AiResponse(success: true, data: {
           'totalScore': 75,
@@ -218,6 +242,18 @@ String? buildSystemPrompt(String featureType, String language) {
           'write "explanations" in English. Reply ONLY with strict JSON: '
           '{"passage": string, "blanks": [{"index": number, "answer": string, '
           '"options": string[]}], "explanations": string[]}. '
+          'No markdown, no code fences.';
+    case 'reading_explain':
+      return 'Explain the $language paragraph for an English speaker learning '
+          '$language. Keep "keyWords" entries\' "word" and "reading" in '
+          '$language; write every other field ("gist", each key word\'s '
+          '"meaning", "grammarPoints", "structure", "translation") in English. '
+          'For "practice", each item\'s "prompt" and "options" stay in '
+          '$language and "answer" must be one of its "options". Reply ONLY with '
+          'strict JSON: {"gist": string, "keyWords": [{"word": string, '
+          '"reading": string, "meaning": string}], "grammarPoints": string[], '
+          '"structure": string, "translation": string, "practice": '
+          '[{"prompt": string, "answer": string, "options": string[]}]}. '
           'No markdown, no code fences.';
     case 'writing_review':
       return 'You are a $language writing grader for English speakers. Write '

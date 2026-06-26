@@ -81,6 +81,69 @@ void main() {
     });
   });
 
+  group('reading_explain feature', () {
+    late AiPolicyService policy;
+
+    setUp(() {
+      policy = AiPolicyService(
+        provider: MockAiProvider(),
+        dailyLimitPerUser: 20,
+      );
+    });
+
+    test('reading_explain returns structured mock explanation', () async {
+      final response = await policy.handle(
+        const AiRequest(
+          featureType: 'reading_explain',
+          userId: 'user1',
+          prompt: '这是一个段落。',
+          targetLanguage: 'zh',
+        ),
+      );
+      expect(response.success, isTrue);
+      expect(response.data['gist'], isA<String>());
+      expect(response.data['keyWords'], isA<List>());
+      expect(response.data['grammarPoints'], isA<List>());
+      expect(response.data['structure'], isA<String>());
+      expect(response.data['translation'], isA<String>());
+      expect(response.data['practice'], isA<List>());
+      final keyWords = response.data['keyWords'] as List;
+      expect(keyWords.first['word'], isA<String>());
+      expect(keyWords.first['meaning'], isA<String>());
+      final practice = response.data['practice'] as List;
+      expect(practice.first['options'], isA<List>());
+    });
+
+    test('reading_explain rejects prompt over 2000 chars', () async {
+      final response = await policy.handle(
+        AiRequest(
+          featureType: 'reading_explain',
+          userId: 'user1',
+          prompt: 'a' * 2001,
+        ),
+      );
+      expect(response.success, isFalse);
+      expect(response.errorCode, equals('too_long'));
+    });
+
+    test('reading_explain over daily limit returns rate_limited', () async {
+      final limited = AiPolicyService(
+        provider: MockAiProvider(),
+        dailyLimitPerUser: 3,
+        dailyCountLookup: (uid) async => 3,
+      );
+      final response = await limited.handle(
+        const AiRequest(
+          featureType: 'reading_explain',
+          userId: 'user1',
+          prompt: '这是一个段落。',
+        ),
+      );
+      expect(response.success, isFalse);
+      expect(response.errorCode, equals('rate_limited'));
+    });
+  });
+
   group('writing_review feature', () {
     late AiPolicyService policy;
 

@@ -35,6 +35,17 @@ void main() {
       expect(p, contains('"explanations" in English'));
       expect(p, contains('"passage"'));
     });
+    test('reading_explain: structured fields, content language vs English', () {
+      final p = buildSystemPrompt('reading_explain', 'Chinese')!;
+      expect(p, contains('Chinese paragraph'));
+      expect(p, contains('"gist"'));
+      expect(p, contains('"keyWords"'));
+      expect(p, contains('"grammarPoints"'));
+      expect(p, contains('"structure"'));
+      expect(p, contains('"translation"'));
+      expect(p, contains('"practice"'));
+      expect(p, contains('No markdown'));
+    });
     test('writing_review: feedback English', () {
       final p = buildSystemPrompt('writing_review', 'Chinese')!;
       expect(p, contains('in English'));

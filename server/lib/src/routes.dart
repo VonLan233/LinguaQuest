@@ -1290,6 +1290,14 @@ Router buildRouter(
     );
   });
 
+  router.post('/ai/reading-explain', (Request request) async {
+    return _protected(
+      config,
+      request,
+      (uid) => _handleAiRequest(request, 'reading_explain', uid),
+    );
+  });
+
   router.get('/ai/history', (Request request) async {
     return _protected(config, request, (uid) async {
       final history = await database.listAiHistory(uid);
