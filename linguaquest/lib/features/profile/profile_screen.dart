@@ -11,6 +11,7 @@ import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
+import '../../core/widgets/language_wordbook_picker.dart';
 import '../../core/widgets/mascot_empty_state.dart';
 import '../../core/widgets/mascot_image.dart';
 import '../../core/widgets/progress_ring.dart';
@@ -28,6 +29,7 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final localeCode = Localizations.localeOf(context).languageCode;
     final state = ref.watch(appControllerProvider);
     final user = state.user;
     final reviewWords = state.reviewWords;
@@ -93,6 +95,13 @@ class ProfileScreen extends ConsumerWidget {
               title: l10n.commonWordbook,
               value: '${state.totalLearningWords} ${l10n.commonWords}',
               onTap: () => context.push('/wordbook'),
+            ),
+            _SettingsItem(
+              icon: AppIcons.language,
+              title: l10n.pickerChooseLanguage,
+              value:
+                  '${languageLabel(state.currentLanguage, l10n)} · ${state.currentWordBook?.nameFor(localeCode) ?? state.currentWordBookId}',
+              onTap: () => showLanguageWordbookPicker(context),
             ),
             _SettingsItem(
               icon: AppIcons.style,
