@@ -153,7 +153,10 @@ class _InputView extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     return Form(
       key: formKey,
-      child: ListView(
+      child: Column(
+        children: [
+          Expanded(
+            child: ListView(
         padding: const EdgeInsets.all(AppTokens.s20),
         children: [
           // Guidance text (aiEmptyWriting)
@@ -253,13 +256,27 @@ class _InputView extends StatelessWidget {
             ),
             const SizedBox(height: AppTokens.s16),
           ],
-          if (isLoading)
-            const Center(child: CircularProgressIndicator())
-          else if (errorMessage == null)
-            AppPrimaryButton(
-              label: 'Submit for Review',
-              onPressed: onSubmit,
+        ],
             ),
+          ),
+          // Pinned submit / loading control — always built and reachable,
+          // independent of how tall the scrollable form grows.
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppTokens.s20,
+              0,
+              AppTokens.s20,
+              AppTokens.s20,
+            ),
+            child: isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : errorMessage == null
+                ? AppPrimaryButton(
+                    label: 'Submit for Review',
+                    onPressed: onSubmit,
+                  )
+                : const SizedBox.shrink(),
+          ),
         ],
       ),
     );

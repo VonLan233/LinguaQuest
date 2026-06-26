@@ -6,6 +6,7 @@ import 'package:linguaquest/core/theme/app_theme.dart';
 import 'package:linguaquest/data/models/ai_feature.dart';
 import 'package:linguaquest/data/repositories/mock_repositories.dart';
 import 'package:linguaquest/features/ai_learning/ai_writing_review_screen.dart';
+import 'package:linguaquest/l10n/generated/app_localizations.dart';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -17,6 +18,9 @@ Widget _buildScreen() {
   return ProviderScope(
     child: MaterialApp(
       theme: AppTheme.light(),
+      locale: const Locale('en'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(
         body: Builder(
           builder: (context) => ElevatedButton(

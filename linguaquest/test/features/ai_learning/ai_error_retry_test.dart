@@ -77,7 +77,7 @@ Widget _buildApp(_ThrowThenSucceedAiRepository fakeRepo) {
     routes: [
       GoRoute(
         path: '/',
-        builder: (_, __) => const AiChatScreen(),
+        builder: (context, state) => const AiChatScreen(),
       ),
     ],
   );
