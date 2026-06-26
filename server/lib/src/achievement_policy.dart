@@ -42,6 +42,9 @@ class AchievementPolicy {
     required int masteredWords,
     required int totalStudyDays,
     required int trainingXp,
+    bool hasPerfectQuiz = false,
+    bool hasListening = false,
+    bool hasMapLanguage = false,
   }) {
     final now = DateTime.now().toUtc();
     return [
@@ -92,6 +95,38 @@ class AchievementPolicy {
         iconKey: 'sports_martial_arts',
         unlocked: trainingXp >= 1000,
         unlockedAt: trainingXp >= 1000 ? now : null,
+      ),
+      Achievement(
+        id: 'learn_100_words',
+        title: 'Century Scholar',
+        description: 'Master 100 words',
+        iconKey: 'workspace_premium',
+        unlocked: masteredWords >= 100,
+        unlockedAt: masteredWords >= 100 ? now : null,
+      ),
+      Achievement(
+        id: 'quiz_perfect',
+        title: 'Flawless Run',
+        description: 'Complete a quiz session with 100% accuracy (4+ questions)',
+        iconKey: 'verified',
+        unlocked: hasPerfectQuiz,
+        unlockedAt: hasPerfectQuiz ? now : null,
+      ),
+      Achievement(
+        id: 'first_listening',
+        title: 'First Echo',
+        description: 'Complete your first listening exercise',
+        iconKey: 'hearing',
+        unlocked: hasListening,
+        unlockedAt: hasListening ? now : null,
+      ),
+      Achievement(
+        id: 'first_map_language',
+        title: 'Cartographer',
+        description: 'Pick a language from the language map',
+        iconKey: 'map',
+        unlocked: hasMapLanguage,
+        unlockedAt: hasMapLanguage ? now : null,
       ),
     ];
   }

@@ -154,6 +154,10 @@ ON custom_words (uid, next_review_at);
       await connection.execute(statement);
     }
 
+    await connection.execute(
+      "ALTER TABLE users ADD COLUMN IF NOT EXISTS first_map_language_at TIMESTAMPTZ",
+    );
+
     await connection.execute('''
 CREATE TABLE IF NOT EXISTS user_words (
   id TEXT PRIMARY KEY,
@@ -1214,6 +1218,59 @@ ON CONFLICT (id) DO NOTHING
         },
       );
     }
+  }
+
+  /// Returns true if the user has at least one session where all answers
+  /// were correct and the session contained at least 4 records.
+  Future<bool> hasPerfectSession(String uid) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT session_id
+FROM exercise_records
+WHERE uid = @uid
+GROUP BY session_id
+HAVING COUNT(*) >= 4 AND bool_and(is_correct)
+LIMIT 1
+'''),
+      parameters: {'uid': uid},
+    );
+    return rows.isNotEmpty;
+  }
+
+  /// Returns true if the user has at least one exercise record with
+  /// dimension = 'listening'.
+  Future<bool> hasListeningRecord(String uid) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT 1 FROM exercise_records
+WHERE uid = @uid AND dimension = 'listening'
+LIMIT 1
+'''),
+      parameters: {'uid': uid},
+    );
+    return rows.isNotEmpty;
+  }
+
+  /// Sets users.first_map_language_at to now if not already set.
+  Future<void> setFirstMapLanguageAt(String uid) async {
+    await connection.execute(
+      Sql.named('''
+UPDATE users
+SET first_map_language_at = NOW()
+WHERE id = @uid AND first_map_language_at IS NULL
+'''),
+      parameters: {'uid': uid},
+    );
+  }
+
+  /// Returns users.first_map_language_at for the given user (null if not set).
+  Future<DateTime?> firstMapLanguageAt(String uid) async {
+    final rows = await connection.execute(
+      Sql.named('SELECT first_map_language_at FROM users WHERE id = @uid'),
+      parameters: {'uid': uid},
+    );
+    if (rows.isEmpty) return null;
+    return rows.first[0] as DateTime?;
   }
 
   Future<List<String>> completedLessonIds(String uid) async {

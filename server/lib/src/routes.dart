@@ -889,6 +889,13 @@ Router buildRouter(
     });
   });
 
+  router.post('/map-language-selected', (Request request) async {
+    return _protected(config, request, (uid) async {
+      await database.setFirstMapLanguageAt(uid);
+      return jsonResponse({'recorded': true}, status: 200);
+    });
+  });
+
   router.get('/achievements', (Request request) async {
     return _protected(config, request, (uid) async {
       final user = await database.userById(uid);
@@ -899,12 +906,18 @@ Router buildRouter(
           .where((w) => (w['mastery_level'] as int? ?? 0) >= 4)
           .length;
       final studySessions = await database.completedLessonIds(uid);
-      final totalStudyDays = studySessions.length > 0 ? 1 : 0;
+      final totalStudyDays = studySessions.isNotEmpty ? 1 : 0;
+      final hasPerfectQuiz = await database.hasPerfectSession(uid);
+      final hasListening = await database.hasListeningRecord(uid);
+      final mapAt = await database.firstMapLanguageAt(uid);
       final achievements = AchievementPolicy.evaluate(
         streakDays: streak,
         masteredWords: masteredWords,
         totalStudyDays: totalStudyDays,
         trainingXp: xp,
+        hasPerfectQuiz: hasPerfectQuiz,
+        hasListening: hasListening,
+        hasMapLanguage: mapAt != null,
       );
       return jsonResponse(achievements.map((a) => a.toJson()).toList());
     });
