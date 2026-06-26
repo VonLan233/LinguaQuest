@@ -3189,4 +3189,73 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get readingThemeExam => '考试';
+
+  @override
+  String get readingToggleHighlight => '高亮';
+
+  @override
+  String get readingLegendTitle => '词汇高亮';
+
+  @override
+  String get readingClassKey => '重点词';
+
+  @override
+  String get readingClassUnknown => '需复习';
+
+  @override
+  String get readingClassNew => '生词';
+
+  @override
+  String get readingClassKnown => '已掌握';
+
+  @override
+  String get readingComprehensionStart => '开始做题';
+
+  @override
+  String get readingComprehensionTitle => '阅读理解';
+
+  @override
+  String readingComprehensionQuestion(int current, int total) {
+    return '第 $current / $total 题';
+  }
+
+  @override
+  String get readingComprehensionNext => '下一题';
+
+  @override
+  String get readingComprehensionFinish => '完成';
+
+  @override
+  String get readingComprehensionResultTitle => '阅读理解完成';
+
+  @override
+  String readingComprehensionScore(int correct, int total) {
+    return '答对 $correct / $total';
+  }
+
+  @override
+  String readingComprehensionAccuracy(int pct) {
+    return '正确率 $pct%';
+  }
+
+  @override
+  String get readingComprehensionDone => '完成';
+
+  @override
+  String get readingComprehensionEmpty => '本篇暂无理解题。';
+
+  @override
+  String get readingAnalyticsTitle => '阅读';
+
+  @override
+  String get readingAnalyticsArticlesRead => '已读文章';
+
+  @override
+  String get readingAnalyticsAccuracy => '理解正确率';
+
+  @override
+  String get readingAnalyticsThemes => '按主题';
+
+  @override
+  String get readingAnalyticsEmpty => '完成一次阅读理解后这里会显示数据。';
 }

@@ -173,6 +173,58 @@ void main() {
     expect(find.text('to get up'), findsOneWidget);
   });
 
+  testWidgets('highlighted vocab renders as a tappable span (P3d)',
+      (tester) async {
+    final repo = FakeArticleRepository([_zhArticle()]);
+    await tester.pumpWidget(_harness(repo, 'zh_hsk1_life_001'));
+    await tester.pumpAndSettle();
+
+    // The curated key word "起来" is rendered as a span with a tap recognizer.
+    var hasHighlightSpan = false;
+    for (final rt in tester.widgetList<RichText>(find.byType(RichText))) {
+      rt.text.visitChildren((span) {
+        if (span is TextSpan &&
+            span.text == '起来' &&
+            span.recognizer != null) {
+          hasHighlightSpan = true;
+          return false;
+        }
+        return true;
+      });
+      if (hasHighlightSpan) break;
+    }
+    expect(hasHighlightSpan, isTrue,
+        reason: 'expected 起来 highlighted + tappable');
+  });
+
+  testWidgets('highlight toggle off → plain text, no tappable spans (P3d)',
+      (tester) async {
+    final repo = FakeArticleRepository([_zhArticle()]);
+    await tester.pumpWidget(_harness(repo, 'zh_hsk1_life_001'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const ValueKey('reading-toggle-highlight')));
+    await tester.pumpAndSettle();
+
+    // With highlight off, no "起来" span carries a tap recognizer.
+    var hasRecognizer = false;
+    for (final rt in tester.widgetList<RichText>(find.byType(RichText))) {
+      rt.text.visitChildren((span) {
+        if (span is TextSpan &&
+            (span.text?.contains('起来') ?? false) &&
+            span.recognizer != null) {
+          hasRecognizer = true;
+          return false;
+        }
+        return true;
+      });
+    }
+    expect(hasRecognizer, isFalse,
+        reason: 'highlight off should render plain, untappable text');
+    // Paragraph text still present.
+    expect(find.textContaining('起来'), findsWidgets);
+  });
+
   testWidgets('reading progress is saved on render', (tester) async {
     final repo = FakeArticleRepository([_zhArticle()]);
     await tester.pumpWidget(_harness(repo, 'zh_hsk1_life_001'));

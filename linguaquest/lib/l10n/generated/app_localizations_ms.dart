@@ -3368,4 +3368,75 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get readingThemeExam => 'Peperiksaan';
+
+  @override
+  String get readingToggleHighlight => 'Sorotan';
+
+  @override
+  String get readingLegendTitle => 'Sorotan perkataan';
+
+  @override
+  String get readingClassKey => 'Kata kunci';
+
+  @override
+  String get readingClassUnknown => 'Perlu ulang kaji';
+
+  @override
+  String get readingClassNew => 'Baharu';
+
+  @override
+  String get readingClassKnown => 'Dikuasai';
+
+  @override
+  String get readingComprehensionStart => 'Mula kefahaman';
+
+  @override
+  String get readingComprehensionTitle => 'Kefahaman';
+
+  @override
+  String readingComprehensionQuestion(int current, int total) {
+    return 'Soalan $current daripada $total';
+  }
+
+  @override
+  String get readingComprehensionNext => 'Seterusnya';
+
+  @override
+  String get readingComprehensionFinish => 'Selesai';
+
+  @override
+  String get readingComprehensionResultTitle => 'Kefahaman selesai';
+
+  @override
+  String readingComprehensionScore(int correct, int total) {
+    return '$correct / $total betul';
+  }
+
+  @override
+  String readingComprehensionAccuracy(int pct) {
+    return 'Ketepatan $pct%';
+  }
+
+  @override
+  String get readingComprehensionDone => 'Selesai';
+
+  @override
+  String get readingComprehensionEmpty =>
+      'Tiada soalan kefahaman untuk artikel ini lagi.';
+
+  @override
+  String get readingAnalyticsTitle => 'Bacaan';
+
+  @override
+  String get readingAnalyticsArticlesRead => 'Artikel dibaca';
+
+  @override
+  String get readingAnalyticsAccuracy => 'Ketepatan kefahaman';
+
+  @override
+  String get readingAnalyticsThemes => 'Mengikut tema';
+
+  @override
+  String get readingAnalyticsEmpty =>
+      'Lengkapkan kefahaman bacaan untuk melihat statistik di sini.';
 }

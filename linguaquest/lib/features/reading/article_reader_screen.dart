@@ -12,9 +12,14 @@ import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_pill.dart';
 import '../../data/models/article.dart';
+import '../../data/models/custom_word.dart';
+import '../../data/models/user_word.dart';
 import '../../data/repositories/article_repository.dart';
 import '../../l10n/generated/app_localizations.dart';
+import 'reading_comprehension_screen.dart';
+import 'reading_highlight_style.dart';
 import 'reading_labels.dart';
+import 'word_segmenter.dart';
 
 /// Article reader (P3c): per-paragraph text with translation + reading toggles,
 /// per-paragraph audio, tappable curated vocab surfaces (meaning sheet +
@@ -35,6 +40,7 @@ class _ArticleReaderScreenState extends ConsumerState<ArticleReaderScreen> {
   // Local per-reader toggle state.
   bool _showTranslation = true;
   bool _showReading = true;
+  bool _showHighlight = true;
 
   int _lastSavedIndex = -1;
 
@@ -97,8 +103,10 @@ class _ArticleReaderScreenState extends ConsumerState<ArticleReaderScreen> {
             article: article,
             showTranslation: _showTranslation,
             showReading: _showReading,
+            showHighlight: _showHighlight,
             onToggleTranslation: (v) => setState(() => _showTranslation = v),
             onToggleReading: (v) => setState(() => _showReading = v),
+            onToggleHighlight: (v) => setState(() => _showHighlight = v),
             onParagraphSeen: (index) =>
                 _saveProgress(article.id, index, article.paragraphs.length),
           );
@@ -120,27 +128,37 @@ class _ReaderBody extends ConsumerWidget {
     required this.article,
     required this.showTranslation,
     required this.showReading,
+    required this.showHighlight,
     required this.onToggleTranslation,
     required this.onToggleReading,
+    required this.onToggleHighlight,
     required this.onParagraphSeen,
   });
 
   final Article article;
   final bool showTranslation;
   final bool showReading;
+  final bool showHighlight;
   final ValueChanged<bool> onToggleTranslation;
   final ValueChanged<bool> onToggleReading;
+  final ValueChanged<bool> onToggleHighlight;
   final ValueChanged<int> onParagraphSeen;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final language = article.language;
-    // Resolve curated vocab surfaces for tap-word matching.
-    final vocabBySurface = <String, ArticleVocabRef>{
-      for (final v in article.vocab)
-        if (v.surface.isNotEmpty) v.surface: v,
-    };
+
+    // P3d: build the highlight index + classification inputs from app state.
+    final wordBook = ref.watch(
+      appControllerProvider.select((s) => s.currentWordBook),
+    );
+    final userWords =
+        ref.watch(appControllerProvider.select((s) => s.userWords));
+    final reviewWords =
+        ref.watch(appControllerProvider.select((s) => s.reviewWords));
+    final highlightVocab =
+        buildHighlightVocab(article: article, wordBook: wordBook);
 
     return CustomScrollView(
       slivers: [
@@ -183,8 +201,10 @@ class _ReaderBody extends ConsumerWidget {
               _ToggleBar(
                 showTranslation: showTranslation,
                 showReading: showReading,
+                showHighlight: showHighlight,
                 onToggleTranslation: onToggleTranslation,
                 onToggleReading: onToggleReading,
+                onToggleHighlight: onToggleHighlight,
               ),
               const SizedBox(height: AppTokens.s8),
               Text(
@@ -193,6 +213,10 @@ class _ReaderBody extends ConsumerWidget {
                   color: AppTokens.textHintLight,
                 ),
               ),
+              if (showHighlight && !highlightVocab.isEmpty) ...[
+                const SizedBox(height: AppTokens.s8),
+                const _HighlightLegend(),
+              ],
               const SizedBox(height: AppTokens.s16),
               for (final paragraph in article.paragraphs)
                 _ParagraphCard(
@@ -200,27 +224,35 @@ class _ReaderBody extends ConsumerWidget {
                   language: language,
                   showTranslation: showTranslation,
                   showReading: showReading,
-                  vocabBySurface: vocabBySurface,
+                  showHighlight: showHighlight,
+                  highlightVocab: highlightVocab,
+                  userWords: userWords,
+                  reviewWords: reviewWords,
                   onVisible: () => onParagraphSeen(paragraph.index),
-                  onTapWord: (vocab) =>
-                      _showWordSheet(context, ref, vocab, language),
+                  onTapWord: (token) =>
+                      _showWordSheet(context, ref, token, language),
                 ),
               const SizedBox(height: AppTokens.s16),
-              // Comprehension CTA placeholder — graded comprehension lands in
-              // P3e, so this is intentionally disabled with a hint.
+              // P3e: graded comprehension over article.comprehension, reusing the
+              // quiz choice UI.
               AppPrimaryButton(
-                label: l10n.readingComprehensionCta,
+                key: const ValueKey('reading-comprehension-cta'),
+                label: l10n.readingComprehensionStart,
                 icon: AppIcons.playlistAddCheck,
-                onPressed: null,
+                onPressed: article.comprehension.isEmpty
+                    ? null
+                    : () => _startComprehension(context),
               ),
-              const SizedBox(height: AppTokens.s8),
-              Text(
-                l10n.readingComprehensionSoon,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: AppTokens.textHintLight,
+              if (article.comprehension.isEmpty) ...[
+                const SizedBox(height: AppTokens.s8),
+                Text(
+                  l10n.readingComprehensionEmpty,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: AppTokens.textHintLight,
+                  ),
                 ),
-              ),
+              ],
             ]),
           ),
         ),
@@ -231,17 +263,89 @@ class _ReaderBody extends ConsumerWidget {
   Future<void> _showWordSheet(
     BuildContext context,
     WidgetRef ref,
-    ArticleVocabRef vocab,
+    ReadingToken token,
     String language,
   ) async {
     await showModalBottomSheet<void>(
       context: context,
       showDragHandle: true,
       builder: (sheetContext) => _WordSheet(
-        vocab: vocab,
+        token: token,
         language: language,
         article: article,
       ),
+    );
+  }
+
+  Future<void> _startComprehension(BuildContext context) async {
+    await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (sheetContext) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
+        ),
+        child: ReadingComprehensionSheet(article: article),
+      ),
+    );
+  }
+}
+
+/// A small legend mapping highlight colors to word classes (P3d).
+class _HighlightLegend extends StatelessWidget {
+  const _HighlightLegend();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    const classes = [
+      WordClass.key,
+      WordClass.unknown,
+      WordClass.newWord,
+      WordClass.known,
+    ];
+    return Wrap(
+      spacing: AppTokens.s12,
+      runSpacing: 6,
+      children: [
+        for (final cls in classes)
+          _LegendChip(
+            label: readingClassLabel(l10n, cls),
+            style: ReadingHighlightStyle.forClass(cls),
+          ),
+      ],
+    );
+  }
+}
+
+class _LegendChip extends StatelessWidget {
+  const _LegendChip({required this.label, required this.style});
+
+  final String label;
+  final ReadingHighlightStyle style;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 12,
+          height: 12,
+          decoration: BoxDecoration(
+            color: style.color,
+            borderRadius: BorderRadius.circular(3),
+          ),
+        ),
+        const SizedBox(width: 4),
+        Text(
+          label,
+          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: AppTokens.textSecondaryLight,
+              ),
+        ),
+      ],
     );
   }
 }
@@ -250,38 +354,46 @@ class _ToggleBar extends StatelessWidget {
   const _ToggleBar({
     required this.showTranslation,
     required this.showReading,
+    required this.showHighlight,
     required this.onToggleTranslation,
     required this.onToggleReading,
+    required this.onToggleHighlight,
   });
 
   final bool showTranslation;
   final bool showReading;
+  final bool showHighlight;
   final ValueChanged<bool> onToggleTranslation;
   final ValueChanged<bool> onToggleReading;
+  final ValueChanged<bool> onToggleHighlight;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return Row(
+    return Wrap(
+      spacing: AppTokens.s8,
+      runSpacing: AppTokens.s8,
       children: [
-        Expanded(
-          child: FilterChip(
-            key: const ValueKey('reading-toggle-translation'),
-            avatar: Icon(AppIcons.translate, size: 16),
-            label: Text(l10n.readingToggleTranslation),
-            selected: showTranslation,
-            onSelected: onToggleTranslation,
-          ),
+        FilterChip(
+          key: const ValueKey('reading-toggle-translation'),
+          avatar: Icon(AppIcons.translate, size: 16),
+          label: Text(l10n.readingToggleTranslation),
+          selected: showTranslation,
+          onSelected: onToggleTranslation,
         ),
-        const SizedBox(width: AppTokens.s8),
-        Expanded(
-          child: FilterChip(
-            key: const ValueKey('reading-toggle-reading'),
-            avatar: Icon(AppIcons.article, size: 16),
-            label: Text(l10n.readingToggleReading),
-            selected: showReading,
-            onSelected: onToggleReading,
-          ),
+        FilterChip(
+          key: const ValueKey('reading-toggle-reading'),
+          avatar: Icon(AppIcons.article, size: 16),
+          label: Text(l10n.readingToggleReading),
+          selected: showReading,
+          onSelected: onToggleReading,
+        ),
+        FilterChip(
+          key: const ValueKey('reading-toggle-highlight'),
+          avatar: Icon(AppIcons.autoAwesome, size: 16),
+          label: Text(l10n.readingToggleHighlight),
+          selected: showHighlight,
+          onSelected: onToggleHighlight,
         ),
       ],
     );
@@ -294,7 +406,10 @@ class _ParagraphCard extends StatefulWidget {
     required this.language,
     required this.showTranslation,
     required this.showReading,
-    required this.vocabBySurface,
+    required this.showHighlight,
+    required this.highlightVocab,
+    required this.userWords,
+    required this.reviewWords,
     required this.onVisible,
     required this.onTapWord,
   });
@@ -303,9 +418,12 @@ class _ParagraphCard extends StatefulWidget {
   final String language;
   final bool showTranslation;
   final bool showReading;
-  final Map<String, ArticleVocabRef> vocabBySurface;
+  final bool showHighlight;
+  final HighlightVocab highlightVocab;
+  final List<UserWord> userWords;
+  final List<CustomWord> reviewWords;
   final VoidCallback onVisible;
-  final ValueChanged<ArticleVocabRef> onTapWord;
+  final ValueChanged<ReadingToken> onTapWord;
 
   @override
   State<_ParagraphCard> createState() => _ParagraphCardState();
@@ -343,7 +461,11 @@ class _ParagraphCardState extends State<_ParagraphCard> {
             ],
             _ParagraphText(
               text: widget.paragraph.text,
-              vocabBySurface: widget.vocabBySurface,
+              language: widget.language,
+              showHighlight: widget.showHighlight,
+              highlightVocab: widget.highlightVocab,
+              userWords: widget.userWords,
+              reviewWords: widget.reviewWords,
               onTapWord: widget.onTapWord,
             ),
             if (widget.showTranslation &&
@@ -370,20 +492,30 @@ class _ParagraphCardState extends State<_ParagraphCard> {
   }
 }
 
-/// Renders a paragraph as inline text where curated vocab surfaces are tappable
-/// spans (rest plain). Longest-match against [vocabBySurface]; per-character
-/// segmentation/highlight is P3d. Owns its [TapGestureRecognizer]s and disposes
+/// Renders a paragraph as inline text using longest-match tokenization (P3d):
+/// matched curated/wordbook surfaces are highlighted per [WordClass] and tappable
+/// (opening their meaning); unmatched runs fall back to plain per-character text.
+/// When [showHighlight] is off, the whole paragraph is rendered as plain text
+/// (no colors, no tappable spans). Owns its [TapGestureRecognizer]s and disposes
 /// them with the element.
 class _ParagraphText extends StatefulWidget {
   const _ParagraphText({
     required this.text,
-    required this.vocabBySurface,
+    required this.language,
+    required this.showHighlight,
+    required this.highlightVocab,
+    required this.userWords,
+    required this.reviewWords,
     required this.onTapWord,
   });
 
   final String text;
-  final Map<String, ArticleVocabRef> vocabBySurface;
-  final ValueChanged<ArticleVocabRef> onTapWord;
+  final String language;
+  final bool showHighlight;
+  final HighlightVocab highlightVocab;
+  final List<UserWord> userWords;
+  final List<CustomWord> reviewWords;
+  final ValueChanged<ReadingToken> onTapWord;
 
   @override
   State<_ParagraphText> createState() => _ParagraphTextState();
@@ -414,54 +546,43 @@ class _ParagraphTextState extends State<_ParagraphText> {
     }
     _recognizers.clear();
 
-    final surfaces = widget.vocabBySurface.keys.toList()
-      ..sort((a, b) => b.length.compareTo(a.length));
+    // Highlight off → plain reading.
+    if (!widget.showHighlight) {
+      return Text(widget.text, style: baseStyle);
+    }
 
-    final text = widget.text;
+    final tokens = segmentParagraph(
+      text: widget.text,
+      vocab: widget.highlightVocab,
+      userWords: widget.userWords,
+      reviewWords: widget.reviewWords,
+    );
+
     final spans = <InlineSpan>[];
-    var i = 0;
-    final buffer = StringBuffer();
-
-    void flushPlain() {
-      if (buffer.isNotEmpty) {
-        spans.add(TextSpan(text: buffer.toString()));
-        buffer.clear();
+    for (final token in tokens) {
+      if (!token.isMatched) {
+        spans.add(TextSpan(text: token.text));
+        continue;
       }
-    }
-
-    while (i < text.length) {
-      String? matched;
-      for (final surface in surfaces) {
-        if (surface.isNotEmpty && text.startsWith(surface, i)) {
-          matched = surface;
-          break;
-        }
-      }
-      if (matched != null) {
-        flushPlain();
-        final vocab = widget.vocabBySurface[matched]!;
-        final recognizer = TapGestureRecognizer()
-          ..onTap = () => widget.onTapWord(vocab);
-        _recognizers.add(recognizer);
-        spans.add(
-          TextSpan(
-            text: matched,
-            style: TextStyle(
-              color: AppTokens.azure,
-              fontWeight: FontWeight.w800,
-              decoration: TextDecoration.underline,
-              decorationColor: AppTokens.azure.withValues(alpha: 0.4),
-            ),
-            recognizer: recognizer,
+      final style = ReadingHighlightStyle.forClass(token.wordClass);
+      final recognizer = TapGestureRecognizer()
+        ..onTap = () => widget.onTapWord(token);
+      _recognizers.add(recognizer);
+      spans.add(
+        TextSpan(
+          text: token.text,
+          style: TextStyle(
+            color: style.color,
+            backgroundColor: style.background,
+            fontWeight: style.bold ? FontWeight.w800 : FontWeight.w600,
+            decoration:
+                style.underline ? TextDecoration.underline : TextDecoration.none,
+            decorationColor: style.color.withValues(alpha: 0.5),
           ),
-        );
-        i += matched.length;
-      } else {
-        buffer.write(text[i]);
-        i += 1;
-      }
+          recognizer: recognizer,
+        ),
+      );
     }
-    flushPlain();
 
     return Text.rich(TextSpan(style: baseStyle, children: spans));
   }
@@ -573,12 +694,12 @@ class _ParagraphAudioButtonState extends State<_ParagraphAudioButton> {
 
 class _WordSheet extends ConsumerWidget {
   const _WordSheet({
-    required this.vocab,
+    required this.token,
     required this.language,
     required this.article,
   });
 
-  final ArticleVocabRef vocab;
+  final ReadingToken token;
   final String language;
   final Article article;
 
@@ -586,6 +707,12 @@ class _WordSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
+    final localeCode = Localizations.localeOf(context).languageCode;
+    // Resolve surface/reading/meaning from the token (curated vocab or wordbook
+    // Word) so tapping any matched word shows its meaning.
+    final surface = token.text;
+    final reading = token.readingFor(language);
+    final meaning = token.meaningFor(localeCode);
     return Padding(
       padding: const EdgeInsets.fromLTRB(
         AppTokens.s20,
@@ -601,7 +728,7 @@ class _WordSheet extends ConsumerWidget {
             children: [
               Expanded(
                 child: Text(
-                  vocab.surface,
+                  surface,
                   style: theme.textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.w800,
                   ),
@@ -614,10 +741,10 @@ class _WordSheet extends ConsumerWidget {
               ),
             ],
           ),
-          if (vocab.reading.isNotEmpty) ...[
+          if (reading.isNotEmpty) ...[
             const SizedBox(height: 4),
             Text(
-              vocab.reading,
+              reading,
               style: theme.textTheme.titleMedium?.copyWith(
                 color: AppTokens.primarySoftText,
               ),
@@ -625,7 +752,7 @@ class _WordSheet extends ConsumerWidget {
           ],
           const SizedBox(height: AppTokens.s12),
           Text(
-            vocab.meaning.isEmpty ? '—' : vocab.meaning,
+            meaning.isEmpty ? '—' : meaning,
             style: theme.textTheme.bodyLarge,
           ),
           const SizedBox(height: AppTokens.s20),
@@ -636,10 +763,10 @@ class _WordSheet extends ConsumerWidget {
               final messenger = ScaffoldMessenger.of(context);
               final navigator = Navigator.of(context);
               await ref.read(appControllerProvider.notifier).addCustomWord(
-                    word: vocab.surface,
-                    meaning: vocab.meaning,
+                    word: surface,
+                    meaning: meaning,
                     exampleSentence: '',
-                    note: vocab.reading,
+                    note: reading,
                     tag: '阅读',
                     difficulty: 'medium',
                   );

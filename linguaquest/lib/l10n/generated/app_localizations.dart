@@ -6018,6 +6018,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Exam'**
   String get readingThemeExam;
+
+  /// No description provided for @readingToggleHighlight.
+  ///
+  /// In en, this message translates to:
+  /// **'Highlight'**
+  String get readingToggleHighlight;
+
+  /// No description provided for @readingLegendTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Word highlights'**
+  String get readingLegendTitle;
+
+  /// No description provided for @readingClassKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Key word'**
+  String get readingClassKey;
+
+  /// No description provided for @readingClassUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs review'**
+  String get readingClassUnknown;
+
+  /// No description provided for @readingClassNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get readingClassNew;
+
+  /// No description provided for @readingClassKnown.
+  ///
+  /// In en, this message translates to:
+  /// **'Known'**
+  String get readingClassKnown;
+
+  /// No description provided for @readingComprehensionStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start comprehension'**
+  String get readingComprehensionStart;
+
+  /// No description provided for @readingComprehensionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Comprehension'**
+  String get readingComprehensionTitle;
+
+  /// No description provided for @readingComprehensionQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Question {current} of {total}'**
+  String readingComprehensionQuestion(int current, int total);
+
+  /// No description provided for @readingComprehensionNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get readingComprehensionNext;
+
+  /// No description provided for @readingComprehensionFinish.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish'**
+  String get readingComprehensionFinish;
+
+  /// No description provided for @readingComprehensionResultTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Comprehension complete'**
+  String get readingComprehensionResultTitle;
+
+  /// No description provided for @readingComprehensionScore.
+  ///
+  /// In en, this message translates to:
+  /// **'{correct} / {total} correct'**
+  String readingComprehensionScore(int correct, int total);
+
+  /// No description provided for @readingComprehensionAccuracy.
+  ///
+  /// In en, this message translates to:
+  /// **'Accuracy {pct}%'**
+  String readingComprehensionAccuracy(int pct);
+
+  /// No description provided for @readingComprehensionDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get readingComprehensionDone;
+
+  /// No description provided for @readingComprehensionEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No comprehension questions for this article yet.'**
+  String get readingComprehensionEmpty;
+
+  /// No description provided for @readingAnalyticsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading'**
+  String get readingAnalyticsTitle;
+
+  /// No description provided for @readingAnalyticsArticlesRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Articles read'**
+  String get readingAnalyticsArticlesRead;
+
+  /// No description provided for @readingAnalyticsAccuracy.
+  ///
+  /// In en, this message translates to:
+  /// **'Comprehension accuracy'**
+  String get readingAnalyticsAccuracy;
+
+  /// No description provided for @readingAnalyticsThemes.
+  ///
+  /// In en, this message translates to:
+  /// **'By theme'**
+  String get readingAnalyticsThemes;
+
+  /// No description provided for @readingAnalyticsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete a reading comprehension to see stats here.'**
+  String get readingAnalyticsEmpty;
 }
 
 class _AppLocalizationsDelegate

@@ -3356,4 +3356,75 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get readingThemeExam => 'Exam';
+
+  @override
+  String get readingToggleHighlight => 'Highlight';
+
+  @override
+  String get readingLegendTitle => 'Word highlights';
+
+  @override
+  String get readingClassKey => 'Key word';
+
+  @override
+  String get readingClassUnknown => 'Needs review';
+
+  @override
+  String get readingClassNew => 'New';
+
+  @override
+  String get readingClassKnown => 'Known';
+
+  @override
+  String get readingComprehensionStart => 'Start comprehension';
+
+  @override
+  String get readingComprehensionTitle => 'Comprehension';
+
+  @override
+  String readingComprehensionQuestion(int current, int total) {
+    return 'Question $current of $total';
+  }
+
+  @override
+  String get readingComprehensionNext => 'Next';
+
+  @override
+  String get readingComprehensionFinish => 'Finish';
+
+  @override
+  String get readingComprehensionResultTitle => 'Comprehension complete';
+
+  @override
+  String readingComprehensionScore(int correct, int total) {
+    return '$correct / $total correct';
+  }
+
+  @override
+  String readingComprehensionAccuracy(int pct) {
+    return 'Accuracy $pct%';
+  }
+
+  @override
+  String get readingComprehensionDone => 'Done';
+
+  @override
+  String get readingComprehensionEmpty =>
+      'No comprehension questions for this article yet.';
+
+  @override
+  String get readingAnalyticsTitle => 'Reading';
+
+  @override
+  String get readingAnalyticsArticlesRead => 'Articles read';
+
+  @override
+  String get readingAnalyticsAccuracy => 'Comprehension accuracy';
+
+  @override
+  String get readingAnalyticsThemes => 'By theme';
+
+  @override
+  String get readingAnalyticsEmpty =>
+      'Complete a reading comprehension to see stats here.';
 }
