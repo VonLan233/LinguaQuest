@@ -29,6 +29,7 @@ class AppDrawer extends StatelessWidget {
                         TextStyle(fontSize: 22, fontWeight: FontWeight.w900)),
               ),
             ),
+            item(AppIcons.language, 'Choose Language', '/language-map'),
             item(AppIcons.map, 'Study Map', '/map'),
             item(AppIcons.locationOn, 'Study Spots', '/map/spots'),
             item(AppIcons.search, 'Search', '/search'),

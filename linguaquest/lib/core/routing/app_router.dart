@@ -52,6 +52,7 @@ import '../../features/wordbook/add_edit_custom_word_screen.dart';
 import '../../features/wordbook/custom_word_list_screen.dart';
 import '../../features/wordbook/target_word_detail_screen.dart';
 import '../../features/wordbook/word_detail_screen.dart';
+import '../../features/map/language_map_screen.dart';
 import '../../features/map/study_map_screen.dart';
 import '../../features/map/study_spots_list_screen.dart';
 import '../../features/wordbook/wordbook_screen.dart';
@@ -216,6 +217,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const HelpSupportScreen(),
       ),
       GoRoute(path: '/about', builder: (context, state) => const AboutScreen()),
+      GoRoute(path: '/language-map', builder: (context, state) => const LanguageMapScreen()),
       GoRoute(path: '/map', builder: (context, state) => const StudyMapScreen()),
       GoRoute(path: '/map/spots', builder: (context, state) => const StudySpotsListScreen()),
       GoRoute(
