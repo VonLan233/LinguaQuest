@@ -7,6 +7,11 @@ const allowedWordBookIds = {
   'hsk4',
   'hsk5',
   'hsk6',
+  'jlpt_n5',
+  'jlpt_n4',
+  'jlpt_n3',
+  'jlpt_n2',
+  'jlpt_n1',
 };
 
 // Wordbook ids from before the HSK pivot. Existing study plans (and any older

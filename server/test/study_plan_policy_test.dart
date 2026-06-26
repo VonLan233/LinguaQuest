@@ -33,6 +33,37 @@ void main() {
     }
   });
 
+  test('accepts every JLPT wordbook id', () {
+    for (final id in ['jlpt_n5', 'jlpt_n4', 'jlpt_n3', 'jlpt_n2', 'jlpt_n1']) {
+      final result = validateStudyPlanPayload({
+        'wordBookId': id,
+        'dailyNewTarget': 10,
+        'dailyReviewLimit': 20,
+        'startDate': '2026-06-04',
+        'targetFinishDate': '2026-08-04',
+        'reminderTime': '08:00',
+      });
+      expect(result.isValid, isTrue, reason: '$id should be accepted');
+      expect(result.data!['wordBookId'], id,
+          reason: '$id should not be normalized to anything else');
+    }
+  });
+
+  test('still rejects unknown wordbook ids after JLPT addition', () {
+    for (final bad in ['jlpt_n6', 'jlpt_n0', 'jlpt', 'n5', 'totally-unknown']) {
+      final result = validateStudyPlanPayload({
+        'wordBookId': bad,
+        'dailyNewTarget': 10,
+        'dailyReviewLimit': 20,
+        'startDate': '2026-06-04',
+        'targetFinishDate': '2026-08-04',
+        'reminderTime': '08:00',
+      });
+      expect(result.error, 'invalid wordBookId',
+          reason: '$bad must be rejected');
+    }
+  });
+
   test('maps legacy English wordbook ids to hsk1 for backward compatibility', () {
     for (final legacy in ['beginner', 'ielts', 'toefl', 'gre', 'cet4', 'cet6',
         'kaoyan', 'daily-english', 'exam-core']) {
