@@ -19,6 +19,9 @@ class LearningAnalytics {
     this.modalityAccuracy = const {},
     this.dailyXp = const [],
     this.topErrorTypes = const [],
+    this.articlesRead = 0,
+    this.readingAccuracyPct = 0,
+    this.themeDistribution = const {},
   });
 
   final int streakDays;
@@ -49,6 +52,16 @@ class LearningAnalytics {
   /// Ordered list of prompt types with the highest error rates (worst first).
   final List<String> topErrorTypes;
 
+  /// Reading metrics (P3e). Default to 0/{} so existing payloads keep parsing.
+  /// Count of completed reading articles (active scope).
+  final int articlesRead;
+
+  /// Reading-comprehension accuracy 0–100 (correct/total over reading results).
+  final int readingAccuracyPct;
+
+  /// Articles read per theme (theme key → count).
+  final Map<String, int> themeDistribution;
+
   Map<String, dynamic> toJson() => {
         'streakDays': streakDays,
         'totalStudyDays': totalStudyDays,
@@ -69,7 +82,43 @@ class LearningAnalytics {
         'modalityAccuracy': modalityAccuracy,
         'dailyXp': dailyXp,
         'topErrorTypes': topErrorTypes,
+        'articlesRead': articlesRead,
+        'readingAccuracyPct': readingAccuracyPct,
+        'themeDistribution': themeDistribution,
       };
+
+  /// Returns a copy with reading metrics overlaid (computed client-side from
+  /// saved [ReadingResult]s — see the analytics screen).
+  LearningAnalytics copyWithReading({
+    required int articlesRead,
+    required int readingAccuracyPct,
+    required Map<String, int> themeDistribution,
+  }) {
+    return LearningAnalytics(
+      streakDays: streakDays,
+      totalStudyDays: totalStudyDays,
+      learnedWords: learnedWords,
+      masteredWords: masteredWords,
+      newWordsToday: newWordsToday,
+      reviewsToday: reviewsToday,
+      wordbookProgressPct: wordbookProgressPct,
+      todayMinutes: todayMinutes,
+      totalMinutes: totalMinutes,
+      averageAccuracyPct: averageAccuracyPct,
+      sevenDayXp: sevenDayXp,
+      weakestExerciseType: weakestExerciseType,
+      mostMissedWordIds: mostMissedWordIds,
+      achievementCount: achievementCount,
+      trainingXp: trainingXp,
+      trainingRank: trainingRank,
+      modalityAccuracy: modalityAccuracy,
+      dailyXp: dailyXp,
+      topErrorTypes: topErrorTypes,
+      articlesRead: articlesRead,
+      readingAccuracyPct: readingAccuracyPct,
+      themeDistribution: themeDistribution,
+    );
+  }
 
   factory LearningAnalytics.fromJson(Map<String, dynamic> j) =>
       LearningAnalytics(
@@ -104,6 +153,11 @@ class LearningAnalytics {
         topErrorTypes: (j['topErrorTypes'] as List<dynamic>? ?? const [])
             .map((e) => e as String)
             .toList(),
+        articlesRead: j['articlesRead'] as int? ?? 0,
+        readingAccuracyPct: j['readingAccuracyPct'] as int? ?? 0,
+        themeDistribution:
+            (j['themeDistribution'] as Map<String, dynamic>? ?? const {})
+                .map((k, v) => MapEntry(k, (v as num).toInt())),
       );
 
   static LearningAnalytics mock() => const LearningAnalytics(
@@ -131,6 +185,9 @@ class LearningAnalytics {
         },
         dailyXp: [120, 80, 95, 110, 70, 130, 45, 100, 90, 60, 85, 110, 75, 95],
         topErrorTypes: ['spelling', 'listening'],
+        articlesRead: 4,
+        readingAccuracyPct: 82,
+        themeDistribution: {'campus': 2, 'life': 1, 'travel': 1},
       );
 }
 

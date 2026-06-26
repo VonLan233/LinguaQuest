@@ -7,6 +7,7 @@ import 'package:linguaquest/core/state/app_state.dart';
 import 'package:linguaquest/core/widgets/section_header.dart';
 import 'package:linguaquest/data/models/analytics.dart';
 import 'package:linguaquest/data/models/custom_word.dart';
+import 'package:linguaquest/data/repositories/article_repository.dart';
 import 'package:linguaquest/features/quests/progress_analytics_screen.dart';
 import 'package:linguaquest/l10n/generated/app_localizations.dart';
 
@@ -23,6 +24,9 @@ class _FakeAppController extends AppController {
 
   @override
   Future<void> refreshRecommendations() async {}
+
+  @override
+  Future<List<ReadingResult>> readingResultsForScope() async => const [];
 }
 
 /// Wraps [child] with Riverpod + Material + l10n, overriding the

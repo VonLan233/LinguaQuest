@@ -18,6 +18,8 @@ import '../../data/models/analytics.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/recommendation.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../reading/reading_labels.dart';
+import '../reading/reading_metrics.dart';
 
 class ProgressAnalyticsScreen extends ConsumerStatefulWidget {
   const ProgressAnalyticsScreen({super.key});
@@ -29,13 +31,25 @@ class ProgressAnalyticsScreen extends ConsumerStatefulWidget {
 
 class _ProgressAnalyticsScreenState
     extends ConsumerState<ProgressAnalyticsScreen> {
+  // Reading metrics computed client-side from saved ReadingResults (P3e).
+  ReadingMetrics _readingMetrics = ReadingMetrics.empty;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(appControllerProvider.notifier).refreshAnalytics();
       ref.read(appControllerProvider.notifier).refreshRecommendations();
+      _loadReadingMetrics();
     });
+  }
+
+  Future<void> _loadReadingMetrics() async {
+    final results = await ref
+        .read(appControllerProvider.notifier)
+        .readingResultsForScope();
+    if (!mounted) return;
+    setState(() => _readingMetrics = ReadingMetrics.fromResults(results));
   }
 
   @override
@@ -186,13 +200,116 @@ class _ProgressAnalyticsScreenState
               const SizedBox(height: 20),
             ],
 
-            // ── 8. Recommended Practice ──────────────────────────────────────
+            // ── 8. Reading ───────────────────────────────────────────────────
+            SectionHeader(title: l10n.readingAnalyticsTitle),
+            const SizedBox(height: 8),
+            _ReadingSection(metrics: _readingMetrics, l10n: l10n),
+            const SizedBox(height: 20),
+
+            // ── 9. Recommended Practice ──────────────────────────────────────
             SectionHeader(title: l10n.analyticsFocusTitle),
             const SizedBox(height: 8),
             _RecommendedPracticeSection(recommendations: recommendations),
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Reading metrics card (P3e): articles read, comprehension accuracy, and a
+/// per-theme breakdown — computed client-side from saved ReadingResults.
+class _ReadingSection extends StatelessWidget {
+  const _ReadingSection({required this.metrics, required this.l10n});
+
+  final ReadingMetrics metrics;
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    if (metrics.isEmpty) {
+      return AppCard(
+        key: const ValueKey('reading-analytics-empty'),
+        child: Text(
+          l10n.readingAnalyticsEmpty,
+          style: theme.textTheme.bodyMedium,
+        ),
+      );
+    }
+    final themes = metrics.themeDistribution.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+    return AppCard(
+      key: const ValueKey('reading-analytics-card'),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: _ReadingStat(
+                  label: l10n.readingAnalyticsArticlesRead,
+                  value: '${metrics.articlesRead}',
+                ),
+              ),
+              Expanded(
+                child: _ReadingStat(
+                  label: l10n.readingAnalyticsAccuracy,
+                  value: '${metrics.accuracyPct}%',
+                ),
+              ),
+            ],
+          ),
+          if (themes.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Text(
+              l10n.readingAnalyticsThemes,
+              style: theme.textTheme.titleSmall
+                  ?.copyWith(fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final e in themes)
+                  AppPill(
+                    label: '${readingThemeLabel(l10n, e.key)} · ${e.value}',
+                    variant: PillVariant.primary,
+                  ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _ReadingStat extends StatelessWidget {
+  const _ReadingStat({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          value,
+          style: theme.textTheme.headlineSmall
+              ?.copyWith(fontWeight: FontWeight.w800),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          label,
+          style: theme.textTheme.bodySmall
+              ?.copyWith(color: AppTokens.textSecondaryLight),
+        ),
+      ],
     );
   }
 }
