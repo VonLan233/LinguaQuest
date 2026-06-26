@@ -21,8 +21,7 @@ class AiWritingReviewScreen extends ConsumerStatefulWidget {
       _AiWritingReviewScreenState();
 }
 
-class _AiWritingReviewScreenState
-    extends ConsumerState<AiWritingReviewScreen> {
+class _AiWritingReviewScreenState extends ConsumerState<AiWritingReviewScreen> {
   final _formKey = GlobalKey<FormState>();
   final _essayController = TextEditingController();
   String _selectedExamType = 'General';
@@ -31,13 +30,7 @@ class _AiWritingReviewScreenState
   bool _showRewrite = false;
   String? _errorMessage;
 
-  static const _examTypes = [
-    'General',
-    'IELTS',
-    'CET-4',
-    'CET-6',
-    'TOEFL',
-  ];
+  static const _examTypes = ['General', 'IELTS', 'CET-4', 'CET-6', 'TOEFL'];
 
   @override
   void dispose() {
@@ -52,18 +45,18 @@ class _AiWritingReviewScreenState
       _result = null;
       _errorMessage = null;
     });
-    final raw = await ref.read(appControllerProvider.notifier).reviewWriting(
-      essay: _essayController.text.trim(),
-      examType:
-          _selectedExamType == 'General' ? null : _selectedExamType,
-    );
+    final raw = await ref
+        .read(appControllerProvider.notifier)
+        .reviewWriting(
+          essay: _essayController.text.trim(),
+          examType: _selectedExamType == 'General' ? null : _selectedExamType,
+        );
     if (mounted) {
       if (raw.isEmpty) {
         final errMsg = ref.read(appControllerProvider).errorMessage;
         setState(() {
           _isLoading = false;
-          _errorMessage =
-              errMsg ?? AppLocalizations.of(context).aiErrorGeneric;
+          _errorMessage = errMsg ?? AppLocalizations.of(context).aiErrorGeneric;
         });
       } else {
         setState(() {
@@ -110,8 +103,7 @@ class _AiWritingReviewScreenState
                 essayController: _essayController,
                 examTypes: _examTypes,
                 selectedExamType: _selectedExamType,
-                onExamTypeChanged: (v) =>
-                    setState(() => _selectedExamType = v),
+                onExamTypeChanged: (v) => setState(() => _selectedExamType = v),
                 isLoading: _isLoading,
                 onSubmit: _submit,
                 errorMessage: _errorMessage,
@@ -157,106 +149,103 @@ class _InputView extends StatelessWidget {
         children: [
           Expanded(
             child: ListView(
-        padding: const EdgeInsets.all(AppTokens.s20),
-        children: [
-          // Guidance text (aiEmptyWriting)
-          AppCard(
-            padding: const EdgeInsets.all(AppTokens.s12),
-            child: Text(
-              l10n.aiEmptyWriting,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ),
-          const SizedBox(height: AppTokens.s16),
-          // Exam type selector
-          AppCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              padding: const EdgeInsets.all(AppTokens.s20),
               children: [
-                Text(
-                  'Exam Type',
-                  style: theme.textTheme.labelLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
+                // Guidance text (aiEmptyWriting)
+                AppCard(
+                  padding: const EdgeInsets.all(AppTokens.s12),
+                  child: Text(
+                    l10n.aiEmptyWriting,
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ),
-                const SizedBox(height: AppTokens.s12),
-                Wrap(
-                  spacing: AppTokens.s8,
-                  runSpacing: AppTokens.s8,
-                  children: examTypes.map((type) {
-                    final selected = type == selectedExamType;
-                    return ChoiceChip(
-                      label: Text(type),
-                      selected: selected,
-                      onSelected: (_) => onExamTypeChanged(type),
-                    );
-                  }).toList(),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: AppTokens.s16),
-          // Essay input
-          AppCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Your Essay',
-                  style: theme.textTheme.labelLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: AppTokens.s8),
-                ValueListenableBuilder<TextEditingValue>(
-                  valueListenable: essayController,
-                  builder: (context, value, _) {
-                    return Text(
-                      '${value.text.length} / 3000 characters',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: value.text.length > 3000
-                            ? theme.colorScheme.error
-                            : theme.colorScheme.onSurfaceVariant,
+                const SizedBox(height: AppTokens.s16),
+                // Exam type selector
+                AppCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Exam Type',
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    );
-                  },
-                ),
-                const SizedBox(height: AppTokens.s8),
-                TextFormField(
-                  controller: essayController,
-                  maxLines: null,
-                  minLines: 8,
-                  maxLength: 3000,
-                  maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                  decoration: const InputDecoration(
-                    hintText:
-                        'Paste or type your essay here (50–3000 characters)...',
-                    border: OutlineInputBorder(),
-                    counterText: '',
+                      const SizedBox(height: AppTokens.s12),
+                      Wrap(
+                        spacing: AppTokens.s8,
+                        runSpacing: AppTokens.s8,
+                        children: examTypes.map((type) {
+                          final selected = type == selectedExamType;
+                          return ChoiceChip(
+                            label: Text(type),
+                            selected: selected,
+                            onSelected: (_) => onExamTypeChanged(type),
+                          );
+                        }).toList(),
+                      ),
+                    ],
                   ),
-                  validator: (v) {
-                    if (v == null || v.trim().length < 50) {
-                      return 'Essay must be at least 50 characters';
-                    }
-                    return null;
-                  },
                 ),
+                const SizedBox(height: AppTokens.s16),
+                // Essay input
+                AppCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Your Essay',
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: AppTokens.s8),
+                      ValueListenableBuilder<TextEditingValue>(
+                        valueListenable: essayController,
+                        builder: (context, value, _) {
+                          return Text(
+                            '${value.text.length} / 3000 characters',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: value.text.length > 3000
+                                  ? theme.colorScheme.error
+                                  : theme.colorScheme.onSurfaceVariant,
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: AppTokens.s8),
+                      TextFormField(
+                        controller: essayController,
+                        maxLines: null,
+                        minLines: 8,
+                        maxLength: 3000,
+                        maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                        decoration: const InputDecoration(
+                          hintText:
+                              'Paste or type your essay here (50–3000 characters)...',
+                          border: OutlineInputBorder(),
+                          counterText: '',
+                        ),
+                        validator: (v) {
+                          if (v == null || v.trim().length < 50) {
+                            return 'Essay must be at least 50 characters';
+                          }
+                          return null;
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: AppTokens.s24),
+                // ERROR state (shown in input view instead of result)
+                if (errorMessage != null) ...[
+                  AiErrorCard(message: errorMessage!, onRetry: onRetry),
+                  const SizedBox(height: AppTokens.s16),
+                ],
               ],
-            ),
-          ),
-          const SizedBox(height: AppTokens.s24),
-          // ERROR state (shown in input view instead of result)
-          if (errorMessage != null) ...[
-            AiErrorCard(
-              message: errorMessage!,
-              onRetry: onRetry,
-            ),
-            const SizedBox(height: AppTokens.s16),
-          ],
-        ],
             ),
           ),
           // Pinned submit / loading control — always built and reachable,
@@ -398,8 +387,7 @@ class _ResultView extends StatelessWidget {
                 const SizedBox(height: AppTokens.s8),
                 ...result.mainIssues.map(
                   (issue) => Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: AppTokens.s4),
+                    padding: const EdgeInsets.symmetric(vertical: AppTokens.s4),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -432,28 +420,31 @@ class _ResultView extends StatelessWidget {
                   final corrected = issue['corrected'] ?? '';
                   final rule = issue['rule'] ?? '';
                   return Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: AppTokens.s4),
+                    padding: const EdgeInsets.symmetric(vertical: AppTokens.s4),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text.rich(TextSpan(children: [
+                        Text.rich(
                           TextSpan(
-                            text: original,
-                            style: TextStyle(
-                              color: theme.colorScheme.error,
-                              decoration: TextDecoration.lineThrough,
-                            ),
+                            children: [
+                              TextSpan(
+                                text: original,
+                                style: TextStyle(
+                                  color: theme.colorScheme.error,
+                                  decoration: TextDecoration.lineThrough,
+                                ),
+                              ),
+                              const TextSpan(text: '  →  '),
+                              TextSpan(
+                                text: corrected,
+                                style: TextStyle(
+                                  color: theme.colorScheme.primary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
                           ),
-                          const TextSpan(text: '  →  '),
-                          TextSpan(
-                            text: corrected,
-                            style: TextStyle(
-                              color: theme.colorScheme.primary,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ])),
+                        ),
                         if (rule.isNotEmpty)
                           Text(
                             rule,
@@ -526,8 +517,7 @@ class _ResultView extends StatelessWidget {
                   final para = s['paragraph'] ?? '';
                   final suggestion = s['suggestion'] ?? '';
                   return Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: AppTokens.s4),
+                    padding: const EdgeInsets.symmetric(vertical: AppTokens.s4),
                     child: Text('Paragraph $para: $suggestion'),
                   );
                 }),
@@ -553,9 +543,7 @@ class _ResultView extends StatelessWidget {
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      Icon(showRewrite
-                          ? Icons.expand_less
-                          : Icons.expand_more),
+                      Icon(showRewrite ? Icons.expand_less : Icons.expand_more),
                     ],
                   ),
                 ),
