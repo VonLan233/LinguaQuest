@@ -1,0 +1,140 @@
+{
+  "level": "jlpt_n5",
+  "language": "ja",
+  "articles": [
+    {
+      "id": "ja_n5_life_001",
+      "language": "ja",
+      "level": "jlpt_n5",
+      "examLevel": 5,
+      "theme": "life",
+      "title": "わたしの あさ",
+      "titleTranslation": "My Morning",
+      "estimatedMinutes": 2,
+      "createdAt": "2026-06-27T00:00:00.000Z",
+      "paragraphs": [
+        {
+          "index": 0,
+          "text": "わたしは まいあさ ろくじに おきます。それから かおを あらいます。",
+          "reading": "watashi wa maiasa rokuji ni okimasu. sorekara kao o araimasu.",
+          "translation": "I wake up at six every morning. After that I wash my face."
+        },
+        {
+          "index": 1,
+          "text": "あさごはんは パンと たまごです。コーヒーも のみます。",
+          "reading": "asagohan wa pan to tamago desu. koohii mo nomimasu.",
+          "translation": "Breakfast is bread and eggs. I also drink coffee."
+        },
+        {
+          "index": 2,
+          "text": "しちじに いえを でます。でんしゃで かいしゃに いきます。",
+          "reading": "shichiji ni ie o demasu. densha de kaisha ni ikimasu.",
+          "translation": "I leave the house at seven. I go to the company by train."
+        }
+      ],
+      "vocab": [
+        {"surface": "おきます", "reading": "okimasu", "meaning": "to wake up", "role": "key"},
+        {"surface": "あさごはん", "reading": "asagohan", "meaning": "breakfast", "role": "key"},
+        {"surface": "たまご", "reading": "tamago", "meaning": "egg", "role": "key"},
+        {"surface": "でんしゃ", "reading": "densha", "meaning": "train", "role": "key"},
+        {"surface": "かいしゃ", "reading": "kaisha", "meaning": "company", "role": "key"}
+      ],
+      "comprehension": [
+        {
+          "id": "ja_n5_life_001_q1",
+          "type": "meaningChoice",
+          "kind": "detail",
+          "prompt": "わたしは まいあさ なんじに おきますか。",
+          "options": ["ごじ", "ろくじ", "しちじ", "はちじ"],
+          "answer": "ろくじ",
+          "explanation": "「まいあさ ろくじに おきます」と あります。"
+        },
+        {
+          "id": "ja_n5_life_001_q2",
+          "type": "meaningChoice",
+          "kind": "detail",
+          "prompt": "あさごはんは なんですか。",
+          "options": ["ごはんと さかな", "パンと たまご", "ラーメン", "サラダ"],
+          "answer": "パンと たまご",
+          "explanation": "「あさごはんは パンと たまごです」と あります。"
+        },
+        {
+          "id": "ja_n5_life_001_q3",
+          "type": "meaningChoice",
+          "kind": "trueFalse",
+          "prompt": "わたしは くるまで かいしゃに いきます。ただしいですか。",
+          "options": ["はい", "いいえ"],
+          "answer": "いいえ",
+          "explanation": "「でんしゃで かいしゃに いきます」と あります。"
+        }
+      ]
+    },
+    {
+      "id": "ja_n5_travel_001",
+      "language": "ja",
+      "level": "jlpt_n5",
+      "examLevel": 5,
+      "theme": "travel",
+      "title": "きょうとへ いきます",
+      "titleTranslation": "Going to Kyoto",
+      "estimatedMinutes": 2,
+      "createdAt": "2026-06-27T00:00:00.000Z",
+      "paragraphs": [
+        {
+          "index": 0,
+          "text": "らいしゅう ともだちと きょうとへ いきます。しんかんせんで いきます。",
+          "reading": "raishuu tomodachi to kyouto e ikimasu. shinkansen de ikimasu.",
+          "translation": "Next week I am going to Kyoto with a friend. We will go by bullet train."
+        },
+        {
+          "index": 1,
+          "text": "きょうとには ふるい おてらが たくさん あります。とても きれいです。",
+          "reading": "kyouto ni wa furui otera ga takusan arimasu. totemo kirei desu.",
+          "translation": "There are many old temples in Kyoto. They are very beautiful."
+        },
+        {
+          "index": 2,
+          "text": "おいしい ものを たべたいです。たのしみです。",
+          "reading": "oishii mono o tabetai desu. tanoshimi desu.",
+          "translation": "I want to eat delicious food. I am looking forward to it."
+        }
+      ],
+      "vocab": [
+        {"surface": "らいしゅう", "reading": "raishuu", "meaning": "next week", "role": "key"},
+        {"surface": "ともだち", "reading": "tomodachi", "meaning": "friend", "role": "key"},
+        {"surface": "しんかんせん", "reading": "shinkansen", "meaning": "bullet train", "role": "key"},
+        {"surface": "おてら", "reading": "otera", "meaning": "temple", "role": "key"},
+        {"surface": "きれい", "reading": "kirei", "meaning": "beautiful, clean", "role": "key"}
+      ],
+      "comprehension": [
+        {
+          "id": "ja_n5_travel_001_q1",
+          "type": "meaningChoice",
+          "kind": "detail",
+          "prompt": "だれと きょうとへ いきますか。",
+          "options": ["かぞく", "ともだち", "せんせい", "ひとり"],
+          "answer": "ともだち",
+          "explanation": "「ともだちと きょうとへ いきます」と あります。"
+        },
+        {
+          "id": "ja_n5_travel_001_q2",
+          "type": "meaningChoice",
+          "kind": "detail",
+          "prompt": "なにで きょうとへ いきますか。",
+          "options": ["バス", "ひこうき", "しんかんせん", "くるま"],
+          "answer": "しんかんせん",
+          "explanation": "「しんかんせんで いきます」と あります。"
+        },
+        {
+          "id": "ja_n5_travel_001_q3",
+          "type": "meaningChoice",
+          "kind": "trueFalse",
+          "prompt": "きょうとには おてらが たくさん あります。ただしいですか。",
+          "options": ["はい", "いいえ"],
+          "answer": "はい",
+          "explanation": "「ふるい おてらが たくさん あります」と あります。"
+        }
+      ]
+    }
+  ]
+}

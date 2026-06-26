@@ -1,0 +1,206 @@
+{
+  "level": "hsk1",
+  "language": "zh",
+  "articles": [
+    {
+      "id": "zh_hsk1_life_001",
+      "language": "zh",
+      "level": "hsk1",
+      "examLevel": 1,
+      "theme": "life",
+      "title": "我的一天",
+      "titleTranslation": "My Day",
+      "estimatedMinutes": 2,
+      "createdAt": "2026-06-27T00:00:00.000Z",
+      "paragraphs": [
+        {
+          "index": 0,
+          "text": "我每天七点起来。我先喝水，然后吃早饭。",
+          "reading": "wǒ měi tiān qī diǎn qǐ lái. wǒ xiān hē shuǐ, rán hòu chī zǎo fàn.",
+          "translation": "I get up at seven every day. First I drink water, then I eat breakfast."
+        },
+        {
+          "index": 1,
+          "text": "上午我去学校学习。中午我和朋友一起吃饭。",
+          "reading": "shàng wǔ wǒ qù xué xiào xué xí. zhōng wǔ wǒ hé péng you yì qǐ chī fàn.",
+          "translation": "In the morning I go to school to study. At noon I eat with my friends."
+        },
+        {
+          "index": 2,
+          "text": "下午我回家。晚上我看书，十点睡觉。",
+          "reading": "xià wǔ wǒ huí jiā. wǎn shang wǒ kàn shū, shí diǎn shuì jiào.",
+          "translation": "In the afternoon I go home. In the evening I read a book and sleep at ten."
+        }
+      ],
+      "vocab": [
+        {"surface": "起来", "reading": "qǐ lái", "meaning": "to get up", "role": "key"},
+        {"surface": "早饭", "reading": "zǎo fàn", "meaning": "breakfast", "role": "key"},
+        {"surface": "学校", "reading": "xué xiào", "meaning": "school", "role": "key"},
+        {"surface": "朋友", "reading": "péng you", "meaning": "friend", "role": "key"},
+        {"surface": "睡觉", "reading": "shuì jiào", "meaning": "to sleep", "role": "key"}
+      ],
+      "comprehension": [
+        {
+          "id": "zh_hsk1_life_001_q1",
+          "type": "meaningChoice",
+          "kind": "detail",
+          "prompt": "“我”每天几点起来？",
+          "options": ["六点", "七点", "八点", "十点"],
+          "answer": "七点",
+          "explanation": "文章说“我每天七点起来”。"
+        },
+        {
+          "id": "zh_hsk1_life_001_q2",
+          "type": "meaningChoice",
+          "kind": "detail",
+          "prompt": "中午“我”和谁一起吃饭？",
+          "options": ["老师", "家人", "朋友", "一个人"],
+          "answer": "朋友",
+          "explanation": "文章说“中午我和朋友一起吃饭”。"
+        },
+        {
+          "id": "zh_hsk1_life_001_q3",
+          "type": "meaningChoice",
+          "kind": "trueFalse",
+          "prompt": "“我”晚上十点睡觉。这句话对吗？",
+          "options": ["对", "不对"],
+          "answer": "对",
+          "explanation": "文章说“晚上我看书，十点睡觉”。"
+        }
+      ]
+    },
+    {
+      "id": "zh_hsk1_travel_001",
+      "language": "zh",
+      "level": "hsk1",
+      "examLevel": 1,
+      "theme": "travel",
+      "title": "去北京",
+      "titleTranslation": "Going to Beijing",
+      "estimatedMinutes": 2,
+      "createdAt": "2026-06-27T00:00:00.000Z",
+      "paragraphs": [
+        {
+          "index": 0,
+          "text": "明天我和妈妈去北京。我们坐飞机去。",
+          "reading": "míng tiān wǒ hé mā ma qù běi jīng. wǒ men zuò fēi jī qù.",
+          "translation": "Tomorrow my mother and I are going to Beijing. We are going by plane."
+        },
+        {
+          "index": 1,
+          "text": "北京很大，也很漂亮。那里有很多人。",
+          "reading": "běi jīng hěn dà, yě hěn piào liang. nà lǐ yǒu hěn duō rén.",
+          "translation": "Beijing is very big and also very beautiful. There are many people there."
+        },
+        {
+          "index": 2,
+          "text": "我想吃北京的菜，也想买东西。我很高兴。",
+          "reading": "wǒ xiǎng chī běi jīng de cài, yě xiǎng mǎi dōng xi. wǒ hěn gāo xìng.",
+          "translation": "I want to eat Beijing food and also want to buy things. I am very happy."
+        }
+      ],
+      "vocab": [
+        {"surface": "明天", "reading": "míng tiān", "meaning": "tomorrow", "role": "key"},
+        {"surface": "飞机", "reading": "fēi jī", "meaning": "airplane", "role": "key"},
+        {"surface": "漂亮", "reading": "piào liang", "meaning": "beautiful", "role": "key"},
+        {"surface": "东西", "reading": "dōng xi", "meaning": "things", "role": "key"},
+        {"surface": "高兴", "reading": "gāo xìng", "meaning": "happy", "role": "key"}
+      ],
+      "comprehension": [
+        {
+          "id": "zh_hsk1_travel_001_q1",
+          "type": "meaningChoice",
+          "kind": "detail",
+          "prompt": "“我”和谁一起去北京？",
+          "options": ["朋友", "妈妈", "老师", "哥哥"],
+          "answer": "妈妈",
+          "explanation": "文章说“我和妈妈去北京”。"
+        },
+        {
+          "id": "zh_hsk1_travel_001_q2",
+          "type": "meaningChoice",
+          "kind": "detail",
+          "prompt": "他们怎么去北京？",
+          "options": ["坐飞机", "坐火车", "开车", "走路"],
+          "answer": "坐飞机",
+          "explanation": "文章说“我们坐飞机去”。"
+        },
+        {
+          "id": "zh_hsk1_travel_001_q3",
+          "type": "meaningChoice",
+          "kind": "trueFalse",
+          "prompt": "北京很小。这句话对吗？",
+          "options": ["对", "不对"],
+          "answer": "不对",
+          "explanation": "文章说“北京很大”。"
+        }
+      ]
+    },
+    {
+      "id": "zh_hsk1_campus_001",
+      "language": "zh",
+      "level": "hsk1",
+      "examLevel": 1,
+      "theme": "campus",
+      "title": "我的老师",
+      "titleTranslation": "My Teacher",
+      "estimatedMinutes": 2,
+      "createdAt": "2026-06-27T00:00:00.000Z",
+      "paragraphs": [
+        {
+          "index": 0,
+          "text": "我的老师是中国人。她叫王老师。",
+          "reading": "wǒ de lǎo shī shì zhōng guó rén. tā jiào wáng lǎo shī.",
+          "translation": "My teacher is Chinese. Her name is Teacher Wang."
+        },
+        {
+          "index": 1,
+          "text": "她教我们说汉语。她说得很慢，我们都听得懂。",
+          "reading": "tā jiāo wǒ men shuō hàn yǔ. tā shuō de hěn màn, wǒ men dōu tīng de dǒng.",
+          "translation": "She teaches us to speak Chinese. She speaks slowly, and we can all understand."
+        },
+        {
+          "index": 2,
+          "text": "我们都很喜欢她。我想学好汉语。",
+          "reading": "wǒ men dōu hěn xǐ huan tā. wǒ xiǎng xué hǎo hàn yǔ.",
+          "translation": "We all like her very much. I want to learn Chinese well."
+        }
+      ],
+      "vocab": [
+        {"surface": "老师", "reading": "lǎo shī", "meaning": "teacher", "role": "key"},
+        {"surface": "汉语", "reading": "hàn yǔ", "meaning": "Chinese (language)", "role": "key"},
+        {"surface": "喜欢", "reading": "xǐ huan", "meaning": "to like", "role": "key"},
+        {"surface": "学", "reading": "xué", "meaning": "to learn", "role": "key"}
+      ],
+      "comprehension": [
+        {
+          "id": "zh_hsk1_campus_001_q1",
+          "type": "meaningChoice",
+          "kind": "detail",
+          "prompt": "老师姓什么？",
+          "options": ["王", "李", "张", "陈"],
+          "answer": "王",
+          "explanation": "文章说“她叫王老师”。"
+        },
+        {
+          "id": "zh_hsk1_campus_001_q2",
+          "type": "meaningChoice",
+          "kind": "detail",
+          "prompt": "老师说汉语说得怎么样？",
+          "options": ["很快", "很慢", "很小", "很大"],
+          "answer": "很慢",
+          "explanation": "文章说“她说得很慢”。"
+        },
+        {
+          "id": "zh_hsk1_campus_001_q3",
+          "type": "meaningChoice",
+          "kind": "trueFalse",
+          "prompt": "学生们不喜欢老师。这句话对吗？",
+          "options": ["对", "不对"],
+          "answer": "不对",
+          "explanation": "文章说“我们都很喜欢她”。"
+        }
+      ]
+    }
+  ]
+}
