@@ -807,6 +807,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Provides audio feedback for quiz results and practice rhythm';
 
   @override
+  String get settingsTheme => 'Theme';
+
+  @override
   String get settingsThemeSystem => 'Follow System';
 
   @override

@@ -54,6 +54,15 @@ class SettingsScreen extends ConsumerWidget {
             const SizedBox(height: AppTokens.s12),
             _SensorySettingsCard(sensorySettings: state.sensorySettings),
             const SizedBox(height: AppTokens.s12),
+            _ThemeSettingCard(
+              themeMode: ref.watch(
+                appControllerProvider.select((s) => s.themeMode),
+              ),
+              onChanged: (mode) => ref
+                  .read(appControllerProvider.notifier)
+                  .updateThemeMode(mode),
+            ),
+            const SizedBox(height: AppTokens.s12),
             _SettingsAction(
               icon: AppIcons.lock,
               title: 'Privacy Settings',
@@ -234,6 +243,60 @@ class _SettingsAction extends StatelessWidget {
             ),
           ),
           const Icon(AppIcons.chevronRight),
+        ],
+      ),
+    );
+  }
+}
+
+class _ThemeSettingCard extends StatelessWidget {
+  const _ThemeSettingCard({
+    required this.themeMode,
+    required this.onChanged,
+  });
+
+  final ThemeMode themeMode;
+  final ValueChanged<ThemeMode> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(AppIcons.contrastCircle, color: theme.colorScheme.primary),
+              const SizedBox(width: AppTokens.s12),
+              Text(l10n.settingsTheme, style: theme.textTheme.titleMedium),
+            ],
+          ),
+          const SizedBox(height: AppTokens.s12),
+          SegmentedButton<ThemeMode>(
+            segments: [
+              ButtonSegment(
+                value: ThemeMode.system,
+                label: Text(l10n.settingsThemeSystem),
+                icon: const Icon(Icons.brightness_auto),
+              ),
+              ButtonSegment(
+                value: ThemeMode.light,
+                label: Text(l10n.settingsThemeLight),
+                icon: const Icon(Icons.brightness_7),
+              ),
+              ButtonSegment(
+                value: ThemeMode.dark,
+                label: Text(l10n.settingsThemeDark),
+                icon: const Icon(Icons.brightness_2),
+              ),
+            ],
+            selected: {themeMode},
+            onSelectionChanged: (Set<ThemeMode> selection) {
+              if (selection.isNotEmpty) onChanged(selection.first);
+            },
+          ),
         ],
       ),
     );

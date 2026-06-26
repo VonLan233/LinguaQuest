@@ -255,6 +255,7 @@
   "settingsAppBar": "设置",
   "settingsSoundFeedback": "答题音效反馈",
   "settingsSoundFeedbackSubtitle": "用于提醒答题结果和练习节奏",
+  "settingsTheme": "主题",
   "settingsThemeSystem": "跟随系统",
   "settingsThemeSystemSubtitle": "根据设备浅色或深色偏好自动切换",
   "settingsThemeLight": "浅色",

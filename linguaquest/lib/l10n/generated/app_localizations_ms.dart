@@ -811,6 +811,9 @@ class AppLocalizationsMs extends AppLocalizations {
       'Memberikan maklum balas audio untuk keputusan kuiz dan rentak latihan';
 
   @override
+  String get settingsTheme => 'Tema';
+
+  @override
   String get settingsThemeSystem => 'Ikut Sistem';
 
   @override

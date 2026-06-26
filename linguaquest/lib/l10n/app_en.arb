@@ -255,6 +255,7 @@
   "settingsAppBar": "Settings",
   "settingsSoundFeedback": "Answer Sound Feedback",
   "settingsSoundFeedbackSubtitle": "Provides audio feedback for quiz results and practice rhythm",
+  "settingsTheme": "Theme",
   "settingsThemeSystem": "Follow System",
   "settingsThemeSystemSubtitle": "Automatically switch based on device light/dark preference",
   "settingsThemeLight": "Light",

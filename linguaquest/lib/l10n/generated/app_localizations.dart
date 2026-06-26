@@ -1570,6 +1570,12 @@ abstract class AppLocalizations {
   /// **'Provides audio feedback for quiz results and practice rhythm'**
   String get settingsSoundFeedbackSubtitle;
 
+  /// No description provided for @settingsTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get settingsTheme;
+
   /// No description provided for @settingsThemeSystem.
   ///
   /// In en, this message translates to:

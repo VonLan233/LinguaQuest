@@ -766,6 +766,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsSoundFeedbackSubtitle => '用于提醒答题结果和练习节奏';
 
   @override
+  String get settingsTheme => '主题';
+
+  @override
   String get settingsThemeSystem => '跟随系统';
 
   @override
