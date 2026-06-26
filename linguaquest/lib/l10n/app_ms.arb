@@ -956,5 +956,47 @@
   "aiEmptyChat": "Tanya apa sahaja tentang bahasa Cina — maksud, tatabahasa atau penggunaan.",
   "aiEmptyAnalysis": "Tampal ayat bahasa Cina untuk melihat huraian strukturnya.",
   "aiEmptyCloze": "Masukkan perkataan untuk menjana latihan isi tempat kosong.",
-  "aiEmptyWriting": "Tampal karangan anda dan pilih jenis peperiksaan untuk maklum balas bermarkah."
+  "aiEmptyWriting": "Tampal karangan anda dan pilih jenis peperiksaan untuk maklum balas bermarkah.",
+
+  "achievementsScreenTitle": "Pencapaian",
+  "achievementsHeaderTitle": "Pencapaian Anda",
+  "@achievementsUnlockedCount": {
+    "placeholders": {
+      "unlocked": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "achievementsUnlockedCount": "{unlocked} / {total} dibuka",
+  "achievementUnlockedLabel": "Dibuka",
+
+  "achievementLearn100Title": "Sarjana Seabad",
+  "achievementLearn100Desc": "Kuasai 100 perkataan",
+  "achievementQuizPerfectTitle": "Larian Sempurna",
+  "achievementQuizPerfectDesc": "Selesaikan sesi kuiz dengan ketepatan 100% (4+ soalan)",
+  "achievementFirstListeningTitle": "Gema Pertama",
+  "achievementFirstListeningDesc": "Selesaikan latihan mendengar pertama anda",
+  "achievementFirstMapLanguageTitle": "Kartografer",
+  "achievementFirstMapLanguageDesc": "Pilih bahasa dari peta bahasa",
+
+  "assetInventoryTitle": "Aset Saya",
+  "assetInventoryEmpty": "Tiada aset lagi. Cuba nasib anda di Cabutan Bertuah!",
+  "@assetInventoryTotalOwned": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "assetInventoryTotalOwned": "{count} item dimiliki",
+  "@assetInventoryTotalFragments": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "assetInventoryTotalFragments": "{count} serpihan",
+  "@assetInventoryQuantityBadge": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "assetInventoryQuantityBadge": "×{count}",
+  "luckyDrawViewMyAssets": "Lihat aset saya"
 }

@@ -5538,6 +5538,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Paste your essay and pick an exam type to get scored feedback.'**
   String get aiEmptyWriting;
+
+  /// No description provided for @achievementsScreenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Achievements'**
+  String get achievementsScreenTitle;
+
+  /// No description provided for @achievementsHeaderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Achievements'**
+  String get achievementsHeaderTitle;
+
+  /// No description provided for @achievementsUnlockedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{unlocked} / {total} unlocked'**
+  String achievementsUnlockedCount(int unlocked, int total);
+
+  /// No description provided for @achievementUnlockedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlocked'**
+  String get achievementUnlockedLabel;
+
+  /// No description provided for @achievementLearn100Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Century Scholar'**
+  String get achievementLearn100Title;
+
+  /// No description provided for @achievementLearn100Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Master 100 words'**
+  String get achievementLearn100Desc;
+
+  /// No description provided for @achievementQuizPerfectTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Flawless Run'**
+  String get achievementQuizPerfectTitle;
+
+  /// No description provided for @achievementQuizPerfectDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete a quiz session with 100% accuracy (4+ questions)'**
+  String get achievementQuizPerfectDesc;
+
+  /// No description provided for @achievementFirstListeningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'First Echo'**
+  String get achievementFirstListeningTitle;
+
+  /// No description provided for @achievementFirstListeningDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete your first listening exercise'**
+  String get achievementFirstListeningDesc;
+
+  /// No description provided for @achievementFirstMapLanguageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cartographer'**
+  String get achievementFirstMapLanguageTitle;
+
+  /// No description provided for @achievementFirstMapLanguageDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a language from the language map'**
+  String get achievementFirstMapLanguageDesc;
+
+  /// No description provided for @assetInventoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My Assets'**
+  String get assetInventoryTitle;
+
+  /// No description provided for @assetInventoryEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No assets yet. Try your luck in the Lucky Draw!'**
+  String get assetInventoryEmpty;
+
+  /// No description provided for @assetInventoryTotalOwned.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} items owned'**
+  String assetInventoryTotalOwned(int count);
+
+  /// No description provided for @assetInventoryTotalFragments.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} fragments'**
+  String assetInventoryTotalFragments(int count);
+
+  /// No description provided for @assetInventoryQuantityBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'×{count}'**
+  String assetInventoryQuantityBadge(int count);
+
+  /// No description provided for @luckyDrawViewMyAssets.
+  ///
+  /// In en, this message translates to:
+  /// **'View my assets'**
+  String get luckyDrawViewMyAssets;
 }
 
 class _AppLocalizationsDelegate

@@ -956,5 +956,47 @@
   "aiEmptyChat": "关于中文的任何问题都可以问——词义、语法或用法。",
   "aiEmptyAnalysis": "粘贴一个中文句子，查看它的结构拆解。",
   "aiEmptyCloze": "输入一个词，生成填空练习。",
-  "aiEmptyWriting": "粘贴你的作文并选择考试类型，获取评分反馈。"
+  "aiEmptyWriting": "粘贴你的作文并选择考试类型，获取评分反馈。",
+
+  "achievementsScreenTitle": "成就",
+  "achievementsHeaderTitle": "我的成就",
+  "@achievementsUnlockedCount": {
+    "placeholders": {
+      "unlocked": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "achievementsUnlockedCount": "{unlocked} / {total} 已解锁",
+  "achievementUnlockedLabel": "已解锁",
+
+  "achievementLearn100Title": "词汇百人斩",
+  "achievementLearn100Desc": "掌握 100 个单词",
+  "achievementQuizPerfectTitle": "完美发挥",
+  "achievementQuizPerfectDesc": "完成一次 100% 正确率的测验（4 题以上）",
+  "achievementFirstListeningTitle": "初次聆听",
+  "achievementFirstListeningDesc": "完成第一次听力练习",
+  "achievementFirstMapLanguageTitle": "探图者",
+  "achievementFirstMapLanguageDesc": "在语言地图中选择一门语言",
+
+  "assetInventoryTitle": "我的资产",
+  "assetInventoryEmpty": "暂无资产，快去幸运抽奖试试手气！",
+  "@assetInventoryTotalOwned": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "assetInventoryTotalOwned": "拥有 {count} 件",
+  "@assetInventoryTotalFragments": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "assetInventoryTotalFragments": "{count} 碎片",
+  "@assetInventoryQuantityBadge": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "assetInventoryQuantityBadge": "×{count}",
+  "luckyDrawViewMyAssets": "查看我的资产"
 }

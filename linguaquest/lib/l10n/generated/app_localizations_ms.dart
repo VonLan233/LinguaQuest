@@ -3111,4 +3111,69 @@ class AppLocalizationsMs extends AppLocalizations {
   @override
   String get aiEmptyWriting =>
       'Tampal karangan anda dan pilih jenis peperiksaan untuk maklum balas bermarkah.';
+
+  @override
+  String get achievementsScreenTitle => 'Pencapaian';
+
+  @override
+  String get achievementsHeaderTitle => 'Pencapaian Anda';
+
+  @override
+  String achievementsUnlockedCount(int unlocked, int total) {
+    return '$unlocked / $total dibuka';
+  }
+
+  @override
+  String get achievementUnlockedLabel => 'Dibuka';
+
+  @override
+  String get achievementLearn100Title => 'Sarjana Seabad';
+
+  @override
+  String get achievementLearn100Desc => 'Kuasai 100 perkataan';
+
+  @override
+  String get achievementQuizPerfectTitle => 'Larian Sempurna';
+
+  @override
+  String get achievementQuizPerfectDesc =>
+      'Selesaikan sesi kuiz dengan ketepatan 100% (4+ soalan)';
+
+  @override
+  String get achievementFirstListeningTitle => 'Gema Pertama';
+
+  @override
+  String get achievementFirstListeningDesc =>
+      'Selesaikan latihan mendengar pertama anda';
+
+  @override
+  String get achievementFirstMapLanguageTitle => 'Kartografer';
+
+  @override
+  String get achievementFirstMapLanguageDesc => 'Pilih bahasa dari peta bahasa';
+
+  @override
+  String get assetInventoryTitle => 'Aset Saya';
+
+  @override
+  String get assetInventoryEmpty =>
+      'Tiada aset lagi. Cuba nasib anda di Cabutan Bertuah!';
+
+  @override
+  String assetInventoryTotalOwned(int count) {
+    return '$count item dimiliki';
+  }
+
+  @override
+  String assetInventoryTotalFragments(int count) {
+    return '$count serpihan';
+  }
+
+  @override
+  String assetInventoryQuantityBadge(int count) {
+    return '×$count';
+  }
+
+  @override
+  String get luckyDrawViewMyAssets => 'Lihat aset saya';
 }

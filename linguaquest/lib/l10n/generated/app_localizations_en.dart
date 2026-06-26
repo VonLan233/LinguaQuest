@@ -3098,4 +3098,70 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get aiEmptyWriting =>
       'Paste your essay and pick an exam type to get scored feedback.';
+
+  @override
+  String get achievementsScreenTitle => 'Achievements';
+
+  @override
+  String get achievementsHeaderTitle => 'Your Achievements';
+
+  @override
+  String achievementsUnlockedCount(int unlocked, int total) {
+    return '$unlocked / $total unlocked';
+  }
+
+  @override
+  String get achievementUnlockedLabel => 'Unlocked';
+
+  @override
+  String get achievementLearn100Title => 'Century Scholar';
+
+  @override
+  String get achievementLearn100Desc => 'Master 100 words';
+
+  @override
+  String get achievementQuizPerfectTitle => 'Flawless Run';
+
+  @override
+  String get achievementQuizPerfectDesc =>
+      'Complete a quiz session with 100% accuracy (4+ questions)';
+
+  @override
+  String get achievementFirstListeningTitle => 'First Echo';
+
+  @override
+  String get achievementFirstListeningDesc =>
+      'Complete your first listening exercise';
+
+  @override
+  String get achievementFirstMapLanguageTitle => 'Cartographer';
+
+  @override
+  String get achievementFirstMapLanguageDesc =>
+      'Pick a language from the language map';
+
+  @override
+  String get assetInventoryTitle => 'My Assets';
+
+  @override
+  String get assetInventoryEmpty =>
+      'No assets yet. Try your luck in the Lucky Draw!';
+
+  @override
+  String assetInventoryTotalOwned(int count) {
+    return '$count items owned';
+  }
+
+  @override
+  String assetInventoryTotalFragments(int count) {
+    return '$count fragments';
+  }
+
+  @override
+  String assetInventoryQuantityBadge(int count) {
+    return '×$count';
+  }
+
+  @override
+  String get luckyDrawViewMyAssets => 'View my assets';
 }

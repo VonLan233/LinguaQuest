@@ -1041,5 +1041,47 @@
   "aiEmptyChat": "Ask anything about Chinese — meanings, grammar, or usage.",
   "aiEmptyAnalysis": "Paste a Chinese sentence to see its structure broken down.",
   "aiEmptyCloze": "Enter a word to generate a fill-in-the-blank exercise.",
-  "aiEmptyWriting": "Paste your essay and pick an exam type to get scored feedback."
+  "aiEmptyWriting": "Paste your essay and pick an exam type to get scored feedback.",
+
+  "achievementsScreenTitle": "Achievements",
+  "achievementsHeaderTitle": "Your Achievements",
+  "@achievementsUnlockedCount": {
+    "placeholders": {
+      "unlocked": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "achievementsUnlockedCount": "{unlocked} / {total} unlocked",
+  "achievementUnlockedLabel": "Unlocked",
+
+  "achievementLearn100Title": "Century Scholar",
+  "achievementLearn100Desc": "Master 100 words",
+  "achievementQuizPerfectTitle": "Flawless Run",
+  "achievementQuizPerfectDesc": "Complete a quiz session with 100% accuracy (4+ questions)",
+  "achievementFirstListeningTitle": "First Echo",
+  "achievementFirstListeningDesc": "Complete your first listening exercise",
+  "achievementFirstMapLanguageTitle": "Cartographer",
+  "achievementFirstMapLanguageDesc": "Pick a language from the language map",
+
+  "assetInventoryTitle": "My Assets",
+  "assetInventoryEmpty": "No assets yet. Try your luck in the Lucky Draw!",
+  "@assetInventoryTotalOwned": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "assetInventoryTotalOwned": "{count} items owned",
+  "@assetInventoryTotalFragments": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "assetInventoryTotalFragments": "{count} fragments",
+  "@assetInventoryQuantityBadge": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "assetInventoryQuantityBadge": "×{count}",
+  "luckyDrawViewMyAssets": "View my assets"
 }

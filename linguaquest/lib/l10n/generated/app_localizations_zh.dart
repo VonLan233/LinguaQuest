@@ -2937,4 +2937,66 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get aiEmptyWriting => '粘贴你的作文并选择考试类型，获取评分反馈。';
+
+  @override
+  String get achievementsScreenTitle => '成就';
+
+  @override
+  String get achievementsHeaderTitle => '我的成就';
+
+  @override
+  String achievementsUnlockedCount(int unlocked, int total) {
+    return '$unlocked / $total 已解锁';
+  }
+
+  @override
+  String get achievementUnlockedLabel => '已解锁';
+
+  @override
+  String get achievementLearn100Title => '词汇百人斩';
+
+  @override
+  String get achievementLearn100Desc => '掌握 100 个单词';
+
+  @override
+  String get achievementQuizPerfectTitle => '完美发挥';
+
+  @override
+  String get achievementQuizPerfectDesc => '完成一次 100% 正确率的测验（4 题以上）';
+
+  @override
+  String get achievementFirstListeningTitle => '初次聆听';
+
+  @override
+  String get achievementFirstListeningDesc => '完成第一次听力练习';
+
+  @override
+  String get achievementFirstMapLanguageTitle => '探图者';
+
+  @override
+  String get achievementFirstMapLanguageDesc => '在语言地图中选择一门语言';
+
+  @override
+  String get assetInventoryTitle => '我的资产';
+
+  @override
+  String get assetInventoryEmpty => '暂无资产，快去幸运抽奖试试手气！';
+
+  @override
+  String assetInventoryTotalOwned(int count) {
+    return '拥有 $count 件';
+  }
+
+  @override
+  String assetInventoryTotalFragments(int count) {
+    return '$count 碎片';
+  }
+
+  @override
+  String assetInventoryQuantityBadge(int count) {
+    return '×$count';
+  }
+
+  @override
+  String get luckyDrawViewMyAssets => '查看我的资产';
 }
