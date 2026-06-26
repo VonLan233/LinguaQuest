@@ -45,6 +45,8 @@ class AchievementPolicy {
     bool hasPerfectQuiz = false,
     bool hasListening = false,
     bool hasMapLanguage = false,
+    bool hasJapaneseStudy = false,
+    bool hasReadingComprehension = false,
   }) {
     final now = DateTime.now().toUtc();
     return [
@@ -127,6 +129,22 @@ class AchievementPolicy {
         iconKey: 'map',
         unlocked: hasMapLanguage,
         unlockedAt: hasMapLanguage ? now : null,
+      ),
+      Achievement(
+        id: 'first_japanese_lesson',
+        title: 'First Japanese',
+        description: 'Study your first Japanese word',
+        iconKey: 'translate',
+        unlocked: hasJapaneseStudy,
+        unlockedAt: hasJapaneseStudy ? now : null,
+      ),
+      Achievement(
+        id: 'first_reading',
+        title: 'Bookworm',
+        description: 'Complete your first reading comprehension',
+        iconKey: 'menu_book',
+        unlocked: hasReadingComprehension,
+        unlockedAt: hasReadingComprehension ? now : null,
       ),
     ];
   }

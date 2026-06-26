@@ -10,7 +10,7 @@ void main() {
         totalStudyDays: 0,
         trainingXp: 0,
       );
-      expect(achievements.length, 10);
+      expect(achievements.length, 12);
     });
 
     test('all achievement ids are unique', () {
@@ -98,6 +98,50 @@ void main() {
       );
       expect(locked.firstWhere((a) => a.id == 'first_map_language').unlocked, isFalse);
       expect(unlocked.firstWhere((a) => a.id == 'first_map_language').unlocked, isTrue);
+    });
+
+    test('first_japanese_lesson unlocks iff hasJapaneseStudy is true', () {
+      final locked = AchievementPolicy.evaluate(
+        streakDays: 0,
+        masteredWords: 0,
+        totalStudyDays: 0,
+        trainingXp: 0,
+        hasJapaneseStudy: false,
+      );
+      final unlocked = AchievementPolicy.evaluate(
+        streakDays: 0,
+        masteredWords: 0,
+        totalStudyDays: 0,
+        trainingXp: 0,
+        hasJapaneseStudy: true,
+      );
+      expect(
+          locked.firstWhere((a) => a.id == 'first_japanese_lesson').unlocked,
+          isFalse);
+      expect(
+          unlocked.firstWhere((a) => a.id == 'first_japanese_lesson').unlocked,
+          isTrue);
+    });
+
+    test('first_reading unlocks iff hasReadingComprehension is true', () {
+      final locked = AchievementPolicy.evaluate(
+        streakDays: 0,
+        masteredWords: 0,
+        totalStudyDays: 0,
+        trainingXp: 0,
+        hasReadingComprehension: false,
+      );
+      final unlocked = AchievementPolicy.evaluate(
+        streakDays: 0,
+        masteredWords: 0,
+        totalStudyDays: 0,
+        trainingXp: 0,
+        hasReadingComprehension: true,
+      );
+      expect(locked.firstWhere((a) => a.id == 'first_reading').unlocked,
+          isFalse);
+      expect(unlocked.firstWhere((a) => a.id == 'first_reading').unlocked,
+          isTrue);
     });
 
     test('existing achievements still work correctly', () {

@@ -104,14 +104,14 @@ void main() {
   });
 
   group('AchievementPolicy', () {
-    test('evaluate returns 10 achievements', () {
+    test('evaluate returns 12 achievements', () {
       final achievements = AchievementPolicy.evaluate(
         streakDays: 0,
         masteredWords: 0,
         totalStudyDays: 0,
         trainingXp: 0,
       );
-      expect(achievements, hasLength(10));
+      expect(achievements, hasLength(12));
     });
 
     test('first_lesson unlocks when totalStudyDays >= 1', () {

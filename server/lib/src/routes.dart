@@ -910,6 +910,8 @@ Router buildRouter(
       final hasPerfectQuiz = await database.hasPerfectSession(uid);
       final hasListening = await database.hasListeningRecord(uid);
       final mapAt = await database.firstMapLanguageAt(uid);
+      final hasJapaneseStudy = await database.hasJapaneseStudy(uid);
+      final hasReadingComprehension = await database.hasReadingRecord(uid);
       final achievements = AchievementPolicy.evaluate(
         streakDays: streak,
         masteredWords: masteredWords,
@@ -918,6 +920,8 @@ Router buildRouter(
         hasPerfectQuiz: hasPerfectQuiz,
         hasListening: hasListening,
         hasMapLanguage: mapAt != null,
+        hasJapaneseStudy: hasJapaneseStudy,
+        hasReadingComprehension: hasReadingComprehension,
       );
       return jsonResponse(achievements.map((a) => a.toJson()).toList());
     });

@@ -1320,6 +1320,33 @@ LIMIT 1
     return rows.isNotEmpty;
   }
 
+  /// Returns true if the user has at least one user_word in Japanese.
+  Future<bool> hasJapaneseStudy(String uid) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT 1 FROM user_words
+WHERE uid = @uid AND language = 'ja'
+LIMIT 1
+'''),
+      parameters: {'uid': uid},
+    );
+    return rows.isNotEmpty;
+  }
+
+  /// Returns true if the user has at least one reading-comprehension exercise
+  /// record (game_id prefixed 'reading-', written by completeReading).
+  Future<bool> hasReadingRecord(String uid) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT 1 FROM exercise_records
+WHERE uid = @uid AND game_id LIKE 'reading-%'
+LIMIT 1
+'''),
+      parameters: {'uid': uid},
+    );
+    return rows.isNotEmpty;
+  }
+
   /// Sets users.first_map_language_at to now if not already set.
   Future<void> setFirstMapLanguageAt(String uid) async {
     await connection.execute(
