@@ -16,6 +16,7 @@ import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/app_progress_bar.dart';
 import '../../core/widgets/fallback_back_button.dart';
+import '../../core/widgets/language_wordbook_picker.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../core/widgets/wordbook_cover_card.dart';
@@ -148,8 +149,16 @@ class _StudyPlanSettingsScreenState
                 l10n: l10n,
               ),
               const SizedBox(height: 24),
+              _CurrentLanguageTile(
+                currentLanguage: state.currentLanguage,
+                l10n: l10n,
+                onTap: () => showLanguageWordbookPicker(context),
+              ),
+              const SizedBox(height: AppTokens.s12),
               _StudyBookSelector(
-                books: state.wordBooks,
+                books: state.wordBooks
+                    .where((b) => b.language == state.currentLanguage)
+                    .toList(),
                 userWords: state.userWords,
                 selectedId: _wordBookId,
                 localeCode: localeCode,
@@ -913,6 +922,50 @@ class _PlanActionRow extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _CurrentLanguageTile extends StatelessWidget {
+  const _CurrentLanguageTile({
+    required this.currentLanguage,
+    required this.l10n,
+    required this.onTap,
+  });
+
+  final String currentLanguage;
+  final AppLocalizations l10n;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppTokens.s16,
+        vertical: AppTokens.s12,
+      ),
+      onTap: onTap,
+      child: Row(
+        children: [
+          Text(
+            l10n.pickerChooseLanguage,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: AppTokens.textSecondaryLight,
+                ),
+          ),
+          const SizedBox(width: AppTokens.s8),
+          AppPill(
+            label: languageLabel(currentLanguage, l10n),
+            variant: PillVariant.primary,
+          ),
+          const Spacer(),
+          const Icon(
+            AppIcons.chevronRight,
+            size: 18,
+            color: AppTokens.textSecondaryLight,
+          ),
+        ],
       ),
     );
   }
