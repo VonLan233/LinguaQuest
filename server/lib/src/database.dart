@@ -540,6 +540,58 @@ CREATE TABLE IF NOT EXISTS forum_favorites (
     await connection.execute('''
 CREATE INDEX IF NOT EXISTS forum_posts_status_idx ON forum_posts(status);
 ''');
+
+    // P2b: Add language column to user_words (additive, default 'zh')
+    await connection.execute(
+      "ALTER TABLE user_words ADD COLUMN IF NOT EXISTS language TEXT NOT NULL DEFAULT 'zh'",
+    );
+
+    // P2b: Add language column to custom_words scope (additive, nullable)
+    await connection.execute(
+      "ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS scope TEXT",
+    );
+
+    // P2b: study_plans — add language column first
+    await connection.execute(
+      "ALTER TABLE study_plans ADD COLUMN IF NOT EXISTS language TEXT NOT NULL DEFAULT 'zh'",
+    );
+
+    // P2b: study_plans — swap UNIQUE(uid) → UNIQUE(uid, language, word_book_id)
+    // We do this safely: drop the old constraint, add the new one (both IF NOT EXISTS / conditional).
+    // The DROP is conditional via DO block to avoid error if already swapped.
+    await connection.execute(r'''
+DO $$
+BEGIN
+  -- Drop old single-uid unique constraint if it still exists.
+  IF EXISTS (
+    SELECT 1 FROM information_schema.table_constraints
+    WHERE table_name = 'study_plans'
+      AND constraint_type = 'UNIQUE'
+      AND constraint_name = 'study_plans_uid_key'
+  ) THEN
+    ALTER TABLE study_plans DROP CONSTRAINT study_plans_uid_key;
+  END IF;
+END
+$$;
+''');
+
+    // Add composite unique constraint if it doesn't already exist.
+    await connection.execute(r'''
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.table_constraints
+    WHERE table_name = 'study_plans'
+      AND constraint_type = 'UNIQUE'
+      AND constraint_name = 'study_plans_uid_language_word_book_id_key'
+  ) THEN
+    ALTER TABLE study_plans
+      ADD CONSTRAINT study_plans_uid_language_word_book_id_key
+      UNIQUE (uid, language, word_book_id);
+  END IF;
+END
+$$;
+''');
   }
 
   Future<Map<String, dynamic>?> getUserPrivacy(String userId) async {
@@ -1109,25 +1161,41 @@ LIMIT 1
     return rows.first.toColumnMap();
   }
 
+  Future<Map<String, dynamic>?> studyPlanByScope(
+    String uid,
+    String language,
+    String wordBookId,
+  ) async {
+    final rows = await connection.execute(
+      Sql.named(
+        'SELECT * FROM study_plans WHERE uid=@uid AND language=@language AND word_book_id=@wordBookId LIMIT 1',
+      ),
+      parameters: {'uid': uid, 'language': language, 'wordBookId': wordBookId},
+    );
+    if (rows.isEmpty) return null;
+    return rows.first.toColumnMap();
+  }
+
   Future<Map<String, dynamic>> upsertStudyPlan(
     String uid,
     Map<String, dynamic> data,
   ) async {
-    final existing = await studyPlanByUid(uid);
+    final language = data['language'] as String? ?? 'zh';
+    final wordBookId = data['wordBookId'] as String;
+    final existing = await studyPlanByScope(uid, language, wordBookId);
     final now = DateTime.now().toUtc();
     final id = existing?['id']?.toString() ?? data['id']?.toString();
     final updatedAt = _date(data['now']) ?? now;
     await connection.execute(
       Sql.named('''
 INSERT INTO study_plans (
-  id, uid, word_book_id, daily_new_target, daily_review_limit, start_date,
+  id, uid, language, word_book_id, daily_new_target, daily_review_limit, start_date,
   target_finish_date, reminder_time, status, created_at, updated_at
 ) VALUES (
-  @id, @uid, @wordBookId, @dailyNewTarget, @dailyReviewLimit, @startDate,
+  @id, @uid, @language, @wordBookId, @dailyNewTarget, @dailyReviewLimit, @startDate,
   @targetFinishDate, @reminderTime, @status, @createdAt, @updatedAt
 )
-ON CONFLICT (uid) DO UPDATE SET
-  word_book_id=EXCLUDED.word_book_id,
+ON CONFLICT (uid, language, word_book_id) DO UPDATE SET
   daily_new_target=EXCLUDED.daily_new_target,
   daily_review_limit=EXCLUDED.daily_review_limit,
   start_date=EXCLUDED.start_date,
@@ -1139,7 +1207,8 @@ ON CONFLICT (uid) DO UPDATE SET
       parameters: {
         'id': id ?? data['id'],
         'uid': uid,
-        'wordBookId': data['wordBookId'],
+        'language': language,
+        'wordBookId': wordBookId,
         'dailyNewTarget': data['dailyNewTarget'],
         'dailyReviewLimit': data['dailyReviewLimit'],
         'startDate': data['startDate'],
@@ -1150,7 +1219,7 @@ ON CONFLICT (uid) DO UPDATE SET
         'updatedAt': updatedAt,
       },
     );
-    return (await studyPlanByUid(uid))!;
+    return (await studyPlanByScope(uid, language, wordBookId))!;
   }
 
   Future<void> resetCustomWordProgress(String uid, {DateTime? now}) async {

@@ -1,4 +1,5 @@
 const allowedStudyPlanStatuses = {'active', 'paused'};
+const allowedLanguages = {'zh', 'ja'};
 const allowedWordBookIds = {
   'hsk1',
   'hsk2',
