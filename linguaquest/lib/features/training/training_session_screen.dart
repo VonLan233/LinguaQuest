@@ -202,6 +202,7 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
                           game: game,
                           question: question,
                           mistakesOnly: widget.mistakesOnly,
+                          language: state.currentLanguage,
                         ),
                         const SizedBox(height: 18),
                         if (game == TrainingGameType.spelling)
@@ -803,11 +804,13 @@ class _TrainingPromptPanel extends StatelessWidget {
     required this.game,
     required this.question,
     required this.mistakesOnly,
+    this.language = '',
   });
 
   final TrainingGameType game;
   final QuizQuestion question;
   final bool mistakesOnly;
+  final String language;
 
   @override
   Widget build(BuildContext context) {
@@ -833,6 +836,7 @@ class _TrainingPromptPanel extends StatelessWidget {
               child: PronunciationControls(
                 word: question.word.word,
                 compact: true,
+                language: language,
               ),
             ),
           ],

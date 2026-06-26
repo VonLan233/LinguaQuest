@@ -703,6 +703,7 @@ class _ParagraphAudioButtonState extends State<_ParagraphAudioButton> {
     final outcome = await _service.play(
       word: widget.text,
       audioUrl: widget.audioUrl,
+      language: widget.language,
     );
     if (!mounted) return;
     setState(() {

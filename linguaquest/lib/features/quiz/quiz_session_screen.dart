@@ -84,6 +84,9 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
     final allLessons = ref.watch(
       appControllerProvider.select((state) => state.lessons),
     );
+    final currentLanguage = ref.watch(
+      appControllerProvider.select((state) => state.currentLanguage),
+    );
     final lesson = _findLesson(lessons);
     if (lesson == null) {
       return Scaffold(body: Center(child: Text(l10n.quizNoLesson)));
@@ -143,7 +146,10 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        QuizPromptPanel(question: question),
+                        QuizPromptPanel(
+                          question: question,
+                          language: currentLanguage,
+                        ),
                         const SizedBox(height: 18),
                         _QuestionInput(
                           question: question,
@@ -370,9 +376,14 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
 }
 
 class QuizPromptPanel extends StatelessWidget {
-  const QuizPromptPanel({required this.question, super.key});
+  const QuizPromptPanel({
+    required this.question,
+    this.language = '',
+    super.key,
+  });
 
   final QuizQuestion question;
+  final String language;
 
   @override
   Widget build(BuildContext context) {
@@ -412,6 +423,7 @@ class QuizPromptPanel extends StatelessWidget {
               word: question.word.word,
               audioUKUrl: question.word.audioUKUrl,
               audioUSUrl: question.word.audioUSUrl,
+              language: language,
             ),
           ],
         ],

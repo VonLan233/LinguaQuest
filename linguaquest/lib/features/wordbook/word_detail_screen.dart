@@ -71,7 +71,11 @@ class WordDetailScreen extends ConsumerWidget {
                         style: Theme.of(context).textTheme.displaySmall
                             ?.copyWith(fontWeight: FontWeight.w900),
                       ),
-                      PronunciationControls(word: word.word, compact: true),
+                      PronunciationControls(
+                        word: word.word,
+                        compact: true,
+                        language: state.currentLanguage,
+                      ),
                     ],
                   ),
                   const SizedBox(height: 8),

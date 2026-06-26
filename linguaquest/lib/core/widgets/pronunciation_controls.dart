@@ -27,6 +27,7 @@ class PronunciationControls extends StatefulWidget {
     this.audioUKUrl = '',
     this.audioUSUrl = '',
     this.compact = false,
+    this.language = '',
     super.key,
   });
 
@@ -34,6 +35,10 @@ class PronunciationControls extends StatefulWidget {
   final String audioUKUrl;
   final String audioUSUrl;
   final bool compact;
+
+  /// Learning-language code (e.g. 'ja', 'zh') of the owning word. Drives
+  /// TTS locale and the single-button layout for Japanese.
+  final String language;
 
   @override
   State<PronunciationControls> createState() => _PronunciationControlsState();
@@ -91,9 +96,9 @@ class _PronunciationControlsState extends State<PronunciationControls> {
     final l10n = AppLocalizations.of(context);
     final failedAccent = _failedAccent;
 
-    // Chinese (HSK) words have a single Mandarin pronunciation — show one
-    // button instead of the UK/US pair.
-    if (containsCjkText(widget.word)) {
+    // CJK (Chinese HSK / Japanese kanji) and kana-only Japanese words have a
+    // single native pronunciation — show one button instead of the UK/US pair.
+    if (containsCjkText(widget.word) || widget.language == 'ja') {
       return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -210,7 +215,12 @@ class _PronunciationControlsState extends State<PronunciationControls> {
       );
     }
 
-    final outcome = await _service.play(word: word, audioUrl: audioUrl, slow: slow);
+    final outcome = await _service.play(
+      word: word,
+      audioUrl: audioUrl,
+      slow: slow,
+      language: widget.language,
+    );
     if (!mounted || widget.word.trim() != word) return;
 
     setState(() {

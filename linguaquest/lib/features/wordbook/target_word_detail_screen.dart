@@ -393,7 +393,7 @@ class _WordHero extends StatelessWidget {
           const SizedBox(height: 8),
           _PhoneticLine(word: word, bookLanguage: bookLanguage),
           const SizedBox(height: 12),
-          _PronunciationControls(word: word),
+          _PronunciationControls(word: word, language: bookLanguage),
           const SizedBox(height: 12),
           Wrap(
             alignment: WrapAlignment.center,
@@ -421,9 +421,10 @@ class _WordHero extends StatelessWidget {
 }
 
 class _PronunciationControls extends StatelessWidget {
-  const _PronunciationControls({required this.word});
+  const _PronunciationControls({required this.word, this.language = ''});
 
   final Word word;
+  final String language;
 
   @override
   Widget build(BuildContext context) {
@@ -431,6 +432,7 @@ class _PronunciationControls extends StatelessWidget {
       word: word.word,
       audioUKUrl: word.audioUKUrl,
       audioUSUrl: word.audioUSUrl,
+      language: language,
     );
   }
 }

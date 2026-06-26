@@ -53,6 +53,45 @@ void main() {
     expect(lang, startsWith('en'));
   });
 
+  test('language ja routes kana-only word to ja-JP tts', () async {
+    String? lang;
+    final svc = PronunciationService(
+      audio: (url) async => true,
+      tts: (text, l, slow) async {
+        lang = l;
+        return true;
+      },
+    );
+    await svc.play(word: 'こんにちは', language: 'ja');
+    expect(lang, 'ja-JP');
+  });
+
+  test('language zh routes to zh-CN tts', () async {
+    String? lang;
+    final svc = PronunciationService(
+      audio: (url) async => true,
+      tts: (text, l, slow) async {
+        lang = l;
+        return true;
+      },
+    );
+    await svc.play(word: 'hello', language: 'zh');
+    expect(lang, 'zh-CN');
+  });
+
+  test('empty language keeps CJK auto-detect fallback', () async {
+    String? lang;
+    final svc = PronunciationService(
+      audio: (url) async => true,
+      tts: (text, l, slow) async {
+        lang = l;
+        return true;
+      },
+    );
+    await svc.play(word: '你好');
+    expect(lang, 'zh-CN');
+  });
+
   test('returns failed when both url and tts fail', () async {
     final svc = PronunciationService(
       audio: (url) async => false,

@@ -18,6 +18,7 @@ class PronunciationService {
     required String word,
     String audioUrl = '',
     bool slow = false,
+    String language = '',
   }) async {
     final trimmed = word.trim();
     if (audioUrl.trim().isNotEmpty) {
@@ -25,8 +26,22 @@ class PronunciationService {
       if (ok) return PronunciationOutcome.playedUrl;
     }
     if (trimmed.isEmpty) return PronunciationOutcome.failed;
-    final language = containsCjkText(trimmed) ? 'zh-CN' : 'en-GB';
-    final spoken = await tts(trimmed, language, slow);
+    final ttsLocale = _resolveTtsLocale(language, trimmed);
+    final spoken = await tts(trimmed, ttsLocale, slow);
     return spoken ? PronunciationOutcome.playedTts : PronunciationOutcome.failed;
+  }
+
+  /// Maps a learning-language code to a TTS locale. Known languages win over
+  /// CJK auto-detection so kana-only Japanese routes to ja-JP, not the
+  /// zh-CN/en-GB fallback used when [language] is empty/unknown.
+  String _resolveTtsLocale(String language, String text) {
+    switch (language) {
+      case 'ja':
+        return 'ja-JP';
+      case 'zh':
+        return 'zh-CN';
+      default:
+        return containsCjkText(text) ? 'zh-CN' : 'en-GB';
+    }
   }
 }
