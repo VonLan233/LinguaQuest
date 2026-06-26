@@ -86,7 +86,6 @@ class AiLearningScreen extends StatelessWidget {
           icon: AppIcons.questionAnswer,
           title: l10n.aiLearningToolAiQA,
           color: AppTheme.cyan,
-          status: l10n.aiLearningStatusSoon,
           onTap: () => context.push(
             '/ai-chat${word.isNotEmpty ? '?word=${Uri.encodeComponent(word)}' : ''}',
           ),
@@ -96,7 +95,6 @@ class AiLearningScreen extends StatelessWidget {
           icon: AppIcons.accountTree,
           title: l10n.aiLearningToolAiAnalysis,
           color: AppTokens.azure,
-          status: l10n.aiLearningStatusSoon,
           onTap: () => context.push('/ai-analysis'),
         ),
         const SizedBox(height: AppTokens.s12),
@@ -104,7 +102,6 @@ class AiLearningScreen extends StatelessWidget {
           icon: AppIcons.autoStories,
           title: l10n.aiLearningToolCloze,
           color: AppTokens.mangoColor(context),
-          status: l10n.aiLearningStatusPlanning,
           onTap: () => context.push(
             '/ai-cloze${word.isNotEmpty ? '?word=${Uri.encodeComponent(word)}' : ''}',
           ),
@@ -114,7 +111,6 @@ class AiLearningScreen extends StatelessWidget {
           icon: AppIcons.rateReview,
           title: l10n.aiLearningToolAiWriting,
           color: AppTokens.coralColor(context),
-          status: l10n.aiLearningStatusSoon,
           onTap: () => context.push('/ai-writing-review'),
         ),
         const SizedBox(height: AppTokens.s12),
@@ -143,18 +139,19 @@ class _AiToolRow extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.color,
-    required this.status,
+    this.status,
     this.onTap,
   });
 
   final IconData icon;
   final String title;
   final Color color;
-  final String status;
+  final String? status;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final enabled = onTap != null;
     return GestureDetector(
       onTap: onTap,
@@ -164,7 +161,7 @@ class _AiToolRow extends StatelessWidget {
         color: color,
         enabled: enabled,
         trailing: AppPill(
-          label: enabled ? 'Available' : status,
+          label: enabled ? l10n.aiLearningStatusAvailable : (status ?? ''),
           variant: enabled ? PillVariant.success : PillVariant.neutral,
         ),
       ),
