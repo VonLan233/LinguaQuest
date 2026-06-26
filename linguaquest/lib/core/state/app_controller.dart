@@ -43,6 +43,7 @@ import '../../data/models/study_spot.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../services/local_notification_service.dart';
 import '../constants/app_constants.dart';
+import '../utils/progress_scope.dart';
 import '../utils/ui_labels.dart';
 import 'app_state.dart';
 
@@ -172,6 +173,21 @@ class AppController extends Notifier<AppState> {
   static const _todayTrainingXpKey = 'linguaquest.today.training.xp';
   static const _todayRewardIdsKey = 'linguaquest.today.rewards';
 
+  // P2b: per-language wordbook pointer and current language
+  static const _currentLanguageKey = 'linguaquest.current_language';
+  static const _migrationV2ScopeFlag = 'linguaquest.migrated.v2_scope';
+
+  // P2b scope-qualified key builders
+  static String _scopedCompletedKey(String scope) => 'linguaquest.completedLessons.$scope';
+  static String _scopedTodayLessonsKey(String scope) => 'linguaquest.today.lessons.$scope';
+  static String _scopedTodayReviewsKey(String scope) => 'linguaquest.today.reviews.$scope';
+  static String _scopedTodayTrainingKey(String scope) => 'linguaquest.today.training.$scope';
+  static String _scopedTodayTrainingGamesKey(String scope) => 'linguaquest.today.training.games.$scope';
+  static String _scopedTodayTrainingXpKey(String scope) => 'linguaquest.today.training.xp.$scope';
+  static String _scopedTodayRewardsKey(String scope) => 'linguaquest.today.rewards.$scope';
+  // _scopedUserWordsKey and _scopedStudyPlanKey reserved for P2c.
+  static String _currentWordBookIdForLangKey(String language) => 'linguaquest.currentWordBookId.$language';
+
   late final AuthRepository _authRepository;
   late final CustomWordRepository _customWordRepository;
   late final LearningRepository _learningRepository;
@@ -210,26 +226,41 @@ class AppController extends Notifier<AppState> {
     state = state.copyWith(isLoading: true, clearError: true);
     try {
       final prefs = await SharedPreferences.getInstance();
-      final localCompletedLessonIds = _stringSet(prefs, _completedLessonIdsKey);
+      // Run one-shot migration before reading any scoped keys.
+      await _runMigrationV2Scope(prefs);
+
+      // Resolve active scope: use persisted language + per-language wordbook
+      // (default zh::hsk1 for legacy users after migration).
+      final currentLanguage = prefs.getString(_currentLanguageKey) ?? 'zh';
+
+      // We need to resolve scope BEFORE studyPlan is loaded. Use the per-language
+      // wordbook pointer, falling back to global currentWordBookId for compatibility.
+      final preResolvedBookId =
+          prefs.getString(_currentWordBookIdForLangKey(currentLanguage)) ??
+          prefs.getString(_currentWordBookIdKey) ??
+          'hsk1';
+      final bootstrapScope = progressScope(currentLanguage, preResolvedBookId);
+
+      final localCompletedLessonIds = _stringSet(prefs, _scopedCompletedKey(bootstrapScope));
       final todayKey = _dateKey(DateTime.now());
       final hasTodayState = prefs.getString(_todayDateKey) == todayKey;
       final localTodayCompletedLessonIds = hasTodayState
-          ? _stringSet(prefs, _todayLessonIdsKey)
+          ? _stringSet(prefs, _scopedTodayLessonsKey(bootstrapScope))
           : <String>{};
       final localTodayReviewWordIds = hasTodayState
-          ? _stringSet(prefs, _todayReviewIdsKey)
+          ? _stringSet(prefs, _scopedTodayReviewsKey(bootstrapScope))
           : <String>{};
       final todayTrainingSessionIds = hasTodayState
-          ? _stringSet(prefs, _todayTrainingIdsKey)
+          ? _stringSet(prefs, _scopedTodayTrainingKey(bootstrapScope))
           : <String>{};
       final localTodayTrainingGameIds = hasTodayState
-          ? _stringSet(prefs, _todayTrainingGameIdsKey)
+          ? _stringSet(prefs, _scopedTodayTrainingGamesKey(bootstrapScope))
           : <String>{};
       final localTodayTrainingXp = hasTodayState
-          ? prefs.getInt(_todayTrainingXpKey) ?? 0
+          ? prefs.getInt(_scopedTodayTrainingXpKey(bootstrapScope)) ?? 0
           : 0;
       final localTodayClaimedRewardIds = hasTodayState
-          ? _stringSet(prefs, _todayRewardIdsKey)
+          ? _stringSet(prefs, _scopedTodayRewardsKey(bootstrapScope))
           : <String>{};
       UserProfile? user;
       try {
@@ -295,6 +326,7 @@ class AppController extends Notifier<AppState> {
         themeMode: _themeModeFromName(prefs.getString(_themeModeKey)),
         locale: _localeFromName(prefs.getString(_localeKey)),
         targetLanguage: prefs.getString(_targetLanguageKey) ?? 'zh',
+        currentLanguage: currentLanguage,
         reminderSettings: reminderSettings,
         sensorySettings: sensorySettings,
         privacySettings: privacySettings,
@@ -641,9 +673,31 @@ class AppController extends Notifier<AppState> {
   Future<bool> switchWordBook(String wordBookId) async {
     if (!_hasWordBook(wordBookId)) return false;
     return _run(() async {
+      // Load this scope's progress (not the current scope's in-memory state).
+      final targetScope = progressScope(state.currentLanguage, wordBookId);
+      final prefs = await SharedPreferences.getInstance();
+      final scopedCompleted = _stringSet(prefs, _scopedCompletedKey(targetScope));
+      final todayKey = _dateKey(DateTime.now());
+      final hasTodayState = prefs.getString(_todayDateKey) == todayKey;
+      final scopedTodayLessons = hasTodayState
+          ? _stringSet(prefs, _scopedTodayLessonsKey(targetScope))
+          : <String>{};
+      final scopedTodayReviews = hasTodayState
+          ? _stringSet(prefs, _scopedTodayReviewsKey(targetScope))
+          : <String>{};
+      final scopedTodayTraining = hasTodayState
+          ? _stringSet(prefs, _scopedTodayTrainingKey(targetScope))
+          : <String>{};
+      final scopedTodayRewards = hasTodayState
+          ? _stringSet(prefs, _scopedTodayRewardsKey(targetScope))
+          : <String>{};
+      final scopedTodayXp = hasTodayState
+          ? prefs.getInt(_scopedTodayTrainingXpKey(targetScope)) ?? 0
+          : 0;
+
       final lessons = _applyLessonProgression(
         await _learningRepository.listLessonsForWordBook(wordBookId),
-        state.completedLessonIds,
+        scopedCompleted,
       );
       final book = _wordBookById(state.wordBooks, wordBookId);
       var updatedUser = state.user;
@@ -677,6 +731,12 @@ class AppController extends Notifier<AppState> {
         lessons: lessons,
         studyPlan: savedPlan,
         reminderSettings: reminderSettings,
+        completedLessonIds: scopedCompleted,
+        todayCompletedLessonIds: scopedTodayLessons,
+        todayReviewWordIds: scopedTodayReviews,
+        todayTrainingSessionIds: scopedTodayTraining,
+        todayClaimedRewardIds: scopedTodayRewards,
+        todayTrainingXp: scopedTodayXp,
       );
       await refreshNotifications();
       await refreshRewardTasks();
@@ -1947,14 +2007,14 @@ class AppController extends Notifier<AppState> {
           UserWord.create(
             uid: uid,
             word: targetWord,
-            wordBookId: lesson.section,
+            wordBookId: state.currentWordBookId,
             now: now,
           );
       if (existing.isIgnored || existing.status == 'Ignored') continue;
       updates.add(
         existing
             .copyWith(
-              wordBookId: lesson.section,
+              wordBookId: state.currentWordBookId,
               word: targetWord.word,
               meaning: targetWord.meaning,
               exampleSentence: targetWord.exampleSentence,
@@ -2178,8 +2238,71 @@ class AppController extends Notifier<AppState> {
   }
 
   Future<void> _saveCurrentWordBookId(String wordBookId) async {
+    final lang = state.currentLanguage;
     final prefs = await SharedPreferences.getInstance();
+    // Save both per-language (new) and global (legacy compat).
+    await prefs.setString(_currentWordBookIdForLangKey(lang), wordBookId);
     await prefs.setString(_currentWordBookIdKey, wordBookId);
+  }
+
+  /// One-shot idempotent migration: copies legacy global keys → zh::hsk1 scope.
+  /// COPY-don't-delete: original keys are preserved for safety. Runs once,
+  /// guarded by [_migrationV2ScopeFlag].
+  Future<void> _runMigrationV2Scope(SharedPreferences prefs) async {
+    if (prefs.getBool(_migrationV2ScopeFlag) == true) return; // already done
+
+    const lang = 'zh';
+    const bookId = 'hsk1';
+    final scope = progressScope(lang, bookId);
+
+    // --- Copy completedLessons ---
+    final globalCompleted = prefs.getStringList(_completedLessonIdsKey);
+    if (globalCompleted != null && prefs.getStringList(_scopedCompletedKey(scope)) == null) {
+      await prefs.setStringList(_scopedCompletedKey(scope), globalCompleted);
+    }
+
+    // --- Copy today.* keys ---
+    final globalTodayLessons = prefs.getStringList(_todayLessonIdsKey);
+    if (globalTodayLessons != null && prefs.getStringList(_scopedTodayLessonsKey(scope)) == null) {
+      await prefs.setStringList(_scopedTodayLessonsKey(scope), globalTodayLessons);
+    }
+    final globalTodayReviews = prefs.getStringList(_todayReviewIdsKey);
+    if (globalTodayReviews != null && prefs.getStringList(_scopedTodayReviewsKey(scope)) == null) {
+      await prefs.setStringList(_scopedTodayReviewsKey(scope), globalTodayReviews);
+    }
+    final globalTodayTraining = prefs.getStringList(_todayTrainingIdsKey);
+    if (globalTodayTraining != null && prefs.getStringList(_scopedTodayTrainingKey(scope)) == null) {
+      await prefs.setStringList(_scopedTodayTrainingKey(scope), globalTodayTraining);
+    }
+    final globalTodayGames = prefs.getStringList(_todayTrainingGameIdsKey);
+    if (globalTodayGames != null && prefs.getStringList(_scopedTodayTrainingGamesKey(scope)) == null) {
+      await prefs.setStringList(_scopedTodayTrainingGamesKey(scope), globalTodayGames);
+    }
+    final globalTodayXp = prefs.getInt(_todayTrainingXpKey);
+    if (globalTodayXp != null && prefs.getInt(_scopedTodayTrainingXpKey(scope)) == null) {
+      await prefs.setInt(_scopedTodayTrainingXpKey(scope), globalTodayXp);
+    }
+    final globalTodayRewards = prefs.getStringList(_todayRewardIdsKey);
+    if (globalTodayRewards != null && prefs.getStringList(_scopedTodayRewardsKey(scope)) == null) {
+      await prefs.setStringList(_scopedTodayRewardsKey(scope), globalTodayRewards);
+    }
+
+    // --- currentWordBookId → per-language ---
+    final globalBookId = prefs.getString(_currentWordBookIdKey);
+    if (globalBookId != null && prefs.getString(_currentWordBookIdForLangKey(lang)) == null) {
+      await prefs.setString(_currentWordBookIdForLangKey(lang), globalBookId);
+    }
+
+    // --- Set default current_language ---
+    if (prefs.getString(_currentLanguageKey) == null) {
+      await prefs.setString(_currentLanguageKey, lang);
+    }
+
+    // NOTE: user_words and studyPlan migration is handled in their respective
+    // load paths: legacy keys (no scope) are read as zh::hsk1 on first access.
+
+    // Set the flag — migration is done. Original global keys are preserved.
+    await prefs.setBool(_migrationV2ScopeFlag, true);
   }
 
   String _resolveCurrentWordBookId({
@@ -2232,14 +2355,15 @@ class AppController extends Notifier<AppState> {
     Set<String> todayCompletedLessonIds,
     DateTime now,
   ) async {
+    final scope = progressScope(state.currentLanguage, state.currentWordBookId);
     final prefs = await SharedPreferences.getInstance();
     await prefs.setStringList(
-      _completedLessonIdsKey,
+      _scopedCompletedKey(scope),
       completedLessonIds.toList(),
     );
     await prefs.setString(_todayDateKey, _dateKey(now));
     await prefs.setStringList(
-      _todayLessonIdsKey,
+      _scopedTodayLessonsKey(scope),
       todayCompletedLessonIds.toList(),
     );
   }
@@ -2248,43 +2372,48 @@ class AppController extends Notifier<AppState> {
     Set<String> todayReviewWordIds,
     DateTime now,
   ) async {
+    final scope = progressScope(state.currentLanguage, state.currentWordBookId);
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_todayDateKey, _dateKey(now));
-    await prefs.setStringList(_todayReviewIdsKey, todayReviewWordIds.toList());
+    await prefs.setStringList(_scopedTodayReviewsKey(scope), todayReviewWordIds.toList());
   }
 
   Future<void> _saveTodayTrainingSessions(
     Set<String> todayTrainingSessionIds,
     DateTime now,
   ) async {
+    final scope = progressScope(state.currentLanguage, state.currentWordBookId);
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_todayDateKey, _dateKey(now));
     await prefs.setStringList(
-      _todayTrainingIdsKey,
+      _scopedTodayTrainingKey(scope),
       todayTrainingSessionIds.toList(),
     );
   }
 
   Future<void> _saveTodayTraining(Set<String> gameIds, int xp) async {
+    final scope = progressScope(state.currentLanguage, state.currentWordBookId);
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_todayDateKey, _dateKey(DateTime.now()));
-    await prefs.setStringList(_todayTrainingGameIdsKey, gameIds.toList());
-    await prefs.setInt(_todayTrainingXpKey, xp);
+    await prefs.setStringList(_scopedTodayTrainingGamesKey(scope), gameIds.toList());
+    await prefs.setInt(_scopedTodayTrainingXpKey(scope), xp);
   }
 
   Future<void> _saveTodayClaimedRewards(
     Set<String> todayClaimedRewardIds,
     DateTime now,
   ) async {
+    final scope = progressScope(state.currentLanguage, state.currentWordBookId);
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_todayDateKey, _dateKey(now));
     await prefs.setStringList(
-      _todayRewardIdsKey,
+      _scopedTodayRewardsKey(scope),
       todayClaimedRewardIds.toList(),
     );
   }
 
   Future<_TodayStateSnapshot> _normalizeTodayState(DateTime now) async {
+    final scope = progressScope(state.currentLanguage, state.currentWordBookId);
     final prefs = await SharedPreferences.getInstance();
     final todayKey = _dateKey(now);
     if (prefs.getString(_todayDateKey) == todayKey) {
@@ -2296,10 +2425,10 @@ class AppController extends Notifier<AppState> {
       );
     }
 
-    await prefs.remove(_todayLessonIdsKey);
-    await prefs.remove(_todayReviewIdsKey);
-    await prefs.remove(_todayTrainingIdsKey);
-    await prefs.remove(_todayRewardIdsKey);
+    await prefs.remove(_scopedTodayLessonsKey(scope));
+    await prefs.remove(_scopedTodayReviewsKey(scope));
+    await prefs.remove(_scopedTodayTrainingKey(scope));
+    await prefs.remove(_scopedTodayRewardsKey(scope));
     await prefs.setString(_todayDateKey, todayKey);
     state = state.copyWith(
       todayCompletedLessonIds: {},

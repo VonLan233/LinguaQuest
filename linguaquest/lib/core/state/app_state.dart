@@ -128,6 +128,7 @@ class AppState {
     required this.aiHistory,
     required this.forumPosts,
     this.targetLanguage = 'zh',
+    this.currentLanguage = 'zh',
     this.sensorySettings = SensorySettings.defaults,
     this.privacySettings = UserPrivacySettings.defaults,
     this.locale,
@@ -172,6 +173,7 @@ class AppState {
   final List<LotteryPrize> lotteryPrizes;
   final List<UserAsset> userAssets;
   final String targetLanguage;
+  final String currentLanguage;
   final SensorySettings sensorySettings;
   final UserPrivacySettings privacySettings;
   final LessonResult? lastResult;
@@ -341,6 +343,7 @@ class AppState {
     List<LotteryPrize>? lotteryPrizes,
     List<UserAsset>? userAssets,
     String? targetLanguage,
+    String? currentLanguage,
     SensorySettings? sensorySettings,
     UserPrivacySettings? privacySettings,
     LessonResult? lastResult,
@@ -391,6 +394,7 @@ class AppState {
       lotteryPrizes: lotteryPrizes ?? this.lotteryPrizes,
       userAssets: userAssets ?? this.userAssets,
       targetLanguage: targetLanguage ?? this.targetLanguage,
+      currentLanguage: currentLanguage ?? this.currentLanguage,
       sensorySettings: sensorySettings ?? this.sensorySettings,
       privacySettings: privacySettings ?? this.privacySettings,
       lastResult: clearLastResult ? null : lastResult ?? this.lastResult,
