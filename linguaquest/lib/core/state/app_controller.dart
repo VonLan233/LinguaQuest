@@ -744,6 +744,52 @@ class AppController extends Notifier<AppState> {
     });
   }
 
+  /// Switches to [language] and picks that language's remembered wordbook (or
+  /// its first available book). Equivalent to [switchWordBook] but also updates
+  /// [AppState.currentLanguage] and persists the new language pointer.
+  ///
+  /// Returns true on success, false if no books exist for [language].
+  Future<bool> switchLanguage(String language) async {
+    // Find books for this language.
+    final books = state.wordBooks.where((b) => b.language == language).toList();
+    if (books.isEmpty) return false;
+
+    // Restore the previously remembered wordbook for this language, or use
+    // the first book.
+    final prefs = await SharedPreferences.getInstance();
+    final rememberedBookId = prefs.getString(_currentWordBookIdForLangKey(language));
+    final targetBookId = (rememberedBookId != null &&
+            books.any((b) => b.id == rememberedBookId))
+        ? rememberedBookId
+        : books.first.id;
+
+    // Persist the language pointer before the scope-switch so that
+    // _saveCurrentWordBookId (called inside switchWordBook) uses the new lang.
+    await prefs.setString(_currentLanguageKey, language);
+    // Update currentLanguage in state so switchWordBook reads the right scope.
+    state = state.copyWith(currentLanguage: language);
+
+    return switchWordBook(targetBookId);
+  }
+
+  /// Atomically switches to the given [language] **and** the exact [wordBookId]
+  /// within that language. Use this when both dimensions are known (e.g. the map
+  /// screen or the two-level picker confirming a (lang, book) pair).
+  ///
+  /// Returns true on success, false if [wordBookId] doesn't exist for [language].
+  Future<bool> switchScope(String language, String wordBookId) async {
+    final books = state.wordBooks.where((b) => b.language == language).toList();
+    if (!books.any((b) => b.id == wordBookId)) return false;
+
+    final prefs = await SharedPreferences.getInstance();
+    // Persist language pointer first so _saveCurrentWordBookId uses the new lang.
+    await prefs.setString(_currentLanguageKey, language);
+    // Update currentLanguage in state so switchWordBook scopes to the right lang.
+    state = state.copyWith(currentLanguage: language);
+
+    return switchWordBook(wordBookId);
+  }
+
   Future<void> logout() async {
     final themeMode = state.themeMode;
     final reminderSettings = state.reminderSettings;

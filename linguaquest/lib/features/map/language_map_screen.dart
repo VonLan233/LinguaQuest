@@ -4,11 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../core/state/app_controller.dart';
-import '../../core/theme/app_tokens.dart';
-import '../../core/widgets/app_button.dart';
-import '../../core/widgets/app_card.dart';
 import '../../core/widgets/fallback_back_button.dart';
-import '../../core/widgets/target_language_picker.dart';
+import '../../core/widgets/language_wordbook_picker.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 /// Coordinate and metadata for each language pin on the world map.
@@ -55,7 +52,7 @@ const _langPins = [
     code: 'ja',
     label: 'Japanese (日本語)',
     point: LatLng(36.2, 138.2), // Japan
-    enabled: false,
+    enabled: true,
   ),
   _LangPin(
     code: 'ms',
@@ -71,64 +68,23 @@ const _langPins = [
 class LanguageMapScreen extends ConsumerWidget {
   const LanguageMapScreen({super.key});
 
-  void _onPinTap(
+  Future<void> _onPinTap(
     BuildContext context,
     WidgetRef ref,
     _LangPin pin,
-  ) {
+  ) async {
     final l10n = AppLocalizations.of(context);
 
     if (pin.enabled) {
-      // Enabled pin (zh): show bottom sheet with confirm action
-      final label = targetLanguageLabel(pin.code);
-      showModalBottomSheet<void>(
-        context: context,
-        backgroundColor: Colors.transparent,
-        builder: (sheetCtx) => SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(AppTokens.s16),
-            child: AppCard(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    l10n.languageMapSelectPrompt,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: AppTokens.s8),
-                  Text(
-                    label,
-                    style: const TextStyle(fontSize: 15),
-                  ),
-                  const SizedBox(height: AppTokens.s16),
-                  AppPrimaryButton(
-                    key: ValueKey('lang-confirm-${pin.code}'),
-                    label: l10n.languageMapConfirm(label),
-                    onPressed: () async {
-                      await ref
-                          .read(appControllerProvider.notifier)
-                          .updateTargetLanguage(pin.code);
-                      if (sheetCtx.mounted) {
-                        Navigator.of(sheetCtx).pop();
-                      }
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(l10n.languageMapSelected(label)),
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
+      // Record one-shot map achievement on first tap of any enabled pin.
+      await ref
+          .read(appControllerProvider.notifier)
+          .updateTargetLanguage(pin.code);
+      if (!context.mounted) return;
+      // Open the two-level picker directly on the wordbook step for this language.
+      await showLanguageWordbookPicker(
+        context,
+        initialLanguage: pin.code,
       );
     } else {
       // Coming-soon pin: show snackbar

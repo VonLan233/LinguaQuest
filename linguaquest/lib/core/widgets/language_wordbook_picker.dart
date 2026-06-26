@@ -55,10 +55,16 @@ String languageLabel(String code, AppLocalizations l10n) {
 
 /// Opens the two-level language → wordbook picker as a modal bottom sheet.
 ///
+/// If [initialLanguage] is provided, the sheet opens directly on step 2
+/// (the wordbook list for that language), skipping the language-selection step.
+///
 /// The sheet inherits the app-level [ProviderScope] through the element tree,
 /// so it can `ref.watch`/`ref.read` the [appControllerProvider] without an
 /// explicit container hand-off.
-Future<void> showLanguageWordbookPicker(BuildContext context) async {
+Future<void> showLanguageWordbookPicker(
+  BuildContext context, {
+  String? initialLanguage,
+}) async {
   await showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
@@ -66,6 +72,7 @@ Future<void> showLanguageWordbookPicker(BuildContext context) async {
     backgroundColor: Colors.transparent,
     builder: (sheetCtx) => _LanguageWordbookPickerSheet(
       onDismiss: () => Navigator.of(sheetCtx).pop(),
+      initialLanguage: initialLanguage,
     ),
   );
 }
@@ -75,9 +82,16 @@ Future<void> showLanguageWordbookPicker(BuildContext context) async {
 // ---------------------------------------------------------------------------
 
 class _LanguageWordbookPickerSheet extends ConsumerStatefulWidget {
-  const _LanguageWordbookPickerSheet({required this.onDismiss});
+  const _LanguageWordbookPickerSheet({
+    required this.onDismiss,
+    this.initialLanguage,
+  });
 
   final VoidCallback onDismiss;
+
+  /// When set, the picker opens directly on the wordbook list for this language,
+  /// skipping the language-selection step.
+  final String? initialLanguage;
 
   @override
   ConsumerState<_LanguageWordbookPickerSheet> createState() =>
@@ -88,7 +102,13 @@ class _LanguageWordbookPickerSheetState
     extends ConsumerState<_LanguageWordbookPickerSheet> {
   /// null = showing Level 1 (language list).
   /// non-null = showing Level 2 (wordbook list for that language code).
-  String? _selectedLanguage;
+  late String? _selectedLanguage;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedLanguage = widget.initialLanguage;
+  }
 
   Future<void> _onBookSelected(String bookId) async {
     final l10n = AppLocalizations.of(context);
@@ -97,7 +117,16 @@ class _LanguageWordbookPickerSheetState
     final booksBefore = ref.read(appControllerProvider).wordBooks;
 
     final notifier = ref.read(appControllerProvider.notifier);
-    final ok = await notifier.switchWordBook(bookId);
+    // When the sheet was opened for a specific language (e.g. from the map),
+    // use switchScope so language + wordbook are both updated atomically.
+    final targetLanguage = _selectedLanguage;
+    final currentLanguage = ref.read(appControllerProvider).currentLanguage;
+    final bool ok;
+    if (targetLanguage != null && targetLanguage != currentLanguage) {
+      ok = await notifier.switchScope(targetLanguage, bookId);
+    } else {
+      ok = await notifier.switchWordBook(bookId);
+    }
     if (!mounted) return;
 
     if (ok) {
