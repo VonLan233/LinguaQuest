@@ -16,6 +16,9 @@ class LearningAnalytics {
     required this.achievementCount,
     required this.trainingXp,
     required this.trainingRank,
+    this.modalityAccuracy = const {},
+    this.dailyXp = const [],
+    this.topErrorTypes = const [],
   });
 
   final int streakDays;
@@ -35,6 +38,17 @@ class LearningAnalytics {
   final int trainingXp;
   final int trainingRank;
 
+  /// Per-modality accuracy: keys are 'meaning', 'listening', 'spelling', 'context'.
+  /// Values are 0–100 (percent). Empty map = no data yet.
+  final Map<String, int> modalityAccuracy;
+
+  /// XP earned per day for up to 14/30 days (oldest first).
+  /// If non-empty, the XP trend chart uses this instead of [sevenDayXp].
+  final List<int> dailyXp;
+
+  /// Ordered list of prompt types with the highest error rates (worst first).
+  final List<String> topErrorTypes;
+
   Map<String, dynamic> toJson() => {
         'streakDays': streakDays,
         'totalStudyDays': totalStudyDays,
@@ -52,6 +66,9 @@ class LearningAnalytics {
         'achievementCount': achievementCount,
         'trainingXp': trainingXp,
         'trainingRank': trainingRank,
+        'modalityAccuracy': modalityAccuracy,
+        'dailyXp': dailyXp,
+        'topErrorTypes': topErrorTypes,
       };
 
   factory LearningAnalytics.fromJson(Map<String, dynamic> j) =>
@@ -78,6 +95,15 @@ class LearningAnalytics {
         achievementCount: j['achievementCount'] as int? ?? 0,
         trainingXp: j['trainingXp'] as int? ?? 0,
         trainingRank: j['trainingRank'] as int? ?? -1,
+        modalityAccuracy:
+            (j['modalityAccuracy'] as Map<String, dynamic>? ?? const {})
+                .map((k, v) => MapEntry(k, (v as num).toInt())),
+        dailyXp: (j['dailyXp'] as List<dynamic>? ?? const [])
+            .map((e) => e as int)
+            .toList(),
+        topErrorTypes: (j['topErrorTypes'] as List<dynamic>? ?? const [])
+            .map((e) => e as String)
+            .toList(),
       );
 
   static LearningAnalytics mock() => const LearningAnalytics(
@@ -97,6 +123,14 @@ class LearningAnalytics {
         achievementCount: 3,
         trainingXp: 300,
         trainingRank: -1,
+        modalityAccuracy: {
+          'meaning': 84,
+          'listening': 71,
+          'spelling': 63,
+          'context': 77,
+        },
+        dailyXp: [120, 80, 95, 110, 70, 130, 45, 100, 90, 60, 85, 110, 75, 95],
+        topErrorTypes: ['spelling', 'listening'],
       );
 }
 
