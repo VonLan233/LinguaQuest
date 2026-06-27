@@ -361,7 +361,12 @@ String displayWordTag(String value, {AppLocalizations? l10n}) {
 }
 
 String displayWordbookTitle(String id, {AppLocalizations? l10n}) {
-  if (id.toLowerCase() == 'hsk1') return 'HSK 1';
+  final lower = id.toLowerCase();
+  // HSK 1-6 and JLPT N5-N1 derive their display name from the id directly.
+  final hsk = RegExp(r'^hsk(\d)$').firstMatch(lower);
+  if (hsk != null) return 'HSK ${hsk.group(1)}';
+  final jlpt = RegExp(r'^jlpt[_-]?n([1-5])$').firstMatch(lower);
+  if (jlpt != null) return 'JLPT N${jlpt.group(1)}';
   if (l10n == null) return id;
   switch (id.toLowerCase()) {
     case 'beginner':
@@ -384,7 +389,13 @@ String displayWordbookTitle(String id, {AppLocalizations? l10n}) {
 }
 
 String displayWordbookDescription(String id, {AppLocalizations? l10n}) {
-  if (id.toLowerCase() == 'hsk1') return 'Core vocabulary for HSK Level 1.';
+  final lower = id.toLowerCase();
+  final hsk = RegExp(r'^hsk(\d)$').firstMatch(lower);
+  if (hsk != null) return 'Core vocabulary for HSK Level ${hsk.group(1)}.';
+  final jlpt = RegExp(r'^jlpt[_-]?n([1-5])$').firstMatch(lower);
+  if (jlpt != null) {
+    return 'Core Japanese vocabulary for JLPT N${jlpt.group(1)}.';
+  }
   if (l10n == null) return '';
   switch (id.toLowerCase()) {
     case 'beginner':
