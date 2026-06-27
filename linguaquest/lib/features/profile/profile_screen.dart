@@ -17,7 +17,6 @@ import '../../core/widgets/mascot_image.dart';
 import '../../core/widgets/progress_ring.dart';
 import '../../core/widgets/section_header.dart';
 import '../../core/widgets/stat_tile.dart';
-import '../../core/widgets/target_language_picker.dart';
 import '../../data/models/lottery.dart';
 import '../../l10n/generated/app_localizations.dart';
 
@@ -127,12 +126,6 @@ class ProfileScreen extends ConsumerWidget {
                   ? state.reminderSettings.formattedTime
                   : l10n.settingsReminderOff,
               onTap: () => context.push('/settings/reminder'),
-            ),
-            _LanguageSettingsItem(
-              targetLanguage: state.targetLanguage,
-              onChanged: (code) => ref
-                  .read(appControllerProvider.notifier)
-                  .updateTargetLanguage(code),
             ),
           ],
         ),
@@ -438,67 +431,6 @@ class _SettingsItem extends StatelessWidget {
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
-              const SizedBox(width: AppTokens.s4),
-              Icon(
-                AppIcons.chevronRight,
-                color: theme.colorScheme.onSurfaceVariant,
-                size: 20,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _LanguageSettingsItem extends StatelessWidget {
-  const _LanguageSettingsItem({
-    required this.targetLanguage,
-    required this.onChanged,
-  });
-
-  final String targetLanguage;
-  final ValueChanged<String> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Material(
-      color: Colors.transparent,
-      borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () => showTargetLanguageSheet(
-          context,
-          targetLanguage: targetLanguage,
-          onChanged: onChanged,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppTokens.s16,
-            vertical: AppTokens.s12,
-          ),
-          child: Row(
-            children: [
-              Icon(
-                AppIcons.language,
-                color: theme.colorScheme.primary,
-                size: 22,
-              ),
-              const SizedBox(width: AppTokens.s16),
-              Expanded(
-                child: Text(
-                  'Target Language',
-                  style: theme.textTheme.bodyMedium,
-                ),
-              ),
-              Text(
-                targetLanguageLabel(targetLanguage),
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
               const SizedBox(width: AppTokens.s4),
               Icon(
                 AppIcons.chevronRight,

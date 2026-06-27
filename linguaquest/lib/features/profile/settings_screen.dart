@@ -9,7 +9,7 @@ import '../../core/theme/app_tokens.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/fallback_back_button.dart';
-import '../../core/widgets/target_language_picker.dart';
+import '../../core/widgets/language_wordbook_picker.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -45,11 +45,9 @@ class SettingsScreen extends ConsumerWidget {
               route: '/settings/reminder',
             ),
             const SizedBox(height: AppTokens.s12),
-            _TargetLanguageSetting(
-              targetLanguage: state.targetLanguage,
-              onChanged: (code) => ref
-                  .read(appControllerProvider.notifier)
-                  .updateTargetLanguage(code),
+            _LearningLanguageSetting(
+              currentLanguage: state.currentLanguage,
+              currentWordBookId: state.currentWordBookId,
             ),
             const SizedBox(height: AppTokens.s12),
             _SensorySettingsCard(sensorySettings: state.sensorySettings),
@@ -166,25 +164,23 @@ class ReminderSettingsScreen extends ConsumerWidget {
   }
 }
 
-class _TargetLanguageSetting extends StatelessWidget {
-  const _TargetLanguageSetting({
-    required this.targetLanguage,
-    required this.onChanged,
+class _LearningLanguageSetting extends StatelessWidget {
+  const _LearningLanguageSetting({
+    required this.currentLanguage,
+    required this.currentWordBookId,
   });
 
-  final String targetLanguage;
-  final ValueChanged<String> onChanged;
+  final String currentLanguage;
+  final String currentWordBookId;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final label = targetLanguageLabel(targetLanguage);
+    final l10n = AppLocalizations.of(context);
+    final langLabel = languageLabel(currentLanguage, l10n);
+    final bookLabel = displayWordbookTitle(currentWordBookId, l10n: l10n);
     return AppCard(
-      onTap: () => showTargetLanguageSheet(
-        context,
-        targetLanguage: targetLanguage,
-        onChanged: onChanged,
-      ),
+      onTap: () => showLanguageWordbookPicker(context),
       child: Row(
         children: [
           Icon(AppIcons.language, color: theme.colorScheme.primary),
@@ -193,9 +189,9 @@ class _TargetLanguageSetting extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Target Language', style: theme.textTheme.titleMedium),
+                Text('Learning Language', style: theme.textTheme.titleMedium),
                 Text(
-                  label,
+                  '$langLabel · $bookLabel',
                   style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                 ),
               ],
