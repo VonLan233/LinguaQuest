@@ -129,22 +129,6 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── "Share an update" quick entry ──────────────────────────────
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                AppTokens.s20,
-                AppTokens.s12,
-                AppTokens.s20,
-                0,
-              ),
-              child: OutlinedButton.icon(
-                onPressed: () => context.push('/forum/compose'),
-                icon: const Icon(Icons.edit_outlined, size: 18),
-                label: Text(l10n.communityShareUpdate),
-              ),
-            ),
-            const SizedBox(height: AppTokens.s12),
-
             // ── Filter chip row ────────────────────────────────────────────
             SizedBox(
               height: 40,
