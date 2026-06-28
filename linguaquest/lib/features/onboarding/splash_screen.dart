@@ -64,7 +64,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         !state.isLoading && !state.isBootstrapped && state.errorMessage != null;
 
     return Scaffold(
-      backgroundColor: AppTheme.paper,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,

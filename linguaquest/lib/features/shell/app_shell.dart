@@ -52,7 +52,7 @@ class _AppShellState extends State<AppShell> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: const AppDrawer(),
-      backgroundColor: AppTheme.paper,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         bottom: false,
         child: GestureDetector(
@@ -63,7 +63,7 @@ class _AppShellState extends State<AppShell> {
           },
           onHorizontalDragEnd: _handleHorizontalDrag,
           child: ColoredBox(
-            color: AppTheme.paper,
+            color: Theme.of(context).scaffoldBackgroundColor,
             child: ClipRect(
               child: AnimatedSlide(
                 offset: _pageOffset,

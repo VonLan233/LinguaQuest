@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:linguaquest/app.dart';
 import 'package:linguaquest/core/theme/app_theme.dart';
 import 'package:linguaquest/features/quests/progress_analytics_screen.dart';
+import 'package:linguaquest/features/shell/app_shell.dart';
 import 'package:linguaquest/l10n/generated/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -66,6 +67,34 @@ void main() {
       await tester.pump();
 
       expect(tester.takeException(), isNull);
+    });
+  });
+
+  group('Dark Mode — app shell', () {
+    testWidgets('shell background follows the dark theme', (tester) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            darkTheme: AppTheme.dark(),
+            themeMode: ThemeMode.dark,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            locale: const Locale('en'),
+            home: const AppShell(selectedIndex: 0, child: SizedBox.shrink()),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      final shellScaffold = tester
+          .widgetList<Scaffold>(find.byType(Scaffold))
+          .firstWhere((s) => s.bottomNavigationBar != null);
+      expect(shellScaffold.backgroundColor, isNot(AppTheme.paper));
+      expect(
+        shellScaffold.backgroundColor,
+        AppTheme.dark().scaffoldBackgroundColor,
+      );
     });
   });
 }
