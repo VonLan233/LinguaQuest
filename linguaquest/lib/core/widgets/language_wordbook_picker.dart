@@ -34,8 +34,29 @@ class SupportedLanguage {
 /// a non-selectable "coming soon" entry.
 const List<SupportedLanguage> kSupportedLanguages = [
   SupportedLanguage(code: 'zh', hasBooks: true),
-  SupportedLanguage(code: 'ja', hasBooks: true),  // P2d: JLPT books are now shipped
+  SupportedLanguage(code: 'ja', hasBooks: true), // P2d: JLPT books shipped
+  SupportedLanguage(code: 'en', hasBooks: false),
+  SupportedLanguage(code: 'es', hasBooks: false),
+  SupportedLanguage(code: 'fr', hasBooks: false),
+  SupportedLanguage(code: 'ms', hasBooks: false),
 ];
+
+/// English display label for coming-soon languages that have no l10n key yet.
+/// Mirrors the labels used on the language map (`language_map_screen.dart`).
+String languageLabelRaw(String code) {
+  switch (code) {
+    case 'en':
+      return 'English';
+    case 'es':
+      return 'Spanish (Español)';
+    case 'fr':
+      return 'French (Français)';
+    case 'ms':
+      return 'Malay (Bahasa Melayu)';
+    default:
+      return code;
+  }
+}
 
 /// Returns a localized, human-readable label for a language [code].
 String languageLabel(String code, AppLocalizations l10n) {
@@ -45,7 +66,7 @@ String languageLabel(String code, AppLocalizations l10n) {
     case 'ja':
       return l10n.pickerLanguageJapanese;
     default:
-      return code;
+      return languageLabelRaw(code);
   }
 }
 
@@ -280,24 +301,31 @@ class _LanguageList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
+    // kSupportedLanguages is a small, bounded list (≤10 entries). Use a Column
+    // inside SingleChildScrollView so every row is always in the widget tree —
+    // required for accessibility traversal and for widget-test finders to reach
+    // all items without needing to scroll programmatically.
+    return SingleChildScrollView(
       controller: scrollController,
       padding: const EdgeInsets.all(AppTokens.s16),
-      itemCount: kSupportedLanguages.length,
-      separatorBuilder: (_, _) => const SizedBox(height: AppTokens.s8),
-      itemBuilder: (_, index) {
-        final lang = kSupportedLanguages[index];
-        final isCurrent = lang.code == currentLanguage;
-        final isActive = lang.hasBooks;
-        return _LanguageRow(
-          label: languageLabel(lang.code, l10n),
-          isCurrent: isCurrent,
-          isActive: isActive,
-          comingSoonLabel: l10n.pickerComingSoon,
-          currentLabel: l10n.pickerCurrentBadge,
-          onTap: isActive ? () => onLanguageSelected(lang.code) : null,
-        );
-      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (var i = 0; i < kSupportedLanguages.length; i++) ...[
+            if (i > 0) const SizedBox(height: AppTokens.s8),
+            _LanguageRow(
+              label: languageLabel(kSupportedLanguages[i].code, l10n),
+              isCurrent: kSupportedLanguages[i].code == currentLanguage,
+              isActive: kSupportedLanguages[i].hasBooks,
+              comingSoonLabel: l10n.pickerComingSoon,
+              currentLabel: l10n.pickerCurrentBadge,
+              onTap: kSupportedLanguages[i].hasBooks
+                  ? () => onLanguageSelected(kSupportedLanguages[i].code)
+                  : null,
+            ),
+          ],
+        ],
+      ),
     );
   }
 }
@@ -335,8 +363,8 @@ class _LanguageRow extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: isActive
-                        ? AppTokens.textPrimaryLight
-                        : AppTokens.textHintLight,
+                        ? Theme.of(context).colorScheme.onSurface
+                        : Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
             ),
           ),
@@ -353,12 +381,12 @@ class _LanguageRow extends StatelessWidget {
               variant: PillVariant.neutral,
             ),
           if (isActive && !isCurrent)
-            const Padding(
-              padding: EdgeInsets.only(left: AppTokens.s8),
+            Padding(
+              padding: const EdgeInsets.only(left: AppTokens.s8),
               child: Icon(
                 AppIcons.chevronRight,
                 size: 20,
-                color: AppTokens.textSecondaryLight,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
         ],
@@ -397,16 +425,16 @@ class _WordbookList extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
+            Icon(
               AppIcons.menuBook,
               size: 48,
-              color: AppTokens.textHintLight,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             const SizedBox(height: AppTokens.s12),
             Text(
               l10n.pickerComingSoon,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: AppTokens.textSecondaryLight,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
             ),
           ],
