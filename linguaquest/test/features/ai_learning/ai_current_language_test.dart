@@ -16,6 +16,8 @@ class _SpyAiRepository implements AiRepository {
   String? chatLanguage;
   String? analyzeLanguage;
   String? clozeLanguage;
+  String? confusionLanguage;
+  String? sentencesLanguage;
   String? reviewLanguage;
 
   @override
@@ -45,6 +47,26 @@ class _SpyAiRepository implements AiRepository {
   }) async {
     clozeLanguage = targetLanguage;
     return {'passage': '', 'blanks': <dynamic>[]};
+  }
+
+  @override
+  Future<Map<String, dynamic>> generateConfusion({
+    required String prompt,
+    required String targetLanguage,
+    String? targetWord,
+  }) async {
+    confusionLanguage = targetLanguage;
+    return {'pairs': <dynamic>[]};
+  }
+
+  @override
+  Future<Map<String, dynamic>> generateSentences({
+    required String prompt,
+    required String targetLanguage,
+    String? targetWord,
+  }) async {
+    sentencesLanguage = targetLanguage;
+    return {'sentences': <dynamic>[], 'rewrites': <dynamic>[]};
   }
 
   @override

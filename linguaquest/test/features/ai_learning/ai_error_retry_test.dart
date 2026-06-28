@@ -53,6 +53,22 @@ class _ThrowThenSucceedAiRepository implements AiRepository {
       throw UnimplementedError();
 
   @override
+  Future<Map<String, dynamic>> generateConfusion({
+    required String prompt,
+    required String targetLanguage,
+    String? targetWord,
+  }) async =>
+      throw UnimplementedError();
+
+  @override
+  Future<Map<String, dynamic>> generateSentences({
+    required String prompt,
+    required String targetLanguage,
+    String? targetWord,
+  }) async =>
+      throw UnimplementedError();
+
+  @override
   Future<Map<String, dynamic>> explainParagraph({
     required String paragraph,
     required String language,
