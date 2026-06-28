@@ -233,6 +233,22 @@ void main() {
     });
   });
 
+  group('confusion and sentence_gen features', () {
+    test('MockAiProvider returns confusion and sentence_gen shapes', () async {
+      final provider = MockAiProvider();
+      final confusion = await provider.generate(const AiRequest(
+          featureType: 'confusion', userId: 'u', prompt: 'p', targetWord: '近'));
+      expect(confusion.success, isTrue);
+      expect(confusion.data['pairs'], isA<List>());
+
+      final sentence = await provider.generate(const AiRequest(
+          featureType: 'sentence_gen', userId: 'u', prompt: 'p', targetWord: '学'));
+      expect(sentence.success, isTrue);
+      expect(sentence.data['sentences'], isA<List>());
+      expect(sentence.data['rewrites'], isA<List>());
+    });
+  });
+
   group('AiPolicyService safety controls', () {
     test('blocked keyword returns blocked error', () async {
       final policy = AiPolicyService(

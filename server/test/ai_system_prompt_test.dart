@@ -54,5 +54,16 @@ void main() {
     test('unknown feature returns null', () {
       expect(buildSystemPrompt('nope', 'Chinese'), isNull);
     });
+    test('buildSystemPrompt covers confusion and sentence_gen', () {
+      final confusion = buildSystemPrompt('confusion', 'Chinese');
+      expect(confusion, isNotNull);
+      expect(confusion, contains('"pairs"'));
+      expect(confusion, contains('No markdown'));
+
+      final sentence = buildSystemPrompt('sentence_gen', 'Chinese');
+      expect(sentence, isNotNull);
+      expect(sentence, contains('"sentences"'));
+      expect(sentence, contains('"rewrites"'));
+    });
   });
 }

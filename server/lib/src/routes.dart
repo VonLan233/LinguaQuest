@@ -1294,6 +1294,22 @@ Router buildRouter(
     );
   });
 
+  router.post('/ai/confusion', (Request request) async {
+    return _protected(
+      config,
+      request,
+      (uid) => _handleAiRequest(request, 'confusion', uid),
+    );
+  });
+
+  router.post('/ai/sentence', (Request request) async {
+    return _protected(
+      config,
+      request,
+      (uid) => _handleAiRequest(request, 'sentence_gen', uid),
+    );
+  });
+
   router.post('/ai/reading-explain', (Request request) async {
     return _protected(
       config,

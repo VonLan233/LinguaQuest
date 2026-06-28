@@ -142,6 +142,34 @@ class MockAiProvider implements AiProvider {
           ],
           'rewrittenSample': 'Mock rewritten essay paragraph...',
         });
+      case 'confusion':
+        final word = request.targetWord ?? 'word';
+        return AiResponse(
+          success: true,
+          data: {
+            'pairs': [
+              {
+                'word': word,
+                'confusedWith': 'similar',
+                'distinction': 'Mock distinction for $word.',
+                'examples': <String>[],
+              },
+            ],
+          },
+        );
+      case 'sentence_gen':
+        final word = request.targetWord ?? 'word';
+        return AiResponse(
+          success: true,
+          data: {
+            'sentences': [
+              {'sentence': 'Mock sentence with $word.', 'translation': 'Mock translation.'},
+            ],
+            'rewrites': [
+              {'original': word, 'rewritten': 'Mock rewrite.', 'note': 'Mock note.'},
+            ],
+          },
+        );
       default:
         return const AiResponse(
           success: false,
@@ -268,6 +296,20 @@ String? buildSystemPrompt(String featureType, String language) {
           '"highScoreExpressions": string[], "grammarIssues": [{"original": '
           'string, "corrected": string, "rule": string}], "rewrittenSample": '
           'string}. No markdown, no fences.';
+    case 'confusion':
+      return 'Identify words commonly confused with the target word in '
+          '$language. Keep each pair\'s "word", "confusedWith", and "examples" '
+          'in $language; write "distinction" in English. Reply ONLY with strict '
+          'JSON: {"pairs": [{"word": string, "confusedWith": string, '
+          '"distinction": string, "examples": string[]}]}. '
+          'No markdown, no code fences.';
+    case 'sentence_gen':
+      return 'For the target word or sentence, write natural example sentences '
+          'and improved rewrites in $language. Keep "sentence" and "rewritten" '
+          'in $language; write "translation" and "note" in English. Reply ONLY '
+          'with strict JSON: {"sentences": [{"sentence": string, "translation": '
+          'string}], "rewrites": [{"original": string, "rewritten": string, '
+          '"note": string}]}. No markdown, no code fences.';
   }
   return null;
 }
