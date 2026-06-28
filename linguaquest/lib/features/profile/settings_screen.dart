@@ -180,7 +180,7 @@ class _LearningLanguageSetting extends StatelessWidget {
     final langLabel = languageLabel(currentLanguage, l10n);
     final bookLabel = displayWordbookTitle(currentWordBookId, l10n: l10n);
     return AppCard(
-      onTap: () => showLanguageWordbookPicker(context),
+      onTap: () => context.push('/language-map'),
       child: Row(
         children: [
           Icon(AppIcons.language, color: theme.colorScheme.primary),

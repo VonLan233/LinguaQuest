@@ -100,7 +100,7 @@ class ProfileScreen extends ConsumerWidget {
               title: l10n.pickerChooseLanguage,
               value:
                   '${languageLabel(state.currentLanguage, l10n)} · ${state.currentWordBook?.nameFor(localeCode) ?? state.currentWordBookId}',
-              onTap: () => showLanguageWordbookPicker(context),
+              onTap: () => context.push('/language-map'),
             ),
             _SettingsItem(
               icon: AppIcons.style,
