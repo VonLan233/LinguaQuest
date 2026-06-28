@@ -1518,6 +1518,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get trainingCorrectFeedback => 'Correct. Streak continues!';
 
   @override
+  String get trainingPromptListening => 'Listen and choose the word you heard';
+
+  @override
   String get learningPathTitle => 'Learning Path';
 
   @override

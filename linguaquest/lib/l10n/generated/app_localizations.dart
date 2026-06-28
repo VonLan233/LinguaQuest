@@ -2768,6 +2768,12 @@ abstract class AppLocalizations {
   /// **'Correct. Streak continues!'**
   String get trainingCorrectFeedback;
 
+  /// No description provided for @trainingPromptListening.
+  ///
+  /// In en, this message translates to:
+  /// **'Listen and choose the word you heard'**
+  String get trainingPromptListening;
+
   /// No description provided for @learningPathTitle.
   ///
   /// In en, this message translates to:

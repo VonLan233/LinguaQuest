@@ -89,7 +89,7 @@ class TrainingScreen extends ConsumerWidget {
               icon: AppIcons.hearing,
               title: l10n.trainingListening,
               color: AppTokens.mangoColor(context),
-              onTap: null,
+              onTap: () => context.push('/training/listening-sprint'),
             ),
           ],
         ),

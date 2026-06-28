@@ -1436,6 +1436,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get trainingCorrectFeedback => '回答正确，连击继续！';
 
   @override
+  String get trainingPromptListening => '听音频，选择你听到的词';
+
+  @override
   String get learningPathTitle => '学习路径';
 
   @override

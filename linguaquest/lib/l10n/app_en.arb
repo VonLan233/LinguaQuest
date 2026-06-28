@@ -474,6 +474,8 @@
   "trainingReviveConsumed": "One revive was consumed. Keep going.",
   "trainingReviveExhausted": "No revives left. This round ends.",
   "trainingCorrectFeedback": "Correct. Streak continues!",
+  "trainingPromptListening": "Listen and choose the word you heard",
+  "@trainingPromptListening": {},
 
   "learningPathTitle": "Learning Path",
   "learningPathBackToHome": "Back to Home",

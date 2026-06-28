@@ -472,6 +472,7 @@
   "trainingReviveConsumed": "Satu nyawa telah digunakan. Teruskan.",
   "trainingReviveExhausted": "Tiada nyawa tinggal. Pusingan ini tamat.",
   "trainingCorrectFeedback": "Betul. Kombo diteruskan!",
+  "trainingPromptListening": "Dengar dan pilih perkataan yang anda dengar",
 
   "learningPathTitle": "Laluan Pembelajaran",
   "learningPathBackToHome": "Kembali ke Utama",

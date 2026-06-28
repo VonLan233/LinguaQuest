@@ -472,6 +472,7 @@
   "trainingReviveConsumed": "已消耗一次复活机会，继续闯关。",
   "trainingReviveExhausted": "复活机会已用完，本轮结束。",
   "trainingCorrectFeedback": "回答正确，连击继续！",
+  "trainingPromptListening": "听音频，选择你听到的词",
 
   "learningPathTitle": "学习路径",
   "learningPathBackToHome": "回到首页",

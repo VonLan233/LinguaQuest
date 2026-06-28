@@ -1518,6 +1518,10 @@ class AppLocalizationsMs extends AppLocalizations {
   String get trainingCorrectFeedback => 'Betul. Kombo diteruskan!';
 
   @override
+  String get trainingPromptListening =>
+      'Dengar dan pilih perkataan yang anda dengar';
+
+  @override
   String get learningPathTitle => 'Laluan Pembelajaran';
 
   @override
