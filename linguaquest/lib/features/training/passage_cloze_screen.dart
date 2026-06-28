@@ -72,6 +72,7 @@ class _PassageClozeScreenState extends ConsumerState<PassageClozeScreen> {
   bool get _allAnswered => _selected.length >= _questions.length;
 
   Future<void> _finish() async {
+    if (_questions.isEmpty) return;
     if (_submitting || !_allAnswered) return;
     setState(() => _submitting = true);
     final notifier = ref.read(appControllerProvider.notifier);
@@ -135,7 +136,8 @@ class _PassageClozeScreenState extends ConsumerState<PassageClozeScreen> {
         title: Text(l10n.trainingPassageCloze),
         leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            onPressed: () => context.go('/training')),
+            onPressed: () =>
+                context.canPop() ? context.pop() : context.go('/training')),
       ),
       body: SafeArea(
         child: _isLoading
