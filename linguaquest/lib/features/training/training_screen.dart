@@ -83,7 +83,7 @@ class TrainingScreen extends ConsumerWidget {
               icon: AppIcons.article,
               title: l10n.trainingPassageCloze,
               color: AppTokens.successColor(context),
-              onTap: null,
+              onTap: () => context.push('/training/passage-cloze'),
             ),
             _TrainingGameRow(
               icon: AppIcons.hearing,

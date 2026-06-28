@@ -49,6 +49,7 @@ import '../../features/search/search_screen.dart';
 import '../../features/shell/app_shell.dart';
 import '../../features/study/mixed_study_session_screen.dart';
 import '../../features/study/session/session_queue_builder.dart';
+import '../../features/training/passage_cloze_screen.dart';
 import '../../features/training/training_screen.dart';
 import '../../features/training/training_session_screen.dart';
 import '../../features/wordbook/add_edit_custom_word_screen.dart';
@@ -305,6 +306,10 @@ final routerProvider = Provider<GoRouter>((ref) {
           lessonId: state.pathParameters['id']!,
           mode: QuizSessionMode.timed,
         ),
+      ),
+      GoRoute(
+        path: '/training/passage-cloze',
+        builder: (context, state) => const PassageClozeScreen(),
       ),
       GoRoute(
         path: '/training/:game',
