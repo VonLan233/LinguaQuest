@@ -1528,22 +1528,37 @@ List<Map<String, dynamic>>? _cachedWordBooks;
 Future<List<Map<String, dynamic>>>? _loadingWordBooks;
 
 Future<List<Map<String, dynamic>>> _readWordBooks() async {
-  final file = _wordBookDataFile();
-  final decoded = jsonDecode(await file.readAsString());
-  if (decoded is! List) {
-    throw const FormatException('wordbooks_p0.json must be a list');
+  final books = <Map<String, dynamic>>[];
+  for (final file in _wordBookDataFiles()) {
+    final decoded = jsonDecode(await file.readAsString());
+    if (decoded is! List) {
+      throw FormatException('${file.path} must be a list');
+    }
+    for (final item in decoded.whereType<Map>()) {
+      books.add(Map<String, dynamic>.from(item));
+    }
   }
-  return decoded.whereType<Map>().map((item) {
-    return Map<String, dynamic>.from(item);
-  }).toList();
+  return books;
 }
 
-File _wordBookDataFile() {
-  final serverRelative = File('data/wordbooks_p0.json');
-  if (serverRelative.existsSync()) return serverRelative;
-  final repoRelative = File('server/data/wordbooks_p0.json');
-  if (repoRelative.existsSync()) return repoRelative;
-  return serverRelative;
+// ponytail: JLPT data is duplicated from the client assets into server/data/.
+// If this duplication ever drifts, regenerate wordbooks_jlpt.json from
+// linguaquest/lib/assets/data/wordbook_jlpt_*.json.
+List<File> _wordBookDataFiles() {
+  final files = <File>[];
+  for (final name in const ['wordbooks_p0.json', 'wordbooks_jlpt.json']) {
+    final serverRelative = File('data/$name');
+    final repoRelative = File('server/data/$name');
+    if (serverRelative.existsSync()) {
+      files.add(serverRelative);
+    } else if (repoRelative.existsSync()) {
+      files.add(repoRelative);
+    }
+  }
+  if (files.isEmpty) {
+    files.add(File('data/wordbooks_p0.json'));
+  }
+  return files;
 }
 
 Map<String, dynamic>? _wordBookById(
