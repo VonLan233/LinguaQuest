@@ -16,6 +16,8 @@ void main() {
     for (final b in books) {
       expect(b['language'], 'ja');
       expect(b['words'], isA<List>());
+      // Guard against a regenerated-but-empty data file slipping through.
+      expect((b['words'] as List), isNotEmpty);
     }
   });
 }
