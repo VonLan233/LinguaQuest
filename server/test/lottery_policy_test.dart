@@ -36,6 +36,16 @@ void main() {
     );
   });
 
+  test('lottery prize seed names and descriptions are English (no CJK)', () {
+    final cjk = RegExp(r'[一-鿿]');
+    for (final prize in lotteryPrizeSeed) {
+      expect(cjk.hasMatch(prize['name'].toString()), isFalse,
+          reason: 'name still has CJK: ${prize['name']}');
+      expect(cjk.hasMatch(prize['description'].toString()), isFalse,
+          reason: 'description still has CJK: ${prize['id']}');
+    }
+  });
+
   test(
     'lottery chooser ignores inactive prizes and falls back to seed pool',
     () {
