@@ -9,6 +9,7 @@ import '../../features/auth/verify_email_screen.dart';
 import '../../features/ai_learning/ai_chat_screen.dart';
 import '../../features/ai_learning/ai_cloze_screen.dart';
 import '../../features/ai_learning/ai_confusable_words_screen.dart';
+import '../../features/ai_learning/ai_sentence_gen_screen.dart';
 import '../../features/ai_learning/ai_writing_review_screen.dart';
 import '../../features/ai_learning/ai_learning_screen.dart';
 import '../../features/ai_learning/ai_sentence_analysis_screen.dart';
@@ -192,6 +193,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/ai-confusion',
         builder: (context, state) => const AiConfusableWordsScreen(),
+      ),
+      GoRoute(
+        path: '/ai-sentence',
+        builder: (context, state) => const AiSentenceGenScreen(),
       ),
       GoRoute(
         path: '/settings',

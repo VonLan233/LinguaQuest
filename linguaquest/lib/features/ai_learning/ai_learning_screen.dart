@@ -125,7 +125,7 @@ class AiLearningScreen extends StatelessWidget {
           icon: AppIcons.tipsAndUpdates,
           title: l10n.aiLearningToolSentence,
           color: AppTokens.azure,
-          status: l10n.aiLearningStatusPlanning,
+          onTap: () => context.push('/ai-sentence'),
         ),
       ],
     );
@@ -139,14 +139,12 @@ class _AiToolRow extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.color,
-    this.status,
     this.onTap,
   });
 
   final IconData icon;
   final String title;
   final Color color;
-  final String? status;
   final VoidCallback? onTap;
 
   @override
@@ -161,7 +159,7 @@ class _AiToolRow extends StatelessWidget {
         color: color,
         enabled: enabled,
         trailing: AppPill(
-          label: enabled ? l10n.aiLearningStatusAvailable : (status ?? ''),
+          label: enabled ? l10n.aiLearningStatusAvailable : '',
           variant: enabled ? PillVariant.success : PillVariant.neutral,
         ),
       ),
