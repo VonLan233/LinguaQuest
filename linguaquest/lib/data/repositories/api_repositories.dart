@@ -703,6 +703,42 @@ class ApiAiRepository implements AiRepository {
   }
 
   @override
+  Future<Map<String, dynamic>> generateConfusion({
+    required String prompt,
+    required String targetLanguage,
+    String? targetWord,
+  }) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/ai/confusion',
+      data: {
+        'prompt': prompt,
+        'targetWord': targetWord,
+        'targetLanguage': targetLanguage,
+      },
+      options: Options(receiveTimeout: _aiTimeout),
+    );
+    return response.data!['data'] as Map<String, dynamic>;
+  }
+
+  @override
+  Future<Map<String, dynamic>> generateSentences({
+    required String prompt,
+    required String targetLanguage,
+    String? targetWord,
+  }) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/ai/sentence',
+      data: {
+        'prompt': prompt,
+        'targetWord': targetWord,
+        'targetLanguage': targetLanguage,
+      },
+      options: Options(receiveTimeout: _aiTimeout),
+    );
+    return response.data!['data'] as Map<String, dynamic>;
+  }
+
+  @override
   Future<Map<String, dynamic>> explainParagraph({
     required String paragraph,
     required String language,

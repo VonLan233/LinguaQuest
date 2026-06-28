@@ -1187,6 +1187,64 @@ class MockAiRepository implements AiRepository {
   }
 
   @override
+  Future<Map<String, dynamic>> generateConfusion({
+    required String prompt,
+    required String targetLanguage,
+    String? targetWord,
+  }) async {
+    final word = targetWord ?? 'word';
+    final result = <String, dynamic>{
+      'pairs': [
+        {
+          'word': word,
+          'confusedWith': 'similar',
+          'distinction': 'Mock distinction for $word.',
+          'examples': <String>[],
+        },
+      ],
+    };
+    _history.insert(
+      0,
+      AiHistoryEntry(
+        id: 'mock-${_idCounter++}',
+        featureType: 'confusion',
+        prompt: prompt,
+        response: result,
+        createdAt: DateTime.now(),
+      ),
+    );
+    return result;
+  }
+
+  @override
+  Future<Map<String, dynamic>> generateSentences({
+    required String prompt,
+    required String targetLanguage,
+    String? targetWord,
+  }) async {
+    final word = targetWord ?? 'word';
+    final result = <String, dynamic>{
+      'sentences': [
+        {'sentence': 'Mock sentence with $word.', 'translation': 'Mock translation.'},
+      ],
+      'rewrites': [
+        {'original': word, 'rewritten': 'Mock rewrite.', 'note': 'Mock note.'},
+      ],
+    };
+    _history.insert(
+      0,
+      AiHistoryEntry(
+        id: 'mock-${_idCounter++}',
+        featureType: 'sentence_gen',
+        prompt: prompt,
+        response: result,
+        createdAt: DateTime.now(),
+      ),
+    );
+    return result;
+  }
+
+  @override
   Future<Map<String, dynamic>> explainParagraph({
     required String paragraph,
     required String language,

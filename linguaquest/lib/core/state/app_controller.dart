@@ -2668,6 +2668,18 @@ class AppController extends Notifier<AppState> {
             targetWord: targetWord,
             targetLanguage: state.currentLanguage,
           );
+        case 'confusion':
+          result = await repo.generateConfusion(
+            prompt: prompt,
+            targetWord: targetWord,
+            targetLanguage: state.currentLanguage,
+          );
+        case 'sentence_gen':
+          result = await repo.generateSentences(
+            prompt: prompt,
+            targetWord: targetWord,
+            targetLanguage: state.currentLanguage,
+          );
         default:
           result = {};
       }
