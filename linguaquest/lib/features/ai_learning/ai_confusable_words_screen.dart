@@ -166,8 +166,8 @@ class _ConfusionResult extends StatelessWidget {
                     const SizedBox(height: AppTokens.s8),
                     Text('${raw['distinction'] ?? ''}',
                         style: theme.textTheme.bodyMedium),
-                    if ((raw['examples'] as List<dynamic>?)?.isNotEmpty ??
-                        false) ...[
+                    if (raw['examples'] is List &&
+                        (raw['examples'] as List).isNotEmpty) ...[
                       const SizedBox(height: AppTokens.s8),
                       for (final ex in (raw['examples'] as List))
                         Padding(
