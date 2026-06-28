@@ -495,7 +495,7 @@ class _WordListRow extends StatelessWidget {
               child: Text(
                 index.toString().padLeft(3, '0'),
                 style: theme.textTheme.labelSmall?.copyWith(
-                  color: AppTokens.textHintLight,
+                  color: muted,
                   fontFeatures: const [FontFeature.tabularFigures()],
                 ),
               ),
@@ -552,7 +552,7 @@ class _WordListRow extends StatelessWidget {
                 Icon(
                   favorite ? AppIcons.star : AppIcons.starBorder,
                   size: 18,
-                  color: favorite ? AppTokens.amber : AppTokens.textHintLight,
+                  color: favorite ? AppTokens.amber : muted,
                 ),
                 if (status != null) ...[
                   const SizedBox(height: AppTokens.s8),

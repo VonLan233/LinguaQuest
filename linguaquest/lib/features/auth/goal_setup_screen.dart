@@ -6,7 +6,6 @@ import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
-import '../../core/theme/app_tokens.dart';
 import '../../core/utils/date_formatting.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/app_button.dart';
@@ -341,10 +340,10 @@ class _LanguageBookPickerTile extends StatelessWidget {
               ],
             ),
           ),
-          const Icon(
+          Icon(
             AppIcons.chevronRight,
             size: 20,
-            color: AppTokens.textSecondaryLight,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ],
       ),

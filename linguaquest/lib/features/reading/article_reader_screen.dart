@@ -194,7 +194,7 @@ class _ReaderBody extends ConsumerWidget {
                 Text(
                   article.titleTranslation,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: AppTokens.textSecondaryLight,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
                 const SizedBox(height: AppTokens.s12),
@@ -211,7 +211,7 @@ class _ReaderBody extends ConsumerWidget {
               Text(
                 l10n.readingTapWordHint,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: AppTokens.textHintLight,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
               if (showHighlight && !highlightVocab.isEmpty) ...[
@@ -256,7 +256,7 @@ class _ReaderBody extends ConsumerWidget {
                   l10n.readingComprehensionEmpty,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppTokens.textHintLight,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
               ],
@@ -369,7 +369,7 @@ class _LegendChip extends StatelessWidget {
         Text(
           label,
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: AppTokens.textSecondaryLight,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
         ),
       ],
@@ -503,7 +503,7 @@ class _ParagraphCardState extends State<_ParagraphCard> {
               Text(
                 widget.paragraph.translation,
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: AppTokens.textSecondaryLight,
+                  color: theme.colorScheme.onSurfaceVariant,
                   fontStyle: FontStyle.italic,
                 ),
               ),

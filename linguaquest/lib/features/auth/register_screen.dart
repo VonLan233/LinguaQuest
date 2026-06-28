@@ -65,7 +65,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   l10n.authCreateProfileSubtitle,
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: AppTokens.textSecondaryLight,
+                    color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
                 const SizedBox(height: AppTokens.s16),
@@ -128,14 +128,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       onPressed: state.isLoading ? null : _submit,
                     ),
                     if (state.isLoading)
-                      const Positioned(
+                      Positioned(
                         right: AppTokens.s20,
                         child: SizedBox(
                           width: 18,
                           height: 18,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            color: AppTokens.textHintLight,
+                            color: theme.colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ),

@@ -327,7 +327,7 @@ class _ReadingStat extends StatelessWidget {
         Text(
           label,
           style: theme.textTheme.bodySmall
-              ?.copyWith(color: AppTokens.textSecondaryLight),
+              ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
         ),
       ],
     );

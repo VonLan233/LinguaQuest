@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:linguaquest/app.dart';
 import 'package:linguaquest/core/theme/app_theme.dart';
 import 'package:linguaquest/features/quests/progress_analytics_screen.dart';
+import 'package:linguaquest/features/reading/reading_list_screen.dart';
 import 'package:linguaquest/features/shell/app_shell.dart';
 import 'package:linguaquest/l10n/generated/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -66,6 +67,26 @@ void main() {
       );
       await tester.pump();
 
+      expect(tester.takeException(), isNull);
+    });
+  });
+
+  group('Dark Mode — reading screens smoke', () {
+    testWidgets('ReadingListScreen renders without exception in dark', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp(
+            theme: AppTheme.dark(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            locale: const Locale('en'),
+            home: const ReadingListScreen(),
+          ),
+        ),
+      );
+      await tester.pump();
       expect(tester.takeException(), isNull);
     });
   });

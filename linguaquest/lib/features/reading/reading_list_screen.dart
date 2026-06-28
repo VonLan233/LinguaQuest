@@ -153,7 +153,7 @@ class _FilterRow extends StatelessWidget {
           label,
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
             fontWeight: FontWeight.w800,
-            color: AppTokens.textSecondaryLight,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ),
         const SizedBox(height: AppTokens.s8),
@@ -216,7 +216,7 @@ class _ArticleRow extends StatelessWidget {
             Text(
               article.titleTranslation,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: AppTokens.textSecondaryLight,
+                color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
           ],
@@ -244,13 +244,13 @@ class _ArticleRow extends StatelessWidget {
                   Icon(
                     AppIcons.menuBook,
                     size: 14,
-                    color: AppTokens.textSecondaryLight,
+                    color: theme.colorScheme.onSurfaceVariant,
                   ),
                   const SizedBox(width: 4),
                   Text(
                     l10n.readingMinutes(article.estimatedMinutes),
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: AppTokens.textSecondaryLight,
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],
@@ -289,14 +289,14 @@ class _EmptyState extends StatelessWidget {
             Icon(
               AppIcons.autoStories,
               size: 40,
-              color: AppTokens.textSecondaryLight,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             const SizedBox(height: AppTokens.s12),
             Text(
               message,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppTokens.textSecondaryLight,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
           ],

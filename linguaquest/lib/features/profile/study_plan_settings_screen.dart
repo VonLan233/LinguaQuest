@@ -951,7 +951,7 @@ class _CurrentLanguageTile extends StatelessWidget {
           Text(
             l10n.pickerChooseLanguage,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppTokens.textSecondaryLight,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
           ),
           const SizedBox(width: AppTokens.s8),
@@ -960,10 +960,10 @@ class _CurrentLanguageTile extends StatelessWidget {
             variant: PillVariant.primary,
           ),
           const Spacer(),
-          const Icon(
+          Icon(
             AppIcons.chevronRight,
             size: 18,
-            color: AppTokens.textSecondaryLight,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ],
       ),

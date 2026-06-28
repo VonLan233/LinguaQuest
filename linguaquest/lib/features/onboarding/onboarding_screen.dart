@@ -64,7 +64,7 @@ class OnboardingScreen extends StatelessWidget {
                 l10n.onboardingTagline,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: AppTokens.textSecondaryLight,
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
               const SizedBox(height: AppTokens.s32),
