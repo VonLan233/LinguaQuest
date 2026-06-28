@@ -118,7 +118,7 @@ class AiLearningScreen extends StatelessWidget {
           icon: AppIcons.compareArrows,
           title: l10n.aiLearningToolConfusion,
           color: AppTheme.cyan,
-          status: l10n.aiLearningStatusPlanning,
+          onTap: () => context.push('/ai-confusion'),
         ),
         const SizedBox(height: AppTokens.s12),
         _AiToolRow(
