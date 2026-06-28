@@ -51,7 +51,7 @@ void main() {
   }
 
   testWidgets(
-    'aiLearningStatusSoon appears 0 times; Available appears; In Planning appears exactly twice',
+    'aiLearningStatusSoon and In Planning absent; Available appears for all tools',
     (tester) async {
       final l10n = await loadL10n();
 
@@ -73,11 +73,12 @@ void main() {
       // "Coming Soon" still must not appear after scroll.
       expect(find.text(l10n.aiLearningStatusSoon), findsNothing);
 
-      // aiLearningStatusAvailable ("Available") should appear for the 4 working tools
+      // aiLearningStatusAvailable ("Available") should appear now that all six
+      // tools (incl. Confusable Words + Sentence Generation) are enabled.
       expect(find.text(l10n.aiLearningStatusAvailable), findsWidgets);
 
-      // aiLearningStatusPlanning ("In Planning") should appear exactly twice (Confusion + Sentence)
-      expect(find.text(l10n.aiLearningStatusPlanning), findsNWidgets(2));
+      // "In Planning" must no longer appear — both planned tools are shipped.
+      expect(find.text(l10n.aiLearningStatusPlanning), findsNothing);
     },
   );
 }
