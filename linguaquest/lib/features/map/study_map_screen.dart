@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../core/services/location_service.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_button.dart';
-import '../../data/models/study_spot.dart';
 import '../../core/widgets/fallback_back_button.dart';
 
 class StudyMapScreen extends ConsumerStatefulWidget {
@@ -30,25 +29,8 @@ class _StudyMapScreenState extends ConsumerState<StudyMapScreen> {
     });
   }
 
-  Future<LatLng?> _currentLatLng() async {
-    try {
-      var perm = await Geolocator.checkPermission();
-      if (perm == LocationPermission.denied) {
-        perm = await Geolocator.requestPermission();
-      }
-      if (perm == LocationPermission.denied ||
-          perm == LocationPermission.deniedForever) {
-        return null;
-      }
-      final pos = await Geolocator.getCurrentPosition();
-      return LatLng(pos.latitude, pos.longitude);
-    } catch (_) {
-      return null;
-    }
-  }
-
   Future<void> _saveHere() async {
-    final loc = await _currentLatLng();
+    final loc = await currentLatLng();
     if (!mounted) return;
     if (loc == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -66,14 +48,11 @@ class _StudyMapScreenState extends ConsumerState<StudyMapScreen> {
     if (!mounted) return;
     final name = await _askName();
     if (name == null || name.trim().isEmpty) return;
-    await ref.read(appControllerProvider.notifier).saveStudySpot(StudySpot(
-          id: '',
+    await ref.read(appControllerProvider.notifier).recordStudyVisit(
           name: name.trim(),
           latitude: loc.latitude,
           longitude: loc.longitude,
-          studyMinutes: 0,
-          createdAt: DateTime.now().toUtc(),
-        ));
+        );
     if (mounted) _map.move(loc, 15);
   }
 

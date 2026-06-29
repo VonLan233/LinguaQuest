@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'profile_repository.dart';
@@ -1675,6 +1676,55 @@ class MockStudySpotRepository implements StudySpotRepository {
       createdAt: spot.createdAt,
     );
     spots.add(saved);
+    await _write(prefs, spots);
+    return saved;
+  }
+
+  @override
+  Future<StudySpot> recordVisit({
+    required double latitude,
+    required double longitude,
+    required String name,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    final spots = await _read(prefs);
+    final distance = const Distance();
+    final here = LatLng(latitude, longitude);
+    var nearestIndex = -1;
+    var nearestMeters = 100.0; // ≤100m aggregates
+    for (var i = 0; i < spots.length; i++) {
+      final d = distance.as(
+          LengthUnit.Meter, here, LatLng(spots[i].latitude, spots[i].longitude));
+      if (d <= nearestMeters) {
+        nearestMeters = d;
+        nearestIndex = i;
+      }
+    }
+    final StudySpot saved;
+    if (nearestIndex >= 0) {
+      final old = spots[nearestIndex];
+      saved = StudySpot(
+        id: old.id,
+        name: old.name,
+        latitude: old.latitude,
+        longitude: old.longitude,
+        studyMinutes: old.studyMinutes,
+        visitCount: old.visitCount + 1,
+        createdAt: DateTime.now().toUtc(),
+      );
+      spots[nearestIndex] = saved;
+    } else {
+      saved = StudySpot(
+        id: 'spot-${DateTime.now().microsecondsSinceEpoch}',
+        name: name,
+        latitude: latitude,
+        longitude: longitude,
+        studyMinutes: 0,
+        visitCount: 1,
+        createdAt: DateTime.now().toUtc(),
+      );
+      spots.add(saved);
+    }
     await _write(prefs, spots);
     return saved;
   }

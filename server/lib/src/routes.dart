@@ -1408,11 +1408,15 @@ Router buildRouter(
       final name = (body['name'] as String? ?? '').trim();
       final lat = (body['latitude'] as num?)?.toDouble() ?? 0;
       final lng = (body['longitude'] as num?)?.toDouble() ?? 0;
-      final minutes = (body['studyMinutes'] as num?)?.toInt() ?? 0;
-      final err = StudySpotPolicy.validate(name: name, latitude: lat, longitude: lng);
+      final err =
+          StudySpotPolicy.validate(name: name, latitude: lat, longitude: lng);
       if (err != null) return jsonResponse({'error': err}, status: 400);
-      final spot = await database.insertStudySpot(
-        uid, name: name, latitude: lat, longitude: lng, studyMinutes: minutes);
+      final spot = await database.recordStudyVisit(
+        uid,
+        name: name,
+        latitude: lat,
+        longitude: lng,
+      );
       return jsonResponse(spot, status: 201);
     });
   });

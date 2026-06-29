@@ -45,6 +45,7 @@ import '../../data/repositories/user_word_repository.dart';
 import '../../data/models/study_spot.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../services/local_notification_service.dart';
+import '../services/location_service.dart';
 import '../constants/app_constants.dart';
 import '../utils/progress_scope.dart';
 import '../utils/ui_labels.dart';
@@ -1063,6 +1064,7 @@ class AppController extends Notifier<AppState> {
       }
       await refreshNotifications();
       unawaited(_scheduleLocalNotifications());
+      unawaited(recordStudyVisit(name: 'Study session'));
     });
   }
 
@@ -1650,6 +1652,7 @@ class AppController extends Notifier<AppState> {
       );
       await refreshNotifications();
       unawaited(_scheduleLocalNotifications());
+      unawaited(recordStudyVisit(name: 'Study session'));
     });
   }
 
@@ -2944,6 +2947,36 @@ class AppController extends Notifier<AppState> {
   Future<void> deleteStudySpot(String id) async {
     await ref.read(studySpotRepositoryProvider).remove(id);
     await loadStudySpots();
+  }
+
+  /// Records a study visit (nearby upsert via the repository). When [latitude]/
+  /// [longitude] are omitted, the current device location is used. Any
+  /// failure — denied permission, timeout, network — is swallowed so it never
+  /// blocks lesson/training completion.
+  Future<void> recordStudyVisit({
+    required String name,
+    double? latitude,
+    double? longitude,
+  }) async {
+    try {
+      double lat;
+      double lng;
+      if (latitude != null && longitude != null) {
+        lat = latitude;
+        lng = longitude;
+      } else {
+        final loc = await currentLatLng();
+        if (loc == null) return; // silently skip
+        lat = loc.latitude;
+        lng = loc.longitude;
+      }
+      await ref
+          .read(studySpotRepositoryProvider)
+          .recordVisit(latitude: lat, longitude: lng, name: name);
+      await loadStudySpots();
+    } catch (error) {
+      debugPrint('recordStudyVisit skipped: $error');
+    }
   }
 
   // ---------------------------------------------------------------------------

@@ -69,6 +69,23 @@ class ApiStudySpotRepository implements StudySpotRepository {
   }
 
   @override
+  Future<StudySpot> recordVisit({
+    required double latitude,
+    required double longitude,
+    required String name,
+  }) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/study-spots',
+      data: {
+        'name': name,
+        'latitude': latitude,
+        'longitude': longitude,
+      },
+    );
+    return StudySpot.fromJson(response.data!);
+  }
+
+  @override
   Future<void> remove(String id) async {
     await _client.dio.delete<void>('/study-spots/$id');
   }

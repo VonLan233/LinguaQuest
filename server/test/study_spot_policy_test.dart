@@ -26,4 +26,24 @@ void main() {
       equals('invalid_coordinates'),
     );
   });
+  test('distanceMeters: same point is ~0', () {
+    expect(StudySpotPolicy.distanceMeters(3.139, 101.6869, 3.139, 101.6869),
+        lessThan(1));
+  });
+  test('distanceMeters: ~100m apart is within tolerance', () {
+    // 0.0009 deg latitude ≈ 100 m.
+    final d = StudySpotPolicy.distanceMeters(3.1390, 101.6869, 3.1399, 101.6869);
+    expect(d, inInclusiveRange(90, 110));
+  });
+  test('nearestWithin: returns index of a spot within 100m', () {
+    final spots = [
+      (latitude: 3.1390, longitude: 101.6869),
+      (latitude: 3.2000, longitude: 101.7000),
+    ];
+    expect(StudySpotPolicy.nearestWithin(spots, 3.13905, 101.68695), 0);
+  });
+  test('nearestWithin: returns null when nothing within 100m', () {
+    final spots = [(latitude: 3.2000, longitude: 101.7000)];
+    expect(StudySpotPolicy.nearestWithin(spots, 3.1390, 101.6869), isNull);
+  });
 }
