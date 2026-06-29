@@ -89,7 +89,7 @@ class StudyPlan {
     return StudyPlan(
       id: json['id'] as String? ?? 'study-plan-$uid',
       uid: uid,
-      wordBookId: normalizedStudyBookId(json['wordBookId'] as String?),
+      wordBookId: _wordBookIdOrDefault(json['wordBookId']),
       dailyNewTarget: _intInRange(json['dailyNewTarget'], 1, 200, 10),
       dailyReviewLimit: _intInRange(json['dailyReviewLimit'], 0, 500, 20),
       startDate: _date(json['startDate']) ?? today,
@@ -155,6 +155,29 @@ StudyBookInfo studyBookInfoForId(String id) {
     (book) => book.id == normalizedStudyBookId(id),
     orElse: () => studyBooks.first,
   );
+}
+
+/// Keeps the real wordbook id from a server/stored plan; only falls back to
+/// the default book when the value is missing or blank. (HSK-pivot used to
+/// collapse everything to hsk1; with 15 books shipping that collapse is gone.)
+String _wordBookIdOrDefault(Object? value) {
+  final raw = (value as String?)?.trim() ?? '';
+  return raw.isEmpty ? 'hsk1' : raw;
+}
+
+/// Emoji cover for the study-plan hero when a wordbook ships no artwork.
+String studyPlanCoverEmoji(String language) {
+  switch (language) {
+    case 'ja':
+      return '🗾';
+    case 'en':
+    case 'es':
+    case 'fr':
+    case 'ms':
+      return '🔤';
+    default:
+      return '🀄';
+  }
 }
 
 // Only one book exists for now; every legacy/exam/HSK target resolves to it.

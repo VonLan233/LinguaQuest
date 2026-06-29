@@ -195,9 +195,18 @@ class AppState {
 
   String? get learningTarget => studyPlan?.wordBookId ?? user?.targetExam;
 
-  StudyBookInfo get currentStudyBook => studyBookInfoForId(
-    studyPlan?.wordBookId ?? studyBookIdForTarget(user?.targetExam),
-  );
+  StudyBookInfo get currentStudyBook {
+    final book = currentWordBook;
+    if (book != null) {
+      return StudyBookInfo(
+        id: book.id,
+        name: book.title,
+        cover: studyPlanCoverEmoji(book.language),
+        description: book.description,
+      );
+    }
+    return studyBookInfoForId(studyPlan?.wordBookId ?? '');
+  }
 
   bool get isStudyPlanPaused => studyPlan?.isPaused ?? false;
 
