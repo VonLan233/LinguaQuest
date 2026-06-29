@@ -4219,12 +4219,6 @@ abstract class AppLocalizations {
   /// **'Review queue beyond limit will be kept for later dates.'**
   String get studyPlanDailyReviewHint;
 
-  /// No description provided for @studyPlanTargetDate.
-  ///
-  /// In en, this message translates to:
-  /// **'Exam/Target Completion Date'**
-  String get studyPlanTargetDate;
-
   /// No description provided for @studyPlanReminderTime.
   ///
   /// In en, this message translates to:
@@ -4272,12 +4266,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Confirm Reset'**
   String get studyPlanConfirm;
-
-  /// No description provided for @studyPlanInvalidDate.
-  ///
-  /// In en, this message translates to:
-  /// **'Target completion date cannot be earlier than today.'**
-  String get studyPlanInvalidDate;
 
   /// No description provided for @studyPlanSaved.
   ///

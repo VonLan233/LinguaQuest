@@ -2213,9 +2213,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get studyPlanDailyReviewHint => '复习队列超过上限时会保留到后续日期。';
 
   @override
-  String get studyPlanTargetDate => '考试/目标完成日期';
-
-  @override
   String get studyPlanReminderTime => '学习提醒时间';
 
   @override
@@ -2239,9 +2236,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get studyPlanConfirm => '确认重置';
-
-  @override
-  String get studyPlanInvalidDate => '目标完成日期不能早于今天。';
 
   @override
   String get studyPlanSaved => '学习计划已保存。';

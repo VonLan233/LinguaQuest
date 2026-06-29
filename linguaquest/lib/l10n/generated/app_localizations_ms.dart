@@ -2339,9 +2339,6 @@ class AppLocalizationsMs extends AppLocalizations {
       'Giliran ulangkaji melebihi had akan disimpan untuk tarikh kemudian.';
 
   @override
-  String get studyPlanTargetDate => 'Tarikh Tamat Peperiksaan/Sasaran';
-
-  @override
   String get studyPlanReminderTime => 'Masa Peringatan Pembelajaran';
 
   @override
@@ -2366,10 +2363,6 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get studyPlanConfirm => 'Sahkan Tetap Semula';
-
-  @override
-  String get studyPlanInvalidDate =>
-      'Tarikh tamat sasaran tidak boleh lebih awal daripada hari ini.';
 
   @override
   String get studyPlanSaved => 'Pelan pembelajaran disimpan.';

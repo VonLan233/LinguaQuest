@@ -608,8 +608,11 @@ class AppController extends Notifier<AppState> {
     final user = state.user;
     if (user == null) return false;
     return _run(() async {
-      final wordBookId = _wordBookIdForTarget(plan.wordBookId, state.wordBooks);
-      final targetExam = targetForStudyBookId(wordBookId);
+      final wordBookId = _hasWordBook(plan.wordBookId)
+          ? plan.wordBookId
+          : _wordBookIdForTarget(plan.wordBookId, state.wordBooks);
+      final book = _wordBookById(state.wordBooks, wordBookId);
+      final targetExam = book?.examType ?? targetForStudyBookId(wordBookId);
       final saved = await _studyPlanRepository.save(
         plan.copyWith(
           uid: user.uid,

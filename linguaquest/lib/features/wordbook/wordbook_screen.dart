@@ -51,7 +51,7 @@ class WordbookScreen extends ConsumerWidget {
     );
     final percent = (progress * 100).round();
     final bookName = currentBook != null
-        ? displayWordbookTitle(currentBook.id, l10n: l10n)
+        ? currentBook.nameFor(localeCode)
         : studyBook.name;
     final examType = currentBook?.examType ?? '';
 

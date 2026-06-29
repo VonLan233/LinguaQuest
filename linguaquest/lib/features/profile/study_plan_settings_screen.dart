@@ -8,7 +8,6 @@ import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
-import '../../core/utils/ui_labels.dart';
 import '../../core/utils/wordbook_progress.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_card.dart';
@@ -679,7 +678,7 @@ class _StudyBookCoverOption extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          displayWordbookTitle(book.id, l10n: l10n),
+                          book.nameFor(localeCode),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: theme.textTheme.labelLarge?.copyWith(
@@ -691,7 +690,7 @@ class _StudyBookCoverOption extends StatelessWidget {
                         ),
                         const SizedBox(height: AppTokens.s4),
                         Text(
-                          displayWordbookDescription(book.id, l10n: l10n),
+                          book.description,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: theme.textTheme.bodySmall?.copyWith(

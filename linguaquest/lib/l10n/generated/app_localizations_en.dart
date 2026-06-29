@@ -2328,9 +2328,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Review queue beyond limit will be kept for later dates.';
 
   @override
-  String get studyPlanTargetDate => 'Exam/Target Completion Date';
-
-  @override
   String get studyPlanReminderTime => 'Study Reminder Time';
 
   @override
@@ -2354,10 +2351,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get studyPlanConfirm => 'Confirm Reset';
-
-  @override
-  String get studyPlanInvalidDate =>
-      'Target completion date cannot be earlier than today.';
 
   @override
   String get studyPlanSaved => 'Study plan saved.';

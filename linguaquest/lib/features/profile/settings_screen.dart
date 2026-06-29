@@ -6,8 +6,8 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_tokens.dart';
-import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/app_card.dart';
+import '../../data/models/lesson.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/language_wordbook_picker.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -48,6 +48,7 @@ class SettingsScreen extends ConsumerWidget {
             _LearningLanguageSetting(
               currentLanguage: state.currentLanguage,
               currentWordBookId: state.currentWordBookId,
+              currentWordBook: state.currentWordBook,
             ),
             const SizedBox(height: AppTokens.s12),
             _SensorySettingsCard(sensorySettings: state.sensorySettings),
@@ -168,17 +169,21 @@ class _LearningLanguageSetting extends StatelessWidget {
   const _LearningLanguageSetting({
     required this.currentLanguage,
     required this.currentWordBookId,
+    this.currentWordBook,
   });
 
   final String currentLanguage;
   final String currentWordBookId;
+  final WordBook? currentWordBook;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
+    final localeCode = Localizations.localeOf(context).languageCode;
     final langLabel = languageLabel(currentLanguage, l10n);
-    final bookLabel = displayWordbookTitle(currentWordBookId, l10n: l10n);
+    final bookLabel =
+        currentWordBook?.nameFor(localeCode) ?? currentWordBookId;
     return AppCard(
       onTap: () => context.push('/language-map'),
       child: Row(
