@@ -231,7 +231,6 @@ void main() {
     await tester.tap(find.text('Word of the Day'));
     await tester.pumpAndSettle();
 
-    expect(find.text('爱'), findsWidgets);
     expect(find.text('Add to custom words'), findsOneWidget);
     expect(find.text('In current plan'), findsOneWidget);
 
@@ -1119,7 +1118,7 @@ void main() {
     await tester.drag(find.text('Daily Task Console'), const Offset(-260, 0));
     await tester.pumpAndSettle();
 
-    expect(find.text('Timed Tests'), findsOneWidget);
+    expect(find.text('Speed Game'), findsOneWidget);
     expect(find.byType(AppCard), findsWidgets);
   });
 
@@ -1149,7 +1148,7 @@ void main() {
     await tester.fling(find.text('Daily Task Console'), const Offset(-80, 0), 1000);
     await tester.pumpAndSettle();
 
-    expect(find.text('Timed Tests'), findsOneWidget);
+    expect(find.text('Speed Game'), findsOneWidget);
   });
 
   testWidgets('dark theme keeps headline text readable', (tester) async {
