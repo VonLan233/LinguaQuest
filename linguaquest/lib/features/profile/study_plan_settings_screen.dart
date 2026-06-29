@@ -8,7 +8,6 @@ import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
-import '../../core/utils/date_formatting.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/utils/wordbook_progress.dart';
 import '../../core/widgets/app_button.dart';
@@ -43,7 +42,6 @@ class _StudyPlanSettingsScreenState
   _PlanInitializationKey? _lastInitializedPlanKey;
   var _initialized = false;
   var _wordBookId = 'beginner';
-  var _targetFinishDate = DateTime.now().add(const Duration(days: 30));
   var _reminderTime = const TimeOfDay(hour: 20, minute: 0);
 
   @override
@@ -194,9 +192,7 @@ class _StudyPlanSettingsScreenState
               ),
               const SizedBox(height: 22),
               _PlanDateTimeSection(
-                targetFinishDate: _targetFinishDate,
                 reminderTimeLabel: _reminderTimeLabel,
-                onPickDate: _pickTargetFinishDate,
                 onPickTime: _pickReminderTime,
                 l10n: l10n,
               ),
@@ -232,7 +228,6 @@ class _StudyPlanSettingsScreenState
       _wordBookId = plan.wordBookId;
       _dailyNewController.text = plan.dailyNewTarget.toString();
       _dailyReviewController.text = plan.dailyReviewLimit.toString();
-      _targetFinishDate = plan.targetFinishDate;
       _reminderTime = parseStudyPlanReminderTime(plan.reminderTime);
       _initialized = true;
       _lastInitializedPlanKey = planKey;
@@ -260,21 +255,19 @@ class _StudyPlanSettingsScreenState
     final user = state.user;
     if (user == null) return;
     final today = _dateOnly(DateTime.now());
-    final finishDate = _dateOnly(_targetFinishDate);
-    final basePlan = state.studyPlan ?? _fallbackPlan(user.uid);
-    if (rejectChangedExpiredTargetFinishDate(
-      finishDate: finishDate,
-      originalFinishDate: basePlan.targetFinishDate,
+    final dailyNew = int.parse(_dailyNewController.text.trim());
+    final selectedWordBook = _wordBookForId(state.wordBooks, _wordBookId);
+    final finishDate = studyPlanAutoFinishDate(
+      totalWords: selectedWordBook?.totalWords ?? 0,
+      dailyNewTarget: dailyNew,
       today: today,
-    )) {
-      _showMessage(AppLocalizations.of(context).studyPlanInvalidDate);
-      return;
-    }
+    );
+    final basePlan = state.studyPlan ?? _fallbackPlan(user.uid);
 
     final plan = basePlan.copyWith(
       uid: user.uid,
       wordBookId: _wordBookId,
-      dailyNewTarget: int.parse(_dailyNewController.text.trim()),
+      dailyNewTarget: dailyNew,
       dailyReviewLimit: int.parse(_dailyReviewController.text.trim()),
       targetFinishDate: finishDate,
       reminderTime: _reminderTimeLabel,
@@ -339,23 +332,6 @@ class _StudyPlanSettingsScreenState
     );
   }
 
-  Future<void> _pickTargetFinishDate() async {
-    final today = _dateOnly(DateTime.now());
-    final lastDate = today.add(const Duration(days: 730));
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: clampStudyPlanPickerInitialDate(
-        selected: _targetFinishDate,
-        today: today,
-        lastDate: lastDate,
-      ),
-      firstDate: today,
-      lastDate: lastDate,
-    );
-    if (picked == null || !mounted) return;
-    setState(() => _targetFinishDate = picked);
-  }
-
   Future<void> _pickReminderTime() async {
     final picked = await showTimePicker(
       context: context,
@@ -397,18 +373,24 @@ WordBook? _wordBookForId(List<WordBook> books, String id) {
 WordBook? wordBookForIdForTest(List<WordBook> books, String id) =>
     _wordBookForId(books, id);
 
-bool rejectChangedExpiredTargetFinishDate({
-  required DateTime finishDate,
-  required DateTime originalFinishDate,
-  required DateTime today,
-}) {
-  final normalizedFinishDate = _studyPlanDateOnly(finishDate);
-  return normalizedFinishDate.isBefore(_studyPlanDateOnly(today)) &&
-      normalizedFinishDate != _studyPlanDateOnly(originalFinishDate);
-}
-
 DateTime _studyPlanDateOnly(DateTime value) {
   return DateTime(value.year, value.month, value.day);
+}
+
+/// Auto-derives the study-plan finish date from the wordbook size and the
+/// daily new-word target, so the date stays bound to the daily pace instead
+/// of being manually picked.
+DateTime studyPlanAutoFinishDate({
+  required int totalWords,
+  required int dailyNewTarget,
+  required DateTime today,
+}) {
+  final base = _studyPlanDateOnly(today);
+  if (totalWords <= 0 || dailyNewTarget <= 0) {
+    return base.add(const Duration(days: 30));
+  }
+  final days = (totalWords / dailyNewTarget).ceil().clamp(1, 3650);
+  return base.add(Duration(days: days));
 }
 
 class _PlanInitializationKey {
@@ -434,19 +416,6 @@ class _PlanInitializationKey {
 
   @override
   int get hashCode => Object.hash(id, updatedAt);
-}
-
-DateTime clampStudyPlanPickerInitialDate({
-  required DateTime selected,
-  required DateTime today,
-  required DateTime lastDate,
-}) {
-  final selectedDay = _studyPlanDateOnly(selected);
-  final firstDay = _studyPlanDateOnly(today);
-  final lastDay = _studyPlanDateOnly(lastDate);
-  if (selectedDay.isBefore(firstDay)) return firstDay;
-  if (selectedDay.isAfter(lastDay)) return lastDay;
-  return selectedDay;
 }
 
 TimeOfDay parseStudyPlanReminderTime(String value) {
@@ -797,16 +766,12 @@ class _NumberField extends StatelessWidget {
 
 class _PlanDateTimeSection extends StatelessWidget {
   const _PlanDateTimeSection({
-    required this.targetFinishDate,
     required this.reminderTimeLabel,
-    required this.onPickDate,
     required this.onPickTime,
     required this.l10n,
   });
 
-  final DateTime targetFinishDate;
   final String reminderTimeLabel;
-  final VoidCallback onPickDate;
   final VoidCallback onPickTime;
   final AppLocalizations l10n;
 
@@ -817,22 +782,11 @@ class _PlanDateTimeSection extends StatelessWidget {
         horizontal: AppTokens.s16,
         vertical: AppTokens.s8,
       ),
-      child: Column(
-        children: [
-          _PlanActionRow(
-            icon: AppIcons.event,
-            title: l10n.studyPlanTargetDate,
-            subtitle: formatShortDate(targetFinishDate),
-            onTap: onPickDate,
-          ),
-          const Divider(height: 18),
-          _PlanActionRow(
-            icon: AppIcons.schedule,
-            title: l10n.studyPlanReminderTime,
-            subtitle: reminderTimeLabel,
-            onTap: onPickTime,
-          ),
-        ],
+      child: _PlanActionRow(
+        icon: AppIcons.schedule,
+        title: l10n.studyPlanReminderTime,
+        subtitle: reminderTimeLabel,
+        onTap: onPickTime,
       ),
     );
   }

@@ -1269,37 +1269,6 @@ void main() {
     expect(clampDeadlinePickerInitialDate(now: now), fallback);
   });
 
-  test('study plan picker initial date stays inside selectable bounds', () {
-    final today = DateTime(2026, 5, 25, 15, 45);
-    final firstDate = DateTime(2026, 5, 25);
-    final lastDate = DateTime(2028, 5, 24);
-
-    expect(
-      clampStudyPlanPickerInitialDate(
-        selected: DateTime(2026, 5, 1),
-        today: today,
-        lastDate: lastDate,
-      ),
-      firstDate,
-    );
-    expect(
-      clampStudyPlanPickerInitialDate(
-        selected: DateTime(2026, 5, 25, 23, 59),
-        today: today,
-        lastDate: lastDate,
-      ),
-      firstDate,
-    );
-    expect(
-      clampStudyPlanPickerInitialDate(
-        selected: DateTime(2030, 1, 1),
-        today: today,
-        lastDate: lastDate,
-      ),
-      lastDate,
-    );
-  });
-
   test('study plan reminder time parsing clamps invalid values', () {
     expect(
       parseStudyPlanReminderTime('08:15'),
@@ -2834,39 +2803,10 @@ void main() {
       findsNothing,
     );
     expect(find.text('Study plan saved.'), findsOneWidget);
-    expect(
-      studyPlanRepository.savedPlan?.targetFinishDate,
-      DateTime(2026, 1, 15),
-    );
-  });
-
-  test('study plan save rejects a changed expired target date', () {
-    final today = DateTime(2026, 5, 25, 12);
-
-    expect(
-      rejectChangedExpiredTargetFinishDate(
-        finishDate: DateTime(2026, 1, 15, 8),
-        originalFinishDate: DateTime(2026, 1, 15, 20),
-        today: today,
-      ),
-      false,
-    );
-    expect(
-      rejectChangedExpiredTargetFinishDate(
-        finishDate: DateTime(2026, 2, 1),
-        originalFinishDate: DateTime(2026, 1, 15),
-        today: today,
-      ),
-      true,
-    );
-    expect(
-      rejectChangedExpiredTargetFinishDate(
-        finishDate: DateTime(2026, 5, 25),
-        originalFinishDate: DateTime(2026, 1, 15),
-        today: today,
-      ),
-      false,
-    );
+    final saved = studyPlanRepository.savedPlan!;
+    // 自动推算后不再等于手填的 2026-01-15，且晚于 startDate。
+    expect(saved.targetFinishDate, isNot(DateTime(2026, 1, 15)));
+    expect(saved.targetFinishDate.isAfter(saved.startDate), isTrue);
   });
 
   testWidgets('study plan settings resyncs when the saved plan changes', (
