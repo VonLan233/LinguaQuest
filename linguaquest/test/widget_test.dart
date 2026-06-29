@@ -1239,7 +1239,7 @@ void main() {
     await tester.drag(find.byType(Scrollable).last, const Offset(0, -320));
     await tester.pumpAndSettle();
     expect(find.text('Daily New Words'), findsOneWidget);
-    expect(find.text('Daily Review Limit'), findsOneWidget);
+    expect(find.text('Daily Review Limit'), findsNothing);
     await tester.drag(find.byType(Scrollable).last, const Offset(0, -520));
     await tester.pumpAndSettle();
     expect(find.text('View Full Wordbook'), findsOneWidget);
@@ -2890,9 +2890,6 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(visibleNumberFieldValues(), contains('33'));
-    await tester.drag(find.byType(Scrollable).last, const Offset(0, -180));
-    await tester.pumpAndSettle();
-    expect(visibleNumberFieldValues(), contains('44'));
     expect(
       container.read(appControllerProvider).studyPlan?.dailyReviewLimit,
       44,
@@ -2941,13 +2938,7 @@ void main() {
 
     await tester.drag(find.byType(Scrollable).last, const Offset(0, -260));
     await tester.pumpAndSettle();
-    expect(digitOnlyFields(), hasLength(2));
-    await tester.drag(find.byType(Scrollable).last, const Offset(0, -180));
-    await tester.pumpAndSettle();
-    expect(
-      digitOnlyFields().where((field) => field.controller.text == '20'),
-      hasLength(1),
-    );
+    expect(digitOnlyFields(), hasLength(1));
   });
 
   testWidgets('study plan fallback initialization preserves unsaved edits', (

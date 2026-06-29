@@ -35,7 +35,6 @@ class _StudyPlanSettingsScreenState
     extends ConsumerState<StudyPlanSettingsScreen> {
   final _formKey = GlobalKey<FormState>();
   final _dailyNewController = TextEditingController();
-  final _dailyReviewController = TextEditingController();
 
   late final ProviderSubscription<AppState> _stateSubscription;
   _PlanInitializationKey? _lastInitializedPlanKey;
@@ -58,7 +57,6 @@ class _StudyPlanSettingsScreenState
   void dispose() {
     _stateSubscription.close();
     _dailyNewController.dispose();
-    _dailyReviewController.dispose();
     super.dispose();
   }
 
@@ -147,9 +145,6 @@ class _StudyPlanSettingsScreenState
                 completedWords: completedWords,
                 progress: progress,
                 status: plan?.status ?? 'active',
-                daysLeft: (plan ?? _fallbackPlan(user.uid)).daysLeft(
-                  DateTime.now(),
-                ),
                 l10n: l10n,
               ),
               const SizedBox(height: 24),
@@ -177,16 +172,6 @@ class _StudyPlanSettingsScreenState
                 icon: AppIcons.addTask,
                 min: 1,
                 max: 200,
-                l10n: l10n,
-              ),
-              const SizedBox(height: 16),
-              _NumberField(
-                controller: _dailyReviewController,
-                label: l10n.studyPlanDailyReview,
-                helperText: l10n.studyPlanDailyReviewHint,
-                icon: AppIcons.replay,
-                min: 0,
-                max: 500,
                 l10n: l10n,
               ),
               const SizedBox(height: 22),
@@ -226,7 +211,6 @@ class _StudyPlanSettingsScreenState
     void updateFields() {
       _wordBookId = plan.wordBookId;
       _dailyNewController.text = plan.dailyNewTarget.toString();
-      _dailyReviewController.text = plan.dailyReviewLimit.toString();
       _reminderTime = parseStudyPlanReminderTime(plan.reminderTime);
       _initialized = true;
       _lastInitializedPlanKey = planKey;
@@ -267,7 +251,7 @@ class _StudyPlanSettingsScreenState
       uid: user.uid,
       wordBookId: _wordBookId,
       dailyNewTarget: dailyNew,
-      dailyReviewLimit: int.parse(_dailyReviewController.text.trim()),
+      dailyReviewLimit: state.dueWords.length.clamp(0, 200).toInt(),
       targetFinishDate: finishDate,
       reminderTime: _reminderTimeLabel,
       updatedAt: DateTime.now(),
@@ -446,7 +430,6 @@ class _PlanHeroCard extends StatelessWidget {
     required this.completedWords,
     required this.progress,
     required this.status,
-    required this.daysLeft,
     required this.l10n,
   });
 
@@ -455,7 +438,6 @@ class _PlanHeroCard extends StatelessWidget {
   final int completedWords;
   final double progress;
   final String status;
-  final int daysLeft;
   final AppLocalizations l10n;
 
   @override
@@ -513,11 +495,6 @@ class _PlanHeroCard extends StatelessWidget {
                 label: l10n.wordbookWordsLearned(completedWords, totalWords),
                 icon: AppIcons.school,
                 variant: PillVariant.primary,
-              ),
-              AppPill(
-                label: l10n.studyPlanDaysLeft(daysLeft),
-                icon: AppIcons.event,
-                variant: PillVariant.streak,
               ),
               AppPill(
                 label: status == 'paused'

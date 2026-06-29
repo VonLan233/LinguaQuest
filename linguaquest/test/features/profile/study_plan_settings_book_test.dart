@@ -88,4 +88,57 @@ void main() {
     expect(wordBookForIdForTest(books, 'hsk2')?.id, 'hsk2');
     expect(wordBookForIdForTest(books, 'missing'), isNull);
   });
+
+  testWidgets(
+    'study plan settings shows no completion-date / days-left and no review-limit field',
+    (tester) async {
+      final user = UserProfile(
+        uid: 'u1',
+        name: 'V',
+        email: 'v@example.com',
+        level: 'Beginner',
+        targetExam: 'HSK 2',
+        dailyGoal: 10,
+        xp: 0,
+        streak: 0,
+        createdAt: DateTime(2026, 1, 1),
+        updatedAt: DateTime(2026, 1, 1),
+      );
+      final plan = StudyPlan.fromJson({
+        'uid': 'u1',
+        'wordBookId': 'hsk2',
+        'dailyNewTarget': 10,
+        'dailyReviewLimit': 20,
+        'startDate': '2026-06-20',
+        'targetFinishDate': '2026-07-20',
+        'reminderTime': '20:00',
+        'status': 'active',
+      });
+      final state = AppState.initial().copyWith(
+        isBootstrapped: true,
+        user: user,
+        wordBooks: [_book('hsk1', 'HSK 1', 'zh'), _book('hsk2', 'HSK 2', 'zh')],
+        currentWordBookId: 'hsk2',
+        studyPlan: plan,
+      );
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appControllerProvider.overrideWith(() => _FakeAppController(state)),
+          ],
+          child: MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            locale: const Locale('en'),
+            home: const StudyPlanSettingsScreen(),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      expect(find.textContaining('days left'), findsNothing);
+      expect(find.text('Daily Review Limit'), findsNothing);
+    },
+  );
 }
