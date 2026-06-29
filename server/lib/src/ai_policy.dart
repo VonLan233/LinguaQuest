@@ -331,7 +331,7 @@ class RemoteAiProvider implements AiProvider {
     required this.apiKey,
     required this.baseUrl,
     required this.model,
-    this.timeout = const Duration(seconds: 30),
+    this.timeout = const Duration(seconds: 50),
   });
 
   final http.Client client;
