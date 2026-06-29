@@ -15,7 +15,7 @@ class AppConfig {
     this.aiProvider = 'mock',
     this.aiApiKey = '',
     this.aiApiBaseUrl = 'https://opencode.ai/zen/v1',
-    this.aiModel = 'deepseek-v4-flash-free',
+    this.aiModel = 'deepseek-v4-flash',
     this.aiClozeModel = '',
     this.aiDailyLimitPerUser = 20,
   });
@@ -57,7 +57,7 @@ class AppConfig {
       aiProvider: _env('AI_PROVIDER', 'mock'),
       aiApiKey: _env('AI_API_KEY', ''),
       aiApiBaseUrl: _env('AI_API_BASE_URL', 'https://opencode.ai/zen/v1'),
-      aiModel: _env('AI_MODEL', 'deepseek-v4-flash-free'),
+      aiModel: _env('AI_MODEL', 'deepseek-v4-flash'),
       aiClozeModel: _env('AI_CLOZE_MODEL', ''),
       aiDailyLimitPerUser:
           int.tryParse(_env('AI_DAILY_LIMIT_PER_USER', '20')) ?? 20,
