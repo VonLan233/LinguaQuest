@@ -1015,6 +1015,9 @@ Router buildRouter(
       prompt: prompt,
       targetWord: targetWord,
       targetLanguage: targetLanguage,
+      modelOverride: featureType == 'cloze' && config.aiClozeModel.isNotEmpty
+          ? config.aiClozeModel
+          : null,
     );
     final response = await effectiveAiPolicy.handle(aiRequest);
     if (!response.success) {

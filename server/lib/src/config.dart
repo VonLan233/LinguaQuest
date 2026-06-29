@@ -16,6 +16,7 @@ class AppConfig {
     this.aiApiKey = '',
     this.aiApiBaseUrl = 'https://opencode.ai/zen/v1',
     this.aiModel = 'deepseek-v4-flash-free',
+    this.aiClozeModel = '',
     this.aiDailyLimitPerUser = 20,
   });
 
@@ -33,6 +34,9 @@ class AppConfig {
   final String aiApiKey;
   final String aiApiBaseUrl;
   final String aiModel;
+
+  /// Optional model used only for `cloze`. Empty → fall back to [aiModel].
+  final String aiClozeModel;
   final int aiDailyLimitPerUser;
 
   factory AppConfig.fromEnvironment() {
@@ -54,6 +58,7 @@ class AppConfig {
       aiApiKey: _env('AI_API_KEY', ''),
       aiApiBaseUrl: _env('AI_API_BASE_URL', 'https://opencode.ai/zen/v1'),
       aiModel: _env('AI_MODEL', 'deepseek-v4-flash-free'),
+      aiClozeModel: _env('AI_CLOZE_MODEL', ''),
       aiDailyLimitPerUser:
           int.tryParse(_env('AI_DAILY_LIMIT_PER_USER', '20')) ?? 20,
     );
@@ -74,6 +79,7 @@ class AppConfig {
     String? aiApiKey,
     String? aiApiBaseUrl,
     String? aiModel,
+    String? aiClozeModel,
     int? aiDailyLimitPerUser,
   }) {
     return AppConfig(
@@ -91,6 +97,7 @@ class AppConfig {
       aiApiKey: aiApiKey ?? this.aiApiKey,
       aiApiBaseUrl: aiApiBaseUrl ?? this.aiApiBaseUrl,
       aiModel: aiModel ?? this.aiModel,
+      aiClozeModel: aiClozeModel ?? this.aiClozeModel,
       aiDailyLimitPerUser: aiDailyLimitPerUser ?? this.aiDailyLimitPerUser,
     );
   }

@@ -28,6 +28,7 @@ class AiRequest {
     required this.prompt,
     this.targetWord,
     this.targetLanguage = 'zh',
+    this.modelOverride,
   });
 
   final String featureType;
@@ -35,6 +36,9 @@ class AiRequest {
   final String prompt;
   final String? targetWord;
   final String targetLanguage;
+
+  /// When non-null, overrides the provider's default model for this request.
+  final String? modelOverride;
 }
 
 class AiResponse {
@@ -265,11 +269,12 @@ String? buildSystemPrompt(String featureType, String language) {
           '"translation": string, "vocabularyNotes": string[]}. '
           'No markdown, no code fences.';
     case 'cloze':
-      return 'Create a $language cloze exercise for the target word. Keep the '
-          '"passage" and each blank\'s "answer" and "options" in $language; '
-          'write "explanations" in English. Reply ONLY with strict JSON: '
-          '{"passage": string, "blanks": [{"index": number, "answer": string, '
-          '"options": string[]}], "explanations": string[]}. '
+      return 'Create a short $language cloze exercise. Write a SHORT $language '
+          'passage of only 2-3 sentences containing EXACTLY 3 to 4 blanks. '
+          'Keep the "passage" and each blank\'s "answer" and "options" in '
+          '$language; write "explanations" in English. Be concise. Reply ONLY '
+          'with strict JSON: {"passage": string, "blanks": [{"index": number, '
+          '"answer": string, "options": string[]}], "explanations": string[]}. '
           'No markdown, no code fences.';
     case 'reading_explain':
       return 'Explain the $language paragraph for an English speaker learning '
@@ -352,7 +357,7 @@ class RemoteAiProvider implements AiProvider {
         ? '${request.prompt}\n\nTarget word: ${request.targetWord}'
         : request.prompt;
     final body = jsonEncode({
-      'model': model,
+      'model': request.modelOverride ?? model,
       'messages': [
         {'role': 'system', 'content': system},
         {'role': 'user', 'content': userContent},

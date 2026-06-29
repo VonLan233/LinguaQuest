@@ -50,8 +50,8 @@ class _PassageClozeScreenState extends ConsumerState<PassageClozeScreen> {
     final seed = words.isNotEmpty ? words.first.word : 'study';
     final result = await ref.read(appControllerProvider.notifier).askAi(
           featureType: 'cloze',
-          prompt: 'Write a short passage with several blanks using these words: '
-              '${words.take(6).map((w) => w.word).join(', ')}',
+          prompt: 'Write a SHORT passage (2-3 sentences) with 3-4 blanks using '
+              'these words: ${words.take(6).map((w) => w.word).join(', ')}',
           targetWord: seed,
         );
     if (!mounted) return;
@@ -141,7 +141,17 @@ class _PassageClozeScreenState extends ConsumerState<PassageClozeScreen> {
       ),
       body: SafeArea(
         child: _isLoading
-            ? const Center(child: CircularProgressIndicator())
+            ? const Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(height: 16),
+                    Text('AI is writing a short passage… (about 10–20s)',
+                        textAlign: TextAlign.center),
+                  ],
+                ),
+              )
             : _error != null
                 ? ListView(padding: const EdgeInsets.all(20), children: [
                     AiErrorCard(message: _error!, onRetry: _load),

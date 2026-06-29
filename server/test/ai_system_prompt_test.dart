@@ -30,10 +30,12 @@ void main() {
       expect(p, contains('Japanese'));
       expect(p, contains('"translation" and "vocabularyNotes" in English'));
     });
-    test('cloze: passage/options target language, explanations English', () {
+    test('cloze: short passage, 3-4 blanks, target language', () {
       final p = buildSystemPrompt('cloze', 'Chinese')!;
       expect(p, contains('"explanations" in English'));
       expect(p, contains('"passage"'));
+      expect(p, contains('2-3 sentences'));
+      expect(p, contains('EXACTLY 3 to 4 blanks'));
     });
     test('reading_explain: structured fields, content language vs English', () {
       final p = buildSystemPrompt('reading_explain', 'Chinese')!;
