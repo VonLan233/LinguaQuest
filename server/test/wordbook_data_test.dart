@@ -34,4 +34,25 @@ void main() {
           reason: '${b['id']} should be a full book, not a 3-word stub');
     }
   });
+
+  test('extra wordbook file holds 4 *_basic books with correct languages', () {
+    final file = File('data/wordbooks_extra.json');
+    expect(file.existsSync(), isTrue,
+        reason: 'run python3 tools/generate_extra_wordbooks.py from repo root');
+    final books = (jsonDecode(file.readAsStringSync()) as List)
+        .cast<Map<String, dynamic>>();
+    expect(books.map((b) => b['id']).toSet(),
+        {'en_basic', 'es_basic', 'fr_basic', 'ms_basic'});
+    const langOf = {
+      'en_basic': 'en',
+      'es_basic': 'es',
+      'fr_basic': 'fr',
+      'ms_basic': 'ms',
+    };
+    for (final b in books) {
+      expect(b['language'], langOf[b['id']]);
+      expect(b['category'], 'basic');
+      expect((b['words'] as List), isNotEmpty);
+    }
+  });
 }

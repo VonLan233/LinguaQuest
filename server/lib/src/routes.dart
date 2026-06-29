@@ -1569,7 +1569,11 @@ Future<List<Map<String, dynamic>>> _readWordBooks() async {
 // linguaquest/lib/assets/data/wordbook_jlpt_*.json.
 List<File> _wordBookDataFiles() {
   final files = <File>[];
-  for (final name in const ['wordbooks_p0.json', 'wordbooks_jlpt.json']) {
+  for (final name in const [
+    'wordbooks_p0.json',
+    'wordbooks_jlpt.json',
+    'wordbooks_extra.json',
+  ]) {
     final serverRelative = File('data/$name');
     final repoRelative = File('server/data/$name');
     if (serverRelative.existsSync()) {

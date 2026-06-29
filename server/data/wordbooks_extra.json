@@ -1,0 +1,3194 @@
+[
+  {
+    "id": "en_basic",
+    "title": "English Basics",
+    "titleEn": "English Basics",
+    "titleMs": "Asas Bahasa Inggeris",
+    "category": "basic",
+    "examType": "Basic",
+    "coverUrl": "",
+    "language": "en",
+    "totalWords": 30,
+    "includedWords": 30,
+    "description": "Everyday English Basics vocabulary (test set).",
+    "wordIds": [
+      "en_000_hello",
+      "en_001_goodbye",
+      "en_002_please",
+      "en_003_thankyou",
+      "en_004_yes",
+      "en_005_no",
+      "en_006_water",
+      "en_007_food",
+      "en_008_friend",
+      "en_009_family",
+      "en_010_house",
+      "en_011_book",
+      "en_012_school",
+      "en_013_work",
+      "en_014_time",
+      "en_015_day",
+      "en_016_night",
+      "en_017_morning",
+      "en_018_love",
+      "en_019_happy",
+      "en_020_sad",
+      "en_021_big",
+      "en_022_small",
+      "en_023_good",
+      "en_024_bad",
+      "en_025_eat",
+      "en_026_drink",
+      "en_027_go",
+      "en_028_come",
+      "en_029_see"
+    ],
+    "createdAt": "2026-06-29T00:00:00.000Z",
+    "words": [
+      {
+        "id": "en_000_hello",
+        "word": "hello",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=hello&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=hello&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "a greeting"
+        ],
+        "englishDefinitions": [
+          "a greeting"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_001_goodbye",
+        "word": "goodbye",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=goodbye&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=goodbye&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "a farewell"
+        ],
+        "englishDefinitions": [
+          "a farewell"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_002_please",
+        "word": "please",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=please&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=please&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "polite request word"
+        ],
+        "englishDefinitions": [
+          "polite request word"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_003_thankyou",
+        "word": "thank you",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=thank%20you&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=thank%20you&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "expression of gratitude"
+        ],
+        "englishDefinitions": [
+          "expression of gratitude"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_004_yes",
+        "word": "yes",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=yes&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=yes&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "affirmative"
+        ],
+        "englishDefinitions": [
+          "affirmative"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_005_no",
+        "word": "no",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=no&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=no&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "negative"
+        ],
+        "englishDefinitions": [
+          "negative"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_006_water",
+        "word": "water",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=water&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=water&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "clear drinkable liquid"
+        ],
+        "englishDefinitions": [
+          "clear drinkable liquid"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_007_food",
+        "word": "food",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=food&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=food&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "things you eat"
+        ],
+        "englishDefinitions": [
+          "things you eat"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_008_friend",
+        "word": "friend",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=friend&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=friend&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "a person you like and trust"
+        ],
+        "englishDefinitions": [
+          "a person you like and trust"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_009_family",
+        "word": "family",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=family&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=family&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "your relatives"
+        ],
+        "englishDefinitions": [
+          "your relatives"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_010_house",
+        "word": "house",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=house&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=house&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "a building to live in"
+        ],
+        "englishDefinitions": [
+          "a building to live in"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_011_book",
+        "word": "book",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=book&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=book&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "pages bound for reading"
+        ],
+        "englishDefinitions": [
+          "pages bound for reading"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_012_school",
+        "word": "school",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=school&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=school&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "place of learning"
+        ],
+        "englishDefinitions": [
+          "place of learning"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_013_work",
+        "word": "work",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=work&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=work&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "a job or labour"
+        ],
+        "englishDefinitions": [
+          "a job or labour"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_014_time",
+        "word": "time",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=time&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=time&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "measured duration"
+        ],
+        "englishDefinitions": [
+          "measured duration"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_015_day",
+        "word": "day",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=day&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=day&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "24-hour period"
+        ],
+        "englishDefinitions": [
+          "24-hour period"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_016_night",
+        "word": "night",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=night&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=night&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "dark part of the day"
+        ],
+        "englishDefinitions": [
+          "dark part of the day"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_017_morning",
+        "word": "morning",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=morning&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=morning&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "early part of the day"
+        ],
+        "englishDefinitions": [
+          "early part of the day"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_018_love",
+        "word": "love",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=love&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=love&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "deep affection"
+        ],
+        "englishDefinitions": [
+          "deep affection"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_019_happy",
+        "word": "happy",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=happy&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=happy&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "feeling joy"
+        ],
+        "englishDefinitions": [
+          "feeling joy"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_020_sad",
+        "word": "sad",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=sad&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=sad&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "feeling sorrow"
+        ],
+        "englishDefinitions": [
+          "feeling sorrow"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_021_big",
+        "word": "big",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=big&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=big&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "large in size"
+        ],
+        "englishDefinitions": [
+          "large in size"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_022_small",
+        "word": "small",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=small&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=small&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "little in size"
+        ],
+        "englishDefinitions": [
+          "little in size"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_023_good",
+        "word": "good",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=good&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=good&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "of high quality"
+        ],
+        "englishDefinitions": [
+          "of high quality"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_024_bad",
+        "word": "bad",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=bad&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=bad&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "of poor quality"
+        ],
+        "englishDefinitions": [
+          "of poor quality"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_025_eat",
+        "word": "eat",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=eat&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=eat&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "to consume food"
+        ],
+        "englishDefinitions": [
+          "to consume food"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_026_drink",
+        "word": "drink",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=drink&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=drink&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "to consume liquid"
+        ],
+        "englishDefinitions": [
+          "to consume liquid"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_027_go",
+        "word": "go",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=go&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=go&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "to move away"
+        ],
+        "englishDefinitions": [
+          "to move away"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_028_come",
+        "word": "come",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=come&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=come&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "to move toward"
+        ],
+        "englishDefinitions": [
+          "to move toward"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "en_029_see",
+        "word": "see",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=see&type=1&le=eng",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=see&type=2&le=eng",
+        "partOfSpeech": "",
+        "definitions": [
+          "to perceive with eyes"
+        ],
+        "englishDefinitions": [
+          "to perceive with eyes"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      }
+    ]
+  },
+  {
+    "id": "es_basic",
+    "title": "Español Básico",
+    "titleEn": "Español Básico",
+    "titleMs": "Asas Bahasa Sepanyol",
+    "category": "basic",
+    "examType": "Basic",
+    "coverUrl": "",
+    "language": "es",
+    "totalWords": 30,
+    "includedWords": 30,
+    "description": "Everyday Español Básico vocabulary (test set).",
+    "wordIds": [
+      "es_000_hola",
+      "es_001_adis",
+      "es_002_porfavor",
+      "es_003_gracias",
+      "es_004_s",
+      "es_005_no",
+      "es_006_agua",
+      "es_007_comida",
+      "es_008_amigo",
+      "es_009_familia",
+      "es_010_casa",
+      "es_011_libro",
+      "es_012_escuela",
+      "es_013_trabajo",
+      "es_014_tiempo",
+      "es_015_da",
+      "es_016_noche",
+      "es_017_maana",
+      "es_018_amor",
+      "es_019_feliz",
+      "es_020_triste",
+      "es_021_grande",
+      "es_022_pequeo",
+      "es_023_bueno",
+      "es_024_malo",
+      "es_025_comer",
+      "es_026_beber",
+      "es_027_ir",
+      "es_028_venir",
+      "es_029_ver"
+    ],
+    "createdAt": "2026-06-29T00:00:00.000Z",
+    "words": [
+      {
+        "id": "es_000_hola",
+        "word": "hola",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "hello"
+        ],
+        "englishDefinitions": [
+          "hello"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_001_adis",
+        "word": "adiós",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "goodbye"
+        ],
+        "englishDefinitions": [
+          "goodbye"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_002_porfavor",
+        "word": "por favor",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "please"
+        ],
+        "englishDefinitions": [
+          "please"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_003_gracias",
+        "word": "gracias",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "thank you"
+        ],
+        "englishDefinitions": [
+          "thank you"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_004_s",
+        "word": "sí",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "yes"
+        ],
+        "englishDefinitions": [
+          "yes"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_005_no",
+        "word": "no",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "no"
+        ],
+        "englishDefinitions": [
+          "no"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_006_agua",
+        "word": "agua",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "water"
+        ],
+        "englishDefinitions": [
+          "water"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_007_comida",
+        "word": "comida",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "food"
+        ],
+        "englishDefinitions": [
+          "food"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_008_amigo",
+        "word": "amigo",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "friend"
+        ],
+        "englishDefinitions": [
+          "friend"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_009_familia",
+        "word": "familia",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "family"
+        ],
+        "englishDefinitions": [
+          "family"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_010_casa",
+        "word": "casa",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "house"
+        ],
+        "englishDefinitions": [
+          "house"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_011_libro",
+        "word": "libro",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "book"
+        ],
+        "englishDefinitions": [
+          "book"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_012_escuela",
+        "word": "escuela",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "school"
+        ],
+        "englishDefinitions": [
+          "school"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_013_trabajo",
+        "word": "trabajo",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "work"
+        ],
+        "englishDefinitions": [
+          "work"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_014_tiempo",
+        "word": "tiempo",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "time"
+        ],
+        "englishDefinitions": [
+          "time"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_015_da",
+        "word": "día",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "day"
+        ],
+        "englishDefinitions": [
+          "day"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_016_noche",
+        "word": "noche",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "night"
+        ],
+        "englishDefinitions": [
+          "night"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_017_maana",
+        "word": "mañana",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "morning / tomorrow"
+        ],
+        "englishDefinitions": [
+          "morning / tomorrow"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_018_amor",
+        "word": "amor",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "love"
+        ],
+        "englishDefinitions": [
+          "love"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_019_feliz",
+        "word": "feliz",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "happy"
+        ],
+        "englishDefinitions": [
+          "happy"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_020_triste",
+        "word": "triste",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "sad"
+        ],
+        "englishDefinitions": [
+          "sad"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_021_grande",
+        "word": "grande",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "big"
+        ],
+        "englishDefinitions": [
+          "big"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_022_pequeo",
+        "word": "pequeño",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "small"
+        ],
+        "englishDefinitions": [
+          "small"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_023_bueno",
+        "word": "bueno",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "good"
+        ],
+        "englishDefinitions": [
+          "good"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_024_malo",
+        "word": "malo",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "bad"
+        ],
+        "englishDefinitions": [
+          "bad"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_025_comer",
+        "word": "comer",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "to eat"
+        ],
+        "englishDefinitions": [
+          "to eat"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_026_beber",
+        "word": "beber",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "to drink"
+        ],
+        "englishDefinitions": [
+          "to drink"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_027_ir",
+        "word": "ir",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "to go"
+        ],
+        "englishDefinitions": [
+          "to go"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_028_venir",
+        "word": "venir",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "to come"
+        ],
+        "englishDefinitions": [
+          "to come"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "es_029_ver",
+        "word": "ver",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "to see"
+        ],
+        "englishDefinitions": [
+          "to see"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      }
+    ]
+  },
+  {
+    "id": "fr_basic",
+    "title": "Français Débutant",
+    "titleEn": "Français Débutant",
+    "titleMs": "Asas Bahasa Perancis",
+    "category": "basic",
+    "examType": "Basic",
+    "coverUrl": "",
+    "language": "fr",
+    "totalWords": 30,
+    "includedWords": 30,
+    "description": "Everyday Français Débutant vocabulary (test set).",
+    "wordIds": [
+      "fr_000_bonjour",
+      "fr_001_aurevoir",
+      "fr_002_silvousp",
+      "fr_003_merci",
+      "fr_004_oui",
+      "fr_005_non",
+      "fr_006_eau",
+      "fr_007_nourritu",
+      "fr_008_ami",
+      "fr_009_famille",
+      "fr_010_maison",
+      "fr_011_livre",
+      "fr_012_cole",
+      "fr_013_travail",
+      "fr_014_temps",
+      "fr_015_jour",
+      "fr_016_nuit",
+      "fr_017_matin",
+      "fr_018_amour",
+      "fr_019_heureux",
+      "fr_020_triste",
+      "fr_021_grand",
+      "fr_022_petit",
+      "fr_023_bon",
+      "fr_024_mauvais",
+      "fr_025_manger",
+      "fr_026_boire",
+      "fr_027_aller",
+      "fr_028_venir",
+      "fr_029_voir"
+    ],
+    "createdAt": "2026-06-29T00:00:00.000Z",
+    "words": [
+      {
+        "id": "fr_000_bonjour",
+        "word": "bonjour",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=bonjour&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=bonjour&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "hello"
+        ],
+        "englishDefinitions": [
+          "hello"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_001_aurevoir",
+        "word": "au revoir",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=au%20revoir&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=au%20revoir&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "goodbye"
+        ],
+        "englishDefinitions": [
+          "goodbye"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_002_silvousp",
+        "word": "s'il vous plaît",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=s%27il%20vous%20pla%C3%AEt&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=s%27il%20vous%20pla%C3%AEt&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "please"
+        ],
+        "englishDefinitions": [
+          "please"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_003_merci",
+        "word": "merci",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=merci&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=merci&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "thank you"
+        ],
+        "englishDefinitions": [
+          "thank you"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_004_oui",
+        "word": "oui",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=oui&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=oui&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "yes"
+        ],
+        "englishDefinitions": [
+          "yes"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_005_non",
+        "word": "non",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=non&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=non&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "no"
+        ],
+        "englishDefinitions": [
+          "no"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_006_eau",
+        "word": "eau",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=eau&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=eau&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "water"
+        ],
+        "englishDefinitions": [
+          "water"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_007_nourritu",
+        "word": "nourriture",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=nourriture&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=nourriture&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "food"
+        ],
+        "englishDefinitions": [
+          "food"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_008_ami",
+        "word": "ami",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=ami&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=ami&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "friend"
+        ],
+        "englishDefinitions": [
+          "friend"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_009_famille",
+        "word": "famille",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=famille&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=famille&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "family"
+        ],
+        "englishDefinitions": [
+          "family"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_010_maison",
+        "word": "maison",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=maison&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=maison&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "house"
+        ],
+        "englishDefinitions": [
+          "house"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_011_livre",
+        "word": "livre",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=livre&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=livre&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "book"
+        ],
+        "englishDefinitions": [
+          "book"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_012_cole",
+        "word": "école",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%C3%A9cole&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%C3%A9cole&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "school"
+        ],
+        "englishDefinitions": [
+          "school"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_013_travail",
+        "word": "travail",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=travail&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=travail&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "work"
+        ],
+        "englishDefinitions": [
+          "work"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_014_temps",
+        "word": "temps",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=temps&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=temps&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "time / weather"
+        ],
+        "englishDefinitions": [
+          "time / weather"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_015_jour",
+        "word": "jour",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=jour&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=jour&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "day"
+        ],
+        "englishDefinitions": [
+          "day"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_016_nuit",
+        "word": "nuit",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=nuit&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=nuit&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "night"
+        ],
+        "englishDefinitions": [
+          "night"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_017_matin",
+        "word": "matin",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=matin&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=matin&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "morning"
+        ],
+        "englishDefinitions": [
+          "morning"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_018_amour",
+        "word": "amour",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=amour&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=amour&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "love"
+        ],
+        "englishDefinitions": [
+          "love"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_019_heureux",
+        "word": "heureux",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=heureux&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=heureux&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "happy"
+        ],
+        "englishDefinitions": [
+          "happy"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_020_triste",
+        "word": "triste",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=triste&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=triste&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "sad"
+        ],
+        "englishDefinitions": [
+          "sad"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_021_grand",
+        "word": "grand",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=grand&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=grand&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "big"
+        ],
+        "englishDefinitions": [
+          "big"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_022_petit",
+        "word": "petit",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=petit&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=petit&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "small"
+        ],
+        "englishDefinitions": [
+          "small"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_023_bon",
+        "word": "bon",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=bon&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=bon&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "good"
+        ],
+        "englishDefinitions": [
+          "good"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_024_mauvais",
+        "word": "mauvais",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=mauvais&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=mauvais&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "bad"
+        ],
+        "englishDefinitions": [
+          "bad"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_025_manger",
+        "word": "manger",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=manger&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=manger&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "to eat"
+        ],
+        "englishDefinitions": [
+          "to eat"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_026_boire",
+        "word": "boire",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=boire&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=boire&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "to drink"
+        ],
+        "englishDefinitions": [
+          "to drink"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_027_aller",
+        "word": "aller",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=aller&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=aller&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "to go"
+        ],
+        "englishDefinitions": [
+          "to go"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_028_venir",
+        "word": "venir",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=venir&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=venir&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "to come"
+        ],
+        "englishDefinitions": [
+          "to come"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "fr_029_voir",
+        "word": "voir",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=voir&type=1&le=fr",
+        "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=voir&type=2&le=fr",
+        "partOfSpeech": "",
+        "definitions": [
+          "to see"
+        ],
+        "englishDefinitions": [
+          "to see"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      }
+    ]
+  },
+  {
+    "id": "ms_basic",
+    "title": "Bahasa Melayu Asas",
+    "titleEn": "Bahasa Melayu Asas",
+    "titleMs": "Bahasa Melayu Asas",
+    "category": "basic",
+    "examType": "Basic",
+    "coverUrl": "",
+    "language": "ms",
+    "totalWords": 30,
+    "includedWords": 30,
+    "description": "Everyday Bahasa Melayu Asas vocabulary (test set).",
+    "wordIds": [
+      "ms_000_helo",
+      "ms_001_selamatt",
+      "ms_002_tolong",
+      "ms_003_terimaka",
+      "ms_004_ya",
+      "ms_005_tidak",
+      "ms_006_air",
+      "ms_007_makanan",
+      "ms_008_kawan",
+      "ms_009_keluarga",
+      "ms_010_rumah",
+      "ms_011_buku",
+      "ms_012_sekolah",
+      "ms_013_kerja",
+      "ms_014_masa",
+      "ms_015_hari",
+      "ms_016_malam",
+      "ms_017_pagi",
+      "ms_018_cinta",
+      "ms_019_gembira",
+      "ms_020_sedih",
+      "ms_021_besar",
+      "ms_022_kecil",
+      "ms_023_baik",
+      "ms_024_buruk",
+      "ms_025_makan",
+      "ms_026_minum",
+      "ms_027_pergi",
+      "ms_028_datang",
+      "ms_029_lihat"
+    ],
+    "createdAt": "2026-06-29T00:00:00.000Z",
+    "words": [
+      {
+        "id": "ms_000_helo",
+        "word": "helo",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "hello"
+        ],
+        "englishDefinitions": [
+          "hello"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_001_selamatt",
+        "word": "selamat tinggal",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "goodbye"
+        ],
+        "englishDefinitions": [
+          "goodbye"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_002_tolong",
+        "word": "tolong",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "please / help"
+        ],
+        "englishDefinitions": [
+          "please / help"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_003_terimaka",
+        "word": "terima kasih",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "thank you"
+        ],
+        "englishDefinitions": [
+          "thank you"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_004_ya",
+        "word": "ya",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "yes"
+        ],
+        "englishDefinitions": [
+          "yes"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_005_tidak",
+        "word": "tidak",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "no"
+        ],
+        "englishDefinitions": [
+          "no"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_006_air",
+        "word": "air",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "water"
+        ],
+        "englishDefinitions": [
+          "water"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_007_makanan",
+        "word": "makanan",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "food"
+        ],
+        "englishDefinitions": [
+          "food"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_008_kawan",
+        "word": "kawan",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "friend"
+        ],
+        "englishDefinitions": [
+          "friend"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_009_keluarga",
+        "word": "keluarga",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "family"
+        ],
+        "englishDefinitions": [
+          "family"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_010_rumah",
+        "word": "rumah",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "house"
+        ],
+        "englishDefinitions": [
+          "house"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_011_buku",
+        "word": "buku",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "book"
+        ],
+        "englishDefinitions": [
+          "book"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_012_sekolah",
+        "word": "sekolah",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "school"
+        ],
+        "englishDefinitions": [
+          "school"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_013_kerja",
+        "word": "kerja",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "work"
+        ],
+        "englishDefinitions": [
+          "work"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_014_masa",
+        "word": "masa",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "time"
+        ],
+        "englishDefinitions": [
+          "time"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_015_hari",
+        "word": "hari",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "day"
+        ],
+        "englishDefinitions": [
+          "day"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_016_malam",
+        "word": "malam",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "night"
+        ],
+        "englishDefinitions": [
+          "night"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_017_pagi",
+        "word": "pagi",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "morning"
+        ],
+        "englishDefinitions": [
+          "morning"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_018_cinta",
+        "word": "cinta",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "love"
+        ],
+        "englishDefinitions": [
+          "love"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_019_gembira",
+        "word": "gembira",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "happy"
+        ],
+        "englishDefinitions": [
+          "happy"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_020_sedih",
+        "word": "sedih",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "sad"
+        ],
+        "englishDefinitions": [
+          "sad"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_021_besar",
+        "word": "besar",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "big"
+        ],
+        "englishDefinitions": [
+          "big"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_022_kecil",
+        "word": "kecil",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "small"
+        ],
+        "englishDefinitions": [
+          "small"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_023_baik",
+        "word": "baik",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "good"
+        ],
+        "englishDefinitions": [
+          "good"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_024_buruk",
+        "word": "buruk",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "bad"
+        ],
+        "englishDefinitions": [
+          "bad"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_025_makan",
+        "word": "makan",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "to eat"
+        ],
+        "englishDefinitions": [
+          "to eat"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_026_minum",
+        "word": "minum",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "to drink"
+        ],
+        "englishDefinitions": [
+          "to drink"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_027_pergi",
+        "word": "pergi",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "to go"
+        ],
+        "englishDefinitions": [
+          "to go"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_028_datang",
+        "word": "datang",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "to come"
+        ],
+        "englishDefinitions": [
+          "to come"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      },
+      {
+        "id": "ms_029_lihat",
+        "word": "lihat",
+        "phoneticUK": "",
+        "phoneticUS": "",
+        "audioUKUrl": "",
+        "audioUSUrl": "",
+        "partOfSpeech": "",
+        "definitions": [
+          "to see"
+        ],
+        "englishDefinitions": [
+          "to see"
+        ],
+        "malayDefinitions": [],
+        "exampleSentences": [],
+        "collocations": [],
+        "synonyms": [],
+        "antonyms": [],
+        "derivatives": [],
+        "rootAffix": "",
+        "examTags": [],
+        "difficulty": "Easy",
+        "imageUrl": ""
+      }
+    ]
+  }
+]

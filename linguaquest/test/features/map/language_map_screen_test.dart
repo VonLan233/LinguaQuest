@@ -54,7 +54,7 @@ void main() {
     expect(find.byKey(const ValueKey('lang-card-start')), findsOneWidget);
   });
 
-  testWidgets('tapping a coming-soon marker shows a disabled card',
+  testWidgets('tapping a newly-opened marker (en) shows an enabled card',
       (tester) async {
     tester.view.physicalSize = const Size(1200, 2000);
     tester.view.devicePixelRatio = 1.0;
@@ -66,7 +66,8 @@ void main() {
     // pumpAndSettle 会因永久循环动画（_pulse）超时；用固定帧前进即可。
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.byKey(const ValueKey('lang-card')), findsOneWidget);
-    // 未开放：没有可用的开始按钮（用 coming-soon 标识替代）。
-    expect(find.byKey(const ValueKey('lang-card-soon')), findsOneWidget);
+    // en 现已开放：显示开始学习按钮，不再是 coming-soon 标识。
+    expect(find.byKey(const ValueKey('lang-card-start')), findsOneWidget);
+    expect(find.byKey(const ValueKey('lang-card-soon')), findsNothing);
   });
 }

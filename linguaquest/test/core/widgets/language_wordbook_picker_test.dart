@@ -110,11 +110,11 @@ void main() {
 
       expect(find.text('Chinese (中文)'), findsOneWidget);
       expect(find.text('Japanese (日本語)'), findsOneWidget);
-      // zh + ja are active (no pill); the 4 future languages show Coming Soon.
-      expect(find.text('Coming Soon'), findsNWidgets(4));
+      // All six languages now ship books, so no "Coming Soon" pill renders.
+      expect(find.text('Coming Soon'), findsNothing);
     });
 
-    testWidgets('level-1 list shows coming-soon languages', (tester) async {
+    testWidgets('level-1 list shows all six languages', (tester) async {
       await tester.pumpWidget(_harness(state: _bothLangState()));
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
@@ -123,8 +123,8 @@ void main() {
       expect(find.text('Spanish (Español)'), findsOneWidget);
       expect(find.text('French (Français)'), findsOneWidget);
       expect(find.text('Malay (Bahasa Melayu)'), findsOneWidget);
-      // The four locked languages each render a "Coming Soon" pill.
-      expect(find.text('Coming Soon'), findsNWidgets(4));
+      // All six languages are active now; no "Coming Soon" pill renders.
+      expect(find.text('Coming Soon'), findsNothing);
     });
 
     test('languageLabelRaw resolves coming-soon language codes', () {

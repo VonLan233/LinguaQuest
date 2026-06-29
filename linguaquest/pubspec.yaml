@@ -88,6 +88,10 @@ flutter:
     - lib/assets/data/wordbook_jlpt_n3.json
     - lib/assets/data/wordbook_jlpt_n2.json
     - lib/assets/data/wordbook_jlpt_n1.json
+    - lib/assets/data/wordbook_en_basic.json
+    - lib/assets/data/wordbook_es_basic.json
+    - lib/assets/data/wordbook_fr_basic.json
+    - lib/assets/data/wordbook_ms_basic.json
     - lib/assets/data/articles_hsk1.json
     - lib/assets/data/articles_jlpt_n5.json
 

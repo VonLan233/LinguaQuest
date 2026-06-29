@@ -35,10 +35,10 @@ class SupportedLanguage {
 const List<SupportedLanguage> kSupportedLanguages = [
   SupportedLanguage(code: 'zh', hasBooks: true),
   SupportedLanguage(code: 'ja', hasBooks: true), // P2d: JLPT books shipped
-  SupportedLanguage(code: 'en', hasBooks: false),
-  SupportedLanguage(code: 'es', hasBooks: false),
-  SupportedLanguage(code: 'fr', hasBooks: false),
-  SupportedLanguage(code: 'ms', hasBooks: false),
+  SupportedLanguage(code: 'en', hasBooks: true),
+  SupportedLanguage(code: 'es', hasBooks: true),
+  SupportedLanguage(code: 'fr', hasBooks: true),
+  SupportedLanguage(code: 'ms', hasBooks: true),
 ];
 
 /// English display label for coming-soon languages that have no l10n key yet.

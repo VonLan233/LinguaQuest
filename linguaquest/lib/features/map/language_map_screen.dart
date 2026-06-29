@@ -27,11 +27,11 @@ class _LangPin {
 
 const _langPins = [
   _LangPin(code: 'zh', label: 'Chinese (中文)', point: LatLng(39.9087, 116.3975), enabled: true),
-  _LangPin(code: 'en', label: 'English', point: LatLng(38.0, -97.0), enabled: false),
-  _LangPin(code: 'es', label: 'Spanish (Español)', point: LatLng(40.4, -3.7), enabled: false),
-  _LangPin(code: 'fr', label: 'French (Français)', point: LatLng(46.6, 2.3), enabled: false),
+  _LangPin(code: 'en', label: 'English', point: LatLng(38.0, -97.0), enabled: true),
+  _LangPin(code: 'es', label: 'Spanish (Español)', point: LatLng(40.4, -3.7), enabled: true),
+  _LangPin(code: 'fr', label: 'French (Français)', point: LatLng(46.6, 2.3), enabled: true),
   _LangPin(code: 'ja', label: 'Japanese (日本語)', point: LatLng(36.2, 138.2), enabled: true),
-  _LangPin(code: 'ms', label: 'Malay (Bahasa Melayu)', point: LatLng(4.2, 101.9), enabled: false),
+  _LangPin(code: 'ms', label: 'Malay (Bahasa Melayu)', point: LatLng(4.2, 101.9), enabled: true),
 ];
 
 /// 全屏世界地图（真 OSM 瓦片）：国家 marker 代表可学语言。点击 marker 弹卡片，

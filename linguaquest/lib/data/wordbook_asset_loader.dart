@@ -20,6 +20,10 @@ class WordBookAssetLoader {
     'jlpt_n3',
     'jlpt_n2',
     'jlpt_n1',
+    'en_basic',
+    'es_basic',
+    'fr_basic',
+    'ms_basic',
   ];
 
   final AssetBundle _bundle;
