@@ -61,9 +61,13 @@ class HomeScreen extends ConsumerWidget {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(AppTokens.radiusPill),
                   onTap: () => Scaffold.of(ctx).openDrawer(),
-                  child: const Padding(
-                    padding: EdgeInsets.all(AppTokens.s4),
-                    child: Icon(AppIcons.menu, size: 24),
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppTokens.s4),
+                    child: Icon(
+                      AppIcons.menu,
+                      size: 24,
+                      color: Theme.of(ctx).colorScheme.onSurface,
+                    ),
                   ),
                 ),
               ),
