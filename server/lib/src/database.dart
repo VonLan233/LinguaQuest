@@ -2071,41 +2071,15 @@ SELECT
         }).toList();
   }
 
-  Future<Map<String, dynamic>> insertStudySpot(
-    String userId, {
-    required String name,
-    required double latitude,
-    required double longitude,
-    required int studyMinutes,
-  }) async {
-    final result = await connection.execute(
-      Sql.named(
-        'INSERT INTO study_spots (user_id, name, latitude, longitude, study_minutes) '
-        'VALUES (@userId, @name, @lat, @lng, @min) '
-        'RETURNING id, name, latitude, longitude, study_minutes, created_at',
-      ),
-      parameters: {
-        'userId': userId,
-        'name': name,
-        'lat': latitude,
-        'lng': longitude,
-        'min': studyMinutes,
-      },
-    );
-    final row = result.first;
-    return {
-      'id': row[0].toString(),
-      'name': row[1],
-      'latitude': row[2],
-      'longitude': row[3],
-      'studyMinutes': row[4],
-      'createdAt': row[5].toString(),
-    };
-  }
-
   /// Nearby upsert: if an existing spot is within 100 m, increment its
   /// visit_count and bump created_at; otherwise insert a new spot
   /// (visit_count = 1). Returns the affected spot.
+  ///
+  /// ponytail: SELECT-then-UPDATE/INSERT is not atomic — two concurrent
+  /// visits for the same user can both insert or both miss an increment.
+  /// Study spots are cosmetic (no trust/data-integrity boundary) and visits
+  /// arrive sequentially per user, so this is acceptable; upgrade to a single
+  /// upsert with a spatial/unique constraint if concurrency ever matters.
   Future<Map<String, dynamic>> recordStudyVisit(
     String userId, {
     required String name,

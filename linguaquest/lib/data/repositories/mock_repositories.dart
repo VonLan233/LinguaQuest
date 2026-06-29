@@ -1681,6 +1681,9 @@ class MockStudySpotRepository implements StudySpotRepository {
   }
 
   @override
+  // ponytail: read-modify-write of the prefs list is not atomic; concurrent
+  // visits could clobber an increment. Single-user offline store with
+  // sequential visits, so acceptable.
   Future<StudySpot> recordVisit({
     required double latitude,
     required double longitude,
