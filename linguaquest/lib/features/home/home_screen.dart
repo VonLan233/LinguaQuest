@@ -158,7 +158,9 @@ class HomeScreen extends ConsumerWidget {
             currentSection:
                 currentLesson?.section ??
                 currentBook?.nameFor(localeCode) ??
-                displayTarget(user?.targetExam ?? '雅思核心词汇', l10n: l10n),
+                (user?.targetExam != null
+                    ? displayTarget(user!.targetExam, l10n: l10n)
+                    : l10n.commonWordbook),
             dailyGoal: dailyGoal,
             dueCount: dueCount,
             isPaused: state.isStudyPlanPaused,

@@ -1055,7 +1055,8 @@ class AppLocalizationsMs extends AppLocalizations {
   String get discoverForumPost1Body => '错词集中在近义辨析，明天准备从训练场的易混词挑战开始。';
 
   @override
-  String get discoverForumPost2Title => '雅思阅读里怎么记 abstract?';
+  String get discoverForumPost2Title =>
+      'Bagaimana untuk mengingati perkataan \'abstract\'?';
 
   @override
   String get discoverForumPost2Body => 'abstract 在论文和阅读文章里经常不是“抽象”的意思，要结合语境判断。';
@@ -2849,7 +2850,7 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get communityPostAbstractTitle =>
-      'Bagaimana mengingat \"abstract\" dalam bacaan IELTS?';
+      'Bagaimana untuk mengingati perkataan \'abstract\'?';
 
   @override
   String get communityPostMistakeTag => 'Perbincangan Kesilapan';
