@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:linguaquest/core/state/app_controller.dart';
 import 'package:linguaquest/core/state/app_state.dart';
+import 'package:linguaquest/core/widgets/section_header.dart';
 import 'package:linguaquest/features/training/training_screen.dart';
 import 'package:linguaquest/l10n/generated/app_localizations.dart';
 
@@ -14,7 +15,7 @@ class _FakeAppController extends AppController {
 }
 
 void main() {
-  testWidgets('Campus Sprint section appears above Timed Tests', (
+  testWidgets('training screen has no section headers (all flat)', (
     tester,
   ) async {
     final state = AppState.initial().copyWith(isBootstrapped: true);
@@ -32,13 +33,17 @@ void main() {
       ),
     );
     await tester.pump();
-
-    final campus = find.text('Campus Sprint');
-    final timed = find.text('Timed Tests');
-    expect(campus, findsWidgets);
-    expect(timed, findsOneWidget);
-    final campusY = tester.getTopLeft(campus.first).dy;
-    final timedY = tester.getTopLeft(timed).dy;
-    expect(campusY, lessThan(timedY)); // Campus Sprint 在 Timed Tests 之上
+    expect(find.byType(SectionHeader), findsNothing);
+    // 6 训练项仍在
+    for (final t in [
+      'Campus Sprint',
+      'Speed Game',
+      'Last One Standing',
+      'Spelling',
+      'Passage Cloze',
+      'Listening Sprint',
+    ]) {
+      expect(find.textContaining(t), findsWidgets, reason: t);
+    }
   });
 }
