@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/utils/custom_word_localization.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_card.dart';
@@ -16,9 +17,14 @@ import '../../core/widgets/mascot_empty_state.dart';
 import '../../core/widgets/mascot_image.dart';
 import '../../core/widgets/section_header.dart';
 import '../../core/widgets/stat_tile.dart';
-import '../../core/utils/custom_word_localization.dart';
 import '../../data/models/custom_word.dart';
 import '../../l10n/generated/app_localizations.dart';
+
+/// Deterministic Word-of-the-Day index: rotates daily, stable within a day.
+int wordOfDayIndex(int epochDay, int wordCount) {
+  if (wordCount <= 0) return 0;
+  return epochDay % wordCount;
+}
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -46,8 +52,12 @@ class HomeScreen extends ConsumerWidget {
     final pathComplete =
         state.formalLessons.isNotEmpty &&
         state.formalLessons.every((lesson) => lesson.status == 'completed');
-    final wordOfDay = (currentLesson?.words.isNotEmpty ?? false)
-        ? currentLesson!.words.first
+    final wodPool = currentLesson?.words ?? const [];
+    final wordOfDay = wodPool.isNotEmpty
+        ? wodPool[wordOfDayIndex(
+            DateTime.now().millisecondsSinceEpoch ~/ Duration.millisecondsPerDay,
+            wodPool.length,
+          )]
         : null;
 
     return ListView(
