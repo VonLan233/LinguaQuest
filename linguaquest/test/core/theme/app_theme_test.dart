@@ -22,21 +22,20 @@ void main() {
     expect(theme.colorScheme.outline, AppTokens.hairline);
   });
 
-  test('light theme chip labels are readable, not washed-out light', () {
-    final theme = AppTheme.light();
-    final labelStyle = theme.chipTheme.labelStyle;
-    expect(labelStyle, isA<WidgetStateTextStyle>());
-    final resolvable = labelStyle as WidgetStateTextStyle;
-    final unselected = resolvable.resolve(<WidgetState>{});
-    final selected = resolvable.resolve(<WidgetState>{WidgetState.selected});
-    // Unselected label: dark navy ink, clearly readable on a light card.
-    expect(unselected.color, AppTokens.textPrimaryLight);
-    expect(unselected.color!.computeLuminance(), lessThan(0.4));
-    // Selected label: strong primary emphasis, never a faint light color.
-    expect(selected.color, theme.colorScheme.primary);
-    expect(selected.color!.computeLuminance(), lessThan(0.5));
-    // A concrete font size must be carried so the color actually applies
-    // (a bare TextStyle(color:) can be dropped by the chip's default merge).
-    expect(unselected.fontSize, isNotNull);
+  test('chip labels carry a concrete onSurface color (light + dark)', () {
+    for (final pair in {
+      'light': AppTheme.light(),
+      'dark': AppTheme.dark(),
+    }.entries) {
+      final labelStyle = pair.value.chipTheme.labelStyle;
+      expect(labelStyle, isNotNull, reason: pair.key);
+      // 普通 TextStyle，颜色受控为 onSurface（不再是 resolve 才有颜色的
+      // WidgetStateTextStyle —— 那种在 ChoiceChip 上 color 解析为 null）。
+      expect(labelStyle, isNot(isA<WidgetStateTextStyle>()), reason: pair.key);
+      expect(labelStyle!.color, pair.value.colorScheme.onSurface,
+          reason: pair.key);
+      // 必须带具体字号，颜色才会被 chip 默认 merge 保留。
+      expect(labelStyle.fontSize, isNotNull, reason: pair.key);
+    }
   });
 }

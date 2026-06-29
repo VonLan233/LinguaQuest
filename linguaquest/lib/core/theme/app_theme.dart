@@ -121,20 +121,13 @@ class AppTheme {
     // chip label size (14) so the style is complete and its colour applies.
     final chipBaseStyle =
         (baseTextTheme.labelLarge ?? const TextStyle()).copyWith(fontSize: 14);
-    final chipLabelStyle = WidgetStateTextStyle.resolveWith((states) {
-      if (states.contains(WidgetState.disabled)) {
-        return chipBaseStyle.copyWith(
-          color: scheme.onSurface.withValues(alpha: 0.38),
-        );
-      }
-      if (states.contains(WidgetState.selected)) {
-        return chipBaseStyle.copyWith(
-          color: isDark ? scheme.onPrimaryContainer : scheme.primary,
-          fontWeight: FontWeight.w700,
-        );
-      }
-      return chipBaseStyle.copyWith(color: scheme.onSurface);
-    });
+    // 普通 TextStyle（非 WidgetStateTextStyle）：ChoiceChip 不会 resolve
+    // WidgetStateTextStyle，会导致 label color 解析为 null、在 light 下白底白字。
+    // 这里直接给 onSurface，light/dark 都可读；选中态靠 selectedColor 背景区分。
+    final chipLabelStyle = chipBaseStyle.copyWith(
+      color: scheme.onSurface,
+      fontWeight: FontWeight.w600,
+    );
 
     return ThemeData(
       useMaterial3: true,
