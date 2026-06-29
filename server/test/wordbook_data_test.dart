@@ -20,4 +20,18 @@ void main() {
       expect((b['words'] as List), isNotEmpty);
     }
   });
+
+  test('p0 HSK file holds 6 full books (hsk2-6 no longer stubs)', () {
+    final file = File('data/wordbooks_p0.json');
+    expect(file.existsSync(), isTrue);
+    final books = (jsonDecode(file.readAsStringSync()) as List)
+        .cast<Map<String, dynamic>>();
+    expect(books.length, 6);
+    expect(books.map((b) => b['id']).toList(),
+        ['hsk1', 'hsk2', 'hsk3', 'hsk4', 'hsk5', 'hsk6']);
+    for (final b in books) {
+      expect((b['words'] as List).length, greaterThan(3),
+          reason: '${b['id']} should be a full book, not a 3-word stub');
+    }
+  });
 }
