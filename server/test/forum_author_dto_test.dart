@@ -35,6 +35,16 @@ void main() {
       expect(dto['authorName'], 'User');
     });
 
+    test('create-path: explicit authorName overrides null author_name in row', () {
+      final dto = forumPostDto(
+        _minimalRow(authorName: null), // insertForumPost row has no author_name
+        isLiked: false,
+        isFavorited: false,
+        authorName: 'RealNickname',
+      );
+      expect(dto['authorName'], 'RealNickname');
+    });
+
     test('includes expected keys alongside authorName', () {
       final dto = forumPostDto(
         _minimalRow(authorName: 'TestUser'),

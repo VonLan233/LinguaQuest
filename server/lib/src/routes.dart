@@ -1170,8 +1170,16 @@ Router buildRouter(
         'tag': tag,
         'status': status.name,
       });
+      final author = await database.userById(uid);
       return jsonResponse(
-        {'post': forumPostDto(post, isLiked: false, isFavorited: false)},
+        {
+          'post': forumPostDto(
+            post,
+            isLiked: false,
+            isFavorited: false,
+            authorName: author?['name'] as String?,
+          ),
+        },
         status: 201,
       );
     });
@@ -1401,11 +1409,12 @@ Map<String, dynamic> forumPostDto(
   Map<String, dynamic> row, {
   required bool isLiked,
   required bool isFavorited,
+  String? authorName,
 }) {
   return {
     'id': row['id'].toString(),
     'authorId': row['author_id'],
-    'authorName': row['author_name'] ?? 'User',
+    'authorName': authorName ?? row['author_name'] ?? 'User',
     'title': row['title'],
     'body': row['body'],
     'tag': row['tag'],
