@@ -3,13 +3,13 @@ import '../lib/src/config.dart';
 
 void main() {
   group('AppConfig AI defaults', () {
-    test('aiModel defaults to deepseek-v4-flash-free', () {
+    test('aiModel defaults to deepseek-v4-flash', () {
       const config = AppConfig(
         port: 8080,
         databaseUrl: 'x',
         jwtSecret: 'y',
       );
-      expect(config.aiModel, equals('deepseek-v4-flash-free'));
+      expect(config.aiModel, equals('deepseek-v4-flash'));
     });
 
     test('aiApiBaseUrl defaults to OpenCode Zen v1 endpoint', () {
