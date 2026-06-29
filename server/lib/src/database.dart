@@ -2052,10 +2052,12 @@ SELECT
   // ---------------------------------------------------------------------------
 
   Future<List<Map<String, dynamic>>> listForumPosts({String? status}) async {
-    final whereClause = status != null ? 'WHERE status=@status' : '';
+    final whereClause = status != null ? 'WHERE fp.status=@status' : '';
     final rows = await connection.execute(
       Sql.named(
-        'SELECT * FROM forum_posts $whereClause ORDER BY created_at DESC',
+        'SELECT fp.*, u.name AS author_name FROM forum_posts fp '
+        'LEFT JOIN users u ON u.id = fp.author_id '
+        '$whereClause ORDER BY fp.created_at DESC',
       ),
       parameters: {if (status != null) 'status': status},
     );
@@ -2064,7 +2066,11 @@ SELECT
 
   Future<Map<String, dynamic>?> getForumPost(String id) async {
     final rows = await connection.execute(
-      Sql.named('SELECT * FROM forum_posts WHERE id=@id::uuid LIMIT 1'),
+      Sql.named(
+        'SELECT fp.*, u.name AS author_name FROM forum_posts fp '
+        'LEFT JOIN users u ON u.id = fp.author_id '
+        'WHERE fp.id=@id::uuid LIMIT 1',
+      ),
       parameters: {'id': id},
     );
     if (rows.isEmpty) return null;

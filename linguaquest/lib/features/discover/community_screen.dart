@@ -202,17 +202,25 @@ class _ForumPostCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Header row: author + relative time ────────────────────────
+          // ── Header row: avatar + author + relative time ───────────────
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Flexible(
-                child: Text(
-                  post.authorName,
-                  style: theme.textTheme.labelLarge?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                  overflow: TextOverflow.ellipsis,
+                child: Row(
+                  children: [
+                    _AuthorAvatar(name: post.authorName),
+                    const SizedBox(width: AppTokens.s8),
+                    Flexible(
+                      child: Text(
+                        post.authorName,
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(width: AppTokens.s8),
@@ -287,6 +295,35 @@ class _ForumPostCard extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Generates a 28-dp circle avatar from the author's display name.
+/// Background color is derived from the name's hash for stable identity.
+/// ponytail: hash-based color; replace with real avatar URL if added later.
+class _AuthorAvatar extends StatelessWidget {
+  const _AuthorAvatar({required this.name});
+
+  final String name;
+
+  @override
+  Widget build(BuildContext context) {
+    final trimmed = name.trim();
+    final initial = trimmed.isEmpty ? '?' : trimmed[0].toUpperCase();
+    final hue = (name.hashCode % 360).abs().toDouble();
+    final bg = HSLColor.fromAHSL(1, hue, 0.45, 0.45).toColor();
+    return CircleAvatar(
+      radius: 14,
+      backgroundColor: bg,
+      child: Text(
+        initial,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 11.76,
+          fontWeight: FontWeight.w700,
+        ),
       ),
     );
   }

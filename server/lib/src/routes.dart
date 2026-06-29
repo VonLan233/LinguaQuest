@@ -1145,7 +1145,7 @@ Router buildRouter(
         final postId = post['id'].toString();
         final liked = await database.hasLiked(uid, postId);
         final favorited = await database.hasFavorited(uid, postId);
-        result.add(_forumPostDto(post, isLiked: liked, isFavorited: favorited));
+        result.add(forumPostDto(post, isLiked: liked, isFavorited: favorited));
       }
       return jsonResponse({'posts': result});
     });
@@ -1171,7 +1171,7 @@ Router buildRouter(
         'status': status.name,
       });
       return jsonResponse(
-        {'post': _forumPostDto(post, isLiked: false, isFavorited: false)},
+        {'post': forumPostDto(post, isLiked: false, isFavorited: false)},
         status: 201,
       );
     });
@@ -1187,7 +1187,7 @@ Router buildRouter(
       final liked = await database.hasLiked(uid, id);
       final favorited = await database.hasFavorited(uid, id);
       return jsonResponse({
-        'post': _forumPostDto(post, isLiked: liked, isFavorited: favorited),
+        'post': forumPostDto(post, isLiked: liked, isFavorited: favorited),
         'comments': comments.map(_forumCommentDto).toList(),
       });
     });
@@ -1397,7 +1397,7 @@ Router buildRouter(
   return router;
 }
 
-Map<String, dynamic> _forumPostDto(
+Map<String, dynamic> forumPostDto(
   Map<String, dynamic> row, {
   required bool isLiked,
   required bool isFavorited,
@@ -1405,6 +1405,7 @@ Map<String, dynamic> _forumPostDto(
   return {
     'id': row['id'].toString(),
     'authorId': row['author_id'],
+    'authorName': row['author_name'] ?? 'User',
     'title': row['title'],
     'body': row['body'],
     'tag': row['tag'],
