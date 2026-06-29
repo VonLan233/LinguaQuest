@@ -988,7 +988,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get discoverForumPost1Body => '错词集中在近义辨析，明天准备从训练场的易混词挑战开始。';
 
   @override
-  String get discoverForumPost2Title => '雅思阅读里怎么记 abstract?';
+  String get discoverForumPost2Title => '怎么记住 abstract 这个词？';
 
   @override
   String get discoverForumPost2Body => 'abstract 在论文和阅读文章里经常不是“抽象”的意思，要结合语境判断。';
@@ -1784,15 +1784,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get labelTargetCET6 => '六级核心词汇';
 
   @override
-  String get labelTargetIELTS => '雅思核心词汇';
-
-  @override
-  String get labelTargetTOEFL => '托福高频词汇';
-
-  @override
-  String get labelTargetGRE => 'GRE 高频词汇';
-
-  @override
   String get labelTargetKaoyan => '考研英语核心词汇';
 
   @override
@@ -1902,15 +1893,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get labelWordTagCET6 => '六级';
-
-  @override
-  String get labelWordTagIELTS => '雅思';
-
-  @override
-  String get labelWordTagTOEFL => '托福';
-
-  @override
-  String get labelWordTagGRE => 'GRE';
 
   @override
   String get labelWordTagKaoyan => '考研';
@@ -2063,24 +2045,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get wordbookDescBeginner => '适合初级英语和日常表达入门的基础高频词。';
-
-  @override
-  String get wordbookNameIELTS => '雅思核心词汇';
-
-  @override
-  String get wordbookDescIELTS => '覆盖雅思阅读、听力和写作中的高频学术词。';
-
-  @override
-  String get wordbookNameTOEFL => '托福高频词汇';
-
-  @override
-  String get wordbookDescTOEFL => '面向托福场景的学术词汇和校园表达。';
-
-  @override
-  String get wordbookNameGRE => 'GRE 高频词汇';
-
-  @override
-  String get wordbookDescGRE => '强化 GRE 阅读和填空常见高阶词。';
 
   @override
   String get wordbookNameCET4 => '四级核心词汇';
@@ -2722,7 +2686,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get communityPostCheckinBody => '错词集中在近义辨析，明天准备从训练场的易混词挑战开始。';
 
   @override
-  String get communityPostAbstractTitle => '雅思阅读里怎么记 abstract?';
+  String get communityPostAbstractTitle => '怎么记住 abstract 这个词？';
 
   @override
   String get communityPostMistakeTag => '错题讨论';

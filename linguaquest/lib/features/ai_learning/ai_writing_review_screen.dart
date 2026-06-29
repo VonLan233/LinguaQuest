@@ -30,7 +30,7 @@ class _AiWritingReviewScreenState extends ConsumerState<AiWritingReviewScreen> {
   bool _showRewrite = false;
   String? _errorMessage;
 
-  static const _examTypes = ['General', 'IELTS', 'CET-4', 'CET-6', 'TOEFL'];
+  static const _examTypes = ['General', 'Academic', 'Business', 'Casual'];
 
   @override
   void dispose() {

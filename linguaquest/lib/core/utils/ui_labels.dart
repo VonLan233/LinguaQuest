@@ -16,13 +16,6 @@ String displayTarget(String? value, {AppLocalizations? l10n}) {
         return l10n.labelTargetCET4;
       case 'CET-6':
         return l10n.labelTargetCET6;
-      case 'IELTS':
-      case '雅思核心词汇':
-        return l10n.labelTargetIELTS;
-      case 'TOEFL':
-        return l10n.labelTargetTOEFL;
-      case 'GRE':
-        return l10n.labelTargetGRE;
       case '考研':
         return l10n.labelTargetKaoyan;
       case 'Beginner':
@@ -44,13 +37,6 @@ String displayTarget(String? value, {AppLocalizations? l10n}) {
       return '四级核心词汇';
     case 'CET-6':
       return '六级核心词汇';
-    case 'IELTS':
-    case '雅思核心词汇':
-      return '雅思核心词汇';
-    case 'TOEFL':
-      return '托福高频词汇';
-    case 'GRE':
-      return 'GRE 高频词汇';
     case '考研':
       return '考研英语核心词汇';
     case 'Beginner':
@@ -294,12 +280,6 @@ String displayWordTag(String value, {AppLocalizations? l10n}) {
       case 'cet6':
       case 'cet-6':
         return l10n.labelWordTagCET6;
-      case 'ielts':
-        return l10n.labelWordTagIELTS;
-      case 'toefl':
-        return l10n.labelWordTagTOEFL;
-      case 'gre':
-        return l10n.labelWordTagGRE;
       case 'kaoyan':
       case '考研':
         return l10n.labelWordTagKaoyan;
@@ -336,12 +316,6 @@ String displayWordTag(String value, {AppLocalizations? l10n}) {
     case 'cet6':
     case 'cet-6':
       return '六级';
-    case 'ielts':
-      return '雅思';
-    case 'toefl':
-      return '托福';
-    case 'gre':
-      return 'GRE';
     case 'kaoyan':
     case '考研':
       return '考研';
@@ -371,12 +345,6 @@ String displayWordbookTitle(String id, {AppLocalizations? l10n}) {
   switch (id.toLowerCase()) {
     case 'beginner':
       return l10n.wordbookNameBeginner;
-    case 'ielts':
-      return l10n.wordbookNameIELTS;
-    case 'toefl':
-      return l10n.wordbookNameTOEFL;
-    case 'gre':
-      return l10n.wordbookNameGRE;
     case 'cet4':
       return l10n.wordbookNameCET4;
     case 'cet6':
@@ -400,12 +368,6 @@ String displayWordbookDescription(String id, {AppLocalizations? l10n}) {
   switch (id.toLowerCase()) {
     case 'beginner':
       return l10n.wordbookDescBeginner;
-    case 'ielts':
-      return l10n.wordbookDescIELTS;
-    case 'toefl':
-      return l10n.wordbookDescTOEFL;
-    case 'gre':
-      return l10n.wordbookDescGRE;
     case 'cet4':
       return l10n.wordbookDescCET4;
     case 'cet6':

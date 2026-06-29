@@ -1049,7 +1049,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get discoverForumPost2Title =>
-      'How do you memorize \'abstract\' in IELTS reading?';
+      'How do you memorize the word \'abstract\'?';
 
   @override
   String get discoverForumPost2Body =>
@@ -1882,15 +1882,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get labelTargetCET6 => 'CET-6 Core';
 
   @override
-  String get labelTargetIELTS => 'IELTS Core';
-
-  @override
-  String get labelTargetTOEFL => 'TOEFL High-Freq';
-
-  @override
-  String get labelTargetGRE => 'GRE High-Freq';
-
-  @override
   String get labelTargetKaoyan => 'Postgrad Core';
 
   @override
@@ -2000,15 +1991,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get labelWordTagCET6 => 'CET-6';
-
-  @override
-  String get labelWordTagIELTS => 'IELTS';
-
-  @override
-  String get labelWordTagTOEFL => 'TOEFL';
-
-  @override
-  String get labelWordTagGRE => 'GRE';
 
   @override
   String get labelWordTagKaoyan => 'Postgrad';
@@ -2163,27 +2145,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get wordbookDescBeginner =>
       'High-frequency words for beginners and daily expression.';
-
-  @override
-  String get wordbookNameIELTS => 'IELTS Core Words';
-
-  @override
-  String get wordbookDescIELTS =>
-      'High-frequency academic words for IELTS reading, listening, and writing.';
-
-  @override
-  String get wordbookNameTOEFL => 'TOEFL High-Frequency Words';
-
-  @override
-  String get wordbookDescTOEFL =>
-      'Academic vocabulary and campus expressions for TOEFL.';
-
-  @override
-  String get wordbookNameGRE => 'GRE High-Frequency Words';
-
-  @override
-  String get wordbookDescGRE =>
-      'Advanced words commonly seen in GRE reading and fill-in-the-blank.';
 
   @override
   String get wordbookNameCET4 => 'CET-4 Core Words';
@@ -2874,7 +2835,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get communityPostAbstractTitle =>
-      'How to remember \"abstract\" in IELTS reading?';
+      'How to remember the word \'abstract\'?';
 
   @override
   String get communityPostMistakeTag => 'Mistake Discussion';

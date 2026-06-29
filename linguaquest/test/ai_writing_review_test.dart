@@ -199,7 +199,7 @@ void main() {
       final repo = MockAiRepository();
       await repo.reviewWriting(
         essay: 'Test essay',
-        examType: 'IELTS',
+        examType: 'Academic',
         targetLanguage: 'zh',
       );
       final history = await repo.listHistory();
@@ -245,10 +245,11 @@ void main() {
       await _openScreen(tester);
 
       expect(find.text('General'), findsOneWidget);
-      expect(find.text('IELTS'), findsOneWidget);
-      expect(find.text('CET-4'), findsOneWidget);
-      expect(find.text('CET-6'), findsOneWidget);
-      expect(find.text('TOEFL'), findsOneWidget);
+      expect(find.text('Academic'), findsOneWidget);
+      expect(find.text('Business'), findsOneWidget);
+      expect(find.text('Casual'), findsOneWidget);
+      expect(find.text('IELTS'), findsNothing);
+      expect(find.text('TOEFL'), findsNothing);
     });
 
     testWidgets('shows character count hint for essay field', (tester) async {
@@ -294,17 +295,17 @@ void main() {
     testWidgets('can select a different exam type chip', (tester) async {
       await _openScreen(tester);
 
-      await tester.tap(find.text('IELTS'));
+      await tester.tap(find.text('Academic'));
       await tester.pump();
 
-      // After tapping IELTS, it should be selected (ChoiceChip is selected).
-      final ieltsChip = tester.widget<ChoiceChip>(
+      // After tapping Academic, it should be selected (ChoiceChip is selected).
+      final academicChip = tester.widget<ChoiceChip>(
         find.ancestor(
-          of: find.text('IELTS'),
+          of: find.text('Academic'),
           matching: find.byType(ChoiceChip),
         ),
       );
-      expect(ieltsChip.selected, isTrue);
+      expect(academicChip.selected, isTrue);
     });
 
     testWidgets('does not show result view initially', (tester) async {

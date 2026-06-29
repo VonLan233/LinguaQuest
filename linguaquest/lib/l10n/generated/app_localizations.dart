@@ -1981,7 +1981,7 @@ abstract class AppLocalizations {
   /// No description provided for @discoverForumPost2Title.
   ///
   /// In en, this message translates to:
-  /// **'How do you memorize \'abstract\' in IELTS reading?'**
+  /// **'How do you memorize the word \'abstract\'?'**
   String get discoverForumPost2Title;
 
   /// No description provided for @discoverForumPost2Body.
@@ -3409,24 +3409,6 @@ abstract class AppLocalizations {
   /// **'CET-6 Core'**
   String get labelTargetCET6;
 
-  /// No description provided for @labelTargetIELTS.
-  ///
-  /// In en, this message translates to:
-  /// **'IELTS Core'**
-  String get labelTargetIELTS;
-
-  /// No description provided for @labelTargetTOEFL.
-  ///
-  /// In en, this message translates to:
-  /// **'TOEFL High-Freq'**
-  String get labelTargetTOEFL;
-
-  /// No description provided for @labelTargetGRE.
-  ///
-  /// In en, this message translates to:
-  /// **'GRE High-Freq'**
-  String get labelTargetGRE;
-
   /// No description provided for @labelTargetKaoyan.
   ///
   /// In en, this message translates to:
@@ -3648,24 +3630,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'CET-6'**
   String get labelWordTagCET6;
-
-  /// No description provided for @labelWordTagIELTS.
-  ///
-  /// In en, this message translates to:
-  /// **'IELTS'**
-  String get labelWordTagIELTS;
-
-  /// No description provided for @labelWordTagTOEFL.
-  ///
-  /// In en, this message translates to:
-  /// **'TOEFL'**
-  String get labelWordTagTOEFL;
-
-  /// No description provided for @labelWordTagGRE.
-  ///
-  /// In en, this message translates to:
-  /// **'GRE'**
-  String get labelWordTagGRE;
 
   /// No description provided for @labelWordTagKaoyan.
   ///
@@ -3942,42 +3906,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'High-frequency words for beginners and daily expression.'**
   String get wordbookDescBeginner;
-
-  /// No description provided for @wordbookNameIELTS.
-  ///
-  /// In en, this message translates to:
-  /// **'IELTS Core Words'**
-  String get wordbookNameIELTS;
-
-  /// No description provided for @wordbookDescIELTS.
-  ///
-  /// In en, this message translates to:
-  /// **'High-frequency academic words for IELTS reading, listening, and writing.'**
-  String get wordbookDescIELTS;
-
-  /// No description provided for @wordbookNameTOEFL.
-  ///
-  /// In en, this message translates to:
-  /// **'TOEFL High-Frequency Words'**
-  String get wordbookNameTOEFL;
-
-  /// No description provided for @wordbookDescTOEFL.
-  ///
-  /// In en, this message translates to:
-  /// **'Academic vocabulary and campus expressions for TOEFL.'**
-  String get wordbookDescTOEFL;
-
-  /// No description provided for @wordbookNameGRE.
-  ///
-  /// In en, this message translates to:
-  /// **'GRE High-Frequency Words'**
-  String get wordbookNameGRE;
-
-  /// No description provided for @wordbookDescGRE.
-  ///
-  /// In en, this message translates to:
-  /// **'Advanced words commonly seen in GRE reading and fill-in-the-blank.'**
-  String get wordbookDescGRE;
 
   /// No description provided for @wordbookNameCET4.
   ///
@@ -5182,7 +5110,7 @@ abstract class AppLocalizations {
   /// No description provided for @communityPostAbstractTitle.
   ///
   /// In en, this message translates to:
-  /// **'How to remember \"abstract\" in IELTS reading?'**
+  /// **'How to remember the word \'abstract\'?'**
   String get communityPostAbstractTitle;
 
   /// No description provided for @communityPostMistakeTag.

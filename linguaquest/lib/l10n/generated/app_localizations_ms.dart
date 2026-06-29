@@ -1889,15 +1889,6 @@ class AppLocalizationsMs extends AppLocalizations {
   String get labelTargetCET6 => 'Teras CET-6';
 
   @override
-  String get labelTargetIELTS => 'Teras IELTS';
-
-  @override
-  String get labelTargetTOEFL => 'Frekuensi Tinggi TOEFL';
-
-  @override
-  String get labelTargetGRE => 'Frekuensi Tinggi GRE';
-
-  @override
   String get labelTargetKaoyan => 'Teras Pascasiswazah';
 
   @override
@@ -2007,15 +1998,6 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get labelWordTagCET6 => 'CET-6';
-
-  @override
-  String get labelWordTagIELTS => 'IELTS';
-
-  @override
-  String get labelWordTagTOEFL => 'TOEFL';
-
-  @override
-  String get labelWordTagGRE => 'GRE';
 
   @override
   String get labelWordTagKaoyan => 'Pascasiswazah';
@@ -2171,27 +2153,6 @@ class AppLocalizationsMs extends AppLocalizations {
   @override
   String get wordbookDescBeginner =>
       'Perkataan frekuensi tinggi untuk pemula dan ungkapan harian.';
-
-  @override
-  String get wordbookNameIELTS => 'Teras IELTS';
-
-  @override
-  String get wordbookDescIELTS =>
-      'Perkataan akademik frekuensi tinggi untuk bacaan, pendengaran, dan penulisan IELTS.';
-
-  @override
-  String get wordbookNameTOEFL => 'Frekuensi Tinggi TOEFL';
-
-  @override
-  String get wordbookDescTOEFL =>
-      'Perbendaharaan kata akademik dan ungkapan kampus untuk TOEFL.';
-
-  @override
-  String get wordbookNameGRE => 'Frekuensi Tinggi GRE';
-
-  @override
-  String get wordbookDescGRE =>
-      'Perkataan aras tinggi yang biasa dilihat dalam bacaan dan isi tempat kosong GRE.';
 
   @override
   String get wordbookNameCET4 => 'Teras CET-4';
