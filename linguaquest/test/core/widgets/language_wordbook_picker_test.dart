@@ -167,6 +167,15 @@ void main() {
       expect(find.text('JLPT_N5'), findsOneWidget);
     });
 
+    testWidgets('language rows use Expanded (no Spacer) for aligned pills',
+        (tester) async {
+      await tester.pumpWidget(_harness(state: _bothLangState()));
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
+      // 语言行不应再使用 Spacer（药丸靠 Expanded 推到右内边距，右缘对齐）。
+      expect(find.byType(Spacer), findsNothing);
+    });
+
     testWidgets(
         'selecting a wordbook calls switchWordBook (no other-scope wipe)',
         (tester) async {

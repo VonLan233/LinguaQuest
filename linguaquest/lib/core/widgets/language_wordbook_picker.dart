@@ -357,7 +357,7 @@ class _LanguageRow extends StatelessWidget {
       onTap: onTap,
       child: Row(
         children: [
-          Flexible(
+          Expanded(
             child: Text(
               label,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -368,7 +368,6 @@ class _LanguageRow extends StatelessWidget {
                   ),
             ),
           ),
-          const Spacer(),
           if (isCurrent)
             AppPill(
               label: currentLabel,
