@@ -5,7 +5,6 @@ import 'package:postgres/postgres.dart';
 import 'auth.dart';
 import 'config.dart';
 import 'lottery_policy.dart';
-import 'study_spot_policy.dart';
 
 const resetCustomWordProgressSql = '''
 UPDATE custom_words
@@ -2046,104 +2045,6 @@ SELECT
     );
     if (result.isEmpty) return 0;
     return (result.first[0] as int?) ?? 0;
-  }
-
-  // ---------------------------------------------------------------------------
-  // Study Spots
-  // ---------------------------------------------------------------------------
-
-  Future<List<Map<String, dynamic>>> listStudySpots(String userId) async {
-    final result = await connection.execute(
-      Sql.named(
-        'SELECT id, name, latitude, longitude, study_minutes, visit_count, created_at '
-        'FROM study_spots WHERE user_id=@userId ORDER BY created_at DESC',
-      ),
-      parameters: {'userId': userId},
-    );
-    return result.map((row) => {
-          'id': row[0].toString(),
-          'name': row[1],
-          'latitude': row[2],
-          'longitude': row[3],
-          'studyMinutes': row[4],
-          'visitCount': row[5],
-          'createdAt': row[6].toString(),
-        }).toList();
-  }
-
-  /// Nearby upsert: if an existing spot is within 100 m, increment its
-  /// visit_count and bump created_at; otherwise insert a new spot
-  /// (visit_count = 1). Returns the affected spot.
-  ///
-  /// ponytail: SELECT-then-UPDATE/INSERT is not atomic — two concurrent
-  /// visits for the same user can both insert or both miss an increment.
-  /// Study spots are cosmetic (no trust/data-integrity boundary) and visits
-  /// arrive sequentially per user, so this is acceptable; upgrade to a single
-  /// upsert with a spatial/unique constraint if concurrency ever matters.
-  Future<Map<String, dynamic>> recordStudyVisit(
-    String userId, {
-    required String name,
-    required double latitude,
-    required double longitude,
-  }) async {
-    final existing = await connection.execute(
-      Sql.named(
-        'SELECT id, latitude, longitude FROM study_spots WHERE user_id=@userId',
-      ),
-      parameters: {'userId': userId},
-    );
-    final spots = existing
-        .map((row) => (
-              id: row[0].toString(),
-              latitude: (row[1] as num).toDouble(),
-              longitude: (row[2] as num).toDouble(),
-            ))
-        .toList();
-    final idx = StudySpotPolicy.nearestWithin(
-      spots.map((s) => (latitude: s.latitude, longitude: s.longitude)).toList(),
-      latitude,
-      longitude,
-    );
-    final returning =
-        'RETURNING id, name, latitude, longitude, study_minutes, visit_count, created_at';
-    final result = idx != null
-        ? await connection.execute(
-            Sql.named(
-              'UPDATE study_spots SET visit_count = visit_count + 1, created_at = NOW() '
-              'WHERE id=@id::uuid AND user_id=@userId $returning',
-            ),
-            parameters: {'id': spots[idx].id, 'userId': userId},
-          )
-        : await connection.execute(
-            Sql.named(
-              'INSERT INTO study_spots (user_id, name, latitude, longitude, visit_count) '
-              'VALUES (@userId, @name, @lat, @lng, 1) $returning',
-            ),
-            parameters: {
-              'userId': userId,
-              'name': name,
-              'lat': latitude,
-              'lng': longitude,
-            },
-          );
-    final row = result.first;
-    return {
-      'id': row[0].toString(),
-      'name': row[1],
-      'latitude': row[2],
-      'longitude': row[3],
-      'studyMinutes': row[4],
-      'visitCount': row[5],
-      'createdAt': row[6].toString(),
-    };
-  }
-
-  Future<bool> deleteStudySpot(String userId, String id) async {
-    final result = await connection.execute(
-      Sql.named('DELETE FROM study_spots WHERE id=@id::uuid AND user_id=@userId'),
-      parameters: {'id': id, 'userId': userId},
-    );
-    return result.affectedRows > 0;
   }
 
   // ---------------------------------------------------------------------------

@@ -30,8 +30,6 @@ class AppDrawer extends StatelessWidget {
               ),
             ),
             item(AppIcons.language, 'Choose Language', '/language-map'),
-            item(AppIcons.map, 'Study Map', '/map'),
-            item(AppIcons.locationOn, 'Study Spots', '/map/spots'),
             item(AppIcons.search, 'Search', '/search'),
             item(AppIcons.person, 'Profile', '/profile'),
             item(AppIcons.settings, 'Settings', '/settings'),

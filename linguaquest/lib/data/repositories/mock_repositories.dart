@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'profile_repository.dart';
@@ -30,7 +29,6 @@ import '../models/ai_feature.dart';
 import '../models/analytics.dart';
 import '../models/forum.dart';
 import '../models/recommendation.dart';
-import '../models/study_spot.dart';
 import 'forum_repository.dart';
 import 'learning_repository.dart';
 import 'lottery_repository.dart';
@@ -39,7 +37,6 @@ import 'reward_repository.dart';
 import 'reward_task_repository.dart';
 import 'review_repository.dart';
 import 'study_plan_repository.dart';
-import 'study_spot_repository.dart';
 import 'user_word_repository.dart';
 
 class MockAuthRepository implements AuthRepository {
@@ -1632,111 +1629,5 @@ class MockProfileRepository implements ProfileRepository {
       'posts': <Map<String, dynamic>>[],
       'wordbookProgress': 18,
     };
-  }
-}
-
-class MockStudySpotRepository implements StudySpotRepository {
-  static const _key = 'mock_study_spots';
-
-  Future<List<StudySpot>> _read(SharedPreferences prefs) async {
-    final raw = prefs.getString(_key);
-    if (raw == null || raw.isEmpty) return [];
-    final list = jsonDecode(raw) as List;
-    return list
-        .map((e) => StudySpot.fromJson(e as Map<String, dynamic>))
-        .toList();
-  }
-
-  Future<void> _write(SharedPreferences prefs, List<StudySpot> spots) async {
-    await prefs.setString(
-        _key, jsonEncode(spots.map((s) => s.toJson()).toList()));
-  }
-
-  @override
-  Future<List<StudySpot>> list() async {
-    final prefs = await SharedPreferences.getInstance();
-    final spots = await _read(prefs);
-    spots.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-    return spots;
-  }
-
-  @override
-  Future<StudySpot> add(StudySpot spot) async {
-    final prefs = await SharedPreferences.getInstance();
-    final spots = await _read(prefs);
-    final id = spot.id.isNotEmpty
-        ? spot.id
-        : 'spot-${DateTime.now().microsecondsSinceEpoch}';
-    final saved = StudySpot(
-      id: id,
-      name: spot.name,
-      latitude: spot.latitude,
-      longitude: spot.longitude,
-      studyMinutes: spot.studyMinutes,
-      createdAt: spot.createdAt,
-    );
-    spots.add(saved);
-    await _write(prefs, spots);
-    return saved;
-  }
-
-  @override
-  // ponytail: read-modify-write of the prefs list is not atomic; concurrent
-  // visits could clobber an increment. Single-user offline store with
-  // sequential visits, so acceptable.
-  Future<StudySpot> recordVisit({
-    required double latitude,
-    required double longitude,
-    required String name,
-  }) async {
-    final prefs = await SharedPreferences.getInstance();
-    final spots = await _read(prefs);
-    final distance = const Distance();
-    final here = LatLng(latitude, longitude);
-    var nearestIndex = -1;
-    var nearestMeters = 100.0; // ≤100m aggregates
-    for (var i = 0; i < spots.length; i++) {
-      final d = distance.as(
-          LengthUnit.Meter, here, LatLng(spots[i].latitude, spots[i].longitude));
-      if (d <= nearestMeters) {
-        nearestMeters = d;
-        nearestIndex = i;
-      }
-    }
-    final StudySpot saved;
-    if (nearestIndex >= 0) {
-      final old = spots[nearestIndex];
-      saved = StudySpot(
-        id: old.id,
-        name: old.name,
-        latitude: old.latitude,
-        longitude: old.longitude,
-        studyMinutes: old.studyMinutes,
-        visitCount: old.visitCount + 1,
-        createdAt: DateTime.now().toUtc(),
-      );
-      spots[nearestIndex] = saved;
-    } else {
-      saved = StudySpot(
-        id: 'spot-${DateTime.now().microsecondsSinceEpoch}',
-        name: name,
-        latitude: latitude,
-        longitude: longitude,
-        studyMinutes: 0,
-        visitCount: 1,
-        createdAt: DateTime.now().toUtc(),
-      );
-      spots.add(saved);
-    }
-    await _write(prefs, spots);
-    return saved;
-  }
-
-  @override
-  Future<void> remove(String id) async {
-    final prefs = await SharedPreferences.getInstance();
-    final spots = await _read(prefs);
-    spots.removeWhere((s) => s.id == id);
-    await _write(prefs, spots);
   }
 }
