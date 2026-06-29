@@ -42,7 +42,7 @@ class TrainingScreen extends ConsumerWidget {
           streakLabel: l10n.homeStreakLabel,
         ),
         const SizedBox(height: AppTokens.s32),
-        SectionHeader(title: l10n.trainingTimedTests),
+        SectionHeader(title: l10n.trainingCampusSection),
         const SizedBox(height: AppTokens.s12),
         _TrainingGameList(
           children: [
@@ -54,6 +54,13 @@ class TrainingScreen extends ConsumerWidget {
                   ? null
                   : () => context.push('/timed-test/${speedLesson.id}'),
             ),
+          ],
+        ),
+        const SizedBox(height: AppTokens.s24),
+        SectionHeader(title: l10n.trainingTimedTests),
+        const SizedBox(height: AppTokens.s12),
+        _TrainingGameList(
+          children: [
             _TrainingGameRow(
               icon: AppIcons.timer,
               title: l10n.trainingSpeedGame,

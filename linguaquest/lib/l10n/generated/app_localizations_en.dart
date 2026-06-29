@@ -1277,6 +1277,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get trainingLeaderboard => 'Leaderboard';
 
   @override
+  String get trainingCampusSection => 'Campus Sprint';
+
+  @override
   String get trainingTimedTests => 'Timed Tests';
 
   @override

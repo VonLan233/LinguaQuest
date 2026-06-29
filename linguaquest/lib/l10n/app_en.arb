@@ -410,6 +410,7 @@
   "trainingWeeklyXpPrefix": "This week",
   "trainingDailyXpAvailable": "Up to 60 XP today",
   "trainingLeaderboard": "Leaderboard",
+  "trainingCampusSection": "Campus Sprint",
   "trainingTimedTests": "Timed Tests",
   "trainingTimedTestsSubtitle": "Campus packs & speed challenges",
   "trainingCampusSpeed": "Campus Sprint",

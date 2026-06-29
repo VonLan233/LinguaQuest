@@ -2380,6 +2380,12 @@ abstract class AppLocalizations {
   /// **'Leaderboard'**
   String get trainingLeaderboard;
 
+  /// No description provided for @trainingCampusSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Campus Sprint'**
+  String get trainingCampusSection;
+
   /// No description provided for @trainingTimedTests.
   ///
   /// In en, this message translates to:

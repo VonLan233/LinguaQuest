@@ -1205,6 +1205,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get trainingLeaderboard => '排行榜';
 
   @override
+  String get trainingCampusSection => '校园速测';
+
+  @override
   String get trainingTimedTests => '限时测试';
 
   @override

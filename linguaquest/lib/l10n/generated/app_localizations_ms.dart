@@ -1273,6 +1273,9 @@ class AppLocalizationsMs extends AppLocalizations {
   String get trainingLeaderboard => 'Papan Pendahulu';
 
   @override
+  String get trainingCampusSection => 'Campus Sprint';
+
+  @override
   String get trainingTimedTests => 'Ujian Bermasa';
 
   @override
