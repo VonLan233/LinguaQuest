@@ -81,6 +81,11 @@ class ProfileScreen extends ConsumerWidget {
         _SettingsGroup(
           children: [
             _SettingsItem(
+              icon: AppIcons.settings,
+              title: l10n.commonSettings,
+              onTap: () => context.push('/settings'),
+            ),
+            _SettingsItem(
               icon: AppIcons.flag,
               title: l10n.profilePlanLabel,
               value: state.currentStudyBook.name,
