@@ -289,8 +289,9 @@ class AppController extends Notifier<AppState> {
           : await _loadOrCreateStudyPlan(user);
       final currentWordBookId = _resolveCurrentWordBookId(
         books: wordBooks,
-        savedId:
-            studyPlan?.wordBookId ?? prefs.getString(_currentWordBookIdKey),
+        savedId: studyPlan?.wordBookId ??
+            prefs.getString(_currentWordBookIdForLangKey(currentLanguage)) ??
+            prefs.getString(_currentWordBookIdKey),
         target: user?.targetExam,
       );
       LearningProgress? progress;

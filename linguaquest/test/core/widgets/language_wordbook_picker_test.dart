@@ -198,5 +198,23 @@ void main() {
       // mutate any other scope's keys itself.
       expect(notifier.switchCalls, contains('hsk2'));
     });
+
+    testWidgets('selecting a wordbook keeps the sheet open (immediate highlight)',
+        (tester) async {
+      _FakeNotifier? captured;
+      await tester.pumpWidget(_harness(
+        state: _zhState(books: 6),
+        capture: (n) => captured = n,
+      ));
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Chinese (中文)'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('HSK2'));
+      await tester.pumpAndSettle();
+      // 切换被调用，但 sheet 不再立即关闭（标题仍在）。
+      expect(captured!.switchCalls, contains('hsk2'));
+      expect(find.text('Choose Wordbook'), findsOneWidget);
+    });
   });
 }

@@ -159,7 +159,8 @@ class _LanguageWordbookPickerSheetState
         }
       }
       final label = selected?.nameFor(localeCode) ?? bookId;
-      widget.onDismiss();
+      // 不立即关闭 sheet：让选中词书即时高亮 Current，用户自行关闭。
+      if (mounted) setState(() {});
       messenger.showSnackBar(
         SnackBar(content: Text(l10n.pickerSwitchSuccess(label))),
       );
