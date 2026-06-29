@@ -250,11 +250,8 @@ class _LangMarker extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final start = (index * 0.12).clamp(0.0, 0.6);
-    final anim = CurvedAnimation(
-      parent: entrance,
-      curve: Interval(start, (start + 0.4).clamp(0.0, 1.0),
-          curve: Curves.easeOutBack),
-    );
+    final curve = Interval(start, (start + 0.4).clamp(0.0, 1.0),
+        curve: Curves.easeOutBack);
     return GestureDetector(
       key: ValueKey('lang-pin-${pin.code}'),
       onTap: onTap,
@@ -262,7 +259,7 @@ class _LangMarker extends StatelessWidget {
       child: AnimatedBuilder(
         animation: Listenable.merge([entrance, pulse]),
         builder: (context, _) {
-          final t = anim.value.clamp(0.0, 1.0);
+          final t = curve.transform(entrance.value).clamp(0.0, 1.0);
           return Opacity(
             opacity: t,
             child: Transform.translate(
@@ -320,6 +317,7 @@ class _Badge extends StatelessWidget {
     final ring = (selected ? 44.0 : 36.0) *
         (1.0 + (pin.enabled ? pulse * 0.22 : 0.0));
     final dot = selected ? 30.0 : 26.0;
+    final glowColor = pin.enabled ? cs.primary : cs.onSurfaceVariant;
     return SizedBox(
       width: 56,
       height: 56,
@@ -332,7 +330,7 @@ class _Badge extends StatelessWidget {
               height: ring,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: cs.primary.withValues(alpha: selected ? 0.30 : 0.16),
+                color: glowColor.withValues(alpha: selected ? 0.30 : 0.16),
               ),
             ),
           Container(
