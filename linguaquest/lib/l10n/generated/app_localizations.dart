@@ -2380,18 +2380,6 @@ abstract class AppLocalizations {
   /// **'Leaderboard'**
   String get trainingLeaderboard;
 
-  /// No description provided for @trainingCampusSection.
-  ///
-  /// In en, this message translates to:
-  /// **'Campus Sprint'**
-  String get trainingCampusSection;
-
-  /// No description provided for @trainingTimedTests.
-  ///
-  /// In en, this message translates to:
-  /// **'Timed Tests'**
-  String get trainingTimedTests;
-
   /// No description provided for @trainingTimedTestsSubtitle.
   ///
   /// In en, this message translates to:
@@ -2445,12 +2433,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Coming Soon'**
   String get trainingComingSoon;
-
-  /// No description provided for @trainingSpecialDrills.
-  ///
-  /// In en, this message translates to:
-  /// **'Skill Drills'**
-  String get trainingSpecialDrills;
 
   /// No description provided for @trainingSpecialDrillsSubtitle.
   ///
@@ -4206,18 +4188,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Recommended 5-30 words, max 200.'**
   String get studyPlanDailyNewHint;
-
-  /// No description provided for @studyPlanDailyReview.
-  ///
-  /// In en, this message translates to:
-  /// **'Daily Review Limit'**
-  String get studyPlanDailyReview;
-
-  /// No description provided for @studyPlanDailyReviewHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Review queue beyond limit will be kept for later dates.'**
-  String get studyPlanDailyReviewHint;
 
   /// No description provided for @studyPlanReminderTime.
   ///

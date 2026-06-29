@@ -1277,12 +1277,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get trainingLeaderboard => 'Leaderboard';
 
   @override
-  String get trainingCampusSection => 'Campus Sprint';
-
-  @override
-  String get trainingTimedTests => 'Timed Tests';
-
-  @override
   String get trainingTimedTestsSubtitle => 'Campus packs & speed challenges';
 
   @override
@@ -1310,9 +1304,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get trainingComingSoon => 'Coming Soon';
-
-  @override
-  String get trainingSpecialDrills => 'Skill Drills';
 
   @override
   String get trainingSpecialDrillsSubtitle =>
@@ -2319,13 +2310,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get studyPlanDailyNewHint => 'Recommended 5-30 words, max 200.';
-
-  @override
-  String get studyPlanDailyReview => 'Daily Review Limit';
-
-  @override
-  String get studyPlanDailyReviewHint =>
-      'Review queue beyond limit will be kept for later dates.';
 
   @override
   String get studyPlanReminderTime => 'Study Reminder Time';

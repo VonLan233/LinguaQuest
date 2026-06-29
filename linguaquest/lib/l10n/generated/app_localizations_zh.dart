@@ -1205,12 +1205,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get trainingLeaderboard => '排行榜';
 
   @override
-  String get trainingCampusSection => '校园速测';
-
-  @override
-  String get trainingTimedTests => '限时测试';
-
-  @override
   String get trainingTimedTestsSubtitle => '校园词包与抢词挑战';
 
   @override
@@ -1236,9 +1230,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get trainingComingSoon => '即将开放';
-
-  @override
-  String get trainingSpecialDrills => '专项训练';
 
   @override
   String get trainingSpecialDrillsSubtitle => '围绕拼写、听音、搭配和短文挖词补弱项。';
@@ -2205,12 +2196,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get studyPlanDailyNewHint => '建议 5-30 词，最多 200 词。';
-
-  @override
-  String get studyPlanDailyReview => '每日复习上限';
-
-  @override
-  String get studyPlanDailyReviewHint => '复习队列超过上限时会保留到后续日期。';
 
   @override
   String get studyPlanReminderTime => '学习提醒时间';

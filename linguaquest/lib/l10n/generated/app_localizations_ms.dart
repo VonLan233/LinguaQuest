@@ -1274,12 +1274,6 @@ class AppLocalizationsMs extends AppLocalizations {
   String get trainingLeaderboard => 'Papan Pendahulu';
 
   @override
-  String get trainingCampusSection => 'Campus Sprint';
-
-  @override
-  String get trainingTimedTests => 'Ujian Bermasa';
-
-  @override
   String get trainingTimedTestsSubtitle => 'Pek kampus & cabaran kelajuan';
 
   @override
@@ -1308,9 +1302,6 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get trainingComingSoon => 'Akan Datang';
-
-  @override
-  String get trainingSpecialDrills => 'Latihan Kemahiran';
 
   @override
   String get trainingSpecialDrillsSubtitle =>
@@ -2330,13 +2321,6 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get studyPlanDailyNewHint => 'Disyorkan 5-30 perkataan, maksimum 200.';
-
-  @override
-  String get studyPlanDailyReview => 'Had Ulangkaji Harian';
-
-  @override
-  String get studyPlanDailyReviewHint =>
-      'Giliran ulangkaji melebihi had akan disimpan untuk tarikh kemudian.';
 
   @override
   String get studyPlanReminderTime => 'Masa Peringatan Pembelajaran';

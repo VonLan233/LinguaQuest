@@ -7,7 +7,6 @@ import 'package:linguaquest/core/state/app_controller.dart';
 import 'package:linguaquest/core/theme/app_theme.dart';
 import 'package:linguaquest/data/models/forum.dart';
 import 'package:linguaquest/data/repositories/forum_repository.dart';
-import 'package:linguaquest/data/repositories/mock_repositories.dart';
 import 'package:linguaquest/features/discover/community_screen.dart';
 import 'package:linguaquest/l10n/generated/app_localizations.dart';
 
