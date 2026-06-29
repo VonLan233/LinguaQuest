@@ -175,13 +175,20 @@ class _PassageClozeScreenState extends ConsumerState<PassageClozeScreen> {
           : SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(AppTokens.s16),
-                child: AppPrimaryButton(
-                  label: _submitting
-                      ? 'Submitting...'
-                      : _allAnswered
-                          ? 'Finish'
-                          : 'Answer all blanks',
-                  onPressed: (_allAnswered && !_submitting) ? _finish : null,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    AppPrimaryButton(
+                      label: _submitting
+                          ? 'Submitting...'
+                          : _allAnswered
+                              ? 'Finish'
+                              : 'Answer all blanks',
+                      onPressed:
+                          (_allAnswered && !_submitting) ? _finish : null,
+                    ),
+                  ],
                 ),
               ),
             ),
