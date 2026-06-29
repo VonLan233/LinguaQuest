@@ -193,7 +193,7 @@ class HomeScreen extends ConsumerWidget {
                 icon: AppIcons.article,
                 title: l10n.homeDailyArticle,
                 subtitle: l10n.homeDailyArticleSubtitle,
-                onTap: () => context.go('/ai-learning'),
+                onTap: () => context.push('/reading'),
               ),
               _HomeShortcutData(
                 icon: AppIcons.route,
