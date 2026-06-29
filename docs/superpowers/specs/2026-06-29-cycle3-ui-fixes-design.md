@@ -2,7 +2,7 @@
 
 日期：2026-06-29
 分支：feat/P2-roadmap
-范围：三个从设备测试中报告的 UI 缺陷 —— 语言选择器药丸对齐、词书 Current 状态不跟随切换、发帖/社区 chip 文字在 light mode 下白底白字。
+范围：四个从设备测试中报告的 UI 问题 —— 语言选择器药丸对齐、词书 Current 状态不跟随切换、发帖/社区 chip 文字在 light mode 下白底白字、语言选择地图美化（深度游戏化，底图保持 OSM 真实地图 API）。
 
 约束：无新依赖；不破坏 light/dark 两套主题；改动后 `flutter analyze` + `flutter test` 全绿。UI 文案沿用现有 l10n / 硬编码英文惯例（本轮不新增文案）。
 
@@ -82,7 +82,37 @@ Row(children: [
 
 ---
 
-## 不在本轮范围
+## 问题 4 — 语言选择地图深度游戏化美化（底图保持 OSM）
+
+### 现状（简陋点）
+`lib/features/map/language_map_screen.dart`：`flutter_map` + OSM 默认瓦片 + 6 个朴素 `Icons.place` 图钉（蓝=可学/灰=未开放，44×44），无标签（点了才知是哪国语言）、无图例、无引导；dark mode 下 OSM 亮瓦片不协调；点 enabled 直接弹 picker、点 disabled 弹 snackbar，反馈弱。
+
+### 硬性约束（rubric）
+Map 是 coursework 必做项，必须用**真实地图 API**（OpenStreetMap 或其它地图 API）显示位置。美化**只能叠加在真地图之上**：底图必须保持 `flutter_map` + OSM 官方瓦片，**不可换成 CartoDB/插画/静态图/伪地图**，不可替换地图引擎。见 [[swe311-coursework-rubric]]。
+
+### 美化（深度游戏化，全部用 Flutter 内置动画 + flutter_map，无新依赖）
+1. **底图**：保留 `https://tile.openstreetmap.org/{z}/{x}/{y}.png`。dark mode 下在瓦片上叠一层半透明深色遮罩（`Container(color: ...withValues(alpha: 0.4))` 或 `ColoredBox`，不拦截手势——用 `IgnorePointer`/放在 TileLayer 之上但 MarkerLayer 之下），让整体协调；light mode 不加遮罩或加极浅遮罩。底图始终是 OSM。
+2. **自定义 marker**（替换 `Icons.place`）：一个 widget = 上方常驻语言名标签气泡（显示 `pin.label`，圆角背景+阴影，走主题色）+ 下方圆形徽章。可学（enabled）= 品牌渐变徽章 + 白描边 + 呼吸光环；未开放（disabled）= 灰徽章 + 🔒。Marker 尺寸相应增大（约 120×72）以容纳标签。
+3. **动画**：入场时各 marker 按 index staggered 淡入 + 轻落（`TweenAnimationBuilder`，延迟 ~index×80ms）；可学 marker 的光环用 `AnimationController`（repeat reverse）做 scale+opacity 呼吸脉冲。全部 Flutter 内置。
+4. **点击交互**：点任意 marker → 设 `selectedCode`，该 marker 放大 + 周围发光圆环高亮其所在区域（marker 内光环，或 flutter_map `CircleLayer`）；并从底部弹出卡片（语言名 + 状态徽章 + 简短描述 + 按钮）。可学：按钮"开始学习"→ 沿用现有 `updateTargetLanguage(code)` + `showLanguageWordbookPicker(initialLanguage: code)`；未开放：按钮置灰"即将开放"，不进 picker。取代现在的直接弹 picker / snackbar。
+5. **氛围**：地图上叠一个顶部半透明引导条（标题"探索世界语言"+ 副标题）；底部小图例（● 可学 / ○ 即将开放）。
+6. **国家高亮**：用发光圆环（围绕选中 pin）代替精确国界 GeoJSON（轻量；不影响"真实地图 API"这一 rubric 要求）。
+7. **light/dark**：底图遮罩、marker、标签气泡、卡片、文字、图例全部走主题色。
+8. **l10n**：复用已有 `languageMapTitle` / `languageMapComingSoon`；新增少量文案（副标题、"开始学习"、状态/图例等）到 en/zh/ms。
+
+### 验证
+- widget 测试：渲染 `LanguageMapScreen`，断言 6 个语言 marker（按 `ValueKey('lang-pin-<code>')`）存在；点击 enabled marker 后弹出卡片含"开始学习"按钮；点击 disabled marker 弹卡片/提示为"即将开放"且不进 picker；标签气泡显示语言名。
+- 注意：OSM 瓦片在无网络的 widget 测试中会抛 `ClientException`（瓦片加载失败），测试只断言 marker/交互，不依赖瓦片渲染（沿用现有惯例，见 issue77 测试 note）。
+- 设备实测（release build）：地图美观、light/dark 协调、动画顺滑、点击弹卡片、可学进 picker。
+
+### 问题 4 不在范围
+- 不引入国界 GeoJSON / 精确轮廓。
+- 不改 About 公司地图（`study_map_screen` / about map 不动）。
+- 不换地图引擎或瓦片为非 OSM 方案。
+
+---
+
+## 不在本轮范围（问题 1-3）
 - 不改 chip 的形状/背景/选中色逻辑（仅修文字颜色受控问题）。
 - 不动语言/词书的切换业务逻辑（仅修 UX 关闭时机 + bootstrap 读取对称）。
 - 服务器无改动；无需部署。客户端改动随 APK 生效。
@@ -91,3 +121,4 @@ Row(children: [
 1. 问题 1：`_LanguageRow` Expanded 化（+ picker 测试）。
 2. 问题 2：`_onBookSelected` 不立即关闭 + `setState`；bootstrap savedId 补 per-language 键（+ picker / controller 测试）。
 3. 问题 3：`chipLabelStyle` 改普通 TextStyle（+ 更新 app_theme_test 断言）。
+4. 问题 4：地图游戏化美化（自定义 marker + 动画 + 点击卡片 + dark 遮罩 + l10n + 测试）；底图保持 OSM。
