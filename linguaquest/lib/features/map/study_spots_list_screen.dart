@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_card.dart';
+import '../../core/widgets/fallback_back_button.dart';
 
 class StudySpotsListScreen extends ConsumerStatefulWidget {
   const StudySpotsListScreen({super.key});
@@ -28,7 +29,10 @@ class _StudySpotsListScreenState extends ConsumerState<StudySpotsListScreen> {
     final totalMinutes =
         spots.fold<int>(0, (sum, s) => sum + s.studyMinutes);
     return Scaffold(
-      appBar: AppBar(title: const Text('Study Spots')),
+      appBar: AppBar(
+        leading: const FallbackBackButton(fallbackLocation: '/home'),
+        title: const Text('Study Spots'),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(AppTokens.s16),
         children: [

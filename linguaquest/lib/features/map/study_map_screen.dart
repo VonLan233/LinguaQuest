@@ -9,6 +9,7 @@ import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_button.dart';
 import '../../data/models/study_spot.dart';
+import '../../core/widgets/fallback_back_button.dart';
 
 class StudyMapScreen extends ConsumerStatefulWidget {
   const StudyMapScreen({super.key});
@@ -118,7 +119,10 @@ class _StudyMapScreenState extends ConsumerState<StudyMapScreen> {
     final spots =
         ref.watch(appControllerProvider.select((s) => s.studySpots));
     return Scaffold(
-      appBar: AppBar(title: const Text('Study Map')),
+      appBar: AppBar(
+        leading: const FallbackBackButton(fallbackLocation: '/home'),
+        title: const Text('Study Map'),
+      ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _saveHere,
         icon: const Icon(Icons.add_location_alt),
