@@ -644,7 +644,12 @@ class _StudyBookCoverOption extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Material(
-      color: selected ? AppTokens.primarySoft : theme.colorScheme.surface,
+      // Keep the dark card when selected (inverting to a light fill made the
+      // white progress bar vanish). Show selection as a "floating" highlight:
+      // elevation + azure shadow, plus the azure border below.
+      color: theme.colorScheme.surface,
+      elevation: selected ? 6 : 0,
+      shadowColor: AppTokens.azure,
       borderRadius: BorderRadius.circular(AppTokens.radiusTile + 4),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -683,9 +688,7 @@ class _StudyBookCoverOption extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: theme.textTheme.labelLarge?.copyWith(
                             fontWeight: FontWeight.w800,
-                            color: selected
-                                ? AppTokens.primarySoftText
-                                : theme.colorScheme.onSurface,
+                            color: theme.colorScheme.onSurface,
                           ),
                         ),
                         const SizedBox(height: AppTokens.s4),
