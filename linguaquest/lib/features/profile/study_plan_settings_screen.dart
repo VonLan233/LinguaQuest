@@ -94,7 +94,14 @@ class _StudyPlanSettingsScreenState
       learnedWords: completedWords,
       totalWords: totalWords,
     );
-    final book = studyBookInfoForId(_wordBookId);
+    final book = selectedWordBook != null
+        ? StudyBookInfo(
+            id: selectedWordBook.id,
+            name: selectedWordBook.nameFor(localeCode),
+            cover: studyPlanCoverEmoji(selectedWordBook.language),
+            description: selectedWordBook.description,
+          )
+        : studyBookInfoForId(_wordBookId);
     final plan = state.studyPlan;
 
     return Scaffold(
@@ -381,12 +388,14 @@ const studyPlanReminderTimePickerEntryMode = TimePickerEntryMode.inputOnly;
 
 WordBook? _wordBookForId(List<WordBook> books, String id) {
   for (final book in books) {
-    if (normalizedStudyBookId(book.id) == normalizedStudyBookId(id)) {
-      return book;
-    }
+    if (book.id == id) return book;
   }
   return null;
 }
+
+/// Test-only accessor for [_wordBookForId].
+WordBook? wordBookForIdForTest(List<WordBook> books, String id) =>
+    _wordBookForId(books, id);
 
 bool rejectChangedExpiredTargetFinishDate({
   required DateTime finishDate,
@@ -502,12 +511,12 @@ class _PlanHeroCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      displayWordbookTitle(book.id, l10n: l10n),
+                      book.name,
                       style: theme.textTheme.titleLarge,
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      displayWordbookDescription(book.id, l10n: l10n),
+                      book.description,
                       style: TextStyle(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
@@ -596,9 +605,7 @@ class _StudyBookSelector extends StatelessWidget {
             separatorBuilder: (_, _) => const SizedBox(width: AppTokens.s12),
             itemBuilder: (context, index) {
               final book = _books[index];
-              final selected =
-                  normalizedStudyBookId(selectedId) ==
-                  normalizedStudyBookId(book.id);
+              final selected = selectedId == book.id;
               final learned = learnedWordCountForBook(
                 userWords: userWords,
                 wordBookId: book.id,

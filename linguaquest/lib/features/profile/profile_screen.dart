@@ -83,10 +83,7 @@ class ProfileScreen extends ConsumerWidget {
             _SettingsItem(
               icon: AppIcons.flag,
               title: l10n.profilePlanLabel,
-              value: displayWordbookTitle(
-                state.currentStudyBook.id,
-                l10n: l10n,
-              ),
+              value: state.currentStudyBook.name,
               onTap: () => context.push('/settings/study-plan'),
             ),
             _SettingsItem(

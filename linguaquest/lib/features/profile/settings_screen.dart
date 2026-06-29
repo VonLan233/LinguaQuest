@@ -32,7 +32,7 @@ class SettingsScreen extends ConsumerWidget {
               icon: AppIcons.flag,
               title: l10n.commonStudyPlan,
               subtitle:
-                  '${displayWordbookTitle(state.currentStudyBook.id, l10n: l10n)} · ${l10n.commonNew} ${state.dailyNewTarget} · ${l10n.commonReview} ${state.dailyReviewLimit}',
+                  '${state.currentStudyBook.name} · ${l10n.commonNew} ${state.dailyNewTarget} · ${l10n.commonReview} ${state.dailyReviewLimit}',
               route: '/settings/study-plan',
             ),
             const SizedBox(height: AppTokens.s12),
