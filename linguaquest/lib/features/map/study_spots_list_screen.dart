@@ -58,7 +58,7 @@ class _StudySpotsListScreenState extends ConsumerState<StudySpotsListScreen> {
                   leading: const Icon(Icons.place),
                   title: Text(s.name),
                   subtitle: Text(
-                      '${s.studyMinutes} min · ${s.latitude.toStringAsFixed(3)}, ${s.longitude.toStringAsFixed(3)}'),
+                      '${s.studyMinutes} min · visited ${s.visitCount}× · ${s.latitude.toStringAsFixed(3)}, ${s.longitude.toStringAsFixed(3)}'),
                   trailing: IconButton(
                     icon: const Icon(Icons.delete_outline),
                     onPressed: () => ref

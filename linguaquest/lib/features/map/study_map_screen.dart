@@ -122,6 +122,19 @@ class _StudyMapScreenState extends ConsumerState<StudyMapScreen> {
             urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             userAgentPackageName: 'com.example.linguaquest',
           ),
+          CircleLayer(
+            circles: [
+              for (final s in spots)
+                CircleMarker(
+                  point: LatLng(s.latitude, s.longitude),
+                  radius: (12 + s.visitCount * 6).clamp(12, 48).toDouble(),
+                  color: Colors.deepOrange.withValues(
+                    alpha: (0.15 + s.visitCount * 0.12).clamp(0.15, 0.6),
+                  ),
+                  borderStrokeWidth: 0,
+                ),
+            ],
+          ),
           MarkerLayer(
             markers: [
               for (final s in spots)
