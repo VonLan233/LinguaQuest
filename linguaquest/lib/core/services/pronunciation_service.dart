@@ -21,12 +21,14 @@ class PronunciationService {
     String language = '',
   }) async {
     final trimmed = word.trim();
-    if (audioUrl.trim().isNotEmpty) {
+    final ttsLocale = _resolveTtsLocale(language, trimmed);
+    // #15: 中文场景只用本地 flutter_tts（跳过慢/不稳的有道音频）。
+    final chineseTtsOnly = ttsLocale == 'zh-CN';
+    if (!chineseTtsOnly && audioUrl.trim().isNotEmpty) {
       final ok = await audio(audioUrl.trim());
       if (ok) return PronunciationOutcome.playedUrl;
     }
     if (trimmed.isEmpty) return PronunciationOutcome.failed;
-    final ttsLocale = _resolveTtsLocale(language, trimmed);
     final spoken = await tts(trimmed, ttsLocale, slow);
     return spoken ? PronunciationOutcome.playedTts : PronunciationOutcome.failed;
   }
