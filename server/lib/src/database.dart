@@ -42,6 +42,15 @@ const incrementVerificationAttemptsSql =
 const deleteVerificationCodeSql =
     'DELETE FROM email_verification_codes WHERE uid=@uid';
 
+/// Picks the primary-key id for an upserted study plan. Reuse the existing
+/// scope's id so `ON CONFLICT (uid, language, word_book_id)` updates that row;
+/// otherwise mint a fresh id. It deliberately ignores any client-supplied id —
+/// when a user switches to a new (language, wordbook) scope the client sends
+/// its CURRENT plan's id, and reusing it would collide with that other row's
+/// primary key (study_plans_pkey → 500).
+String studyPlanRowId(Map<String, dynamic>? existing) =>
+    existing?['id']?.toString() ?? newId();
+
 class AppDatabase {
   AppDatabase(this.connection);
 
@@ -1187,7 +1196,7 @@ LIMIT 1
     final wordBookId = data['wordBookId'] as String;
     final existing = await studyPlanByScope(uid, language, wordBookId);
     final now = DateTime.now().toUtc();
-    final id = existing?['id']?.toString() ?? data['id']?.toString();
+    final id = studyPlanRowId(existing);
     final updatedAt = _date(data['now']) ?? now;
     await connection.execute(
       Sql.named('''
@@ -1208,7 +1217,7 @@ ON CONFLICT (uid, language, word_book_id) DO UPDATE SET
   updated_at=EXCLUDED.updated_at
 '''),
       parameters: {
-        'id': id ?? data['id'],
+        'id': id,
         'uid': uid,
         'language': language,
         'wordBookId': wordBookId,
