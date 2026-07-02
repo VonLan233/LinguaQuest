@@ -920,6 +920,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get discoverCommunityPostsSubtitle => 'Community';
 
   @override
+  String get discoverMyFavorites => 'My Favorites';
+
+  @override
+  String get favoritesEmpty => 'You haven\'t favorited any posts yet.';
+
+  @override
   String get communityFilterAll => 'All';
 
   @override

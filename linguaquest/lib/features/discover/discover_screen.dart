@@ -70,6 +70,13 @@ class DiscoverScreen extends ConsumerWidget {
           color: AppTokens.successSoftText,
           onTap: () => context.push('/discover/community'),
         ),
+        const SizedBox(height: AppTokens.s12),
+        CompactEntryCard(
+          icon: AppIcons.bookmark,
+          title: l10n.discoverMyFavorites,
+          color: AppTokens.successSoftText,
+          onTap: () => context.push('/forum/favorites'),
+        ),
       ],
     );
   }

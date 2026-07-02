@@ -126,6 +126,7 @@ class AppState {
     required this.userAssets,
     required this.aiHistory,
     required this.forumPosts,
+    this.favoritedPosts = const [],
     this.targetLanguage = 'zh',
     this.currentLanguage = 'zh',
     this.sensorySettings = SensorySettings.defaults,
@@ -179,6 +180,7 @@ class AppState {
   final String? errorMessage;
   final List<AiHistoryEntry> aiHistory;
   final List<ForumPost> forumPosts;
+  final List<ForumPost> favoritedPosts;
   final LearningAnalytics? analyticsSnapshot;
   final List<Achievement> achievements;
   final LeaderboardResult? leaderboardSnapshot;
@@ -359,6 +361,7 @@ class AppState {
     bool clearError = false,
     List<AiHistoryEntry>? aiHistory,
     List<ForumPost>? forumPosts,
+    List<ForumPost>? favoritedPosts,
     LearningAnalytics? analyticsSnapshot,
     bool clearAnalyticsSnapshot = false,
     List<Achievement>? achievements,
@@ -407,6 +410,7 @@ class AppState {
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
       aiHistory: aiHistory ?? this.aiHistory,
       forumPosts: forumPosts ?? this.forumPosts,
+      favoritedPosts: favoritedPosts ?? this.favoritedPosts,
       analyticsSnapshot: clearAnalyticsSnapshot
           ? null
           : analyticsSnapshot ?? this.analyticsSnapshot,

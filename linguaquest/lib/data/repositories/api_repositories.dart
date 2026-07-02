@@ -846,6 +846,17 @@ class ApiForumRepository implements ForumRepository {
       },
     );
   }
+
+  @override
+  Future<List<ForumPost>> listFavoritedPosts() async {
+    final response =
+        await _client.dio.get<Map<String, dynamic>>('/forum/favorites');
+    final posts = response.data!['posts'] as List<dynamic>? ?? const [];
+    return posts
+        .whereType<Map>()
+        .map((item) => ForumPost.fromJson(Map<String, dynamic>.from(item)))
+        .toList();
+  }
 }
 
 class ApiAnalyticsRepository implements AnalyticsRepository {

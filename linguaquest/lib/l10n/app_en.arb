@@ -290,6 +290,8 @@
   "discoverLuckyDrawCost": "30 XP per draw; rare probability displayed transparently, fragments given even without a prize.",
   "discoverCommunityPosts": "Community Posts",
   "discoverCommunityPostsSubtitle": "Community",
+  "discoverMyFavorites": "My Favorites",
+  "favoritesEmpty": "You haven't favorited any posts yet.",
   "communityFilterAll": "All",
   "communityTagGrammar": "Grammar",
   "communityTagVocabulary": "Vocabulary",

@@ -868,6 +868,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get discoverCommunityPostsSubtitle => '社区动态';
 
   @override
+  String get discoverMyFavorites => '我的收藏';
+
+  @override
+  String get favoritesEmpty => '你还没有收藏任何帖子。';
+
+  @override
   String get communityFilterAll => '全部';
 
   @override

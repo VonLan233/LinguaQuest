@@ -1448,6 +1448,19 @@ class MockForumRepository implements ForumRepository {
   Future<void> reportPost(String postId, String reason, {String? detail}) async {
     // No-op in mock — report acknowledged silently.
   }
+
+  @override
+  Future<List<ForumPost>> listFavoritedPosts() async {
+    return _posts
+        .where((post) => _favoritedPostIds.contains(post.id))
+        .map(
+          (post) => post.copyWith(
+            isLiked: _likedPostIds.contains(post.id),
+            isFavorited: true,
+          ),
+        )
+        .toList();
+  }
 }
 
 List<ForumPost> _buildSeedPosts() => [

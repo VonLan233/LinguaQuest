@@ -290,6 +290,8 @@
   "discoverLuckyDrawCost": "消耗 30 积分抽一次；稀有概率透明展示，未中奖也给碎片。",
   "discoverCommunityPosts": "社区帖子",
   "discoverCommunityPostsSubtitle": "社区动态",
+  "discoverMyFavorites": "我的收藏",
+  "favoritesEmpty": "你还没有收藏任何帖子。",
   "communityFilterAll": "全部",
   "communityTagGrammar": "语法",
   "communityTagVocabulary": "词汇",

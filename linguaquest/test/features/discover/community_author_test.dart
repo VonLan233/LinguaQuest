@@ -62,6 +62,9 @@ class _SinglePostRepo implements ForumRepository {
 
   @override
   Future<void> reportPost(String postId, String reason, {String? detail}) async {}
+
+  @override
+  Future<List<ForumPost>> listFavoritedPosts() async => const [];
 }
 
 Widget _buildHarness({required ForumRepository repo}) {

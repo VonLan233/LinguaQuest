@@ -2764,6 +2764,16 @@ class AppController extends Notifier<AppState> {
     }
   }
 
+  Future<void> refreshFavoritedPosts() async {
+    try {
+      final posts = await _forumRepository.listFavoritedPosts();
+      if (!ref.mounted) return;
+      state = state.copyWith(favoritedPosts: posts);
+    } catch (error) {
+      debugPrint('Failed to refresh favorited posts: $error');
+    }
+  }
+
   Future<ForumPost?> createForumPost({
     required String title,
     required String body,

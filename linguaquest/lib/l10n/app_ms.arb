@@ -290,6 +290,8 @@
   "discoverLuckyDrawCost": "30 XP setiap cabutan; kebarangkalian jarang dipaparkan dengan telus, serpihan diberi walaupun tanpa hadiah.",
   "discoverCommunityPosts": "Siaran Komuniti",
   "discoverCommunityPostsSubtitle": "Daftar masuk pembelajaran dan perbincangan kesilapan dipaparkan di sini.",
+  "discoverMyFavorites": "Kegemaran Saya",
+  "favoritesEmpty": "Anda belum menandai sebarang kiriman.",
   "communityFilterAll": "Semua",
   "communityTagGrammar": "Tatabahasa",
   "communityTagVocabulary": "Kosa kata",

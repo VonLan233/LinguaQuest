@@ -929,6 +929,12 @@ class AppLocalizationsMs extends AppLocalizations {
       'Daftar masuk pembelajaran dan perbincangan kesilapan dipaparkan di sini.';
 
   @override
+  String get discoverMyFavorites => 'Kegemaran Saya';
+
+  @override
+  String get favoritesEmpty => 'Anda belum menandai sebarang kiriman.';
+
+  @override
   String get communityFilterAll => 'Semua';
 
   @override

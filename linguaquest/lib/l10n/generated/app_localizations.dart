@@ -1774,6 +1774,18 @@ abstract class AppLocalizations {
   /// **'Community'**
   String get discoverCommunityPostsSubtitle;
 
+  /// No description provided for @discoverMyFavorites.
+  ///
+  /// In en, this message translates to:
+  /// **'My Favorites'**
+  String get discoverMyFavorites;
+
+  /// No description provided for @favoritesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t favorited any posts yet.'**
+  String get favoritesEmpty;
+
   /// No description provided for @communityFilterAll.
   ///
   /// In en, this message translates to:
