@@ -315,6 +315,8 @@ Router buildRouter(
       if (existing != null) {
         return jsonResponse({'word': wordDto(existing)}, status: 200);
       }
+      // ponytail: 并发下两个请求可能同时通过查重再插入，唯一索引会让第二个 INSERT 抛冲突 500。
+      // 单用户 coursework 概率极低；多端并发写时需在 upsertCustomWord 外层 catch 唯一冲突并回查返回既有。
       final word = await database.upsertCustomWord(uid, {...body, 'id': id});
       return jsonResponse({'word': wordDto(word)}, status: 201);
     });
@@ -328,6 +330,9 @@ Router buildRouter(
         return jsonResponse({'error': 'word not found'}, status: 404);
       }
       final merged = {...wordDto(existing), ...body, 'id': id};
+      // ponytail: 若将 word 改为与同 uid 另一行相同（大小写不敏感），upsertCustomWord
+      // 的 ON CONFLICT(id) UPDATE 会触发唯一索引冲突 500；coursework 单账户场景极低概率，
+      // 如需保护需在 upsertCustomWord 捕获 unique violation 后返回 400/409。
       final word = await database.upsertCustomWord(uid, merged, id: id);
       return jsonResponse({'word': wordDto(word)});
     });
