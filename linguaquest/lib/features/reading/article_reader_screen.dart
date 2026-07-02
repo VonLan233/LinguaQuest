@@ -67,6 +67,26 @@ class _ArticleReaderScreenState extends ConsumerState<ArticleReaderScreen> {
     return _ReaderData(article: article, resume: resume);
   }
 
+  // #C3: 答题时隐藏正文翻译，答题结束后恢复；#D: 完成后 pop 回列表
+  Future<void> _startComprehension(Article article) async {
+    final prevShowTranslation = _showTranslation;
+    setState(() => _showTranslation = false);
+    final result = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (sheetContext) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
+        ),
+        child: ReadingComprehensionSheet(article: article),
+      ),
+    );
+    if (!mounted) return;
+    setState(() => _showTranslation = prevShowTranslation);
+    if (result == true) Navigator.of(context).pop();
+  }
+
   /// Persist progress for [paragraphIndex] (debounced by index change).
   void _saveProgress(String articleId, int paragraphIndex, int paragraphCount) {
     if (paragraphIndex <= _lastSavedIndex) return;
@@ -110,6 +130,7 @@ class _ArticleReaderScreenState extends ConsumerState<ArticleReaderScreen> {
             onToggleHighlight: (v) => setState(() => _showHighlight = v),
             onParagraphSeen: (index) =>
                 _saveProgress(article.id, index, article.paragraphs.length),
+            onStartComprehension: () => _startComprehension(article),
           );
         },
       ),
@@ -134,6 +155,7 @@ class _ReaderBody extends ConsumerWidget {
     required this.onToggleReading,
     required this.onToggleHighlight,
     required this.onParagraphSeen,
+    required this.onStartComprehension,
   });
 
   final Article article;
@@ -144,6 +166,7 @@ class _ReaderBody extends ConsumerWidget {
   final ValueChanged<bool> onToggleReading;
   final ValueChanged<bool> onToggleHighlight;
   final ValueChanged<int> onParagraphSeen;
+  final Future<void> Function() onStartComprehension;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -248,7 +271,7 @@ class _ReaderBody extends ConsumerWidget {
                 icon: AppIcons.playlistAddCheck,
                 onPressed: article.comprehension.isEmpty
                     ? null
-                    : () => _startComprehension(context),
+                    : onStartComprehension,
               ),
               if (article.comprehension.isEmpty) ...[
                 const SizedBox(height: AppTokens.s8),
@@ -304,19 +327,6 @@ class _ReaderBody extends ConsumerWidget {
     );
   }
 
-  Future<void> _startComprehension(BuildContext context) async {
-    await showModalBottomSheet<bool>(
-      context: context,
-      isScrollControlled: true,
-      showDragHandle: true,
-      builder: (sheetContext) => Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
-        ),
-        child: ReadingComprehensionSheet(article: article),
-      ),
-    );
-  }
 }
 
 /// A small legend mapping highlight colors to word classes (P3d).

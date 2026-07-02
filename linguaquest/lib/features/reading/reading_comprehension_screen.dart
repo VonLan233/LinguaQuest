@@ -146,9 +146,23 @@ class _ReadingComprehensionSheetState
           ),
           const SizedBox(height: AppTokens.s16),
           AppCard(
-            child: Text(
-              question.prompt,
-              style: Theme.of(context).textTheme.titleLarge,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  question.prompt,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                if (question.promptEn != null) ...[
+                  const SizedBox(height: AppTokens.s4),
+                  Text(
+                    question.promptEn!,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
           const SizedBox(height: AppTokens.s16),
@@ -157,7 +171,9 @@ class _ReadingComprehensionSheetState
               padding: const EdgeInsets.only(bottom: AppTokens.s12),
               child: WordChoiceButton(
                 letter: String.fromCharCode(65 + i),
-                text: question.options[i],
+                text: question.optionsEn != null && i < question.optionsEn!.length
+                    ? '${question.options[i]}  ·  ${question.optionsEn![i]}'
+                    : question.options[i],
                 state: _optionState(question, question.options[i]),
                 onTap: _checked ? null : () => _judge(question.options[i]),
               ),
@@ -166,7 +182,9 @@ class _ReadingComprehensionSheetState
             const SizedBox(height: AppTokens.s8),
             _FeedbackCard(
               isCorrect: _correctness[_index],
-              explanation: question.explanation,
+              explanation: question.explanationEn != null
+                  ? '${question.explanation}\n${question.explanationEn!}'
+                  : question.explanation,
               answer: question.answer,
             ),
             const SizedBox(height: AppTokens.s16),
