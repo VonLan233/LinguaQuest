@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:linguaquest/core/services/tts_completion.dart';
 
@@ -30,6 +32,17 @@ void main() {
       registerError: (cb) => onErr = cb,
       speak: () async => onErr!(),
       timeout: const Duration(seconds: 1),
+    );
+    expect(result, isFalse);
+  });
+
+  test('speak Future 永不 resolve → 超时返回 false', () async {
+    final neverCompletes = Completer<void>();
+    final result = await awaitTtsCompletion(
+      registerCompletion: (_) {},
+      registerError: (_) {},
+      speak: () => neverCompletes.future,
+      timeout: const Duration(milliseconds: 50),
     );
     expect(result, isFalse);
   });
