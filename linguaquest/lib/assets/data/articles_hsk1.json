@@ -33,11 +33,36 @@
         }
       ],
       "vocab": [
-        {"surface": "起来", "reading": "qǐ lái", "meaning": "to get up", "role": "key"},
-        {"surface": "早饭", "reading": "zǎo fàn", "meaning": "breakfast", "role": "key"},
-        {"surface": "学校", "reading": "xué xiào", "meaning": "school", "role": "key"},
-        {"surface": "朋友", "reading": "péng you", "meaning": "friend", "role": "key"},
-        {"surface": "睡觉", "reading": "shuì jiào", "meaning": "to sleep", "role": "key"}
+        {
+          "surface": "起来",
+          "reading": "qǐ lái",
+          "meaning": "to get up",
+          "role": "key"
+        },
+        {
+          "surface": "早饭",
+          "reading": "zǎo fàn",
+          "meaning": "breakfast",
+          "role": "key"
+        },
+        {
+          "surface": "学校",
+          "reading": "xué xiào",
+          "meaning": "school",
+          "role": "key"
+        },
+        {
+          "surface": "朋友",
+          "reading": "péng you",
+          "meaning": "friend",
+          "role": "key"
+        },
+        {
+          "surface": "睡觉",
+          "reading": "shuì jiào",
+          "meaning": "to sleep",
+          "role": "key"
+        }
       ],
       "comprehension": [
         {
@@ -45,27 +70,62 @@
           "type": "meaningChoice",
           "kind": "detail",
           "prompt": "“我”每天几点起来？",
-          "options": ["六点", "七点", "八点", "十点"],
+          "options": [
+            "六点",
+            "七点",
+            "八点",
+            "十点"
+          ],
           "answer": "七点",
-          "explanation": "文章说“我每天七点起来”。"
+          "explanation": "文章说“我每天七点起来”。",
+          "promptEn": "What time does the writer get up every day?",
+          "optionsEn": [
+            "6 o'clock",
+            "7 o'clock",
+            "8 o'clock",
+            "10 o'clock"
+          ],
+          "explanationEn": "The text says 'I get up at 7 every day.'"
         },
         {
           "id": "zh_hsk1_life_001_q2",
           "type": "meaningChoice",
           "kind": "detail",
           "prompt": "中午“我”和谁一起吃饭？",
-          "options": ["老师", "家人", "朋友", "一个人"],
+          "options": [
+            "老师",
+            "家人",
+            "朋友",
+            "一个人"
+          ],
           "answer": "朋友",
-          "explanation": "文章说“中午我和朋友一起吃饭”。"
+          "explanation": "文章说“中午我和朋友一起吃饭”。",
+          "promptEn": "Who does the writer have lunch with?",
+          "optionsEn": [
+            "Teacher",
+            "Family",
+            "Friends",
+            "Alone"
+          ],
+          "explanationEn": "The text says 'At noon I eat with friends.'"
         },
         {
           "id": "zh_hsk1_life_001_q3",
           "type": "meaningChoice",
           "kind": "trueFalse",
           "prompt": "“我”晚上十点睡觉。这句话对吗？",
-          "options": ["对", "不对"],
+          "options": [
+            "对",
+            "不对"
+          ],
           "answer": "对",
-          "explanation": "文章说“晚上我看书，十点睡觉”。"
+          "explanation": "文章说“晚上我看书，十点睡觉”。",
+          "promptEn": "The writer goes to bed at 10 pm. Is this correct?",
+          "optionsEn": [
+            "Correct",
+            "Incorrect"
+          ],
+          "explanationEn": "The text says 'In the evening I read, and sleep at 10.'"
         }
       ]
     },
@@ -100,11 +160,36 @@
         }
       ],
       "vocab": [
-        {"surface": "明天", "reading": "míng tiān", "meaning": "tomorrow", "role": "key"},
-        {"surface": "飞机", "reading": "fēi jī", "meaning": "airplane", "role": "key"},
-        {"surface": "漂亮", "reading": "piào liang", "meaning": "beautiful", "role": "key"},
-        {"surface": "东西", "reading": "dōng xi", "meaning": "things", "role": "key"},
-        {"surface": "高兴", "reading": "gāo xìng", "meaning": "happy", "role": "key"}
+        {
+          "surface": "明天",
+          "reading": "míng tiān",
+          "meaning": "tomorrow",
+          "role": "key"
+        },
+        {
+          "surface": "飞机",
+          "reading": "fēi jī",
+          "meaning": "airplane",
+          "role": "key"
+        },
+        {
+          "surface": "漂亮",
+          "reading": "piào liang",
+          "meaning": "beautiful",
+          "role": "key"
+        },
+        {
+          "surface": "东西",
+          "reading": "dōng xi",
+          "meaning": "things",
+          "role": "key"
+        },
+        {
+          "surface": "高兴",
+          "reading": "gāo xìng",
+          "meaning": "happy",
+          "role": "key"
+        }
       ],
       "comprehension": [
         {
@@ -112,27 +197,62 @@
           "type": "meaningChoice",
           "kind": "detail",
           "prompt": "“我”和谁一起去北京？",
-          "options": ["朋友", "妈妈", "老师", "哥哥"],
+          "options": [
+            "朋友",
+            "妈妈",
+            "老师",
+            "哥哥"
+          ],
           "answer": "妈妈",
-          "explanation": "文章说“我和妈妈去北京”。"
+          "explanation": "文章说“我和妈妈去北京”。",
+          "promptEn": "Who does the writer go to Beijing with?",
+          "optionsEn": [
+            "Friend",
+            "Mother",
+            "Teacher",
+            "Older brother"
+          ],
+          "explanationEn": "The text says 'I go to Beijing with my mother.'"
         },
         {
           "id": "zh_hsk1_travel_001_q2",
           "type": "meaningChoice",
           "kind": "detail",
           "prompt": "他们怎么去北京？",
-          "options": ["坐飞机", "坐火车", "开车", "走路"],
+          "options": [
+            "坐飞机",
+            "坐火车",
+            "开车",
+            "走路"
+          ],
           "answer": "坐飞机",
-          "explanation": "文章说“我们坐飞机去”。"
+          "explanation": "文章说“我们坐飞机去”。",
+          "promptEn": "How do they go to Beijing?",
+          "optionsEn": [
+            "By plane",
+            "By train",
+            "By car",
+            "On foot"
+          ],
+          "explanationEn": "The text says 'We go by plane.'"
         },
         {
           "id": "zh_hsk1_travel_001_q3",
           "type": "meaningChoice",
           "kind": "trueFalse",
           "prompt": "北京很小。这句话对吗？",
-          "options": ["对", "不对"],
+          "options": [
+            "对",
+            "不对"
+          ],
           "answer": "不对",
-          "explanation": "文章说“北京很大”。"
+          "explanation": "文章说“北京很大”。",
+          "promptEn": "Beijing is very small. Is this correct?",
+          "optionsEn": [
+            "Correct",
+            "Incorrect"
+          ],
+          "explanationEn": "The text says 'Beijing is very big.'"
         }
       ]
     },
@@ -167,10 +287,30 @@
         }
       ],
       "vocab": [
-        {"surface": "老师", "reading": "lǎo shī", "meaning": "teacher", "role": "key"},
-        {"surface": "汉语", "reading": "hàn yǔ", "meaning": "Chinese (language)", "role": "key"},
-        {"surface": "喜欢", "reading": "xǐ huan", "meaning": "to like", "role": "key"},
-        {"surface": "学", "reading": "xué", "meaning": "to learn", "role": "key"}
+        {
+          "surface": "老师",
+          "reading": "lǎo shī",
+          "meaning": "teacher",
+          "role": "key"
+        },
+        {
+          "surface": "汉语",
+          "reading": "hàn yǔ",
+          "meaning": "Chinese (language)",
+          "role": "key"
+        },
+        {
+          "surface": "喜欢",
+          "reading": "xǐ huan",
+          "meaning": "to like",
+          "role": "key"
+        },
+        {
+          "surface": "学",
+          "reading": "xué",
+          "meaning": "to learn",
+          "role": "key"
+        }
       ],
       "comprehension": [
         {
@@ -178,27 +318,62 @@
           "type": "meaningChoice",
           "kind": "detail",
           "prompt": "老师姓什么？",
-          "options": ["王", "李", "张", "陈"],
+          "options": [
+            "王",
+            "李",
+            "张",
+            "陈"
+          ],
           "answer": "王",
-          "explanation": "文章说“她叫王老师”。"
+          "explanation": "文章说“她叫王老师”。",
+          "promptEn": "What is the teacher's surname?",
+          "optionsEn": [
+            "Wang",
+            "Li",
+            "Zhang",
+            "Chen"
+          ],
+          "explanationEn": "The text says 'She is called Teacher Wang.'"
         },
         {
           "id": "zh_hsk1_campus_001_q2",
           "type": "meaningChoice",
           "kind": "detail",
           "prompt": "老师说汉语说得怎么样？",
-          "options": ["很快", "很慢", "很小", "很大"],
+          "options": [
+            "很快",
+            "很慢",
+            "很小",
+            "很大"
+          ],
           "answer": "很慢",
-          "explanation": "文章说“她说得很慢”。"
+          "explanation": "文章说“她说得很慢”。",
+          "promptEn": "How does the teacher speak Chinese?",
+          "optionsEn": [
+            "Very fast",
+            "Very slow",
+            "Very quiet",
+            "Very loud"
+          ],
+          "explanationEn": "The text says 'She speaks very slowly.'"
         },
         {
           "id": "zh_hsk1_campus_001_q3",
           "type": "meaningChoice",
           "kind": "trueFalse",
           "prompt": "学生们不喜欢老师。这句话对吗？",
-          "options": ["对", "不对"],
+          "options": [
+            "对",
+            "不对"
+          ],
           "answer": "不对",
-          "explanation": "文章说“我们都很喜欢她”。"
+          "explanation": "文章说“我们都很喜欢她”。",
+          "promptEn": "The students do not like the teacher. Is this correct?",
+          "optionsEn": [
+            "Correct",
+            "Incorrect"
+          ],
+          "explanationEn": "The text says 'We all like her very much.'"
         }
       ]
     }

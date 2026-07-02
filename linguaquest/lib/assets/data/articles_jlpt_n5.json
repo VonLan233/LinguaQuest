@@ -33,11 +33,36 @@
         }
       ],
       "vocab": [
-        {"surface": "おきます", "reading": "okimasu", "meaning": "to wake up", "role": "key"},
-        {"surface": "あさごはん", "reading": "asagohan", "meaning": "breakfast", "role": "key"},
-        {"surface": "たまご", "reading": "tamago", "meaning": "egg", "role": "key"},
-        {"surface": "でんしゃ", "reading": "densha", "meaning": "train", "role": "key"},
-        {"surface": "かいしゃ", "reading": "kaisha", "meaning": "company", "role": "key"}
+        {
+          "surface": "おきます",
+          "reading": "okimasu",
+          "meaning": "to wake up",
+          "role": "key"
+        },
+        {
+          "surface": "あさごはん",
+          "reading": "asagohan",
+          "meaning": "breakfast",
+          "role": "key"
+        },
+        {
+          "surface": "たまご",
+          "reading": "tamago",
+          "meaning": "egg",
+          "role": "key"
+        },
+        {
+          "surface": "でんしゃ",
+          "reading": "densha",
+          "meaning": "train",
+          "role": "key"
+        },
+        {
+          "surface": "かいしゃ",
+          "reading": "kaisha",
+          "meaning": "company",
+          "role": "key"
+        }
       ],
       "comprehension": [
         {
@@ -45,27 +70,62 @@
           "type": "meaningChoice",
           "kind": "detail",
           "prompt": "わたしは まいあさ なんじに おきますか。",
-          "options": ["ごじ", "ろくじ", "しちじ", "はちじ"],
+          "options": [
+            "ごじ",
+            "ろくじ",
+            "しちじ",
+            "はちじ"
+          ],
           "answer": "ろくじ",
-          "explanation": "「まいあさ ろくじに おきます」と あります。"
+          "explanation": "「まいあさ ろくじに おきます」と あります。",
+          "promptEn": "What time do I get up every morning?",
+          "optionsEn": [
+            "5 o'clock",
+            "6 o'clock",
+            "7 o'clock",
+            "8 o'clock"
+          ],
+          "explanationEn": "It says 'I get up at 6 every morning.'"
         },
         {
           "id": "ja_n5_life_001_q2",
           "type": "meaningChoice",
           "kind": "detail",
           "prompt": "あさごはんは なんですか。",
-          "options": ["ごはんと さかな", "パンと たまご", "ラーメン", "サラダ"],
+          "options": [
+            "ごはんと さかな",
+            "パンと たまご",
+            "ラーメン",
+            "サラダ"
+          ],
           "answer": "パンと たまご",
-          "explanation": "「あさごはんは パンと たまごです」と あります。"
+          "explanation": "「あさごはんは パンと たまごです」と あります。",
+          "promptEn": "What is breakfast?",
+          "optionsEn": [
+            "Rice and fish",
+            "Bread and eggs",
+            "Ramen",
+            "Salad"
+          ],
+          "explanationEn": "It says 'Breakfast is bread and eggs.'"
         },
         {
           "id": "ja_n5_life_001_q3",
           "type": "meaningChoice",
           "kind": "trueFalse",
           "prompt": "わたしは くるまで かいしゃに いきます。ただしいですか。",
-          "options": ["はい", "いいえ"],
+          "options": [
+            "はい",
+            "いいえ"
+          ],
           "answer": "いいえ",
-          "explanation": "「でんしゃで かいしゃに いきます」と あります。"
+          "explanation": "「でんしゃで かいしゃに いきます」と あります。",
+          "promptEn": "I go to work by car. Is this correct?",
+          "optionsEn": [
+            "Yes",
+            "No"
+          ],
+          "explanationEn": "It says 'I go to work by train.'"
         }
       ]
     },
@@ -100,11 +160,36 @@
         }
       ],
       "vocab": [
-        {"surface": "らいしゅう", "reading": "raishuu", "meaning": "next week", "role": "key"},
-        {"surface": "ともだち", "reading": "tomodachi", "meaning": "friend", "role": "key"},
-        {"surface": "しんかんせん", "reading": "shinkansen", "meaning": "bullet train", "role": "key"},
-        {"surface": "おてら", "reading": "otera", "meaning": "temple", "role": "key"},
-        {"surface": "きれい", "reading": "kirei", "meaning": "beautiful, clean", "role": "key"}
+        {
+          "surface": "らいしゅう",
+          "reading": "raishuu",
+          "meaning": "next week",
+          "role": "key"
+        },
+        {
+          "surface": "ともだち",
+          "reading": "tomodachi",
+          "meaning": "friend",
+          "role": "key"
+        },
+        {
+          "surface": "しんかんせん",
+          "reading": "shinkansen",
+          "meaning": "bullet train",
+          "role": "key"
+        },
+        {
+          "surface": "おてら",
+          "reading": "otera",
+          "meaning": "temple",
+          "role": "key"
+        },
+        {
+          "surface": "きれい",
+          "reading": "kirei",
+          "meaning": "beautiful, clean",
+          "role": "key"
+        }
       ],
       "comprehension": [
         {
@@ -112,27 +197,62 @@
           "type": "meaningChoice",
           "kind": "detail",
           "prompt": "だれと きょうとへ いきますか。",
-          "options": ["かぞく", "ともだち", "せんせい", "ひとり"],
+          "options": [
+            "かぞく",
+            "ともだち",
+            "せんせい",
+            "ひとり"
+          ],
           "answer": "ともだち",
-          "explanation": "「ともだちと きょうとへ いきます」と あります。"
+          "explanation": "「ともだちと きょうとへ いきます」と あります。",
+          "promptEn": "Who do you go to Kyoto with?",
+          "optionsEn": [
+            "Family",
+            "Friend",
+            "Teacher",
+            "Alone"
+          ],
+          "explanationEn": "It says 'I go to Kyoto with a friend.'"
         },
         {
           "id": "ja_n5_travel_001_q2",
           "type": "meaningChoice",
           "kind": "detail",
           "prompt": "なにで きょうとへ いきますか。",
-          "options": ["バス", "ひこうき", "しんかんせん", "くるま"],
+          "options": [
+            "バス",
+            "ひこうき",
+            "しんかんせん",
+            "くるま"
+          ],
           "answer": "しんかんせん",
-          "explanation": "「しんかんせんで いきます」と あります。"
+          "explanation": "「しんかんせんで いきます」と あります。",
+          "promptEn": "How do you go to Kyoto?",
+          "optionsEn": [
+            "Bus",
+            "Airplane",
+            "Bullet train",
+            "Car"
+          ],
+          "explanationEn": "It says 'I go by bullet train.'"
         },
         {
           "id": "ja_n5_travel_001_q3",
           "type": "meaningChoice",
           "kind": "trueFalse",
           "prompt": "きょうとには おてらが たくさん あります。ただしいですか。",
-          "options": ["はい", "いいえ"],
+          "options": [
+            "はい",
+            "いいえ"
+          ],
           "answer": "はい",
-          "explanation": "「ふるい おてらが たくさん あります」と あります。"
+          "explanation": "「ふるい おてらが たくさん あります」と あります。",
+          "promptEn": "There are many temples in Kyoto. Is this correct?",
+          "optionsEn": [
+            "Yes",
+            "No"
+          ],
+          "explanationEn": "It says 'There are many old temples.'"
         }
       ]
     }
