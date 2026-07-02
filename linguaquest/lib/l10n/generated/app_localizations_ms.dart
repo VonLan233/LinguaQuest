@@ -154,7 +154,7 @@ class AppLocalizationsMs extends AppLocalizations {
   String get commonTimesSuffix => ' kali';
 
   @override
-  String get commonViewAll => 'View all';
+  String get commonViewAll => 'Lihat semua';
 
   @override
   String get authRegisterTitle => 'Daftar';

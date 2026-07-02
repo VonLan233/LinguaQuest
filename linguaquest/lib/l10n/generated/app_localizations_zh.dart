@@ -153,7 +153,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get commonTimesSuffix => ' 次';
 
   @override
-  String get commonViewAll => 'View all';
+  String get commonViewAll => '查看全部';
 
   @override
   String get authRegisterTitle => '注册';

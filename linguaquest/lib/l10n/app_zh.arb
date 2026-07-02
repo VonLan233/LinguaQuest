@@ -51,6 +51,7 @@
   "commonAlreadyAdded": "已加入",
   "commonWrongPrefix": "错 ",
   "commonTimesSuffix": " 次",
+  "commonViewAll": "查看全部",
 
   "authRegisterTitle": "注册",
   "authLoginTitle": "登录",
