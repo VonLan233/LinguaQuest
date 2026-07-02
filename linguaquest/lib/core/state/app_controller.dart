@@ -858,12 +858,18 @@ class AppController extends Notifier<AppState> {
   }) async {
     final user = state.user;
     if (user == null) return false;
+    final trimmed = word.trim();
+    // #G: 同一个词已在生词本则不重复添加（幂等）。
+    final dup = state.customWords.any(
+      (w) => w.word.trim().toLowerCase() == trimmed.toLowerCase(),
+    );
+    if (dup) return true;
     return _run(() async {
       final created = await _customWordRepository.create(
         CustomWord.create(
           id: 'word-${DateTime.now().microsecondsSinceEpoch}',
           uid: user.uid,
-          word: word,
+          word: trimmed,
           meaning: meaning,
           exampleSentence: exampleSentence,
           note: note,
