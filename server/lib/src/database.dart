@@ -436,6 +436,20 @@ CREATE INDEX IF NOT EXISTS idx_custom_words_uid_next_review
 ON custom_words (uid, next_review_at)
 ''');
 
+    // #G: 清理历史重复生词（保留每个 (uid, lower(word)) 最早一条），再建唯一索引。
+    await connection.execute('''
+DELETE FROM custom_words a
+USING custom_words b
+WHERE a.uid = b.uid
+  AND LOWER(a.word) = LOWER(b.word)
+  AND (a.created_at > b.created_at
+       OR (a.created_at = b.created_at AND a.id > b.id))
+''');
+    await connection.execute('''
+CREATE UNIQUE INDEX IF NOT EXISTS idx_custom_words_uid_word_unique
+ON custom_words (uid, LOWER(word))
+''');
+
     await connection.execute('''
 DO \$\$
 BEGIN
@@ -853,6 +867,17 @@ ORDER BY ${dueOnly ? 'next_review_at ASC, updated_at DESC' : 'updated_at DESC'}
     final rows = await connection.execute(
       Sql.named('SELECT * FROM custom_words WHERE uid=@uid AND id=@id LIMIT 1'),
       parameters: {'uid': uid, 'id': id},
+    );
+    if (rows.isEmpty) return null;
+    return rows.first.toColumnMap();
+  }
+
+  Future<Map<String, dynamic>?> customWordByWord(String uid, String word) async {
+    final rows = await connection.execute(
+      Sql.named(
+        'SELECT * FROM custom_words WHERE uid=@uid AND LOWER(word)=LOWER(@word) LIMIT 1',
+      ),
+      parameters: {'uid': uid, 'word': word},
     );
     if (rows.isEmpty) return null;
     return rows.first.toColumnMap();

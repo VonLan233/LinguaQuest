@@ -311,6 +311,10 @@ Router buildRouter(
           'error': 'word and meaning are required',
         }, status: 400);
       }
+      final existing = await database.customWordByWord(uid, (body['word'] as String).trim());
+      if (existing != null) {
+        return jsonResponse({'word': wordDto(existing)}, status: 200);
+      }
       final word = await database.upsertCustomWord(uid, {...body, 'id': id});
       return jsonResponse({'word': wordDto(word)}, status: 201);
     });
