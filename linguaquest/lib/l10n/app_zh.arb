@@ -52,6 +52,7 @@
   "commonWrongPrefix": "错 ",
   "commonTimesSuffix": " 次",
   "commonViewAll": "查看全部",
+  "commonView": "查看",
 
   "authRegisterTitle": "注册",
   "authLoginTitle": "登录",

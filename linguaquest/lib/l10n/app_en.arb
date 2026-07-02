@@ -52,6 +52,7 @@
   "commonWrongPrefix": "Wrong ",
   "commonTimesSuffix": " times",
   "commonViewAll": "View all",
+  "commonView": "View",
 
   "authRegisterTitle": "Register",
   "authLoginTitle": "Login",

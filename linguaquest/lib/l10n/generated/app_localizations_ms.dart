@@ -157,6 +157,9 @@ class AppLocalizationsMs extends AppLocalizations {
   String get commonViewAll => 'Lihat semua';
 
   @override
+  String get commonView => 'Lihat';
+
+  @override
   String get authRegisterTitle => 'Daftar';
 
   @override

@@ -394,6 +394,12 @@ abstract class AppLocalizations {
   /// **'View all'**
   String get commonViewAll;
 
+  /// No description provided for @commonView.
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get commonView;
+
   /// No description provided for @authRegisterTitle.
   ///
   /// In en, this message translates to:

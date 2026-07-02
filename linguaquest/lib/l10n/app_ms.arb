@@ -52,6 +52,7 @@
   "commonWrongPrefix": "Salah ",
   "commonTimesSuffix": " kali",
   "commonViewAll": "Lihat semua",
+  "commonView": "Lihat",
 
   "authRegisterTitle": "Daftar",
   "authLoginTitle": "Log Masuk",

@@ -157,6 +157,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commonViewAll => 'View all';
 
   @override
+  String get commonView => 'View';
+
+  @override
   String get authRegisterTitle => 'Register';
 
   @override

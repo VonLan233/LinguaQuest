@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/services/pronunciation_service.dart';
@@ -814,6 +815,7 @@ class _WordSheet extends ConsumerWidget {
             icon: AppIcons.bookmark,
             onPressed: () async {
               final messenger = ScaffoldMessenger.of(context);
+              final router = GoRouter.of(context);
               final navigator = Navigator.of(context);
               await ref.read(appControllerProvider.notifier).addCustomWord(
                     word: surface,
@@ -825,7 +827,13 @@ class _WordSheet extends ConsumerWidget {
                   );
               navigator.pop();
               messenger.showSnackBar(
-                SnackBar(content: Text(l10n.readingWordAdded)),
+                SnackBar(
+                  content: Text(l10n.readingWordAdded),
+                  action: SnackBarAction(
+                    label: l10n.commonView,
+                    onPressed: () => router.push('/custom-words'),
+                  ),
+                ),
               );
             },
           ),

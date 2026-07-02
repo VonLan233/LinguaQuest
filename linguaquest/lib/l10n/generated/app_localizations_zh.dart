@@ -156,6 +156,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get commonViewAll => '查看全部';
 
   @override
+  String get commonView => '查看';
+
+  @override
   String get authRegisterTitle => '注册';
 
   @override
