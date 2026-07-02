@@ -1267,6 +1267,8 @@ Router buildRouter(
     return _protected(config, request, (uid) async {
       final posts = await database.listFavoritedPostsByUser(uid);
       final result = <Map<String, dynamic>>[];
+      // ponytail: O(n) hasLiked 逐帖查询；收藏列表 n 通常极小，不预优化。
+      // 升级路径：批量 SELECT post_id FROM forum_likes WHERE user_id=? AND post_id = ANY(?)
       for (final post in posts) {
         final postId = post['id'].toString();
         final liked = await database.hasLiked(uid, postId);
