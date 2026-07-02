@@ -388,6 +388,12 @@ abstract class AppLocalizations {
   /// **' times'**
   String get commonTimesSuffix;
 
+  /// No description provided for @commonViewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'View all'**
+  String get commonViewAll;
+
   /// No description provided for @authRegisterTitle.
   ///
   /// In en, this message translates to:

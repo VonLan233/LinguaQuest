@@ -262,6 +262,15 @@ class HomeScreen extends ConsumerWidget {
                 ...state.weakWords
                     .take(3)
                     .map((word) => _WeakWordLink(word: word)),
+                if (state.weakWords.length > 3)
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton(
+                      key: const ValueKey('home-see-all-mistakes'),
+                      onPressed: () => context.push('/mistake-book'),
+                      child: Text(l10n.commonViewAll),
+                    ),
+                  ),
               ],
             ],
           ),

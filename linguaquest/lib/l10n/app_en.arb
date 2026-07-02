@@ -51,6 +51,7 @@
   "commonAlreadyAdded": "Already added",
   "commonWrongPrefix": "Wrong ",
   "commonTimesSuffix": " times",
+  "commonViewAll": "View all",
 
   "authRegisterTitle": "Register",
   "authLoginTitle": "Login",

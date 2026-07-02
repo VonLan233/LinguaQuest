@@ -154,6 +154,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commonTimesSuffix => ' times';
 
   @override
+  String get commonViewAll => 'View all';
+
+  @override
   String get authRegisterTitle => 'Register';
 
   @override
