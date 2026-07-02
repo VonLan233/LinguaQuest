@@ -109,7 +109,11 @@ class _ReadingListScreenState extends ConsumerState<ReadingListScreen> {
                     article: article,
                     language: language,
                     progress: data.progressById[article.id],
-                    onTap: () => context.push('/reading/${article.id}'),
+                    onTap: () => context
+                        .push('/reading/${article.id}')
+                        .then((_) {
+                      if (mounted) setState(() => _future = _load());
+                    }),
                   ),
                   const SizedBox(height: AppTokens.s12),
                 ],
