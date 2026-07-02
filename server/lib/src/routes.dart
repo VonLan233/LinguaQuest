@@ -1262,6 +1262,20 @@ Router buildRouter(
     },
   );
 
+  // 列出当前用户收藏的所有帖子
+  router.get('/forum/favorites', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final posts = await database.listFavoritedPostsByUser(uid);
+      final result = <Map<String, dynamic>>[];
+      for (final post in posts) {
+        final postId = post['id'].toString();
+        final liked = await database.hasLiked(uid, postId);
+        result.add(forumPostDto(post, isLiked: liked, isFavorited: true));
+      }
+      return jsonResponse({'posts': result});
+    });
+  });
+
   router.post('/reports', (Request request) async {
     return _protected(config, request, (uid) async {
       final body = await readJsonMap(request);

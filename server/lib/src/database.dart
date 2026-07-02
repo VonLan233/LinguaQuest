@@ -2269,6 +2269,24 @@ ORDER BY created_at ASC
     return rows.isNotEmpty;
   }
 
+  /// 返回用户收藏的所有已审核帖子，按创建时间倒序。
+  Future<List<Map<String, dynamic>>> listFavoritedPostsByUser(
+    String userId,
+  ) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT p.*, u.name AS author_name
+FROM forum_posts p
+JOIN forum_favorites f ON f.post_id = p.id
+LEFT JOIN users u ON u.id = p.author_id
+WHERE f.user_id = @userId AND p.status = 'approved'
+ORDER BY p.created_at DESC
+'''),
+      parameters: {'userId': userId},
+    );
+    return rows.map((r) => r.toColumnMap()).toList();
+  }
+
   static Map<String, dynamic> _forumPostRowToMap(dynamic row) {
     if (row is Map) return Map<String, dynamic>.from(row);
     final list = row as List;
