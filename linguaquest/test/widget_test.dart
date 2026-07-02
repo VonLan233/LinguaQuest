@@ -57,6 +57,17 @@ import 'package:linguaquest/features/wordbook/word_detail_screen.dart';
 import 'package:linguaquest/features/wordbook/wordbook_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// 生成给定 uid 的最小有效学习计划 JSON，供测试 mock SharedPreferences 使用。
+/// [dailyGoal] 默认为 10；需要与用户 profile 相符时可显式传入 profile.dailyGoal。
+String _studyPlanJsonForUid(String uid, {int dailyGoal = 10}) {
+  final plan = StudyPlan.defaultsFor(
+    uid: uid,
+    targetExam: 'HSK 1',
+    dailyGoal: dailyGoal,
+  );
+  return jsonEncode(plan.toJson());
+}
+
 void main() {
   test('default user display name localizes untouched defaults', () async {
     final en = await AppLocalizations.delegate.load(const Locale('en'));
@@ -109,6 +120,7 @@ void main() {
     );
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
+      'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(profile.uid),
     });
 
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
@@ -153,6 +165,8 @@ void main() {
       'linguaquest.today.date': _todayDateKey(DateTime.now()),
       'linguaquest.today.lessons': ['hsk1-lesson-1'],
       'linguaquest.today.reviews': ['seed-1'],
+      // 须与 profile.dailyGoal 一致，确保 dailyNewTarget 正确计算总目标数。
+      'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(profile.uid, dailyGoal: profile.dailyGoal),
     });
 
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
@@ -188,6 +202,7 @@ void main() {
     );
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
+      'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(profile.uid),
     });
 
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
@@ -217,6 +232,7 @@ void main() {
     );
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
+      'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(profile.uid),
     });
 
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
@@ -444,6 +460,7 @@ void main() {
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
       key: jsonEncode(staleDraft.toJson()),
+      'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(profile.uid),
     });
 
     await tester.pumpWidget(
@@ -507,6 +524,7 @@ void main() {
     );
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
+      'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(profile.uid),
     });
 
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
@@ -542,6 +560,7 @@ void main() {
     );
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
+      'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(profile.uid),
     });
 
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
@@ -614,6 +633,7 @@ void main() {
     );
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
+      'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(profile.uid),
     });
 
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
@@ -672,6 +692,7 @@ void main() {
     );
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
+      'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(profile.uid),
     });
 
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
@@ -762,6 +783,7 @@ void main() {
       );
       SharedPreferences.setMockInitialValues({
         'linguaquest.profile': jsonEncode(profile.toJson()),
+        'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(profile.uid),
       });
       final container = ProviderContainer();
       addTearDown(container.dispose);
@@ -853,6 +875,7 @@ void main() {
       );
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
+      'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(profile.uid),
     });
 
     await tester.pumpWidget(
@@ -945,6 +968,7 @@ void main() {
           .split('T')
           .first,
       'linguaquest.today.reviews': ['cleared-word'],
+      'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(profile.uid),
     });
 
     await tester.pumpWidget(
@@ -1105,6 +1129,7 @@ void main() {
     );
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
+      'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(profile.uid),
     });
 
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
@@ -1140,6 +1165,7 @@ void main() {
     );
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
+      'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(profile.uid),
     });
 
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
@@ -1218,6 +1244,7 @@ void main() {
     );
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
+      'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(profile.uid),
     });
 
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
@@ -2911,6 +2938,7 @@ void main() {
     );
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
+      'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(profile.uid),
     });
 
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
@@ -2962,16 +2990,19 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         studyPlanRepositoryProvider.overrideWithValue(
-          _MemoryStudyPlanRepository(null),
+          _MemoryStudyPlanRepository(
+            StudyPlan.defaultsFor(
+              uid: 'settings-fallback-user',
+              targetExam: 'HSK 1',
+              dailyGoal: 10,
+            ),
+          ),
         ),
       ],
     );
     addTearDown(container.dispose);
 
     await container.read(appControllerProvider.notifier).bootstrap();
-    container.read(appControllerProvider.notifier).state = container
-        .read(appControllerProvider)
-        .copyWith(studyPlan: null);
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
@@ -3296,6 +3327,7 @@ void main() {
     );
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
+      'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(profile.uid),
     });
 
     await tester.pumpWidget(
@@ -3882,6 +3914,7 @@ void main() {
     );
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
+      'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(profile.uid),
     });
 
     await tester.pumpWidget(
@@ -3952,6 +3985,7 @@ void main() {
       );
       SharedPreferences.setMockInitialValues({
         'linguaquest.profile': jsonEncode(profile.toJson()),
+        'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(profile.uid),
       });
 
       await tester.pumpWidget(
@@ -4387,6 +4421,7 @@ void main() {
     );
     SharedPreferences.setMockInitialValues({
       'linguaquest.profile': jsonEncode(profile.toJson()),
+      'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(profile.uid),
     });
     final container = ProviderContainer();
     addTearDown(container.dispose);
@@ -4471,6 +4506,7 @@ void main() {
       );
       SharedPreferences.setMockInitialValues({
         'linguaquest.profile': jsonEncode(profile.toJson()),
+        'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(profile.uid),
       });
       final container = ProviderContainer();
       addTearDown(container.dispose);

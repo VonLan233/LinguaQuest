@@ -53,7 +53,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     final state = ref.read(appControllerProvider);
     if (!state.isBootstrapped && state.errorMessage != null) return;
     if (!mounted) return;
-    context.go(state.isAuthenticated ? '/home' : '/onboarding');
+    if (state.isAuthenticated) {
+      context.go(state.studyPlan == null ? '/goal-setup' : '/home');
+    } else {
+      context.go('/onboarding');
+    }
   }
 
   @override

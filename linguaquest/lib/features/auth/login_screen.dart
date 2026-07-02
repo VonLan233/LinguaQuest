@@ -157,7 +157,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (!mounted) return;
     switch (step) {
       case AuthStep.authenticated:
-        context.go('/home');
+        context.go(
+          ref.read(appControllerProvider).studyPlan == null
+              ? '/goal-setup'
+              : '/home',
+        );
       case AuthStep.needsVerification:
         context.go(
           '/verify-email?email=${Uri.encodeComponent(_emailController.text.trim())}',

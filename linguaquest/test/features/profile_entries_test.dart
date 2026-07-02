@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:linguaquest/app.dart';
+import 'package:linguaquest/data/models/study_plan.dart';
 import 'package:linguaquest/data/models/user_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,8 +25,14 @@ void main() {
         createdAt: now,
         updatedAt: now,
       );
+      final plan = StudyPlan.defaultsFor(
+        uid: profile.uid,
+        targetExam: 'HSK 1',
+        dailyGoal: 10,
+      );
       SharedPreferences.setMockInitialValues({
         'linguaquest.profile': jsonEncode(profile.toJson()),
+        'linguaquest.studyPlan.${profile.uid}': jsonEncode(plan.toJson()),
       });
 
       await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));

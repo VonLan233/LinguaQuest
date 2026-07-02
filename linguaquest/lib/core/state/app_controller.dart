@@ -2603,20 +2603,13 @@ class AppController extends Notifier<AppState> {
     );
   }
 
-  Future<StudyPlan> _loadOrCreateStudyPlan(UserProfile user) async {
-    final existing = await _studyPlanRepository.load(user.uid);
-    if (existing != null) return existing;
-    return _studyPlanRepository.save(
-      _buildStudyPlan(
-        uid: user.uid,
-        target: user.targetExam,
-        dailyGoal: user.dailyGoal,
-      ),
-    );
+  Future<StudyPlan?> _loadOrCreateStudyPlan(UserProfile user) async {
+    return _studyPlanRepository.load(user.uid);
   }
 
   Future<void> _ensureStudyPlan(UserProfile user) async {
     final plan = await _loadOrCreateStudyPlan(user);
+    if (plan == null) return; // 新用户/未做 goal-setup：studyPlan 保持 null
     if (ref.mounted && state.user?.uid == user.uid) {
       final reminderSettings = _reminderSettingsForPlan(plan);
       await _persistReminderSettings(reminderSettings);
