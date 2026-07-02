@@ -143,7 +143,7 @@ void main() {
     final word = _word('w1', '学习',
         meaning: '', englishDefinitions: const ['to study']);
 
-    test('author key role wins over everything', () {
+    test('author key role wins for mastered (non-struggling) user words', () {
       const ref = ArticleVocabRef(surface: '学习', role: 'key');
       final learned = UserWord.create(
         uid: 'u',

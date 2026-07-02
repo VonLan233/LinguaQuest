@@ -66,4 +66,19 @@ void main() {
     );
     expect(result, WordClass.key);
   });
+
+  test('struggling userWord + key vocab → unknown', () {
+    // userWord status:'New', masteryLevel:0 → 吃力，覆盖 key
+    final strugglingWord = UserWord.create(
+      uid: 'u',
+      word: _minWord(),
+      wordBookId: 'hsk1',
+    ); // 默认 status: 'New', masteryLevel: 0
+    final result = classifyToken(
+      surface: '老师',
+      vocab: _keyVocab,
+      userWord: strugglingWord,
+    );
+    expect(result, WordClass.unknown);
+  });
 }
