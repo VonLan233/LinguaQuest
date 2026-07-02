@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -515,7 +516,7 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
     ) {
       add(cleanValues[(offset + step + 1) % cleanValues.length]);
     }
-    return List.unmodifiable(options);
+    return List.unmodifiable(options..shuffle(Random(offset)));
   }
 
   String _blankExample(Word word, String localeCode) {
@@ -1072,7 +1073,7 @@ QuizQuestion buildListeningQuestion(
     type: QuizQuestionType.listeningWordChoice,
     prompt: prompt,
     answer: word.word,
-    options: List.unmodifiable(options),
+    options: List.unmodifiable(options..shuffle(Random(index))),
     explanation: word.exampleSentence,
     word: word,
   );
