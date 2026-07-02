@@ -203,9 +203,15 @@ List<ReadingToken> segmentParagraph({
 
 /// Pure classification of a matched token into [WordClass].
 ///
-/// Precedence: key (author hint) > unknown (struggling) > new (unseen in
-/// wordbook) > known (learned/mastered). Inputs all come from existing app state
-/// ([UserWord], [CustomWord], wordbook [Word], [ArticleVocabRef]) — no storage.
+/// 优先级（高 → 低）：
+/// 1. 用户正在复习且吃力（struggling userWord 或 reviewWord 未掌握）→ unknown（红）；
+///    即使是作者 key 词也覆盖，避免用户加入生词本/复习后永不显红（#E）。
+/// 2. 作者 key 提示（非 struggling 词）→ key（蓝）。
+/// 3. 已掌握的 user/review 词 → known（淡）。
+/// 4. 词书内未学过 → newWord；其余 curated vocab → newWord；否则 plain。
+///
+/// 输入全部来自现有 app state（[UserWord]、[CustomWord]、wordbook [Word]、
+/// [ArticleVocabRef]），不触发存储。
 WordClass classifyToken({
   required String surface,
   ArticleVocabRef? vocab,
@@ -213,10 +219,7 @@ WordClass classifyToken({
   UserWord? userWord,
   CustomWord? reviewWord,
 }) {
-  // 1. Author key hint wins (rendered with an accent even if otherwise known).
-  if (vocab != null && vocab.role == 'key') return WordClass.key;
-
-  // 2. Struggling: in the user/review set but new/relearning or low mastery.
+  // 1. 用户正在复习且吃力的词优先显红——即使是作者 key 词（#E）。
   if (userWord != null) {
     final struggling = userWord.status == 'New' ||
         userWord.status == 'Relearning' ||
@@ -225,20 +228,20 @@ WordClass classifyToken({
         userWord.status == 'Review' ||
         userWord.masteryLevel >= 3;
     if (struggling && !mastered) return WordClass.unknown;
-    // 4. Known: learned/mastered user word.
-    return WordClass.known;
   }
-  if (reviewWord != null) {
-    if (reviewWord.masteryLevel >= 3) return WordClass.known;
+  if (reviewWord != null && reviewWord.masteryLevel < 3) {
     return WordClass.unknown;
   }
 
-  // 3. New: appears in the current wordbook but never studied.
+  // 2. 作者 key 提示（对非 struggling 词）。
+  if (vocab != null && vocab.role == 'key') return WordClass.key;
+
+  // 3. 已掌握的 user/review 词 → known。
+  if (userWord != null) return WordClass.known;
+  if (reviewWord != null) return WordClass.known;
+
+  // 4. 词书内未学过 → new；其余 curated → new；否则 plain。
   if (word != null) return WordClass.newWord;
-
-  // Curated vocab with role != 'key' and no wordbook/user resolution → treat as
-  // new (it's still curated content we have a meaning for).
   if (vocab != null) return WordClass.newWord;
-
   return WordClass.plain;
 }
