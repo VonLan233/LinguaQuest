@@ -438,6 +438,9 @@ class QuizQuestion {
     required this.options,
     required this.explanation,
     required this.word,
+    this.promptEn,
+    this.optionsEn,
+    this.explanationEn,
   });
 
   final String id;
@@ -447,6 +450,9 @@ class QuizQuestion {
   final List<String> options;
   final String explanation;
   final Word word;
+  final String? promptEn;
+  final List<String>? optionsEn;
+  final String? explanationEn;
 
   factory QuizQuestion.fromJson(Map<String, dynamic> json) {
     final wordData = json['word'];
@@ -458,6 +464,9 @@ class QuizQuestion {
       options: _stringList(json['options']),
       explanation: _string(json['explanation']),
       word: Word.fromJson(_questionWordJson(json, wordData)),
+      promptEn: json['promptEn'] == null ? null : _string(json['promptEn']),
+      optionsEn: json['optionsEn'] == null ? null : _stringList(json['optionsEn']),
+      explanationEn: json['explanationEn'] == null ? null : _string(json['explanationEn']),
     );
   }
 
@@ -470,6 +479,9 @@ class QuizQuestion {
       'options': options,
       'explanation': explanation,
       'word': word.toJson(),
+      if (promptEn != null) 'promptEn': promptEn,
+      if (optionsEn != null) 'optionsEn': optionsEn,
+      if (explanationEn != null) 'explanationEn': explanationEn,
     };
   }
 }
