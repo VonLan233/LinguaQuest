@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/services/pronunciation_service.dart';
+import '../../core/services/tts_completion.dart';
 import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/ai_error_card.dart';
@@ -679,8 +680,11 @@ class _ParagraphAudioButtonState extends State<_ParagraphAudioButton> {
         await _tts.setLanguage(_ttsLanguage(widget.language));
         await _tts.setSpeechRate(slow ? 0.4 : 0.5);
         await _tts.stop();
-        await _tts.speak(text);
-        return true;
+        return await awaitTtsCompletion(
+          registerCompletion: (cb) => _tts.setCompletionHandler(cb),
+          registerError: (cb) => _tts.setErrorHandler((_) => cb()),
+          speak: () => _tts.speak(text),
+        );
       } catch (_) {
         return false;
       }

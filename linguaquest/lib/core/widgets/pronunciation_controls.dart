@@ -6,6 +6,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 
 import '../../l10n/generated/app_localizations.dart';
 import '../services/pronunciation_service.dart';
+import '../services/tts_completion.dart';
 import '../theme/app_icons.dart';
 import '../theme/app_theme.dart';
 import '../utils/text_language.dart';
@@ -64,8 +65,11 @@ class _PronunciationControlsState extends State<PronunciationControls> {
         await _tts.setLanguage(lang);
         await _tts.setSpeechRate(slow ? 0.4 : 0.5);
         await _tts.stop();
-        await _tts.speak(text);
-        return true;
+        return await awaitTtsCompletion(
+          registerCompletion: (cb) => _tts.setCompletionHandler(cb),
+          registerError: (cb) => _tts.setErrorHandler((_) => cb()),
+          speak: () => _tts.speak(text),
+        );
       } catch (_) {
         return false;
       }
