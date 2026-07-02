@@ -2968,7 +2968,7 @@ void main() {
     expect(digitOnlyFields(), hasLength(1));
   });
 
-  testWidgets('study plan fallback initialization preserves unsaved edits', (
+  testWidgets('study plan settings screen preserves unsaved edits through state updates', (
     tester,
   ) async {
     final now = DateTime(2026, 5, 25);
