@@ -40,7 +40,12 @@ class _MyFavoritesScreenState extends ConsumerState<MyFavoritesScreen> {
               itemBuilder: (context, i) {
                 final post = posts[i];
                 return AppCard(
-                  onTap: () => context.push('/forum/posts/${post.id}'),
+                  onTap: () async {
+                    await context.push('/forum/posts/${post.id}');
+                    if (mounted) {
+                      ref.read(appControllerProvider.notifier).refreshFavoritedPosts();
+                    }
+                  },
                   padding: const EdgeInsets.all(AppTokens.s16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

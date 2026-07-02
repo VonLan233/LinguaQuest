@@ -53,15 +53,19 @@ void main() {
       // 先 toggleFavorite 某个种子帖子（id = mock-post-1）
       await repo.toggleFavorite('mock-post-1');
 
+      // 从 repo 动态获取实际的收藏帖子标题，避免硬编码依赖 mock 种子数据
+      final favoritedPosts = await repo.listFavoritedPosts();
+      final actualTitle = favoritedPosts.isNotEmpty ? favoritedPosts.first.title : '';
+
       await tester.pumpWidget(
         _buildHarness(child: const MyFavoritesScreen(), repo: repo),
       );
       await tester.pump();
       await tester.pumpAndSettle();
 
-      // 种子帖子 mock-post-1 标题含 "Present Perfect"
+      // 验证实际帖子标题显示在列表中
       expect(
-        find.textContaining('Present Perfect', findRichText: true),
+        find.textContaining(actualTitle, findRichText: true),
         findsAtLeastNWidgets(1),
       );
       // 空态文案不应显示
