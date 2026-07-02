@@ -6,8 +6,8 @@
   "category": "hsk",
   "examType": "HSK 1",
   "coverUrl": "",
-  "totalWords": 489,
-  "includedWords": 489,
+  "totalWords": 490,
+  "includedWords": 490,
   "description": "Core vocabulary for HSK Level 1.",
   "wordIds": [
     "hsk1_000_i",
@@ -33,7 +33,6 @@
     "hsk1_021_bijng",
     "hsk1_022_bn",
     "hsk1_023_bnzi",
-    "hsk1_024_b",
     "hsk1_025_bi",
     "hsk1_026_bide",
     "hsk1_027_biren",
@@ -70,6 +69,7 @@
     "hsk1_059_dki",
     "hsk1_060_dqi",
     "hsk1_061_d",
+    "hsk1_062_dxu",
     "hsk1_063_dxushng",
     "hsk1_064_do",
     "hsk1_065_de",
@@ -97,7 +97,7 @@
     "hsk1_087_dngx",
     "hsk1_088_dng",
     "hsk1_089_dngzu",
-    "hsk1_090_d",
+    "hsk1_090_du",
     "hsk1_091_du",
     "hsk1_092_dsh",
     "hsk1_093_du",
@@ -138,7 +138,7 @@
     "hsk1_130_guji",
     "hsk1_131_guwi",
     "hsk1_132_gu",
-    "hsk1_133_hun",
+    "hsk1_133_hi",
     "hsk1_134_hishi",
     "hsk1_135_hiyu",
     "hsk1_136_hizi",
@@ -258,7 +258,6 @@
     "hsk1_254_nr",
     "hsk1_255_nl",
     "hsk1_256_nxi",
-    "hsk1_257_n",
     "hsk1_258_nbian",
     "hsk1_259_nr",
     "hsk1_260_nli",
@@ -310,6 +309,7 @@
     "hsk1_308_rn",
     "hsk1_309_rnshi",
     "hsk1_310_rnzhn",
+    "hsk1_311_r",
     "hsk1_312_rq",
     "hsk1_313_ru",
     "hsk1_314_sn",
@@ -340,6 +340,7 @@
     "hsk1_340_shbsh",
     "hsk1_341_shu",
     "hsk1_342_shuj",
+    "hsk1_343_sh",
     "hsk1_344_shbo",
     "hsk1_345_shdin",
     "hsk1_346_sh",
@@ -677,16 +678,56 @@
     {
       "id": "hsk1_006_bi",
       "word": "白",
-      "phoneticUK": "Bái",
-      "phoneticUS": "Bái",
+      "phoneticUK": "bái",
+      "phoneticUS": "bái",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E7%99%BD&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E7%99%BD&type=2",
       "partOfSpeech": "a/nr/d/b/v/g",
       "definitions": [
-        "surname Bai"
+        "white",
+        "snowy",
+        "pure",
+        "bright",
+        "empty",
+        "blank",
+        "plain",
+        "clear",
+        "to make clear",
+        "in vain",
+        "gratuitous",
+        "free of charge",
+        "reactionary",
+        "anti-communist",
+        "funeral",
+        "to stare coldly",
+        "to write wrong character",
+        "to state",
+        "to explain",
+        "vernacular",
+        "spoken lines in opera"
       ],
       "englishDefinitions": [
-        "surname Bai"
+        "white",
+        "snowy",
+        "pure",
+        "bright",
+        "empty",
+        "blank",
+        "plain",
+        "clear",
+        "to make clear",
+        "in vain",
+        "gratuitous",
+        "free of charge",
+        "reactionary",
+        "anti-communist",
+        "funeral",
+        "to stare coldly",
+        "to write wrong character",
+        "to state",
+        "to explain",
+        "vernacular",
+        "spoken lines in opera"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -733,16 +774,20 @@
     {
       "id": "hsk1_008_bi",
       "word": "百",
-      "phoneticUK": "Bǎi",
-      "phoneticUS": "Bǎi",
+      "phoneticUK": "bǎi",
+      "phoneticUS": "bǎi",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E7%99%BE&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E7%99%BE&type=2",
       "partOfSpeech": "m/t",
       "definitions": [
-        "surname Bai"
+        "hundred",
+        "numerous",
+        "all kinds of"
       ],
       "englishDefinitions": [
-        "surname Bai"
+        "hundred",
+        "numerous",
+        "all kinds of"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -759,16 +804,22 @@
     {
       "id": "hsk1_009_bn",
       "word": "班",
-      "phoneticUK": "Bān",
-      "phoneticUS": "Bān",
+      "phoneticUK": "bān",
+      "phoneticUS": "bān",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E7%8F%AD&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E7%8F%AD&type=2",
       "partOfSpeech": "n/q/nr",
       "definitions": [
-        "surname Ban"
+        "team; class; grade",
+        "(military) squad",
+        "work shift",
+        "classifier for groups of people and scheduled transport vehicles"
       ],
       "englishDefinitions": [
-        "surname Ban"
+        "team; class; grade",
+        "(military) squad",
+        "work shift",
+        "classifier for groups of people and scheduled transport vehicles"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -907,16 +958,40 @@
     {
       "id": "hsk1_015_bo",
       "word": "包",
-      "phoneticUK": "Bāo",
-      "phoneticUS": "Bāo",
+      "phoneticUK": "bāo",
+      "phoneticUS": "bāo",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%8C%85&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%8C%85&type=2",
       "partOfSpeech": "v/n/q",
       "definitions": [
-        "surname Bao"
+        "to cover",
+        "to wrap",
+        "to hold",
+        "to include",
+        "to take charge of",
+        "to contract (to or for)",
+        "package",
+        "wrapper",
+        "container",
+        "bag",
+        "to hold or embrace",
+        "bundle",
+        "packet"
       ],
       "englishDefinitions": [
-        "surname Bao"
+        "to cover",
+        "to wrap",
+        "to hold",
+        "to include",
+        "to take charge of",
+        "to contract (to or for)",
+        "package",
+        "wrapper",
+        "container",
+        "bag",
+        "to hold or embrace",
+        "bundle",
+        "packet"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -1177,46 +1252,28 @@
       "hskLevel": 1
     },
     {
-      "id": "hsk1_024_b",
-      "word": "比",
-      "phoneticUK": "Bǐ",
-      "phoneticUS": "Bǐ",
-      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%AF%94&type=1",
-      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%AF%94&type=2",
-      "partOfSpeech": "p/v/n/b",
-      "definitions": [
-        "Belgium",
-        "Belgian"
-      ],
-      "englishDefinitions": [
-        "Belgium",
-        "Belgian"
-      ],
-      "malayDefinitions": [],
-      "exampleSentences": [],
-      "collocations": [],
-      "synonyms": [],
-      "antonyms": [],
-      "derivatives": [],
-      "rootAffix": "",
-      "examTags": [],
-      "difficulty": "Easy",
-      "imageUrl": "",
-      "hskLevel": 1
-    },
-    {
       "id": "hsk1_025_bi",
       "word": "别",
-      "phoneticUK": "Bié",
-      "phoneticUS": "Bié",
+      "phoneticUK": "bié",
+      "phoneticUS": "bié",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%88%AB&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%88%AB&type=2",
       "partOfSpeech": "d/v/r/vn",
       "definitions": [
-        "surname Bie"
+        "to leave; to part (from)",
+        "(literary) to differentiate; to distinguish",
+        "(bound form) other; another; different",
+        "don't ...!",
+        "to fasten with a pin or clip",
+        "to stick in; to insert (in order to hinder movement)"
       ],
       "englishDefinitions": [
-        "surname Bie"
+        "to leave; to part (from)",
+        "(literary) to differentiate; to distinguish",
+        "(bound form) other; another; different",
+        "don't ...!",
+        "to fasten with a pin or clip",
+        "to stick in; to insert (in order to hinder movement)"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -1595,16 +1652,28 @@
     {
       "id": "hsk1_038_chng",
       "word": "常",
-      "phoneticUK": "Cháng",
-      "phoneticUS": "Cháng",
+      "phoneticUK": "cháng",
+      "phoneticUS": "cháng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%B8%B8&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%B8%B8&type=2",
       "partOfSpeech": "d/nr",
       "definitions": [
-        "surname Chang"
+        "always",
+        "ever",
+        "often",
+        "frequently",
+        "common",
+        "general",
+        "constant"
       ],
       "englishDefinitions": [
-        "surname Chang"
+        "always",
+        "ever",
+        "often",
+        "frequently",
+        "common",
+        "general",
+        "constant"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -1705,16 +1774,24 @@
     {
       "id": "hsk1_042_ch",
       "word": "车",
-      "phoneticUK": "Chē",
-      "phoneticUS": "Chē",
+      "phoneticUK": "chē",
+      "phoneticUS": "chē",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E8%BD%A6&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E8%BD%A6&type=2",
       "partOfSpeech": "n/q",
       "definitions": [
-        "surname Che"
+        "car",
+        "vehicle",
+        "machine",
+        "to shape with a lathe",
+        "Kangxi radical 159"
       ],
       "englishDefinitions": [
-        "surname Che"
+        "car",
+        "vehicle",
+        "machine",
+        "to shape with a lathe",
+        "Kangxi radical 159"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -2097,16 +2174,40 @@
     {
       "id": "hsk1_055_cu",
       "word": "错",
-      "phoneticUK": "Cuò",
-      "phoneticUS": "Cuò",
+      "phoneticUK": "cuò",
+      "phoneticUS": "cuò",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%94%99&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%94%99&type=2",
       "partOfSpeech": "v/n",
       "definitions": [
-        "surname Cuo"
+        "mistake",
+        "wrong",
+        "bad",
+        "interlocking",
+        "complex",
+        "to grind",
+        "to polish",
+        "to alternate",
+        "to stagger",
+        "to miss",
+        "to let slip",
+        "to evade",
+        "to inlay with gold or silver"
       ],
       "englishDefinitions": [
-        "surname Cuo"
+        "mistake",
+        "wrong",
+        "bad",
+        "interlocking",
+        "complex",
+        "to grind",
+        "to polish",
+        "to alternate",
+        "to stagger",
+        "to miss",
+        "to let slip",
+        "to evade",
+        "to inlay with gold or silver"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -2281,6 +2382,34 @@
         "greatly; freely; fully",
         "(dialect) father",
         "(dialect) uncle (father's brother)"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": "",
+      "hskLevel": 1
+    },
+    {
+      "id": "hsk1_062_dxu",
+      "word": "大学",
+      "phoneticUK": "dà xué",
+      "phoneticUS": "dà xué",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%A4%A7%E5%AD%A6&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%A4%A7%E5%AD%A6&type=2",
+      "partOfSpeech": "n",
+      "definitions": [
+        "university",
+        "college"
+      ],
+      "englishDefinitions": [
+        "university",
+        "college"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -2991,16 +3120,20 @@
     {
       "id": "hsk1_085_dng",
       "word": "东",
-      "phoneticUK": "Dōng",
-      "phoneticUS": "Dōng",
+      "phoneticUK": "dōng",
+      "phoneticUS": "dōng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E4%B8%9C&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E4%B8%9C&type=2",
       "partOfSpeech": "f/b",
       "definitions": [
-        "surname Dong"
+        "east",
+        "host (i.e. sitting on east side of guest)",
+        "landlord"
       ],
       "englishDefinitions": [
-        "surname Dong"
+        "east",
+        "host (i.e. sitting on east side of guest)",
+        "landlord"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -3139,18 +3272,24 @@
       "hskLevel": 1
     },
     {
-      "id": "hsk1_090_d",
+      "id": "hsk1_090_du",
       "word": "都",
-      "phoneticUK": "Dū",
-      "phoneticUS": "Dū",
+      "phoneticUK": "dōu",
+      "phoneticUS": "dōu",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%83%BD&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%83%BD&type=2",
       "partOfSpeech": "d/g",
       "definitions": [
-        "surname Du"
+        "all; both; entirely",
+        "(used for emphasis) even",
+        "already",
+        "(not) at all"
       ],
       "englishDefinitions": [
-        "surname Du"
+        "all; both; entirely",
+        "(used for emphasis) even",
+        "already",
+        "(not) at all"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -3873,16 +4012,24 @@
     {
       "id": "hsk1_115_go",
       "word": "高",
-      "phoneticUK": "Gāo",
-      "phoneticUS": "Gāo",
+      "phoneticUK": "gāo",
+      "phoneticUS": "gāo",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%AB%98&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%AB%98&type=2",
       "partOfSpeech": "a/ad/v/g",
       "definitions": [
-        "surname Gao"
+        "high",
+        "tall",
+        "above average",
+        "loud",
+        "your (honorific)"
       ],
       "englishDefinitions": [
-        "surname Gao"
+        "high",
+        "tall",
+        "above average",
+        "loud",
+        "your (honorific)"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -4177,16 +4324,22 @@
     {
       "id": "hsk1_126_gun",
       "word": "关",
-      "phoneticUK": "Guān",
-      "phoneticUS": "Guān",
+      "phoneticUK": "guān",
+      "phoneticUS": "guān",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%85%B3&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%85%B3&type=2",
       "partOfSpeech": "v/n/nr",
       "definitions": [
-        "surname Guan"
+        "mountain pass",
+        "to close; to shut; to turn off",
+        "to confine; to lock (sb) up; to shut (sb in a room, a bird in a cage etc)",
+        "to concern; to involve"
       ],
       "englishDefinitions": [
-        "surname Guan"
+        "mountain pass",
+        "to close; to shut; to turn off",
+        "to confine; to lock (sb) up; to shut (sb in a room, a bird in a cage etc)",
+        "to concern; to involve"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -4263,16 +4416,18 @@
     {
       "id": "hsk1_129_gu",
       "word": "国",
-      "phoneticUK": "Guó",
-      "phoneticUS": "Guó",
+      "phoneticUK": "guó",
+      "phoneticUS": "guó",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%9B%BD&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%9B%BD&type=2",
       "partOfSpeech": "n",
       "definitions": [
-        "surname Guo"
+        "country; nation; state",
+        "(bound form) national"
       ],
       "englishDefinitions": [
-        "surname Guo"
+        "country; nation; state",
+        "(bound form) national"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -4347,16 +4502,30 @@
     {
       "id": "hsk1_132_gu",
       "word": "过",
-      "phoneticUK": "Guō",
-      "phoneticUS": "Guō",
+      "phoneticUK": "guò",
+      "phoneticUS": "guò",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E8%BF%87&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E8%BF%87&type=2",
       "partOfSpeech": "u/v/d/g",
       "definitions": [
-        "surname Guo"
+        "to cross",
+        "to go over",
+        "to pass (time)",
+        "to celebrate (a holiday)",
+        "to live",
+        "to get along",
+        "excessively",
+        "too-"
       ],
       "englishDefinitions": [
-        "surname Guo"
+        "to cross",
+        "to go over",
+        "to pass (time)",
+        "to celebrate (a holiday)",
+        "to live",
+        "to get along",
+        "excessively",
+        "too-"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -4371,18 +4540,40 @@
       "hskLevel": 1
     },
     {
-      "id": "hsk1_133_hun",
+      "id": "hsk1_133_hi",
       "word": "还",
-      "phoneticUK": "Huán",
-      "phoneticUS": "Huán",
+      "phoneticUK": "hái",
+      "phoneticUS": "hái",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E8%BF%98&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E8%BF%98&type=2",
       "partOfSpeech": "d/v",
       "definitions": [
-        "surname Huan"
+        "still",
+        "still in progress",
+        "still more",
+        "yet",
+        "even more",
+        "in addition",
+        "fairly",
+        "passably (good)",
+        "as early as",
+        "even",
+        "also",
+        "else"
       ],
       "englishDefinitions": [
-        "surname Huan"
+        "still",
+        "still in progress",
+        "still more",
+        "yet",
+        "even more",
+        "in addition",
+        "fairly",
+        "passably (good)",
+        "as early as",
+        "even",
+        "also",
+        "else"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -4793,16 +4984,22 @@
     {
       "id": "hsk1_148_hu",
       "word": "后",
-      "phoneticUK": "Hòu",
-      "phoneticUS": "Hòu",
+      "phoneticUK": "hòu",
+      "phoneticUS": "hòu",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%90%8E&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%90%8E&type=2",
       "partOfSpeech": "f/g/t",
       "definitions": [
-        "surname Hou"
+        "empress",
+        "queen",
+        "(archaic) monarch",
+        "ruler"
       ],
       "englishDefinitions": [
-        "surname Hou"
+        "empress",
+        "queen",
+        "(archaic) monarch",
+        "ruler"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -4879,16 +5076,28 @@
     {
       "id": "hsk1_151_hu",
       "word": "花",
-      "phoneticUK": "Huā",
-      "phoneticUS": "Huā",
+      "phoneticUK": "huā",
+      "phoneticUS": "huā",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E8%8A%B1&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E8%8A%B1&type=2",
       "partOfSpeech": "v/n/a",
       "definitions": [
-        "surname Hua"
+        "flower",
+        "blossom",
+        "fancy pattern",
+        "florid",
+        "to spend (money, time)",
+        "(coll.) lecherous",
+        "lustful"
       ],
       "englishDefinitions": [
-        "surname Hua"
+        "flower",
+        "blossom",
+        "fancy pattern",
+        "florid",
+        "to spend (money, time)",
+        "(coll.) lecherous",
+        "lustful"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -5611,16 +5820,16 @@
     {
       "id": "hsk1_176_jio",
       "word": "教",
-      "phoneticUK": "Jiào",
-      "phoneticUS": "Jiào",
+      "phoneticUK": "jiāo",
+      "phoneticUS": "jiāo",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%95%99&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%95%99&type=2",
       "partOfSpeech": "v/g",
       "definitions": [
-        "surname Jiao"
+        "to teach"
       ],
       "englishDefinitions": [
-        "surname Jiao"
+        "to teach"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -6747,16 +6956,16 @@
     {
       "id": "hsk1_213_lng",
       "word": "冷",
-      "phoneticUK": "Lěng",
-      "phoneticUS": "Lěng",
+      "phoneticUK": "lěng",
+      "phoneticUS": "lěng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%86%B7&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%86%B7&type=2",
       "partOfSpeech": "a/ad/g",
       "definitions": [
-        "surname Leng"
+        "cold"
       ],
       "englishDefinitions": [
-        "surname Leng"
+        "cold"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -6907,16 +7116,20 @@
     {
       "id": "hsk1_219_lu",
       "word": "楼",
-      "phoneticUK": "Lóu",
-      "phoneticUS": "Lóu",
+      "phoneticUK": "lóu",
+      "phoneticUS": "lóu",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%A5%BC&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%A5%BC&type=2",
       "partOfSpeech": "n",
       "definitions": [
-        "surname Lou"
+        "house with more than 1 story",
+        "storied building",
+        "floor"
       ],
       "englishDefinitions": [
-        "surname Lou"
+        "house with more than 1 story",
+        "storied building",
+        "floor"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -6987,16 +7200,24 @@
     {
       "id": "hsk1_222_l",
       "word": "路",
-      "phoneticUK": "Lù",
-      "phoneticUS": "Lù",
+      "phoneticUK": "lù",
+      "phoneticUS": "lù",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E8%B7%AF&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E8%B7%AF&type=2",
       "partOfSpeech": "n/qv",
       "definitions": [
-        "surname Lu"
+        "road",
+        "journey",
+        "route",
+        "line (bus etc)",
+        "sort; kind"
       ],
       "englishDefinitions": [
-        "surname Lu"
+        "road",
+        "journey",
+        "route",
+        "line (bus etc)",
+        "sort; kind"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -7303,16 +7524,42 @@
     {
       "id": "hsk1_233_mo",
       "word": "毛",
-      "phoneticUK": "Máo",
-      "phoneticUS": "Máo",
+      "phoneticUK": "máo",
+      "phoneticUS": "máo",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%AF%9B&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%AF%9B&type=2",
       "partOfSpeech": "nr/n/q",
       "definitions": [
-        "surname Mao"
+        "hair",
+        "feather",
+        "down",
+        "wool",
+        "mildew",
+        "mold",
+        "coarse or semifinished",
+        "young",
+        "raw",
+        "careless",
+        "unthinking",
+        "nervous",
+        "scared",
+        "(of currency) to devalue or depreciate"
       ],
       "englishDefinitions": [
-        "surname Mao"
+        "hair",
+        "feather",
+        "down",
+        "wool",
+        "mildew",
+        "mold",
+        "coarse or semifinished",
+        "young",
+        "raw",
+        "careless",
+        "unthinking",
+        "nervous",
+        "scared",
+        "(of currency) to devalue or depreciate"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -7535,16 +7782,52 @@
     {
       "id": "hsk1_241_mn",
       "word": "门",
-      "phoneticUK": "Mén",
-      "phoneticUS": "Mén",
+      "phoneticUK": "mén",
+      "phoneticUS": "mén",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%97%A8&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%97%A8&type=2",
       "partOfSpeech": "n/q",
       "definitions": [
-        "surname Men"
+        "gate",
+        "door",
+        "gateway",
+        "doorway",
+        "opening",
+        "valve",
+        "switch",
+        "way to do something",
+        "knack",
+        "family",
+        "house",
+        "(religious) sect",
+        "school (of thought)",
+        "class",
+        "category",
+        "phylum or division (taxonomy)",
+        "classifier for large guns",
+        "classifier for lessons, subjects, branches of technology",
+        "(suffix) -gate (i.e. scandal; derived from Watergate)"
       ],
       "englishDefinitions": [
-        "surname Men"
+        "gate",
+        "door",
+        "gateway",
+        "doorway",
+        "opening",
+        "valve",
+        "switch",
+        "way to do something",
+        "knack",
+        "family",
+        "house",
+        "(religious) sect",
+        "school (of thought)",
+        "class",
+        "category",
+        "phylum or division (taxonomy)",
+        "classifier for large guns",
+        "classifier for lessons, subjects, branches of technology",
+        "(suffix) -gate (i.e. scandal; derived from Watergate)"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -7953,32 +8236,6 @@
       "hskLevel": 1
     },
     {
-      "id": "hsk1_257_n",
-      "word": "那",
-      "phoneticUK": "Nā",
-      "phoneticUS": "Nā",
-      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%82%A3&type=1",
-      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%82%A3&type=2",
-      "partOfSpeech": "r/c",
-      "definitions": [
-        "surname Na"
-      ],
-      "englishDefinitions": [
-        "surname Na"
-      ],
-      "malayDefinitions": [],
-      "exampleSentences": [],
-      "collocations": [],
-      "synonyms": [],
-      "antonyms": [],
-      "derivatives": [],
-      "rootAffix": "",
-      "examTags": [],
-      "difficulty": "Easy",
-      "imageUrl": "",
-      "hskLevel": 1
-    },
-    {
       "id": "hsk1_258_nbian",
       "word": "那边",
       "phoneticUK": "nà bian",
@@ -8289,16 +8546,16 @@
     {
       "id": "hsk1_269_nn",
       "word": "南",
-      "phoneticUK": "Nán",
-      "phoneticUS": "Nán",
+      "phoneticUK": "nán",
+      "phoneticUS": "nán",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%8D%97&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%8D%97&type=2",
       "partOfSpeech": "b/f",
       "definitions": [
-        "surname Nan"
+        "south"
       ],
       "englishDefinitions": [
-        "surname Nan"
+        "south"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -8415,16 +8672,24 @@
     {
       "id": "hsk1_273_nng",
       "word": "能",
-      "phoneticUK": "Néng",
-      "phoneticUS": "Néng",
+      "phoneticUK": "néng",
+      "phoneticUS": "néng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E8%83%BD&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E8%83%BD&type=2",
       "partOfSpeech": "v/g",
       "definitions": [
-        "surname Neng"
+        "can",
+        "to be able to",
+        "might possibly",
+        "ability",
+        "(physics) energy"
       ],
       "englishDefinitions": [
-        "surname Neng"
+        "can",
+        "to be able to",
+        "might possibly",
+        "ability",
+        "(physics) energy"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -8467,16 +8732,16 @@
     {
       "id": "hsk1_276_nin",
       "word": "年",
-      "phoneticUK": "Nián",
-      "phoneticUS": "Nián",
+      "phoneticUK": "nián",
+      "phoneticUS": "nián",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%B9%B4&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%B9%B4&type=2",
       "partOfSpeech": "qt/t/n",
       "definitions": [
-        "surname Nian"
+        "year"
       ],
       "englishDefinitions": [
-        "surname Nian"
+        "year"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -9067,16 +9332,18 @@
     {
       "id": "hsk1_297_qin",
       "word": "钱",
-      "phoneticUK": "Qián",
-      "phoneticUS": "Qián",
+      "phoneticUK": "qián",
+      "phoneticUS": "qián",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%92%B1&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%92%B1&type=2",
       "partOfSpeech": "n/nr",
       "definitions": [
-        "surname Qian"
+        "coin",
+        "money"
       ],
       "englishDefinitions": [
-        "surname Qian"
+        "coin",
+        "money"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -9503,6 +9770,36 @@
       "hskLevel": 1
     },
     {
+      "id": "hsk1_311_r",
+      "word": "日",
+      "phoneticUK": "rì",
+      "phoneticUS": "rì",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%97%A5&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%97%A5&type=2",
+      "partOfSpeech": "t/g/b/qt",
+      "definitions": [
+        "sun",
+        "day",
+        "date, day of the month"
+      ],
+      "englishDefinitions": [
+        "sun",
+        "day",
+        "date, day of the month"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": "",
+      "hskLevel": 1
+    },
+    {
       "id": "hsk1_312_rq",
       "word": "日期",
       "phoneticUK": "rì qī",
@@ -9569,16 +9866,18 @@
     {
       "id": "hsk1_314_sn",
       "word": "三",
-      "phoneticUK": "Sān",
-      "phoneticUS": "Sān",
+      "phoneticUK": "sān",
+      "phoneticUS": "sān",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E4%B8%89&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E4%B8%89&type=2",
       "partOfSpeech": "m/t",
       "definitions": [
-        "surname San"
+        "three",
+        "3"
       ],
       "englishDefinitions": [
-        "surname San"
+        "three",
+        "3"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -9595,16 +9894,18 @@
     {
       "id": "hsk1_315_shn",
       "word": "山",
-      "phoneticUK": "Shān",
-      "phoneticUS": "Shān",
+      "phoneticUK": "shān",
+      "phoneticUS": "shān",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%B1%B1&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%B1%B1&type=2",
       "partOfSpeech": "n",
       "definitions": [
-        "surname Shan"
+        "mountain; hill",
+        "(coll.) small bundle of straw for silkworms to spin cocoons on"
       ],
       "englishDefinitions": [
-        "surname Shan"
+        "mountain; hill",
+        "(coll.) small bundle of straw for silkworms to spin cocoons on"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -10413,6 +10714,38 @@
       "hskLevel": 1
     },
     {
+      "id": "hsk1_343_sh",
+      "word": "书",
+      "phoneticUK": "shū",
+      "phoneticUS": "shū",
+      "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E4%B9%A6&type=1",
+      "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E4%B9%A6&type=2",
+      "partOfSpeech": "n/g",
+      "definitions": [
+        "book",
+        "letter",
+        "document",
+        "to write"
+      ],
+      "englishDefinitions": [
+        "book",
+        "letter",
+        "document",
+        "to write"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": "",
+      "hskLevel": 1
+    },
+    {
       "id": "hsk1_344_shbo",
       "word": "书包",
       "phoneticUK": "shū bāo",
@@ -10529,16 +10862,26 @@
     {
       "id": "hsk1_348_shu",
       "word": "水",
-      "phoneticUK": "Shuǐ",
-      "phoneticUS": "Shuǐ",
+      "phoneticUK": "shuǐ",
+      "phoneticUS": "shuǐ",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%B0%B4&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%B0%B4&type=2",
       "partOfSpeech": "n",
       "definitions": [
-        "surname Shui"
+        "water",
+        "river",
+        "liquid",
+        "beverage",
+        "additional charges or income",
+        "(of clothes) classifier for number of washes"
       ],
       "englishDefinitions": [
-        "surname Shui"
+        "water",
+        "river",
+        "liquid",
+        "beverage",
+        "additional charges or income",
+        "(of clothes) classifier for number of washes"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -11725,18 +12068,16 @@
     {
       "id": "hsk1_390_x",
       "word": "西",
-      "phoneticUK": "Xī",
-      "phoneticUS": "Xī",
+      "phoneticUK": "xī",
+      "phoneticUS": "xī",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E8%A5%BF&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E8%A5%BF&type=2",
       "partOfSpeech": "f/b",
       "definitions": [
-        "the West",
-        "Spanish"
+        "west"
       ],
       "englishDefinitions": [
-        "the West",
-        "Spanish"
+        "west"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -12415,16 +12756,20 @@
     {
       "id": "hsk1_414_xn",
       "word": "新",
-      "phoneticUK": "Xīn",
-      "phoneticUS": "Xīn",
+      "phoneticUK": "xīn",
+      "phoneticUS": "xīn",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%96%B0&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%96%B0&type=2",
       "partOfSpeech": "a/d/b",
       "definitions": [
-        "surname Xin"
+        "new",
+        "newly",
+        "meso- (chemistry)"
       ],
       "englishDefinitions": [
-        "surname Xin"
+        "new",
+        "newly",
+        "meso- (chemistry)"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -12791,16 +13136,16 @@
     {
       "id": "hsk1_427_y",
       "word": "也",
-      "phoneticUK": "Yě",
-      "phoneticUS": "Yě",
+      "phoneticUK": "yě",
+      "phoneticUS": "yě",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E4%B9%9F&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E4%B9%9F&type=2",
       "partOfSpeech": "d/y/u/b",
       "definitions": [
-        "surname Ye"
+        "(adverb) also; both ... and ... (before predicates only)"
       ],
       "englishDefinitions": [
-        "surname Ye"
+        "(adverb) also; both ... and ... (before predicates only)"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -13611,18 +13956,38 @@
     {
       "id": "hsk1_455_yun",
       "word": "元",
-      "phoneticUK": "Yuán",
-      "phoneticUS": "Yuán",
+      "phoneticUK": "yuán",
+      "phoneticUS": "yuán",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%85%83&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%85%83&type=2",
       "partOfSpeech": "q/tg",
       "definitions": [
-        "surname Yuan",
-        "the Yuan or Mongol dynasty (1279-1368)"
+        "currency unit (esp. Chinese yuan)",
+        "first",
+        "original",
+        "primary",
+        "fundamental",
+        "constituent",
+        "part",
+        "era (of a reign)",
+        "meta- (prefix)",
+        "(math.) argument",
+        "variable",
+        "(Tw) (geology) eon"
       ],
       "englishDefinitions": [
-        "surname Yuan",
-        "the Yuan or Mongol dynasty (1279-1368)"
+        "currency unit (esp. Chinese yuan)",
+        "first",
+        "original",
+        "primary",
+        "fundamental",
+        "constituent",
+        "part",
+        "era (of a reign)",
+        "meta- (prefix)",
+        "(math.) argument",
+        "variable",
+        "(Tw) (geology) eon"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -14349,20 +14714,22 @@
     {
       "id": "hsk1_481_zhng",
       "word": "中",
-      "phoneticUK": "Zhōng",
-      "phoneticUS": "Zhōng",
+      "phoneticUK": "zhōng",
+      "phoneticUS": "zhōng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E4%B8%AD&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E4%B8%AD&type=2",
       "partOfSpeech": "f/b/v",
       "definitions": [
-        "China",
-        "Chinese",
-        "surname Zhong"
+        "within; among; in",
+        "middle; center",
+        "while (doing sth); during",
+        "(dialect) OK; all right"
       ],
       "englishDefinitions": [
-        "China",
-        "Chinese",
-        "surname Zhong"
+        "within; among; in",
+        "middle; center",
+        "while (doing sth); during",
+        "(dialect) OK; all right"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -14943,16 +15310,30 @@
     {
       "id": "hsk1_501_zu",
       "word": "左",
-      "phoneticUK": "Zuǒ",
-      "phoneticUS": "Zuǒ",
+      "phoneticUK": "zuǒ",
+      "phoneticUS": "zuǒ",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%B7%A6&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%B7%A6&type=2",
       "partOfSpeech": "f/a",
       "definitions": [
-        "surname Zuo"
+        "left",
+        "the Left (politics)",
+        "east",
+        "unorthodox",
+        "queer",
+        "wrong",
+        "differing",
+        "opposite"
       ],
       "englishDefinitions": [
-        "surname Zuo"
+        "left",
+        "the Left (politics)",
+        "east",
+        "unorthodox",
+        "queer",
+        "wrong",
+        "differing",
+        "opposite"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],
@@ -14999,16 +15380,22 @@
     {
       "id": "hsk1_503_zu",
       "word": "坐",
-      "phoneticUK": "Zuò",
-      "phoneticUS": "Zuò",
+      "phoneticUK": "zuò",
+      "phoneticUS": "zuò",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%9D%90&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%9D%90&type=2",
       "partOfSpeech": "v",
       "definitions": [
-        "surname Zuo"
+        "to sit",
+        "to take a seat",
+        "to take (a bus, airplane etc)",
+        "to bear fruit"
       ],
       "englishDefinitions": [
-        "surname Zuo"
+        "to sit",
+        "to take a seat",
+        "to take (a bus, airplane etc)",
+        "to bear fruit"
       ],
       "malayDefinitions": [],
       "exampleSentences": [],

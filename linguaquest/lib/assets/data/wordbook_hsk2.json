@@ -152,7 +152,7 @@
     "hsk2_139_rang",
     "hsk2_140_gei",
     "hsk2_141_zhao",
-    "hsk2_142_huan",
+    "hsk2_142_hai",
     "hsk2_143_dao",
     "hsk2_144_ye",
     "hsk2_145_yao",
@@ -492,13 +492,12 @@
     {
       "id": "hsk2_012_yin",
       "word": "阴",
-      "phoneticUK": "Yīn",
-      "phoneticUS": "Yīn",
+      "phoneticUK": "yīn",
+      "phoneticUS": "yīn",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%98%B4&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%98%B4&type=2",
       "partOfSpeech": "a/g/ad/b",
       "definitions": [
-        "surname Yin",
         "overcast (weather)",
         "cloudy",
         "shady",
@@ -511,7 +510,6 @@
         "genitalia"
       ],
       "englishDefinitions": [
-        "surname Yin",
         "overcast (weather)",
         "cloudy",
         "shady",
@@ -790,13 +788,12 @@
     {
       "id": "hsk2_022_ti",
       "word": "题",
-      "phoneticUK": "Tí",
-      "phoneticUS": "Tí",
+      "phoneticUK": "tí",
+      "phoneticUS": "tí",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%A2%98&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%A2%98&type=2",
       "partOfSpeech": "n/v",
       "definitions": [
-        "surname Ti",
         "topic",
         "problem for discussion",
         "exam question",
@@ -805,7 +802,6 @@
         "to mention"
       ],
       "englishDefinitions": [
-        "surname Ti",
         "topic",
         "problem for discussion",
         "exam question",
@@ -924,19 +920,17 @@
     {
       "id": "hsk2_026_bai",
       "word": "百",
-      "phoneticUK": "Bǎi",
-      "phoneticUS": "Bǎi",
+      "phoneticUK": "bǎi",
+      "phoneticUS": "bǎi",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E7%99%BE&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E7%99%BE&type=2",
       "partOfSpeech": "m/t",
       "definitions": [
-        "surname Bai",
         "hundred",
         "numerous",
         "all kinds of"
       ],
       "englishDefinitions": [
-        "surname Bai",
         "hundred",
         "numerous",
         "all kinds of"
@@ -1128,18 +1122,16 @@
     {
       "id": "hsk2_033_xue",
       "word": "雪",
-      "phoneticUK": "Xuě",
-      "phoneticUS": "Xuě",
+      "phoneticUK": "xuě",
+      "phoneticUS": "xuě",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%9B%AA&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%9B%AA&type=2",
       "partOfSpeech": "n",
       "definitions": [
-        "surname Xue",
         "snow",
         "(literary) to wipe away (a humiliation etc)"
       ],
       "englishDefinitions": [
-        "surname Xue",
         "snow",
         "(literary) to wipe away (a humiliation etc)"
       ],
@@ -1631,7 +1623,6 @@
         "to strain",
         "to wear out",
         "to work hard",
-        "surname Lei",
         "rope",
         "to bind together",
         "to twist around"
@@ -1646,7 +1637,6 @@
         "to strain",
         "to wear out",
         "to work hard",
-        "surname Lei",
         "rope",
         "to bind together",
         "to twist around"
@@ -1666,17 +1656,15 @@
     {
       "id": "hsk2_051_yu",
       "word": "鱼",
-      "phoneticUK": "Yú",
-      "phoneticUS": "Yú",
+      "phoneticUK": "yú",
+      "phoneticUS": "yú",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%B1%BC&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%B1%BC&type=2",
       "partOfSpeech": "n",
       "definitions": [
-        "surname Yu",
         "fish"
       ],
       "englishDefinitions": [
-        "surname Yu",
         "fish"
       ],
       "malayDefinitions": [],
@@ -1920,13 +1908,12 @@
     {
       "id": "hsk2_059_bai",
       "word": "白",
-      "phoneticUK": "Bái",
-      "phoneticUS": "Bái",
+      "phoneticUK": "bái",
+      "phoneticUS": "bái",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E7%99%BD&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E7%99%BD&type=2",
       "partOfSpeech": "a/nr/d/b/v/g",
       "definitions": [
-        "surname Bai",
         "white",
         "snowy",
         "pure",
@@ -1950,7 +1937,6 @@
         "spoken lines in opera"
       ],
       "englishDefinitions": [
-        "surname Bai",
         "white",
         "snowy",
         "pure",
@@ -1995,7 +1981,6 @@
       "partOfSpeech": "v/p",
       "definitions": [
         "mythical beast (archaic)",
-        "surname Li",
         "to leave",
         "to part from",
         "to be away from",
@@ -2006,7 +1991,6 @@
       ],
       "englishDefinitions": [
         "mythical beast (archaic)",
-        "surname Li",
         "to leave",
         "to part from",
         "to be away from",
@@ -2174,20 +2158,18 @@
     {
       "id": "hsk2_066_hong",
       "word": "红",
-      "phoneticUK": "Hóng",
-      "phoneticUS": "Hóng",
+      "phoneticUK": "hóng",
+      "phoneticUS": "hóng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E7%BA%A2&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E7%BA%A2&type=2",
       "partOfSpeech": "a/v/g",
       "definitions": [
-        "surname Hong",
         "red",
         "popular",
         "revolutionary",
         "bonus"
       ],
       "englishDefinitions": [
-        "surname Hong",
         "red",
         "popular",
         "revolutionary",
@@ -2240,13 +2222,12 @@
     {
       "id": "hsk2_068_yuan",
       "word": "元",
-      "phoneticUK": "Yuán",
-      "phoneticUS": "Yuán",
+      "phoneticUK": "yuán",
+      "phoneticUS": "yuán",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%85%83&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%85%83&type=2",
       "partOfSpeech": "q/tg",
       "definitions": [
-        "surname Yuan",
         "the Yuan or Mongol dynasty (1279-1368)",
         "currency unit (esp. Chinese yuan)",
         "first",
@@ -2262,7 +2243,6 @@
         "(Tw) (geology) eon"
       ],
       "englishDefinitions": [
-        "surname Yuan",
         "the Yuan or Mongol dynasty (1279-1368)",
         "currency unit (esp. Chinese yuan)",
         "first",
@@ -2322,8 +2302,8 @@
     {
       "id": "hsk2_070_hei",
       "word": "黑",
-      "phoneticUK": "Hēi",
-      "phoneticUS": "Hēi",
+      "phoneticUK": "hēi",
+      "phoneticUS": "hēi",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%BB%91&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%BB%91&type=2",
       "partOfSpeech": "a/g/b",
@@ -2520,13 +2500,12 @@
     {
       "id": "hsk2_076_cuo",
       "word": "错",
-      "phoneticUK": "Cuò",
-      "phoneticUS": "Cuò",
+      "phoneticUK": "cuò",
+      "phoneticUS": "cuò",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%94%99&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%94%99&type=2",
       "partOfSpeech": "v/n",
       "definitions": [
-        "surname Cuo",
         "mistake",
         "wrong",
         "bad",
@@ -2542,7 +2521,6 @@
         "to inlay with gold or silver"
       ],
       "englishDefinitions": [
-        "surname Cuo",
         "mistake",
         "wrong",
         "bad",
@@ -2704,13 +2682,12 @@
     {
       "id": "hsk2_081_men",
       "word": "门",
-      "phoneticUK": "Mén",
-      "phoneticUS": "Mén",
+      "phoneticUK": "mén",
+      "phoneticUS": "mén",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%97%A8&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%97%A8&type=2",
       "partOfSpeech": "n/q",
       "definitions": [
-        "surname Men",
         "gate",
         "door",
         "gateway",
@@ -2732,7 +2709,6 @@
         "(suffix) -gate (i.e. scandal; derived from Watergate)"
       ],
       "englishDefinitions": [
-        "surname Men",
         "gate",
         "door",
         "gateway",
@@ -2868,13 +2844,12 @@
     {
       "id": "hsk2_085_lu",
       "word": "路",
-      "phoneticUK": "Lù",
-      "phoneticUS": "Lù",
+      "phoneticUK": "lù",
+      "phoneticUS": "lù",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E8%B7%AF&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E8%B7%AF&type=2",
       "partOfSpeech": "n/qv",
       "definitions": [
-        "surname Lu",
         "road",
         "journey",
         "route",
@@ -2882,7 +2857,6 @@
         "sort; kind"
       ],
       "englishDefinitions": [
-        "surname Lu",
         "road",
         "journey",
         "route",
@@ -3184,13 +3158,12 @@
     {
       "id": "hsk2_095_zhang",
       "word": "张",
-      "phoneticUK": "Zhāng",
-      "phoneticUS": "Zhāng",
+      "phoneticUK": "zhāng",
+      "phoneticUS": "zhāng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%BC%A0&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%BC%A0&type=2",
       "partOfSpeech": "q/nr/v/g",
       "definitions": [
-        "surname Zhang",
         "to open up",
         "to spread",
         "sheet of paper",
@@ -3198,7 +3171,6 @@
         "classifier for votes"
       ],
       "englishDefinitions": [
-        "surname Zhang",
         "to open up",
         "to spread",
         "sheet of paper",
@@ -3250,13 +3222,12 @@
     {
       "id": "hsk2_097_gao",
       "word": "高",
-      "phoneticUK": "Gāo",
-      "phoneticUS": "Gāo",
+      "phoneticUK": "gāo",
+      "phoneticUS": "gāo",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%AB%98&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%AB%98&type=2",
       "partOfSpeech": "a/ad/v/g",
       "definitions": [
-        "surname Gao",
         "high",
         "tall",
         "above average",
@@ -3264,7 +3235,6 @@
         "your (honorific)"
       ],
       "englishDefinitions": [
-        "surname Gao",
         "high",
         "tall",
         "above average",
@@ -3522,13 +3492,12 @@
     {
       "id": "hsk2_105_bie",
       "word": "别",
-      "phoneticUK": "Bié",
-      "phoneticUS": "Bié",
+      "phoneticUK": "bié",
+      "phoneticUS": "bié",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%88%AB&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%88%AB&type=2",
       "partOfSpeech": "d/v/r/vn",
       "definitions": [
-        "surname Bie",
         "to leave; to part (from)",
         "(literary) to differentiate; to distinguish",
         "(bound form) other; another; different",
@@ -3538,7 +3507,6 @@
         "to make sb change their ways, opinions etc"
       ],
       "englishDefinitions": [
-        "surname Bie",
         "to leave; to part (from)",
         "(literary) to differentiate; to distinguish",
         "(bound form) other; another; different",
@@ -3706,13 +3674,12 @@
     {
       "id": "hsk2_111_xiang",
       "word": "向",
-      "phoneticUK": "Xiàng",
-      "phoneticUS": "Xiàng",
+      "phoneticUK": "xiàng",
+      "phoneticUS": "xiàng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%90%91&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%90%91&type=2",
       "partOfSpeech": "p/v/g",
       "definitions": [
-        "surname Xiang",
         "towards",
         "to face",
         "to turn towards",
@@ -3732,7 +3699,6 @@
         "to"
       ],
       "englishDefinitions": [
-        "surname Xiang",
         "towards",
         "to face",
         "to turn towards",
@@ -3826,8 +3792,8 @@
     {
       "id": "hsk2_114_bi",
       "word": "比",
-      "phoneticUK": "Bǐ",
-      "phoneticUS": "Bǐ",
+      "phoneticUK": "bī",
+      "phoneticUS": "bī",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%AF%94&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%AF%94&type=2",
       "partOfSpeech": "p/v/n/b",
@@ -3954,19 +3920,17 @@
     {
       "id": "hsk2_117_xin",
       "word": "新",
-      "phoneticUK": "Xīn",
-      "phoneticUS": "Xīn",
+      "phoneticUK": "xīn",
+      "phoneticUS": "xīn",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%96%B0&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%96%B0&type=2",
       "partOfSpeech": "a/d/b",
       "definitions": [
-        "surname Xin",
         "new",
         "newly",
         "meso- (chemistry)"
       ],
       "englishDefinitions": [
-        "surname Xin",
         "new",
         "newly",
         "meso- (chemistry)"
@@ -4526,7 +4490,6 @@
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E4%BB%8E&type=2",
       "partOfSpeech": "p/g",
       "definitions": [
-        "surname Cong",
         "from",
         "through",
         "via",
@@ -4541,7 +4504,6 @@
         "related by common paternal grandfather or earlier ancestor"
       ],
       "englishDefinitions": [
-        "surname Cong",
         "from",
         "through",
         "via",
@@ -4886,15 +4848,14 @@
       "hskLevel": 2
     },
     {
-      "id": "hsk2_142_huan",
+      "id": "hsk2_142_hai",
       "word": "还",
-      "phoneticUK": "Huán",
-      "phoneticUS": "Huán",
+      "phoneticUK": "hái",
+      "phoneticUS": "hái",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E8%BF%98&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E8%BF%98&type=2",
       "partOfSpeech": "d/v",
       "definitions": [
-        "surname Huan",
         "still",
         "still in progress",
         "still more",
@@ -4911,7 +4872,6 @@
         "to return"
       ],
       "englishDefinitions": [
-        "surname Huan",
         "still",
         "still in progress",
         "still more",
@@ -4976,17 +4936,15 @@
     {
       "id": "hsk2_144_ye",
       "word": "也",
-      "phoneticUK": "Yě",
-      "phoneticUS": "Yě",
+      "phoneticUK": "yě",
+      "phoneticUS": "yě",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E4%B9%9F&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E4%B9%9F&type=2",
       "partOfSpeech": "d/y/u/b",
       "definitions": [
-        "surname Ye",
         "(adverb) also; both ... and ... (before predicates only)"
       ],
       "englishDefinitions": [
-        "surname Ye",
         "(adverb) also; both ... and ... (before predicates only)"
       ],
       "malayDefinitions": [],

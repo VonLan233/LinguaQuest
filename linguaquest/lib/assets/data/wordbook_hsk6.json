@@ -1676,7 +1676,7 @@
     "hsk6_1663_qingchen",
     "hsk6_1664_shouhu",
     "hsk6_1665_mishi",
-    "hsk6_1666_sheng",
+    "hsk6_1666_cheng",
     "hsk6_1667_longzhon",
     "hsk6_1668_wu",
     "hsk6_1669_yi",
@@ -1904,7 +1904,7 @@
     "hsk6_1891_bianhu",
     "hsk6_1892_ai",
     "hsk6_1893_biaoji",
-    "hsk6_1894_pan",
+    "hsk6_1894_fan",
     "hsk6_1895_manchang",
     "hsk6_1896_fengxian",
     "hsk6_1897_waijie",
@@ -1999,7 +1999,7 @@
     "hsk6_1986_a",
     "hsk6_1987_zhuoshou",
     "hsk6_1988_xiezuo",
-    "hsk6_1989_pian",
+    "hsk6_1989_bian",
     "hsk6_1990_fengbao",
     "hsk6_1991_lizhi",
     "hsk6_1992_jingxuan",
@@ -8095,8 +8095,8 @@
     {
       "id": "hsk6_198_xinglong",
       "word": "兴隆",
-      "phoneticUK": "Xīng lóng",
-      "phoneticUS": "Xīng lóng",
+      "phoneticUK": "xīng lóng",
+      "phoneticUS": "xīng lóng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%85%B4%E9%9A%86&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%85%B4%E9%9A%86&type=2",
       "partOfSpeech": "a/an",
@@ -9895,8 +9895,8 @@
     {
       "id": "hsk6_260_zhenxing",
       "word": "振兴",
-      "phoneticUK": "Zhèn xīng",
-      "phoneticUS": "Zhèn xīng",
+      "phoneticUK": "zhèn xīng",
+      "phoneticUS": "zhèn xīng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%8C%AF%E5%85%B4&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%8C%AF%E5%85%B4&type=2",
       "partOfSpeech": "v",
@@ -14779,8 +14779,8 @@
     {
       "id": "hsk6_426_weixin",
       "word": "威信",
-      "phoneticUK": "Wēi xìn",
-      "phoneticUS": "Wēi xìn",
+      "phoneticUK": "wēi xìn",
+      "phoneticUS": "wēi xìn",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%A8%81%E4%BF%A1&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%A8%81%E4%BF%A1&type=2",
       "partOfSpeech": "n",
@@ -16405,8 +16405,8 @@
     {
       "id": "hsk6_482_danshui",
       "word": "淡水",
-      "phoneticUK": "Dàn shuǐ",
-      "phoneticUS": "Dàn shuǐ",
+      "phoneticUK": "dàn shuǐ",
+      "phoneticUS": "dàn shuǐ",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%B7%A1%E6%B0%B4&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%B7%A1%E6%B0%B4&type=2",
       "partOfSpeech": "n",
@@ -27337,8 +27337,8 @@
     {
       "id": "hsk6_855_fuxing",
       "word": "复兴",
-      "phoneticUK": "Fù xīng",
-      "phoneticUS": "Fù xīng",
+      "phoneticUK": "fù xīng",
+      "phoneticUS": "fù xīng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%A4%8D%E5%85%B4&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%A4%8D%E5%85%B4&type=2",
       "partOfSpeech": "vn/v",
@@ -27685,8 +27685,8 @@
     {
       "id": "hsk6_867_fangyan",
       "word": "方言",
-      "phoneticUK": "Fāng yán",
-      "phoneticUS": "Fāng yán",
+      "phoneticUK": "fāng yán",
+      "phoneticUS": "fāng yán",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%96%B9%E8%A8%80&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%96%B9%E8%A8%80&type=2",
       "partOfSpeech": "n",
@@ -36139,8 +36139,8 @@
     {
       "id": "hsk6_1154_fengman",
       "word": "丰满",
-      "phoneticUK": "Fēng mǎn",
-      "phoneticUS": "Fēng mǎn",
+      "phoneticUK": "fēng mǎn",
+      "phoneticUS": "fēng mǎn",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E4%B8%B0%E6%BB%A1&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E4%B8%B0%E6%BB%A1&type=2",
       "partOfSpeech": "a/ns",
@@ -38975,8 +38975,8 @@
     {
       "id": "hsk6_1252_gaoming",
       "word": "高明",
-      "phoneticUK": "Gāo míng",
-      "phoneticUS": "Gāo míng",
+      "phoneticUK": "gāo míng",
+      "phoneticUS": "gāo míng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%AB%98%E6%98%8E&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%AB%98%E6%98%8E&type=2",
       "partOfSpeech": "a/nr",
@@ -40161,8 +40161,8 @@
     {
       "id": "hsk6_1293_anning",
       "word": "安宁",
-      "phoneticUK": "Ān níng",
-      "phoneticUS": "Ān níng",
+      "phoneticUK": "ān níng",
+      "phoneticUS": "ān níng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%AE%89%E5%AE%81&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%AE%89%E5%AE%81&type=2",
       "partOfSpeech": "an/a",
@@ -42631,8 +42631,8 @@
     {
       "id": "hsk6_1374_fuyu",
       "word": "富裕",
-      "phoneticUK": "Fù yù",
-      "phoneticUS": "Fù yù",
+      "phoneticUK": "fù yù",
+      "phoneticUS": "fù yù",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%AF%8C%E8%A3%95&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%AF%8C%E8%A3%95&type=2",
       "partOfSpeech": "a/an",
@@ -47319,8 +47319,8 @@
     {
       "id": "hsk6_1531_benchi",
       "word": "奔驰",
-      "phoneticUK": "Bēn chí",
-      "phoneticUS": "Bēn chí",
+      "phoneticUK": "bēn chí",
+      "phoneticUS": "bēn chí",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%A5%94%E9%A9%B0&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%A5%94%E9%A9%B0&type=2",
       "partOfSpeech": "nz/v/vn",
@@ -51281,15 +51281,14 @@
       "hskLevel": 6
     },
     {
-      "id": "hsk6_1666_sheng",
+      "id": "hsk6_1666_cheng",
       "word": "盛",
-      "phoneticUK": "Shèng",
-      "phoneticUS": "Shèng",
+      "phoneticUK": "chéng",
+      "phoneticUS": "chéng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E7%9B%9B&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E7%9B%9B&type=2",
       "partOfSpeech": "v/a/ad/g",
       "definitions": [
-        "surname Sheng",
         "to hold",
         "to contain",
         "to ladle",
@@ -51300,7 +51299,6 @@
         "extensively"
       ],
       "englishDefinitions": [
-        "surname Sheng",
         "to hold",
         "to contain",
         "to ladle",
@@ -51383,20 +51381,18 @@
     {
       "id": "hsk6_1669_yi",
       "word": "翼",
-      "phoneticUK": "Yì",
-      "phoneticUS": "Yì",
+      "phoneticUK": "yì",
+      "phoneticUS": "yì",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E7%BF%BC&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E7%BF%BC&type=2",
       "partOfSpeech": "g",
       "definitions": [
-        "surname Yi",
         "wing",
         "area surrounding the bullseye of a target",
         "to assist",
         "one of the 28 constellations of Chinese astronomy"
       ],
       "englishDefinitions": [
-        "surname Yi",
         "wing",
         "area surrounding the bullseye of a target",
         "to assist",
@@ -52057,8 +52053,8 @@
     {
       "id": "hsk6_1692_lianxian",
       "word": "联想",
-      "phoneticUK": "Lián xiǎng",
-      "phoneticUS": "Lián xiǎng",
+      "phoneticUK": "lián xiǎng",
+      "phoneticUS": "lián xiǎng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E8%81%94%E6%83%B3&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E8%81%94%E6%83%B3&type=2",
       "partOfSpeech": "v/nz/vn",
@@ -54207,13 +54203,12 @@
     {
       "id": "hsk6_1763_shu",
       "word": "束",
-      "phoneticUK": "Shù",
-      "phoneticUS": "Shù",
+      "phoneticUK": "shù",
+      "phoneticUS": "shù",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%9D%9F&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%9D%9F&type=2",
       "partOfSpeech": "q/v",
       "definitions": [
-        "surname Shu",
         "to bind",
         "bunch",
         "bundle",
@@ -54221,7 +54216,6 @@
         "to control"
       ],
       "englishDefinitions": [
-        "surname Shu",
         "to bind",
         "bunch",
         "bundle",
@@ -58143,15 +58137,14 @@
       "hskLevel": 6
     },
     {
-      "id": "hsk6_1894_pan",
+      "id": "hsk6_1894_fan",
       "word": "番",
-      "phoneticUK": "Pān",
-      "phoneticUS": "Pān",
+      "phoneticUK": "fān",
+      "phoneticUS": "fān",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E7%95%AA&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E7%95%AA&type=2",
       "partOfSpeech": "qv/g",
       "definitions": [
-        "surname Pan",
         "foreign (non-Chinese)",
         "barbarian",
         "classifier for occurrences (of an event, action or speech utterance)",
@@ -58159,7 +58152,6 @@
         "classifier for situations: kind, sort"
       ],
       "englishDefinitions": [
-        "surname Pan",
         "foreign (non-Chinese)",
         "barbarian",
         "classifier for occurrences (of an event, action or speech utterance)",
@@ -58385,13 +58377,12 @@
     {
       "id": "hsk6_1902_po",
       "word": "颇",
-      "phoneticUK": "Pō",
-      "phoneticUS": "Pō",
+      "phoneticUK": "pō",
+      "phoneticUS": "pō",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%A2%87&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%A2%87&type=2",
       "partOfSpeech": "d",
       "definitions": [
-        "surname Po",
         "Taiwan pr. [Pǒ]",
         "rather",
         "quite",
@@ -58402,7 +58393,6 @@
         "Taiwan pr. [pǒ]"
       ],
       "englishDefinitions": [
-        "surname Po",
         "Taiwan pr. [Pǒ]",
         "rather",
         "quite",
@@ -59671,18 +59661,16 @@
     {
       "id": "hsk6_1946_kong",
       "word": "孔",
-      "phoneticUK": "Kǒng",
-      "phoneticUS": "Kǒng",
+      "phoneticUK": "kǒng",
+      "phoneticUS": "kǒng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%AD%94&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%AD%94&type=2",
       "partOfSpeech": "n/nr/q",
       "definitions": [
-        "surname Kong",
         "hole",
         "classifier for cave dwellings"
       ],
       "englishDefinitions": [
-        "surname Kong",
         "hole",
         "classifier for cave dwellings"
       ],
@@ -60949,21 +60937,19 @@
       "hskLevel": 6
     },
     {
-      "id": "hsk6_1989_pian",
+      "id": "hsk6_1989_bian",
       "word": "扁",
-      "phoneticUK": "Piān",
-      "phoneticUS": "Piān",
+      "phoneticUK": "biǎn",
+      "phoneticUS": "biǎn",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%89%81&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%89%81&type=2",
       "partOfSpeech": "a",
       "definitions": [
-        "surname Pian",
         "flat",
         "(coll.) to beat (sb) up",
         "small boat"
       ],
       "englishDefinitions": [
-        "surname Pian",
         "flat",
         "(coll.) to beat (sb) up",
         "small boat"
@@ -69069,21 +69055,19 @@
     {
       "id": "hsk6_2262_jing",
       "word": "井",
-      "phoneticUK": "Jǐng",
-      "phoneticUS": "Jǐng",
+      "phoneticUK": "jǐng",
+      "phoneticUS": "jǐng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E4%BA%95&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E4%BA%95&type=2",
       "partOfSpeech": "n",
       "definitions": [
         "Jing, one of the 28 constellations of Chinese astronomy",
-        "surname Jing",
         "a well",
         "neat",
         "orderly"
       ],
       "englishDefinitions": [
         "Jing, one of the 28 constellations of Chinese astronomy",
-        "surname Jing",
         "a well",
         "neat",
         "orderly"
@@ -71595,20 +71579,18 @@
     {
       "id": "hsk6_2344_shua",
       "word": "耍",
-      "phoneticUK": "Shuǎ",
-      "phoneticUS": "Shuǎ",
+      "phoneticUK": "shuǎ",
+      "phoneticUS": "shuǎ",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E8%80%8D&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E8%80%8D&type=2",
       "partOfSpeech": "v",
       "definitions": [
-        "surname Shua",
         "to play with",
         "to wield",
         "to act (cool etc)",
         "to display (a skill, one's temper etc)"
       ],
       "englishDefinitions": [
-        "surname Shua",
         "to play with",
         "to wield",
         "to act (cool etc)",
@@ -71919,7 +71901,6 @@
         "to make a wild guess",
         "blind",
         "dim-sighted",
-        "surname Meng",
         "Mongol ethnic group",
         "Taiwan pr. [Méng]",
         "(knocked) unconscious",
@@ -71939,7 +71920,6 @@
         "to make a wild guess",
         "blind",
         "dim-sighted",
-        "surname Meng",
         "Mongol ethnic group",
         "Taiwan pr. [Méng]",
         "(knocked) unconscious",
@@ -73093,20 +73073,18 @@
     {
       "id": "hsk6_2393_mei",
       "word": "枚",
-      "phoneticUK": "Méi",
-      "phoneticUS": "Méi",
+      "phoneticUK": "méi",
+      "phoneticUS": "méi",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%9E%9A&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%9E%9A&type=2",
       "partOfSpeech": "q",
       "definitions": [
-        "surname Mei",
         "classifier for coins, rings, badges, pearls, sporting medals, rockets, satellites etc",
         "tree trunk",
         "whip",
         "wooden peg, used as a gag for marching soldiers (old)"
       ],
       "englishDefinitions": [
-        "surname Mei",
         "classifier for coins, rings, badges, pearls, sporting medals, rockets, satellites etc",
         "tree trunk",
         "whip",
@@ -73595,8 +73573,8 @@
     {
       "id": "hsk6_2410_jiangjun",
       "word": "将军",
-      "phoneticUK": "Jiāng jūn",
-      "phoneticUS": "Jiāng jūn",
+      "phoneticUK": "jiāng jūn",
+      "phoneticUS": "jiāng jūn",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%B0%86%E5%86%9B&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%B0%86%E5%86%9B&type=2",
       "partOfSpeech": "n",
@@ -74609,20 +74587,18 @@
     {
       "id": "hsk6_2443_dang",
       "word": "党",
-      "phoneticUK": "Dǎng",
-      "phoneticUS": "Dǎng",
+      "phoneticUK": "dǎng",
+      "phoneticUS": "dǎng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%85%9A&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%85%9A&type=2",
       "partOfSpeech": "n",
       "definitions": [
-        "surname Dang",
         "party",
         "association",
         "club",
         "society"
       ],
       "englishDefinitions": [
-        "surname Dang",
         "party",
         "association",
         "club",
@@ -75491,8 +75467,8 @@
     {
       "id": "hsk6_2472_wangluo",
       "word": "网络",
-      "phoneticUK": "Wǎng luò",
-      "phoneticUS": "Wǎng luò",
+      "phoneticUK": "wǎng luò",
+      "phoneticUS": "wǎng luò",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E7%BD%91%E7%BB%9C&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E7%BD%91%E7%BB%9C&type=2",
       "partOfSpeech": "n",
@@ -76239,13 +76215,12 @@
     {
       "id": "hsk6_2497_zu",
       "word": "组",
-      "phoneticUK": "Zǔ",
-      "phoneticUS": "Zǔ",
+      "phoneticUK": "zǔ",
+      "phoneticUS": "zǔ",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E7%BB%84&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E7%BB%84&type=2",
       "partOfSpeech": "n/q/g/v",
       "definitions": [
-        "surname Zu",
         "to form",
         "to organize",
         "group",
@@ -76253,7 +76228,6 @@
         "classifier for sets, series, groups of people, batteries"
       ],
       "englishDefinitions": [
-        "surname Zu",
         "to form",
         "to organize",
         "group",

@@ -281,7 +281,7 @@
     "hsk4_268_zixi",
     "hsk4_269_kongpa",
     "hsk4_270_shouru",
-    "hsk4_271_tang",
+    "hsk4_271_shang",
     "hsk4_272_xiang",
     "hsk4_273_gaoji",
     "hsk4_274_jiji",
@@ -2193,13 +2193,12 @@
     {
       "id": "hsk4_056_xian",
       "word": "咸",
-      "phoneticUK": "Xián",
-      "phoneticUS": "Xián",
+      "phoneticUK": "xián",
+      "phoneticUS": "xián",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%92%B8&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%92%B8&type=2",
       "partOfSpeech": "a",
       "definitions": [
-        "surname Xian",
         "all",
         "everyone",
         "each",
@@ -2211,7 +2210,6 @@
         "miserly"
       ],
       "englishDefinitions": [
-        "surname Xian",
         "all",
         "everyone",
         "each",
@@ -3157,8 +3155,8 @@
     {
       "id": "hsk4_090_sunzi",
       "word": "孙子",
-      "phoneticUK": "Sūn zǐ",
-      "phoneticUS": "Sūn zǐ",
+      "phoneticUK": "sūn zi",
+      "phoneticUS": "sūn zi",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%AD%99%E5%AD%90&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%AD%99%E5%AD%90&type=2",
       "partOfSpeech": "n/nr",
@@ -4229,8 +4227,8 @@
     {
       "id": "hsk4_127_shizi",
       "word": "狮子",
-      "phoneticUK": "Shī zǐ",
-      "phoneticUS": "Shī zǐ",
+      "phoneticUK": "shī zi",
+      "phoneticUS": "shī zi",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E7%8B%AE%E5%AD%90&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E7%8B%AE%E5%AD%90&type=2",
       "partOfSpeech": "n",
@@ -5659,13 +5657,12 @@
     {
       "id": "hsk4_176_kuan",
       "word": "宽",
-      "phoneticUK": "Kuān",
-      "phoneticUS": "Kuān",
+      "phoneticUK": "kuān",
+      "phoneticUS": "kuān",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%AE%BD&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%AE%BD&type=2",
       "partOfSpeech": "a",
       "definitions": [
-        "surname Kuan",
         "wide",
         "broad",
         "loose",
@@ -5673,7 +5670,6 @@
         "lenient"
       ],
       "englishDefinitions": [
-        "surname Kuan",
         "wide",
         "broad",
         "loose",
@@ -6055,8 +6051,8 @@
     {
       "id": "hsk4_189_youhao",
       "word": "友好",
-      "phoneticUK": "Yǒu hǎo",
-      "phoneticUS": "Yǒu hǎo",
+      "phoneticUK": "yǒu hǎo",
+      "phoneticUS": "yǒu hǎo",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%8F%8B%E5%A5%BD&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%8F%8B%E5%A5%BD&type=2",
       "partOfSpeech": "a/ad",
@@ -6461,19 +6457,17 @@
     {
       "id": "hsk4_203_fu",
       "word": "富",
-      "phoneticUK": "Fù",
-      "phoneticUS": "Fù",
+      "phoneticUK": "fù",
+      "phoneticUS": "fù",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%AF%8C&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%AF%8C&type=2",
       "partOfSpeech": "g/a",
       "definitions": [
-        "surname Fu",
         "rich",
         "abundant",
         "wealthy"
       ],
       "englishDefinitions": [
-        "surname Fu",
         "rich",
         "abundant",
         "wealthy"
@@ -7695,8 +7689,8 @@
     {
       "id": "hsk4_243_xiandai",
       "word": "现代",
-      "phoneticUK": "Xiàn dài",
-      "phoneticUS": "Xiàn dài",
+      "phoneticUK": "xiàn dài",
+      "phoneticUS": "xiàn dài",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E7%8E%B0%E4%BB%A3&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E7%8E%B0%E4%BB%A3&type=2",
       "partOfSpeech": "t",
@@ -8563,15 +8557,14 @@
       "hskLevel": 4
     },
     {
-      "id": "hsk4_271_tang",
+      "id": "hsk4_271_shang",
       "word": "汤",
-      "phoneticUK": "Tāng",
-      "phoneticUS": "Tāng",
+      "phoneticUK": "shāng",
+      "phoneticUS": "shāng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%B1%A4&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%B1%A4&type=2",
       "partOfSpeech": "n/nr",
       "definitions": [
-        "surname Tang",
         "rushing current",
         "soup",
         "hot or boiling water",
@@ -8579,7 +8572,6 @@
         "water in which sth has been boiled"
       ],
       "englishDefinitions": [
-        "surname Tang",
         "rushing current",
         "soup",
         "hot or boiling water",
@@ -10325,20 +10317,18 @@
     {
       "id": "hsk4_327_dai",
       "word": "戴",
-      "phoneticUK": "Dài",
-      "phoneticUS": "Dài",
+      "phoneticUK": "dài",
+      "phoneticUS": "dài",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%88%B4&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%88%B4&type=2",
       "partOfSpeech": "v/nr",
       "definitions": [
-        "surname Dai",
         "to put on or wear (glasses, hat, gloves etc)",
         "to respect",
         "to bear",
         "to support"
       ],
       "englishDefinitions": [
-        "surname Dai",
         "to put on or wear (glasses, hat, gloves etc)",
         "to respect",
         "to bear",
@@ -10385,13 +10375,12 @@
     {
       "id": "hsk4_329_xiu",
       "word": "修",
-      "phoneticUK": "Xiū",
-      "phoneticUS": "Xiū",
+      "phoneticUK": "xiū",
+      "phoneticUS": "xiū",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E4%BF%AE&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E4%BF%AE&type=2",
       "partOfSpeech": "v",
       "definitions": [
-        "surname Xiu",
         "to decorate",
         "to embellish",
         "to repair",
@@ -10402,7 +10391,6 @@
         "to take (a class)"
       ],
       "englishDefinitions": [
-        "surname Xiu",
         "to decorate",
         "to embellish",
         "to repair",
@@ -11843,13 +11831,12 @@
     {
       "id": "hsk4_377_shuai",
       "word": "帅",
-      "phoneticUK": "Shuài",
-      "phoneticUS": "Shuài",
+      "phoneticUK": "shuài",
+      "phoneticUS": "shuài",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%B8%85&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%B8%85&type=2",
       "partOfSpeech": "nr/g",
       "definitions": [
-        "surname Shuai",
         "(bound form) commander-in-chief",
         "(bound form) to lead; to command",
         "handsome; graceful; dashing; elegant",
@@ -11857,7 +11844,6 @@
         "(Chinese chess) general (on the red side, equivalent to a king in Western chess)"
       ],
       "englishDefinitions": [
-        "surname Shuai",
         "(bound form) commander-in-chief",
         "(bound form) to lead; to command",
         "handsome; graceful; dashing; elegant",
@@ -12705,13 +12691,12 @@
     {
       "id": "hsk4_405_dao",
       "word": "刀",
-      "phoneticUK": "Dāo",
-      "phoneticUS": "Dāo",
+      "phoneticUK": "dāo",
+      "phoneticUS": "dāo",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%88%80&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%88%80&type=2",
       "partOfSpeech": "n/q",
       "definitions": [
-        "surname Dao",
         "knife",
         "blade",
         "single-edged sword",
@@ -12721,7 +12706,6 @@
         "classifier for knife cuts or stabs"
       ],
       "englishDefinitions": [
-        "surname Dao",
         "knife",
         "blade",
         "single-edged sword",
@@ -13467,13 +13451,12 @@
     {
       "id": "hsk4_429_huo",
       "word": "火",
-      "phoneticUK": "Huǒ",
-      "phoneticUS": "Huǒ",
+      "phoneticUK": "huǒ",
+      "phoneticUS": "huǒ",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E7%81%AB&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E7%81%AB&type=2",
       "partOfSpeech": "n/a/v",
       "definitions": [
-        "surname Huo",
         "fire",
         "urgent",
         "ammunition",
@@ -13484,7 +13467,6 @@
         "Kangxi radical 86"
       ],
       "englishDefinitions": [
-        "surname Huo",
         "fire",
         "urgent",
         "ammunition",
@@ -14809,8 +14791,8 @@
     {
       "id": "hsk4_472_man",
       "word": "满",
-      "phoneticUK": "Mǎn",
-      "phoneticUS": "Mǎn",
+      "phoneticUK": "mǎn",
+      "phoneticUS": "mǎn",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%BB%A1&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%BB%A1&type=2",
       "partOfSpeech": "a/v/d/b",
@@ -15317,13 +15299,12 @@
     {
       "id": "hsk4_488_tan",
       "word": "谈",
-      "phoneticUK": "Tán",
-      "phoneticUS": "Tán",
+      "phoneticUK": "tán",
+      "phoneticUS": "tán",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E8%B0%88&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E8%B0%88&type=2",
       "partOfSpeech": "v/g",
       "definitions": [
-        "surname Tan",
         "to speak",
         "to talk",
         "to converse",
@@ -15331,7 +15312,6 @@
         "to discuss"
       ],
       "englishDefinitions": [
-        "surname Tan",
         "to speak",
         "to talk",
         "to converse",
@@ -16441,14 +16421,13 @@
     {
       "id": "hsk4_523_tai",
       "word": "台",
-      "phoneticUK": "Tái",
-      "phoneticUS": "Tái",
+      "phoneticUK": "tái",
+      "phoneticUS": "tái",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%8F%B0&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%8F%B0&type=2",
       "partOfSpeech": "q/n/b",
       "definitions": [
         "Taiwan (abbr.)",
-        "surname Tai",
         "(classical) you (in letters)",
         "desk; table; counter",
         "platform",
@@ -16463,7 +16442,6 @@
       ],
       "englishDefinitions": [
         "Taiwan (abbr.)",
-        "surname Tai",
         "(classical) you (in letters)",
         "desk; table; counter",
         "platform",
@@ -17495,8 +17473,8 @@
     {
       "id": "hsk4_554_chenggon",
       "word": "成功",
-      "phoneticUK": "Chéng gōng",
-      "phoneticUS": "Chéng gōng",
+      "phoneticUK": "chéng gōng",
+      "phoneticUS": "chéng gōng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%88%90%E5%8A%9F&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%88%90%E5%8A%9F&type=2",
       "partOfSpeech": "a/an/ad",
@@ -17587,7 +17565,6 @@
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%B9%B2&type=2",
       "partOfSpeech": "v/a",
       "definitions": [
-        "surname Gan",
         "dry",
         "dried food",
         "empty; hollow",
@@ -17610,7 +17587,6 @@
         "annoyed"
       ],
       "englishDefinitions": [
-        "surname Gan",
         "dry",
         "dried food",
         "empty; hollow",
@@ -17761,13 +17737,12 @@
     {
       "id": "hsk4_562_lian",
       "word": "连",
-      "phoneticUK": "Lián",
-      "phoneticUS": "Lián",
+      "phoneticUK": "lián",
+      "phoneticUS": "lián",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E8%BF%9E&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E8%BF%9E&type=2",
       "partOfSpeech": "u/d/v/n",
       "definitions": [
-        "surname Lian",
         "to link",
         "to join",
         "to connect",
@@ -17777,7 +17752,6 @@
         "company (military)"
       ],
       "englishDefinitions": [
-        "surname Lian",
         "to link",
         "to join",
         "to connect",
@@ -19003,13 +18977,12 @@
     {
       "id": "hsk4_596_guo",
       "word": "过",
-      "phoneticUK": "Guō",
-      "phoneticUS": "Guō",
+      "phoneticUK": "guò",
+      "phoneticUS": "guò",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E8%BF%87&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E8%BF%87&type=2",
       "partOfSpeech": "u/v/d/g",
       "definitions": [
-        "surname Guo",
         "to cross",
         "to go over",
         "to pass (time)",
@@ -19021,7 +18994,6 @@
         "(experienced action marker)"
       ],
       "englishDefinitions": [
-        "surname Guo",
         "to cross",
         "to go over",
         "to pass (time)",

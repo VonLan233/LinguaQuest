@@ -79,14 +79,23 @@ def youdao(word: str, t: int) -> str:
 def make_word(entry, level, index):
     simp = entry["simplified"]
     forms = entry.get("forms") or [{}]
-    pinyin = (forms[0].get("transcriptions") or {}).get("pinyin", "")
-    # aggregate glosses across ALL forms (the clean English meaning is sometimes
-    # in a later form, after a leading "variant of …" form)
+    # #B2: 优先选拼音首字母小写的 form（常用词），避免姓氏/专名读音（如 Bǎi）。
+    def pick_form(fs):
+        for f in fs:
+            p = (f.get("transcriptions") or {}).get("pinyin", "")
+            if p and p[0].islower():
+                return f
+        return fs[0]
+    chosen = pick_form(forms)
+    pinyin = (chosen.get("transcriptions") or {}).get("pinyin", "")
+    # aggregate glosses across ALL forms（跳 surname 义项）
     seen = set()
     raw = []
     for f in forms:
         for m in f.get("meanings") or []:
             m = m.strip()
+            if m and m.lower().startswith("surname "):
+                continue
             if m and m not in seen:
                 seen.add(m)
                 raw.append(m)

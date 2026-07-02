@@ -100,7 +100,7 @@
     "hsk3_087_fangxin",
     "hsk3_088_ganjing",
     "hsk3_089_pan",
-    "hsk3_090_jue",
+    "hsk3_090_jiao",
     "hsk3_091_tiyu",
     "hsk3_092_shufu",
     "hsk3_093_tongshi",
@@ -1007,19 +1007,17 @@
     {
       "id": "hsk3_025_qiu",
       "word": "秋",
-      "phoneticUK": "Qiū",
-      "phoneticUS": "Qiū",
+      "phoneticUK": "qiū",
+      "phoneticUS": "qiū",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E7%A7%8B&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E7%A7%8B&type=2",
       "partOfSpeech": "tg/g",
       "definitions": [
-        "surname Qiu",
         "autumn",
         "fall",
         "harvest time"
       ],
       "englishDefinitions": [
-        "surname Qiu",
         "autumn",
         "fall",
         "harvest time"
@@ -1098,13 +1096,11 @@
       "partOfSpeech": "tg",
       "definitions": [
         "winter",
-        "surname Dong",
         "(onom.) beating a drum",
         "rat-a-tat"
       ],
       "englishDefinitions": [
         "winter",
-        "surname Dong",
         "(onom.) beating a drum",
         "rat-a-tat"
       ],
@@ -1529,7 +1525,6 @@
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%98%A5&type=2",
       "partOfSpeech": "tg",
       "definitions": [
-        "surname Chun",
         "spring (season)",
         "gay",
         "joyful",
@@ -1539,7 +1534,6 @@
         "life"
       ],
       "englishDefinitions": [
-        "surname Chun",
         "spring (season)",
         "gay",
         "joyful",
@@ -1741,21 +1735,19 @@
     {
       "id": "hsk3_050_xia",
       "word": "夏",
-      "phoneticUK": "Xià",
-      "phoneticUS": "Xià",
+      "phoneticUK": "xià",
+      "phoneticUS": "xià",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%A4%8F&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%A4%8F&type=2",
       "partOfSpeech": "tg/g/nr",
       "definitions": [
         "the Xia or Hsia dynasty c. 2000 BC",
         "Xia of the Sixteen Kingdoms (407-432)",
-        "surname Xia",
         "summer"
       ],
       "englishDefinitions": [
         "the Xia or Hsia dynasty c. 2000 BC",
         "Xia of the Sixteen Kingdoms (407-432)",
-        "surname Xia",
         "summer"
       ],
       "malayDefinitions": [],
@@ -2252,12 +2244,10 @@
       "partOfSpeech": "n/g/b",
       "definitions": [
         "(classical) to say",
-        "surname Yun",
         "cloud"
       ],
       "englishDefinitions": [
         "(classical) to say",
-        "surname Yun",
         "cloud"
       ],
       "malayDefinitions": [],
@@ -2937,15 +2927,14 @@
       "hskLevel": 3
     },
     {
-      "id": "hsk3_090_jue",
+      "id": "hsk3_090_jiao",
       "word": "角",
-      "phoneticUK": "Jué",
-      "phoneticUS": "Jué",
+      "phoneticUK": "jiǎo",
+      "phoneticUS": "jiǎo",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E8%A7%92&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E8%A7%92&type=2",
       "partOfSpeech": "n/q/g",
       "definitions": [
-        "surname Jue",
         "angle",
         "corner",
         "horn",
@@ -2957,7 +2946,6 @@
         "third note of pentatonic scale"
       ],
       "englishDefinitions": [
-        "surname Jue",
         "angle",
         "corner",
         "horn",
@@ -3705,19 +3693,17 @@
     {
       "id": "hsk3_115_huang",
       "word": "黄",
-      "phoneticUK": "Huáng",
-      "phoneticUS": "Huáng",
+      "phoneticUK": "huáng",
+      "phoneticUS": "huáng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%BB%84&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%BB%84&type=2",
       "partOfSpeech": "nr/a/b",
       "definitions": [
-        "surname Huang or Hwang",
         "yellow",
         "pornographic",
         "to fall through"
       ],
       "englishDefinitions": [
-        "surname Huang or Hwang",
         "yellow",
         "pornographic",
         "to fall through"
@@ -3853,17 +3839,15 @@
     {
       "id": "hsk3_120_nan",
       "word": "南",
-      "phoneticUK": "Nán",
-      "phoneticUS": "Nán",
+      "phoneticUK": "nán",
+      "phoneticUS": "nán",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%8D%97&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%8D%97&type=2",
       "partOfSpeech": "b/f",
       "definitions": [
-        "surname Nan",
         "south"
       ],
       "englishDefinitions": [
-        "surname Nan",
         "south"
       ],
       "malayDefinitions": [],
@@ -4029,18 +4013,16 @@
     {
       "id": "hsk3_126_lan",
       "word": "蓝",
-      "phoneticUK": "Lán",
-      "phoneticUS": "Lán",
+      "phoneticUK": "lán",
+      "phoneticUS": "lán",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E8%93%9D&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E8%93%9D&type=2",
       "partOfSpeech": "a/g",
       "definitions": [
-        "surname Lan",
         "blue",
         "indigo plant"
       ],
       "englishDefinitions": [
-        "surname Lan",
         "blue",
         "indigo plant"
       ],
@@ -4149,19 +4131,17 @@
     {
       "id": "hsk3_130_dong",
       "word": "东",
-      "phoneticUK": "Dōng",
-      "phoneticUS": "Dōng",
+      "phoneticUK": "dōng",
+      "phoneticUS": "dōng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E4%B8%9C&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E4%B8%9C&type=2",
       "partOfSpeech": "f/b",
       "definitions": [
-        "surname Dong",
         "east",
         "host (i.e. sitting on east side of guest)",
         "landlord"
       ],
       "englishDefinitions": [
-        "surname Dong",
         "east",
         "host (i.e. sitting on east side of guest)",
         "landlord"
@@ -4657,20 +4637,18 @@
     {
       "id": "hsk3_147_ban",
       "word": "班",
-      "phoneticUK": "Bān",
-      "phoneticUS": "Bān",
+      "phoneticUK": "bān",
+      "phoneticUS": "bān",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E7%8F%AD&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E7%8F%AD&type=2",
       "partOfSpeech": "n/q/nr",
       "definitions": [
-        "surname Ban",
         "team; class; grade",
         "(military) squad",
         "work shift",
         "classifier for groups of people and scheduled transport vehicles"
       ],
       "englishDefinitions": [
-        "surname Ban",
         "team; class; grade",
         "(military) squad",
         "work shift",
@@ -4753,19 +4731,17 @@
     {
       "id": "hsk3_150_zhu",
       "word": "祝",
-      "phoneticUK": "Zhù",
-      "phoneticUS": "Zhù",
+      "phoneticUK": "zhù",
+      "phoneticUS": "zhù",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E7%A5%9D&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E7%A5%9D&type=2",
       "partOfSpeech": "v/nr",
       "definitions": [
-        "surname Zhu",
         "to pray for",
         "to wish (sb bon voyage, happy birthday etc)",
         "person who invokes the spirits during sacrificial ceremonies"
       ],
       "englishDefinitions": [
-        "surname Zhu",
         "to pray for",
         "to wish (sb bon voyage, happy birthday etc)",
         "person who invokes the spirits during sacrificial ceremonies"
@@ -4903,20 +4879,18 @@
     {
       "id": "hsk3_155_guan",
       "word": "关",
-      "phoneticUK": "Guān",
-      "phoneticUS": "Guān",
+      "phoneticUK": "guān",
+      "phoneticUS": "guān",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%85%B3&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%85%B3&type=2",
       "partOfSpeech": "v/n/nr",
       "definitions": [
-        "surname Guan",
         "mountain pass",
         "to close; to shut; to turn off",
         "to confine; to lock (sb) up; to shut (sb in a room, a bird in a cage etc)",
         "to concern; to involve"
       ],
       "englishDefinitions": [
-        "surname Guan",
         "mountain pass",
         "to close; to shut; to turn off",
         "to confine; to lock (sb) up; to shut (sb in a room, a bird in a cage etc)",
@@ -5235,13 +5209,12 @@
     {
       "id": "hsk3_166_jiao",
       "word": "教",
-      "phoneticUK": "Jiào",
-      "phoneticUS": "Jiào",
+      "phoneticUK": "jiāo",
+      "phoneticUS": "jiāo",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%95%99&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%95%99&type=2",
       "partOfSpeech": "v/g",
       "definitions": [
-        "surname Jiao",
         "to teach",
         "religion",
         "teaching",
@@ -5250,7 +5223,6 @@
         "to tell"
       ],
       "englishDefinitions": [
-        "surname Jiao",
         "to teach",
         "religion",
         "teaching",
@@ -5411,8 +5383,8 @@
     {
       "id": "hsk3_171_xi",
       "word": "西",
-      "phoneticUK": "Xī",
-      "phoneticUS": "Xī",
+      "phoneticUK": "xī",
+      "phoneticUS": "xī",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E8%A5%BF&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E8%A5%BF&type=2",
       "partOfSpeech": "f/b",
@@ -6051,19 +6023,17 @@
     {
       "id": "hsk3_192_lou",
       "word": "楼",
-      "phoneticUK": "Lóu",
-      "phoneticUS": "Lóu",
+      "phoneticUK": "lóu",
+      "phoneticUS": "lóu",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%A5%BC&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%A5%BC&type=2",
       "partOfSpeech": "n",
       "definitions": [
-        "surname Lou",
         "house with more than 1 story",
         "storied building",
         "floor"
       ],
       "englishDefinitions": [
-        "surname Lou",
         "house with more than 1 story",
         "storied building",
         "floor"
@@ -6083,13 +6053,12 @@
     {
       "id": "hsk3_193_bao",
       "word": "包",
-      "phoneticUK": "Bāo",
-      "phoneticUS": "Bāo",
+      "phoneticUK": "bāo",
+      "phoneticUS": "bāo",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%8C%85&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%8C%85&type=2",
       "partOfSpeech": "v/n/q",
       "definitions": [
-        "surname Bao",
         "to cover",
         "to wrap",
         "to hold",
@@ -6105,7 +6074,6 @@
         "packet"
       ],
       "englishDefinitions": [
-        "surname Bao",
         "to cover",
         "to wrap",
         "to hold",
@@ -6399,18 +6367,16 @@
     {
       "id": "hsk3_203_mi",
       "word": "米",
-      "phoneticUK": "Mǐ",
-      "phoneticUS": "Mǐ",
+      "phoneticUK": "mǐ",
+      "phoneticUS": "mǐ",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E7%B1%B3&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E7%B1%B3&type=2",
       "partOfSpeech": "n/q",
       "definitions": [
-        "surname Mi",
         "rice",
         "meter (classifier)"
       ],
       "englishDefinitions": [
-        "surname Mi",
         "rice",
         "meter (classifier)"
       ],
@@ -6459,13 +6425,12 @@
     {
       "id": "hsk3_205_duan",
       "word": "段",
-      "phoneticUK": "Duàn",
-      "phoneticUS": "Duàn",
+      "phoneticUK": "duàn",
+      "phoneticUS": "duàn",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%AE%B5&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%AE%B5&type=2",
       "partOfSpeech": "q/g",
       "definitions": [
-        "surname Duan",
         "paragraph",
         "section",
         "segment",
@@ -6473,7 +6438,6 @@
         "classifier for stories, periods of time, lengths of thread etc"
       ],
       "englishDefinitions": [
-        "surname Duan",
         "paragraph",
         "section",
         "segment",
@@ -6521,13 +6485,12 @@
     {
       "id": "hsk3_207_shuang",
       "word": "双",
-      "phoneticUK": "Shuāng",
-      "phoneticUS": "Shuāng",
+      "phoneticUK": "shuāng",
+      "phoneticUS": "shuāng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%8F%8C&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%8F%8C&type=2",
       "partOfSpeech": "m/q",
       "definitions": [
-        "surname Shuang",
         "two",
         "double",
         "pair",
@@ -6535,7 +6498,6 @@
         "even (number)"
       ],
       "englishDefinitions": [
-        "surname Shuang",
         "two",
         "double",
         "pair",
@@ -6803,19 +6765,17 @@
     {
       "id": "hsk3_216_ma",
       "word": "马",
-      "phoneticUK": "Mǎ",
-      "phoneticUS": "Mǎ",
+      "phoneticUK": "mǎ",
+      "phoneticUS": "mǎ",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%A9%AC&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%A9%AC&type=2",
       "partOfSpeech": "n/nr/b",
       "definitions": [
-        "surname Ma",
         "horse",
         "horse or cavalry piece in Chinese chess",
         "knight in Western chess"
       ],
       "englishDefinitions": [
-        "surname Ma",
         "horse",
         "horse or cavalry piece in Chinese chess",
         "knight in Western chess"
@@ -6923,8 +6883,8 @@
     {
       "id": "hsk3_220_yue",
       "word": "越",
-      "phoneticUK": "Yuè",
-      "phoneticUS": "Yuè",
+      "phoneticUK": "yuè",
+      "phoneticUS": "yuè",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E8%B6%8A&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E8%B6%8A&type=2",
       "partOfSpeech": "d/g/b",
@@ -7015,12 +6975,10 @@
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E4%B8%87&type=2",
       "partOfSpeech": "m/t",
       "definitions": [
-        "surname Wan",
         "ten thousand",
         "a great number"
       ],
       "englishDefinitions": [
-        "surname Wan",
         "ten thousand",
         "a great number"
       ],
@@ -7413,13 +7371,12 @@
     {
       "id": "hsk3_236_hua",
       "word": "花",
-      "phoneticUK": "Huā",
-      "phoneticUS": "Huā",
+      "phoneticUK": "huā",
+      "phoneticUS": "huā",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E8%8A%B1&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E8%8A%B1&type=2",
       "partOfSpeech": "v/n/a",
       "definitions": [
-        "surname Hua",
         "flower",
         "blossom",
         "fancy pattern",
@@ -7430,7 +7387,6 @@
         "also pr. [wěi]"
       ],
       "englishDefinitions": [
-        "surname Hua",
         "flower",
         "blossom",
         "fancy pattern",

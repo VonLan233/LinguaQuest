@@ -622,7 +622,7 @@
     "hsk5_609_pingchan",
     "hsk5_610_zhaokai",
     "hsk5_611_chengfen",
-    "hsk5_612_bo",
+    "hsk5_612_bao",
     "hsk5_613_maoyi",
     "hsk5_614_motuoche",
     "hsk5_615_kefu",
@@ -873,7 +873,7 @@
     "hsk5_860_mo",
     "hsk5_861_shuangfa",
     "hsk5_862_yinsu",
-    "hsk5_863_lu",
+    "hsk5_863_lou",
     "hsk5_864_huoban",
     "hsk5_865_zhihui",
     "hsk5_866_buru",
@@ -995,7 +995,7 @@
     "hsk5_982_ta",
     "hsk5_983_chao",
     "hsk5_984_lianhe",
-    "hsk5_985_ge",
+    "hsk5_985_gai",
     "hsk5_986_yuanze",
     "hsk5_987_zhidao",
     "hsk5_988_tuijian",
@@ -4573,8 +4573,8 @@
     {
       "id": "hsk5_116_guanzi",
       "word": "管子",
-      "phoneticUK": "Guǎn zǐ",
-      "phoneticUS": "Guǎn zǐ",
+      "phoneticUK": "guǎn zi",
+      "phoneticUS": "guǎn zi",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E7%AE%A1%E5%AD%90&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E7%AE%A1%E5%AD%90&type=2",
       "partOfSpeech": "n/nr",
@@ -13245,8 +13245,8 @@
     {
       "id": "hsk5_414_yanchang",
       "word": "延长",
-      "phoneticUK": "Yán cháng",
-      "phoneticUS": "Yán cháng",
+      "phoneticUK": "yán cháng",
+      "phoneticUS": "yán cháng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%BB%B6%E9%95%BF&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%BB%B6%E9%95%BF&type=2",
       "partOfSpeech": "v/vn",
@@ -19173,15 +19173,14 @@
       "hskLevel": 5
     },
     {
-      "id": "hsk5_612_bo",
+      "id": "hsk5_612_bao",
       "word": "薄",
-      "phoneticUK": "Bó",
-      "phoneticUS": "Bó",
+      "phoneticUK": "báo",
+      "phoneticUS": "báo",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E8%96%84&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E8%96%84&type=2",
       "partOfSpeech": "a",
       "definitions": [
-        "surname Bo",
         "thin",
         "cold in manner",
         "indifferent",
@@ -19198,7 +19197,6 @@
         "to approach or near"
       ],
       "englishDefinitions": [
-        "surname Bo",
         "thin",
         "cold in manner",
         "indifferent",
@@ -20755,13 +20753,12 @@
     {
       "id": "hsk5_664_chou",
       "word": "丑",
-      "phoneticUK": "Chǒu",
-      "phoneticUS": "Chǒu",
+      "phoneticUK": "chǒu",
+      "phoneticUS": "chǒu",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E4%B8%91&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E4%B8%91&type=2",
       "partOfSpeech": "a/g",
       "definitions": [
-        "surname Chou",
         "clown",
         "2nd earthly branch: 1-3 a.m., 12th solar month (6th January to 3rd February), year of the Ox",
         "ancient Chinese compass point: 30°",
@@ -20770,7 +20767,6 @@
         "disgraceful"
       ],
       "englishDefinitions": [
-        "surname Chou",
         "clown",
         "2nd earthly branch: 1-3 a.m., 12th solar month (6th January to 3rd February), year of the Ox",
         "ancient Chinese compass point: 30°",
@@ -23905,13 +23901,12 @@
     {
       "id": "hsk5_769_ding",
       "word": "丁",
-      "phoneticUK": "Dīng",
-      "phoneticUS": "Dīng",
+      "phoneticUK": "dīng",
+      "phoneticUS": "dīng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E4%B8%81&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E4%B8%81&type=2",
       "partOfSpeech": "nr/o/g/Mg",
       "definitions": [
-        "surname Ding",
         "male adult",
         "fourth (used like \"4\" or \"D\")",
         "small cube of meat or vegetable",
@@ -23920,7 +23915,6 @@
         "(chemistry) butyl"
       ],
       "englishDefinitions": [
-        "surname Ding",
         "male adult",
         "fourth (used like \"4\" or \"D\")",
         "small cube of meat or vegetable",
@@ -24591,20 +24585,18 @@
     {
       "id": "hsk5_791_yao",
       "word": "摇",
-      "phoneticUK": "Yáo",
-      "phoneticUS": "Yáo",
+      "phoneticUK": "yáo",
+      "phoneticUS": "yáo",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%91%87&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%91%87&type=2",
       "partOfSpeech": "v",
       "definitions": [
-        "surname Yao",
         "to shake",
         "to rock",
         "to row",
         "to crank"
       ],
       "englishDefinitions": [
-        "surname Yao",
         "to shake",
         "to rock",
         "to row",
@@ -25453,13 +25445,12 @@
     {
       "id": "hsk5_818_cheng",
       "word": "乘",
-      "phoneticUK": "Chéng",
-      "phoneticUS": "Chéng",
+      "phoneticUK": "chéng",
+      "phoneticUS": "chéng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E4%B9%98&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E4%B9%98&type=2",
       "partOfSpeech": "v/p",
       "definitions": [
-        "surname Cheng",
         "to ride",
         "to mount",
         "to make use of",
@@ -25472,7 +25463,6 @@
         "generic term for history books"
       ],
       "englishDefinitions": [
-        "surname Cheng",
         "to ride",
         "to mount",
         "to make use of",
@@ -26373,8 +26363,8 @@
     {
       "id": "hsk5_847_qing",
       "word": "青",
-      "phoneticUK": "Qīng",
-      "phoneticUS": "Qīng",
+      "phoneticUK": "qīng",
+      "phoneticUS": "qīng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%9D%92&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%9D%92&type=2",
       "partOfSpeech": "a/b",
@@ -26843,15 +26833,14 @@
       "hskLevel": 5
     },
     {
-      "id": "hsk5_863_lu",
+      "id": "hsk5_863_lou",
       "word": "露",
-      "phoneticUK": "Lù",
-      "phoneticUS": "Lù",
+      "phoneticUK": "lòu",
+      "phoneticUS": "lòu",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%9C%B2&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%9C%B2&type=2",
       "partOfSpeech": "v/g",
       "definitions": [
-        "surname Lu",
         "to show",
         "to reveal",
         "to betray",
@@ -26862,7 +26851,6 @@
         "outdoors (not under cover)"
       ],
       "englishDefinitions": [
-        "surname Lu",
         "to show",
         "to reveal",
         "to betray",
@@ -27389,8 +27377,8 @@
     {
       "id": "hsk5_881_shi",
       "word": "诗",
-      "phoneticUK": "Shī",
-      "phoneticUS": "Shī",
+      "phoneticUK": "shī",
+      "phoneticUS": "shī",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E8%AF%97&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E8%AF%97&type=2",
       "partOfSpeech": "n",
@@ -28499,13 +28487,12 @@
     {
       "id": "hsk5_918_wen",
       "word": "闻",
-      "phoneticUK": "Wén",
-      "phoneticUS": "Wén",
+      "phoneticUK": "wén",
+      "phoneticUS": "wén",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%97%BB&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%97%BB&type=2",
       "partOfSpeech": "v",
       "definitions": [
-        "surname Wen",
         "to hear",
         "news",
         "well-known",
@@ -28516,7 +28503,6 @@
         "to sniff at"
       ],
       "englishDefinitions": [
-        "surname Wen",
         "to hear",
         "news",
         "well-known",
@@ -29517,8 +29503,8 @@
     {
       "id": "hsk5_951_ziyuan",
       "word": "资源",
-      "phoneticUK": "Zī yuán",
-      "phoneticUS": "Zī yuán",
+      "phoneticUK": "zī yuán",
+      "phoneticUS": "zī yuán",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E8%B5%84%E6%BA%90&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E8%B5%84%E6%BA%90&type=2",
       "partOfSpeech": "n",
@@ -30549,15 +30535,14 @@
       "hskLevel": 5
     },
     {
-      "id": "hsk5_985_ge",
+      "id": "hsk5_985_gai",
       "word": "盖",
-      "phoneticUK": "Gě",
-      "phoneticUS": "Gě",
+      "phoneticUK": "gài",
+      "phoneticUS": "gài",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E7%9B%96&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E7%9B%96&type=2",
       "partOfSpeech": "v/g",
       "definitions": [
-        "surname Ge",
         "lid",
         "top",
         "cover",
@@ -30567,7 +30552,6 @@
         "to build"
       ],
       "englishDefinitions": [
-        "surname Ge",
         "lid",
         "top",
         "cover",
@@ -32945,13 +32929,12 @@
     {
       "id": "hsk5_1063_guan",
       "word": "官",
-      "phoneticUK": "Guān",
-      "phoneticUS": "Guān",
+      "phoneticUK": "guān",
+      "phoneticUS": "guān",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%AE%98&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%AE%98&type=2",
       "partOfSpeech": "n",
       "definitions": [
-        "surname Guan",
         "government official",
         "governmental",
         "official",
@@ -32959,7 +32942,6 @@
         "organ of the body"
       ],
       "englishDefinitions": [
-        "surname Guan",
         "government official",
         "governmental",
         "official",
@@ -33273,8 +33255,8 @@
     {
       "id": "hsk5_1074_heping",
       "word": "和平",
-      "phoneticUK": "Hé píng",
-      "phoneticUS": "Hé píng",
+      "phoneticUK": "hé píng",
+      "phoneticUS": "hé píng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%92%8C%E5%B9%B3&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%92%8C%E5%B9%B3&type=2",
       "partOfSpeech": "n/ad/a",
@@ -33513,13 +33495,12 @@
     {
       "id": "hsk5_1082_zhong",
       "word": "钟",
-      "phoneticUK": "Zhōng",
-      "phoneticUS": "Zhōng",
+      "phoneticUK": "zhōng",
+      "phoneticUS": "zhōng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%92%9F&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%92%9F&type=2",
       "partOfSpeech": "n/nr",
       "definitions": [
-        "surname Zhong",
         "handleless cup",
         "goblet",
         "to concentrate",
@@ -33529,7 +33510,6 @@
         "bell"
       ],
       "englishDefinitions": [
-        "surname Zhong",
         "handleless cup",
         "goblet",
         "to concentrate",
@@ -33579,13 +33559,12 @@
     {
       "id": "hsk5_1084_ping",
       "word": "平",
-      "phoneticUK": "Píng",
-      "phoneticUS": "Píng",
+      "phoneticUK": "píng",
+      "phoneticUS": "píng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%B9%B3&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%B9%B3&type=2",
       "partOfSpeech": "a/v",
       "definitions": [
-        "surname Ping",
         "flat",
         "level",
         "equal",
@@ -33595,7 +33574,6 @@
         "peaceful"
       ],
       "englishDefinitions": [
-        "surname Ping",
         "flat",
         "level",
         "equal",
@@ -34653,18 +34631,16 @@
     {
       "id": "hsk5_1118_long",
       "word": "龙",
-      "phoneticUK": "Lóng",
-      "phoneticUS": "Lóng",
+      "phoneticUK": "lóng",
+      "phoneticUS": "lóng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%BE%99&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%BE%99&type=2",
       "partOfSpeech": "n/nr",
       "definitions": [
-        "surname Long",
         "dragon",
         "imperial"
       ],
       "englishDefinitions": [
-        "surname Long",
         "dragon",
         "imperial"
       ],
@@ -34937,20 +34913,18 @@
     {
       "id": "hsk5_1127_lei",
       "word": "雷",
-      "phoneticUK": "Léi",
-      "phoneticUS": "Léi",
+      "phoneticUK": "léi",
+      "phoneticUS": "léi",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%9B%B7&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%9B%B7&type=2",
       "partOfSpeech": "n/nr",
       "definitions": [
-        "surname Lei",
         "thunder",
         "(coll.) to shock; to stun; to astound",
         "(Tw) (coll.) spoiler",
         "(Tw) (coll.) to reveal plot details to (sb)"
       ],
       "englishDefinitions": [
-        "surname Lei",
         "thunder",
         "(coll.) to shock; to stun; to astound",
         "(Tw) (coll.) spoiler",
@@ -35367,13 +35341,12 @@
     {
       "id": "hsk5_1141_qiang",
       "word": "枪",
-      "phoneticUK": "Qiāng",
-      "phoneticUS": "Qiāng",
+      "phoneticUK": "qiāng",
+      "phoneticUS": "qiāng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%9E%AA&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%9E%AA&type=2",
       "partOfSpeech": "n/q",
       "definitions": [
-        "surname Qiang",
         "gun",
         "firearm",
         "rifle",
@@ -35384,7 +35357,6 @@
         "classifier for rifle shots"
       ],
       "englishDefinitions": [
-        "surname Qiang",
         "gun",
         "firearm",
         "rifle",
@@ -35439,13 +35411,12 @@
     {
       "id": "hsk5_1143_zhi",
       "word": "直",
-      "phoneticUK": "Zhí",
-      "phoneticUS": "Zhí",
+      "phoneticUK": "zhí",
+      "phoneticUS": "zhí",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E7%9B%B4&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E7%9B%B4&type=2",
       "partOfSpeech": "d/a/v",
       "definitions": [
-        "surname Zhi",
         "straight",
         "to straighten",
         "fair and reasonable",
@@ -35456,7 +35427,6 @@
         "vertical downward stroke in Chinese characters"
       ],
       "englishDefinitions": [
-        "surname Zhi",
         "straight",
         "to straighten",
         "fair and reasonable",
@@ -35735,8 +35705,8 @@
     {
       "id": "hsk5_1152_shidai",
       "word": "时代",
-      "phoneticUK": "Shí dài",
-      "phoneticUS": "Shí dài",
+      "phoneticUK": "shí dài",
+      "phoneticUS": "shí dài",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%97%B6%E4%BB%A3&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%97%B6%E4%BB%A3&type=2",
       "partOfSpeech": "n",
@@ -36131,8 +36101,8 @@
     {
       "id": "hsk5_1164_chao",
       "word": "朝",
-      "phoneticUK": "Cháo",
-      "phoneticUS": "Cháo",
+      "phoneticUK": "cháo",
+      "phoneticUS": "cháo",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%9C%9D&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%9C%9D&type=2",
       "partOfSpeech": "p/tg/b/v/q",
@@ -36201,13 +36171,12 @@
     {
       "id": "hsk5_1166_mao",
       "word": "毛",
-      "phoneticUK": "Máo",
-      "phoneticUS": "Máo",
+      "phoneticUK": "máo",
+      "phoneticUS": "máo",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%AF%9B&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%AF%9B&type=2",
       "partOfSpeech": "nr/n/q",
       "definitions": [
-        "surname Mao",
         "hair",
         "feather",
         "down",
@@ -36224,7 +36193,6 @@
         "(of currency) to devalue or depreciate"
       ],
       "englishDefinitions": [
-        "surname Mao",
         "hair",
         "feather",
         "down",
@@ -38039,13 +38007,12 @@
     {
       "id": "hsk5_1224_fang",
       "word": "方",
-      "phoneticUK": "Fāng",
-      "phoneticUS": "Fāng",
+      "phoneticUK": "fāng",
+      "phoneticUS": "fāng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%96%B9&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%96%B9&type=2",
       "partOfSpeech": "q/d/g/a/f/b",
       "definitions": [
-        "surname Fang",
         "square",
         "power or involution (math.)",
         "upright",
@@ -38063,7 +38030,6 @@
         "abbr. for square or cubic meter"
       ],
       "englishDefinitions": [
-        "surname Fang",
         "square",
         "power or involution (math.)",
         "upright",
@@ -38335,8 +38301,8 @@
     {
       "id": "hsk5_1233_fei",
       "word": "非",
-      "phoneticUK": "Fēi",
-      "phoneticUS": "Fēi",
+      "phoneticUK": "fēi",
+      "phoneticUS": "fēi",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%9D%9E&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%9D%9E&type=2",
       "partOfSpeech": "b",
@@ -38461,13 +38427,12 @@
     {
       "id": "hsk5_1237_zhi",
       "word": "支",
-      "phoneticUK": "Zhī",
-      "phoneticUS": "Zhī",
+      "phoneticUK": "zhī",
+      "phoneticUS": "zhī",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E6%94%AF&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E6%94%AF&type=2",
       "partOfSpeech": "q/v",
       "definitions": [
-        "surname Zhi",
         "to support",
         "to sustain",
         "to erect",
@@ -38478,7 +38443,6 @@
         "classifier for rods such as pens and guns, for army divisions and for songs or compositions"
       ],
       "englishDefinitions": [
-        "surname Zhi",
         "to support",
         "to sustain",
         "to erect",
@@ -38625,13 +38589,12 @@
     {
       "id": "hsk5_1242_xiang",
       "word": "项",
-      "phoneticUK": "Xiàng",
-      "phoneticUS": "Xiàng",
+      "phoneticUK": "xiàng",
+      "phoneticUS": "xiàng",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E9%A1%B9&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E9%A1%B9&type=2",
       "partOfSpeech": "q",
       "definitions": [
-        "surname Xiang",
         "back of neck",
         "item",
         "thing",
@@ -38640,7 +38603,6 @@
         "classifier for principles, items, clauses, tasks, research projects etc"
       ],
       "englishDefinitions": [
-        "surname Xiang",
         "back of neck",
         "item",
         "thing",
@@ -39059,8 +39021,8 @@
     {
       "id": "hsk5_1254_ke",
       "word": "克",
-      "phoneticUK": "Kè",
-      "phoneticUS": "Kè",
+      "phoneticUK": "kè",
+      "phoneticUS": "kè",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%85%8B&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%85%8B&type=2",
       "partOfSpeech": "g/q/b/v",
@@ -39347,8 +39309,8 @@
     {
       "id": "hsk5_1262_ha",
       "word": "哈",
-      "phoneticUK": "Hā",
-      "phoneticUS": "Hā",
+      "phoneticUK": "hā",
+      "phoneticUS": "hā",
       "audioUKUrl": "https://dict.youdao.com/dictvoice?audio=%E5%93%88&type=1",
       "audioUSUrl": "https://dict.youdao.com/dictvoice?audio=%E5%93%88&type=2",
       "partOfSpeech": "b/v",
