@@ -51,53 +51,52 @@ class TargetWordDetailScreen extends ConsumerWidget {
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Expanded(
-                child: AppSecondaryButton(
-                  onPressed: () => _toggleFavorite(
-                    context,
-                    ref,
-                    word,
-                    wordBookId,
-                    progress?.isFavorite ?? false,
-                    l10n,
-                  ),
-                  label: progress?.isFavorite == true
-                      ? l10n.wordbookFavorited
-                      : l10n.wordbookFavorite,
+              AppSecondaryButton(
+                onPressed: () => _toggleFavorite(
+                  context,
+                  ref,
+                  word,
+                  wordBookId,
+                  progress?.isFavorite ?? false,
+                  l10n,
                 ),
+                label: progress?.isFavorite == true
+                    ? l10n.wordbookFavorited
+                    : l10n.wordbookFavorite,
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: FilledButton.icon(
-                  style: FilledButton.styleFrom(
-                    backgroundColor: AppTokens.azure,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                        AppTokens.radiusButton,
-                      ),
+              const SizedBox(height: 12),
+              FilledButton.icon(
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppTokens.azure,
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size.fromHeight(48),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      AppTokens.radiusButton,
                     ),
                   ),
-                  onPressed: () => _toggleNewWordbook(
-                    context,
-                    ref,
-                    word,
-                    wordBookId,
-                    isInNewWordbook,
-                    l10n,
-                  ),
-                  icon: Icon(
-                    isInNewWordbook
-                        ? AppIcons.checkCircle
-                        : AppIcons.addCircle,
-                  ),
-                  label: Text(
-                    isInNewWordbook
-                        ? l10n.wordbookRemoveCustomWord
-                        : l10n.wordbookAddToCustomWords,
-                  ),
+                ),
+                onPressed: () => _toggleNewWordbook(
+                  context,
+                  ref,
+                  word,
+                  wordBookId,
+                  isInNewWordbook,
+                  l10n,
+                ),
+                icon: Icon(
+                  isInNewWordbook
+                      ? AppIcons.checkCircle
+                      : AppIcons.addCircle,
+                ),
+                label: Text(
+                  isInNewWordbook
+                      ? l10n.wordbookRemoveCustomWord
+                      : l10n.wordbookAddToCustomWords,
                 ),
               ),
             ],
