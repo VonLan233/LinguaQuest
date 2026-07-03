@@ -706,7 +706,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get profilePlansCompleted => '完成计划';
 
   @override
-  String get profileStreakDays => '天连续';
+  String profileStreakDays(num count) {
+    return '连续 $count 天';
+  }
 
   @override
   String get profileCurrentBookProgress => '当前词书进度';

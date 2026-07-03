@@ -743,7 +743,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profilePlansCompleted => 'Plans Done';
 
   @override
-  String get profileStreakDays => 'days streak';
+  String profileStreakDays(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days streak',
+      one: '1 day streak',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get profileCurrentBookProgress => 'Current Wordbook Progress';

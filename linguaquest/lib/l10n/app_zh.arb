@@ -234,7 +234,7 @@
   "profileCustomWords": "生词本",
   "profileAverageAccuracy": "平均正确率",
   "profilePlansCompleted": "完成计划",
-  "profileStreakDays": "天连续",
+  "profileStreakDays": "连续 {count} 天",
   "profileCurrentBookProgress": "当前词书进度",
   "profileWordbookSubtitle": "当前词书与目标词汇",
   "profileCustomWordsSubtitle": "收藏的单词与个人词汇卡片",

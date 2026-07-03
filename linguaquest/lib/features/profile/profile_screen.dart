@@ -253,7 +253,7 @@ class _ProfileHeader extends StatelessWidget {
                   icon: AppIcons.bolt,
                 ),
                 AppPill(
-                  label: '$streak ${l10n.profileStreakDays}',
+                  label: l10n.profileStreakDays(streak),
                   variant: PillVariant.streak,
                   icon: AppIcons.localFireDepartment,
                 ),

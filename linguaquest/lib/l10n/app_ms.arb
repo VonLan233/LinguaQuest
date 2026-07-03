@@ -234,7 +234,7 @@
   "profileCustomWords": "Perkataan Tersuai",
   "profileAverageAccuracy": "Purata Ketepatan",
   "profilePlansCompleted": "Pelan Selesai",
-  "profileStreakDays": "hari berturut-turut",
+  "profileStreakDays": "{count} hari berturut-turut",
   "profileCurrentBookProgress": "Kemajuan Buku Perkataan Semasa",
   "profileWordbookSubtitle": "Buku perkataan semasa dan perbendaharaan kata sasaran",
   "profileCustomWordsSubtitle": "Perkataan yang disimpan dan kad perbendaharaan kata peribadi",

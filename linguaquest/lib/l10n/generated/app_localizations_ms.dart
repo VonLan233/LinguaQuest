@@ -745,7 +745,9 @@ class AppLocalizationsMs extends AppLocalizations {
   String get profilePlansCompleted => 'Pelan Selesai';
 
   @override
-  String get profileStreakDays => 'hari berturut-turut';
+  String profileStreakDays(num count) {
+    return '$count hari berturut-turut';
+  }
 
   @override
   String get profileCurrentBookProgress => 'Kemajuan Buku Perkataan Semasa';

@@ -1453,8 +1453,8 @@ abstract class AppLocalizations {
   /// No description provided for @profileStreakDays.
   ///
   /// In en, this message translates to:
-  /// **'days streak'**
-  String get profileStreakDays;
+  /// **'{count, plural, =1{1 day streak} other{{count} days streak}}'**
+  String profileStreakDays(num count);
 
   /// No description provided for @profileCurrentBookProgress.
   ///

@@ -234,7 +234,7 @@
   "profileCustomWords": "Custom Words",
   "profileAverageAccuracy": "Avg. Accuracy",
   "profilePlansCompleted": "Plans Done",
-  "profileStreakDays": "days streak",
+  "profileStreakDays": "{count, plural, =1{1 day streak} other{{count} days streak}}",
   "profileCurrentBookProgress": "Current Wordbook Progress",
   "profileWordbookSubtitle": "Current wordbook and target vocabulary",
   "profileCustomWordsSubtitle": "Saved words and personal vocabulary cards",
