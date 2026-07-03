@@ -92,8 +92,8 @@ class _LanguageMapScreenState extends ConsumerState<LanguageMapScreen>
         children: [
           FlutterMap(
             options: const MapOptions(
-              initialCenter: LatLng(20, 80),
-              initialZoom: 2.2,
+              initialCenter: LatLng(20, 100),
+              initialZoom: 2.0,
               minZoom: 1,
               maxZoom: 6,
             ),
