@@ -728,7 +728,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Key progress at a glance, with settings at the bottom.';
 
   @override
-  String get profileLearnedWords => 'Words Learned';
+  String get profileLearnedWords => 'Learned';
 
   @override
   String get profileMasteredWords => 'Mastered';
@@ -990,7 +990,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String discoverGoComplete(Object points) {
-    return 'Go +$points XP';
+    return 'Complete for +$points XP';
   }
 
   @override

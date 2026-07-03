@@ -1423,7 +1423,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileLearnedWords.
   ///
   /// In en, this message translates to:
-  /// **'Words Learned'**
+  /// **'Learned'**
   String get profileLearnedWords;
 
   /// No description provided for @profileMasteredWords.
@@ -1885,7 +1885,7 @@ abstract class AppLocalizations {
   /// No description provided for @discoverGoComplete.
   ///
   /// In en, this message translates to:
-  /// **'Go +{points} XP'**
+  /// **'Complete for +{points} XP'**
   String discoverGoComplete(Object points);
 
   /// No description provided for @discoverClaim.

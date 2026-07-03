@@ -730,7 +730,7 @@ class AppLocalizationsMs extends AppLocalizations {
       'Kemajuan penting dalam satu skrin, dengan tetapan di bahagian bawah.';
 
   @override
-  String get profileLearnedWords => 'Perkataan Dipelajari';
+  String get profileLearnedWords => 'Dipelajari';
 
   @override
   String get profileMasteredWords => 'Dikuasai';
@@ -993,7 +993,7 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String discoverGoComplete(Object points) {
-    return 'Pergi +$points XP';
+    return 'Lengkapkan untuk +$points XP';
   }
 
   @override

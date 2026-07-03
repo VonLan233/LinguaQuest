@@ -691,7 +691,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get profileDashboardSubtitle => '学习数据一览';
 
   @override
-  String get profileLearnedWords => '已学单词';
+  String get profileLearnedWords => '已学';
 
   @override
   String get profileMasteredWords => '已掌握';

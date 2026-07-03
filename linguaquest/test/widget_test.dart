@@ -706,7 +706,7 @@ void main() {
 
     expect(find.byType(AppCard), findsWidgets);
     expect(find.text('Daily Check-in'), findsOneWidget);
-    expect(find.text('Go +5 XP'), findsOneWidget);
+    expect(find.text('Complete for +5 XP'), findsOneWidget);
     expect(find.textContaining('Earned'), findsNothing);
   });
 
@@ -833,7 +833,7 @@ void main() {
       );
       expect(newLearningTask, findsOneWidget);
       expect(
-        find.descendant(of: newLearningTask, matching: find.text('Go +20 XP')),
+        find.descendant(of: newLearningTask, matching: find.text('Complete for +20 XP')),
         findsOneWidget,
       );
       expect(
@@ -907,7 +907,7 @@ void main() {
     );
     expect(cleanupTask, findsOneWidget);
     expect(
-      find.descendant(of: cleanupTask, matching: find.text('Go +10 XP')),
+      find.descendant(of: cleanupTask, matching: find.text('Complete for +10 XP')),
       findsOneWidget,
     );
     expect(
@@ -1000,7 +1000,7 @@ void main() {
     );
     expect(cleanupTask, findsOneWidget);
     expect(
-      find.descendant(of: cleanupTask, matching: find.text('Go +10 XP')),
+      find.descendant(of: cleanupTask, matching: find.text('Complete for +10 XP')),
       findsOneWidget,
     );
     expect(
