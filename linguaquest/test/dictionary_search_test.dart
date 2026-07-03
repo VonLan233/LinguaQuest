@@ -181,6 +181,27 @@ void main() {
 
       expect(results, isEmpty);
     });
+
+    test('P-pinyin: 无声调拼音 ai 优先命中 爱（而非英文释义里 train/car）', () {
+      final ai = _word(id: 'ai', text: '爱', meaning: '爱', phonetic: 'ài');
+      final shangche = _word(
+        id: 'shangche',
+        text: '上车',
+        meaning: '上车',
+        englishDefinitions: const ['to get on or into (a bus, train, car etc)'],
+      );
+      final book = _wordBook(id: 'hsk1', words: [shangche, ai]);
+
+      final results = searchDictionaryWords(
+        wordBooks: [book],
+        currentWordBookId: 'hsk1',
+        scope: DictionarySearchScope.allWordBooks,
+        query: 'ai',
+      );
+
+      expect(results.first.word.id, 'ai');
+      expect(results.first.matchedBy, '汉字拼音');
+    });
   });
 }
 
@@ -204,11 +225,13 @@ Word _word({
   required String id,
   required String text,
   required String meaning,
+  String phonetic = '',
+  List<String> englishDefinitions = const [],
 }) {
   return Word(
     id: id,
     word: text,
-    phonetic: '',
+    phonetic: phonetic,
     meaning: meaning,
     definition: '$text definition',
     partOfSpeech: 'noun',
@@ -217,6 +240,7 @@ Word _word({
     imageCue: 'A',
     difficulty: 'Medium',
     tags: const [],
+    englishDefinitions: englishDefinitions,
   );
 }
 

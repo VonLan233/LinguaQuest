@@ -1,5 +1,6 @@
 import 'models/custom_word.dart';
 import 'models/lesson.dart';
+import '../core/utils/pinyin.dart';
 
 final _whitespaceRegExp = RegExp(r'\s+');
 
@@ -160,6 +161,7 @@ _SearchMatch? _targetWordMatch(
   String Function(String tag) tagLabeler,
 ) {
   return _matchText('英文单词/词组', word.word, query) ??
+      _matchPinyin('汉字拼音', word.phonetic, query) ??
       // Japanese phonetic fields (kana + romaji) — no-op for zh words (empty).
       _matchText('かな', word.kana, query) ??
       _matchText('ローマ字', word.romaji, query) ??
@@ -242,10 +244,19 @@ _SearchMatch? _matchText(String label, String value, String query) {
   return _SearchMatch(label: label, preview: trimmed);
 }
 
+_SearchMatch? _matchPinyin(String label, String value, String query) {
+  final trimmed = value.trim();
+  if (trimmed.isEmpty) return null;
+  // 去声调后子串匹配：'ài' -> 'ai'，'xià chē' -> 'xiache'。
+  if (!normalizePinyin(trimmed).contains(query)) return null;
+  return _SearchMatch(label: label, preview: trimmed);
+}
+
 int _matchRank(DictionaryWordSearchResult result, String query) {
   final word = result.word.word.toLowerCase();
   if (word == query) return 0;
   if (word.startsWith(query)) return 1;
+  if (result.matchedBy == '汉字拼音') return 1;
   if (result.matchedBy == '英文单词/词组') return 2;
   // Japanese phonetic matches rank alongside word-text matches.
   if (result.matchedBy == 'かな' || result.matchedBy == 'ローマ字') return 2;
