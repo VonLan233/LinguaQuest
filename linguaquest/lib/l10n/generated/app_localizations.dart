@@ -5140,8 +5140,8 @@ abstract class AppLocalizations {
   /// No description provided for @luckyDrawInventoryCount.
   ///
   /// In en, this message translates to:
-  /// **'{count} items in stock'**
-  String luckyDrawInventoryCount(Object count);
+  /// **'{count, plural, =1{1 item in stock} other{{count} items in stock}}'**
+  String luckyDrawInventoryCount(num count);
 
   /// No description provided for @luckyDrawNoBoost.
   ///

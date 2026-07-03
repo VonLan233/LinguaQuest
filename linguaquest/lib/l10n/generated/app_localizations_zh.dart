@@ -2706,7 +2706,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String luckyDrawInventoryCount(Object count) {
+  String luckyDrawInventoryCount(num count) {
     return '库存 $count 件';
   }
 

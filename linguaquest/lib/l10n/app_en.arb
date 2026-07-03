@@ -917,7 +917,7 @@
   "languageSetting": "Language",
   "luckyDrawCostLine": "Spend {cost} XP per draw",
   "luckyDrawBalanceHint": "Current balance {xp} XP; prizes include avatar frames, profile backgrounds, badges, titles, card skins, and consolation fragments.",
-  "luckyDrawInventoryCount": "{count} items in stock",
+  "luckyDrawInventoryCount": "{count, plural, =1{1 item in stock} other{{count} items in stock}}",
   "luckyDrawNoBoost": "No learning boost",
   "luckyDrawNow": "Draw now",
   "luckyDrawInsufficient": "Not enough XP — finish tasks first",

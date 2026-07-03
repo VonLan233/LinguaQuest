@@ -2853,8 +2853,14 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String luckyDrawInventoryCount(Object count) {
-    return '$count items in stock';
+  String luckyDrawInventoryCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items in stock',
+      one: '1 item in stock',
+    );
+    return '$_temp0';
   }
 
   @override

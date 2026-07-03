@@ -2868,7 +2868,7 @@ class AppLocalizationsMs extends AppLocalizations {
   }
 
   @override
-  String luckyDrawInventoryCount(Object count) {
+  String luckyDrawInventoryCount(num count) {
     return '$count item dalam stok';
   }
 
