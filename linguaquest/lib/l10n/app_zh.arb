@@ -1033,6 +1033,7 @@
   "readingDiscoverEntry": "时文阅读",
   "readingRecommended": "为你推荐",
   "readingAllArticles": "全部文章",
+  "readingArticlesForTheme": "{theme}文章",
   "readingFilterLevel": "级别",
   "readingFilterTheme": "主题",
   "readingFilterAll": "全部",

@@ -3266,6 +3266,11 @@ class AppLocalizationsMs extends AppLocalizations {
   String get readingAllArticles => 'Semua artikel';
 
   @override
+  String readingArticlesForTheme(Object theme) {
+    return 'Artikel $theme';
+  }
+
+  @override
   String get readingFilterLevel => 'Tahap';
 
   @override

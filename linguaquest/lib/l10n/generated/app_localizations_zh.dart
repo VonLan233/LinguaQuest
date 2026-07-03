@@ -3091,6 +3091,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get readingAllArticles => '全部文章';
 
   @override
+  String readingArticlesForTheme(Object theme) {
+    return '$theme文章';
+  }
+
+  @override
   String get readingFilterLevel => '级别';
 
   @override

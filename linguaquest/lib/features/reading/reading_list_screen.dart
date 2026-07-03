@@ -99,7 +99,13 @@ class _ReadingListScreenState extends ConsumerState<ReadingListScreen> {
                 onSelect: (v) => setState(() => _themeFilter = v),
               ),
               const SizedBox(height: AppTokens.s24),
-              SectionHeader(title: l10n.readingAllArticles),
+              SectionHeader(
+                title: _themeFilter == null
+                    ? l10n.readingAllArticles
+                    : l10n.readingArticlesForTheme(
+                        readingThemeLabel(l10n, _themeFilter!),
+                      ),
+              ),
               const SizedBox(height: AppTokens.s12),
               if (filtered.isEmpty)
                 _EmptyState(message: l10n.readingEmpty)

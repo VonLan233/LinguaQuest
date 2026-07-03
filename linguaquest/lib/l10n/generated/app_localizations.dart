@@ -5815,6 +5815,12 @@ abstract class AppLocalizations {
   /// **'All articles'**
   String get readingAllArticles;
 
+  /// No description provided for @readingArticlesForTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'{theme} articles'**
+  String readingArticlesForTheme(Object theme);
+
   /// No description provided for @readingFilterLevel.
   ///
   /// In en, this message translates to:

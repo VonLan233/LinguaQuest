@@ -1119,6 +1119,7 @@
   "readingDiscoverEntry": "Reading",
   "readingRecommended": "Recommended for you",
   "readingAllArticles": "All articles",
+  "readingArticlesForTheme": "{theme} articles",
   "readingFilterLevel": "Level",
   "readingFilterTheme": "Theme",
   "readingFilterAll": "All",

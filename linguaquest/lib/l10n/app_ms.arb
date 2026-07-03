@@ -1033,6 +1033,7 @@
   "readingDiscoverEntry": "Bacaan",
   "readingRecommended": "Disyorkan untuk anda",
   "readingAllArticles": "Semua artikel",
+  "readingArticlesForTheme": "Artikel {theme}",
   "readingFilterLevel": "Tahap",
   "readingFilterTheme": "Tema",
   "readingFilterAll": "Semua",
