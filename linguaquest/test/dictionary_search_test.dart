@@ -200,7 +200,26 @@ void main() {
       );
 
       expect(results.first.word.id, 'ai');
-      expect(results.first.matchedBy, '汉字拼音');
+      expect(results.first.matchedBy, '汉字拼音精确');
+    });
+
+    test('P-pinyin-exact: 精确拼音 ai 置顶于子串拼音（爱 在 太 之前）', () {
+      final ai = _word(id: 'ai', text: '爱', meaning: '爱', phonetic: 'ài');
+      final tai = _word(id: 'tai', text: '太', meaning: '太', phonetic: 'tài');
+      // 列表故意把子串匹配的 太 放前面，验证排序而非顺序侥幸。
+      final book = _wordBook(id: 'hsk1', words: [tai, ai]);
+
+      final results = searchDictionaryWords(
+        wordBooks: [book],
+        currentWordBookId: 'hsk1',
+        scope: DictionarySearchScope.allWordBooks,
+        query: 'ai',
+      );
+
+      expect(results.first.word.id, 'ai');
+      expect(results.first.matchedBy, '汉字拼音精确');
+      final taiResult = results.firstWhere((r) => r.word.id == 'tai');
+      expect(taiResult.matchedBy, '汉字拼音'); // 子串
     });
   });
 }

@@ -247,16 +247,19 @@ _SearchMatch? _matchText(String label, String value, String query) {
 _SearchMatch? _matchPinyin(String label, String value, String query) {
   final trimmed = value.trim();
   if (trimmed.isEmpty) return null;
-  // 去声调后子串匹配：'ài' -> 'ai'，'xià chē' -> 'xiache'。
-  if (!normalizePinyin(trimmed).contains(query)) return null;
-  return _SearchMatch(label: label, preview: trimmed);
+  // 去声调后匹配：'ài' -> 'ai'，'tài' -> 'tai'。精确=整串相等，否则子串。
+  final normalized = normalizePinyin(trimmed);
+  if (!normalized.contains(query)) return null;
+  final matchLabel = normalized == query ? '汉字拼音精确' : label;
+  return _SearchMatch(label: matchLabel, preview: trimmed);
 }
 
 int _matchRank(DictionaryWordSearchResult result, String query) {
   final word = result.word.word.toLowerCase();
   if (word == query) return 0;
   if (word.startsWith(query)) return 1;
-  if (result.matchedBy == '汉字拼音') return 1;
+  if (result.matchedBy == '汉字拼音精确') return 1;
+  if (result.matchedBy == '汉字拼音') return 2;
   if (result.matchedBy == '英文单词/词组') return 2;
   // Japanese phonetic matches rank alongside word-text matches.
   if (result.matchedBy == 'かな' || result.matchedBy == 'ローマ字') return 2;
