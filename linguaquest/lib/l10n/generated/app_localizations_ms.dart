@@ -3089,6 +3089,9 @@ class AppLocalizationsMs extends AppLocalizations {
       'Tanya apa sahaja tentang bahasa Cina — maksud, tatabahasa atau penggunaan.';
 
   @override
+  String get aiQuestionHint => 'Taip soalan anda tentang bahasa Cina...';
+
+  @override
   String get aiEmptyAnalysis =>
       'Tampal ayat bahasa Cina untuk melihat huraian strukturnya.';
 

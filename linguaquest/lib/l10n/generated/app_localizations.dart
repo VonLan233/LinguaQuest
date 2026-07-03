@@ -5497,6 +5497,12 @@ abstract class AppLocalizations {
   /// **'Ask anything about Chinese — meanings, grammar, or usage.'**
   String get aiEmptyChat;
 
+  /// No description provided for @aiQuestionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Type your question about Chinese...'**
+  String get aiQuestionHint;
+
   /// No description provided for @aiEmptyAnalysis.
   ///
   /// In en, this message translates to:

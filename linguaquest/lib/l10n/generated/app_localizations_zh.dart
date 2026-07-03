@@ -2920,6 +2920,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get aiEmptyChat => '关于中文的任何问题都可以问——词义、语法或用法。';
 
   @override
+  String get aiQuestionHint => '输入你关于中文的问题……';
+
+  @override
   String get aiEmptyAnalysis => '粘贴一个中文句子，查看它的结构拆解。';
 
   @override

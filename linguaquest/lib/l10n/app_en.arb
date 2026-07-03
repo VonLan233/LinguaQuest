@@ -1041,6 +1041,7 @@
   "aiExplainWithAi": "Explain with AI",
   "aiErrorGeneric": "Something went wrong. Please try again.",
   "aiEmptyChat": "Ask anything about Chinese — meanings, grammar, or usage.",
+  "aiQuestionHint": "Type your question about Chinese...",
   "aiEmptyAnalysis": "Paste a Chinese sentence to see its structure broken down.",
   "aiEmptyCloze": "Enter a word to generate a fill-in-the-blank exercise.",
   "aiEmptyWriting": "Paste your essay and pick an exam type to get scored feedback.",

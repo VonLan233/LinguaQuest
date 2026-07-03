@@ -3079,6 +3079,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Ask anything about Chinese — meanings, grammar, or usage.';
 
   @override
+  String get aiQuestionHint => 'Type your question about Chinese...';
+
+  @override
   String get aiEmptyAnalysis =>
       'Paste a Chinese sentence to see its structure broken down.';
 

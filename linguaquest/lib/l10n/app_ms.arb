@@ -955,6 +955,7 @@
   "aiExplainWithAi": "Jelaskan dengan AI",
   "aiErrorGeneric": "Sesuatu tidak kena. Sila cuba lagi.",
   "aiEmptyChat": "Tanya apa sahaja tentang bahasa Cina — maksud, tatabahasa atau penggunaan.",
+  "aiQuestionHint": "Taip soalan anda tentang bahasa Cina...",
   "aiEmptyAnalysis": "Tampal ayat bahasa Cina untuk melihat huraian strukturnya.",
   "aiEmptyCloze": "Masukkan perkataan untuk menjana latihan isi tempat kosong.",
   "aiEmptyWriting": "Tampal karangan anda dan pilih jenis peperiksaan untuk maklum balas bermarkah.",

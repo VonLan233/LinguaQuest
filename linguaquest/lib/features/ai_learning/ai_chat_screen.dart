@@ -115,9 +115,9 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
                     controller: _controller,
                     maxLength: 2000,
                     maxLines: 4,
-                    decoration: const InputDecoration(
-                      hintText: 'Type your question about English...',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      hintText: l10n.aiQuestionHint,
+                      border: const OutlineInputBorder(),
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
