@@ -71,107 +71,109 @@ class _ForumComposeScreenState extends ConsumerState<ForumComposeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: const FallbackBackButton(fallbackLocation: '/discover/community'),
+        leading: const FallbackBackButton(
+          fallbackLocation: '/discover/community',
+        ),
         title: Text(l10n.communityNewPost),
       ),
       body: SafeArea(
         child: Form(
           key: _formKey,
           child: ListView(
-          padding: const EdgeInsets.all(AppTokens.s20),
-          children: [
-            // Title field
-            Text(
-              'Title',
-              style: theme.textTheme.labelLarge?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(height: AppTokens.s8),
-            TextFormField(
-              controller: _titleController,
-              maxLength: 200,
-              textCapitalization: TextCapitalization.sentences,
-              decoration: const InputDecoration(
-                hintText: 'What is your question or topic?',
-                border: OutlineInputBorder(),
-              ),
-              validator: (value) {
-                final v = (value ?? '').trim();
-                if (v.isEmpty) return 'Please enter a title.';
-                if (v.length > 200) {
-                  return 'Title must be under 200 characters.';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: AppTokens.s16),
-
-            // Tag selector
-            Text(
-              'Tag',
-              style: theme.textTheme.labelLarge?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(height: AppTokens.s8),
-            Wrap(
-              spacing: AppTokens.s8,
-              children: [
-                for (final tag in _kTags)
-                  ChoiceChip(
-                    label: Text(tag),
-                    selected: _selectedTag == tag,
-                    onSelected: (_) => setState(() => _selectedTag = tag),
-                  ),
-                ChoiceChip(
-                  key: const ValueKey('compose-scope-chip'),
-                  label: Text(scopeTag),
-                  selected: _selectedTag == scopeTag,
-                  onSelected: (_) => setState(() => _selectedTag = scopeTag),
+            padding: const EdgeInsets.all(AppTokens.s20),
+            children: [
+              // Title field
+              Text(
+                'Title',
+                style: theme.textTheme.labelLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
                 ),
-              ],
-            ),
-            const SizedBox(height: AppTokens.s16),
-
-            // Body field
-            Text(
-              'Content',
-              style: theme.textTheme.labelLarge?.copyWith(
-                fontWeight: FontWeight.w700,
               ),
-            ),
-            const SizedBox(height: AppTokens.s8),
-            TextFormField(
-              controller: _bodyController,
-              maxLength: 5000,
-              maxLines: 8,
-              minLines: 4,
-              textCapitalization: TextCapitalization.sentences,
-              decoration: const InputDecoration(
-                hintText: 'Share your question, tips, or story...',
-                border: OutlineInputBorder(),
-                alignLabelWithHint: true,
+              const SizedBox(height: AppTokens.s8),
+              TextFormField(
+                controller: _titleController,
+                maxLength: 200,
+                textCapitalization: TextCapitalization.sentences,
+                decoration: const InputDecoration(
+                  hintText: 'What is your question or topic?',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  final v = (value ?? '').trim();
+                  if (v.isEmpty) return 'Please enter a title.';
+                  if (v.length > 200) {
+                    return 'Title must be under 200 characters.';
+                  }
+                  return null;
+                },
               ),
-              validator: (value) {
-                final v = (value ?? '').trim();
-                if (v.isEmpty) return 'Please enter some content.';
-                if (v.length > 5000) {
-                  return 'Content must be under 5000 characters.';
-                }
-                return null;
-              },
-            ),
+              const SizedBox(height: AppTokens.s16),
 
-            const SizedBox(height: AppTokens.s24),
-            AppPrimaryButton(
-              label: _submitting ? 'Publishing...' : 'Publish',
-              onPressed: _submitting ? null : _submit,
-            ),
-          ],
+              // Tag selector
+              Text(
+                'Tag',
+                style: theme.textTheme.labelLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: AppTokens.s8),
+              Wrap(
+                spacing: AppTokens.s8,
+                children: [
+                  for (final tag in _kTags)
+                    ChoiceChip(
+                      label: Text(tag),
+                      selected: _selectedTag == tag,
+                      onSelected: (_) => setState(() => _selectedTag = tag),
+                    ),
+                  ChoiceChip(
+                    key: const ValueKey('compose-scope-chip'),
+                    label: Text(scopeTag),
+                    selected: _selectedTag == scopeTag,
+                    onSelected: (_) => setState(() => _selectedTag = scopeTag),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppTokens.s16),
+
+              // Body field
+              Text(
+                'Content',
+                style: theme.textTheme.labelLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: AppTokens.s8),
+              TextFormField(
+                controller: _bodyController,
+                maxLength: 5000,
+                maxLines: 8,
+                minLines: 4,
+                textCapitalization: TextCapitalization.sentences,
+                decoration: const InputDecoration(
+                  hintText: 'Share your question, tips, or story...',
+                  border: OutlineInputBorder(),
+                  alignLabelWithHint: true,
+                ),
+                validator: (value) {
+                  final v = (value ?? '').trim();
+                  if (v.isEmpty) return 'Please enter some content.';
+                  if (v.length > 5000) {
+                    return 'Content must be under 5000 characters.';
+                  }
+                  return null;
+                },
+              ),
+
+              const SizedBox(height: AppTokens.s24),
+              AppPrimaryButton(
+                label: _submitting ? 'Publishing...' : 'Publish',
+                onPressed: _submitting ? null : _submit,
+              ),
+            ],
+          ),
         ),
       ),
-    ),
-  );
+    );
   }
 }
