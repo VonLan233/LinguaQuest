@@ -19,11 +19,11 @@ class ForumComposeScreen extends ConsumerStatefulWidget {
 }
 
 class _ForumComposeScreenState extends ConsumerState<ForumComposeScreen> {
+  final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _bodyController = TextEditingController();
   String _selectedTag = 'General';
   bool _submitting = false;
-  String? _errorMessage;
 
   @override
   void dispose() {
@@ -33,33 +33,11 @@ class _ForumComposeScreenState extends ConsumerState<ForumComposeScreen> {
   }
 
   Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) return;
     final title = _titleController.text.trim();
     final body = _bodyController.text.trim();
 
-    if (title.isEmpty) {
-      setState(() => _errorMessage = 'Please enter a title.');
-      return;
-    }
-    if (body.isEmpty) {
-      setState(() => _errorMessage = 'Please enter some content.');
-      return;
-    }
-    if (title.length > 200) {
-      setState(() => _errorMessage = 'Title must be under 200 characters.');
-      return;
-    }
-    if (body.length > 5000) {
-      setState(
-        () => _errorMessage = 'Content must be under 5000 characters.',
-      );
-      return;
-    }
-
-    setState(() {
-      _submitting = true;
-      _errorMessage = null;
-    });
-
+    setState(() => _submitting = true);
     try {
       final post = await ref
           .read(appControllerProvider.notifier)
@@ -68,8 +46,10 @@ class _ForumComposeScreenState extends ConsumerState<ForumComposeScreen> {
       if (post != null) {
         context.pop();
       } else {
-        setState(
-          () => _errorMessage = 'Failed to publish post. Please try again.',
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to publish post. Please try again.'),
+          ),
         );
       }
     } finally {
@@ -95,7 +75,9 @@ class _ForumComposeScreenState extends ConsumerState<ForumComposeScreen> {
         title: Text(l10n.communityNewPost),
       ),
       body: SafeArea(
-        child: ListView(
+        child: Form(
+          key: _formKey,
+          child: ListView(
           padding: const EdgeInsets.all(AppTokens.s20),
           children: [
             // Title field
@@ -106,7 +88,7 @@ class _ForumComposeScreenState extends ConsumerState<ForumComposeScreen> {
               ),
             ),
             const SizedBox(height: AppTokens.s8),
-            TextField(
+            TextFormField(
               controller: _titleController,
               maxLength: 200,
               textCapitalization: TextCapitalization.sentences,
@@ -114,6 +96,14 @@ class _ForumComposeScreenState extends ConsumerState<ForumComposeScreen> {
                 hintText: 'What is your question or topic?',
                 border: OutlineInputBorder(),
               ),
+              validator: (value) {
+                final v = (value ?? '').trim();
+                if (v.isEmpty) return 'Please enter a title.';
+                if (v.length > 200) {
+                  return 'Title must be under 200 characters.';
+                }
+                return null;
+              },
             ),
             const SizedBox(height: AppTokens.s16),
 
@@ -152,7 +142,7 @@ class _ForumComposeScreenState extends ConsumerState<ForumComposeScreen> {
               ),
             ),
             const SizedBox(height: AppTokens.s8),
-            TextField(
+            TextFormField(
               controller: _bodyController,
               maxLength: 5000,
               maxLines: 8,
@@ -163,17 +153,15 @@ class _ForumComposeScreenState extends ConsumerState<ForumComposeScreen> {
                 border: OutlineInputBorder(),
                 alignLabelWithHint: true,
               ),
+              validator: (value) {
+                final v = (value ?? '').trim();
+                if (v.isEmpty) return 'Please enter some content.';
+                if (v.length > 5000) {
+                  return 'Content must be under 5000 characters.';
+                }
+                return null;
+              },
             ),
-
-            if (_errorMessage != null) ...[
-              const SizedBox(height: AppTokens.s8),
-              Text(
-                _errorMessage!,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.error,
-                ),
-              ),
-            ],
 
             const SizedBox(height: AppTokens.s24),
             AppPrimaryButton(
@@ -183,6 +171,7 @@ class _ForumComposeScreenState extends ConsumerState<ForumComposeScreen> {
           ],
         ),
       ),
-    );
+    ),
+  );
   }
 }
