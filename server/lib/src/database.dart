@@ -2089,7 +2089,12 @@ SELECT
     final whereClause = status != null ? 'WHERE fp.status=@status' : '';
     final rows = await connection.execute(
       Sql.named(
-        'SELECT fp.*, u.name AS author_name FROM forum_posts fp '
+        'SELECT fp.id, fp.author_id, fp.title, fp.body, fp.tag, fp.status, '
+        'fp.like_count, '
+        "(SELECT COUNT(*) FROM forum_comments fc "
+        "WHERE fc.post_id=fp.id AND fc.status='approved') AS comment_count, "
+        'fp.created_at, fp.updated_at, u.name AS author_name '
+        'FROM forum_posts fp '
         'LEFT JOIN users u ON u.id = fp.author_id '
         '$whereClause ORDER BY fp.created_at DESC',
       ),
@@ -2101,7 +2106,12 @@ SELECT
   Future<Map<String, dynamic>?> getForumPost(String id) async {
     final rows = await connection.execute(
       Sql.named(
-        'SELECT fp.*, u.name AS author_name FROM forum_posts fp '
+        'SELECT fp.id, fp.author_id, fp.title, fp.body, fp.tag, fp.status, '
+        'fp.like_count, '
+        "(SELECT COUNT(*) FROM forum_comments fc "
+        "WHERE fc.post_id=fp.id AND fc.status='approved') AS comment_count, "
+        'fp.created_at, fp.updated_at, u.name AS author_name '
+        'FROM forum_posts fp '
         'LEFT JOIN users u ON u.id = fp.author_id '
         'WHERE fp.id=@id::uuid LIMIT 1',
       ),
