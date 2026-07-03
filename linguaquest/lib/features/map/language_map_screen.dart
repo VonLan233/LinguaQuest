@@ -282,12 +282,21 @@ class _LangMarker extends StatelessWidget {
                             offset: const Offset(0, 2)),
                       ],
                     ),
-                    child: Text(
-                      pin.label,
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                        color: pin.enabled ? cs.onSurface : cs.onSurfaceVariant,
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 124),
+                      child: Text(
+                        pin.label,
+                        maxLines: 2,
+                        softWrap: true,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: pin.enabled
+                              ? cs.onSurface
+                              : cs.onSurfaceVariant,
+                        ),
                       ),
                     ),
                   ),
