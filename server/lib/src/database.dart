@@ -2284,14 +2284,18 @@ ORDER BY created_at ASC
     String userId,
   ) async {
     final rows = await connection.execute(
-      Sql.named('''
-SELECT p.*, u.name AS author_name
-FROM forum_posts p
-JOIN forum_favorites f ON f.post_id = p.id
-LEFT JOIN users u ON u.id = p.author_id
-WHERE f.user_id = @userId AND p.status = 'approved'
-ORDER BY p.created_at DESC
-'''),
+      Sql.named(
+        'SELECT p.id, p.author_id, p.title, p.body, p.tag, p.status, '
+        'p.like_count, '
+        "(SELECT COUNT(*) FROM forum_comments fc "
+        "WHERE fc.post_id=p.id AND fc.status='approved') AS comment_count, "
+        'p.created_at, p.updated_at, u.name AS author_name '
+        'FROM forum_posts p '
+        'JOIN forum_favorites f ON f.post_id = p.id '
+        'LEFT JOIN users u ON u.id = p.author_id '
+        "WHERE f.user_id = @userId AND p.status = 'approved' "
+        'ORDER BY p.created_at DESC',
+      ),
       parameters: {'userId': userId},
     );
     return rows.map((r) => r.toColumnMap()).toList();
