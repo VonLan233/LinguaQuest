@@ -30,6 +30,14 @@ class AppDrawer extends StatelessWidget {
               ),
             ),
             item(AppIcons.language, 'Choose Language', '/language-map'),
+            ListTile(
+              leading: const Icon(AppIcons.map),
+              title: const Text('Study Map'),
+              onTap: () {
+                Navigator.of(context).pop();
+                context.push('/map');
+              },
+            ),
             item(AppIcons.search, 'Search', '/search'),
             item(AppIcons.person, 'Profile', '/profile'),
             item(AppIcons.settings, 'Settings', '/settings'),
