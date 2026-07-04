@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../core/services/location_service.dart';
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_button.dart';
@@ -101,6 +103,13 @@ class _StudyMapScreenState extends ConsumerState<StudyMapScreen> {
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/home'),
         title: const Text('Study Map'),
+        actions: [
+          IconButton(
+            icon: const Icon(AppIcons.playlistAddCheck),
+            tooltip: 'View spots list',
+            onPressed: () => context.push('/map/spots'),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _saveHere,
