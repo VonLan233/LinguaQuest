@@ -23,8 +23,12 @@ async def synthesize(request):
         return web.Response(status=502, text=f'tts failed: {e}')
 
 
+async def health(_request):
+    return web.Response(text='ok')
+
+
 app = web.Application()
 app.router.add_get('/synthesize', synthesize)
-app.router.add_get('/health', lambda r: web.Response(text='ok'))
+app.router.add_get('/health', health)
 if __name__ == '__main__':
     web.run_app(app, host='0.0.0.0', port=5002)
