@@ -314,7 +314,7 @@ class _PostBody extends StatelessWidget {
                     authorInitial,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 11.76,
+                      fontSize: 12.0,
                       fontWeight: FontWeight.w700,
                     ),
                   ),

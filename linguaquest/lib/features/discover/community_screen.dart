@@ -206,9 +206,9 @@ class _ForumPostCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              GestureDetector(
-                onTap: () => context.push('/profile/${post.authorId}'),
-                child: Flexible(
+              Flexible(
+                child: GestureDetector(
+                  onTap: () => context.push('/profile/${post.authorId}'),
                   child: Row(
                     children: [
                       _AuthorAvatar(name: post.authorName),
@@ -324,7 +324,7 @@ class _AuthorAvatar extends StatelessWidget {
         initial,
         style: const TextStyle(
           color: Colors.white,
-          fontSize: 11.76,
+          fontSize: 12.0,
           fontWeight: FontWeight.w700,
         ),
       ),

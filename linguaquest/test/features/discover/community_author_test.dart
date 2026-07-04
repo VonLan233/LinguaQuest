@@ -111,5 +111,20 @@ void main() {
       // The avatar should contain the initial 'L'.
       expect(find.text('L'), findsOneWidget);
     });
+
+    // Smoke test: verifies no ParentDataWidget / Flexible constraint crash.
+    // Before the fix, GestureDetector wrapped Flexible (not the other way
+    // around), making Flexible a non-direct child of the outer Row and
+    // causing "Incorrect use of ParentDataWidget" in debug mode.
+    testWidgets('renders without exceptions (Flexible/GestureDetector order)',
+        (tester) async {
+      await tester.pumpWidget(_buildHarness(repo: _SinglePostRepo('Alice')));
+      await tester.pumpAndSettle();
+
+      // Author name must be visible.
+      expect(find.text('Alice'), findsOneWidget);
+      // No framework exception should have been thrown.
+      expect(tester.takeException(), isNull);
+    });
   });
 }
