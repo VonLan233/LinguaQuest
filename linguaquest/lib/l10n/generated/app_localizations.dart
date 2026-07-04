@@ -5014,8 +5014,8 @@ abstract class AppLocalizations {
   /// No description provided for @aboutVersion.
   ///
   /// In en, this message translates to:
-  /// **'LinguaQuest · Version 1.0.0'**
-  String get aboutVersion;
+  /// **'LinguaQuest · Version {version}'**
+  String aboutVersion(String version);
 
   /// No description provided for @aboutIntro.
   ///

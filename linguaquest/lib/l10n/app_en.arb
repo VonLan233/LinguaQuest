@@ -893,7 +893,14 @@
   "helpFaqAiTutorA": "It can explain words, grammar, and mistakes, and suggest examples for further practice.",
   "helpContactSupport": "Contact support",
 
-  "aboutVersion": "LinguaQuest · Version 1.0.0",
+  "aboutVersion": "LinguaQuest · Version {version}",
+  "@aboutVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
   "aboutIntro": "LinguaQuest brings visual word cards, learning paths, spaced review, XP, streaks, and personal word cards into a mobile-first English learning app.",
   "aboutGoalTitle": "Project goal",
   "aboutGoalSubtitle": "Help learners build a daily English study habit through short lessons, mistake repair, and visible progress.",

@@ -869,7 +869,7 @@
   "helpFaqAiTutorA": "可以解释单词、语法和错题，并给出适合继续练习的例句。",
   "helpContactSupport": "联系支持",
 
-  "aboutVersion": "词境星球 · 版本 1.0.0",
+  "aboutVersion": "词境星球 · 版本 {version}",
   "aboutIntro": "LinguaQuest 将图像词卡、学习路径、间隔复习、XP、连续打卡和个人生词卡整合到一个移动优先的英语学习应用中。",
   "aboutGoalTitle": "项目目标",
   "aboutGoalSubtitle": "通过短课节、错题修复和可见进度，帮助学习者建立每日英语学习习惯。",

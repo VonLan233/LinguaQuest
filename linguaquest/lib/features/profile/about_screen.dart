@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_tokens.dart';
@@ -71,10 +72,13 @@ class AboutScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: AppTokens.s8),
-                    Text(
-                      l10n.aboutVersion,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: Colors.white,
+                    FutureBuilder<PackageInfo>(
+                      future: PackageInfo.fromPlatform(),
+                      builder: (c, snap) => Text(
+                        l10n.aboutVersion(snap.data?.version ?? ''),
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ],

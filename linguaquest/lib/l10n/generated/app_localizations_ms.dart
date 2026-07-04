@@ -2794,7 +2794,9 @@ class AppLocalizationsMs extends AppLocalizations {
   String get helpContactSupport => 'Hubungi sokongan';
 
   @override
-  String get aboutVersion => 'LinguaQuest · Versi 1.0.0';
+  String aboutVersion(String version) {
+    return 'LinguaQuest · Versi $version';
+  }
 
   @override
   String get aboutIntro =>

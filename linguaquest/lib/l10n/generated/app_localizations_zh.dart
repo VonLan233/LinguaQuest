@@ -2639,7 +2639,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get helpContactSupport => '联系支持';
 
   @override
-  String get aboutVersion => '词境星球 · 版本 1.0.0';
+  String aboutVersion(String version) {
+    return '词境星球 · 版本 $version';
+  }
 
   @override
   String get aboutIntro =>
