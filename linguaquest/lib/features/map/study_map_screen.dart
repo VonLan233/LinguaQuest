@@ -146,6 +146,11 @@ class _StudyMapScreenState extends ConsumerState<StudyMapScreen> {
                 ),
             ],
           ),
+          const RichAttributionWidget(
+            attributions: [
+              TextSourceAttribution('© OpenStreetMap contributors'),
+            ],
+          ),
         ],
       ),
     );
