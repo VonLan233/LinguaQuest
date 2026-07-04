@@ -266,6 +266,7 @@
   "settingsThemeDarkSubtitle": "Gunakan antara muka pembelajaran gelap",
   "settingsReminderTitle": "Peringatan Harian",
   "settingsReminderTime": "Masa Peringatan",
+  "settingsReminderDisplay": "Harian · {time}",
   "settingsReminderOff": "Peringatan Dimatikan",
   "settingsReminderDisabled": "Tiada peringatan tempatan dijadualkan",
   "settingsReminderDescription": "Aplikasi mengingati masa peringatan anda dan menjadualkan peringatan sistem tempatan untuk mengingatkan pembelajaran dan daftar masuk harian.",

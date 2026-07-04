@@ -266,6 +266,7 @@
   "settingsThemeDarkSubtitle": "使用深色学习界面",
   "settingsReminderTitle": "每日提醒",
   "settingsReminderTime": "提醒时间",
+  "settingsReminderDisplay": "每日 · {time}",
   "settingsReminderOff": "提醒已关闭",
   "settingsReminderDisabled": "不会安排本地提醒",
   "settingsReminderDescription": "按时提醒你开始每日学习和打卡",

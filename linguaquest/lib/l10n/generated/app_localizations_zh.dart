@@ -801,6 +801,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsReminderTime => '提醒时间';
 
   @override
+  String settingsReminderDisplay(String time) {
+    return '每日 · $time';
+  }
+
+  @override
   String get settingsReminderOff => '提醒已关闭';
 
   @override

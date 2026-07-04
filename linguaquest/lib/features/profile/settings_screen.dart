@@ -40,7 +40,7 @@ class SettingsScreen extends ConsumerWidget {
               icon: AppIcons.notifications,
               title: l10n.commonDailyReminder,
               subtitle: state.reminderSettings.enabled
-                  ? '${l10n.commonDay} ${state.reminderSettings.formattedTime}'
+                  ? l10n.settingsReminderDisplay(state.reminderSettings.formattedTime)
                   : l10n.settingsReminderOff,
               route: '/settings/reminder',
             ),

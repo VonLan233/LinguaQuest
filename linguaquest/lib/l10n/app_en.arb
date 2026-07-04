@@ -266,6 +266,14 @@
   "settingsThemeDarkSubtitle": "Use dark learning interface",
   "settingsReminderTitle": "Daily Reminder",
   "settingsReminderTime": "Reminder Time",
+  "settingsReminderDisplay": "Daily · {time}",
+  "@settingsReminderDisplay": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "settingsReminderOff": "Reminder Off",
   "settingsReminderDisabled": "No local reminders scheduled",
   "settingsReminderDescription": "The app remembers your reminder time and schedules local system reminders to prompt daily learning and check-ins.",

@@ -850,6 +850,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsReminderTime => 'Reminder Time';
 
   @override
+  String settingsReminderDisplay(String time) {
+    return 'Daily · $time';
+  }
+
+  @override
   String get settingsReminderOff => 'Reminder Off';
 
   @override

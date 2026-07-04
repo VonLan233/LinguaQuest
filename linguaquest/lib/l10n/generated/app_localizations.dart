@@ -1636,6 +1636,12 @@ abstract class AppLocalizations {
   /// **'Reminder Time'**
   String get settingsReminderTime;
 
+  /// No description provided for @settingsReminderDisplay.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily · {time}'**
+  String settingsReminderDisplay(String time);
+
   /// No description provided for @settingsReminderOff.
   ///
   /// In en, this message translates to:

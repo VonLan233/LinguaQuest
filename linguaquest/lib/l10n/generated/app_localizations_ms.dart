@@ -849,6 +849,11 @@ class AppLocalizationsMs extends AppLocalizations {
   String get settingsReminderTime => 'Masa Peringatan';
 
   @override
+  String settingsReminderDisplay(String time) {
+    return 'Harian · $time';
+  }
+
+  @override
   String get settingsReminderOff => 'Peringatan Dimatikan';
 
   @override
