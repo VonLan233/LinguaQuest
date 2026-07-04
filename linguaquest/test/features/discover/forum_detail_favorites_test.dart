@@ -1,11 +1,15 @@
 // Tests for Bug A: ForumPostDetailScreen loads post by id via getPost()
 // so navigating from My Favorites (empty forumPosts list) works correctly.
+//
+// Also covers regression fix: tap like/favorite triggers immediate icon refresh
+// via optimistic setState even when the post is not in forumPosts.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:linguaquest/core/state/app_controller.dart';
+import 'package:linguaquest/core/theme/app_icons.dart';
 import 'package:linguaquest/core/theme/app_theme.dart';
 import 'package:linguaquest/data/models/forum.dart';
 import 'package:linguaquest/data/repositories/forum_repository.dart';
@@ -107,6 +111,36 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Post not found'), findsOneWidget);
+    });
+
+    testWidgets(
+        'tap like button immediately refreshes icon and likeCount (regression fix)',
+        (tester) async {
+      await tester.pumpWidget(_buildHarness(postId: 'fav-1'));
+      await tester.pumpAndSettle();
+
+      // Initial state: post has isLiked=false, likeCount=5.
+      // The AppBar like button shows the un-liked icon.
+      expect(
+        find.widgetWithIcon(IconButton, AppIcons.thumbUpOffAlt),
+        findsOneWidget,
+      );
+      // likeCount '5' visible in _PostBody.
+      expect(find.text('5'), findsOneWidget);
+
+      // Tap the like IconButton in the AppBar.
+      await tester.tap(find.widgetWithIcon(IconButton, AppIcons.thumbUpOffAlt));
+      // One pump is enough to see the synchronous setState effect.
+      await tester.pump();
+
+      // Icon must have flipped to the liked state.
+      expect(
+        find.widgetWithIcon(IconButton, AppIcons.thumbUpAlt),
+        findsOneWidget,
+      );
+      // likeCount must be 6 now.
+      expect(find.text('6'), findsOneWidget);
+      expect(find.text('5'), findsNothing);
     });
   });
 }

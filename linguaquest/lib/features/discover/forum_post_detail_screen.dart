@@ -172,7 +172,18 @@ class _ForumPostDetailScreenState extends ConsumerState<ForumPostDetailScreen> {
         ),
       );
     }
-    final post = _post!;
+    // Watch live post from controller state (covers Community entry path).
+    // Falls back to _post snapshot when the post is not in forumPosts
+    // (e.g. navigated from My Favorites before Community list is loaded).
+    final ForumPost? livePost = ref.watch(
+      appControllerProvider.select((s) {
+        for (final p in s.forumPosts) {
+          if (p.id == widget.postId) return p;
+        }
+        return null;
+      }),
+    );
+    final post = livePost ?? _post!;
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -188,6 +199,16 @@ class _ForumPostDetailScreenState extends ConsumerState<ForumPostDetailScreen> {
                   : theme.colorScheme.onSurfaceVariant,
             ),
             onPressed: () {
+              // Optimistic local update so the icon refreshes even when this
+              // post is not in forumPosts (e.g. entered from My Favorites).
+              setState(() {
+                _post = _post!.copyWith(
+                  isLiked: !_post!.isLiked,
+                  likeCount: _post!.isLiked
+                      ? (_post!.likeCount - 1).clamp(0, 999999)
+                      : _post!.likeCount + 1,
+                );
+              });
               ref
                   .read(appControllerProvider.notifier)
                   .toggleForumLike(widget.postId);
@@ -201,6 +222,10 @@ class _ForumPostDetailScreenState extends ConsumerState<ForumPostDetailScreen> {
                   : theme.colorScheme.onSurfaceVariant,
             ),
             onPressed: () {
+              // Optimistic local update (same reason as like above).
+              setState(() {
+                _post = _post!.copyWith(isFavorited: !_post!.isFavorited);
+              });
               ref
                   .read(appControllerProvider.notifier)
                   .toggleForumFavorite(widget.postId);
