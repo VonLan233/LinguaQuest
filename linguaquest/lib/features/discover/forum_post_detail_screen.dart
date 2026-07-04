@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_icons.dart';
@@ -26,9 +27,14 @@ class _ForumPostDetailScreenState extends ConsumerState<ForumPostDetailScreen> {
   bool _loadingComments = true;
   bool _submitting = false;
 
+  ForumPost? _post;
+  bool _loadingPost = true;
+  bool _postNotFound = false;
+
   @override
   void initState() {
     super.initState();
+    _loadPost();
     _loadComments();
   }
 
@@ -36,6 +42,16 @@ class _ForumPostDetailScreenState extends ConsumerState<ForumPostDetailScreen> {
   void dispose() {
     _commentController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadPost() async {
+    try {
+      final repo = ref.read(forumRepositoryProvider);
+      final post = await repo.getPost(widget.postId);
+      if (mounted) setState(() { _post = post; _loadingPost = false; });
+    } catch (_) {
+      if (mounted) setState(() { _loadingPost = false; _postNotFound = true; });
+    }
   }
 
   Future<void> _loadComments() async {
@@ -135,12 +151,28 @@ class _ForumPostDetailScreenState extends ConsumerState<ForumPostDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final post = ref
-        .watch(
-          appControllerProvider.select(
-            (s) => s.forumPosts.where((p) => p.id == widget.postId).firstOrNull,
-          ),
-        );
+    if (_loadingPost) {
+      return Scaffold(
+        appBar: AppBar(
+          leading: const FallbackBackButton(fallbackLocation: '/discover/community'),
+          title: const Text('Post'),
+        ),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+    if (_postNotFound || _post == null) {
+      return Scaffold(
+        appBar: AppBar(
+          leading: const FallbackBackButton(fallbackLocation: '/discover/community'),
+          title: const Text('Post'),
+        ),
+        body: const MascotEmptyState(
+          title: 'Post not found',
+          message: 'This post may have been removed.',
+        ),
+      );
+    }
+    final post = _post!;
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -148,110 +180,103 @@ class _ForumPostDetailScreenState extends ConsumerState<ForumPostDetailScreen> {
         leading: const FallbackBackButton(fallbackLocation: '/discover/community'),
         title: const Text('Post'),
         actions: [
-          if (post != null) ...[
-            IconButton(
-              icon: Icon(
-                post.isLiked ? AppIcons.thumbUpAlt : AppIcons.thumbUpOffAlt,
-                color: post.isLiked
-                    ? theme.colorScheme.primary
-                    : theme.colorScheme.onSurfaceVariant,
-              ),
-              onPressed: () {
-                ref
-                    .read(appControllerProvider.notifier)
-                    .toggleForumLike(widget.postId);
-              },
+          IconButton(
+            icon: Icon(
+              post.isLiked ? AppIcons.thumbUpAlt : AppIcons.thumbUpOffAlt,
+              color: post.isLiked
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.onSurfaceVariant,
             ),
-            IconButton(
-              icon: Icon(
-                post.isFavorited ? AppIcons.bookmark : AppIcons.bookmarkBorder,
-                color: post.isFavorited
-                    ? theme.colorScheme.primary
-                    : theme.colorScheme.onSurfaceVariant,
-              ),
-              onPressed: () {
-                ref
-                    .read(appControllerProvider.notifier)
-                    .toggleForumFavorite(widget.postId);
-              },
+            onPressed: () {
+              ref
+                  .read(appControllerProvider.notifier)
+                  .toggleForumLike(widget.postId);
+            },
+          ),
+          IconButton(
+            icon: Icon(
+              post.isFavorited ? AppIcons.bookmark : AppIcons.bookmarkBorder,
+              color: post.isFavorited
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.onSurfaceVariant,
             ),
-            PopupMenuButton<String>(
-              icon: const Icon(Icons.more_vert_rounded),
-              onSelected: (value) {
-                if (value == 'report') {
-                  _showReportSheet(context, widget.postId);
-                }
-              },
-              itemBuilder: (context) => const [
-                PopupMenuItem(
-                  value: 'report',
-                  child: Row(
-                    children: [
-                      Icon(Icons.flag_outlined, size: 18),
-                      SizedBox(width: 8),
-                      Text('Report'),
-                    ],
-                  ),
+            onPressed: () {
+              ref
+                  .read(appControllerProvider.notifier)
+                  .toggleForumFavorite(widget.postId);
+            },
+          ),
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert_rounded),
+            onSelected: (value) {
+              if (value == 'report') {
+                _showReportSheet(context, widget.postId);
+              }
+            },
+            itemBuilder: (context) => const [
+              PopupMenuItem(
+                value: 'report',
+                child: Row(
+                  children: [
+                    Icon(Icons.flag_outlined, size: 18),
+                    SizedBox(width: 8),
+                    Text('Report'),
+                  ],
                 ),
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ],
       ),
-      body: post == null
-          ? const MascotEmptyState(
-              title: 'Post not found',
-              message: 'This post may have been removed.',
-            )
-          : Column(
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.all(AppTokens.s16),
               children: [
-                Expanded(
-                  child: ListView(
-                    padding: const EdgeInsets.all(AppTokens.s16),
-                    children: [
-                      _PostBody(post: post),
-                      const SizedBox(height: AppTokens.s20),
-                      Text(
-                        'Comments (${_comments.length})',
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: AppTokens.s12),
-                      if (_loadingComments)
-                        const Center(
-                          child: Padding(
-                            padding: EdgeInsets.all(AppTokens.s20),
-                            child: CircularProgressIndicator(),
-                          ),
-                        )
-                      else if (_comments.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: AppTokens.s16,
-                          ),
-                          child: Text(
-                            'No comments yet. Be the first to reply!',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                        )
-                      else
-                        for (final comment in _comments) ...[
-                          _CommentCard(comment: comment),
-                          const SizedBox(height: AppTokens.s8),
-                        ],
-                    ],
+                _PostBody(post: post),
+                const SizedBox(height: AppTokens.s20),
+                Text(
+                  'Comments (${_comments.length})',
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
-                _CommentInputBar(
-                  controller: _commentController,
-                  submitting: _submitting,
-                  onSend: _submitComment,
-                ),
+                const SizedBox(height: AppTokens.s12),
+                if (_loadingComments)
+                  const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(AppTokens.s20),
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                else if (_comments.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppTokens.s16,
+                    ),
+                    child: Text(
+                      'No comments yet. Be the first to reply!',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  )
+                else
+                  for (final comment in _comments) ...[
+                    _CommentCard(comment: comment),
+                    const SizedBox(height: AppTokens.s8),
+                  ],
               ],
             ),
+          ),
+          _CommentInputBar(
+            controller: _commentController,
+            submitting: _submitting,
+            onSend: _submitComment,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -264,11 +289,47 @@ class _PostBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final authorInitial = post.authorName.trim().isEmpty
+        ? '?'
+        : post.authorName.trim()[0].toUpperCase();
+    final authorAvatarBg = HSLColor.fromAHSL(
+      1,
+      (post.authorName.hashCode % 360).abs().toDouble(),
+      0.45,
+      0.45,
+    ).toColor();
     return AppCard(
       padding: const EdgeInsets.all(AppTokens.s16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          GestureDetector(
+            onTap: () => context.push('/profile/${post.authorId}'),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 14,
+                  backgroundColor: authorAvatarBg,
+                  child: Text(
+                    authorInitial,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 11.76,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: AppTokens.s8),
+                Text(
+                  post.authorName,
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppTokens.s12),
           AppPill(
             label: post.tag,
             variant: PillVariant.streak,
@@ -334,11 +395,14 @@ class _CommentCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            comment.authorName,
-            style: theme.textTheme.labelMedium?.copyWith(
-              fontWeight: FontWeight.w700,
-              color: theme.colorScheme.primary,
+          GestureDetector(
+            onTap: () => context.push('/profile/${comment.authorId}'),
+            child: Text(
+              comment.authorName,
+              style: theme.textTheme.labelMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+                color: theme.colorScheme.primary,
+              ),
             ),
           ),
           const SizedBox(height: AppTokens.s4),

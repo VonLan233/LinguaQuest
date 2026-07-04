@@ -206,21 +206,24 @@ class _ForumPostCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Flexible(
-                child: Row(
-                  children: [
-                    _AuthorAvatar(name: post.authorName),
-                    const SizedBox(width: AppTokens.s8),
-                    Flexible(
-                      child: Text(
-                        post.authorName,
-                        style: theme.textTheme.labelLarge?.copyWith(
-                          fontWeight: FontWeight.w700,
+              GestureDetector(
+                onTap: () => context.push('/profile/${post.authorId}'),
+                child: Flexible(
+                  child: Row(
+                    children: [
+                      _AuthorAvatar(name: post.authorName),
+                      const SizedBox(width: AppTokens.s8),
+                      Flexible(
+                        child: Text(
+                          post.authorName,
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(width: AppTokens.s8),
