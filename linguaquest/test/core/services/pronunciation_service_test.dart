@@ -101,4 +101,92 @@ void main() {
         await svc.play(word: 'hello', audioUrl: 'http://x/h.mp3');
     expect(outcome, PronunciationOutcome.failed);
   });
+
+  group('server TTS URL (apiBaseUrl injection)', () {
+    test('Chinese with apiBaseUrl: audio called with server TTS URL', () async {
+      String? calledUrl;
+      var ttsCalled = false;
+      final svc = PronunciationService(
+        audio: (url) async {
+          calledUrl = url;
+          return true;
+        },
+        tts: (text, lang, slow) async {
+          ttsCalled = true;
+          return true;
+        },
+        apiBaseUrl: 'http://server',
+      );
+      final outcome = await svc.play(word: '你好', language: 'zh');
+      expect(outcome, PronunciationOutcome.playedUrl);
+      expect(calledUrl, contains('/tts?'));
+      expect(calledUrl, contains('lang=zh'));
+      expect(calledUrl, contains(Uri.encodeComponent('你好')));
+      expect(ttsCalled, isFalse);
+    });
+
+    test('server TTS audio fails: fallback to local TTS', () async {
+      var ttsCalled = false;
+      final svc = PronunciationService(
+        audio: (url) async => false,
+        tts: (text, lang, slow) async {
+          ttsCalled = true;
+          return true;
+        },
+        apiBaseUrl: 'http://server',
+      );
+      final outcome = await svc.play(word: '你好', language: 'zh');
+      expect(outcome, PronunciationOutcome.playedTts);
+      expect(ttsCalled, isTrue);
+    });
+
+    test('apiBaseUrl empty: Chinese goes directly to local TTS', () async {
+      var audioCalled = false;
+      final svc = PronunciationService(
+        audio: (url) async {
+          audioCalled = true;
+          return true;
+        },
+        tts: (text, lang, slow) async => true,
+        apiBaseUrl: '',
+      );
+      final outcome = await svc.play(word: '你好', language: 'zh');
+      expect(outcome, PronunciationOutcome.playedTts);
+      expect(audioCalled, isFalse);
+    });
+
+    test('en external audioUrl still preferred over server TTS', () async {
+      final calledUrls = <String>[];
+      final svc = PronunciationService(
+        audio: (url) async {
+          calledUrls.add(url);
+          return true;
+        },
+        tts: (text, lang, slow) async => true,
+        apiBaseUrl: 'http://server',
+      );
+      final outcome = await svc.play(
+        word: 'hello',
+        audioUrl: 'http://dict/hello.mp3',
+      );
+      expect(outcome, PronunciationOutcome.playedUrl);
+      expect(calledUrls.length, 1);
+      expect(calledUrls.first, 'http://dict/hello.mp3');
+    });
+
+    test('Japanese with apiBaseUrl uses server TTS URL with lang=ja', () async {
+      String? calledUrl;
+      final svc = PronunciationService(
+        audio: (url) async {
+          calledUrl = url;
+          return true;
+        },
+        tts: (text, lang, slow) async => true,
+        apiBaseUrl: 'http://server',
+      );
+      final outcome = await svc.play(word: 'こんにちは', language: 'ja');
+      expect(outcome, PronunciationOutcome.playedUrl);
+      expect(calledUrl, contains('lang=ja'));
+    });
+  });
 }
