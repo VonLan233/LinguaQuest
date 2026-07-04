@@ -3,7 +3,7 @@
 - **日期：** 2026-07-04
 - **分支：** `feat/P2-roadmap`
 - **来源：** 第三轮外部 QA 报告 `Codes/Mobile/testing3/LinguaQuest_APK_V3_Huangshen_Test_Report_2026-07-04.md`（针对连生产后端的 APK v1.0.3）。经 4 个探索 agent 核实根因后分诊。
-- **范围：** 两部分——①**Study Map 完整恢复**（feature，之前被 `ea68e35` 整体删除）；②**8 个真 bug**（A-H）。**需部署：Study Map 后端端点 + B 收藏计数（server）。**
+- **范围：** 三部分——①**Study Map 完整恢复**（feature，之前被 `ea68e35` 整体删除）；②**8 个真 bug**（A-H）；③**服务端 TTS**（edge-tts，修复本地 flutter_tts 在缺中文语音包设备/模拟器上无声）。**需部署：Study Map 后端端点 + B 收藏计数 + TTS 微服务（server）。**
 - **不纳入（已核实非 bug，报告说明即可）：** About 公司地图 marker 无反馈（`InteractiveFlag.none` 故意只读）；抽奖无法测（测试账号 0 XP，环境问题）。QA 报的"Study Map 缺失"本是发现性误解（Map 评分项已由 Language Map 承接），但用户决定**恢复独立 Study Map**，故纳入本轮。
 
 ## 全局约束（Global Constraints）
@@ -28,6 +28,7 @@
 | F | 首页/个人页学习路径不一致 | client | 否 |
 | G | Theme "Follow System" 换行挤压 | client | 否 |
 | H | Daily Reminder 文案 "day 20:00" | client + l10n | 否 |
+| TTS | 服务端语音合成（edge-tts） | client + server | ✅ |
 
 ---
 
@@ -189,11 +190,41 @@
 
 ---
 
+## TTS：服务端语音合成（edge-tts）（client + server，部署）
+
+**根因（agent 核实）：** 客户端 `pronunciation_service.dart:26` 中文场景 `chineseTtsOnly` **只用本地 `flutter_tts`、主动跳过 audioUrl**；`pronunciation_controls.dart:63-76` 与 `article_reader_screen.dart:686` 的 tts sink = `_tts.setLanguage('zh-CN')` + `speak()`。本地 flutter_tts 依赖**设备安装的中文 TTS 语音数据**，模拟器/评分环境常缺失 → `setLanguage`/`speak` 失败或无声。非代码 bug，是本地 TTS 固有短板。**有利点：** 客户端 audio sink 已能播 `UrlSource`（audioplayers），只要 server 给音频 URL，中文改走 URL 即可，改动小。
+
+**方案（用户选：运行时 edge-tts）：** server 提供 `/tts` 音频端点（微软 Edge 免费 neural TTS，无需 key），客户端中文单词/阅读句子改播该 URL，本地 flutter_tts 降级为兜底。
+
+### TTS.1 服务端（需部署）
+**集成方式：** docker-compose 加一个**独立 python edge-tts 微服务**（Dart API 保持纯 Dart，只做转发 + 缓存；edge-tts 用维护良好的 python 库最稳）。
+- Create `server/tts/`（轻量 python 服务：`edge-tts` + 最小 HTTP，`POST/GET /synthesize?text=&voice=&rate=` → 返回 `audio/mpeg` mp3）。Dockerfile 基于 `python:3-slim` + `pip install edge-tts`。
+- Modify `server/docker-compose.prod.yml`：加 `tts` service（内部网络，不对外暴露端口）；API 通过 `http://tts:PORT` 访问。
+- Modify `server/lib/src/routes.dart`：加 `GET /tts?text=&lang=&slow=` 端点：
+  - **输入校验**（信任边界）：`text` 非空且长度 ≤ 上限（如 500 字，防滥用）；`lang` 白名单 `{zh,en,ja}`；否则 400。
+  - **voice 映射**：`zh`→`zh-CN-XiaoxiaoNeural`、`en`→`en-US-AriaNeural`、`ja`→`ja-JP-NanamiNeural`（具体音色实现时定）；`slow=true`→edge-tts `rate=-25%`。
+  - **缓存**（降开销）：按 `sha256(text|voice|rate)` 存 mp3 到 volume 目录；命中直接回，未命中调 tts 微服务生成后落盘再回。
+  - 返回 `Content-Type: audio/mpeg`（可加长 `Cache-Control`）。
+  - `/tts` 是否需鉴权：读端点，可**免鉴权**（音频非敏感；与词库公开性一致）或复用 bearer——实现时按现有公开端点惯例定，倾向免鉴权简化客户端。
+- Modify `server/lib/src/config.dart`：加 TTS 微服务地址/缓存目录 env（默认值，非密钥）。
+
+> ponytail: 缓存用文件系统 + sha256 键，无需 DB/Redis；词/句重复率高，命中率好。edge-tts 走微软公共 endpoint（VPS 需能出网访问 `speech.platform.bing.com`，部署时验证）。
+
+### TTS.2 客户端
+**文件：** Modify `pronunciation_service.dart` + `pronunciation_controls.dart` + `article_reader_screen.dart`
+- `pronunciation_service.dart`：中文不再无条件 `chineseTtsOnly` 跳过 URL。改为：**优先播 server TTS URL**（`{AppConstants.apiBaseUrl}/tts?text={encoded}&lang={zh/en/ja}&slow={bool}`，`Uri.encodeComponent` 编码 text）；audio sink 成功 → `playedUrl`；失败/无 apiBaseUrl → **fallback 本地 flutter_tts**（离线兜底保留）。
+- `pronunciation_controls.dart` / `article_reader_screen.dart`：构造 server TTS URL 传入 `play(audioUrl: ttsUrl, ...)`；语言按当前 targetLanguage/文本映射。
+- 保留 flutter_tts 实例作兜底（server 不可达/离线时仍能尝试本地）。
+
+**验收（TTS 整体）：** server 单测：`/tts` 输入校验（空/超长/非法 lang → 400）、缓存命中不重复合成、voice 映射正确。客户端单测：`PronunciationService` 中文优先 URL、URL 失败 fallback tts。部署后 curl `GET /tts?text=你好&lang=zh` 返回 `audio/mpeg` 且非空。**设备复验（关键）：** 模拟器（无中文语音包）下点单词/阅读句子 Play → **能发出中文读音**（经 server），非静默；断开 server → fallback 本地不崩。`flutter test`/`analyze` + `dart test`/`analyze` 绿。
+
+---
+
 ## 部署 & 验证
 
-- **部署项**：SM 后端（`study_spot_policy.dart` + routes 端点）+ B（收藏计数 SQL）→ `deploy/vps_deploy.sh`（health 200，curl 带 token 验端点）。
+- **部署项**：SM 后端（`study_spot_policy.dart` + routes 端点）+ B（收藏计数 SQL）+ **TTS（docker-compose 加 tts 微服务 + `/tts` 端点）** → `deploy/vps_deploy.sh`（health 200，curl 带 token 验端点；`curl /tts?text=你好&lang=zh` 返回 audio/mpeg）。
 - **APK**：`flutter build apk --release --dart-define=API_BASE_URL=https://api.vonlan233.top`。
-- **设备复验**（连后端账号登录）：SM 全流程（Drawer→Study Map→定位/长按→命名→落库→visitCount 累加→热力图→列表→重启持久化）；A（收藏帖详情）；C（作者→Profile）；D（隐私返回不卡）；E（版本 1.0.3）；F（首页=个人页词书）；G（三行主题）；H（Daily · 20:00）；B（收藏计数一致）。
+- **设备复验**（连后端账号登录）：SM 全流程（Drawer→Study Map→定位/长按→命名→落库→visitCount 累加→热力图→列表→重启持久化）；A（收藏帖详情）；C（作者→Profile）；D（隐私返回不卡）；E（版本 1.0.3）；F（首页=个人页词书）；G（三行主题）；H（Daily · 20:00）；B（收藏计数一致）；**TTS（模拟器无中文语音包下，单词/阅读句子 Play 能发中文读音）**。
 
 ## 任务分解预览（writing-plans 细化）
 Study Map 较大，按数据流拆多 task；bug 各自独立小改。
@@ -210,6 +241,8 @@ Study Map 较大，按数据流拆多 task；bug 各自独立小改。
 11. **F** 首页/个人页词书统一取值
 12. **G** Theme 垂直三行
 13. **H** Daily Reminder 文案（l10n）
-14. **验证 + 部署**（SM 后端 + B）+ 构建 APK + 设备复验全项
+14. **TTS.1** 服务端：tts 微服务（python edge-tts）+ docker-compose + Dart `/tts` 端点（校验/voice映射/缓存）+ server 单测
+15. **TTS.2** 客户端：`pronunciation_service` 中文优先 server URL + fallback 本地 + 单测
+16. **验证 + 部署**（SM 后端 + B + TTS 微服务）+ 构建 APK + 设备复验全项
 
 > SM 前端可与 bug A-H 并行；SM.5 后端与 B 同批部署。geolocator/package_info_plus 两个新依赖用 `flutter pub add` 解析（geolocator 恢复原有能力，package_info_plus 为动态版本号——均非"造轮子"，是恢复/标准能力）。
