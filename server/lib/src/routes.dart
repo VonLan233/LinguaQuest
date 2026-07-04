@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
-import 'dart:typed_data';
 
+import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
@@ -45,68 +45,61 @@ Router buildRouter(
   });
 
   router.get('/tts', (Request request) async {
-    final word = request.url.queryParameters['word']?.trim() ?? '';
-    final type = request.url.queryParameters['type']?.trim() ?? '1';
-    if (word.isEmpty || word.length > 100) {
+    final text = request.url.queryParameters['text']?.trim() ?? '';
+    final lang = request.url.queryParameters['lang']?.trim() ?? '';
+    final slow = request.url.queryParameters['slow']?.trim() ?? 'false';
+    if (text.isEmpty || text.length > 500) {
       return jsonResponse({
-        'error': 'word is required and must be under 100 characters',
+        'error': 'text is required and must be 500 characters or fewer',
       }, status: 400);
     }
-    if (type != '1' && type != '2') {
+    if (!isTtsLangValid(lang)) {
       return jsonResponse({
-        'error': 'type must be 1 (UK) or 2 (US)',
+        'error': 'lang must be one of: zh, en, ja',
       }, status: 400);
+    }
+    final voice = ttsVoiceFor(lang);
+    final rate = ttsRateFor(slow);
+    final cacheKey =
+        sha256.convert(utf8.encode('$text|$voice|$rate')).toString();
+    final cacheDir = Directory(config.ttsCacheDir);
+    await cacheDir.create(recursive: true);
+    final cacheFile = File('${cacheDir.path}/$cacheKey.mp3');
+    if (await cacheFile.exists()) {
+      final cached = await cacheFile.readAsBytes();
+      if (cached.isNotEmpty) {
+        return Response.ok(
+          cached,
+          headers: {
+            'Content-Type': 'audio/mpeg',
+            'Cache-Control': 'public, max-age=86400',
+          },
+        );
+      }
     }
     try {
-      final uri = Uri.https('dict.youdao.com', '/dictvoice', {
-        'audio': word,
-        'type': type,
-      });
-      final streamedResponse = await client
-          .send(http.Request('GET', uri))
-          .timeout(const Duration(seconds: 5));
-      if (streamedResponse.statusCode != 200) {
-        await streamedResponse.stream.listen((_) {}).cancel();
+      final base = Uri.parse(config.ttsServiceUrl);
+      final uri = Uri(
+        scheme: base.scheme,
+        host: base.host,
+        port: base.port,
+        path: '/synthesize',
+        queryParameters: {'text': text, 'voice': voice, 'rate': rate},
+      );
+      final response = await client
+          .get(uri)
+          .timeout(const Duration(seconds: 30));
+      if (response.statusCode != 200 || response.bodyBytes.isEmpty) {
+        stderr.writeln(
+          'TTS microservice error: status=${response.statusCode}',
+        );
         return jsonResponse({'error': 'tts unavailable'}, status: 502);
       }
-      final contentLength = streamedResponse.contentLength;
-      if (contentLength != null && contentLength > 5 * 1024 * 1024) {
-        await streamedResponse.stream.listen((_) {}).cancel();
-        return jsonResponse({'error': 'tts response too large'}, status: 502);
-      }
-      final contentType =
-          (streamedResponse.headers['content-type'] ??
-                  streamedResponse.headers['Content-Type'] ??
-                  'audio/mpeg')
-              .toLowerCase();
-      if (!contentType.startsWith('audio/')) {
-        await streamedResponse.stream.listen((_) {}).cancel();
-        return jsonResponse({'error': 'tts unavailable'}, status: 502);
-      }
-      final bytesBuilder = BytesBuilder();
-      var totalBytes = 0;
-      const maxBytes = 5 * 1024 * 1024;
-      await for (final chunk in streamedResponse.stream.timeout(
-        const Duration(seconds: 5),
-      )) {
-        totalBytes += chunk.length;
-        if (totalBytes > maxBytes) {
-          return jsonResponse({
-            'error': 'tts response invalid or too large',
-          }, status: 502);
-        }
-        bytesBuilder.add(chunk);
-      }
-      final bytes = bytesBuilder.takeBytes();
-      if (bytes.isEmpty) {
-        return jsonResponse({
-          'error': 'tts response invalid or too large',
-        }, status: 502);
-      }
+      await cacheFile.writeAsBytes(response.bodyBytes);
       return Response.ok(
-        bytes,
+        response.bodyBytes,
         headers: {
-          'Content-Type': contentType,
+          'Content-Type': 'audio/mpeg',
           'Cache-Control': 'public, max-age=86400',
         },
       );
@@ -2125,3 +2118,20 @@ Future<void> _issueAndSendCode(
   );
   await mailer.sendVerificationCode(to: email, code: code);
 }
+
+// ── TTS pure helpers ──────────────────────────────────────────────────────────
+
+/// Returns the edge-tts voice name for the given language code.
+/// Defaults to zh voice for unknown inputs (callers should validate lang first).
+String ttsVoiceFor(String lang) => switch (lang) {
+  'zh' => 'zh-CN-XiaoxiaoNeural',
+  'en' => 'en-US-AriaNeural',
+  'ja' => 'ja-JP-NanamiNeural',
+  _ => 'zh-CN-XiaoxiaoNeural',
+};
+
+/// Returns the edge-tts rate string for the given slow flag value.
+String ttsRateFor(String slow) => slow == 'true' ? '-25%' : '+0%';
+
+/// Returns true if lang is in the supported whitelist {zh, en, ja}.
+bool isTtsLangValid(String lang) => const {'zh', 'en', 'ja'}.contains(lang);

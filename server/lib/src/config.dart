@@ -18,6 +18,8 @@ class AppConfig {
     this.aiModel = 'deepseek-v4-flash',
     this.aiClozeModel = '',
     this.aiDailyLimitPerUser = 20,
+    this.ttsServiceUrl = 'http://tts:5002',
+    this.ttsCacheDir = '/tmp/tts-cache',
   });
 
   final int port;
@@ -38,6 +40,8 @@ class AppConfig {
   /// Optional model used only for `cloze`. Empty → fall back to [aiModel].
   final String aiClozeModel;
   final int aiDailyLimitPerUser;
+  final String ttsServiceUrl;
+  final String ttsCacheDir;
 
   factory AppConfig.fromEnvironment() {
     return AppConfig(
@@ -61,6 +65,8 @@ class AppConfig {
       aiClozeModel: _env('AI_CLOZE_MODEL', ''),
       aiDailyLimitPerUser:
           int.tryParse(_env('AI_DAILY_LIMIT_PER_USER', '20')) ?? 20,
+      ttsServiceUrl: _env('TTS_SERVICE_URL', 'http://tts:5002'),
+      ttsCacheDir: _env('TTS_CACHE_DIR', '/tmp/tts-cache'),
     );
   }
 
@@ -81,6 +87,8 @@ class AppConfig {
     String? aiModel,
     String? aiClozeModel,
     int? aiDailyLimitPerUser,
+    String? ttsServiceUrl,
+    String? ttsCacheDir,
   }) {
     return AppConfig(
       port: port ?? this.port,
@@ -99,6 +107,8 @@ class AppConfig {
       aiModel: aiModel ?? this.aiModel,
       aiClozeModel: aiClozeModel ?? this.aiClozeModel,
       aiDailyLimitPerUser: aiDailyLimitPerUser ?? this.aiDailyLimitPerUser,
+      ttsServiceUrl: ttsServiceUrl ?? this.ttsServiceUrl,
+      ttsCacheDir: ttsCacheDir ?? this.ttsCacheDir,
     );
   }
 }
