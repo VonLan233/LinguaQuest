@@ -274,29 +274,36 @@ class _ThemeSettingCard extends StatelessWidget {
               Text(l10n.settingsTheme, style: theme.textTheme.titleMedium),
             ],
           ),
-          const SizedBox(height: AppTokens.s12),
-          SegmentedButton<ThemeMode>(
-            segments: [
-              ButtonSegment(
-                value: ThemeMode.system,
-                label: Text(l10n.settingsThemeSystem),
-                icon: const Icon(Icons.brightness_auto),
-              ),
-              ButtonSegment(
-                value: ThemeMode.light,
-                label: Text(l10n.settingsThemeLight),
-                icon: const Icon(Icons.brightness_7),
-              ),
-              ButtonSegment(
-                value: ThemeMode.dark,
-                label: Text(l10n.settingsThemeDark),
-                icon: const Icon(Icons.brightness_2),
-              ),
-            ],
-            selected: {themeMode},
-            onSelectionChanged: (Set<ThemeMode> selection) {
-              if (selection.isNotEmpty) onChanged(selection.first);
-            },
+          RadioGroup<ThemeMode>(
+            groupValue: themeMode,
+            onChanged: (m) { if (m != null) onChanged(m); },
+            child: Column(
+              children: [
+                RadioListTile<ThemeMode>(
+                  value: ThemeMode.system,
+                  title: Text(l10n.settingsThemeSystem),
+                  subtitle: Text(l10n.settingsThemeSystemSubtitle),
+                  secondary: const Icon(Icons.brightness_auto),
+                  contentPadding: EdgeInsets.zero,
+                ),
+                const Divider(),
+                RadioListTile<ThemeMode>(
+                  value: ThemeMode.light,
+                  title: Text(l10n.settingsThemeLight),
+                  subtitle: Text(l10n.settingsThemeLightSubtitle),
+                  secondary: const Icon(Icons.brightness_7),
+                  contentPadding: EdgeInsets.zero,
+                ),
+                const Divider(),
+                RadioListTile<ThemeMode>(
+                  value: ThemeMode.dark,
+                  title: Text(l10n.settingsThemeDark),
+                  subtitle: Text(l10n.settingsThemeDarkSubtitle),
+                  secondary: const Icon(Icons.brightness_2),
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ],
+            ),
           ),
         ],
       ),
