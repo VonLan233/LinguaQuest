@@ -2379,6 +2379,8 @@ ORDER BY created_at ASC
         'RETURNING id, name, latitude, longitude, study_minutes, visit_count, created_at';
     final result = idx != null
         ? await connection.execute(
+            // ponytail: created_at 在就近重访时被更新为最近访问时间，用于 listStudySpots 的
+            // 最近优先排序（表结构约定，语义上等同于 last_visited_at；非新增列）。
             Sql.named(
               'UPDATE study_spots SET visit_count = visit_count + 1, created_at = NOW() '
               'WHERE id=@id::uuid AND user_id=@userId $returning',

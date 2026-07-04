@@ -1438,12 +1438,19 @@ Router buildRouter(
   router.post('/study-spots', (Request request) async {
     return _protected(config, request, (uid) async {
       final body = await readJsonMap(request);
-      if (body['latitude'] == null || body['longitude'] == null) {
+      final name = (body['name']?.toString() ?? '').trim();
+      final rawLat = body['latitude'];
+      final rawLng = body['longitude'];
+      // 安全解析坐标：客户端可能传 num 或 String 数字；任何非数值→null→400。
+      final lat = rawLat is num
+          ? rawLat.toDouble()
+          : num.tryParse(rawLat?.toString() ?? '')?.toDouble();
+      final lng = rawLng is num
+          ? rawLng.toDouble()
+          : num.tryParse(rawLng?.toString() ?? '')?.toDouble();
+      if (lat == null || lng == null) {
         return jsonResponse({'error': 'invalid_coordinates'}, status: 400);
       }
-      final name = (body['name'] as String? ?? '').trim();
-      final lat = (body['latitude'] as num?)?.toDouble() ?? 0;
-      final lng = (body['longitude'] as num?)?.toDouble() ?? 0;
       final err =
           StudySpotPolicy.validate(name: name, latitude: lat, longitude: lng);
       if (err != null) return jsonResponse({'error': err}, status: 400);
@@ -1459,6 +1466,10 @@ Router buildRouter(
 
   router.delete('/study-spots/<id>', (Request request, String id) async {
     return _protected(config, request, (uid) async {
+      // 预检 UUID 格式，避免非法字符串触发 Postgres invalid input syntax for type uuid → 500。
+      if (!_isValidUuid(id)) {
+        return jsonResponse({'error': 'not found'}, status: 404);
+      }
       final ok = await database.deleteStudySpot(uid, id);
       if (!ok) return jsonResponse({'error': 'not found'}, status: 404);
       return jsonResponse({'deleted': true});
@@ -2080,6 +2091,11 @@ String? nullableDateValue(Object? value) {
   if (value is DateTime) return value.toIso8601String();
   return value.toString();
 }
+
+final _uuidPattern = RegExp(
+  r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$',
+);
+bool _isValidUuid(String id) => _uuidPattern.hasMatch(id);
 
 final _emailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
 
