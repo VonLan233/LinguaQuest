@@ -39,11 +39,14 @@ import '../../data/repositories/notification_repository.dart';
 import '../../data/repositories/reward_repository.dart';
 import '../../data/repositories/reward_task_repository.dart';
 import '../../data/repositories/review_repository.dart';
+import '../../data/models/study_spot.dart';
 import '../../data/repositories/study_plan_repository.dart';
+import '../../data/repositories/study_spot_repository.dart';
 import '../../data/repositories/user_word_repository.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../services/local_notification_service.dart';
 import '../constants/app_constants.dart';
+import '../services/location_service.dart';
 import '../utils/progress_scope.dart';
 import '../utils/ui_labels.dart';
 import 'app_state.dart';
@@ -138,6 +141,13 @@ final forumRepositoryProvider = Provider<ForumRepository>((ref) {
   return MockForumRepository();
 });
 
+final studySpotRepositoryProvider = Provider<StudySpotRepository>((ref) {
+  if (AppConstants.apiBaseUrl.isNotEmpty) {
+    return ApiStudySpotRepository(ref.read(apiClientProvider));
+  }
+  return MockStudySpotRepository();
+});
+
 final analyticsRepositoryProvider = Provider<AnalyticsRepository>((ref) {
   if (AppConstants.apiBaseUrl.isNotEmpty) {
     return ApiAnalyticsRepository(ref.read(apiClientProvider));
@@ -203,6 +213,7 @@ class AppController extends Notifier<AppState> {
   late final RewardRepository _rewardRepository;
   late final RewardTaskRepository _rewardTaskRepository;
   late final ForumRepository _forumRepository;
+  late final StudySpotRepository _studySpotRepository;
   late final AnalyticsRepository _analyticsRepository;
   late final ArticleRepository _articleRepository;
   late final LocalNotificationService _localNotificationService;
@@ -221,6 +232,7 @@ class AppController extends Notifier<AppState> {
     _rewardRepository = ref.watch(rewardRepositoryProvider);
     _rewardTaskRepository = ref.watch(rewardTaskRepositoryProvider);
     _forumRepository = ref.watch(forumRepositoryProvider);
+    _studySpotRepository = ref.watch(studySpotRepositoryProvider);
     _analyticsRepository = ref.watch(analyticsRepositoryProvider);
     _articleRepository = ref.watch(articleRepositoryProvider);
     _localNotificationService = ref.watch(localNotificationServiceProvider);
@@ -2931,6 +2943,57 @@ class AppController extends Notifier<AppState> {
     } catch (error) {
       // Recommendation failures are non-critical — do not surface to the user.
       debugPrint('Failed to refresh recommendations: $error');
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Study Map (P2d): study spot CRUD + visit recording.
+  // ---------------------------------------------------------------------------
+
+  Future<void> loadStudySpots() async {
+    final spots = await _studySpotRepository.list();
+    state = state.copyWith(studySpots: spots);
+  }
+
+  Future<void> saveStudySpot(StudySpot spot) async {
+    await _studySpotRepository.add(spot);
+    await loadStudySpots();
+  }
+
+  Future<void> deleteStudySpot(String id) async {
+    await _studySpotRepository.remove(id);
+    await loadStudySpots();
+  }
+
+  /// Records a study visit (nearby upsert via the repository). When [latitude]/
+  /// [longitude] are omitted, the current device location is used. Any
+  /// failure — denied permission, timeout, network — is swallowed so it never
+  /// blocks lesson/training completion.
+  Future<void> recordStudyVisit({
+    required String name,
+    double? latitude,
+    double? longitude,
+  }) async {
+    try {
+      double lat;
+      double lng;
+      if (latitude != null && longitude != null) {
+        lat = latitude;
+        lng = longitude;
+      } else {
+        final loc = await currentLatLng();
+        if (loc == null) return; // silently skip
+        lat = loc.latitude;
+        lng = loc.longitude;
+      }
+      await _studySpotRepository.recordVisit(
+        latitude: lat,
+        longitude: lng,
+        name: name,
+      );
+      await loadStudySpots();
+    } catch (error) {
+      debugPrint('recordStudyVisit skipped: $error');
     }
   }
 
