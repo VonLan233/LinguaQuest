@@ -685,6 +685,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get profileNoEmail => '未设置邮箱';
 
   @override
+  String get publicProfileNotFoundTitle => '无法查看该资料';
+
+  @override
+  String get publicProfileNotFoundMessage => '该用户不存在或资料不可见。';
+
+  @override
+  String get publicProfileLoadFailedTitle => '资料加载失败';
+
+  @override
+  String get publicProfileLoadFailedMessage => '出了点问题，请稍后重试。';
+
+  @override
   String get profileDashboard => '学习仪表盘';
 
   @override

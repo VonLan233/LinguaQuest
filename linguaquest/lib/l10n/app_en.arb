@@ -227,6 +227,10 @@
 
   "profileLearner": "Explorer",
   "profileNoEmail": "No email set",
+  "publicProfileNotFoundTitle": "Profile unavailable",
+  "publicProfileNotFoundMessage": "This user doesn't exist or their profile is private.",
+  "publicProfileLoadFailedTitle": "Couldn't load profile",
+  "publicProfileLoadFailedMessage": "Something went wrong. Please try again.",
   "profileDashboard": "Learning Dashboard",
   "profileDashboardSubtitle": "Key progress at a glance, with settings at the bottom.",
   "profileLearnedWords": "Learned",

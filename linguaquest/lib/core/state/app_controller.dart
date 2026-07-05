@@ -1397,24 +1397,28 @@ class AppController extends Notifier<AppState> {
           answerEvents: answerEvents,
         ),
       );
-      final learnedUserWords = currentLesson == null
-          ? <UserWord>[]
-          : await _recordLessonUserWords(
-              uid: user.uid,
-              result: LessonResult(
-                lessonId: currentLesson.id,
-                lessonTitle: currentLesson.title,
-                totalQuestions: totalQuestions,
-                correctAnswers: correctAnswers,
-                xpEarned: xpEarned,
-                mistakes: [
-                  for (final question in currentLesson.questions)
-                    if (mistakeWordIds.contains(question.word.id)) question,
-                ],
-                completedAt: now,
-              ),
-              now: now,
-            );
+      // Record every new word the session actually studied, not just the
+      // 3-word [currentLesson] chunk. New-word answers are logged with
+      // source 'newWord' (StudySessionItemSource.newWord.name); their ids are
+      // resolved against the current wordbook. Without this, words drawn beyond
+      // the lesson chunk stay untracked and reappear in the next day's plan.
+      final wordsById = {
+        for (final word in state.currentWordBook?.words ?? const <Word>[])
+          word.id: word,
+      };
+      final learnedWords = <Word>[
+        if (currentLesson != null) ...currentLesson.words,
+        for (final event in answerEvents)
+          if (event['source'] == 'newWord' && event['wordId'] is String)
+            if (wordsById[event['wordId'] as String] != null)
+              wordsById[event['wordId'] as String]!,
+      ];
+      final learnedUserWords = await _recordLearnedWords(
+        uid: user.uid,
+        words: learnedWords,
+        mistakeWordIds: mistakeWordIds.toSet(),
+        now: now,
+      );
       await _saveLessonProgress(completedLessonIds, todayCompletedLessonIds, now);
       state = state.copyWith(
         user: updatedUser,
@@ -2092,11 +2096,31 @@ class AppController extends Notifier<AppState> {
     final mistakeWordIds = result.mistakes
         .map((mistake) => mistake.word.id)
         .toSet();
+    return _recordLearnedWords(
+      uid: uid,
+      words: lesson.words,
+      mistakeWordIds: mistakeWordIds,
+      now: now,
+    );
+  }
+
+  /// Marks [words] as learned userWords, upserting them. Words already tracked
+  /// keep their history (via [UserWord.learned]); untracked ones are created.
+  /// Ignored words are skipped and duplicate ids collapse to a single update.
+  Future<List<UserWord>> _recordLearnedWords({
+    required String uid,
+    required List<Word> words,
+    required Set<String> mistakeWordIds,
+    required DateTime now,
+  }) async {
+    if (words.isEmpty) return [];
     final existingByWordId = {
       for (final word in state.userWords) word.wordId: word,
     };
     final updates = <UserWord>[];
-    for (final targetWord in lesson.words) {
+    final seen = <String>{};
+    for (final targetWord in words) {
+      if (!seen.add(targetWord.id)) continue;
       final existing =
           existingByWordId[targetWord.id] ??
           UserWord.create(

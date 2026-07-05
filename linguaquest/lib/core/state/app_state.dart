@@ -240,6 +240,26 @@ class AppState {
     return formalLessons.isEmpty ? null : formalLessons.last;
   }
 
+  /// New words the learner can still study from the current wordbook: every
+  /// word in [currentWordBook] whose id is not yet tracked in [userWords],
+  /// deduped by id with original book order preserved.
+  ///
+  /// The daily study session seeds new words from this (not from a single
+  /// [currentLesson], which is only a 3-word chunk) so the number of new words
+  /// follows [dailyNewTarget] instead of being capped at the lesson size.
+  List<Word> get availableNewWords {
+    final book = currentWordBook;
+    if (book == null) return const [];
+    final startedIds = {for (final word in userWords) word.wordId};
+    final seen = <String>{};
+    final result = <Word>[];
+    for (final word in book.words) {
+      if (startedIds.contains(word.id)) continue;
+      if (seen.add(word.id)) result.add(word);
+    }
+    return List.unmodifiable(result);
+  }
+
   int get totalLearningWords =>
       formalLessons.fold(0, (total, lesson) => total + lesson.words.length);
 

@@ -723,6 +723,20 @@ class AppLocalizationsMs extends AppLocalizations {
   String get profileNoEmail => 'Tiada e-mel ditetapkan';
 
   @override
+  String get publicProfileNotFoundTitle => 'Profil tidak tersedia';
+
+  @override
+  String get publicProfileNotFoundMessage =>
+      'Pengguna ini tidak wujud atau profilnya adalah peribadi.';
+
+  @override
+  String get publicProfileLoadFailedTitle => 'Gagal memuatkan profil';
+
+  @override
+  String get publicProfileLoadFailedMessage =>
+      'Sesuatu tidak kena. Sila cuba lagi.';
+
+  @override
   String get profileDashboard => 'Papan Pemuka Pembelajaran';
 
   @override

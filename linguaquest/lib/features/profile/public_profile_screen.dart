@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -10,15 +11,18 @@ import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/app_progress_bar.dart';
 import '../../core/widgets/fallback_back_button.dart';
+import '../../core/widgets/mascot_empty_state.dart';
 import '../../data/repositories/api_repositories.dart';
 import '../../data/repositories/mock_repositories.dart';
 import '../../data/repositories/profile_repository.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 // ---------------------------------------------------------------------------
 // Provider
 // ---------------------------------------------------------------------------
 
-final _profileRepositoryProvider = Provider<ProfileRepository>((ref) {
+/// Public so tests can inject a fake repository via [ProviderScope] overrides.
+final profileRepositoryProvider = Provider<ProfileRepository>((ref) {
   if (AppConstants.apiBaseUrl.isNotEmpty) {
     final client = ref.watch(apiClientProvider);
     return ApiProfileRepository(client);
@@ -29,7 +33,7 @@ final _profileRepositoryProvider = Provider<ProfileRepository>((ref) {
 
 final _publicProfileProvider = FutureProvider.family<Map<String, dynamic>, String>(
   (ref, userId) async {
-    final repo = ref.watch(_profileRepositoryProvider);
+    final repo = ref.watch(profileRepositoryProvider);
     return repo.getPublicProfile(userId);
   },
 );
@@ -63,16 +67,47 @@ class PublicProfileScreen extends ConsumerWidget {
       ),
       body: profileAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, _) => Center(
-          child: Padding(
-            padding: const EdgeInsets.all(AppTokens.s20),
-            child: Text(
-              'Could not load profile.\n$err',
-              textAlign: TextAlign.center,
-            ),
-          ),
+        error: (err, _) => _ProfileError(
+          error: err,
+          onRetry: () => ref.invalidate(_publicProfileProvider(userId)),
         ),
         data: (profile) => _ProfileBody(profile: profile),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Error state
+// ---------------------------------------------------------------------------
+
+class _ProfileError extends StatelessWidget {
+  const _ProfileError({required this.error, required this.onRetry});
+
+  final Object error;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final isNotFound =
+        error is DioException && (error as DioException).response?.statusCode == 404;
+
+    if (isNotFound) {
+      // The user was deleted or their profile is private — a friendly, dead-end
+      // empty state (no retry, since retrying will not change the outcome).
+      return MascotEmptyState(
+        title: l10n.publicProfileNotFoundTitle,
+        message: l10n.publicProfileNotFoundMessage,
+      );
+    }
+
+    return MascotEmptyState(
+      title: l10n.publicProfileLoadFailedTitle,
+      message: l10n.publicProfileLoadFailedMessage,
+      action: FilledButton(
+        onPressed: onRetry,
+        child: Text(l10n.commonRetry),
       ),
     );
   }

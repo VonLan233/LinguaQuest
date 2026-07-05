@@ -1408,6 +1408,30 @@ abstract class AppLocalizations {
   /// **'No email set'**
   String get profileNoEmail;
 
+  /// No description provided for @publicProfileNotFoundTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile unavailable'**
+  String get publicProfileNotFoundTitle;
+
+  /// No description provided for @publicProfileNotFoundMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This user doesn\'t exist or their profile is private.'**
+  String get publicProfileNotFoundMessage;
+
+  /// No description provided for @publicProfileLoadFailedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load profile'**
+  String get publicProfileLoadFailedTitle;
+
+  /// No description provided for @publicProfileLoadFailedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get publicProfileLoadFailedMessage;
+
   /// No description provided for @profileDashboard.
   ///
   /// In en, this message translates to:

@@ -721,6 +721,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileNoEmail => 'No email set';
 
   @override
+  String get publicProfileNotFoundTitle => 'Profile unavailable';
+
+  @override
+  String get publicProfileNotFoundMessage =>
+      'This user doesn\'t exist or their profile is private.';
+
+  @override
+  String get publicProfileLoadFailedTitle => 'Couldn\'t load profile';
+
+  @override
+  String get publicProfileLoadFailedMessage =>
+      'Something went wrong. Please try again.';
+
+  @override
   String get profileDashboard => 'Learning Dashboard';
 
   @override

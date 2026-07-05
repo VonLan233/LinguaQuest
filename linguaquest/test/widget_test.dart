@@ -4085,6 +4085,67 @@ void main() {
     expect(learnedWordIds, containsAll(lesson.words.map((word) => word.id)));
   });
 
+  test('mixed study completion records every studied new word, not just the '
+      'current lesson chunk', () async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'mixed-studied-user',
+      name: 'Sora',
+      email: 'sora@lingua.quest',
+      targetExam: 'Daily English',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+    });
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    final controller = container.read(appControllerProvider.notifier);
+    await controller.bootstrap();
+    final state0 = container.read(appControllerProvider);
+    final book = state0.currentWordBook!;
+    expect(book.words.length, greaterThanOrEqualTo(10));
+    final lesson = state0.currentLesson!;
+
+    // The session studied more new words than the 3-word lesson chunk: take the
+    // first 10 untracked words from the current wordbook (what availableNewWords
+    // would have seeded) and log them as source=newWord answers.
+    final studiedIds = <String>{
+      ...lesson.words.map((word) => word.id),
+      ...state0.availableNewWords.take(10).map((word) => word.id),
+    };
+    expect(studiedIds.length, greaterThan(lesson.words.length));
+    final answerEvents = <Map<String, dynamic>>[
+      for (final id in studiedIds)
+        {'source': 'newWord', 'wordId': id, 'isCorrect': true},
+    ];
+
+    final succeeded = await controller.completeMixedStudySession(
+      lessonId: 'daily-mixed-session',
+      totalQuestions: answerEvents.length,
+      correctAnswers: answerEvents.length,
+      mistakeWordIds: const [],
+      answerEvents: answerEvents,
+      startedAt: now,
+      endedAt: now.add(const Duration(minutes: 5)),
+      completeCurrentLesson: true,
+      xpEarned: 20,
+    );
+
+    expect(succeeded, isTrue);
+    final learnedWordIds = {
+      for (final word in container.read(appControllerProvider).userWords)
+        word.wordId,
+    };
+    expect(learnedWordIds, containsAll(studiedIds));
+  });
+
   testWidgets('lesson result ignores stale results from another lesson', (
     tester,
   ) async {

@@ -227,6 +227,10 @@
 
   "profileLearner": "Penjelajah",
   "profileNoEmail": "Tiada e-mel ditetapkan",
+  "publicProfileNotFoundTitle": "Profil tidak tersedia",
+  "publicProfileNotFoundMessage": "Pengguna ini tidak wujud atau profilnya adalah peribadi.",
+  "publicProfileLoadFailedTitle": "Gagal memuatkan profil",
+  "publicProfileLoadFailedMessage": "Sesuatu tidak kena. Sila cuba lagi.",
   "profileDashboard": "Papan Pemuka Pembelajaran",
   "profileDashboardSubtitle": "Kemajuan penting dalam satu skrin, dengan tetapan di bahagian bawah.",
   "profileLearnedWords": "Dipelajari",

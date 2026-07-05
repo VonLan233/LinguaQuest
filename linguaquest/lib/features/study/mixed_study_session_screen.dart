@@ -198,7 +198,7 @@ class _MixedStudySessionScreenState
     final state = ref.read(appControllerProvider);
     if (await _restoreDraft(state)) return;
     final dailyGoal = state.dailyNewTarget;
-    final newWords = state.currentLesson?.words ?? const <Word>[];
+    final newWords = state.availableNewWords;
     final plan = _builder.build(
       newWords: newWords,
       dueWords: state.dueWords,
@@ -274,12 +274,15 @@ class _MixedStudySessionScreenState
     }
     final currentLesson = state.currentLesson;
     if (draft.lessonId != (currentLesson?.id ?? '')) return false;
-    final currentLessonWordIds = {
-      for (final word in currentLesson?.words ?? const <Word>[]) word.id,
+    // New words are drawn from the whole current wordbook (see availableNewWords),
+    // not just the 3-word currentLesson, so validate a restored draft's new-word
+    // items against the wordbook pool.
+    final newWordIds = {
+      for (final word in state.currentWordBook?.words ?? const <Word>[]) word.id,
     };
     final customWordIds = {for (final word in state.customWords) word.id};
     for (final item in draft.queue) {
-      if (item.isNewWord && !currentLessonWordIds.contains(item.wordId)) {
+      if (item.isNewWord && !newWordIds.contains(item.wordId)) {
         return false;
       }
       if (!item.isNewWord && !customWordIds.contains(item.wordId)) {
