@@ -67,3 +67,42 @@
 - **训练类（Word Rush/Word Spelling/Listening/Survival/Campus）+ 地图中文/西语无法点选 + Mistake Book AI 入口**：未探索（探索 agent 因 opus 波动挂）。language_map_screen marker enabled/locked 逻辑、training_session_screen + 各 game screen 待新会话探索。
 
 > **新会话续 Cycle 11**：读本 backlog + `.superpowers/sdd/progress.md`；先坐实上述未尽根因（用 Bash/Read 或稳定后派 agent）→ brainstorm 定范围/优先级 → spec → plan → SDD。Cycle 10 已完整交付（三 Part 部署+设备验证），勿重做。
+
+## 根因坐实（2026-07-05 Cycle11 会话，用户决策：全部 22 项一次清）
+> 4 个并行 Explore agent + 自查坐实。注意：agent 有过一次编造代码（错题本"flashcard 阶段"纯属虚构），以下均已本人 Read/grep 核对真实行号。
+
+- **课程只学2-3词（高危6.1）✅确凿**：`lesson_factory.dart:5` `wordsPerLesson=3` 硬编码；`api_repositories.dart:300` `lessonsFromWordBook(book)` 调用**没传 dailyNewTarget**。每日计划 `dailyNewTarget`（app_state.dart:215 读取正常）从未接进 lesson 生成。修法：`lessonsFromWordBook(book, wordsPerLesson: <每日计划值>)`，需把 dailyGoal 传到 api_repositories 调用点（注意该处是否能拿到 state.dailyNewTarget）。
+- **Profile 404（高危7.2）✅路径确定**：帖子作者头像跳 `/profile/{authorId}`（community_screen.dart:211，Cycle10 C 接线）→ `getPublicProfile`→ GET `/users/<id>/profile` → 后端 `routes.dart:1056` 当 `userById(userId)==null` 返 404。forum_posts.author_id **无 FK 约束**（database.dart:526-538），可指向不存在用户。自己 profile 入口用有效 uid 不 404。客户端 `public_profile_screen.dart:66-73` 把异常直接当文案显示。修法：后端 404 时客户端友好空态（"用户不存在/资料不可见"），并考虑帖子作者不可点或后端 join 校验。
+- **错题本"全录"（高危6.2）⚠️代码逻辑正确，非明确代码 bug**：真机课程走 `mixed_study_session_screen.dart`（/study/mixed），非 quiz_session。判分 `_judgeQuestion:312` `answer==item.meaningFor(locale)`，选项由 `_buildOptionsFor:458` 用同一 `meaningFor`+distractor 构建 → **选对必判 true**；`_wrongItemIds` 只在首答错时 add；`completeMixedStudySession`（app_controller.dart:1354）**不写 lastResult**，只喂 `_recordLessonUserWords`（:2099 仅对真错词 `hadMistake:true`）；错题本 weakWords 段=`reviewWords.where(isWeak)`。→ **代码层面查不到"答对却全录"**。最可能：HSK 学中文，新词首次接触真答错→自然塞满；或用户复现路径特殊。修法方向：**新词首次曝光的错答不计入错题本/弱词**（仅 review 项或重复错才算），需先写复现测试坐实。⚠️实现前可能需向用户要精确复现步骤。
+- **地图 zh/es 点不了（UI 4）✅确凿（非 enabled 门控）**：`language_map_screen.dart:28-35` 六 pin 全 `enabled:true` 无门控。真因是 **marker 命中框 140×110（:116-117）远大于视觉 badge ~56px**，zoom=2 下 zh(北京116°E)/ja(日本138°E) 约 60px 间距、es(马德里-3.7°)/fr(巴黎2.3°) 约 17px → 两两重叠；后绘 marker（ja=index4 盖 zh、fr=index3 盖 es）抢走点击。恰好 zh、es 被覆盖，en/ms/ja/fr 孤立或在顶层可点。修法：命中框缩到贴合 badge（只让 badge 区可点）/ 拉开坐标 / 缩小 Marker width。
+- **5 训练游戏（SVV D-01/03/04/02/06）✅确凿**，均在 `lib/features/training/training_session_screen.dart`（Campus 在 `lib/features/quiz/quiz_session_screen.dart`）：
+  - D-01 Word Rush 计分冲突：倒计时结算 `_finishTraining` 时末题 feedback 延迟未完成，attempt 漏计（:558-560 vs :319/:709-710）。
+  - D-03 Word Spelling 语言错配：`:401` 用 app locale(en) 取释义喂给"拼中文"prompt（`trainingPromptChineseSpelling`），期望中文却给英文。
+  - D-04 Listening 泄题：选项在音频播放前无条件渲染（:1067 add(word.word)，:934-943 选项在 PronunciationControls 之前）。
+  - D-02 Survival 标签反转：`:803` 传 `(revives,nodeRewards)`，l10n `trainingSurvivalResources` 定义 `(nodes,revives)` 顺序颠倒（app_localizations_en.dart:1515-1516）。
+  - D-06 Campus 无限重试：`quiz_session_screen.dart:276-298/504-506` 无 maxAttempts，答错可逐个试；结果标签 l10n 前缀+explanation 中英拼接（:570/:577）。
+
+### UI / l10n 簇（agent grep 坐实，实现前需 Read 复核真实行号——agent 有编造前科）
+- **11 AI helper 写死"Chinese"**：❓未找到硬编码。AI 屏幕语言文案都走 l10n key。可能已修或在后端 prompt。**实现前需真机/再查确认是否仍是 bug**，否则移出。
+- **16 词卡多余中文释义**：`target_word_detail_screen.dart:512-580` `_DefinitionSections`。非 CJK 词渲染三段（Bilingual 头+中文定义 558-563+英文定义 565-569），CJK 词只显英文。修：删非 CJK 的中文定义段，统一只显英文。
+- **17 音频按钮过多**：`pronunciation_controls.dart:143-187` 非 CJK 词渲染 UK/US/0.5× 三钮；CJK 只 Audio+0.5×。修：非 CJK 也收敛为 Audio+0.5×（去 UK/US 区分）。
+- **18 Profile 命名不统一**：三处硬编码 `profile_screen.dart:145 'Data & storage'`、`settings_screen.dart:74 'Data & Account'`、`data_settings_screen.dart:24 'Data & Account'`。修：统一 l10n key。
+- **19 DarkMode "Choose Language" 换行**：`app_drawer.dart:32` 硬编码 `'Choose Language'`。修：换 `l10n.pickerChooseLanguage`（已存在）。⚠️换行真因存疑，需真机复核是否单纯文案长度。
+- **20 开屏 "word image" 无图**：`onboarding_screen.dart:24 onboardingFeatureImageCards`、`splash_screen.dart:91 splashTagline`。无真实图像。修：产品决策——去掉"Image"措辞或改文案。
+- **21 Onboarding 双设置共存**：`goal_setup_screen.dart:138-197`（每日词数 138-152 + deadline 155-191 + 共用保存 194）；deadline 设了会 auto 覆盖 dailyGoal（77-79）。修：改互斥（单选/tab）。产品决策。
+- **12 AI Writing snackbar 挡提交按钮**：`ai_writing_review_screen.dart:253-268 提交按钮 + 487-493 snackbar 无 duration`。修：snackbar 加短 duration / floating behavior。
+
+### 数据 / 词典 / 成就 簇
+- **9 日文词典 は→tooth**：`word_segmenter.dart:116-117` `buildHighlightVocab` 把词条 kana 字段也纳入可匹配 surface；"歯"(ha=tooth) 的 kana="は" 与助词 は 撞车，最长匹配命中。修：日语跳过纯假名虚词匹配/只匹配 word 字段/加 POS 过滤。
+- **13 Analytics 训练 XP 不一致**：`progress_analytics_screen.dart:113,139` 用本地 `state.todayTrainingXp`（SharedPreferences），重启/多设备与后端不同步；无活动明细。修：改用后端 dailyXp 或加明细。⚠️需确认口径。
+- **14 3-Day Streak 单日解锁**：疑 demo 硬编码——`user_profile.dart:42 demo() streak:3`、`analytics.dart:164 mock() streakDays:5`。⚠️连后端时非 demo，此根因可能不对；需确认真机连后端下 streak 来源与成就判定。
+- **10 Mistake Book AI 入口不可见**：`mistake_book_screen.dart:97-127` `_MistakeWordRow` 的 Row 5 元素无宽度约束，AppPill 过宽挤出 IconButton(autoAwesome)。修：给 IconButton/AppPill 固定宽度或 Flexible。
+- **22 语言切换不同步**：`app_controller.dart:387-398` `updateTargetLanguage()` 只改 `targetLanguage`，不切 `currentLanguage`/词书 → 显示新语言但课程/词书/进度仍旧。⚠️但地图入口 `_startLearning` 之后接了 `showLanguageWordbookPicker`，需核实是否已覆盖；关联 Cycle10 F。修：切语言时完整切 scope+默认词书。
+- **待查5.3 重复加词无反馈**：`app_controller.dart:878` 重复时 `return true`（幂等），`_save()` 显示"已保存"，用户看不到"已存在"。修：区分反馈文案（返回已存在标志/errorMessage 提示）。
+
+## Cycle 11 全 22 项分批（SDD）建议
+按风险与相邻代码分组，逐 Part 走 SDD（每 task: failing test → 实现 → spec review → quality review → verify）：
+- **Part 1 高危（3）**：6.1 课程词数接每日计划 · 7.2 Profile404 友好态 · 6.2 错题本（先写复现测试坐实，判分补 trim + 新词首曝不计错题）
+- **Part 2 训练游戏（5）**：D-01/03/04/02/06，集中在 training_session_screen + quiz_session_screen
+- **Part 3 UI/l10n（8）**：4 地图命中框 · 16 词卡中文释义 · 17 音频钮 · 18 命名统一 · 19 DarkMode 换行 · 10 AI 入口布局 · 12 snackbar · 11 AI 写死语言（若确认是 bug）
+- **Part 4 数据/词典/产品决策（6）**：9 日文 は · 13 Analytics XP · 14 streak · 22 语言切换 · 5.3 重复词反馈 · 20/21 产品决策项（开屏文案/Onboarding 互斥）
