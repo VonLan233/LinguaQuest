@@ -4462,7 +4462,7 @@ abstract class AppLocalizations {
   /// No description provided for @aiLearningToolAiAnalysisDesc.
   ///
   /// In en, this message translates to:
-  /// **'Extract main clauses, divide subordinate clauses, explain modifiers and key words, and provide natural Chinese translation.'**
+  /// **'Extract main clauses, divide subordinate clauses, explain modifiers and key words, and provide a natural translation.'**
   String get aiLearningToolAiAnalysisDesc;
 
   /// No description provided for @aiLearningToolAiWriting.

@@ -49,4 +49,6 @@ abstract class AuthRepository {
   Future<UserProfile> updateProfile(UserProfile profile);
 
   Future<void> logout();
+
+  Future<void> deleteAccount();
 }

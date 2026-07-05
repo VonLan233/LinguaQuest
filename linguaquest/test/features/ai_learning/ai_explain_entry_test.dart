@@ -4,10 +4,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:linguaquest/core/state/app_controller.dart';
 import 'package:linguaquest/core/state/app_state.dart';
+import 'package:linguaquest/core/widgets/ai_word_support_link.dart';
 import 'package:linguaquest/data/models/lesson.dart';
 import 'package:linguaquest/data/models/lesson_result.dart';
+import 'package:linguaquest/features/ai_learning/ai_learning_screen.dart';
 import 'package:linguaquest/features/quiz/lesson_result_screen.dart';
 import 'package:linguaquest/features/review/mistake_book_screen.dart';
+import 'package:linguaquest/features/shell/app_shell.dart';
 import 'package:linguaquest/l10n/generated/app_localizations.dart';
 
 // ---------------------------------------------------------------------------
@@ -16,29 +19,29 @@ import 'package:linguaquest/l10n/generated/app_localizations.dart';
 
 /// A minimal [Word] used as a mistake in tests.
 Word _makeWord(String wordText) => Word(
-      id: 'test-word-id',
-      word: wordText,
-      phonetic: '',
-      meaning: 'test meaning',
-      definition: 'test definition',
-      partOfSpeech: 'noun',
-      exampleSentence: 'example',
-      exampleTranslation: 'translation',
-      imageCue: '📖',
-      difficulty: 'easy',
-      tags: const [],
-    );
+  id: 'test-word-id',
+  word: wordText,
+  phonetic: '',
+  meaning: 'test meaning',
+  definition: 'test definition',
+  partOfSpeech: 'noun',
+  exampleSentence: 'example',
+  exampleTranslation: 'translation',
+  imageCue: '📖',
+  difficulty: 'easy',
+  tags: const [],
+);
 
 /// A minimal [QuizQuestion] containing [word].
 QuizQuestion _makeQuestion(Word word) => QuizQuestion(
-      id: 'q1',
-      type: QuizQuestionType.meaningChoice,
-      prompt: 'What is ${word.word}?',
-      answer: word.word,
-      options: const [],
-      explanation: 'test explanation',
-      word: word,
-    );
+  id: 'q1',
+  type: QuizQuestionType.meaningChoice,
+  prompt: 'What is ${word.word}?',
+  answer: word.word,
+  options: const [],
+  explanation: 'test explanation',
+  word: word,
+);
 
 /// A [LessonResult] with one mistake for [wordText].
 LessonResult _makeResult(String wordText) {
@@ -71,16 +74,16 @@ class _FakeAppController extends AppController {
 // Router helpers
 // ---------------------------------------------------------------------------
 
-/// Captures the word query-param received by the /ai-chat stub route.
-String? _capturedAiChatWord;
+/// Captures the word query-param received by the /ai-learning stub route.
+String? _capturedAiLearningWord;
 
-GoRoute _aiChatStubRoute() => GoRoute(
-      path: '/ai-chat',
-      builder: (context, state) {
-        _capturedAiChatWord = state.uri.queryParameters['word'];
-        return const Scaffold(body: Text('ai-chat'));
-      },
-    );
+GoRoute _aiLearningStubRoute() => GoRoute(
+  path: '/ai-learning',
+  builder: (context, state) {
+    _capturedAiLearningWord = state.uri.queryParameters['word'];
+    return const Scaffold(body: Text('ai-learning'));
+  },
+);
 
 Widget _buildLessonResultApp({required LessonResult result}) {
   final router = GoRouter(
@@ -89,7 +92,7 @@ Widget _buildLessonResultApp({required LessonResult result}) {
         path: '/',
         builder: (context, state) => LessonResultScreen(result: result),
       ),
-      _aiChatStubRoute(),
+      _aiLearningStubRoute(),
     ],
   );
 
@@ -112,7 +115,7 @@ Widget _buildMistakeBookApp({required LessonResult result}) {
         path: '/',
         builder: (context, state) => const MistakeBookScreen(),
       ),
-      _aiChatStubRoute(),
+      _aiLearningStubRoute(),
       GoRoute(
         path: '/review',
         builder: (context, state) => const Scaffold(body: Text('review')),
@@ -122,9 +125,43 @@ Widget _buildMistakeBookApp({required LessonResult result}) {
 
   return ProviderScope(
     overrides: [
-      appControllerProvider
-          .overrideWith(() => _FakeAppController(initialState)),
+      appControllerProvider.overrideWith(
+        () => _FakeAppController(initialState),
+      ),
     ],
+    child: MaterialApp.router(
+      routerConfig: router,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('en'),
+    ),
+  );
+}
+
+Widget _buildRealShellAiLinkApp() {
+  final router = GoRouter(
+    routes: [
+      GoRoute(
+        path: '/',
+        builder: (context, state) => const Scaffold(
+          body: Center(child: AiWordSupportLink(word: '爱')),
+        ),
+      ),
+      ShellRoute(
+        builder: (context, state, child) {
+          return AppShell(selectedIndex: 2, child: child);
+        },
+        routes: [
+          GoRoute(
+            path: '/ai-learning',
+            builder: (context, state) => const AiLearningScreen(),
+          ),
+        ],
+      ),
+    ],
+  );
+
+  return ProviderScope(
     child: MaterialApp.router(
       routerConfig: router,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -142,11 +179,11 @@ void main() {
   final result = _makeResult('试');
 
   setUp(() {
-    _capturedAiChatWord = null;
+    _capturedAiLearningWord = null;
   });
 
   testWidgets(
-    'LessonResultScreen: explain button exists and navigates to /ai-chat?word=',
+    'LessonResultScreen: explain button exists and navigates to /ai-learning?word=',
     (tester) async {
       final l10n = await AppLocalizations.delegate.load(const Locale('en'));
 
@@ -165,18 +202,18 @@ void main() {
       final explainBtn = find.byTooltip(l10n.aiExplainWithAi);
       expect(explainBtn, findsOneWidget);
 
-      // Tapping should navigate to /ai-chat with the word as query param.
+      // Tapping should navigate to /ai-learning with the word as query param.
       await tester.tap(explainBtn);
       await tester.pumpAndSettle();
 
-      // The /ai-chat stub captured the word query parameter.
-      expect(_capturedAiChatWord, isNotEmpty);
-      expect(find.text('ai-chat'), findsOneWidget);
+      // The /ai-learning stub captured the word query parameter.
+      expect(_capturedAiLearningWord, isNotEmpty);
+      expect(find.text('ai-learning'), findsOneWidget);
     },
   );
 
   testWidgets(
-    'MistakeBookScreen: explain button exists and navigates to /ai-chat?word=',
+    'MistakeBookScreen: explain button exists and navigates to /ai-learning?word=',
     (tester) async {
       final l10n = await AppLocalizations.delegate.load(const Locale('en'));
 
@@ -187,13 +224,13 @@ void main() {
       final explainBtn = find.byTooltip(l10n.aiExplainWithAi);
       expect(explainBtn, findsOneWidget);
 
-      // Tapping should navigate to /ai-chat with the word as query param.
+      // Tapping should navigate to /ai-learning with the word as query param.
       await tester.tap(explainBtn);
       await tester.pumpAndSettle();
 
-      // The /ai-chat stub captured the word query parameter.
-      expect(_capturedAiChatWord, isNotEmpty);
-      expect(find.text('ai-chat'), findsOneWidget);
+      // The /ai-learning stub captured the word query parameter.
+      expect(_capturedAiLearningWord, isNotEmpty);
+      expect(find.text('ai-learning'), findsOneWidget);
     },
   );
 
@@ -224,8 +261,23 @@ void main() {
       await tester.tap(explainBtn);
       await tester.pumpAndSettle();
 
-      expect(_capturedAiChatWord, isNotEmpty);
-      expect(find.text('ai-chat'), findsOneWidget);
+      expect(_capturedAiLearningWord, isNotEmpty);
+      expect(find.text('ai-learning'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'AiWordSupportLink navigates from a non-shell page into the real AI shell',
+    (tester) async {
+      await tester.pumpWidget(_buildRealShellAiLinkApp());
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('AI Learning'));
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('AI Learning'), findsWidgets);
+      expect(find.text('Current Word: 爱'), findsOneWidget);
     },
   );
 }

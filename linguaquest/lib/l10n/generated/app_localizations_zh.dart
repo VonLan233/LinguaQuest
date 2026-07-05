@@ -2342,7 +2342,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get aiLearningToolAiAnalysis => 'AI 长难句分析';
 
   @override
-  String get aiLearningToolAiAnalysisDesc => '提取主干、划分从句、解释修饰成分和关键词，并给出自然中文翻译。';
+  String get aiLearningToolAiAnalysisDesc => '提取主干、划分从句、解释修饰成分和关键词，并给出自然译文。';
 
   @override
   String get aiLearningToolAiWriting => 'AI 作文批改';

@@ -2470,7 +2470,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aiLearningToolAiAnalysisDesc =>
-      'Extract main clauses, divide subordinate clauses, explain modifiers and key words, and provide natural Chinese translation.';
+      'Extract main clauses, divide subordinate clauses, explain modifiers and key words, and provide a natural translation.';
 
   @override
   String get aiLearningToolAiWriting => 'AI Writing Correction';

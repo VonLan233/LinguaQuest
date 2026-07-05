@@ -166,7 +166,10 @@ void main() {
       'linguaquest.today.lessons': ['hsk1-lesson-1'],
       'linguaquest.today.reviews': ['seed-1'],
       // 须与 profile.dailyGoal 一致，确保 dailyNewTarget 正确计算总目标数。
-      'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(profile.uid, dailyGoal: profile.dailyGoal),
+      'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(
+        profile.uid,
+        dailyGoal: profile.dailyGoal,
+      ),
     });
 
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
@@ -314,8 +317,6 @@ void main() {
       wordBookId: 'hsk1',
       now: now,
     ).copyWith(status: 'Mastered', isIgnored: true);
-    // The runtime collapses every book id to the single HSK book, so a word with
-    // any book id but a learned status still counts toward the current book.
     final reviewed = UserWord.create(
       uid: 'u1',
       word: words[3],
@@ -323,15 +324,15 @@ void main() {
       now: now,
     ).copyWith(status: 'Review');
 
-    // Learned (Learning) + reviewed (Review) count; New and ignored/Mastered are
-    // excluded. So two of the four user words are learned for the current book.
+    // Only the learned word in the target book counts. New, ignored/Mastered,
+    // and learned words from another book are excluded.
     expect(
       learnedWordCountForBook(
         userWords: [learned, newWord, ignored, reviewed],
         wordBookId: 'hsk1',
         wordIds: words.take(3).map((word) => word.id).toSet(),
       ),
-      2,
+      1,
     );
   });
 
@@ -785,7 +786,9 @@ void main() {
       );
       SharedPreferences.setMockInitialValues({
         'linguaquest.profile': jsonEncode(profile.toJson()),
-        'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(profile.uid),
+        'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(
+          profile.uid,
+        ),
       });
       final container = ProviderContainer();
       addTearDown(container.dispose);
@@ -835,7 +838,10 @@ void main() {
       );
       expect(newLearningTask, findsOneWidget);
       expect(
-        find.descendant(of: newLearningTask, matching: find.text('Complete for +20 XP')),
+        find.descendant(
+          of: newLearningTask,
+          matching: find.text('Complete for +20 XP'),
+        ),
         findsOneWidget,
       );
       expect(
@@ -909,7 +915,10 @@ void main() {
     );
     expect(cleanupTask, findsOneWidget);
     expect(
-      find.descendant(of: cleanupTask, matching: find.text('Complete for +10 XP')),
+      find.descendant(
+        of: cleanupTask,
+        matching: find.text('Complete for +10 XP'),
+      ),
       findsOneWidget,
     );
     expect(
@@ -1002,7 +1011,10 @@ void main() {
     );
     expect(cleanupTask, findsOneWidget);
     expect(
-      find.descendant(of: cleanupTask, matching: find.text('Complete for +10 XP')),
+      find.descendant(
+        of: cleanupTask,
+        matching: find.text('Complete for +10 XP'),
+      ),
       findsOneWidget,
     );
     expect(
@@ -1137,7 +1149,11 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    await tester.fling(find.text('Daily Task Console'), const Offset(-24, 0), 1000);
+    await tester.fling(
+      find.text('Daily Task Console'),
+      const Offset(-24, 0),
+      1000,
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('Daily Task Console'), findsOneWidget);
@@ -1173,7 +1189,11 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    await tester.fling(find.text('Daily Task Console'), const Offset(-80, 0), 1000);
+    await tester.fling(
+      find.text('Daily Task Console'),
+      const Offset(-80, 0),
+      1000,
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('Speed Game'), findsOneWidget);
@@ -1875,7 +1895,8 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('限时测试'), findsOneWidget);
+    expect(find.text(trainingLesson.title), findsOneWidget);
+    expect(find.text('限时测试'), findsNothing);
     expect(find.text('没有找到这节课'), findsNothing);
   });
 
@@ -2063,7 +2084,10 @@ void main() {
     await _advanceCorrectQuizQuestion(tester, lesson.questions[1]);
     await _advanceCorrectQuizQuestion(tester, lesson.questions[2]);
 
-    expect(find.text('2/3 · +15 XP · Mistakes saved to review.'), findsOneWidget);
+    expect(
+      find.text('2/3 · +15 XP · Mistakes saved to review.'),
+      findsOneWidget,
+    );
     expect(find.text('Credited +15 XP'), findsOneWidget);
     expect(find.text('+15 XP credited'), findsOneWidget);
     expect(find.text('Total 15 XP'), findsOneWidget);
@@ -2877,21 +2901,21 @@ void main() {
     addTearDown(container.dispose);
 
     await container.read(appControllerProvider.notifier).bootstrap();
+    tester.view.physicalSize = const Size(1000, 2000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: const LinguaQuestApp(),
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('en'),
+          home: const StudyPlanSettingsScreen(),
+        ),
       ),
     );
-    await tester.pumpAndSettle(const Duration(seconds: 1));
-
-    await tester.scrollUntilVisible(
-      find.text('Adjust Plan'),
-      300,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Adjust Plan'));
     await tester.pumpAndSettle();
 
     List<String> visibleNumberFieldValues() => tester
@@ -2900,8 +2924,6 @@ void main() {
         .whereType<String>()
         .toList();
 
-    await tester.drag(find.byType(Scrollable).last, const Offset(0, -360));
-    await tester.pumpAndSettle();
     expect(visibleNumberFieldValues(), contains('10'));
     final updatedPlan = initialPlan.copyWith(
       dailyNewTarget: 33,
@@ -2970,82 +2992,83 @@ void main() {
     expect(digitOnlyFields(), hasLength(1));
   });
 
-  testWidgets('study plan settings screen preserves unsaved edits through state updates', (
-    tester,
-  ) async {
-    final now = DateTime(2026, 5, 25);
-    final profile = UserProfile(
-      uid: 'settings-fallback-user',
-      name: 'Fay',
-      email: 'settings-fallback@lingua.quest',
-      targetExam: 'Daily English',
-      level: 'Elementary',
-      dailyGoal: 10,
-      xp: 0,
-      streak: 0,
-      createdAt: now,
-      updatedAt: now,
-    );
-    SharedPreferences.setMockInitialValues({
-      'linguaquest.profile': jsonEncode(profile.toJson()),
-    });
-    final container = ProviderContainer(
-      overrides: [
-        studyPlanRepositoryProvider.overrideWithValue(
-          _MemoryStudyPlanRepository(
-            StudyPlan.defaultsFor(
-              uid: 'settings-fallback-user',
-              targetExam: 'HSK 1',
-              dailyGoal: 10,
+  testWidgets(
+    'study plan settings screen preserves unsaved edits through state updates',
+    (tester) async {
+      final now = DateTime(2026, 5, 25);
+      final profile = UserProfile(
+        uid: 'settings-fallback-user',
+        name: 'Fay',
+        email: 'settings-fallback@lingua.quest',
+        targetExam: 'Daily English',
+        level: 'Elementary',
+        dailyGoal: 10,
+        xp: 0,
+        streak: 0,
+        createdAt: now,
+        updatedAt: now,
+      );
+      SharedPreferences.setMockInitialValues({
+        'linguaquest.profile': jsonEncode(profile.toJson()),
+      });
+      final container = ProviderContainer(
+        overrides: [
+          studyPlanRepositoryProvider.overrideWithValue(
+            _MemoryStudyPlanRepository(
+              StudyPlan.defaultsFor(
+                uid: 'settings-fallback-user',
+                targetExam: 'HSK 1',
+                dailyGoal: 10,
+              ),
             ),
           ),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await container.read(appControllerProvider.notifier).bootstrap();
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: const LinguaQuestApp(),
         ),
-      ],
-    );
-    addTearDown(container.dispose);
+      );
+      await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    await container.read(appControllerProvider.notifier).bootstrap();
-    await tester.pumpWidget(
-      UncontrolledProviderScope(
-        container: container,
-        child: const LinguaQuestApp(),
-      ),
-    );
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+      await tester.scrollUntilVisible(
+        find.text('Adjust Plan'),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Adjust Plan'));
+      await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(
-      find.text('Adjust Plan'),
-      300,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Adjust Plan'));
-    await tester.pumpAndSettle();
+      await tester.drag(find.byType(Scrollable).last, const Offset(0, -360));
+      await tester.pumpAndSettle();
+      final field = tester.widget<TextFormField>(
+        find.byType(TextFormField).first,
+      );
+      field.controller?.text = '77';
+      await container
+          .read(appControllerProvider.notifier)
+          .updateThemeMode(ThemeMode.dark);
+      await tester.pumpAndSettle();
 
-    await tester.drag(find.byType(Scrollable).last, const Offset(0, -360));
-    await tester.pumpAndSettle();
-    final field = tester.widget<TextFormField>(
-      find.byType(TextFormField).first,
-    );
-    field.controller?.text = '77';
-    await container
-        .read(appControllerProvider.notifier)
-        .updateThemeMode(ThemeMode.dark);
-    await tester.pumpAndSettle();
+      final updatedField = tester.widget<TextFormField>(
+        find.byType(TextFormField).first,
+      );
+      expect(updatedField.controller?.text, '77');
+    },
+  );
 
-    final updatedField = tester.widget<TextFormField>(
-      find.byType(TextFormField).first,
-    );
-    expect(updatedField.controller?.text, '77');
-  });
-
-  test('logout keeps lesson status and completed ids in sync', () async {
+  test('logout clears user-scoped learning progress from memory', () async {
     final now = DateTime(2026, 5, 25);
     final profile = UserProfile(
       uid: 'logout-user',
       name: 'Lou',
       email: 'lou@lingua.quest',
-      targetExam: 'Daily English',
+      targetExam: 'HSK 1',
       level: 'Elementary',
       dailyGoal: 10,
       xp: 0,
@@ -3070,9 +3093,14 @@ void main() {
     final state = container.read(appControllerProvider);
 
     expect(state.user, isNull);
-    expect(state.completedLessonIds, {completedLessonId});
-    expect(state.lessons.first.status, 'completed');
-    expect(state.learningPathProgress, greaterThan(0));
+    expect(state.completedLessonIds, isEmpty);
+    expect(state.todayCompletedLessonIds, isEmpty);
+    expect(state.todayLearnedWordIds, isEmpty);
+    expect(state.userWords, isEmpty);
+    expect(state.customWords, isEmpty);
+    expect(state.studyPlan, isNull);
+    expect(state.lessons.first.status, 'current');
+    expect(state.learningPathProgress, 0);
   });
 
   testWidgets('target word detail can add the searched word to custom cards', (
@@ -3792,9 +3820,9 @@ void main() {
     expect(state.todayClaimedRewardIds, contains('daily-checkin'));
 
     final prefs = await SharedPreferences.getInstance();
-    // P2b: rewards are now saved under the scoped key (zh::hsk1).
+    // Rewards are saved under the active language/book scope.
     expect(
-      prefs.getStringList('linguaquest.today.rewards.zh::hsk1'),
+      prefs.getStringList('linguaquest.today.rewards.en::en_basic'),
       contains('daily-checkin'),
     );
   });
@@ -3987,7 +4015,9 @@ void main() {
       );
       SharedPreferences.setMockInitialValues({
         'linguaquest.profile': jsonEncode(profile.toJson()),
-        'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(profile.uid),
+        'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(
+          profile.uid,
+        ),
       });
 
       await tester.pumpWidget(
@@ -4344,17 +4374,26 @@ void main() {
       final prefs = await SharedPreferences.getInstance();
 
       expect(prefs.getString('linguaquest.today.date'), _todayDateKey(now));
-      // P2b: daily state keys are now scoped (zh::hsk1). Rollover clears scoped
+      // Daily state keys are scoped by active language/book. Rollover clears scoped
       // keys; the legacy global keys are kept as a safety copy but not used.
-      expect(prefs.getStringList('linguaquest.today.lessons.zh::hsk1'), isNull);
-      expect(prefs.getStringList('linguaquest.today.reviews.zh::hsk1'), isNull);
-      expect(prefs.getStringList('linguaquest.today.rewards.zh::hsk1'), isNull);
       expect(
-        prefs.getStringList('linguaquest.today.training.zh::hsk1'),
+        prefs.getStringList('linguaquest.today.lessons.en::en_basic'),
+        isNull,
+      );
+      expect(
+        prefs.getStringList('linguaquest.today.reviews.en::en_basic'),
+        isNull,
+      );
+      expect(
+        prefs.getStringList('linguaquest.today.rewards.en::en_basic'),
+        isNull,
+      );
+      expect(
+        prefs.getStringList('linguaquest.today.training.en::en_basic'),
         contains(training.id),
       );
       expect(
-        prefs.getStringList('linguaquest.today.training.zh::hsk1'),
+        prefs.getStringList('linguaquest.today.training.en::en_basic'),
         isNot(contains('yesterday-training')),
       );
     },
@@ -4569,7 +4608,9 @@ void main() {
       );
       SharedPreferences.setMockInitialValues({
         'linguaquest.profile': jsonEncode(profile.toJson()),
-        'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(profile.uid),
+        'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(
+          profile.uid,
+        ),
       });
       final container = ProviderContainer();
       addTearDown(container.dispose);
@@ -4827,6 +4868,9 @@ class _FailingAuth implements AuthRepository {
 
   @override
   Future<void> logout() async {}
+
+  @override
+  Future<void> deleteAccount() async {}
 }
 
 class _SnapshotAuthRepository implements AuthRepository {
@@ -4873,6 +4917,9 @@ class _SnapshotAuthRepository implements AuthRepository {
 
   @override
   Future<void> logout() async {}
+
+  @override
+  Future<void> deleteAccount() async {}
 }
 
 class _ThrowingSessionAuth extends _FailingAuth {

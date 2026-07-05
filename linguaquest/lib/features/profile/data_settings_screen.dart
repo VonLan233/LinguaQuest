@@ -59,12 +59,12 @@ class DataSettingsScreen extends ConsumerWidget {
                 children: [
                   ListTile(
                     contentPadding: EdgeInsets.zero,
-                    title: const Text('Clear local cache'),
+                    title: const Text('Clear all data and restart'),
                     subtitle: const Text(
-                      'Remove locally stored data and sign out',
+                      'Remove all local app data and return to a fresh start',
                     ),
-                    trailing: const Icon(Icons.delete_outline),
-                    onTap: () => _confirmClearCache(context, ref),
+                    trailing: const Icon(Icons.restart_alt),
+                    onTap: () => _confirmClearAllData(context, ref),
                   ),
                   const Divider(height: AppTokens.s16),
                   ListTile(
@@ -73,14 +73,6 @@ class DataSettingsScreen extends ConsumerWidget {
                     subtitle: const Text('Remove all AI interaction history'),
                     trailing: const Icon(Icons.history_outlined),
                     onTap: () => _confirmClearAiHistory(context, ref),
-                  ),
-                  const Divider(height: AppTokens.s16),
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: const Text('Export account data'),
-                    subtitle: const Text('Download a copy of your data'),
-                    trailing: const Icon(Icons.download_outlined),
-                    onTap: () => _showExportInfo(context),
                   ),
                   const Divider(height: AppTokens.s16),
                   ListTile(
@@ -98,7 +90,7 @@ class DataSettingsScreen extends ConsumerWidget {
                       Icons.warning_amber_outlined,
                       color: Theme.of(context).colorScheme.error,
                     ),
-                    onTap: () => _confirmDeleteAccount(context),
+                    onTap: () => _confirmDeleteAccount(context, ref),
                   ),
                 ],
               ),
@@ -113,8 +105,9 @@ class DataSettingsScreen extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
   ) async {
-    final ok =
-        await ref.read(appControllerProvider.notifier).refreshOfflineContent();
+    final ok = await ref
+        .read(appControllerProvider.notifier)
+        .refreshOfflineContent();
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -125,16 +118,13 @@ class DataSettingsScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _confirmClearCache(
-    BuildContext context,
-    WidgetRef ref,
-  ) async {
+  Future<void> _confirmClearAllData(BuildContext context, WidgetRef ref) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Clear local cache'),
+        title: const Text('Clear all data and restart'),
         content: const Text(
-          'This will remove all locally stored data and sign you out. Your account data stored on the server will not be affected.',
+          'This will remove all local app data, sign you out, and restart from a fresh state.',
         ),
         actions: [
           TextButton(
@@ -143,33 +133,26 @@ class DataSettingsScreen extends ConsumerWidget {
           ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(true),
-            child: const Text('Clear'),
+            child: const Text('Clear and restart'),
           ),
         ],
       ),
     );
     if (confirmed == true && context.mounted) {
-      await ref.read(appControllerProvider.notifier).logout();
+      final ok = await ref
+          .read(appControllerProvider.notifier)
+          .clearAllDataAndRestart();
       if (context.mounted) {
-        context.go('/login');
+        if (ok) {
+          context.go('/onboarding');
+        } else {
+          final error = ref.read(appControllerProvider).errorMessage;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(error ?? 'Could not clear app data')),
+          );
+        }
       }
     }
-  }
-
-  void _showExportInfo(BuildContext context) {
-    showDialog<void>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Export account data'),
-        content: const Text('Not available in this version.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
   }
 
   Future<void> _confirmClearAiHistory(
@@ -179,9 +162,9 @@ class DataSettingsScreen extends ConsumerWidget {
     final controller = ref.read(appControllerProvider);
     final historyIds = controller.aiHistory.map((e) => e.id).toList();
     if (historyIds.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No AI history to clear')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('No AI history to clear')));
       return;
     }
     final confirmed = await showDialog<bool>(
@@ -207,15 +190,18 @@ class DataSettingsScreen extends ConsumerWidget {
       final notifier = ref.read(appControllerProvider.notifier);
       await notifier.clearAiHistory();
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('AI history cleared')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('AI history cleared')));
       }
     }
   }
 
-  void _confirmDeleteAccount(BuildContext context) {
-    showDialog<void>(
+  Future<void> _confirmDeleteAccount(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
+    final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(
@@ -223,18 +209,34 @@ class DataSettingsScreen extends ConsumerWidget {
           style: TextStyle(color: Theme.of(context).colorScheme.error),
         ),
         content: const Text(
-          'Account deletion is not yet available in-app. '
-          'To permanently delete your account and all associated data, '
-          'please contact support at support@linguaquest.app. '
-          'This action cannot be undone.',
+          'This will permanently delete your account, clear this device, and cannot be undone.',
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Close'),
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Delete account'),
           ),
         ],
       ),
     );
+    if (confirmed == true && context.mounted) {
+      final ok = await ref
+          .read(appControllerProvider.notifier)
+          .deleteAccountAndRestart();
+      if (context.mounted) {
+        if (ok) {
+          context.go('/onboarding');
+        } else {
+          final error = ref.read(appControllerProvider).errorMessage;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(error ?? 'Could not delete account')),
+          );
+        }
+      }
+    }
   }
 }

@@ -63,11 +63,19 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
     final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final localeCode = Localizations.localeOf(context).languageCode;
-    final selectedBook = _bookForTarget(state.wordBooks, _target);
     final currentBook = state.currentWordBook;
+    final currentTarget = currentBook == null
+        ? _target
+        : targetForStudyBookId(currentBook.id);
+    final selectedBook =
+        currentBook ?? _bookForTarget(state.wordBooks, _target);
     final currentBookName =
-        currentBook?.nameFor(localeCode) ?? displayTarget(_target, l10n: l10n);
-    final selectedLessons = learningLessonsForTarget(state.lessons, _target);
+        currentBook?.nameFor(localeCode) ??
+        displayTarget(currentTarget, l10n: l10n);
+    final selectedLessons = learningLessonsForTarget(
+      state.lessons,
+      currentBook?.id ?? currentTarget,
+    );
     final totalWords =
         selectedBook?.totalWords ??
         selectedLessons.fold<int>(
@@ -107,7 +115,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
                   variant: PillVariant.primary,
                 ),
                 AppPill(
-                  label: displayTarget(_target, l10n: l10n),
+                  label: displayTarget(currentTarget, l10n: l10n),
                   icon: AppIcons.flag,
                   variant: PillVariant.neutral,
                 ),
@@ -120,7 +128,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
             ),
             const SizedBox(height: 16),
             _PlanSnapshotLine(
-              target: displayTarget(_target, l10n: l10n),
+              target: displayTarget(currentTarget, l10n: l10n),
               totalWords: totalWords,
               completedWords: completedWords,
               dailyWords: dailyWords,
@@ -352,8 +360,8 @@ class _LanguageBookPickerTile extends StatelessWidget {
                 Text(
                   currentBookName,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ],
             ),

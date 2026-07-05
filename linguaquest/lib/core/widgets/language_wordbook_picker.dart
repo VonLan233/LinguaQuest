@@ -216,6 +216,7 @@ class _LanguageWordbookPickerSheetState
                     if (_selectedLanguage != null)
                       IconButton(
                         icon: const Icon(AppIcons.arrowBack),
+                        color: Theme.of(context).colorScheme.onSurface,
                         onPressed: () =>
                             setState(() => _selectedLanguage = null),
                         tooltip:
@@ -234,6 +235,7 @@ class _LanguageWordbookPickerSheetState
                     ),
                     IconButton(
                       icon: const Icon(AppIcons.close),
+                      color: Theme.of(context).colorScheme.onSurface,
                       onPressed: widget.onDismiss,
                       tooltip:
                           MaterialLocalizations.of(context).closeButtonLabel,

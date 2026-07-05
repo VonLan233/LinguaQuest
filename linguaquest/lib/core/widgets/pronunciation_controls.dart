@@ -104,8 +104,8 @@ class _PronunciationControlsState extends State<PronunciationControls> {
     final failedAccent = _failedAccent;
 
     // Every word has a single pronunciation button: dictionary audio (English)
-    // or TTS (Chinese HSK / Japanese) both play through one "Audio" control,
-    // paired with a 0.5× slow variant. No UK/US accent split.
+    // or TTS (Chinese HSK / Japanese) both play through one "Audio" control.
+    // No UK/US accent split and no 0.5x slow variant.
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,16 +116,10 @@ class _PronunciationControlsState extends State<PronunciationControls> {
             _PronunciationButton(
               accent: _PronunciationAccent.us,
               compact: widget.compact,
-              isLoading: _loadingAccent != null && !_isSlow,
-              hasFailed: failedAccent != null && !_isSlow,
+              isLoading: _loadingAccent != null,
+              hasFailed: failedAccent != null,
               onPressed: () => _play(_PronunciationAccent.us),
               labelOverride: 'Audio',
-            ),
-            const SizedBox(width: 8),
-            _SlowButton(
-              compact: widget.compact,
-              isLoading: _loadingAccent != null && _isSlow,
-              onPressed: () => _play(_PronunciationAccent.us, slow: true),
             ),
           ],
         ),
@@ -143,8 +137,6 @@ class _PronunciationControlsState extends State<PronunciationControls> {
     );
   }
 
-  bool _isSlow = false;
-
   Future<void> _play(_PronunciationAccent accent, {bool slow = false}) async {
     if (_loadingAccent != null) return;
     widget.onPlayed?.call();
@@ -154,7 +146,6 @@ class _PronunciationControlsState extends State<PronunciationControls> {
     setState(() {
       _loadingAccent = accent;
       _failedAccent = null;
-      _isSlow = slow;
     });
 
     final word = widget.word.trim();
@@ -184,50 +175,8 @@ class _PronunciationControlsState extends State<PronunciationControls> {
 
     setState(() {
       _loadingAccent = null;
-      _isSlow = false;
       _failedAccent = outcome == PronunciationOutcome.failed ? accent : null;
     });
-  }
-}
-
-class _SlowButton extends StatelessWidget {
-  const _SlowButton({
-    required this.compact,
-    required this.isLoading,
-    required this.onPressed,
-  });
-
-  final bool compact;
-  final bool isLoading;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return OutlinedButton.icon(
-      key: const ValueKey('pronunciation-slow'),
-      onPressed: isLoading ? null : onPressed,
-      style: OutlinedButton.styleFrom(
-        minimumSize: Size(compact ? 64 : 72, compact ? 36 : 40),
-        padding: EdgeInsets.symmetric(horizontal: compact ? 9 : 11),
-        foregroundColor: AppTheme.teal,
-        disabledForegroundColor: AppTheme.teal.withValues(alpha: 0.72),
-        backgroundColor: isLoading
-            ? AppTheme.selectedSurface(context)
-            : Colors.transparent,
-        side: BorderSide(color: theme.colorScheme.outlineVariant),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(compact ? 12 : 14),
-        ),
-      ),
-      icon: isLoading
-          ? SizedBox.square(
-              dimension: compact ? 13 : 15,
-              child: CircularProgressIndicator(strokeWidth: compact ? 2 : 2.2),
-            )
-          : Icon(Icons.slow_motion_video, size: compact ? 16 : 18),
-      label: Text(isLoading ? 'Loading…' : '0.5×'),
-    );
   }
 }
 

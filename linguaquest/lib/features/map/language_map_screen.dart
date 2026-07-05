@@ -26,12 +26,15 @@ class _LangPin {
 }
 
 const _langPins = [
-  _LangPin(code: 'zh', label: 'Chinese (中文)', point: LatLng(39.9087, 116.3975), enabled: true),
-  _LangPin(code: 'en', label: 'English', point: LatLng(38.0, -97.0), enabled: true),
-  _LangPin(code: 'es', label: 'Spanish (Español)', point: LatLng(40.4, -3.7), enabled: true),
-  _LangPin(code: 'fr', label: 'French (Français)', point: LatLng(48.85, 2.35), enabled: true),
-  _LangPin(code: 'ja', label: 'Japanese (日本語)', point: LatLng(36.2, 138.2), enabled: true),
-  _LangPin(code: 'ms', label: 'Malay (Bahasa Melayu)', point: LatLng(4.2, 101.9), enabled: true),
+  // Coordinates are each language's capital city (Beijing/Washington/Madrid/
+  // Paris/Tokyo/Kuala Lumpur). Only the badge is tappable (see _LangMarker) so
+  // nearby capitals do not steal each other's taps.
+  _LangPin(code: 'zh', label: 'Chinese (中文)', point: LatLng(39.9042, 116.4074), enabled: true),
+  _LangPin(code: 'en', label: 'English', point: LatLng(38.9072, -77.0369), enabled: true),
+  _LangPin(code: 'es', label: 'Spanish (Español)', point: LatLng(40.4168, -3.7038), enabled: true),
+  _LangPin(code: 'fr', label: 'French (Français)', point: LatLng(48.8566, 2.3522), enabled: true),
+  _LangPin(code: 'ja', label: 'Japanese (日本語)', point: LatLng(35.6762, 139.6503), enabled: true),
+  _LangPin(code: 'ms', label: 'Malay (Bahasa Melayu)', point: LatLng(3.1390, 101.6869), enabled: true),
 ];
 
 /// 全屏世界地图（真 OSM 瓦片）：国家 marker 代表可学语言。点击 marker 弹卡片，
@@ -114,8 +117,11 @@ class _LanguageMapScreenState extends ConsumerState<LanguageMapScreen>
                     Marker(
                       point: _langPins[i].point,
                       width: 140,
-                      height: 110,
-                      alignment: Alignment.topCenter,
+                      height: 144,
+                      // The badge is centered in the marker box, so anchoring the
+                      // geo point at the box center puts the dot exactly on the
+                      // location at every zoom level.
+                      alignment: Alignment.center,
                       child: _LangMarker(
                         pin: _langPins[i],
                         index: i,
@@ -263,51 +269,66 @@ class _LangMarker extends StatelessWidget {
           opacity: t,
           child: Transform.translate(
             offset: Offset(0, (1 - t) * -10),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8, vertical: 3),
-                    decoration: BoxDecoration(
-                      color: cs.surface,
-                      borderRadius:
-                          BorderRadius.circular(AppTokens.radiusPill),
-                      border: Border.all(color: cs.outlineVariant),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.18),
-                            blurRadius: 6,
-                            offset: const Offset(0, 2)),
-                      ],
-                    ),
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 124),
-                      child: Text(
-                        pin.label,
-                        maxLines: 2,
-                        softWrap: true,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          color: pin.enabled
-                              ? cs.onSurface
-                              : cs.onSurfaceVariant,
+            // The badge is centered in this box; with the Marker anchored at
+            // Alignment.center the dot lands exactly on the geo point at any
+            // zoom. The label is Positioned above the badge so it never shifts
+            // the anchor.
+            child: SizedBox(
+              width: 140,
+              height: 144,
+              child: Stack(
+                clipBehavior: Clip.none,
+                alignment: Alignment.center,
+                children: [
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: cs.surface,
+                          borderRadius:
+                              BorderRadius.circular(AppTokens.radiusPill),
+                          border: Border.all(color: cs.outlineVariant),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.18),
+                                blurRadius: 6,
+                                offset: const Offset(0, 2)),
+                          ],
+                        ),
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 124),
+                          child: Text(
+                            pin.label,
+                            maxLines: 2,
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              color: pin.enabled
+                                  ? cs.onSurface
+                                  : cs.onSurfaceVariant,
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                const SizedBox(height: 2),
-                GestureDetector(
-                  key: ValueKey('lang-pin-${pin.code}'),
-                  onTap: onTap,
-                  behavior: HitTestBehavior.opaque,
-                  child: _Badge(
-                      pin: pin, selected: selected, pulse: pulse.value),
-                ),
-              ],
+                  GestureDetector(
+                    key: ValueKey('lang-pin-${pin.code}'),
+                    onTap: onTap,
+                    behavior: HitTestBehavior.opaque,
+                    child: _Badge(
+                        pin: pin, selected: selected, pulse: pulse.value),
+                  ),
+                ],
+              ),
             ),
           ),
         );

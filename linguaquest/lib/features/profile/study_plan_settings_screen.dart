@@ -161,7 +161,7 @@ class _StudyPlanSettingsScreenState
                 userWords: state.userWords,
                 selectedId: _wordBookId,
                 localeCode: localeCode,
-                onSelected: (value) => setState(() => _wordBookId = value),
+                onSelected: (value) => _selectWordBook(value),
                 l10n: l10n,
               ),
               const SizedBox(height: 40),
@@ -267,6 +267,16 @@ class _StudyPlanSettingsScreenState
           : latestState.errorMessage ??
                 AppLocalizations.of(context).studyPlanSaveFailed,
     );
+  }
+
+  Future<void> _selectWordBook(String value) async {
+    setState(() => _wordBookId = value);
+    final succeeded = await ref
+        .read(appControllerProvider.notifier)
+        .switchWordBook(value);
+    if (!mounted || succeeded) return;
+    final error = ref.read(appControllerProvider).errorMessage;
+    _showMessage(error ?? AppLocalizations.of(context).pickerSwitchFailed);
   }
 
   Future<void> _togglePause() async {
@@ -460,10 +470,7 @@ class _PlanHeroCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      book.name,
-                      style: theme.textTheme.titleLarge,
-                    ),
+                    Text(book.name, style: theme.textTheme.titleLarge),
                     const SizedBox(height: 4),
                     Text(
                       book.description,
@@ -891,8 +898,8 @@ class _CurrentLanguageTile extends StatelessWidget {
           Text(
             l10n.pickerChooseLanguage,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
           const SizedBox(width: AppTokens.s8),
           AppPill(

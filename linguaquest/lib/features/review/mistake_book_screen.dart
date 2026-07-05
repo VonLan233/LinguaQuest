@@ -127,7 +127,7 @@ class _MistakeWordRow extends StatelessWidget {
               icon: const Icon(AppIcons.autoAwesome),
               tooltip: l10n.aiExplainWithAi,
               onPressed: () => context.push(
-                '/ai-chat?word=${Uri.encodeComponent(mistake.word.word)}',
+                '/ai-learning?word=${Uri.encodeComponent(mistake.word.word)}',
               ),
             ),
           ],

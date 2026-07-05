@@ -799,7 +799,7 @@
   "aiLearningToolAiQA": "AI Q&A",
   "aiLearningToolAiQADesc": "Answer questions about word meaning, grammar, and expression naturalness based on current words, examples, and learning goals.",
   "aiLearningToolAiAnalysis": "AI Long Sentence Analysis",
-  "aiLearningToolAiAnalysisDesc": "Extract main clauses, divide subordinate clauses, explain modifiers and key words, and provide natural Chinese translation.",
+  "aiLearningToolAiAnalysisDesc": "Extract main clauses, divide subordinate clauses, explain modifiers and key words, and provide a natural translation.",
   "aiLearningToolAiWriting": "AI Writing Correction",
   "aiLearningToolAiWritingDesc": "Select exam type, enter topic and body text, output total score, itemized scores, and paragraph-by-paragraph revision suggestions.",
   "aiLearningToolCloze": "Today's Word Cloze",

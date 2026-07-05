@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/services/answer_sound_service.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
@@ -120,7 +123,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
       child: Scaffold(
         appBar: AppBar(
           leading: BackButton(onPressed: () => _handleBack(context)),
-          title: Text(isTimed ? l10n.quizTimedTest : lesson.title),
+          title: Text(lesson.title),
         ),
         body: SafeArea(
           child: Padding(
@@ -184,9 +187,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
                     label: l10n.quizCheck,
                     icon: AppIcons.check,
                     onPressed:
-                        _hasAnswer(question) &&
-                            !_locked &&
-                            !_isSubmitting
+                        _hasAnswer(question) && !_locked && !_isSubmitting
                         ? () => _submitSpelling(lesson, question)
                         : null,
                   ),
@@ -294,6 +295,12 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
     if (_locked) return;
     final isCorrect =
         option.trim().toLowerCase() == question.answer.trim().toLowerCase();
+    unawaited(
+      AnswerSoundService.play(
+        isCorrect: isCorrect,
+        enabled: ref.read(appControllerProvider).sensorySettings.soundEnabled,
+      ),
+    );
     setState(() {
       _recordAttempt(question, isCorrect);
       _selected = option;
@@ -325,6 +332,12 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
     if (answer.isEmpty) return;
     final isCorrect =
         normalizePinyin(answer) == normalizePinyin(question.answer);
+    unawaited(
+      AnswerSoundService.play(
+        isCorrect: isCorrect,
+        enabled: ref.read(appControllerProvider).sensorySettings.soundEnabled,
+      ),
+    );
     final exhausted =
         !isCorrect && _reachedAttemptLimit(question, _wrongCount + 1);
     setState(() {
@@ -479,11 +492,11 @@ class QuizPromptPanel extends StatelessWidget {
       case QuizQuestionType.sentenceCloze:
         return AppIcons.formatQuote; // 填空与上下文题同属句子语境
       case QuizQuestionType.confusableChoice:
-        return AppIcons.swapHoriz;   // 易混词辨析类似中英互选
+        return AppIcons.swapHoriz; // 易混词辨析类似中英互选
       case QuizQuestionType.collocationChoice:
-        return AppIcons.translate;   // 搭配选择偏向词义辨析
+        return AppIcons.translate; // 搭配选择偏向词义辨析
       case QuizQuestionType.derivativeChoice:
-        return AppIcons.edit;        // 词形变化类似拼写题
+        return AppIcons.edit; // 词形变化类似拼写题
     }
   }
 }
@@ -530,9 +543,7 @@ class _QuestionInput extends StatelessWidget {
               letter: String.fromCharCode(65 + i),
               text: question.options[i],
               state: _optionState(question.options[i]),
-              onTap: locked
-                  ? null
-                  : () => onSelected(question.options[i]),
+              onTap: locked ? null : () => onSelected(question.options[i]),
             ),
           ),
       ],

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
+import '../../core/services/answer_sound_service.dart';
 import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/utils/custom_word_localization.dart';
@@ -278,7 +280,8 @@ class _MixedStudySessionScreenState
     // not just the 3-word currentLesson, so validate a restored draft's new-word
     // items against the wordbook pool.
     final newWordIds = {
-      for (final word in state.currentWordBook?.words ?? const <Word>[]) word.id,
+      for (final word in state.currentWordBook?.words ?? const <Word>[])
+        word.id,
     };
     final customWordIds = {for (final word in state.customWords) word.id};
     for (final item in draft.queue) {
@@ -315,6 +318,12 @@ class _MixedStudySessionScreenState
     final isCorrect =
         answer.trim().toLowerCase() ==
         item.meaningFor(localeCode).trim().toLowerCase();
+    unawaited(
+      AnswerSoundService.play(
+        isCorrect: isCorrect,
+        enabled: ref.read(appControllerProvider).sensorySettings.soundEnabled,
+      ),
+    );
     final responseTime = DateTime.now()
         .difference(_itemStartedAt)
         .inMilliseconds;

@@ -79,9 +79,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/verify-email',
-        builder: (context, state) => VerifyEmailScreen(
-          email: state.uri.queryParameters['email'] ?? '',
-        ),
+        builder: (context, state) =>
+            VerifyEmailScreen(email: state.uri.queryParameters['email'] ?? ''),
       ),
       GoRoute(
         path: '/goal-setup',
@@ -184,9 +183,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/ai-cloze',
-        builder: (context, state) => AiClozeScreen(
-          word: state.uri.queryParameters['word'],
-        ),
+        builder: (context, state) =>
+            AiClozeScreen(word: state.uri.queryParameters['word']),
       ),
       GoRoute(
         path: '/ai-writing-review',
@@ -217,23 +215,31 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const PrivacySettingsScreen(),
       ),
       GoRoute(
-        path: '/profile/:userId',
-        builder: (context, state) => PublicProfileScreen(
-          userId: state.pathParameters['userId']!,
-        ),
-      ),
-      GoRoute(
         path: '/profile/data',
         builder: (context, state) => const DataSettingsScreen(),
+      ),
+      GoRoute(
+        path: '/profile/:userId',
+        builder: (context, state) =>
+            PublicProfileScreen(userId: state.pathParameters['userId']!),
       ),
       GoRoute(
         path: '/help',
         builder: (context, state) => const HelpSupportScreen(),
       ),
       GoRoute(path: '/about', builder: (context, state) => const AboutScreen()),
-      GoRoute(path: '/language-map', builder: (context, state) => const LanguageMapScreen()),
-      GoRoute(path: '/map', builder: (context, state) => const StudyMapScreen()),
-      GoRoute(path: '/map/spots', builder: (context, state) => const StudySpotsListScreen()),
+      GoRoute(
+        path: '/language-map',
+        builder: (context, state) => const LanguageMapScreen(),
+      ),
+      GoRoute(
+        path: '/map',
+        builder: (context, state) => const StudyMapScreen(),
+      ),
+      GoRoute(
+        path: '/map/spots',
+        builder: (context, state) => const StudySpotsListScreen(),
+      ),
       GoRoute(
         path: '/search',
         builder: (context, state) => const SearchScreen(),
@@ -256,9 +262,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/forum/posts/:id',
-        builder: (context, state) => ForumPostDetailScreen(
-          postId: state.pathParameters['id']!,
-        ),
+        builder: (context, state) =>
+            ForumPostDetailScreen(postId: state.pathParameters['id']!),
       ),
       GoRoute(
         path: '/forum/compose',

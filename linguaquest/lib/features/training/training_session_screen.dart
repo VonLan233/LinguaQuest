@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/services/answer_sound_service.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_icons.dart';
@@ -210,8 +211,10 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
                           onListeningPlayed: () =>
                               setState(() => _listeningRevealed = true),
                           hideWordCue:
-                              game == TrainingGameType.listeningSprint &&
-                              !_checked,
+                              !_checked &&
+                              (game == TrainingGameType.listeningSprint ||
+                                  question.type ==
+                                      QuizQuestionType.chineseChoice),
                         ),
                         const SizedBox(height: 18),
                         if (game == TrainingGameType.spelling)
@@ -488,10 +491,9 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
           prompt: prompt,
           answer: word.word,
           options: const [],
-          explanation: l10n.trainingExplanationSpelling(
-            word.word,
-            word.exampleSentence,
-          ),
+          explanation: l10n
+              .trainingExplanationSpelling(word.exampleSentence, word.word)
+              .trimRight(),
           word: word,
         );
       case TrainingGameType.listeningSprint:
@@ -553,6 +555,12 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
     final question = _questions[_index % _questions.length];
     final normalizedAnswer = answer.trim().toLowerCase();
     final isCorrect = normalizedAnswer == question.answer.trim().toLowerCase();
+    unawaited(
+      AnswerSoundService.play(
+        isCorrect: isCorrect,
+        enabled: ref.read(appControllerProvider).sensorySettings.soundEnabled,
+      ),
+    );
     final answeredAt = DateTime.now();
     final nextStreak = isCorrect ? _streak + 1 : 0;
     final consumedRevive =
@@ -866,7 +874,7 @@ class _TrainingPromptPanel extends StatelessWidget {
           ImageCueBadge(
             cue: question.word.imageCue,
             size: 104,
-            icon: hideWordCue ? TrainingGameType.listeningSprint.icon : null,
+            icon: hideWordCue ? game.icon : null,
           ),
           const SizedBox(height: 14),
           Text(
@@ -1116,6 +1124,7 @@ QuizQuestion buildListeningQuestion(
     final key = v.trim().toLowerCase();
     if (v.trim().isNotEmpty && seen.add(key)) options.add(v.trim());
   }
+
   add(word.word);
   for (var step = 0; step < values.length && options.length < 4; step++) {
     add(values[(index + step + 1) % values.length]);

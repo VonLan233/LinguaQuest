@@ -212,7 +212,11 @@ class _XpImpactNotice extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const IconCueBadge(icon: AppIcons.bolt, color: AppTheme.mango, size: 48),
+          const IconCueBadge(
+            icon: AppIcons.bolt,
+            color: AppTheme.mango,
+            size: 48,
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -326,7 +330,7 @@ class _MistakeResultRow extends StatelessWidget {
               icon: const Icon(AppIcons.autoAwesome),
               tooltip: l10n.aiExplainWithAi,
               onPressed: () => context.push(
-                '/ai-chat?word=${Uri.encodeComponent(mistake.word.word)}',
+                '/ai-learning?word=${Uri.encodeComponent(mistake.word.word)}',
               ),
             ),
           ],

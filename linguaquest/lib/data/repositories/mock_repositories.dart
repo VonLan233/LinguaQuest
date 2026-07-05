@@ -186,6 +186,22 @@ class MockAuthRepository implements AuthRepository {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_profileKey);
   }
+
+  @override
+  Future<void> deleteAccount() async {
+    final prefs = await SharedPreferences.getInstance();
+    final email = _profile?.email.trim().toLowerCase();
+    _profile = null;
+    await prefs.remove(_profileKey);
+    if (email != null && email.isNotEmpty) {
+      final registered =
+          prefs.getStringList(_registeredEmailsKey) ?? const <String>[];
+      await prefs.setStringList(
+        _registeredEmailsKey,
+        registered.where((item) => item.trim().toLowerCase() != email).toList(),
+      );
+    }
+  }
 }
 
 class MockCustomWordRepository implements CustomWordRepository {
@@ -714,7 +730,8 @@ const _mockPrizePool = [
     name: 'Star Trail Avatar Frame',
     category: 'avatarFrame',
     rarity: 'rare',
-    description: 'A star-trail decoration around your avatar. Cosmetic only — no learning-score boost.',
+    description:
+        'A star-trail decoration around your avatar. Cosmetic only — no learning-score boost.',
     probability: 4,
     fragmentValue: 18,
   ),
@@ -723,7 +740,8 @@ const _mockPrizePool = [
     name: 'Ember Flame Avatar Frame',
     category: 'avatarFrame',
     rarity: 'rare',
-    description: 'A burning-ember style avatar frame. Decorative only — does not affect learning fairness.',
+    description:
+        'A burning-ember style avatar frame. Decorative only — does not affect learning fairness.',
     probability: 3,
     fragmentValue: 18,
   ),
@@ -732,7 +750,8 @@ const _mockPrizePool = [
     name: 'Aurora Home Background',
     category: 'profileBackground',
     rarity: 'rare',
-    description: 'An aurora backdrop for your profile space. Decorative only — does not affect learning fairness.',
+    description:
+        'An aurora backdrop for your profile space. Decorative only — does not affect learning fairness.',
     probability: 4,
     fragmentValue: 16,
   ),
@@ -786,7 +805,8 @@ const _mockPrizePool = [
     name: 'Vocabulary Guardian Title',
     category: 'title',
     rarity: 'uncommon',
-    description: 'A title for dedicated vocabulary learners. Does not affect learning fairness.',
+    description:
+        'A title for dedicated vocabulary learners. Does not affect learning fairness.',
     probability: 7,
     fragmentValue: 8,
   ),
@@ -804,7 +824,8 @@ const _mockPrizePool = [
     name: 'Mint Card Skin',
     category: 'cardSkin',
     rarity: 'common',
-    description: 'A word-card visual skin. Does not change the memory algorithm.',
+    description:
+        'A word-card visual skin. Does not change the memory algorithm.',
     probability: 12,
     fragmentValue: 5,
   ),
@@ -813,7 +834,8 @@ const _mockPrizePool = [
     name: 'Sakura Card Skin',
     category: 'cardSkin',
     rarity: 'common',
-    description: 'A sakura-style card skin. Does not change the memory algorithm.',
+    description:
+        'A sakura-style card skin. Does not change the memory algorithm.',
     probability: 11,
     fragmentValue: 5,
   ),
@@ -822,7 +844,8 @@ const _mockPrizePool = [
     name: 'Midnight Card Skin',
     category: 'cardSkin',
     rarity: 'common',
-    description: 'A dark midnight-style card skin. Does not affect learning results.',
+    description:
+        'A dark midnight-style card skin. Does not affect learning results.',
     probability: 10,
     fragmentValue: 5,
   ),
@@ -840,7 +863,8 @@ const _mockPrizePool = [
     name: 'Stardust Fragment',
     category: 'fragment',
     rarity: 'comfort',
-    description: 'A consolation reward you can accumulate to redeem decorative assets.',
+    description:
+        'A consolation reward you can accumulate to redeem decorative assets.',
     probability: 10,
     fragmentValue: 3,
   ),
@@ -1226,7 +1250,10 @@ class MockAiRepository implements AiRepository {
     final word = targetWord ?? 'word';
     final result = <String, dynamic>{
       'sentences': [
-        {'sentence': 'Mock sentence with $word.', 'translation': 'Mock translation.'},
+        {
+          'sentence': 'Mock sentence with $word.',
+          'translation': 'Mock translation.',
+        },
       ],
       'rewrites': [
         {'original': word, 'rewritten': 'Mock rewrite.', 'note': 'Mock note.'},
@@ -1448,7 +1475,11 @@ class MockForumRepository implements ForumRepository {
   }
 
   @override
-  Future<void> reportPost(String postId, String reason, {String? detail}) async {
+  Future<void> reportPost(
+    String postId,
+    String reason, {
+    String? detail,
+  }) async {
     // No-op in mock — report acknowledged silently.
   }
 
@@ -1573,30 +1604,108 @@ class MockAnalyticsRepository implements AnalyticsRepository {
     switch (dimension) {
       case 'friends':
         entries = const [
-          LeaderboardEntry(rank: 1, userId: 'mock_f1', name: 'Alex', xp: 450, isCurrentUser: false),
-          LeaderboardEntry(rank: 2, userId: 'mock_f2', name: 'Jordan', xp: 350, isCurrentUser: false),
-          LeaderboardEntry(rank: 3, userId: 'mock_me', name: 'You', xp: 300, isCurrentUser: true),
-          LeaderboardEntry(rank: 4, userId: 'mock_f3', name: 'Morgan', xp: 220, isCurrentUser: false),
+          LeaderboardEntry(
+            rank: 1,
+            userId: 'mock_f1',
+            name: 'Alex',
+            xp: 450,
+            isCurrentUser: false,
+          ),
+          LeaderboardEntry(
+            rank: 2,
+            userId: 'mock_f2',
+            name: 'Jordan',
+            xp: 350,
+            isCurrentUser: false,
+          ),
+          LeaderboardEntry(
+            rank: 3,
+            userId: 'mock_me',
+            name: 'You',
+            xp: 300,
+            isCurrentUser: true,
+          ),
+          LeaderboardEntry(
+            rank: 4,
+            userId: 'mock_f3',
+            name: 'Morgan',
+            xp: 220,
+            isCurrentUser: false,
+          ),
         ];
       case 'class':
         entries = const [
-          LeaderboardEntry(rank: 1, userId: 'mock_c1', name: 'Sam', xp: 500, isCurrentUser: false),
-          LeaderboardEntry(rank: 2, userId: 'mock_me', name: 'You', xp: 300, isCurrentUser: true),
-          LeaderboardEntry(rank: 3, userId: 'mock_c2', name: 'Taylor', xp: 180, isCurrentUser: false),
+          LeaderboardEntry(
+            rank: 1,
+            userId: 'mock_c1',
+            name: 'Sam',
+            xp: 500,
+            isCurrentUser: false,
+          ),
+          LeaderboardEntry(
+            rank: 2,
+            userId: 'mock_me',
+            name: 'You',
+            xp: 300,
+            isCurrentUser: true,
+          ),
+          LeaderboardEntry(
+            rank: 3,
+            userId: 'mock_c2',
+            name: 'Taylor',
+            xp: 180,
+            isCurrentUser: false,
+          ),
         ];
       default: // global
         entries = const [
-          LeaderboardEntry(rank: 1, userId: 'mock_g1', name: 'Alice', xp: 800, isCurrentUser: false),
-          LeaderboardEntry(rank: 2, userId: 'mock_g2', name: 'Bob', xp: 600, isCurrentUser: false),
-          LeaderboardEntry(rank: 3, userId: 'mock_g3', name: 'Charlie', xp: 400, isCurrentUser: false),
-          LeaderboardEntry(rank: 4, userId: 'mock_g4', name: 'Diana', xp: 320, isCurrentUser: false),
-          LeaderboardEntry(rank: 5, userId: 'mock_me', name: 'You', xp: 300, isCurrentUser: true),
+          LeaderboardEntry(
+            rank: 1,
+            userId: 'mock_g1',
+            name: 'Alice',
+            xp: 800,
+            isCurrentUser: false,
+          ),
+          LeaderboardEntry(
+            rank: 2,
+            userId: 'mock_g2',
+            name: 'Bob',
+            xp: 600,
+            isCurrentUser: false,
+          ),
+          LeaderboardEntry(
+            rank: 3,
+            userId: 'mock_g3',
+            name: 'Charlie',
+            xp: 400,
+            isCurrentUser: false,
+          ),
+          LeaderboardEntry(
+            rank: 4,
+            userId: 'mock_g4',
+            name: 'Diana',
+            xp: 320,
+            isCurrentUser: false,
+          ),
+          LeaderboardEntry(
+            rank: 5,
+            userId: 'mock_me',
+            name: 'You',
+            xp: 300,
+            isCurrentUser: true,
+          ),
         ];
     }
     final currentUserRank = entries
         .firstWhere(
           (e) => e.isCurrentUser,
-          orElse: () => const LeaderboardEntry(rank: -1, userId: '', name: '', xp: 0, isCurrentUser: true),
+          orElse: () => const LeaderboardEntry(
+            rank: -1,
+            userId: '',
+            name: '',
+            xp: 0,
+            isCurrentUser: true,
+          ),
         )
         .rank;
     return LeaderboardResult(
@@ -1623,11 +1732,7 @@ class MockProfileRepository implements ProfileRepository {
       'name': isOwner ? 'You' : 'Demo User',
       'isOwner': isOwner,
       'streak': 5,
-      'stats': {
-        'learnedWords': 89,
-        'masteredWords': 34,
-        'totalDays': 12,
-      },
+      'stats': {'learnedWords': 89, 'masteredWords': 34, 'totalDays': 12},
       'achievements': [
         {
           'id': 'first_lesson',
@@ -1662,7 +1767,9 @@ class MockStudySpotRepository implements StudySpotRepository {
 
   Future<void> _write(SharedPreferences prefs, List<StudySpot> spots) async {
     await prefs.setString(
-        _key, jsonEncode(spots.map((s) => s.toJson()).toList()));
+      _key,
+      jsonEncode(spots.map((s) => s.toJson()).toList()),
+    );
   }
 
   @override
@@ -1710,7 +1817,10 @@ class MockStudySpotRepository implements StudySpotRepository {
     var nearestMeters = 100.0; // ≤100m aggregates
     for (var i = 0; i < spots.length; i++) {
       final d = distance.as(
-          LengthUnit.Meter, here, LatLng(spots[i].latitude, spots[i].longitude));
+        LengthUnit.Meter,
+        here,
+        LatLng(spots[i].latitude, spots[i].longitude),
+      );
       if (d <= nearestMeters) {
         nearestMeters = d;
         nearestIndex = i;

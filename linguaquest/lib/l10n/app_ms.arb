@@ -767,7 +767,7 @@
   "aiLearningToolAiQA": "Soal Jawab AI",
   "aiLearningToolAiQADesc": "Jawab soalan tentang makna perkataan, tatabahasa, dan kesepaduan ungkapan berdasarkan perkataan semasa, contoh, dan matlamat pembelajaran.",
   "aiLearningToolAiAnalysis": "Analisis Ayat Panjang AI",
-  "aiLearningToolAiAnalysisDesc": "Ekstrak klausa utama, bahagikan klausa bawahan, terangkan bahan pengubah dan kata kunci, dan berikan terjemahan bahasa Cina yang semula jadi.",
+  "aiLearningToolAiAnalysisDesc": "Ekstrak klausa utama, bahagikan klausa bawahan, terangkan bahan pengubah dan kata kunci, dan berikan terjemahan yang semula jadi.",
   "aiLearningToolAiWriting": "Pembetulan Penulisan AI",
   "aiLearningToolAiWritingDesc": "Pilih jenis peperiksaan, masukkan topik dan teks, keluarkan skor keseluruhan, skor terperinci, dan cadangan semakan per perenggan.",
   "aiLearningToolCloze": "Isi Tempat Kosong Perkataan Hari Ini",

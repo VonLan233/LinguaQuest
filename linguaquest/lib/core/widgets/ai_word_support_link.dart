@@ -57,7 +57,7 @@ class AiWordSupportLink extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(AppIcons.chevronRight),
+              Icon(AppIcons.chevronRight, color: theme.colorScheme.onSurface),
             ],
           ),
         ),
@@ -66,12 +66,7 @@ class AiWordSupportLink extends StatelessWidget {
   }
 
   void _openAiLearning(BuildContext context) {
-    final location = _aiLearningLocation();
-    if (location == '/ai-learning') {
-      context.push('/ai-learning');
-      return;
-    }
-    context.push(location);
+    context.go(_aiLearningLocation());
   }
 
   String _description(AppLocalizations l10n) {

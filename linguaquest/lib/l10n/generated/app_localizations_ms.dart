@@ -2475,7 +2475,7 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get aiLearningToolAiAnalysisDesc =>
-      'Ekstrak klausa utama, bahagikan klausa bawahan, terangkan bahan pengubah dan kata kunci, dan berikan terjemahan bahasa Cina yang semula jadi.';
+      'Ekstrak klausa utama, bahagikan klausa bawahan, terangkan bahan pengubah dan kata kunci, dan berikan terjemahan yang semula jadi.';
 
   @override
   String get aiLearningToolAiWriting => 'Pembetulan Penulisan AI';

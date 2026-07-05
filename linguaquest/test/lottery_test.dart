@@ -293,6 +293,9 @@ class _CountingAuthRepository implements AuthRepository {
   Future<void> logout() async {}
 
   @override
+  Future<void> deleteAccount() async {}
+
+  @override
   Future<AuthResult> register({
     required String name,
     required String email,

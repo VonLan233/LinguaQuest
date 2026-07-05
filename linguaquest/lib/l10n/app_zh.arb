@@ -767,7 +767,7 @@
   "aiLearningToolAiQA": "AI 知识问答",
   "aiLearningToolAiQADesc": "结合当前单词、例句和学习目标回答词义、语法和表达自然度问题。",
   "aiLearningToolAiAnalysis": "AI 长难句分析",
-  "aiLearningToolAiAnalysisDesc": "提取主干、划分从句、解释修饰成分和关键词，并给出自然中文翻译。",
+  "aiLearningToolAiAnalysisDesc": "提取主干、划分从句、解释修饰成分和关键词，并给出自然译文。",
   "aiLearningToolAiWriting": "AI 作文批改",
   "aiLearningToolAiWritingDesc": "选择考试类型、输入题目和正文，输出总评分、分项评分和逐段修改建议。",
   "aiLearningToolCloze": "今日单词情景填空",
