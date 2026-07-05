@@ -400,6 +400,14 @@ class AppController extends Notifier<AppState> {
         DateTime.now().toIso8601String(),
       );
     }
+    // Align the learning scope so language + wordbook + progress match the new
+    // target immediately, not only after the picker later confirms a book. This
+    // prevents the "target language shows new but lessons/wordbook stay old"
+    // mismatch (Cycle 10 F). switchLanguage restores the language's remembered
+    // (or first) wordbook and no-ops for languages that have no books yet.
+    if (code != state.currentLanguage) {
+      await switchLanguage(code);
+    }
   }
 
   Future<void> updateReminderSettings(DailyReminderSettings settings) async {
@@ -882,11 +890,16 @@ class AppController extends Notifier<AppState> {
     final user = state.user;
     if (user == null) return false;
     final trimmed = word.trim();
-    // #G: 同一个词已在生词本则不重复添加（幂等）。
+    // #G: 同一个词已在生词本则不重复添加（幂等）。返回 false 表示"未新增"，
+    // 并清空 errorMessage —— 重复不是错误，调用方据此展示"已在生词本"而非"已保存"，
+    // 与真正失败（errorMessage 非空）区分。
     final dup = state.customWords.any(
       (w) => w.word.trim().toLowerCase() == trimmed.toLowerCase(),
     );
-    if (dup) return true;
+    if (dup) {
+      state = state.copyWith(clearError: true);
+      return false;
+    }
     return _run(() async {
       final created = await _customWordRepository.create(
         CustomWord.create(

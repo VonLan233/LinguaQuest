@@ -76,8 +76,13 @@ class _ProgressAnalyticsScreenState
     final l10n = AppLocalizations.of(context);
     final analytics = state.analyticsSnapshot;
     final recommendations = state.recommendations;
-    final weekXp =
-        (analytics?.sevenDayXp ?? []).fold<int>(0, (a, b) => a + b);
+    final sevenDayXp = analytics?.sevenDayXp ?? const <int>[];
+    final weekXp = sevenDayXp.fold<int>(0, (a, b) => a + b);
+    // D-10: "Today XP" must share the same source (backend sevenDayXp — total
+    // XP across all activities) as the XP-trend chart and the "This week XP"
+    // pill. Previously it showed local training-only `todayTrainingXp`, which
+    // did not match the chart's today value and desynced across restarts/devices.
+    final todayXp = sevenDayXp.isNotEmpty ? sevenDayXp.last : 0;
 
     return Scaffold(
       appBar: AppBar(
@@ -135,8 +140,7 @@ class _ProgressAnalyticsScreenState
                       ),
                       const SizedBox(width: 8),
                       AppPill(
-                        label:
-                            '${l10n.analyticsTodayXp}: ${state.todayTrainingXp} XP',
+                        label: '${l10n.analyticsTodayXp}: $todayXp XP',
                         variant: PillVariant.primary,
                       ),
                     ],

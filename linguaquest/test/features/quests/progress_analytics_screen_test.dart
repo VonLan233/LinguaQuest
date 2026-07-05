@@ -224,6 +224,22 @@ void main() {
       expect(find.byType(PieChart), findsOneWidget);
     });
 
+    testWidgets(
+        'Today XP pill uses backend sevenDayXp, not local todayTrainingXp (D-10)',
+        (tester) async {
+      // Seed local training XP (999) distinct from today's backend XP (45 =
+      // last of sevenDayXp) to prove the pill reads the backend series.
+      final state = _seededState().copyWith(todayTrainingXp: 999);
+      await tester.pumpWidget(
+        _buildHarness(const ProgressAnalyticsScreen(), state),
+      );
+      await tester.pump();
+
+      final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+      expect(find.text('${l10n.analyticsTodayXp}: 45 XP'), findsOneWidget);
+      expect(find.text('${l10n.analyticsTodayXp}: 999 XP'), findsNothing);
+    });
+
     testWidgets('report title section header is present', (tester) async {
       await tester.pumpWidget(
         _buildHarness(const ProgressAnalyticsScreen(), _seededState()),

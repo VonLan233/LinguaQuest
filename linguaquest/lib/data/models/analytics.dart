@@ -161,7 +161,11 @@ class LearningAnalytics {
       );
 
   static LearningAnalytics mock() => const LearningAnalytics(
-        streakDays: 5,
+        // D-12: kept below the streak_3 achievement threshold (3) so the
+        // offline/demo persona does not falsely unlock "3-Day Streak" before
+        // the user has actually studied 3 days in a row. Server-connected
+        // users are unaffected — their streak comes from the real users table.
+        streakDays: 2,
         totalStudyDays: 12,
         learnedWords: 89,
         masteredWords: 34,

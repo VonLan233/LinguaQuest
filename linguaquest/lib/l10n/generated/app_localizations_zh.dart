@@ -2493,6 +2493,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get customWordsSaved => '单词已保存';
 
   @override
+  String get customWordsAlreadyInWordbook => '该词已在生词本';
+
+  @override
   String get customWordsDifficulty => '难度';
 
   @override

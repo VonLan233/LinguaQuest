@@ -10,7 +10,8 @@ void main() {
 
     test('getAnalytics returns mock with all fields populated', () async {
       final analytics = await repo.getAnalytics('test-uid');
-      expect(analytics.streakDays, equals(5));
+      // D-12: demo streak stays below the streak_3 threshold (see mock()).
+      expect(analytics.streakDays, equals(2));
       expect(analytics.masteredWords, equals(34));
       expect(analytics.sevenDayXp, hasLength(7));
       expect(analytics.weakestExerciseType, isNotEmpty);
@@ -19,6 +20,17 @@ void main() {
     test('getAchievements returns 12 achievements', () async {
       final achievements = await repo.getAchievements('test-uid');
       expect(achievements, hasLength(12));
+    });
+
+    test('getAchievements does NOT unlock streak_3 in the demo persona (D-12)',
+        () async {
+      // Regression: the offline/demo seed must not pre-unlock "3-Day Streak"
+      // before the user has actually studied 3 days in a row.
+      final achievements = await repo.getAchievements('test-uid');
+      expect(
+        achievements.firstWhere((a) => a.id == 'streak_3').unlocked,
+        isFalse,
+      );
     });
 
     test('getLeaderboard global returns entries with current user', () async {

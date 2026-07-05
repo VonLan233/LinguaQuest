@@ -820,6 +820,7 @@
   "customWordsCreate": "Cipta perkataan",
   "customWordsSaveFailed": "Tidak dapat menyimpan perkataan ini buat masa ini",
   "customWordsSaved": "Perkataan disimpan",
+  "customWordsAlreadyInWordbook": "Perkataan ini sudah ada dalam buku kata anda",
   "customWordsDifficulty": "Kesukaran",
   "commonRequired": "Wajib diisi",
   "customWordsDeleteFailed": "Tidak dapat memadam {word} sekarang",

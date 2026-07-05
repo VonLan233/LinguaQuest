@@ -2630,6 +2630,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get customWordsSaved => 'Word saved';
 
   @override
+  String get customWordsAlreadyInWordbook =>
+      'This word is already in your wordbook';
+
+  @override
   String get customWordsDifficulty => 'Difficulty';
 
   @override

@@ -2636,6 +2636,10 @@ class AppLocalizationsMs extends AppLocalizations {
   String get customWordsSaved => 'Perkataan disimpan';
 
   @override
+  String get customWordsAlreadyInWordbook =>
+      'Perkataan ini sudah ada dalam buku kata anda';
+
+  @override
   String get customWordsDifficulty => 'Kesukaran';
 
   @override

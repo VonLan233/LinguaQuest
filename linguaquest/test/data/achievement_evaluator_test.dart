@@ -173,6 +173,19 @@ void main() {
       );
     });
 
+    test('streak_3 unlocks at streakDays >= 3, not at 1 or 2 (D-12)', () {
+      bool streak3Unlocked(int streakDays) => AchievementEvaluator.evaluate(
+            streakDays: streakDays,
+            masteredWords: 0,
+            totalStudyDays: 0,
+            trainingXp: 0,
+          ).firstWhere((a) => a.id == 'streak_3').unlocked;
+
+      expect(streak3Unlocked(1), isFalse);
+      expect(streak3Unlocked(2), isFalse);
+      expect(streak3Unlocked(3), isTrue);
+    });
+
     test('existing achievements still evaluate correctly', () {
       final achievements = AchievementEvaluator.evaluate(
         streakDays: 7,

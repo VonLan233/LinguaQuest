@@ -852,6 +852,7 @@
   "customWordsCreate": "Create word",
   "customWordsSaveFailed": "Unable to save this word for now",
   "customWordsSaved": "Word saved",
+  "customWordsAlreadyInWordbook": "This word is already in your wordbook",
   "customWordsDifficulty": "Difficulty",
   "commonRequired": "Required",
   "customWordsDeleteFailed": "Unable to delete {word} right now",

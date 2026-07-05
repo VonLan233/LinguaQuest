@@ -820,6 +820,7 @@
   "customWordsCreate": "创建单词",
   "customWordsSaveFailed": "暂时无法保存这个单词",
   "customWordsSaved": "单词已保存",
+  "customWordsAlreadyInWordbook": "该词已在生词本",
   "customWordsDifficulty": "难度",
   "commonRequired": "必填",
   "customWordsDeleteFailed": "暂时无法删除 {word}",

@@ -4747,6 +4747,12 @@ abstract class AppLocalizations {
   /// **'Word saved'**
   String get customWordsSaved;
 
+  /// No description provided for @customWordsAlreadyInWordbook.
+  ///
+  /// In en, this message translates to:
+  /// **'This word is already in your wordbook'**
+  String get customWordsAlreadyInWordbook;
+
   /// No description provided for @customWordsDifficulty.
   ///
   /// In en, this message translates to:
