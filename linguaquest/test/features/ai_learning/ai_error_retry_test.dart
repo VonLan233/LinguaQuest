@@ -138,7 +138,8 @@ void main() {
       await tester.pumpWidget(_buildApp(fakeRepo));
       await tester.pumpAndSettle();
 
-      expect(find.text(l10n.aiEmptyChat), findsOneWidget);
+      // Default scope is Chinese; helper text is parameterized by language.
+      expect(find.text(l10n.aiEmptyChat(l10n.pickerLanguageChinese)), findsOneWidget);
       expect(find.byType(AiErrorCard), findsNothing);
     },
   );

@@ -142,7 +142,7 @@ class ProfileScreen extends ConsumerWidget {
             ),
             _SettingsItem(
               icon: AppIcons.inventory2,
-              title: 'Data & storage',
+              title: l10n.dataAccountTitle,
               onTap: () => context.push('/profile/data'),
             ),
             _SettingsItem(

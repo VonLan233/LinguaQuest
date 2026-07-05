@@ -3991,6 +3991,12 @@ abstract class AppLocalizations {
   /// **'Notifications'**
   String get notificationTitle;
 
+  /// No description provided for @dataAccountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Data & Account'**
+  String get dataAccountTitle;
+
   /// No description provided for @notificationMarkAllRead.
   ///
   /// In en, this message translates to:
@@ -5530,20 +5536,20 @@ abstract class AppLocalizations {
   /// No description provided for @aiEmptyChat.
   ///
   /// In en, this message translates to:
-  /// **'Ask anything about Chinese — meanings, grammar, or usage.'**
-  String get aiEmptyChat;
+  /// **'Ask anything about {language} — meanings, grammar, or usage.'**
+  String aiEmptyChat(Object language);
 
   /// No description provided for @aiQuestionHint.
   ///
   /// In en, this message translates to:
-  /// **'Type your question about Chinese...'**
-  String get aiQuestionHint;
+  /// **'Type your question about {language}...'**
+  String aiQuestionHint(Object language);
 
   /// No description provided for @aiEmptyAnalysis.
   ///
   /// In en, this message translates to:
-  /// **'Paste a Chinese sentence to see its structure broken down.'**
-  String get aiEmptyAnalysis;
+  /// **'Paste a {language} sentence to see its structure broken down.'**
+  String aiEmptyAnalysis(Object language);
 
   /// No description provided for @aiEmptyCloze.
   ///

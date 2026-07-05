@@ -316,5 +316,35 @@ void main() {
       expect(find.text('Score Breakdown'), findsNothing);
       expect(find.text('New Essay'), findsNothing);
     });
+
+    testWidgets(
+      'copy-expression snackbar is floating with short duration '
+      '(SVV D-11 regression)',
+      (tester) async {
+        await _openScreen(tester);
+
+        // Submit a valid essay so the (mock) result view with copyable
+        // high-score expressions is shown.
+        await tester.enterText(
+          find.byType(TextFormField),
+          'This is a sufficiently long essay used only for the writing '
+          'review widget test so it passes the fifty character minimum.',
+        );
+        await tester.tap(find.text('Submit for Review'));
+        await tester.pumpAndSettle();
+
+        // High-Score Expressions section renders a copy button per expression.
+        final copyBtn = find.byIcon(Icons.copy).first;
+        await tester.ensureVisible(copyBtn);
+        await tester.pumpAndSettle();
+
+        await tester.tap(copyBtn);
+        await tester.pump(); // let the snackbar mount
+
+        final snackBar = tester.widget<SnackBar>(find.byType(SnackBar));
+        expect(snackBar.behavior, SnackBarBehavior.floating);
+        expect(snackBar.duration, const Duration(milliseconds: 1500));
+      },
+    );
   });
 }

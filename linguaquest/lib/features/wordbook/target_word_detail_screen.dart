@@ -517,54 +517,21 @@ class _DefinitionSections extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cn = word.definitions.isEmpty ? [word.meaning] : word.definitions;
     final en = word.englishDefinitions.isEmpty
         ? [word.definition]
         : word.englishDefinitions;
     final ms = word.malayDefinitions;
 
-    // Chinese (HSK) words: the "Chinese definitions" list duplicates the English
-    // meanings, so show only the English definitions.
-    if (containsCjkText(word.word)) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _DefinitionList(
-            title: l10n.wordbookEnglishDefinitions,
-            values: en,
-            highFrequency: true,
-            l10n: l10n,
-          ),
-          if (ms.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            _DefinitionList(
-              title: l10n.wordbookMalayDefinitions,
-              values: ms,
-              l10n: l10n,
-            ),
-          ],
-        ],
-      );
-    }
-
+    // The app teaches Chinese (HSK); the localized "Chinese definitions" list
+    // only duplicates the English meanings, so show just the English (+ Malay)
+    // definitions for every word.
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          l10n.wordbookBilingualDefinitions,
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        const SizedBox(height: 12),
-        _DefinitionList(
-          title: l10n.wordbookChineseDefinitions,
-          values: cn,
-          highFrequency: true,
-          l10n: l10n,
-        ),
-        const SizedBox(height: 12),
         _DefinitionList(
           title: l10n.wordbookEnglishDefinitions,
           values: en,
+          highFrequency: true,
           l10n: l10n,
         ),
         if (ms.isNotEmpty) ...[

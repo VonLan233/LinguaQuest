@@ -32,12 +32,18 @@ void main() {
     expect(find.byKey(const ValueKey('pronunciation-slow')), findsOneWidget);
   });
 
-  testWidgets('English word renders UK/US accent pair', (tester) async {
+  testWidgets('English word renders single Audio button (no UK/US pair)',
+      (tester) async {
     await tester.pumpWidget(_wrap(
       const PronunciationControls(word: 'hello'),
     ));
     await tester.pump();
-    expect(find.byKey(const ValueKey('pronunciation-uk')), findsOneWidget);
+    // Collapsed to Audio + 0.5×: no UK/US accent split.
+    expect(find.byKey(const ValueKey('pronunciation-uk')), findsNothing);
     expect(find.byKey(const ValueKey('pronunciation-us')), findsOneWidget);
+    expect(find.byKey(const ValueKey('pronunciation-slow')), findsOneWidget);
+    expect(find.text('Audio'), findsOneWidget);
+    expect(find.text('英音'), findsNothing);
+    expect(find.text('美音'), findsNothing);
   });
 }

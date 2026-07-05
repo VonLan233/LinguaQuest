@@ -71,7 +71,7 @@ class SettingsScreen extends ConsumerWidget {
             const SizedBox(height: AppTokens.s12),
             _SettingsAction(
               icon: AppIcons.person,
-              title: 'Data & Account',
+              title: l10n.dataAccountTitle,
               subtitle: 'Cache, export, and account deletion',
               route: '/profile/data',
             ),

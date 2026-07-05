@@ -9,7 +9,6 @@ import '../services/pronunciation_service.dart';
 import '../services/tts_completion.dart';
 import '../theme/app_icons.dart';
 import '../theme/app_theme.dart';
-import '../utils/text_language.dart';
 
 enum _PronunciationAccent { uk, us }
 
@@ -102,49 +101,11 @@ class _PronunciationControlsState extends State<PronunciationControls> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
     final failedAccent = _failedAccent;
 
-    // CJK (Chinese HSK / Japanese kanji) and kana-only Japanese words have a
-    // single native pronunciation — show one button instead of the UK/US pair.
-    if (containsCjkText(widget.word) || widget.language == 'ja') {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _PronunciationButton(
-                accent: _PronunciationAccent.us,
-                compact: widget.compact,
-                isLoading: _loadingAccent != null && !_isSlow,
-                hasFailed: failedAccent != null && !_isSlow,
-                onPressed: () => _play(_PronunciationAccent.us),
-                labelOverride: 'Audio',
-              ),
-              const SizedBox(width: 8),
-              _SlowButton(
-                compact: widget.compact,
-                isLoading: _loadingAccent != null && _isSlow,
-                onPressed: () => _play(_PronunciationAccent.us, slow: true),
-              ),
-            ],
-          ),
-          if (failedAccent != null) ...[
-            const SizedBox(height: 6),
-            Text(
-              'Audio unavailable, tap to retry.',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.error,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ],
-        ],
-      );
-    }
-
+    // Every word has a single pronunciation button: dictionary audio (English)
+    // or TTS (Chinese HSK / Japanese) both play through one "Audio" control,
+    // paired with a 0.5× slow variant. No UK/US accent split.
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,35 +114,25 @@ class _PronunciationControlsState extends State<PronunciationControls> {
           mainAxisSize: MainAxisSize.min,
           children: [
             _PronunciationButton(
-              accent: _PronunciationAccent.uk,
-              compact: widget.compact,
-              isLoading: _loadingAccent == _PronunciationAccent.uk && !_isSlow,
-              hasFailed: failedAccent == _PronunciationAccent.uk,
-              onPressed: () => _play(_PronunciationAccent.uk),
-            ),
-            const SizedBox(width: 8),
-            _PronunciationButton(
               accent: _PronunciationAccent.us,
               compact: widget.compact,
-              isLoading: _loadingAccent == _PronunciationAccent.us && !_isSlow,
-              hasFailed: failedAccent == _PronunciationAccent.us,
+              isLoading: _loadingAccent != null && !_isSlow,
+              hasFailed: failedAccent != null && !_isSlow,
               onPressed: () => _play(_PronunciationAccent.us),
+              labelOverride: 'Audio',
             ),
             const SizedBox(width: 8),
             _SlowButton(
               compact: widget.compact,
               isLoading: _loadingAccent != null && _isSlow,
-              onPressed: () => _play(
-                _lastAccent ?? _PronunciationAccent.us,
-                slow: true,
-              ),
+              onPressed: () => _play(_PronunciationAccent.us, slow: true),
             ),
           ],
         ),
         if (failedAccent != null) ...[
           const SizedBox(height: 6),
           Text(
-            l10n.pronunciationFailedRetry(_accentLabel(l10n, failedAccent)),
+            'Audio unavailable, tap to retry.',
             style: TextStyle(
               color: Theme.of(context).colorScheme.error,
               fontWeight: FontWeight.w800,
@@ -192,7 +143,6 @@ class _PronunciationControlsState extends State<PronunciationControls> {
     );
   }
 
-  _PronunciationAccent? _lastAccent;
   bool _isSlow = false;
 
   Future<void> _play(_PronunciationAccent accent, {bool slow = false}) async {
@@ -205,7 +155,6 @@ class _PronunciationControlsState extends State<PronunciationControls> {
       _loadingAccent = accent;
       _failedAccent = null;
       _isSlow = slow;
-      _lastAccent = accent;
     });
 
     final word = widget.word.trim();

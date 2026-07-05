@@ -6,6 +6,7 @@ import '../../core/state/app_controller.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/fallback_back_button.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../reading/reading_labels.dart';
 
 class DataSettingsScreen extends ConsumerWidget {
@@ -21,7 +22,7 @@ class DataSettingsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/settings'),
-        title: const Text('Data & Account'),
+        title: Text(AppLocalizations.of(context).dataAccountTitle),
       ),
       body: SafeArea(
         child: ListView(

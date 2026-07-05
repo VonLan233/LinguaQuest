@@ -29,7 +29,7 @@ const _langPins = [
   _LangPin(code: 'zh', label: 'Chinese (中文)', point: LatLng(39.9087, 116.3975), enabled: true),
   _LangPin(code: 'en', label: 'English', point: LatLng(38.0, -97.0), enabled: true),
   _LangPin(code: 'es', label: 'Spanish (Español)', point: LatLng(40.4, -3.7), enabled: true),
-  _LangPin(code: 'fr', label: 'French (Français)', point: LatLng(46.6, 2.3), enabled: true),
+  _LangPin(code: 'fr', label: 'French (Français)', point: LatLng(48.85, 2.35), enabled: true),
   _LangPin(code: 'ja', label: 'Japanese (日本語)', point: LatLng(36.2, 138.2), enabled: true),
   _LangPin(code: 'ms', label: 'Malay (Bahasa Melayu)', point: LatLng(4.2, 101.9), enabled: true),
 ];
@@ -252,22 +252,21 @@ class _LangMarker extends StatelessWidget {
     final start = (index * 0.12).clamp(0.0, 0.6);
     final curve = Interval(start, (start + 0.4).clamp(0.0, 1.0),
         curve: Curves.easeOutBack);
-    return GestureDetector(
-      key: ValueKey('lang-pin-${pin.code}'),
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: AnimatedBuilder(
-        animation: Listenable.merge([entrance, pulse]),
-        builder: (context, _) {
-          final t = curve.transform(entrance.value).clamp(0.0, 1.0);
-          return Opacity(
-            opacity: t,
-            child: Transform.translate(
-              offset: Offset(0, (1 - t) * -10),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
+    // 点击热区只包住 badge（~56px），不包含更宽的文字标签列。marker 命中框仍是
+    // 140×110，但除 badge 外的区域不吸收点击，避免相邻 marker（尤其经度相近的
+    // zh/ja、es/fr）的宽标签互相遮挡抢占点击。标签保持可见、仅不可点。
+    return AnimatedBuilder(
+      animation: Listenable.merge([entrance, pulse]),
+      builder: (context, _) {
+        final t = curve.transform(entrance.value).clamp(0.0, 1.0);
+        return Opacity(
+          opacity: t,
+          child: Transform.translate(
+            offset: Offset(0, (1 - t) * -10),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
@@ -300,14 +299,19 @@ class _LangMarker extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 2),
-                  _Badge(pin: pin, selected: selected, pulse: pulse.value),
-                ],
-              ),
+                const SizedBox(height: 2),
+                GestureDetector(
+                  key: ValueKey('lang-pin-${pin.code}'),
+                  onTap: onTap,
+                  behavior: HitTestBehavior.opaque,
+                  child: _Badge(
+                      pin: pin, selected: selected, pulse: pulse.value),
+                ),
+              ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

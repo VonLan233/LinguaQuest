@@ -2208,6 +2208,9 @@ class AppLocalizationsMs extends AppLocalizations {
   String get notificationTitle => 'Pemberitahuan';
 
   @override
+  String get dataAccountTitle => 'Data & Akaun';
+
+  @override
   String get notificationMarkAllRead => 'Semua Dibaca';
 
   @override
@@ -3112,15 +3115,19 @@ class AppLocalizationsMs extends AppLocalizations {
   String get aiErrorGeneric => 'Sesuatu tidak kena. Sila cuba lagi.';
 
   @override
-  String get aiEmptyChat =>
-      'Tanya apa sahaja tentang bahasa Cina — maksud, tatabahasa atau penggunaan.';
+  String aiEmptyChat(Object language) {
+    return 'Tanya apa sahaja tentang $language — maksud, tatabahasa atau penggunaan.';
+  }
 
   @override
-  String get aiQuestionHint => 'Taip soalan anda tentang bahasa Cina...';
+  String aiQuestionHint(Object language) {
+    return 'Taip soalan anda tentang $language...';
+  }
 
   @override
-  String get aiEmptyAnalysis =>
-      'Tampal ayat bahasa Cina untuk melihat huraian strukturnya.';
+  String aiEmptyAnalysis(Object language) {
+    return 'Tampal ayat $language untuk melihat huraian strukturnya.';
+  }
 
   @override
   String get aiEmptyCloze =>

@@ -8,6 +8,7 @@ import '../../core/widgets/ai_error_card.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/app_button.dart';
+import '../../core/widgets/language_wordbook_picker.dart';
 import '../../data/models/ai_feature.dart';
 import '../../l10n/generated/app_localizations.dart';
 
@@ -74,6 +75,10 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
+    final language = languageLabel(
+      ref.watch(appControllerProvider.select((s) => s.currentLanguage)),
+      l10n,
+    );
     final history = ref.watch(
       appControllerProvider.select(
         (s) =>
@@ -116,7 +121,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
                     maxLength: 2000,
                     maxLines: 4,
                     decoration: InputDecoration(
-                      hintText: l10n.aiQuestionHint,
+                      hintText: l10n.aiQuestionHint(language),
                       border: const OutlineInputBorder(),
                     ),
                     validator: (value) {
@@ -143,7 +148,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
               AppCard(
                 padding: const EdgeInsets.all(AppTokens.s16),
                 child: Text(
-                  l10n.aiEmptyChat,
+                  l10n.aiEmptyChat(language),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,

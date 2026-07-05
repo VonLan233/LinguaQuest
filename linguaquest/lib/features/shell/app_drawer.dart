@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_icons.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     Widget item(IconData icon, String label, String route) => ListTile(
           leading: Icon(icon),
           title: Text(label),
@@ -29,7 +31,7 @@ class AppDrawer extends StatelessWidget {
                         TextStyle(fontSize: 22, fontWeight: FontWeight.w900)),
               ),
             ),
-            item(AppIcons.language, 'Choose Language', '/language-map'),
+            item(AppIcons.language, l10n.pickerChooseLanguage, '/language-map'),
             ListTile(
               leading: const Icon(AppIcons.map),
               title: const Text('Study Map'),

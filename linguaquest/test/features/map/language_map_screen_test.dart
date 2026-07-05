@@ -70,4 +70,42 @@ void main() {
     expect(find.byKey(const ValueKey('lang-card-start')), findsOneWidget);
     expect(find.byKey(const ValueKey('lang-card-soon')), findsNothing);
   });
+
+  // 回归：每个 pin 各自点击必须选中自己对应的语言卡片。旧的“只断言卡片出现”
+  // 会被相邻 marker 抢占点击的 bug 蒙混过关（被覆盖的 marker 抢到的仍是一张卡片）。
+  // 这里断言卡片内展示的是被点语言的标签，才能真正暴露 zh/es 被 ja/fr 遮挡的问题。
+  testWidgets('each pin selects its own language card (no overlap steal)',
+      (tester) async {
+    tester.view.physicalSize = const Size(1200, 2000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    // code -> 卡片标签里的独有子串
+    const expected = {
+      'zh': '中文',
+      'en': 'English',
+      'es': 'Español',
+      'fr': 'Français',
+      'ja': '日本語',
+      'ms': 'Bahasa Melayu',
+    };
+
+    await tester.pumpWidget(_app(AppTheme.light()));
+    await tester.pump();
+
+    for (final entry in expected.entries) {
+      await tester.tap(find.byKey(ValueKey('lang-pin-${entry.key}')));
+      await tester.pump(const Duration(milliseconds: 100));
+      final card = find.byKey(const ValueKey('lang-card'));
+      expect(card, findsOneWidget, reason: '点击 ${entry.key} 未弹出卡片');
+      expect(
+        find.descendant(of: card, matching: find.textContaining(entry.value)),
+        findsWidgets,
+        reason: '点击 ${entry.key} 弹出的卡片不是 ${entry.value}（被相邻 marker 抢占了点击）',
+      );
+      // 关闭卡片，避免影响下一次点击命中。
+      await tester.tap(find.byIcon(Icons.close));
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+  });
 }

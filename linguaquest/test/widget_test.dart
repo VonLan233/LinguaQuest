@@ -496,14 +496,16 @@ void main() {
       ),
     );
 
-    expect(find.text('英音'), findsOneWidget);
-    expect(find.text('美音'), findsOneWidget);
+    // Collapsed to a single Audio button (no UK/US accent split).
+    expect(find.text('Audio'), findsOneWidget);
+    expect(find.text('英音'), findsNothing);
+    expect(find.text('美音'), findsNothing);
 
-    await tester.tap(find.byKey(const ValueKey('pronunciation-uk')));
+    await tester.tap(find.byKey(const ValueKey('pronunciation-us')));
     await tester.pumpAndSettle();
 
     // SnackBars are gone; failure now shows as inline retry indicator.
-    expect(find.text('英音发音失败，请重试'), findsOneWidget);
+    expect(find.text('Audio unavailable, tap to retry.'), findsOneWidget);
   });
 
   testWidgets('home new-study entry opens standalone new learning flow', (

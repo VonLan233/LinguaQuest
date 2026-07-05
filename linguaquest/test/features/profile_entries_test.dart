@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   testWidgets(
-    'ProfileScreen contains Privacy, Data & storage, and Notifications entries',
+    'ProfileScreen contains Privacy, Data & Account, and Notifications entries',
     (tester) async {
       final now = DateTime(2026, 6, 20);
       final profile = UserProfile(
@@ -53,13 +53,13 @@ void main() {
       expect(find.text('Privacy'), findsOneWidget);
 
       await tester.scrollUntilVisible(
-        find.text('Data & storage'),
+        find.text('Data & Account'),
         300,
         scrollable: find.byType(Scrollable).first,
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Data & storage'), findsOneWidget);
+      expect(find.text('Data & Account'), findsOneWidget);
 
       await tester.scrollUntilVisible(
         find.text('Notifications'),

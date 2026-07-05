@@ -7,6 +7,7 @@ import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/ai_error_card.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_button.dart';
+import '../../core/widgets/language_wordbook_picker.dart';
 import '../../data/models/ai_feature.dart';
 import '../../l10n/generated/app_localizations.dart';
 
@@ -67,6 +68,10 @@ class _AiSentenceAnalysisScreenState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
+    final language = languageLabel(
+      ref.watch(appControllerProvider.select((s) => s.currentLanguage)),
+      l10n,
+    );
     final history = ref.watch(
       appControllerProvider.select(
         (s) => s.aiHistory
@@ -137,7 +142,7 @@ class _AiSentenceAnalysisScreenState
               AppCard(
                 padding: const EdgeInsets.all(AppTokens.s16),
                 child: Text(
-                  l10n.aiEmptyAnalysis,
+                  l10n.aiEmptyAnalysis(language),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,

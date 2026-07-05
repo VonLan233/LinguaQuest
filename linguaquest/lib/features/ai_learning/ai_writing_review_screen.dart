@@ -489,7 +489,14 @@ class _ResultView extends StatelessWidget {
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: expr));
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Copied!')),
+                          const SnackBar(
+                            content: Text('Copied!'),
+                            // Floating + short duration so the toast does not
+                            // sit over the submit control for the default 4s.
+                            // See SVV D-11.
+                            behavior: SnackBarBehavior.floating,
+                            duration: Duration(milliseconds: 1500),
+                          ),
                         );
                       },
                     ),

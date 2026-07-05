@@ -196,4 +196,36 @@ void main() {
       expect(find.text('ai-chat'), findsOneWidget);
     },
   );
+
+  testWidgets(
+    'MistakeBookScreen: explain button stays visible/tappable at narrow width '
+    '(SVV D-09 regression)',
+    (tester) async {
+      // Narrow viewport forces the mistake-row children to compete for width.
+      // Without the Flexible pill wrapper, the row overflows and pushes the
+      // Explain-with-AI IconButton out of the visible/tappable area.
+      tester.view.physicalSize = const Size(200, 640);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+
+      await tester.pumpWidget(_buildMistakeBookApp(result: result));
+      await tester.pumpAndSettle();
+
+      // No RenderFlex overflow should have been thrown during layout.
+      expect(tester.takeException(), isNull);
+
+      final explainBtn = find.byTooltip(l10n.aiExplainWithAi);
+      expect(explainBtn, findsOneWidget);
+
+      // The button must be actually tappable (hit-testable, on-screen).
+      await tester.tap(explainBtn);
+      await tester.pumpAndSettle();
+
+      expect(_capturedAiChatWord, isNotEmpty);
+      expect(find.text('ai-chat'), findsOneWidget);
+    },
+  );
 }

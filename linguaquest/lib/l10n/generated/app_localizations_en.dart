@@ -2205,6 +2205,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notificationTitle => 'Notifications';
 
   @override
+  String get dataAccountTitle => 'Data & Account';
+
+  @override
   String get notificationMarkAllRead => 'Mark All Read';
 
   @override
@@ -3108,15 +3111,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aiErrorGeneric => 'Something went wrong. Please try again.';
 
   @override
-  String get aiEmptyChat =>
-      'Ask anything about Chinese — meanings, grammar, or usage.';
+  String aiEmptyChat(Object language) {
+    return 'Ask anything about $language — meanings, grammar, or usage.';
+  }
 
   @override
-  String get aiQuestionHint => 'Type your question about Chinese...';
+  String aiQuestionHint(Object language) {
+    return 'Type your question about $language...';
+  }
 
   @override
-  String get aiEmptyAnalysis =>
-      'Paste a Chinese sentence to see its structure broken down.';
+  String aiEmptyAnalysis(Object language) {
+    return 'Paste a $language sentence to see its structure broken down.';
+  }
 
   @override
   String get aiEmptyCloze =>

@@ -2093,6 +2093,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get notificationTitle => '消息通知';
 
   @override
+  String get dataAccountTitle => '数据与账户';
+
+  @override
   String get notificationMarkAllRead => '全部已读';
 
   @override
@@ -2941,13 +2944,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get aiErrorGeneric => '出错了，请重试。';
 
   @override
-  String get aiEmptyChat => '关于中文的任何问题都可以问——词义、语法或用法。';
+  String aiEmptyChat(Object language) {
+    return '关于$language的任何问题都可以问——词义、语法或用法。';
+  }
 
   @override
-  String get aiQuestionHint => '输入你关于中文的问题……';
+  String aiQuestionHint(Object language) {
+    return '输入你关于$language的问题……';
+  }
 
   @override
-  String get aiEmptyAnalysis => '粘贴一个中文句子，查看它的结构拆解。';
+  String aiEmptyAnalysis(Object language) {
+    return '粘贴一个$language句子，查看它的结构拆解。';
+  }
 
   @override
   String get aiEmptyCloze => '输入一个词，生成填空练习。';
