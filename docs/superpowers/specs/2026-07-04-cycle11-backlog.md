@@ -59,3 +59,11 @@
 
 ## 备注
 - SVV 用日文 scope（JLPT N5）+ 中文 scope 测；部分真 bug（Word Spelling 语言、日文词典）与"学中文/学日文"scope 有关，Cycle 11 brainstorm 时需明确当前多语言 scope 策略（关联 [[hsk-target-language-flip]]）。
+
+## 已探索根因（2026-07-05 Cycle10 会话，opus 波动致 agent 挂，探索未尽）
+- **Profile 404（高危3.1）**：客户端 `getPublicProfile`→`/users/{userId}/profile`（api_repositories.dart:973），server 有 `GET /users/<userId>/profile`（routes.dart:1051）——**路径匹配，非端点缺失**。需查为何 404：该 userId 是否在 users 表存在（社区种子帖 authorId 可能无对应用户行）/隐私全关是否返回 404 / getPublicProfile 异常→public_profile_screen 显示 404。**Cycle 10 C 接了作者头像跳转，若目标 profile 端点对某些 authorId 404 就复现。**
+- **错题本全录（高危3.3）**：`passage_cloze_screen.dart:88` `if(ok){correct++}else{mistakes.add(q)}` 判断正确（错才加）。lesson quiz 流程（`app_controller.dart:1083 bool isCorrect` + `:1029 mistakeWordIds: result.mistakes`）待查——需确认 lesson 场景 result.mistakes 来源是否漏判 isCorrect 把全部录入。
+- **课程只学2-3个退出（高危3.2）**：session 词数来源未定位（learning_repository 无 take/daily 关键词命中）。待查 lesson 生成/dailyPlan 的 session 词数逻辑（app_controller.dart:2063 remainingWords 附近）。
+- **训练类（Word Rush/Word Spelling/Listening/Survival/Campus）+ 地图中文/西语无法点选 + Mistake Book AI 入口**：未探索（探索 agent 因 opus 波动挂）。language_map_screen marker enabled/locked 逻辑、training_session_screen + 各 game screen 待新会话探索。
+
+> **新会话续 Cycle 11**：读本 backlog + `.superpowers/sdd/progress.md`；先坐实上述未尽根因（用 Bash/Read 或稳定后派 agent）→ brainstorm 定范围/优先级 → spec → plan → SDD。Cycle 10 已完整交付（三 Part 部署+设备验证），勿重做。
