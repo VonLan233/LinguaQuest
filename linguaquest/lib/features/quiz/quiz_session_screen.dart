@@ -275,7 +275,8 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
   /// Instant judgment for a tapped choice [option].
   void _judge(Lesson lesson, QuizQuestion question, String option) {
     if (_lockedCorrect) return;
-    final isCorrect = option.toLowerCase() == question.answer.toLowerCase();
+    final isCorrect =
+        option.trim().toLowerCase() == question.answer.trim().toLowerCase();
     setState(() {
       _recordAttempt(question, isCorrect);
       _selected = option;
@@ -511,7 +512,7 @@ class _QuestionInput extends StatelessWidget {
   }
 
   bool _isCorrectOption(String option) {
-    return option.toLowerCase() == question.answer.toLowerCase();
+    return option.trim().toLowerCase() == question.answer.trim().toLowerCase();
   }
 
   ChoiceState _optionState(String option) {

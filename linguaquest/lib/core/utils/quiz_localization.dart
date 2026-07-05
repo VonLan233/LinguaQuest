@@ -45,7 +45,7 @@ Map<String, String> buildMeaningTranslations(
 /// [languageCode] using [translations]; returns the original when no mapping
 /// exists so nothing is ever dropped.
 String localizeMeaning(String value, Map<String, String> translations) {
-  return translations[value.trim()] ?? value;
+  return translations[value.trim()] ?? value.trim();
 }
 
 /// Returns a copy of [question] with its `options` and `answer` resolved to
