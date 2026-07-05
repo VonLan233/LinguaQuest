@@ -2717,13 +2717,13 @@ abstract class AppLocalizations {
   /// No description provided for @trainingPromptChineseSpelling.
   ///
   /// In en, this message translates to:
-  /// **'Spell the English word from the meaning: {meaning}'**
+  /// **'Spell the word from its meaning: {meaning}'**
   String trainingPromptChineseSpelling(Object meaning);
 
   /// No description provided for @trainingPromptAudioSpelling.
   ///
   /// In en, this message translates to:
-  /// **'Spell the English word after listening: {cue}'**
+  /// **'Spell the word after listening: {cue}'**
   String trainingPromptAudioSpelling(Object cue);
 
   /// No description provided for @trainingPromptContextSpelling.
@@ -2789,7 +2789,7 @@ abstract class AppLocalizations {
   /// No description provided for @trainingSpellingInputLabel.
   ///
   /// In en, this message translates to:
-  /// **'Enter English spelling'**
+  /// **'Type the word'**
   String get trainingSpellingInputLabel;
 
   /// No description provided for @trainingReviveConsumed.
@@ -2815,6 +2815,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Listen and choose the word you heard'**
   String get trainingPromptListening;
+
+  /// No description provided for @trainingListeningRevealHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Play the audio first, then the options appear.'**
+  String get trainingListeningRevealHint;
 
   /// No description provided for @learningPathTitle.
   ///

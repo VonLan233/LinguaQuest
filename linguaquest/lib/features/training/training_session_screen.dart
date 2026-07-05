@@ -85,6 +85,7 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
   bool _lastCorrect = false;
   bool _usedReviveForLastMistake = false;
   bool _isSubmitting = false;
+  bool _listeningRevealed = false;
   String? _selected;
   int _index = 0;
   int _attempts = 0;
@@ -206,6 +207,8 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
                           question: question,
                           mistakesOnly: widget.mistakesOnly,
                           language: state.currentLanguage,
+                          onListeningPlayed: () =>
+                              setState(() => _listeningRevealed = true),
                         ),
                         const SizedBox(height: 18),
                         if (game == TrainingGameType.spelling)
@@ -214,6 +217,12 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
                             checked: _checked,
                             isCorrect: _lastCorrect,
                             onChanged: () => setState(() {}),
+                          )
+                        else if (game == TrainingGameType.listeningSprint &&
+                            !_listeningRevealed &&
+                            !_checked)
+                          _ListeningRevealHint(
+                            message: l10n.trainingListeningRevealHint,
                           )
                         else
                           _ChoiceInput(
@@ -619,6 +628,7 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
       _checked = false;
       _lastCorrect = false;
       _usedReviveForLastMistake = false;
+      _listeningRevealed = false;
       _selected = null;
       _textController.clear();
       _questionStartedAt = DateTime.now();
@@ -800,7 +810,7 @@ class _TrainingStatusLine extends StatelessWidget {
               AppPill(
                 label: AppLocalizations.of(
                   context,
-                ).trainingSurvivalResources(revives, nodeRewards),
+                ).trainingSurvivalResources(nodeRewards, revives),
                 icon: AppIcons.favorite,
                 variant: PillVariant.streak,
               ),
@@ -825,12 +835,14 @@ class _TrainingPromptPanel extends StatelessWidget {
     required this.question,
     required this.mistakesOnly,
     this.language = '',
+    this.onListeningPlayed,
   });
 
   final TrainingGameType game;
   final QuizQuestion question;
   final bool mistakesOnly;
   final String language;
+  final VoidCallback? onListeningPlayed;
 
   @override
   Widget build(BuildContext context) {
@@ -869,6 +881,7 @@ class _TrainingPromptPanel extends StatelessWidget {
                 audioUSUrl: question.word.audioUSUrl,
                 compact: true,
                 language: language,
+                onPlayed: onListeningPlayed,
               ),
             ),
           ],
@@ -942,6 +955,33 @@ class _ChoiceInput extends StatelessWidget {
             ),
           ),
       ],
+    );
+  }
+}
+
+class _ListeningRevealHint extends StatelessWidget {
+  const _ListeningRevealHint({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return AppCard(
+      child: Row(
+        children: [
+          Icon(AppIcons.hearing, color: theme.colorScheme.primary),
+          const SizedBox(width: AppTokens.s12),
+          Expanded(
+            child: Text(
+              message,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

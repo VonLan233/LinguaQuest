@@ -1477,12 +1477,12 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String trainingPromptChineseSpelling(Object meaning) {
-    return 'Eja perkataan Inggeris daripada makna: $meaning';
+    return 'Eja perkataan daripada maknanya: $meaning';
   }
 
   @override
   String trainingPromptAudioSpelling(Object cue) {
-    return 'Eja perkataan Inggeris selepas mendengar: $cue';
+    return 'Eja perkataan selepas mendengar: $cue';
   }
 
   @override
@@ -1533,7 +1533,7 @@ class AppLocalizationsMs extends AppLocalizations {
   String get trainingRealSource => 'Sumber soalan sebenar';
 
   @override
-  String get trainingSpellingInputLabel => 'Masukkan ejaan Inggeris';
+  String get trainingSpellingInputLabel => 'Taip perkataan';
 
   @override
   String get trainingReviveConsumed => 'Satu nyawa telah digunakan. Teruskan.';
@@ -1548,6 +1548,10 @@ class AppLocalizationsMs extends AppLocalizations {
   @override
   String get trainingPromptListening =>
       'Dengar dan pilih perkataan yang anda dengar';
+
+  @override
+  String get trainingListeningRevealHint =>
+      'Main audio dahulu, kemudian pilihan muncul.';
 
   @override
   String get learningPathTitle => 'Laluan Pembelajaran';

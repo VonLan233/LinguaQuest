@@ -29,6 +29,7 @@ class PronunciationControls extends StatefulWidget {
     this.audioUSUrl = '',
     this.compact = false,
     this.language = '',
+    this.onPlayed,
     super.key,
   });
 
@@ -40,6 +41,10 @@ class PronunciationControls extends StatefulWidget {
   /// Learning-language code (e.g. 'ja', 'zh') of the owning word. Drives
   /// TTS locale and the single-button layout for Japanese.
   final String language;
+
+  /// Invoked when the user triggers playback (before audio actually starts),
+  /// so callers can reveal answer options only after a play attempt.
+  final VoidCallback? onPlayed;
 
   @override
   State<PronunciationControls> createState() => _PronunciationControlsState();
@@ -192,6 +197,7 @@ class _PronunciationControlsState extends State<PronunciationControls> {
 
   Future<void> _play(_PronunciationAccent accent, {bool slow = false}) async {
     if (_loadingAccent != null) return;
+    widget.onPlayed?.call();
     final view = View.of(context);
     final l10n = AppLocalizations.of(context);
     final accentLabel = _accentLabel(l10n, accent);

@@ -41,6 +41,11 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
     with SingleTickerProviderStateMixin {
   static const _autoAdvanceDelay = Duration(milliseconds: 1500);
 
+  // A wrong answer stays retryable, but only up to this many wrong attempts;
+  // then the question locks, reveals the answer and auto-advances so learners
+  // cannot brute-force by tapping every option until one is correct.
+  static const _maxWrongAttempts = 2;
+
   // Times the 1500ms pause before auto-advancing after a correct answer;
   // it drives no visual property, only the delay.
   late final AnimationController _autoAdvanceController;
@@ -50,11 +55,12 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
   final Set<String> _wrongTries = {};
   int _index = 0;
   int _correct = 0;
+  int _wrongCount = 0;
   String? _selected;
   bool _checked = false;
   bool _lastCorrect = false;
   bool _isSubmitting = false;
-  bool _lockedCorrect = false;
+  bool _locked = false;
 
   @override
   void initState() {
@@ -154,7 +160,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
                         _QuestionInput(
                           question: question,
                           selected: _selected,
-                          lockedCorrect: _lockedCorrect,
+                          locked: _locked,
                           wrongTries: _wrongTries,
                           controller: _textController,
                           onSelected: (value) =>
@@ -165,7 +171,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
                           const SizedBox(height: 14),
                           _FeedbackPanel(
                             isCorrect: _lastCorrect,
-                            revealAnswer: _lastCorrect,
+                            revealAnswer: _locked,
                             question: question,
                           ),
                         ],
@@ -179,7 +185,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
                     icon: AppIcons.check,
                     onPressed:
                         _hasAnswer(question) &&
-                            !_lockedCorrect &&
+                            !_locked &&
                             !_isSubmitting
                         ? () => _submitSpelling(lesson, question)
                         : null,
@@ -272,9 +278,20 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
     }
   }
 
+  /// Whether [wrongAttempts] wrong tries exhausts the retry budget for
+  /// [question]. Choice questions also lock once every distractor has been
+  /// tried, so the correct option can never be reached by elimination.
+  bool _reachedAttemptLimit(QuizQuestion question, int wrongAttempts) {
+    final distractors = question.options.length - 1;
+    final limit = distractors > 0 && distractors < _maxWrongAttempts
+        ? distractors
+        : _maxWrongAttempts;
+    return wrongAttempts >= limit;
+  }
+
   /// Instant judgment for a tapped choice [option].
   void _judge(Lesson lesson, QuizQuestion question, String option) {
-    if (_lockedCorrect) return;
+    if (_locked) return;
     final isCorrect =
         option.trim().toLowerCase() == question.answer.trim().toLowerCase();
     setState(() {
@@ -283,12 +300,15 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
       _checked = true;
       _lastCorrect = isCorrect;
       if (isCorrect) {
-        _lockedCorrect = true;
-      } else {
-        _wrongTries.add(option);
+        _locked = true;
+      } else if (_wrongTries.add(option)) {
+        // Only a distinct distractor consumes the retry budget, so repeatedly
+        // tapping the same wrong option can't fast-track the reveal.
+        _wrongCount++;
+        if (_reachedAttemptLimit(question, _wrongCount)) _locked = true;
       }
     });
-    if (isCorrect) {
+    if (_locked) {
       _autoAdvanceController
         ..reset()
         ..forward().whenComplete(() {
@@ -300,24 +320,31 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
 
   /// Submit handler for spelling questions (keeps the explicit check button).
   void _submitSpelling(Lesson lesson, QuizQuestion question) {
-    if (_lockedCorrect) return;
+    if (_locked) return;
     final answer = _textController.text.trim();
     if (answer.isEmpty) return;
     final isCorrect =
         normalizePinyin(answer) == normalizePinyin(question.answer);
+    final exhausted =
+        !isCorrect && _reachedAttemptLimit(question, _wrongCount + 1);
     setState(() {
       _recordAttempt(question, isCorrect);
       _checked = true;
       _lastCorrect = isCorrect;
       if (isCorrect) {
-        _lockedCorrect = true;
+        _locked = true;
       } else {
-        // Hide the feedback panel so the still-enabled field invites an
-        // immediate retry (the field stays enabled via !_lockedCorrect).
-        _checked = false;
+        _wrongCount++;
+        if (exhausted) {
+          _locked = true;
+        } else {
+          // Hide the feedback panel so the still-enabled field invites an
+          // immediate retry (the field stays enabled via !_locked).
+          _checked = false;
+        }
       }
     });
-    if (isCorrect) {
+    if (isCorrect || exhausted) {
       _autoAdvanceController
         ..reset()
         ..forward().whenComplete(() {
@@ -369,7 +396,8 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
       _selected = null;
       _checked = false;
       _lastCorrect = false;
-      _lockedCorrect = false;
+      _locked = false;
+      _wrongCount = 0;
       _wrongTries.clear();
       _textController.clear();
     });
@@ -464,7 +492,7 @@ class _QuestionInput extends StatelessWidget {
   const _QuestionInput({
     required this.question,
     required this.selected,
-    required this.lockedCorrect,
+    required this.locked,
     required this.wrongTries,
     required this.controller,
     required this.onSelected,
@@ -473,7 +501,7 @@ class _QuestionInput extends StatelessWidget {
 
   final QuizQuestion question;
   final String? selected;
-  final bool lockedCorrect;
+  final bool locked;
   final Set<String> wrongTries;
   final TextEditingController controller;
   final ValueChanged<String> onSelected;
@@ -484,7 +512,7 @@ class _QuestionInput extends StatelessWidget {
     if (question.type == QuizQuestionType.spelling) {
       return TextField(
         controller: controller,
-        enabled: !lockedCorrect,
+        enabled: !locked,
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context).quizInputWord,
           prefixIcon: const Icon(AppIcons.edit),
@@ -502,7 +530,7 @@ class _QuestionInput extends StatelessWidget {
               letter: String.fromCharCode(65 + i),
               text: question.options[i],
               state: _optionState(question.options[i]),
-              onTap: lockedCorrect
+              onTap: locked
                   ? null
                   : () => onSelected(question.options[i]),
             ),
@@ -516,7 +544,7 @@ class _QuestionInput extends StatelessWidget {
   }
 
   ChoiceState _optionState(String option) {
-    if (lockedCorrect && _isCorrectOption(option)) return ChoiceState.correct;
+    if (locked && _isCorrectOption(option)) return ChoiceState.correct;
     if (wrongTries.contains(option)) return ChoiceState.wrong;
     return ChoiceState.idle;
   }
@@ -566,13 +594,27 @@ class _FeedbackPanel extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Label goes purely through l10n; the (possibly other-language)
+                // explanation is kept in its own run below so the fixed prefix
+                // and the content are never concatenated into mixed-language text.
                 Text(
-                  revealAnswer
-                      ? '${l10n.quizCorrect}${question.explanation}'
+                  isCorrect
+                      ? l10n.quizCorrect
+                      : revealAnswer
+                      ? l10n.quizWrong
                       : '${l10n.quizWrong}${l10n.quizRetry}',
                   style: TextStyle(color: color),
                 ),
                 if (revealAnswer) ...[
+                  if (question.explanation.isNotEmpty) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      question.explanation,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: 8),
                   Text(
                     '${l10n.quizReinforce}${question.word.word} · ${question.word.primaryDefinitionFor(Localizations.localeOf(context).languageCode)}',

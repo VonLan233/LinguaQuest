@@ -1483,12 +1483,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String trainingPromptChineseSpelling(Object meaning) {
-    return 'Spell the English word from the meaning: $meaning';
+    return 'Spell the word from its meaning: $meaning';
   }
 
   @override
   String trainingPromptAudioSpelling(Object cue) {
-    return 'Spell the English word after listening: $cue';
+    return 'Spell the word after listening: $cue';
   }
 
   @override
@@ -1539,7 +1539,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get trainingRealSource => 'Real question source';
 
   @override
-  String get trainingSpellingInputLabel => 'Enter English spelling';
+  String get trainingSpellingInputLabel => 'Type the word';
 
   @override
   String get trainingReviveConsumed => 'One revive was consumed. Keep going.';
@@ -1552,6 +1552,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get trainingPromptListening => 'Listen and choose the word you heard';
+
+  @override
+  String get trainingListeningRevealHint =>
+      'Play the audio first, then the options appear.';
 
   @override
   String get learningPathTitle => 'Learning Path';

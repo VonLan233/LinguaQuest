@@ -1394,12 +1394,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String trainingPromptChineseSpelling(Object meaning) {
-    return '看中文拼写英文：$meaning';
+    return '根据释义拼写单词：$meaning';
   }
 
   @override
   String trainingPromptAudioSpelling(Object cue) {
-    return '听音后拼写英文：$cue';
+    return '听音后拼写单词：$cue';
   }
 
   @override
@@ -1449,7 +1449,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get trainingRealSource => '真实题源';
 
   @override
-  String get trainingSpellingInputLabel => '输入英文拼写';
+  String get trainingSpellingInputLabel => '输入单词';
 
   @override
   String get trainingReviveConsumed => '已消耗一次复活机会，继续闯关。';
@@ -1462,6 +1462,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get trainingPromptListening => '听音频，选择你听到的词';
+
+  @override
+  String get trainingListeningRevealHint => '先播放音频，随后显示选项。';
 
   @override
   String get learningPathTitle => '学习路径';
