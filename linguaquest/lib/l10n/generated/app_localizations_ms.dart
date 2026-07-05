@@ -247,8 +247,7 @@ class AppLocalizationsMs extends AppLocalizations {
   String get onboardingTagStreak => 'Streak harian';
 
   @override
-  String get splashTagline =>
-      'Kad perkataan bergambar, laluan jelas, ulang kaji pintar.';
+  String get splashTagline => 'Kad perkataan, laluan jelas, ulang kaji pintar.';
 
   @override
   String get studyNewScreenTitle => 'Perkataan baharu';
@@ -539,11 +538,11 @@ class AppLocalizationsMs extends AppLocalizations {
   String get analyticsAccuracy => 'Ketepatan';
 
   @override
-  String get onboardingFeatureImageCards => 'Kad Perkataan Bergambar';
+  String get onboardingFeatureImageCards => 'Kad Perkataan';
 
   @override
   String get onboardingFeatureImageCardsDesc =>
-      'Perkataan, makna, contoh, tahap penguasaan, dan petunjuk visual disambungkan dalam satu aliran pembelajaran.';
+      'Perkataan, makna, dan contoh disambungkan dalam satu aliran pembelajaran.';
 
   @override
   String get onboardingFeaturePath => 'Laluan Jelas';
@@ -583,6 +582,9 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get goalSetupTarget => 'Sasaran';
+
+  @override
+  String get goalSetupPlanBy => 'Rancang ikut';
 
   @override
   String get goalSetupDailyGoal => 'Matlamat Harian';
@@ -2826,7 +2828,7 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get aboutIntro =>
-      'LinguaQuest menggabungkan kad perkataan visual, laluan pembelajaran, ulangkaji berjarak, XP, rentetan kehadiran, dan kad perkataan peribadi dalam aplikasi pembelajaran Inggeris berfokus mudah alih.';
+      'LinguaQuest menggabungkan kad perkataan, laluan pembelajaran, ulangkaji berjarak, XP, rentetan kehadiran, dan kad perkataan peribadi dalam aplikasi pembelajaran Inggeris berfokus mudah alih.';
 
   @override
   String get aboutGoalTitle => 'Matlamat projek';
@@ -2847,7 +2849,7 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get aboutCoreSubtitle =>
-      'Perancangan matlamat, kosa kata visual, latihan kuiz, jadual ulangkaji, dan kad perkataan peribadi.';
+      'Perancangan matlamat, pembinaan kosa kata, latihan kuiz, jadual ulangkaji, dan kad perkataan peribadi.';
 
   @override
   String get aboutPrivacyTitle => 'Privasi';

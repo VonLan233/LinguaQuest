@@ -565,7 +565,7 @@ abstract class AppLocalizations {
   /// No description provided for @splashTagline.
   ///
   /// In en, this message translates to:
-  /// **'Image word cards, clear paths, smart review.'**
+  /// **'Word cards, clear paths, smart review.'**
   String get splashTagline;
 
   /// No description provided for @studyNewScreenTitle.
@@ -1069,7 +1069,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingFeatureImageCards.
   ///
   /// In en, this message translates to:
-  /// **'Image Word Cards'**
+  /// **'Word Cards'**
   String get onboardingFeatureImageCards;
 
   /// No description provided for @onboardingFeatureImageCardsDesc.
@@ -1149,6 +1149,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Target'**
   String get goalSetupTarget;
+
+  /// No description provided for @goalSetupPlanBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan by'**
+  String get goalSetupPlanBy;
 
   /// No description provided for @goalSetupDailyGoal.
   ///
@@ -5062,7 +5068,7 @@ abstract class AppLocalizations {
   /// No description provided for @aboutIntro.
   ///
   /// In en, this message translates to:
-  /// **'LinguaQuest brings visual word cards, learning paths, spaced review, XP, streaks, and personal word cards into a mobile-first English learning app.'**
+  /// **'LinguaQuest brings word cards, learning paths, spaced review, XP, streaks, and personal word cards into a mobile-first English learning app.'**
   String get aboutIntro;
 
   /// No description provided for @aboutGoalTitle.
@@ -5098,7 +5104,7 @@ abstract class AppLocalizations {
   /// No description provided for @aboutCoreSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Goal planning, visual vocabulary, quiz practice, review scheduling, and personal word cards.'**
+  /// **'Goal planning, vocabulary building, quiz practice, review scheduling, and personal word cards.'**
   String get aboutCoreSubtitle;
 
   /// No description provided for @aboutPrivacyTitle.

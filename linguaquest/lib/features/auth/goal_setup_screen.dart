@@ -19,6 +19,10 @@ import '../../data/models/lesson.dart';
 import '../../data/models/study_plan.dart';
 import '../../l10n/generated/app_localizations.dart';
 
+/// The daily-word-count plan and the deadline plan are mutually exclusive: the
+/// learner picks exactly one, and only that mode's input is shown/saved.
+enum _GoalMode { daily, deadline }
+
 class GoalSetupScreen extends ConsumerStatefulWidget {
   const GoalSetupScreen({super.key});
 
@@ -31,6 +35,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
   String _level = 'Intermediate';
   int _dailyGoal = 10;
   DateTime? _deadline;
+  _GoalMode _mode = _GoalMode.daily;
   var _initializedFromState = false;
   late final ProviderSubscription<AppState> _stateSubscription;
 
@@ -74,9 +79,9 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
               .where((lesson) => state.completedLessonIds.contains(lesson.id))
               .fold<int>(0, (total, lesson) => total + lesson.words.length)
         : 0;
-    final plannedDailyWords = _deadline == null
-        ? null
-        : _dailyWordsForDeadline(totalWords - completedWords);
+    final plannedDailyWords = (_mode == _GoalMode.deadline && _deadline != null)
+        ? _dailyWordsForDeadline(totalWords - completedWords)
+        : null;
     final dailyWords = plannedDailyWords ?? _dailyGoal;
     return Scaffold(
       appBar: AppBar(
@@ -135,61 +140,71 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
               onTap: () => showLanguageWordbookPicker(context),
             ),
             const SizedBox(height: 24),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.goalSetupDailyGoal,
-                  style: Theme.of(context).textTheme.titleMedium,
+            Text(
+              l10n.goalSetupPlanBy,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8),
+            SegmentedButton<_GoalMode>(
+              segments: [
+                ButtonSegment(
+                  value: _GoalMode.daily,
+                  icon: const Icon(AppIcons.today),
+                  label: Text(l10n.goalSetupDailyGoal),
                 ),
-                const SizedBox(height: 8),
-                _ChoiceList<int>(
-                  values: goals,
-                  selected: _dailyGoal,
-                  labelFor: (goal) => '$goal ${l10n.commonWords}',
-                  onSelected: (goal) => setState(() => _dailyGoal = goal),
+                ButtonSegment(
+                  value: _GoalMode.deadline,
+                  icon: const Icon(AppIcons.event),
+                  label: Text(l10n.goalSetupDeadlinePlan),
                 ),
               ],
+              selected: {_mode},
+              showSelectedIcon: false,
+              onSelectionChanged: (selection) =>
+                  setState(() => _mode = selection.first),
             ),
-            const SizedBox(height: 24),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.goalSetupDeadlinePlan,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  _deadline == null
-                      ? l10n.goalSetupDeadlineHint
-                      : '${formatShortDate(_deadline!)} · ${plannedDailyWords ?? _dailyGoal} ${l10n.commonWords}/${l10n.commonDay}',
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: AppSecondaryButton(
-                        onPressed: _pickDeadline,
-                        icon: AppIcons.event,
-                        label: _deadline == null
-                            ? l10n.goalSetupPickDate
-                            : l10n.goalSetupChangeDate,
+            const SizedBox(height: 16),
+            if (_mode == _GoalMode.daily)
+              _ChoiceList<int>(
+                values: goals,
+                selected: _dailyGoal,
+                labelFor: (goal) => '$goal ${l10n.commonWords}',
+                onSelected: (goal) => setState(() => _dailyGoal = goal),
+              )
+            else
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _deadline == null
+                        ? l10n.goalSetupDeadlineHint
+                        : '${formatShortDate(_deadline!)} · ${plannedDailyWords ?? _dailyGoal} ${l10n.commonWords}/${l10n.commonDay}',
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: AppSecondaryButton(
+                          onPressed: _pickDeadline,
+                          icon: AppIcons.event,
+                          label: _deadline == null
+                              ? l10n.goalSetupPickDate
+                              : l10n.goalSetupChangeDate,
+                        ),
                       ),
-                    ),
-                    if (_deadline != null) ...[
-                      const SizedBox(width: 10),
-                      QuestIconButton(
-                        tooltip: l10n.goalSetupClearDate,
-                        onPressed: () => setState(() => _deadline = null),
-                        icon: AppIcons.close,
-                        color: AppTheme.coral,
-                      ),
+                      if (_deadline != null) ...[
+                        const SizedBox(width: 10),
+                        QuestIconButton(
+                          tooltip: l10n.goalSetupClearDate,
+                          onPressed: () => setState(() => _deadline = null),
+                          icon: AppIcons.close,
+                          color: AppTheme.coral,
+                        ),
+                      ],
                     ],
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
             const SizedBox(height: 28),
             AppPrimaryButton(
               onPressed: _save,
@@ -213,6 +228,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
       _level = user.level;
       _dailyGoal = state.studyPlan?.dailyNewTarget ?? user.dailyGoal;
       _deadline = state.studyPlan?.targetFinishDate;
+      _mode = _deadline == null ? _GoalMode.daily : _GoalMode.deadline;
       _initializedFromState = true;
     }
 
@@ -231,13 +247,15 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
     final targetExam = state.currentWordBookId.isEmpty
         ? _target
         : targetForStudyBookId(state.currentWordBookId);
+    // Mutually exclusive: only the selected mode is persisted. Daily mode
+    // clears the deadline so it cannot silently override the daily goal.
     final succeeded = await ref
         .read(appControllerProvider.notifier)
         .completeGoalSetup(
           targetExam: targetExam,
           level: _level,
           dailyGoal: _dailyGoal,
-          deadline: _deadline,
+          deadline: _mode == _GoalMode.deadline ? _deadline : null,
         );
     if (!mounted) return;
     if (!succeeded) return;

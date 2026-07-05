@@ -240,7 +240,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingTagStreak => '连续打卡';
 
   @override
-  String get splashTagline => '图像词卡、清晰路径、智能复习。';
+  String get splashTagline => '单词卡、清晰路径、智能复习。';
 
   @override
   String get studyNewScreenTitle => '新学';
@@ -508,7 +508,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get analyticsAccuracy => '正确率';
 
   @override
-  String get onboardingFeatureImageCards => '图像词卡';
+  String get onboardingFeatureImageCards => '单词卡';
 
   @override
   String get onboardingFeatureImageCardsDesc => '单词、释义、例句串联学习';
@@ -548,6 +548,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get goalSetupTarget => '目标';
+
+  @override
+  String get goalSetupPlanBy => '规划方式';
 
   @override
   String get goalSetupDailyGoal => '每日目标';
@@ -2668,7 +2671,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get aboutIntro =>
-      'LinguaQuest 将图像词卡、学习路径、间隔复习、XP、连续打卡和个人生词卡整合到一个移动优先的英语学习应用中。';
+      'LinguaQuest 将单词卡、学习路径、间隔复习、XP、连续打卡和个人生词卡整合到一个移动优先的英语学习应用中。';
 
   @override
   String get aboutGoalTitle => '项目目标';
@@ -2686,7 +2689,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get aboutCoreTitle => '核心体验';
 
   @override
-  String get aboutCoreSubtitle => '目标规划、视觉词汇、测验练习、复习排程和个人词卡。';
+  String get aboutCoreSubtitle => '目标规划、词汇学习、测验练习、复习排程和个人词卡。';
 
   @override
   String get aboutPrivacyTitle => '隐私';

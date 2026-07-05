@@ -90,6 +90,19 @@ class HighlightVocab {
   bool get isEmpty => surfacesLongestFirst.isEmpty;
 }
 
+/// Single-kana Japanese grammatical particles that must NOT become highlightable
+/// surfaces via a content word's `kana`. Their single-mora homophones (e.g. 歯
+/// `ha` "tooth" → kana は) would otherwise mis-highlight the far more common
+/// particle は/を/… in running text as a content word (SVV D-07).
+///
+/// ponytail: naive fixed particle set — no morphological analyzer. Covers only
+/// the frequent single-kana particles that collide with single-mora content
+/// words; multi-kana readings (e.g. いきます) are unaffected and still match, and
+/// the word's kanji surface (歯) still highlights. Upgrade path: swap for a real
+/// ja tokenizer (e.g. kuromoji) if genuinely-intended single-kana entries ever
+/// need to match.
+const _jaParticleSurfaces = {'は', 'が', 'を', 'に', 'へ', 'と', 'も', 'の'};
+
 /// Builds the highlightable-surface index from the article's curated vocab and
 /// the current wordbook words (matching on `word` surface and, for ja, `kana`).
 ///
@@ -113,7 +126,7 @@ HighlightVocab buildHighlightVocab({
       if (w.word.isNotEmpty) {
         byWord.putIfAbsent(w.word, () => w);
       }
-      if (w.kana.isNotEmpty) {
+      if (w.kana.isNotEmpty && !_jaParticleSurfaces.contains(w.kana)) {
         byWord.putIfAbsent(w.kana, () => w);
       }
     }

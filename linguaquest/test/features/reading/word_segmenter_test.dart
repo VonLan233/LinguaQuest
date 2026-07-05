@@ -123,6 +123,35 @@ void main() {
       expect(tokens[2].text, '水');
     });
 
+    test('does not match the particle は as the content word 歯 (tooth)', () {
+      // SVV D-07: 歯 (ha, "tooth") carries kana は, which collides with the
+      // Japanese topic particle は. The particle in running text must stay plain
+      // and never be highlighted as 歯/tooth.
+      final book = _book([
+        _word('w1', '歯', kana: 'は', meaning: 'tooth'),
+        _word('w2', '行', kana: 'いきます', meaning: 'to go'),
+      ]);
+      final vocab =
+          buildHighlightVocab(article: _article(const []), wordBook: book);
+
+      // The bare particle kana must not be a highlightable surface…
+      expect(vocab.byWord.keys, isNot(contains('は')));
+      // …while the kanji surface and the multi-kana reading still are.
+      expect(vocab.byWord.keys, containsAll(<String>['歯', 'いきます']));
+
+      final tokens = segmentParagraph(
+        text: 'これは歯です',
+        vocab: vocab,
+        userWords: const [],
+        reviewWords: const [],
+      );
+      final byText = {for (final t in tokens) t.text: t};
+      // Particle は → plain, kanji 歯 → matched (tooth).
+      expect(tokens.firstWhere((t) => t.text == 'は').isMatched, isFalse);
+      expect(byText['歯']!.isMatched, isTrue);
+      expect(byText['歯']!.word?.meaning, 'tooth');
+    });
+
     test('matches japanese kana surfaces', () {
       final book = _book([_word('w1', '行', kana: 'いきます', meaning: 'to go')]);
       final vocab =

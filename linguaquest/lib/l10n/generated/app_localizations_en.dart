@@ -245,7 +245,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingTagStreak => 'Daily streak';
 
   @override
-  String get splashTagline => 'Image word cards, clear paths, smart review.';
+  String get splashTagline => 'Word cards, clear paths, smart review.';
 
   @override
   String get studyNewScreenTitle => 'New words';
@@ -532,7 +532,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get analyticsAccuracy => 'Accuracy';
 
   @override
-  String get onboardingFeatureImageCards => 'Image Word Cards';
+  String get onboardingFeatureImageCards => 'Word Cards';
 
   @override
   String get onboardingFeatureImageCardsDesc =>
@@ -576,6 +576,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get goalSetupTarget => 'Target';
+
+  @override
+  String get goalSetupPlanBy => 'Plan by';
 
   @override
   String get goalSetupDailyGoal => 'Daily Goal';
@@ -2817,7 +2820,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aboutIntro =>
-      'LinguaQuest brings visual word cards, learning paths, spaced review, XP, streaks, and personal word cards into a mobile-first English learning app.';
+      'LinguaQuest brings word cards, learning paths, spaced review, XP, streaks, and personal word cards into a mobile-first English learning app.';
 
   @override
   String get aboutGoalTitle => 'Project goal';
@@ -2838,7 +2841,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aboutCoreSubtitle =>
-      'Goal planning, visual vocabulary, quiz practice, review scheduling, and personal word cards.';
+      'Goal planning, vocabulary building, quiz practice, review scheduling, and personal word cards.';
 
   @override
   String get aboutPrivacyTitle => 'Privacy';
