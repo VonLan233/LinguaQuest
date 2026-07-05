@@ -209,6 +209,9 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
                           language: state.currentLanguage,
                           onListeningPlayed: () =>
                               setState(() => _listeningRevealed = true),
+                          hideWordCue:
+                              game == TrainingGameType.listeningSprint &&
+                              !_checked,
                         ),
                         const SizedBox(height: 18),
                         if (game == TrainingGameType.spelling)
@@ -836,6 +839,7 @@ class _TrainingPromptPanel extends StatelessWidget {
     required this.mistakesOnly,
     this.language = '',
     this.onListeningPlayed,
+    this.hideWordCue = false,
   });
 
   final TrainingGameType game;
@@ -843,6 +847,10 @@ class _TrainingPromptPanel extends StatelessWidget {
   final bool mistakesOnly;
   final String language;
   final VoidCallback? onListeningPlayed;
+
+  /// Hides the target word's character in the top cue badge (listening
+  /// questions before the answer is committed) so it cannot leak the answer.
+  final bool hideWordCue;
 
   @override
   Widget build(BuildContext context) {
@@ -855,7 +863,11 @@ class _TrainingPromptPanel extends StatelessWidget {
     return AppCard(
       child: Column(
         children: [
-          ImageCueBadge(cue: question.word.imageCue, size: 104),
+          ImageCueBadge(
+            cue: question.word.imageCue,
+            size: 104,
+            icon: hideWordCue ? TrainingGameType.listeningSprint.icon : null,
+          ),
           const SizedBox(height: 14),
           Text(
             question.prompt,

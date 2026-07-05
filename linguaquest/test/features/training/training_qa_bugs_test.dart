@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:linguaquest/core/state/app_controller.dart';
 import 'package:linguaquest/core/state/app_state.dart';
+import 'package:linguaquest/core/widgets/learning_badges.dart';
 import 'package:linguaquest/core/widgets/word_choice_button.dart';
 import 'package:linguaquest/data/models/custom_word.dart';
 import 'package:linguaquest/features/training/training_session_screen.dart';
@@ -110,6 +111,11 @@ void main() {
       // Before playing the audio, the candidate word options (which include the
       // answer text) must not be exposed.
       expect(find.byType(WordChoiceButton), findsNothing);
+
+      // The top cue badge must also hide the target word's character (it would
+      // leak the answer); it renders a neutral icon instead until answered.
+      final badge = tester.widget<ImageCueBadge>(find.byType(ImageCueBadge));
+      expect(badge.icon, isNotNull);
 
       // Playing the audio reveals the options so the user can still answer.
       await tester.tap(find.text('Audio'));

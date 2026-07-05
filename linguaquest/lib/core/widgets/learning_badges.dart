@@ -47,10 +47,14 @@ class PillLabel extends StatelessWidget {
 }
 
 class ImageCueBadge extends StatelessWidget {
-  const ImageCueBadge({required this.cue, this.size = 64, super.key});
+  const ImageCueBadge({required this.cue, this.size = 64, this.icon, super.key});
 
   final String cue;
   final double size;
+
+  /// When set, renders this icon instead of [cue]. Used to keep a listening
+  /// question's target word hidden (the character would leak the answer).
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +71,9 @@ class ImageCueBadge extends StatelessWidget {
         ),
       ),
       alignment: Alignment.center,
-      child: Text(cue, style: TextStyle(fontSize: size * 0.48)),
+      child: icon != null
+          ? Icon(icon, size: size * 0.5)
+          : Text(cue, style: TextStyle(fontSize: size * 0.48)),
     );
   }
 }
