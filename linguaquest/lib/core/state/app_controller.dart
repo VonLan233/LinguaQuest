@@ -194,6 +194,7 @@ class AppController extends Notifier<AppState> {
   // P2b scope-qualified key builders
   static String _scopedCompletedKey(String scope) => 'linguaquest.completedLessons.$scope';
   static String _scopedTodayLessonsKey(String scope) => 'linguaquest.today.lessons.$scope';
+  static String _scopedTodayLearnedKey(String scope) => 'linguaquest.today.learned.$scope';
   static String _scopedTodayReviewsKey(String scope) => 'linguaquest.today.reviews.$scope';
   static String _scopedTodayTrainingKey(String scope) => 'linguaquest.today.training.$scope';
   static String _scopedTodayTrainingGamesKey(String scope) => 'linguaquest.today.training.games.$scope';
@@ -264,6 +265,9 @@ class AppController extends Notifier<AppState> {
       final hasTodayState = prefs.getString(_todayDateKey) == todayKey;
       final localTodayCompletedLessonIds = hasTodayState
           ? _stringSet(prefs, _scopedTodayLessonsKey(bootstrapScope))
+          : <String>{};
+      final localTodayLearnedWordIds = hasTodayState
+          ? _stringSet(prefs, _scopedTodayLearnedKey(bootstrapScope))
           : <String>{};
       final localTodayReviewWordIds = hasTodayState
           ? _stringSet(prefs, _scopedTodayReviewsKey(bootstrapScope))
@@ -352,6 +356,7 @@ class AppController extends Notifier<AppState> {
         studyPlan: studyPlan,
         completedLessonIds: completedLessonIds,
         todayCompletedLessonIds: todayCompletedLessonIds,
+        todayLearnedWordIds: localTodayLearnedWordIds,
         todayReviewWordIds: todayReviewWordIds,
         todayTrainingSessionIds: todayTrainingSessionIds,
         todayTrainingGameIds: localTodayTrainingGameIds,
@@ -677,6 +682,7 @@ class AppController extends Notifier<AppState> {
           )
           .toList();
       await _saveLessonProgress(<String>{}, <String>{}, resetAt);
+      await _saveTodayLearnedWords(<String>{}, resetAt);
       await _saveTodayReviewWords(<String>{}, resetAt);
       state = state.copyWith(
         studyPlan: resetPlan,
@@ -684,6 +690,7 @@ class AppController extends Notifier<AppState> {
         customWords: resetWords,
         completedLessonIds: {},
         todayCompletedLessonIds: {},
+        todayLearnedWordIds: {},
         todayReviewWordIds: {},
         lessons: _applyLessonProgression(state.lessons, <String>{}),
       );
@@ -703,6 +710,9 @@ class AppController extends Notifier<AppState> {
       final hasTodayState = prefs.getString(_todayDateKey) == todayKey;
       final scopedTodayLessons = hasTodayState
           ? _stringSet(prefs, _scopedTodayLessonsKey(targetScope))
+          : <String>{};
+      final scopedTodayLearned = hasTodayState
+          ? _stringSet(prefs, _scopedTodayLearnedKey(targetScope))
           : <String>{};
       final scopedTodayReviews = hasTodayState
           ? _stringSet(prefs, _scopedTodayReviewsKey(targetScope))
@@ -755,6 +765,7 @@ class AppController extends Notifier<AppState> {
         reminderSettings: reminderSettings,
         completedLessonIds: scopedCompleted,
         todayCompletedLessonIds: scopedTodayLessons,
+        todayLearnedWordIds: scopedTodayLearned,
         todayReviewWordIds: scopedTodayReviews,
         todayTrainingSessionIds: scopedTodayTraining,
         todayClaimedRewardIds: scopedTodayRewards,
@@ -1046,6 +1057,18 @@ class AppController extends Notifier<AppState> {
         result: result,
         now: now,
       );
+      // Formal-course words count toward "today's learning" the same way mixed
+      // sessions do, keeping the home counter and hasStudyToday consistent
+      // across both study paths. Training packs are not new learning, so skip.
+      final todayLearnedWordIds = isTraining
+          ? todayState.learnedWordIds
+          : {
+              ...todayState.learnedWordIds,
+              for (final word in learnedUserWords) word.wordId,
+            };
+      if (!isTraining) {
+        await _saveTodayLearnedWords(todayLearnedWordIds, now);
+      }
       state = state.copyWith(
         user: updatedUser,
         lessons: shouldAdvanceLesson
@@ -1055,6 +1078,7 @@ class AppController extends Notifier<AppState> {
             ? completedLessonIds
             : state.completedLessonIds,
         todayCompletedLessonIds: todayCompletedLessonIds,
+        todayLearnedWordIds: todayLearnedWordIds,
         todayTrainingSessionIds: todayTrainingSessionIds,
         userWords: _mergeUserWords(state.userWords, learnedUserWords),
         lastResult: resolvedResult,
@@ -1419,12 +1443,18 @@ class AppController extends Notifier<AppState> {
         mistakeWordIds: mistakeWordIds.toSet(),
         now: now,
       );
+      final todayLearnedWordIds = {
+        ...state.todayLearnedWordIds,
+        for (final word in learnedUserWords) word.wordId,
+      };
       await _saveLessonProgress(completedLessonIds, todayCompletedLessonIds, now);
+      await _saveTodayLearnedWords(todayLearnedWordIds, now);
       state = state.copyWith(
         user: updatedUser,
         lessons: _applyLessonProgression(state.lessons, completedLessonIds),
         completedLessonIds: completedLessonIds,
         todayCompletedLessonIds: todayCompletedLessonIds,
+        todayLearnedWordIds: todayLearnedWordIds,
         userWords: _mergeUserWords(state.userWords, learnedUserWords),
       );
       await refreshNotifications();
@@ -2487,6 +2517,19 @@ class AppController extends Notifier<AppState> {
     );
   }
 
+  Future<void> _saveTodayLearnedWords(
+    Set<String> todayLearnedWordIds,
+    DateTime now,
+  ) async {
+    final scope = progressScope(state.currentLanguage, state.currentWordBookId);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_todayDateKey, _dateKey(now));
+    await prefs.setStringList(
+      _scopedTodayLearnedKey(scope),
+      todayLearnedWordIds.toList(),
+    );
+  }
+
   Future<void> _saveTodayReviewWords(
     Set<String> todayReviewWordIds,
     DateTime now,
@@ -2538,6 +2581,7 @@ class AppController extends Notifier<AppState> {
     if (prefs.getString(_todayDateKey) == todayKey) {
       return _TodayStateSnapshot(
         completedLessonIds: {...state.todayCompletedLessonIds},
+        learnedWordIds: {...state.todayLearnedWordIds},
         reviewWordIds: {...state.todayReviewWordIds},
         trainingSessionIds: {...state.todayTrainingSessionIds},
         claimedRewardIds: {...state.todayClaimedRewardIds},
@@ -2545,18 +2589,21 @@ class AppController extends Notifier<AppState> {
     }
 
     await prefs.remove(_scopedTodayLessonsKey(scope));
+    await prefs.remove(_scopedTodayLearnedKey(scope));
     await prefs.remove(_scopedTodayReviewsKey(scope));
     await prefs.remove(_scopedTodayTrainingKey(scope));
     await prefs.remove(_scopedTodayRewardsKey(scope));
     await prefs.setString(_todayDateKey, todayKey);
     state = state.copyWith(
       todayCompletedLessonIds: {},
+      todayLearnedWordIds: {},
       todayReviewWordIds: {},
       todayTrainingSessionIds: {},
       todayClaimedRewardIds: {},
     );
     return const _TodayStateSnapshot(
       completedLessonIds: {},
+      learnedWordIds: {},
       reviewWordIds: {},
       trainingSessionIds: {},
       claimedRewardIds: {},
@@ -3205,12 +3252,14 @@ class _PointGrantOutcome {
 class _TodayStateSnapshot {
   const _TodayStateSnapshot({
     required this.completedLessonIds,
+    required this.learnedWordIds,
     required this.reviewWordIds,
     required this.trainingSessionIds,
     required this.claimedRewardIds,
   });
 
   final Set<String> completedLessonIds;
+  final Set<String> learnedWordIds;
   final Set<String> reviewWordIds;
   final Set<String> trainingSessionIds;
   final Set<String> claimedRewardIds;

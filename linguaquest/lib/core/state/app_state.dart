@@ -114,6 +114,7 @@ class AppState {
     required this.reminderSettings,
     required this.completedLessonIds,
     required this.todayCompletedLessonIds,
+    required this.todayLearnedWordIds,
     required this.todayReviewWordIds,
     required this.todayTrainingSessionIds,
     required this.todayTrainingGameIds,
@@ -162,6 +163,12 @@ class AppState {
   final StudyPlan? studyPlan;
   final Set<String> completedLessonIds;
   final Set<String> todayCompletedLessonIds;
+
+  /// Ids of the new words learned *today* (from mixed sessions and formal
+  /// lessons alike). Unlike [todayCompletedLessonIds] this is not tied to the
+  /// 3-word lesson chunk, so a session that studies [dailyNewTarget] new words
+  /// is counted in full by [todayLearningWords].
+  final Set<String> todayLearnedWordIds;
   final Set<String> todayReviewWordIds;
   final Set<String> todayTrainingSessionIds;
   final Set<String> todayTrainingGameIds;
@@ -280,9 +287,19 @@ class AppState {
       if (todayCompletedLessonIds.contains(lesson.id)) lesson.id,
   };
 
-  int get todayLearningWords => formalLessons
-      .where((lesson) => todayCompletedLessonIds.contains(lesson.id))
-      .fold(0, (total, lesson) => total + lesson.words.length);
+  /// New words counted toward *today's* learning: the union of every word in
+  /// today's completed formal lessons and [todayLearnedWordIds] (the new words
+  /// a mixed session actually studied). Taking the union — rather than summing
+  /// lesson chunks — means a session that studies [dailyNewTarget] new words is
+  /// counted in full (bug 6.1: it was pinned to the 3-word current lesson) while
+  /// staying backward-compatible with progress persisted only as completed
+  /// lessons. Deduping by word id prevents a word from being counted twice.
+  int get todayLearningWords => <String>{
+    for (final lesson in formalLessons)
+      if (todayCompletedLessonIds.contains(lesson.id))
+        for (final word in lesson.words) word.id,
+    ...todayLearnedWordIds,
+  }.length;
 
   double get learningPathProgress {
     if (totalLearningWords == 0) return 0;
@@ -362,6 +379,7 @@ class AppState {
     bool clearStudyPlan = false,
     Set<String>? completedLessonIds,
     Set<String>? todayCompletedLessonIds,
+    Set<String>? todayLearnedWordIds,
     Set<String>? todayReviewWordIds,
     Set<String>? todayTrainingSessionIds,
     Set<String>? todayTrainingGameIds,
@@ -412,6 +430,7 @@ class AppState {
       completedLessonIds: completedLessonIds ?? this.completedLessonIds,
       todayCompletedLessonIds:
           todayCompletedLessonIds ?? this.todayCompletedLessonIds,
+      todayLearnedWordIds: todayLearnedWordIds ?? this.todayLearnedWordIds,
       todayReviewWordIds: todayReviewWordIds ?? this.todayReviewWordIds,
       todayTrainingSessionIds:
           todayTrainingSessionIds ?? this.todayTrainingSessionIds,
@@ -464,6 +483,7 @@ class AppState {
       reminderSettings: DailyReminderSettings.defaults,
       completedLessonIds: {},
       todayCompletedLessonIds: {},
+      todayLearnedWordIds: {},
       todayReviewWordIds: {},
       todayTrainingSessionIds: {},
       todayTrainingGameIds: {},

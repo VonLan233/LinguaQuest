@@ -85,6 +85,7 @@ AppState _makeState({required int weakWordCount}) {
     reminderSettings: DailyReminderSettings.defaults,
     completedLessonIds: const {},
     todayCompletedLessonIds: const {},
+    todayLearnedWordIds: const {},
     todayReviewWordIds: const {},
     todayTrainingSessionIds: const {},
     todayTrainingGameIds: const {},
