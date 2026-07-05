@@ -235,8 +235,12 @@ class CustomWord {
         6;
   }
 
-  bool get isWeak =>
-      status == 'Relearning' || wrongCount > correctCount || masteryLevel <= 1;
+  /// A word is "weak" only when the learner has actually struggled with it —
+  /// being relearned, or missed at least as often as recalled. A freshly
+  /// learned word answered correctly (masteryLevel 0→1, wrongCount 0) must NOT
+  /// count as weak, otherwise the mistake book fills with every studied word
+  /// regardless of correctness (bug 6.2).
+  bool get isWeak => status == 'Relearning' || wrongCount > correctCount;
 
   bool isDue(DateTime now) {
     if (isIgnored || status == 'Ignored') return false;
