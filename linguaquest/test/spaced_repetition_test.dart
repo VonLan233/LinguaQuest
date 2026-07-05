@@ -163,11 +163,17 @@ void main() {
     expect(learned.status, 'Review');
     expect(learned.correctCount, 1);
     expect(learned.nextReviewAt, now.add(const Duration(days: 1)));
+    // A word answered correctly (masteryLevel 0->1, no mistakes) must NOT be
+    // "weak", otherwise the mistake book lists every studied word (bug 6.2).
+    expect(learned.masteryLevel, 1);
+    expect(learned.isWeak, isFalse);
 
     final relearning = created.learned(hadMistake: true, now: now);
     expect(relearning.status, 'Relearning');
     expect(relearning.wrongCount, 1);
     expect(relearning.nextReviewAt.day, now.day);
+    // A word answered wrong is genuinely weak and belongs in the mistake book.
+    expect(relearning.isWeak, isTrue);
   });
 
   test('review words deduplicate custom copies and prefer target progress', () {
