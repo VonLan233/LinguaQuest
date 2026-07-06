@@ -76,6 +76,8 @@ CREATE TABLE IF NOT EXISTS users (
   xp INTEGER NOT NULL DEFAULT 0,
   streak INTEGER NOT NULL DEFAULT 0,
   last_study_date TIMESTAMPTZ,
+  current_word_book_id TEXT,
+  language TEXT,
   created_at TIMESTAMPTZ NOT NULL,
   updated_at TIMESTAMPTZ NOT NULL
 );
@@ -98,6 +100,12 @@ CREATE TABLE IF NOT EXISTS users (
     );
     await connection.execute(
       'ALTER TABLE users ALTER COLUMN email_verified SET DEFAULT FALSE',
+    );
+    await connection.execute(
+      'ALTER TABLE users ADD COLUMN IF NOT EXISTS current_word_book_id TEXT',
+    );
+    await connection.execute(
+      'ALTER TABLE users ADD COLUMN IF NOT EXISTS language TEXT',
     );
     await connection.execute('''
 CREATE TABLE IF NOT EXISTS email_verification_codes (
@@ -806,6 +814,8 @@ UPDATE users SET
   daily_goal=@dailyGoal,
   streak=@streak,
   last_study_date=@lastStudyDate,
+  current_word_book_id=@currentWordBookId,
+  language=@language,
   updated_at=@updatedAt
 WHERE id=@uid
 '''),
@@ -818,6 +828,9 @@ WHERE id=@uid
         'streak': data['streak'] ?? existing['streak'],
         'lastStudyDate':
             _date(data['lastStudyDate']) ?? existing['last_study_date'],
+        'currentWordBookId':
+            data['currentWordBookId'] ?? existing['current_word_book_id'],
+        'language': data['language'] ?? existing['language'],
         'updatedAt': now,
       },
     );
@@ -976,6 +989,23 @@ ON CONFLICT (id) DO UPDATE SET
       Sql.named('DELETE FROM custom_words WHERE uid=@uid AND id=@id'),
       parameters: {'uid': uid, 'id': id},
     );
+  }
+
+  /// Permanently deletes a user account and all of its data. Tables keyed by
+  /// user_id/author_id without an ON DELETE CASCADE foreign key are cleaned
+  /// explicitly; removing the users row cascades the rest.
+  Future<void> deleteAccount(String uid) async {
+    for (final sql in const [
+      'DELETE FROM forum_comments WHERE author_id=@uid',
+      'DELETE FROM forum_posts WHERE author_id=@uid',
+      'DELETE FROM forum_likes WHERE user_id=@uid',
+      'DELETE FROM forum_favorites WHERE user_id=@uid',
+      'DELETE FROM ai_history WHERE user_id=@uid',
+      'DELETE FROM study_spots WHERE user_id=@uid',
+      'DELETE FROM users WHERE id=@uid',
+    ]) {
+      await connection.execute(Sql.named(sql), parameters: {'uid': uid});
+    }
   }
 
   Future<List<Map<String, dynamic>>> userWords(

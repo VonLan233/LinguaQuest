@@ -339,6 +339,14 @@ Router buildRouter(
     });
   });
 
+  // Permanently deletes the authenticated user's account and all their data.
+  router.delete('/account', (Request request) async {
+    return _protected(config, request, (uid) async {
+      await database.deleteAccount(uid);
+      return jsonResponse({'deleted': true});
+    });
+  });
+
   router.get('/user-words', (Request request) async {
     return _protected(config, request, (uid) async {
       final words = await database.userWords(uid);
@@ -1723,6 +1731,8 @@ Map<String, dynamic> userDto(Map<String, dynamic> row) {
     'streak': row['streak'],
     'emailVerified': row['email_verified'] ?? true,
     'lastStudyDate': (row['last_study_date'] as DateTime?)?.toIso8601String(),
+    'currentWordBookId': row['current_word_book_id'] as String?,
+    'language': row['language'] as String?,
     'createdAt': (row['created_at'] as DateTime).toIso8601String(),
     'updatedAt': (row['updated_at'] as DateTime).toIso8601String(),
   };
