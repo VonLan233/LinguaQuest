@@ -58,6 +58,30 @@ void main() {
     expect(userWordDto({})['lastReviewedAt'], null);
   });
 
+  test('user DTO serializes current wordbook language state', () {
+    final timestamp = DateTime.utc(2026, 7, 6, 8, 30);
+
+    final dto = userDto({
+      'id': 'user-1',
+      'name': 'Learner',
+      'email': 'learner@example.com',
+      'target_exam': 'JLPT N5',
+      'level': 'Beginner',
+      'daily_goal': 12,
+      'xp': 34,
+      'streak': 5,
+      'email_verified': true,
+      'last_study_date': timestamp,
+      'current_word_book_id': 'jlpt_n5',
+      'language': 'ja',
+      'created_at': timestamp,
+      'updated_at': timestamp,
+    });
+
+    expect(dto['currentWordBookId'], 'jlpt_n5');
+    expect(dto['language'], 'ja');
+  });
+
   test('notification DTO decodes params safely', () {
     final timestamp = DateTime.utc(2026, 6, 18, 9);
 

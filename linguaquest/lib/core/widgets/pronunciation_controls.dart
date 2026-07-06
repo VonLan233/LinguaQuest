@@ -2,11 +2,13 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 import '../../l10n/generated/app_localizations.dart';
+import '../services/pronunciation_service.dart';
+import '../services/tts_completion.dart';
 import '../theme/app_icons.dart';
 import '../theme/app_theme.dart';
-import '../utils/text_language.dart';
 
 enum _PronunciationAccent { uk, us }
 
@@ -25,6 +27,8 @@ class PronunciationControls extends StatefulWidget {
     this.audioUKUrl = '',
     this.audioUSUrl = '',
     this.compact = false,
+    this.language = '',
+    this.onPlayed,
     super.key,
   });
 
@@ -32,6 +36,14 @@ class PronunciationControls extends StatefulWidget {
   final String audioUKUrl;
   final String audioUSUrl;
   final bool compact;
+
+  /// Learning-language code (e.g. 'ja', 'zh') of the owning word. Drives
+  /// TTS locale and the single-button layout for Japanese.
+  final String language;
+
+  /// Invoked when the user triggers playback (before audio actually starts),
+  /// so callers can reveal answer options only after a play attempt.
+  final VoidCallback? onPlayed;
 
   @override
   State<PronunciationControls> createState() => _PronunciationControlsState();
@@ -41,6 +53,32 @@ class _PronunciationControlsState extends State<PronunciationControls> {
   _PronunciationAccent? _loadingAccent;
   _PronunciationAccent? _failedAccent;
   final AudioPlayer _player = AudioPlayer();
+  final FlutterTts _tts = FlutterTts();
+  late final PronunciationService _service = PronunciationService(
+    audio: (url) async {
+      try {
+        await _player.stop();
+        await _player.play(UrlSource(url));
+        return true;
+      } catch (_) {
+        return false;
+      }
+    },
+    tts: (text, lang, slow) async {
+      try {
+        await _tts.setLanguage(lang);
+        await _tts.setSpeechRate(slow ? 0.4 : 0.5);
+        await _tts.stop();
+        return await awaitTtsCompletion(
+          registerCompletion: (cb) => _tts.setCompletionHandler(cb),
+          registerError: (cb) => _tts.setErrorHandler((_) => cb()),
+          speak: () => _tts.speak(text),
+        );
+      } catch (_) {
+        return false;
+      }
+    },
+  );
 
   @override
   void didUpdateWidget(covariant PronunciationControls oldWidget) {
@@ -57,43 +95,17 @@ class _PronunciationControlsState extends State<PronunciationControls> {
   @override
   void dispose() {
     _player.dispose();
+    _tts.stop();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
     final failedAccent = _failedAccent;
 
-    // Chinese (HSK) words have a single Mandarin pronunciation — show one
-    // button instead of the UK/US pair.
-    if (containsCjkText(widget.word)) {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _PronunciationButton(
-            accent: _PronunciationAccent.us,
-            compact: widget.compact,
-            isLoading: _loadingAccent != null,
-            hasFailed: failedAccent != null,
-            onPressed: () => _play(_PronunciationAccent.us),
-            labelOverride: 'Audio',
-          ),
-          if (failedAccent != null) ...[
-            const SizedBox(height: 6),
-            Text(
-              'Audio unavailable, tap to retry.',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.error,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ],
-        ],
-      );
-    }
-
+    // Every word has a single pronunciation button: dictionary audio (English)
+    // or TTS (Chinese HSK / Japanese) both play through one "Audio" control.
+    // No UK/US accent split and no 0.5x slow variant.
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,26 +114,19 @@ class _PronunciationControlsState extends State<PronunciationControls> {
           mainAxisSize: MainAxisSize.min,
           children: [
             _PronunciationButton(
-              accent: _PronunciationAccent.uk,
-              compact: widget.compact,
-              isLoading: _loadingAccent == _PronunciationAccent.uk,
-              hasFailed: failedAccent == _PronunciationAccent.uk,
-              onPressed: () => _play(_PronunciationAccent.uk),
-            ),
-            const SizedBox(width: 8),
-            _PronunciationButton(
               accent: _PronunciationAccent.us,
               compact: widget.compact,
-              isLoading: _loadingAccent == _PronunciationAccent.us,
-              hasFailed: failedAccent == _PronunciationAccent.us,
+              isLoading: _loadingAccent != null,
+              hasFailed: failedAccent != null,
               onPressed: () => _play(_PronunciationAccent.us),
+              labelOverride: 'Audio',
             ),
           ],
         ),
         if (failedAccent != null) ...[
           const SizedBox(height: 6),
           Text(
-            l10n.pronunciationFailedRetry(_accentLabel(l10n, failedAccent)),
+            'Audio unavailable, tap to retry.',
             style: TextStyle(
               color: Theme.of(context).colorScheme.error,
               fontWeight: FontWeight.w800,
@@ -132,8 +137,9 @@ class _PronunciationControlsState extends State<PronunciationControls> {
     );
   }
 
-  Future<void> _play(_PronunciationAccent accent) async {
+  Future<void> _play(_PronunciationAccent accent, {bool slow = false}) async {
     if (_loadingAccent != null) return;
+    widget.onPlayed?.call();
     final view = View.of(context);
     final l10n = AppLocalizations.of(context);
     final accentLabel = _accentLabel(l10n, accent);
@@ -148,7 +154,6 @@ class _PronunciationControlsState extends State<PronunciationControls> {
       _PronunciationAccent.us => widget.audioUSUrl.trim(),
     };
     final hasWord = word.isNotEmpty;
-    final hasAudioUrl = audioUrl.isNotEmpty;
 
     if (hasWord) {
       await HapticFeedback.selectionClick();
@@ -160,47 +165,18 @@ class _PronunciationControlsState extends State<PronunciationControls> {
       );
     }
 
-    if (hasAudioUrl) {
-      try {
-        await _player.stop();
-        if (!mounted || widget.word.trim() != word) return;
-        await _player.play(UrlSource(audioUrl));
-        if (!mounted || widget.word.trim() != word) return;
-        setState(() {
-          _loadingAccent = null;
-          _failedAccent = null;
-        });
-        _showMessage(l10n.pronunciationPlaying(accentLabel, word));
-      } catch (_) {
-        if (!mounted || widget.word.trim() != word) return;
-        setState(() {
-          _loadingAccent = null;
-          _failedAccent = accent;
-        });
-        _showMessage(l10n.pronunciationFailedRetry(accentLabel));
-      }
-    } else {
-      if (!mounted || widget.word.trim() != word) return;
-      setState(() {
-        _loadingAccent = null;
-        _failedAccent = hasWord ? null : accent;
-      });
-      final message = hasWord
-          ? l10n.pronunciationPlaying(accentLabel, word)
-          : l10n.pronunciationUnavailable(accentLabel);
-      _showMessage(message);
-    }
-  }
-
-  void _showMessage(String message) {
-    final messenger = ScaffoldMessenger.maybeOf(context);
-    messenger?.clearSnackBars();
-    messenger?.showSnackBar(
-      SnackBar(
-        duration: const Duration(milliseconds: 1200),
-        content: Text(message),
-      ),
+    final outcome = await _service.play(
+      word: word,
+      audioUrl: audioUrl,
+      slow: slow,
+      language: widget.language,
     );
+    if (!mounted || widget.word.trim() != word) return;
+
+    setState(() {
+      _loadingAccent = null;
+      _failedAccent = outcome == PronunciationOutcome.failed ? accent : null;
+    });
   }
 }
 

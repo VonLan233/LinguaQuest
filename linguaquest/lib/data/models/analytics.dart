@@ -16,6 +16,12 @@ class LearningAnalytics {
     required this.achievementCount,
     required this.trainingXp,
     required this.trainingRank,
+    this.modalityAccuracy = const {},
+    this.dailyXp = const [],
+    this.topErrorTypes = const [],
+    this.articlesRead = 0,
+    this.readingAccuracyPct = 0,
+    this.themeDistribution = const {},
   });
 
   final int streakDays;
@@ -35,6 +41,27 @@ class LearningAnalytics {
   final int trainingXp;
   final int trainingRank;
 
+  /// Per-modality accuracy: keys are 'meaning', 'listening', 'spelling', 'context'.
+  /// Values are 0–100 (percent). Empty map = no data yet.
+  final Map<String, int> modalityAccuracy;
+
+  /// XP earned per day for up to 14/30 days (oldest first).
+  /// If non-empty, the XP trend chart uses this instead of [sevenDayXp].
+  final List<int> dailyXp;
+
+  /// Ordered list of prompt types with the highest error rates (worst first).
+  final List<String> topErrorTypes;
+
+  /// Reading metrics (P3e). Default to 0/{} so existing payloads keep parsing.
+  /// Count of completed reading articles (active scope).
+  final int articlesRead;
+
+  /// Reading-comprehension accuracy 0–100 (correct/total over reading results).
+  final int readingAccuracyPct;
+
+  /// Articles read per theme (theme key → count).
+  final Map<String, int> themeDistribution;
+
   Map<String, dynamic> toJson() => {
         'streakDays': streakDays,
         'totalStudyDays': totalStudyDays,
@@ -52,7 +79,46 @@ class LearningAnalytics {
         'achievementCount': achievementCount,
         'trainingXp': trainingXp,
         'trainingRank': trainingRank,
+        'modalityAccuracy': modalityAccuracy,
+        'dailyXp': dailyXp,
+        'topErrorTypes': topErrorTypes,
+        'articlesRead': articlesRead,
+        'readingAccuracyPct': readingAccuracyPct,
+        'themeDistribution': themeDistribution,
       };
+
+  /// Returns a copy with reading metrics overlaid (computed client-side from
+  /// saved [ReadingResult]s — see the analytics screen).
+  LearningAnalytics copyWithReading({
+    required int articlesRead,
+    required int readingAccuracyPct,
+    required Map<String, int> themeDistribution,
+  }) {
+    return LearningAnalytics(
+      streakDays: streakDays,
+      totalStudyDays: totalStudyDays,
+      learnedWords: learnedWords,
+      masteredWords: masteredWords,
+      newWordsToday: newWordsToday,
+      reviewsToday: reviewsToday,
+      wordbookProgressPct: wordbookProgressPct,
+      todayMinutes: todayMinutes,
+      totalMinutes: totalMinutes,
+      averageAccuracyPct: averageAccuracyPct,
+      sevenDayXp: sevenDayXp,
+      weakestExerciseType: weakestExerciseType,
+      mostMissedWordIds: mostMissedWordIds,
+      achievementCount: achievementCount,
+      trainingXp: trainingXp,
+      trainingRank: trainingRank,
+      modalityAccuracy: modalityAccuracy,
+      dailyXp: dailyXp,
+      topErrorTypes: topErrorTypes,
+      articlesRead: articlesRead,
+      readingAccuracyPct: readingAccuracyPct,
+      themeDistribution: themeDistribution,
+    );
+  }
 
   factory LearningAnalytics.fromJson(Map<String, dynamic> j) =>
       LearningAnalytics(
@@ -78,10 +144,28 @@ class LearningAnalytics {
         achievementCount: j['achievementCount'] as int? ?? 0,
         trainingXp: j['trainingXp'] as int? ?? 0,
         trainingRank: j['trainingRank'] as int? ?? -1,
+        modalityAccuracy:
+            (j['modalityAccuracy'] as Map<String, dynamic>? ?? const {})
+                .map((k, v) => MapEntry(k, (v as num).toInt())),
+        dailyXp: (j['dailyXp'] as List<dynamic>? ?? const [])
+            .map((e) => e as int)
+            .toList(),
+        topErrorTypes: (j['topErrorTypes'] as List<dynamic>? ?? const [])
+            .map((e) => e as String)
+            .toList(),
+        articlesRead: j['articlesRead'] as int? ?? 0,
+        readingAccuracyPct: j['readingAccuracyPct'] as int? ?? 0,
+        themeDistribution:
+            (j['themeDistribution'] as Map<String, dynamic>? ?? const {})
+                .map((k, v) => MapEntry(k, (v as num).toInt())),
       );
 
   static LearningAnalytics mock() => const LearningAnalytics(
-        streakDays: 5,
+        // D-12: kept below the streak_3 achievement threshold (3) so the
+        // offline/demo persona does not falsely unlock "3-Day Streak" before
+        // the user has actually studied 3 days in a row. Server-connected
+        // users are unaffected — their streak comes from the real users table.
+        streakDays: 2,
         totalStudyDays: 12,
         learnedWords: 89,
         masteredWords: 34,
@@ -97,6 +181,17 @@ class LearningAnalytics {
         achievementCount: 3,
         trainingXp: 300,
         trainingRank: -1,
+        modalityAccuracy: {
+          'meaning': 84,
+          'listening': 71,
+          'spelling': 63,
+          'context': 77,
+        },
+        dailyXp: [120, 80, 95, 110, 70, 130, 45, 100, 90, 60, 85, 110, 75, 95],
+        topErrorTypes: ['spelling', 'listening'],
+        articlesRead: 4,
+        readingAccuracyPct: 82,
+        themeDistribution: {'campus': 2, 'life': 1, 'travel': 1},
       );
 }
 

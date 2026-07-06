@@ -5,6 +5,7 @@ import 'package:postgres/postgres.dart';
 import 'auth.dart';
 import 'config.dart';
 import 'lottery_policy.dart';
+import 'study_spot_policy.dart';
 
 const resetCustomWordProgressSql = '''
 UPDATE custom_words
@@ -42,6 +43,15 @@ const incrementVerificationAttemptsSql =
 const deleteVerificationCodeSql =
     'DELETE FROM email_verification_codes WHERE uid=@uid';
 
+/// Picks the primary-key id for an upserted study plan. Reuse the existing
+/// scope's id so `ON CONFLICT (uid, language, word_book_id)` updates that row;
+/// otherwise mint a fresh id. It deliberately ignores any client-supplied id —
+/// when a user switches to a new (language, wordbook) scope the client sends
+/// its CURRENT plan's id, and reusing it would collide with that other row's
+/// primary key (study_plans_pkey → 500).
+String studyPlanRowId(Map<String, dynamic>? existing) =>
+    existing?['id']?.toString() ?? newId();
+
 class AppDatabase {
   AppDatabase(this.connection);
 
@@ -66,6 +76,8 @@ CREATE TABLE IF NOT EXISTS users (
   xp INTEGER NOT NULL DEFAULT 0,
   streak INTEGER NOT NULL DEFAULT 0,
   last_study_date TIMESTAMPTZ,
+  current_word_book_id TEXT,
+  language TEXT,
   created_at TIMESTAMPTZ NOT NULL,
   updated_at TIMESTAMPTZ NOT NULL
 );
@@ -88,6 +100,12 @@ CREATE TABLE IF NOT EXISTS users (
     );
     await connection.execute(
       'ALTER TABLE users ALTER COLUMN email_verified SET DEFAULT FALSE',
+    );
+    await connection.execute(
+      'ALTER TABLE users ADD COLUMN IF NOT EXISTS current_word_book_id TEXT',
+    );
+    await connection.execute(
+      'ALTER TABLE users ADD COLUMN IF NOT EXISTS language TEXT',
     );
     await connection.execute('''
 CREATE TABLE IF NOT EXISTS email_verification_codes (
@@ -153,6 +171,10 @@ ON custom_words (uid, next_review_at);
     ]) {
       await connection.execute(statement);
     }
+
+    await connection.execute(
+      "ALTER TABLE users ADD COLUMN IF NOT EXISTS first_map_language_at TIMESTAMPTZ",
+    );
 
     await connection.execute('''
 CREATE TABLE IF NOT EXISTS user_words (
@@ -423,6 +445,20 @@ CREATE INDEX IF NOT EXISTS idx_custom_words_uid_next_review
 ON custom_words (uid, next_review_at)
 ''');
 
+    // #G: 清理历史重复生词（保留每个 (uid, lower(word)) 最早一条），再建唯一索引。
+    await connection.execute('''
+DELETE FROM custom_words a
+USING custom_words b
+WHERE a.uid = b.uid
+  AND LOWER(a.word) = LOWER(b.word)
+  AND (a.created_at > b.created_at
+       OR (a.created_at = b.created_at AND a.id > b.id))
+''');
+    await connection.execute('''
+CREATE UNIQUE INDEX IF NOT EXISTS idx_custom_words_uid_word_unique
+ON custom_words (uid, LOWER(word))
+''');
+
     await connection.execute('''
 DO \$\$
 BEGIN
@@ -448,6 +484,24 @@ CREATE TABLE IF NOT EXISTS ai_history (
 ''');
     await connection.execute(
       'CREATE INDEX IF NOT EXISTS ai_history_user_id_idx ON ai_history(user_id)',
+    );
+
+    await connection.execute('''
+CREATE TABLE IF NOT EXISTS study_spots (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id TEXT NOT NULL,
+  name TEXT NOT NULL,
+  latitude DOUBLE PRECISION NOT NULL,
+  longitude DOUBLE PRECISION NOT NULL,
+  study_minutes INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+''');
+    await connection.execute(
+      'CREATE INDEX IF NOT EXISTS study_spots_user_id_idx ON study_spots(user_id)',
+    );
+    await connection.execute(
+      'ALTER TABLE study_spots ADD COLUMN IF NOT EXISTS visit_count INTEGER NOT NULL DEFAULT 1',
     );
 
     await connection.execute('''
@@ -520,6 +574,58 @@ CREATE TABLE IF NOT EXISTS forum_favorites (
 
     await connection.execute('''
 CREATE INDEX IF NOT EXISTS forum_posts_status_idx ON forum_posts(status);
+''');
+
+    // P2b: Add language column to user_words (additive, default 'zh')
+    await connection.execute(
+      "ALTER TABLE user_words ADD COLUMN IF NOT EXISTS language TEXT NOT NULL DEFAULT 'zh'",
+    );
+
+    // P2b: Add language column to custom_words scope (additive, nullable)
+    await connection.execute(
+      "ALTER TABLE custom_words ADD COLUMN IF NOT EXISTS scope TEXT",
+    );
+
+    // P2b: study_plans — add language column first
+    await connection.execute(
+      "ALTER TABLE study_plans ADD COLUMN IF NOT EXISTS language TEXT NOT NULL DEFAULT 'zh'",
+    );
+
+    // P2b: study_plans — swap UNIQUE(uid) → UNIQUE(uid, language, word_book_id)
+    // We do this safely: drop the old constraint, add the new one (both IF NOT EXISTS / conditional).
+    // The DROP is conditional via DO block to avoid error if already swapped.
+    await connection.execute(r'''
+DO $$
+BEGIN
+  -- Drop old single-uid unique constraint if it still exists.
+  IF EXISTS (
+    SELECT 1 FROM information_schema.table_constraints
+    WHERE table_name = 'study_plans'
+      AND constraint_type = 'UNIQUE'
+      AND constraint_name = 'study_plans_uid_key'
+  ) THEN
+    ALTER TABLE study_plans DROP CONSTRAINT study_plans_uid_key;
+  END IF;
+END
+$$;
+''');
+
+    // Add composite unique constraint if it doesn't already exist.
+    await connection.execute(r'''
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.table_constraints
+    WHERE table_name = 'study_plans'
+      AND constraint_type = 'UNIQUE'
+      AND constraint_name = 'study_plans_uid_language_word_book_id_key'
+  ) THEN
+    ALTER TABLE study_plans
+      ADD CONSTRAINT study_plans_uid_language_word_book_id_key
+      UNIQUE (uid, language, word_book_id);
+  END IF;
+END
+$$;
 ''');
   }
 
@@ -708,6 +814,8 @@ UPDATE users SET
   daily_goal=@dailyGoal,
   streak=@streak,
   last_study_date=@lastStudyDate,
+  current_word_book_id=@currentWordBookId,
+  language=@language,
   updated_at=@updatedAt
 WHERE id=@uid
 '''),
@@ -720,6 +828,9 @@ WHERE id=@uid
         'streak': data['streak'] ?? existing['streak'],
         'lastStudyDate':
             _date(data['lastStudyDate']) ?? existing['last_study_date'],
+        'currentWordBookId':
+            data['currentWordBookId'] ?? existing['current_word_book_id'],
+        'language': data['language'] ?? existing['language'],
         'updatedAt': now,
       },
     );
@@ -770,6 +881,17 @@ ORDER BY ${dueOnly ? 'next_review_at ASC, updated_at DESC' : 'updated_at DESC'}
     final rows = await connection.execute(
       Sql.named('SELECT * FROM custom_words WHERE uid=@uid AND id=@id LIMIT 1'),
       parameters: {'uid': uid, 'id': id},
+    );
+    if (rows.isEmpty) return null;
+    return rows.first.toColumnMap();
+  }
+
+  Future<Map<String, dynamic>?> customWordByWord(String uid, String word) async {
+    final rows = await connection.execute(
+      Sql.named(
+        'SELECT * FROM custom_words WHERE uid=@uid AND LOWER(word)=LOWER(@word) LIMIT 1',
+      ),
+      parameters: {'uid': uid, 'word': word},
     );
     if (rows.isEmpty) return null;
     return rows.first.toColumnMap();
@@ -867,6 +989,23 @@ ON CONFLICT (id) DO UPDATE SET
       Sql.named('DELETE FROM custom_words WHERE uid=@uid AND id=@id'),
       parameters: {'uid': uid, 'id': id},
     );
+  }
+
+  /// Permanently deletes a user account and all of its data. Tables keyed by
+  /// user_id/author_id without an ON DELETE CASCADE foreign key are cleaned
+  /// explicitly; removing the users row cascades the rest.
+  Future<void> deleteAccount(String uid) async {
+    for (final sql in const [
+      'DELETE FROM forum_comments WHERE author_id=@uid',
+      'DELETE FROM forum_posts WHERE author_id=@uid',
+      'DELETE FROM forum_likes WHERE user_id=@uid',
+      'DELETE FROM forum_favorites WHERE user_id=@uid',
+      'DELETE FROM ai_history WHERE user_id=@uid',
+      'DELETE FROM study_spots WHERE user_id=@uid',
+      'DELETE FROM users WHERE id=@uid',
+    ]) {
+      await connection.execute(Sql.named(sql), parameters: {'uid': uid});
+    }
   }
 
   Future<List<Map<String, dynamic>>> userWords(
@@ -1090,25 +1229,41 @@ LIMIT 1
     return rows.first.toColumnMap();
   }
 
+  Future<Map<String, dynamic>?> studyPlanByScope(
+    String uid,
+    String language,
+    String wordBookId,
+  ) async {
+    final rows = await connection.execute(
+      Sql.named(
+        'SELECT * FROM study_plans WHERE uid=@uid AND language=@language AND word_book_id=@wordBookId LIMIT 1',
+      ),
+      parameters: {'uid': uid, 'language': language, 'wordBookId': wordBookId},
+    );
+    if (rows.isEmpty) return null;
+    return rows.first.toColumnMap();
+  }
+
   Future<Map<String, dynamic>> upsertStudyPlan(
     String uid,
     Map<String, dynamic> data,
   ) async {
-    final existing = await studyPlanByUid(uid);
+    final language = data['language'] as String? ?? 'zh';
+    final wordBookId = data['wordBookId'] as String;
+    final existing = await studyPlanByScope(uid, language, wordBookId);
     final now = DateTime.now().toUtc();
-    final id = existing?['id']?.toString() ?? data['id']?.toString();
+    final id = studyPlanRowId(existing);
     final updatedAt = _date(data['now']) ?? now;
     await connection.execute(
       Sql.named('''
 INSERT INTO study_plans (
-  id, uid, word_book_id, daily_new_target, daily_review_limit, start_date,
+  id, uid, language, word_book_id, daily_new_target, daily_review_limit, start_date,
   target_finish_date, reminder_time, status, created_at, updated_at
 ) VALUES (
-  @id, @uid, @wordBookId, @dailyNewTarget, @dailyReviewLimit, @startDate,
+  @id, @uid, @language, @wordBookId, @dailyNewTarget, @dailyReviewLimit, @startDate,
   @targetFinishDate, @reminderTime, @status, @createdAt, @updatedAt
 )
-ON CONFLICT (uid) DO UPDATE SET
-  word_book_id=EXCLUDED.word_book_id,
+ON CONFLICT (uid, language, word_book_id) DO UPDATE SET
   daily_new_target=EXCLUDED.daily_new_target,
   daily_review_limit=EXCLUDED.daily_review_limit,
   start_date=EXCLUDED.start_date,
@@ -1118,9 +1273,10 @@ ON CONFLICT (uid) DO UPDATE SET
   updated_at=EXCLUDED.updated_at
 '''),
       parameters: {
-        'id': id ?? data['id'],
+        'id': id,
         'uid': uid,
-        'wordBookId': data['wordBookId'],
+        'language': language,
+        'wordBookId': wordBookId,
         'dailyNewTarget': data['dailyNewTarget'],
         'dailyReviewLimit': data['dailyReviewLimit'],
         'startDate': data['startDate'],
@@ -1131,7 +1287,7 @@ ON CONFLICT (uid) DO UPDATE SET
         'updatedAt': updatedAt,
       },
     );
-    return (await studyPlanByUid(uid))!;
+    return (await studyPlanByScope(uid, language, wordBookId))!;
   }
 
   Future<void> resetCustomWordProgress(String uid, {DateTime? now}) async {
@@ -1199,6 +1355,86 @@ ON CONFLICT (id) DO NOTHING
         },
       );
     }
+  }
+
+  /// Returns true if the user has at least one session where all answers
+  /// were correct and the session contained at least 4 records.
+  Future<bool> hasPerfectSession(String uid) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT session_id
+FROM exercise_records
+WHERE uid = @uid
+GROUP BY session_id
+HAVING COUNT(*) >= 4 AND bool_and(is_correct)
+LIMIT 1
+'''),
+      parameters: {'uid': uid},
+    );
+    return rows.isNotEmpty;
+  }
+
+  /// Returns true if the user has at least one exercise record with
+  /// dimension = 'listening'.
+  Future<bool> hasListeningRecord(String uid) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT 1 FROM exercise_records
+WHERE uid = @uid AND dimension = 'listening'
+LIMIT 1
+'''),
+      parameters: {'uid': uid},
+    );
+    return rows.isNotEmpty;
+  }
+
+  /// Returns true if the user has at least one user_word in Japanese.
+  Future<bool> hasJapaneseStudy(String uid) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT 1 FROM user_words
+WHERE uid = @uid AND language = 'ja'
+LIMIT 1
+'''),
+      parameters: {'uid': uid},
+    );
+    return rows.isNotEmpty;
+  }
+
+  /// Returns true if the user has at least one reading-comprehension exercise
+  /// record (game_id prefixed 'reading-', written by completeReading).
+  Future<bool> hasReadingRecord(String uid) async {
+    final rows = await connection.execute(
+      Sql.named('''
+SELECT 1 FROM exercise_records
+WHERE uid = @uid AND game_id LIKE 'reading-%'
+LIMIT 1
+'''),
+      parameters: {'uid': uid},
+    );
+    return rows.isNotEmpty;
+  }
+
+  /// Sets users.first_map_language_at to now if not already set.
+  Future<void> setFirstMapLanguageAt(String uid) async {
+    await connection.execute(
+      Sql.named('''
+UPDATE users
+SET first_map_language_at = NOW()
+WHERE id = @uid AND first_map_language_at IS NULL
+'''),
+      parameters: {'uid': uid},
+    );
+  }
+
+  /// Returns users.first_map_language_at for the given user (null if not set).
+  Future<DateTime?> firstMapLanguageAt(String uid) async {
+    final rows = await connection.execute(
+      Sql.named('SELECT first_map_language_at FROM users WHERE id = @uid'),
+      parameters: {'uid': uid},
+    );
+    if (rows.isEmpty) return null;
+    return rows.first[0] as DateTime?;
   }
 
   Future<List<String>> completedLessonIds(String uid) async {
@@ -1881,10 +2117,17 @@ SELECT
   // ---------------------------------------------------------------------------
 
   Future<List<Map<String, dynamic>>> listForumPosts({String? status}) async {
-    final whereClause = status != null ? 'WHERE status=@status' : '';
+    final whereClause = status != null ? 'WHERE fp.status=@status' : '';
     final rows = await connection.execute(
       Sql.named(
-        'SELECT * FROM forum_posts $whereClause ORDER BY created_at DESC',
+        'SELECT fp.id, fp.author_id, fp.title, fp.body, fp.tag, fp.status, '
+        'fp.like_count, '
+        "(SELECT COUNT(*) FROM forum_comments fc "
+        "WHERE fc.post_id=fp.id AND fc.status='approved') AS comment_count, "
+        'fp.created_at, fp.updated_at, u.name AS author_name '
+        'FROM forum_posts fp '
+        'LEFT JOIN users u ON u.id = fp.author_id '
+        '$whereClause ORDER BY fp.created_at DESC',
       ),
       parameters: {if (status != null) 'status': status},
     );
@@ -1893,7 +2136,16 @@ SELECT
 
   Future<Map<String, dynamic>?> getForumPost(String id) async {
     final rows = await connection.execute(
-      Sql.named('SELECT * FROM forum_posts WHERE id=@id::uuid LIMIT 1'),
+      Sql.named(
+        'SELECT fp.id, fp.author_id, fp.title, fp.body, fp.tag, fp.status, '
+        'fp.like_count, '
+        "(SELECT COUNT(*) FROM forum_comments fc "
+        "WHERE fc.post_id=fp.id AND fc.status='approved') AS comment_count, "
+        'fp.created_at, fp.updated_at, u.name AS author_name '
+        'FROM forum_posts fp '
+        'LEFT JOIN users u ON u.id = fp.author_id '
+        'WHERE fp.id=@id::uuid LIMIT 1',
+      ),
       parameters: {'id': id},
     );
     if (rows.isEmpty) return null;
@@ -2058,6 +2310,28 @@ ORDER BY created_at ASC
     return rows.isNotEmpty;
   }
 
+  /// 返回用户收藏的所有已审核帖子，按创建时间倒序。
+  Future<List<Map<String, dynamic>>> listFavoritedPostsByUser(
+    String userId,
+  ) async {
+    final rows = await connection.execute(
+      Sql.named(
+        'SELECT p.id, p.author_id, p.title, p.body, p.tag, p.status, '
+        'p.like_count, '
+        "(SELECT COUNT(*) FROM forum_comments fc "
+        "WHERE fc.post_id=p.id AND fc.status='approved') AS comment_count, "
+        'p.created_at, p.updated_at, u.name AS author_name '
+        'FROM forum_posts p '
+        'JOIN forum_favorites f ON f.post_id = p.id '
+        'LEFT JOIN users u ON u.id = p.author_id '
+        "WHERE f.user_id = @userId AND p.status = 'approved' "
+        'ORDER BY p.created_at DESC',
+      ),
+      parameters: {'userId': userId},
+    );
+    return rows.map((r) => r.toColumnMap()).toList();
+  }
+
   static Map<String, dynamic> _forumPostRowToMap(dynamic row) {
     if (row is Map) return Map<String, dynamic>.from(row);
     final list = row as List;
@@ -2073,6 +2347,106 @@ ORDER BY created_at ASC
       'created_at': list[8],
       'updated_at': list[9],
     };
+  }
+
+  // ---------------------------------------------------------------------------
+  // Study Spots
+  // ---------------------------------------------------------------------------
+
+  Future<List<Map<String, dynamic>>> listStudySpots(String userId) async {
+    final result = await connection.execute(
+      Sql.named(
+        'SELECT id, name, latitude, longitude, study_minutes, visit_count, created_at '
+        'FROM study_spots WHERE user_id=@userId ORDER BY created_at DESC',
+      ),
+      parameters: {'userId': userId},
+    );
+    return result.map((row) => {
+          'id': row[0].toString(),
+          'name': row[1],
+          'latitude': row[2],
+          'longitude': row[3],
+          'studyMinutes': row[4],
+          'visitCount': row[5],
+          'createdAt': row[6].toString(),
+        }).toList();
+  }
+
+  /// Nearby upsert: if an existing spot is within 100 m, increment its
+  /// visit_count and bump created_at; otherwise insert a new spot
+  /// (visit_count = 1). Returns the affected spot.
+  ///
+  /// ponytail: SELECT-then-UPDATE/INSERT is not atomic — two concurrent
+  /// visits for the same user can both insert or both miss an increment.
+  /// Study spots are cosmetic (no trust/data-integrity boundary) and visits
+  /// arrive sequentially per user, so this is acceptable; upgrade to a single
+  /// upsert with a spatial/unique constraint if concurrency ever matters.
+  Future<Map<String, dynamic>> recordStudyVisit(
+    String userId, {
+    required String name,
+    required double latitude,
+    required double longitude,
+  }) async {
+    final existing = await connection.execute(
+      Sql.named(
+        'SELECT id, latitude, longitude FROM study_spots WHERE user_id=@userId',
+      ),
+      parameters: {'userId': userId},
+    );
+    final spots = existing
+        .map((row) => (
+              id: row[0].toString(),
+              latitude: (row[1] as num).toDouble(),
+              longitude: (row[2] as num).toDouble(),
+            ))
+        .toList();
+    final idx = StudySpotPolicy.nearestWithin(
+      spots.map((s) => (latitude: s.latitude, longitude: s.longitude)).toList(),
+      latitude,
+      longitude,
+    );
+    const returning =
+        'RETURNING id, name, latitude, longitude, study_minutes, visit_count, created_at';
+    final result = idx != null
+        ? await connection.execute(
+            // ponytail: created_at 在就近重访时被更新为最近访问时间，用于 listStudySpots 的
+            // 最近优先排序（表结构约定，语义上等同于 last_visited_at；非新增列）。
+            Sql.named(
+              'UPDATE study_spots SET visit_count = visit_count + 1, created_at = NOW() '
+              'WHERE id=@id::uuid AND user_id=@userId $returning',
+            ),
+            parameters: {'id': spots[idx].id, 'userId': userId},
+          )
+        : await connection.execute(
+            Sql.named(
+              'INSERT INTO study_spots (user_id, name, latitude, longitude, visit_count) '
+              'VALUES (@userId, @name, @lat, @lng, 1) $returning',
+            ),
+            parameters: {
+              'userId': userId,
+              'name': name,
+              'lat': latitude,
+              'lng': longitude,
+            },
+          );
+    final row = result.first;
+    return {
+      'id': row[0].toString(),
+      'name': row[1],
+      'latitude': row[2],
+      'longitude': row[3],
+      'studyMinutes': row[4],
+      'visitCount': row[5],
+      'createdAt': row[6].toString(),
+    };
+  }
+
+  Future<bool> deleteStudySpot(String userId, String id) async {
+    final result = await connection.execute(
+      Sql.named('DELETE FROM study_spots WHERE id=@id::uuid AND user_id=@userId'),
+      parameters: {'id': id, 'userId': userId},
+    );
+    return result.affectedRows > 0;
   }
 }
 

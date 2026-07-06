@@ -1,0 +1,798 @@
+{
+  "id": "ms_basic",
+  "title": "Bahasa Melayu Asas",
+  "titleEn": "Bahasa Melayu Asas",
+  "titleMs": "Bahasa Melayu Asas",
+  "category": "basic",
+  "examType": "Basic",
+  "coverUrl": "",
+  "language": "ms",
+  "totalWords": 30,
+  "includedWords": 30,
+  "description": "Everyday Bahasa Melayu Asas vocabulary (test set).",
+  "wordIds": [
+    "ms_000_helo",
+    "ms_001_selamatt",
+    "ms_002_tolong",
+    "ms_003_terimaka",
+    "ms_004_ya",
+    "ms_005_tidak",
+    "ms_006_air",
+    "ms_007_makanan",
+    "ms_008_kawan",
+    "ms_009_keluarga",
+    "ms_010_rumah",
+    "ms_011_buku",
+    "ms_012_sekolah",
+    "ms_013_kerja",
+    "ms_014_masa",
+    "ms_015_hari",
+    "ms_016_malam",
+    "ms_017_pagi",
+    "ms_018_cinta",
+    "ms_019_gembira",
+    "ms_020_sedih",
+    "ms_021_besar",
+    "ms_022_kecil",
+    "ms_023_baik",
+    "ms_024_buruk",
+    "ms_025_makan",
+    "ms_026_minum",
+    "ms_027_pergi",
+    "ms_028_datang",
+    "ms_029_lihat"
+  ],
+  "createdAt": "2026-06-29T00:00:00.000Z",
+  "words": [
+    {
+      "id": "ms_000_helo",
+      "word": "helo",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "hello"
+      ],
+      "englishDefinitions": [
+        "hello"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_001_selamatt",
+      "word": "selamat tinggal",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "goodbye"
+      ],
+      "englishDefinitions": [
+        "goodbye"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_002_tolong",
+      "word": "tolong",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "please / help"
+      ],
+      "englishDefinitions": [
+        "please / help"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_003_terimaka",
+      "word": "terima kasih",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "thank you"
+      ],
+      "englishDefinitions": [
+        "thank you"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_004_ya",
+      "word": "ya",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "yes"
+      ],
+      "englishDefinitions": [
+        "yes"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_005_tidak",
+      "word": "tidak",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "no"
+      ],
+      "englishDefinitions": [
+        "no"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_006_air",
+      "word": "air",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "water"
+      ],
+      "englishDefinitions": [
+        "water"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_007_makanan",
+      "word": "makanan",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "food"
+      ],
+      "englishDefinitions": [
+        "food"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_008_kawan",
+      "word": "kawan",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "friend"
+      ],
+      "englishDefinitions": [
+        "friend"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_009_keluarga",
+      "word": "keluarga",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "family"
+      ],
+      "englishDefinitions": [
+        "family"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_010_rumah",
+      "word": "rumah",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "house"
+      ],
+      "englishDefinitions": [
+        "house"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_011_buku",
+      "word": "buku",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "book"
+      ],
+      "englishDefinitions": [
+        "book"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_012_sekolah",
+      "word": "sekolah",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "school"
+      ],
+      "englishDefinitions": [
+        "school"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_013_kerja",
+      "word": "kerja",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "work"
+      ],
+      "englishDefinitions": [
+        "work"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_014_masa",
+      "word": "masa",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "time"
+      ],
+      "englishDefinitions": [
+        "time"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_015_hari",
+      "word": "hari",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "day"
+      ],
+      "englishDefinitions": [
+        "day"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_016_malam",
+      "word": "malam",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "night"
+      ],
+      "englishDefinitions": [
+        "night"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_017_pagi",
+      "word": "pagi",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "morning"
+      ],
+      "englishDefinitions": [
+        "morning"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_018_cinta",
+      "word": "cinta",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "love"
+      ],
+      "englishDefinitions": [
+        "love"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_019_gembira",
+      "word": "gembira",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "happy"
+      ],
+      "englishDefinitions": [
+        "happy"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_020_sedih",
+      "word": "sedih",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "sad"
+      ],
+      "englishDefinitions": [
+        "sad"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_021_besar",
+      "word": "besar",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "big"
+      ],
+      "englishDefinitions": [
+        "big"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_022_kecil",
+      "word": "kecil",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "small"
+      ],
+      "englishDefinitions": [
+        "small"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_023_baik",
+      "word": "baik",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "good"
+      ],
+      "englishDefinitions": [
+        "good"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_024_buruk",
+      "word": "buruk",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "bad"
+      ],
+      "englishDefinitions": [
+        "bad"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_025_makan",
+      "word": "makan",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "to eat"
+      ],
+      "englishDefinitions": [
+        "to eat"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_026_minum",
+      "word": "minum",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "to drink"
+      ],
+      "englishDefinitions": [
+        "to drink"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_027_pergi",
+      "word": "pergi",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "to go"
+      ],
+      "englishDefinitions": [
+        "to go"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_028_datang",
+      "word": "datang",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "to come"
+      ],
+      "englishDefinitions": [
+        "to come"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "ms_029_lihat",
+      "word": "lihat",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "to see"
+      ],
+      "englishDefinitions": [
+        "to see"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    }
+  ]
+}

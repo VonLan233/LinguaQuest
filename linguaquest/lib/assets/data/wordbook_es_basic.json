@@ -1,0 +1,798 @@
+{
+  "id": "es_basic",
+  "title": "Español Básico",
+  "titleEn": "Español Básico",
+  "titleMs": "Asas Bahasa Sepanyol",
+  "category": "basic",
+  "examType": "Basic",
+  "coverUrl": "",
+  "language": "es",
+  "totalWords": 30,
+  "includedWords": 30,
+  "description": "Everyday Español Básico vocabulary (test set).",
+  "wordIds": [
+    "es_000_hola",
+    "es_001_adis",
+    "es_002_porfavor",
+    "es_003_gracias",
+    "es_004_s",
+    "es_005_no",
+    "es_006_agua",
+    "es_007_comida",
+    "es_008_amigo",
+    "es_009_familia",
+    "es_010_casa",
+    "es_011_libro",
+    "es_012_escuela",
+    "es_013_trabajo",
+    "es_014_tiempo",
+    "es_015_da",
+    "es_016_noche",
+    "es_017_maana",
+    "es_018_amor",
+    "es_019_feliz",
+    "es_020_triste",
+    "es_021_grande",
+    "es_022_pequeo",
+    "es_023_bueno",
+    "es_024_malo",
+    "es_025_comer",
+    "es_026_beber",
+    "es_027_ir",
+    "es_028_venir",
+    "es_029_ver"
+  ],
+  "createdAt": "2026-06-29T00:00:00.000Z",
+  "words": [
+    {
+      "id": "es_000_hola",
+      "word": "hola",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "hello"
+      ],
+      "englishDefinitions": [
+        "hello"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_001_adis",
+      "word": "adiós",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "goodbye"
+      ],
+      "englishDefinitions": [
+        "goodbye"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_002_porfavor",
+      "word": "por favor",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "please"
+      ],
+      "englishDefinitions": [
+        "please"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_003_gracias",
+      "word": "gracias",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "thank you"
+      ],
+      "englishDefinitions": [
+        "thank you"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_004_s",
+      "word": "sí",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "yes"
+      ],
+      "englishDefinitions": [
+        "yes"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_005_no",
+      "word": "no",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "no"
+      ],
+      "englishDefinitions": [
+        "no"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_006_agua",
+      "word": "agua",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "water"
+      ],
+      "englishDefinitions": [
+        "water"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_007_comida",
+      "word": "comida",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "food"
+      ],
+      "englishDefinitions": [
+        "food"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_008_amigo",
+      "word": "amigo",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "friend"
+      ],
+      "englishDefinitions": [
+        "friend"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_009_familia",
+      "word": "familia",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "family"
+      ],
+      "englishDefinitions": [
+        "family"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_010_casa",
+      "word": "casa",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "house"
+      ],
+      "englishDefinitions": [
+        "house"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_011_libro",
+      "word": "libro",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "book"
+      ],
+      "englishDefinitions": [
+        "book"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_012_escuela",
+      "word": "escuela",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "school"
+      ],
+      "englishDefinitions": [
+        "school"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_013_trabajo",
+      "word": "trabajo",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "work"
+      ],
+      "englishDefinitions": [
+        "work"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_014_tiempo",
+      "word": "tiempo",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "time"
+      ],
+      "englishDefinitions": [
+        "time"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_015_da",
+      "word": "día",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "day"
+      ],
+      "englishDefinitions": [
+        "day"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_016_noche",
+      "word": "noche",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "night"
+      ],
+      "englishDefinitions": [
+        "night"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_017_maana",
+      "word": "mañana",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "morning / tomorrow"
+      ],
+      "englishDefinitions": [
+        "morning / tomorrow"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_018_amor",
+      "word": "amor",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "love"
+      ],
+      "englishDefinitions": [
+        "love"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_019_feliz",
+      "word": "feliz",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "happy"
+      ],
+      "englishDefinitions": [
+        "happy"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_020_triste",
+      "word": "triste",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "sad"
+      ],
+      "englishDefinitions": [
+        "sad"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_021_grande",
+      "word": "grande",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "big"
+      ],
+      "englishDefinitions": [
+        "big"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_022_pequeo",
+      "word": "pequeño",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "small"
+      ],
+      "englishDefinitions": [
+        "small"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_023_bueno",
+      "word": "bueno",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "good"
+      ],
+      "englishDefinitions": [
+        "good"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_024_malo",
+      "word": "malo",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "bad"
+      ],
+      "englishDefinitions": [
+        "bad"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_025_comer",
+      "word": "comer",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "to eat"
+      ],
+      "englishDefinitions": [
+        "to eat"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_026_beber",
+      "word": "beber",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "to drink"
+      ],
+      "englishDefinitions": [
+        "to drink"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_027_ir",
+      "word": "ir",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "to go"
+      ],
+      "englishDefinitions": [
+        "to go"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_028_venir",
+      "word": "venir",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "to come"
+      ],
+      "englishDefinitions": [
+        "to come"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    },
+    {
+      "id": "es_029_ver",
+      "word": "ver",
+      "phoneticUK": "",
+      "phoneticUS": "",
+      "audioUKUrl": "",
+      "audioUSUrl": "",
+      "partOfSpeech": "",
+      "definitions": [
+        "to see"
+      ],
+      "englishDefinitions": [
+        "to see"
+      ],
+      "malayDefinitions": [],
+      "exampleSentences": [],
+      "collocations": [],
+      "synonyms": [],
+      "antonyms": [],
+      "derivatives": [],
+      "rootAffix": "",
+      "examTags": [],
+      "difficulty": "Easy",
+      "imageUrl": ""
+    }
+  ]
+}

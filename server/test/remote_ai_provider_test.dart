@@ -279,5 +279,15 @@ void main() {
       expect(res.data['answer'], equals('Hello means a greeting.'));
       expect(callCount, equals(2));
     });
+
+    test('RemoteAiProvider default timeout is 50s', () {
+      final provider = RemoteAiProvider(
+        client: http.Client(),
+        apiKey: 'k',
+        baseUrl: 'https://example.test/v1',
+        model: 'm',
+      );
+      expect(provider.timeout, const Duration(seconds: 50));
+    });
   });
 }

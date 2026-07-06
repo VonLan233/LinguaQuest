@@ -6,6 +6,7 @@ import '../../core/widgets/app_card.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/achievement.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class AchievementsScreen extends ConsumerStatefulWidget {
   const AchievementsScreen({super.key});
@@ -25,6 +26,7 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
     final achievements = state.achievements;
     final unlockedCount = achievements.where((a) => a.unlocked).length;
@@ -32,7 +34,7 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/quest'),
-        title: const Text('Achievements'),
+        title: Text(l10n.achievementsScreenTitle),
       ),
       body: SafeArea(
         child: achievements.isEmpty
@@ -41,8 +43,11 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
                 padding: const EdgeInsets.all(20),
                 children: [
                   SectionHeader(
-                    title: 'Your Achievements',
-                    subtitle: '$unlockedCount / ${achievements.length} unlocked',
+                    title: l10n.achievementsHeaderTitle,
+                    subtitle: l10n.achievementsUnlockedCount(
+                      unlockedCount,
+                      achievements.length,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   for (final achievement in achievements) ...[
@@ -63,6 +68,7 @@ class _AchievementTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final unlocked = achievement.unlocked;
 
@@ -107,7 +113,7 @@ class _AchievementTile extends StatelessWidget {
                 if (unlocked && achievement.unlockedAt != null) ...[
                   const SizedBox(height: 2),
                   Text(
-                    'Unlocked',
+                    l10n.achievementUnlockedLabel,
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: theme.colorScheme.primary,
                       fontWeight: FontWeight.w600,

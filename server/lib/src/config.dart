@@ -15,8 +15,11 @@ class AppConfig {
     this.aiProvider = 'mock',
     this.aiApiKey = '',
     this.aiApiBaseUrl = 'https://opencode.ai/zen/v1',
-    this.aiModel = 'deepseek-v4-flash-free',
+    this.aiModel = 'deepseek-v4-flash',
+    this.aiClozeModel = '',
     this.aiDailyLimitPerUser = 20,
+    this.ttsServiceUrl = 'http://tts:5002',
+    this.ttsCacheDir = '/tmp/tts-cache',
   });
 
   final int port;
@@ -33,7 +36,12 @@ class AppConfig {
   final String aiApiKey;
   final String aiApiBaseUrl;
   final String aiModel;
+
+  /// Optional model used only for `cloze`. Empty → fall back to [aiModel].
+  final String aiClozeModel;
   final int aiDailyLimitPerUser;
+  final String ttsServiceUrl;
+  final String ttsCacheDir;
 
   factory AppConfig.fromEnvironment() {
     return AppConfig(
@@ -53,9 +61,12 @@ class AppConfig {
       aiProvider: _env('AI_PROVIDER', 'mock'),
       aiApiKey: _env('AI_API_KEY', ''),
       aiApiBaseUrl: _env('AI_API_BASE_URL', 'https://opencode.ai/zen/v1'),
-      aiModel: _env('AI_MODEL', 'deepseek-v4-flash-free'),
+      aiModel: _env('AI_MODEL', 'deepseek-v4-flash'),
+      aiClozeModel: _env('AI_CLOZE_MODEL', ''),
       aiDailyLimitPerUser:
           int.tryParse(_env('AI_DAILY_LIMIT_PER_USER', '20')) ?? 20,
+      ttsServiceUrl: _env('TTS_SERVICE_URL', 'http://tts:5002'),
+      ttsCacheDir: _env('TTS_CACHE_DIR', '/tmp/tts-cache'),
     );
   }
 
@@ -74,7 +85,10 @@ class AppConfig {
     String? aiApiKey,
     String? aiApiBaseUrl,
     String? aiModel,
+    String? aiClozeModel,
     int? aiDailyLimitPerUser,
+    String? ttsServiceUrl,
+    String? ttsCacheDir,
   }) {
     return AppConfig(
       port: port ?? this.port,
@@ -91,7 +105,10 @@ class AppConfig {
       aiApiKey: aiApiKey ?? this.aiApiKey,
       aiApiBaseUrl: aiApiBaseUrl ?? this.aiApiBaseUrl,
       aiModel: aiModel ?? this.aiModel,
+      aiClozeModel: aiClozeModel ?? this.aiClozeModel,
       aiDailyLimitPerUser: aiDailyLimitPerUser ?? this.aiDailyLimitPerUser,
+      ttsServiceUrl: ttsServiceUrl ?? this.ttsServiceUrl,
+      ttsCacheDir: ttsCacheDir ?? this.ttsCacheDir,
     );
   }
 }

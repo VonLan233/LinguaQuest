@@ -28,6 +28,7 @@ class AiRequest {
     required this.prompt,
     this.targetWord,
     this.targetLanguage = 'zh',
+    this.modelOverride,
   });
 
   final String featureType;
@@ -35,6 +36,9 @@ class AiRequest {
   final String prompt;
   final String? targetWord;
   final String targetLanguage;
+
+  /// When non-null, overrides the provider's default model for this request.
+  final String? modelOverride;
 }
 
 class AiResponse {
@@ -92,6 +96,30 @@ class MockAiProvider implements AiProvider {
             'explanations': <String>[],
           },
         );
+      case 'reading_explain':
+        return const AiResponse(
+          success: true,
+          data: {
+            'gist': 'Mock gist of the paragraph.',
+            'keyWords': [
+              {
+                'word': '示例',
+                'reading': 'shìlì',
+                'meaning': 'example',
+              },
+            ],
+            'grammarPoints': ['Mock grammar point'],
+            'structure': 'Mock sentence structure analysis.',
+            'translation': 'Mock English translation of the paragraph.',
+            'practice': [
+              {
+                'prompt': 'Mock practice question?',
+                'answer': '示例',
+                'options': ['示例', '其它', '别的', '另一个'],
+              },
+            ],
+          },
+        );
       case 'writing_review':
         return AiResponse(success: true, data: {
           'totalScore': 75,
@@ -118,6 +146,34 @@ class MockAiProvider implements AiProvider {
           ],
           'rewrittenSample': 'Mock rewritten essay paragraph...',
         });
+      case 'confusion':
+        final word = request.targetWord ?? 'word';
+        return AiResponse(
+          success: true,
+          data: {
+            'pairs': [
+              {
+                'word': word,
+                'confusedWith': 'similar',
+                'distinction': 'Mock distinction for $word.',
+                'examples': <String>[],
+              },
+            ],
+          },
+        );
+      case 'sentence_gen':
+        final word = request.targetWord ?? 'word';
+        return AiResponse(
+          success: true,
+          data: {
+            'sentences': [
+              {'sentence': 'Mock sentence with $word.', 'translation': 'Mock translation.'},
+            ],
+            'rewrites': [
+              {'original': word, 'rewritten': 'Mock rewrite.', 'note': 'Mock note.'},
+            ],
+          },
+        );
       default:
         return const AiResponse(
           success: false,
@@ -213,11 +269,24 @@ String? buildSystemPrompt(String featureType, String language) {
           '"translation": string, "vocabularyNotes": string[]}. '
           'No markdown, no code fences.';
     case 'cloze':
-      return 'Create a $language cloze exercise for the target word. Keep the '
-          '"passage" and each blank\'s "answer" and "options" in $language; '
-          'write "explanations" in English. Reply ONLY with strict JSON: '
-          '{"passage": string, "blanks": [{"index": number, "answer": string, '
-          '"options": string[]}], "explanations": string[]}. '
+      return 'Create a short $language cloze exercise. Write a SHORT $language '
+          'passage of only 2-3 sentences containing EXACTLY 3 to 4 blanks. '
+          'Keep the "passage" and each blank\'s "answer" and "options" in '
+          '$language; write "explanations" in English. Be concise. Reply ONLY '
+          'with strict JSON: {"passage": string, "blanks": [{"index": number, '
+          '"answer": string, "options": string[]}], "explanations": string[]}. '
+          'No markdown, no code fences.';
+    case 'reading_explain':
+      return 'Explain the $language paragraph for an English speaker learning '
+          '$language. Keep "keyWords" entries\' "word" and "reading" in '
+          '$language; write every other field ("gist", each key word\'s '
+          '"meaning", "grammarPoints", "structure", "translation") in English. '
+          'For "practice", each item\'s "prompt" and "options" stay in '
+          '$language and "answer" must be one of its "options". Reply ONLY with '
+          'strict JSON: {"gist": string, "keyWords": [{"word": string, '
+          '"reading": string, "meaning": string}], "grammarPoints": string[], '
+          '"structure": string, "translation": string, "practice": '
+          '[{"prompt": string, "answer": string, "options": string[]}]}. '
           'No markdown, no code fences.';
     case 'writing_review':
       return 'You are a $language writing grader for English speakers. Write '
@@ -232,6 +301,20 @@ String? buildSystemPrompt(String featureType, String language) {
           '"highScoreExpressions": string[], "grammarIssues": [{"original": '
           'string, "corrected": string, "rule": string}], "rewrittenSample": '
           'string}. No markdown, no fences.';
+    case 'confusion':
+      return 'Identify words commonly confused with the target word in '
+          '$language. Keep each pair\'s "word", "confusedWith", and "examples" '
+          'in $language; write "distinction" in English. Reply ONLY with strict '
+          'JSON: {"pairs": [{"word": string, "confusedWith": string, '
+          '"distinction": string, "examples": string[]}]}. '
+          'No markdown, no code fences.';
+    case 'sentence_gen':
+      return 'For the target word or sentence, write natural example sentences '
+          'and improved rewrites in $language. Keep "sentence" and "rewritten" '
+          'in $language; write "translation" and "note" in English. Reply ONLY '
+          'with strict JSON: {"sentences": [{"sentence": string, "translation": '
+          'string}], "rewrites": [{"original": string, "rewritten": string, '
+          '"note": string}]}. No markdown, no code fences.';
   }
   return null;
 }
@@ -248,7 +331,7 @@ class RemoteAiProvider implements AiProvider {
     required this.apiKey,
     required this.baseUrl,
     required this.model,
-    this.timeout = const Duration(seconds: 30),
+    this.timeout = const Duration(seconds: 50),
   });
 
   final http.Client client;
@@ -274,7 +357,7 @@ class RemoteAiProvider implements AiProvider {
         ? '${request.prompt}\n\nTarget word: ${request.targetWord}'
         : request.prompt;
     final body = jsonEncode({
-      'model': model,
+      'model': request.modelOverride ?? model,
       'messages': [
         {'role': 'system', 'content': system},
         {'role': 'user', 'content': userContent},

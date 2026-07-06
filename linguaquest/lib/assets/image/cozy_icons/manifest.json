@@ -1,0 +1,522 @@
+[
+  {
+    "file": "01_home_active.png",
+    "title": "Home active",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "01_home_outline.png",
+    "title": "Home outline",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "02_training_active.png",
+    "title": "Training active",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "02_training_outline.png",
+    "title": "Training outline",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "03_ai_learning_active.png",
+    "title": "AI Learning active",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "03_ai_learning_outline.png",
+    "title": "AI Learning outline",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "04_discover_active.png",
+    "title": "Discover active",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "04_discover_outline.png",
+    "title": "Discover outline",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "05_profile_active.png",
+    "title": "Profile active",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "05_profile_outline.png",
+    "title": "Profile outline",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "06_meaning_translate.png",
+    "title": "Meaning / translate",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "07_language_choice.png",
+    "title": "Chinese-English choice",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "08_context_sentence.png",
+    "title": "Context / sentence",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "09_image_choice.png",
+    "title": "Image choice",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "10_listening.png",
+    "title": "Listening",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "11_spelling_input.png",
+    "title": "Spelling / input",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "12_word_rush.png",
+    "title": "Word Rush",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "13_survival.png",
+    "title": "Survival",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "14_spelling_game.png",
+    "title": "Spelling game",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "15_xp_points.png",
+    "title": "XP / points",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "16_streak.png",
+    "title": "Streak",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "17_trophy_achievement.png",
+    "title": "Trophy / achievement",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "18_correct_check.png",
+    "title": "Correct / check",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "19_wrong_retry.png",
+    "title": "Wrong / retry",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "20_goal_flag.png",
+    "title": "Goal / flag",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "21_leaderboard.png",
+    "title": "Leaderboard",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "22_wordbook.png",
+    "title": "Wordbook",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "23_add_word_card.png",
+    "title": "Add word card",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "24_tag_label.png",
+    "title": "Tag / label",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "25_word_family_relations.png",
+    "title": "Word family / relations",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "26_empty_state.png",
+    "title": "Empty state",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "27_success_celebration.png",
+    "title": "Success / celebration",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "28_hint_tip.png",
+    "title": "Hint / tip",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "29_warning.png",
+    "title": "Warning",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "30_gift_reward.png",
+    "title": "Gift / reward",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "31_lottery_draw.png",
+    "title": "Lottery / draw",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "32_wallet_coins.png",
+    "title": "Wallet / coins",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "33_badge_medal.png",
+    "title": "Badge / medal",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "34_ai_tutor_bot.png",
+    "title": "AI tutor bot",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "35_chat_dialogue.png",
+    "title": "Chat / dialogue",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "36_back.png",
+    "title": "Back",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "37_next_forward.png",
+    "title": "Next / forward",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "38_search.png",
+    "title": "Search",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "39_add.png",
+    "title": "Add",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "40_settings.png",
+    "title": "Settings",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "41_refresh_replay.png",
+    "title": "Refresh / replay",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "42_close.png",
+    "title": "Close",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "43_notifications.png",
+    "title": "Notifications",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "44_check_in_calendar.png",
+    "title": "Check-in / calendar",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "45_edit.png",
+    "title": "Edit",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "46_filter.png",
+    "title": "Filter",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  },
+  {
+    "file": "47_lock.png",
+    "title": "Lock",
+    "size": 1024,
+    "palette": [
+      "#2C7BE0",
+      "#EAF2FC",
+      "#233A66"
+    ]
+  }
+]

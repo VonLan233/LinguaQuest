@@ -154,6 +154,12 @@ class AppLocalizationsMs extends AppLocalizations {
   String get commonTimesSuffix => ' kali';
 
   @override
+  String get commonViewAll => 'Lihat semua';
+
+  @override
+  String get commonView => 'Lihat';
+
+  @override
   String get authRegisterTitle => 'Daftar';
 
   @override
@@ -241,8 +247,7 @@ class AppLocalizationsMs extends AppLocalizations {
   String get onboardingTagStreak => 'Streak harian';
 
   @override
-  String get splashTagline =>
-      'Kad perkataan bergambar, laluan jelas, ulang kaji pintar.';
+  String get splashTagline => 'Kad perkataan, laluan jelas, ulang kaji pintar.';
 
   @override
   String get studyNewScreenTitle => 'Perkataan baharu';
@@ -469,16 +474,6 @@ class AppLocalizationsMs extends AppLocalizations {
   String get questTrend => 'Trend';
 
   @override
-  String get questClassMode => 'Mod Kelas';
-
-  @override
-  String get questClassModeBody =>
-      'Sertai dengan kod kelas untuk lihat papan pemuka guru dan pembelajaran kumpulan.';
-
-  @override
-  String get questClassCode => 'Kod kelas';
-
-  @override
   String get questAiTutor => 'Tutor AI';
 
   @override
@@ -500,48 +495,6 @@ class AppLocalizationsMs extends AppLocalizations {
   @override
   String get aiTutorSampleAnswer =>
       'Affect is usually a verb: \"The weather affects my mood.\" Effect is usually a noun: \"The effect was immediate.\" Cuba tulis satu ayat dengan setiap perkataan.';
-
-  @override
-  String get classModeTitle => 'Pembelajaran kelas';
-
-  @override
-  String get classModeSubtitle =>
-      'Masukkan kod kelas untuk menyertai kumpulan dan lihat kemajuan kelas serta ringkasan kelemahan.';
-
-  @override
-  String classModeJoined(Object code) {
-    return 'Menyertai kelas $code';
-  }
-
-  @override
-  String get classModeJoin => 'Sertai kelas';
-
-  @override
-  String get classModeViewProgress => 'Lihat kemajuan kelas';
-
-  @override
-  String get classProgressTitle => 'Kemajuan kelas';
-
-  @override
-  String get classProgressOverview => 'Gambaran kelas';
-
-  @override
-  String get classProgressSubtitle =>
-      'Penyiapan pihak guru dan ringkasan perkataan lemah.';
-
-  @override
-  String classProgressWeakWord(Object word) {
-    return 'Perkataan lemah: $word';
-  }
-
-  @override
-  String get classTopicExamSignals => 'Perkataan isyarat peperiksaan';
-
-  @override
-  String get classTopicTravelBasics => 'Asas perjalanan';
-
-  @override
-  String get classTopicWorkplace => 'Ungkapan tempat kerja';
 
   @override
   String get leaderboardDefaultName => 'Penjelajah';
@@ -585,11 +538,11 @@ class AppLocalizationsMs extends AppLocalizations {
   String get analyticsAccuracy => 'Ketepatan';
 
   @override
-  String get onboardingFeatureImageCards => 'Kad Perkataan Bergambar';
+  String get onboardingFeatureImageCards => 'Kad Perkataan';
 
   @override
   String get onboardingFeatureImageCardsDesc =>
-      'Perkataan, makna, contoh, tahap penguasaan, dan petunjuk visual disambungkan dalam satu aliran pembelajaran.';
+      'Perkataan, makna, dan contoh disambungkan dalam satu aliran pembelajaran.';
 
   @override
   String get onboardingFeaturePath => 'Laluan Jelas';
@@ -629,6 +582,9 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get goalSetupTarget => 'Sasaran';
+
+  @override
+  String get goalSetupPlanBy => 'Rancang ikut';
 
   @override
   String get goalSetupDailyGoal => 'Matlamat Harian';
@@ -769,6 +725,34 @@ class AppLocalizationsMs extends AppLocalizations {
   String get profileNoEmail => 'Tiada e-mel ditetapkan';
 
   @override
+  String get publicProfileNotFoundTitle => 'Profil tidak tersedia';
+
+  @override
+  String get publicProfileNotFoundMessage =>
+      'Pengguna ini tidak wujud atau profilnya adalah peribadi.';
+
+  @override
+  String get publicProfileLoadFailedTitle => 'Gagal memuatkan profil';
+
+  @override
+  String get publicProfileLoadFailedMessage =>
+      'Sesuatu tidak kena. Sila cuba lagi.';
+
+  @override
+  String get profileEditNicknameTitle => 'Edit nama panggilan';
+
+  @override
+  String get profileEditNicknameSignInRequired =>
+      'Sila log masuk sebelum mengedit nama panggilan.';
+
+  @override
+  String get profileEditNicknameEmpty => 'Nama panggilan tidak boleh kosong.';
+
+  @override
+  String get profileEditNicknameSaveFailed =>
+      'Tidak dapat mengemas kini nama panggilan.';
+
+  @override
   String get profileDashboard => 'Papan Pemuka Pembelajaran';
 
   @override
@@ -776,7 +760,7 @@ class AppLocalizationsMs extends AppLocalizations {
       'Kemajuan penting dalam satu skrin, dengan tetapan di bahagian bawah.';
 
   @override
-  String get profileLearnedWords => 'Perkataan Dipelajari';
+  String get profileLearnedWords => 'Dipelajari';
 
   @override
   String get profileMasteredWords => 'Dikuasai';
@@ -791,7 +775,9 @@ class AppLocalizationsMs extends AppLocalizations {
   String get profilePlansCompleted => 'Pelan Selesai';
 
   @override
-  String get profileStreakDays => 'hari berturut-turut';
+  String profileStreakDays(num count) {
+    return '$count hari berturut-turut';
+  }
 
   @override
   String get profileCurrentBookProgress => 'Kemajuan Buku Perkataan Semasa';
@@ -863,6 +849,9 @@ class AppLocalizationsMs extends AppLocalizations {
       'Memberikan maklum balas audio untuk keputusan kuiz dan rentak latihan';
 
   @override
+  String get settingsTheme => 'Tema';
+
+  @override
   String get settingsThemeSystem => 'Ikut Sistem';
 
   @override
@@ -888,6 +877,11 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get settingsReminderTime => 'Masa Peringatan';
+
+  @override
+  String settingsReminderDisplay(String time) {
+    return 'Harian · $time';
+  }
 
   @override
   String get settingsReminderOff => 'Peringatan Dimatikan';
@@ -975,6 +969,57 @@ class AppLocalizationsMs extends AppLocalizations {
       'Daftar masuk pembelajaran dan perbincangan kesilapan dipaparkan di sini.';
 
   @override
+  String get discoverMyFavorites => 'Kegemaran Saya';
+
+  @override
+  String get favoritesEmpty => 'Anda belum menandai sebarang kiriman.';
+
+  @override
+  String get communityFilterAll => 'Semua';
+
+  @override
+  String get communityTagGrammar => 'Tatabahasa';
+
+  @override
+  String get communityTagVocabulary => 'Kosa kata';
+
+  @override
+  String get communityTagCulture => 'Budaya';
+
+  @override
+  String get communityTagGeneral => 'Umum';
+
+  @override
+  String get communityTagProgress => 'Kemajuan';
+
+  @override
+  String get communityShareUpdate => 'Kongsi kemajuan';
+
+  @override
+  String get communityNewPost => 'Catatan baharu';
+
+  @override
+  String get communityNoPostsInFilter => 'Tiada catatan dalam kategori ini';
+
+  @override
+  String get communityTimeJustNow => 'Sebentar tadi';
+
+  @override
+  String communityTimeMinutesAgo(int count) {
+    return '$count minit lalu';
+  }
+
+  @override
+  String communityTimeHoursAgo(int count) {
+    return '$count jam lalu';
+  }
+
+  @override
+  String communityTimeDaysAgo(int count) {
+    return '$count hari lalu';
+  }
+
+  @override
   String get discoverXpUsage => 'Kegunaan XP';
 
   @override
@@ -983,7 +1028,7 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String discoverGoComplete(Object points) {
-    return 'Pergi +$points XP';
+    return 'Lengkapkan untuk +$points XP';
   }
 
   @override
@@ -1059,7 +1104,8 @@ class AppLocalizationsMs extends AppLocalizations {
   String get discoverForumPost1Body => '错词集中在近义辨析，明天准备从训练场的易混词挑战开始。';
 
   @override
-  String get discoverForumPost2Title => '雅思阅读里怎么记 abstract?';
+  String get discoverForumPost2Title =>
+      'Bagaimana untuk mengingati perkataan \'abstract\'?';
 
   @override
   String get discoverForumPost2Body => 'abstract 在论文和阅读文章里经常不是“抽象”的意思，要结合语境判断。';
@@ -1277,9 +1323,6 @@ class AppLocalizationsMs extends AppLocalizations {
   String get trainingLeaderboard => 'Papan Pendahulu';
 
   @override
-  String get trainingTimedTests => 'Ujian Bermasa';
-
-  @override
   String get trainingTimedTestsSubtitle => 'Pek kampus & cabaran kelajuan';
 
   @override
@@ -1308,9 +1351,6 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get trainingComingSoon => 'Akan Datang';
-
-  @override
-  String get trainingSpecialDrills => 'Latihan Kemahiran';
 
   @override
   String get trainingSpecialDrillsSubtitle =>
@@ -1453,12 +1493,12 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String trainingPromptChineseSpelling(Object meaning) {
-    return 'Eja perkataan Inggeris daripada makna: $meaning';
+    return 'Eja perkataan daripada maknanya: $meaning';
   }
 
   @override
   String trainingPromptAudioSpelling(Object cue) {
-    return 'Eja perkataan Inggeris selepas mendengar: $cue';
+    return 'Eja perkataan selepas mendengar: $cue';
   }
 
   @override
@@ -1509,7 +1549,7 @@ class AppLocalizationsMs extends AppLocalizations {
   String get trainingRealSource => 'Sumber soalan sebenar';
 
   @override
-  String get trainingSpellingInputLabel => 'Masukkan ejaan Inggeris';
+  String get trainingSpellingInputLabel => 'Taip perkataan';
 
   @override
   String get trainingReviveConsumed => 'Satu nyawa telah digunakan. Teruskan.';
@@ -1520,6 +1560,14 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get trainingCorrectFeedback => 'Betul. Kombo diteruskan!';
+
+  @override
+  String get trainingPromptListening =>
+      'Dengar dan pilih perkataan yang anda dengar';
+
+  @override
+  String get trainingListeningRevealHint =>
+      'Main audio dahulu, kemudian pilihan muncul.';
 
   @override
   String get learningPathTitle => 'Laluan Pembelajaran';
@@ -1886,15 +1934,6 @@ class AppLocalizationsMs extends AppLocalizations {
   String get labelTargetCET6 => 'Teras CET-6';
 
   @override
-  String get labelTargetIELTS => 'Teras IELTS';
-
-  @override
-  String get labelTargetTOEFL => 'Frekuensi Tinggi TOEFL';
-
-  @override
-  String get labelTargetGRE => 'Frekuensi Tinggi GRE';
-
-  @override
   String get labelTargetKaoyan => 'Teras Pascasiswazah';
 
   @override
@@ -2004,15 +2043,6 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get labelWordTagCET6 => 'CET-6';
-
-  @override
-  String get labelWordTagIELTS => 'IELTS';
-
-  @override
-  String get labelWordTagTOEFL => 'TOEFL';
-
-  @override
-  String get labelWordTagGRE => 'GRE';
 
   @override
   String get labelWordTagKaoyan => 'Pascasiswazah';
@@ -2128,6 +2158,33 @@ class AppLocalizationsMs extends AppLocalizations {
   String get wordbookSwitchFailed => 'Tidak dapat menukar buku perkataan';
 
   @override
+  String get pickerChooseLanguage => 'Pilih Bahasa';
+
+  @override
+  String get pickerChooseWordbook => 'Pilih Buku Perkataan';
+
+  @override
+  String get pickerLanguageChinese => 'Bahasa Cina (中文)';
+
+  @override
+  String get pickerLanguageJapanese => 'Bahasa Jepun (日本語)';
+
+  @override
+  String get pickerComingSoon => 'Akan Datang';
+
+  @override
+  String get pickerCurrentBadge => 'Semasa';
+
+  @override
+  String pickerSwitchSuccess(String wordbook) {
+    return 'Ditukar kepada $wordbook';
+  }
+
+  @override
+  String get pickerSwitchFailed =>
+      'Tidak dapat menukar buku perkataan sekarang';
+
+  @override
   String get wordbookTargetSection => 'Perkataan Sasaran';
 
   @override
@@ -2141,27 +2198,6 @@ class AppLocalizationsMs extends AppLocalizations {
   @override
   String get wordbookDescBeginner =>
       'Perkataan frekuensi tinggi untuk pemula dan ungkapan harian.';
-
-  @override
-  String get wordbookNameIELTS => 'Teras IELTS';
-
-  @override
-  String get wordbookDescIELTS =>
-      'Perkataan akademik frekuensi tinggi untuk bacaan, pendengaran, dan penulisan IELTS.';
-
-  @override
-  String get wordbookNameTOEFL => 'Frekuensi Tinggi TOEFL';
-
-  @override
-  String get wordbookDescTOEFL =>
-      'Perbendaharaan kata akademik dan ungkapan kampus untuk TOEFL.';
-
-  @override
-  String get wordbookNameGRE => 'Frekuensi Tinggi GRE';
-
-  @override
-  String get wordbookDescGRE =>
-      'Perkataan aras tinggi yang biasa dilihat dalam bacaan dan isi tempat kosong GRE.';
 
   @override
   String get wordbookNameCET4 => 'Teras CET-4';
@@ -2186,6 +2222,9 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get notificationTitle => 'Pemberitahuan';
+
+  @override
+  String get dataAccountTitle => 'Data & Akaun';
 
   @override
   String get notificationMarkAllRead => 'Semua Dibaca';
@@ -2340,16 +2379,6 @@ class AppLocalizationsMs extends AppLocalizations {
   String get studyPlanDailyNewHint => 'Disyorkan 5-30 perkataan, maksimum 200.';
 
   @override
-  String get studyPlanDailyReview => 'Had Ulangkaji Harian';
-
-  @override
-  String get studyPlanDailyReviewHint =>
-      'Giliran ulangkaji melebihi had akan disimpan untuk tarikh kemudian.';
-
-  @override
-  String get studyPlanTargetDate => 'Tarikh Tamat Peperiksaan/Sasaran';
-
-  @override
   String get studyPlanReminderTime => 'Masa Peringatan Pembelajaran';
 
   @override
@@ -2374,10 +2403,6 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get studyPlanConfirm => 'Sahkan Tetap Semula';
-
-  @override
-  String get studyPlanInvalidDate =>
-      'Tarikh tamat sasaran tidak boleh lebih awal daripada hari ini.';
 
   @override
   String get studyPlanSaved => 'Pelan pembelajaran disimpan.';
@@ -2464,7 +2489,7 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get aiLearningToolAiAnalysisDesc =>
-      'Ekstrak klausa utama, bahagikan klausa bawahan, terangkan bahan pengubah dan kata kunci, dan berikan terjemahan bahasa Cina yang semula jadi.';
+      'Ekstrak klausa utama, bahagikan klausa bawahan, terangkan bahan pengubah dan kata kunci, dan berikan terjemahan yang semula jadi.';
 
   @override
   String get aiLearningToolAiWriting => 'Pembetulan Penulisan AI';
@@ -2623,6 +2648,10 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get customWordsSaved => 'Perkataan disimpan';
+
+  @override
+  String get customWordsAlreadyInWordbook =>
+      'Perkataan ini sudah ada dalam buku kata anda';
 
   @override
   String get customWordsDifficulty => 'Kesukaran';
@@ -2811,11 +2840,13 @@ class AppLocalizationsMs extends AppLocalizations {
   String get helpContactSupport => 'Hubungi sokongan';
 
   @override
-  String get aboutVersion => 'LinguaQuest · Versi 1.0.0';
+  String aboutVersion(String version) {
+    return 'LinguaQuest · Versi $version';
+  }
 
   @override
   String get aboutIntro =>
-      'LinguaQuest menggabungkan kad perkataan visual, laluan pembelajaran, ulangkaji berjarak, XP, rentetan kehadiran, dan kad perkataan peribadi dalam aplikasi pembelajaran Inggeris berfokus mudah alih.';
+      'LinguaQuest menggabungkan kad perkataan, laluan pembelajaran, ulangkaji berjarak, XP, rentetan kehadiran, dan kad perkataan peribadi dalam aplikasi pembelajaran Inggeris berfokus mudah alih.';
 
   @override
   String get aboutGoalTitle => 'Matlamat projek';
@@ -2836,7 +2867,7 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get aboutCoreSubtitle =>
-      'Perancangan matlamat, kosa kata visual, latihan kuiz, jadual ulangkaji, dan kad perkataan peribadi.';
+      'Perancangan matlamat, pembinaan kosa kata, latihan kuiz, jadual ulangkaji, dan kad perkataan peribadi.';
 
   @override
   String get aboutPrivacyTitle => 'Privasi';
@@ -2858,7 +2889,7 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get communityPostAbstractTitle =>
-      'Bagaimana mengingat \"abstract\" dalam bacaan IELTS?';
+      'Bagaimana untuk mengingati perkataan \'abstract\'?';
 
   @override
   String get communityPostMistakeTag => 'Perbincangan Kesilapan';
@@ -2887,7 +2918,7 @@ class AppLocalizationsMs extends AppLocalizations {
   }
 
   @override
-  String luckyDrawInventoryCount(Object count) {
+  String luckyDrawInventoryCount(num count) {
     return '$count item dalam stok';
   }
 
@@ -3057,4 +3088,407 @@ class AppLocalizationsMs extends AppLocalizations {
   String dueInMinutes(int count) {
     return '$count minit lagi';
   }
+
+  @override
+  String get languageMapTitle => 'Pilih Bahasa';
+
+  @override
+  String get languageMapSelectPrompt =>
+      'Ketik sebuah negara untuk memilih bahasa yang ingin dipelajari.';
+
+  @override
+  String get languageMapChinese => 'Bahasa Cina (中文)';
+
+  @override
+  String languageMapConfirm(String language) {
+    return 'Belajar $language';
+  }
+
+  @override
+  String languageMapSelected(String language) {
+    return 'Kini belajar $language';
+  }
+
+  @override
+  String languageMapComingSoon(String language) {
+    return '$language — akan datang';
+  }
+
+  @override
+  String get aboutCompanyName => 'LinguaQuest';
+
+  @override
+  String get aboutCompanyAddress =>
+      'Universiti Xiamen Malaysia, Bandar Sunsuria, 43900 Sepang, Selangor, Malaysia (maya)';
+
+  @override
+  String get aboutCompanyDescription =>
+      'Kampus maya tempat LinguaQuest dibina.';
+
+  @override
+  String get aiLearningStatusAvailable => 'Tersedia';
+
+  @override
+  String get aiExplainWithAi => 'Jelaskan dengan AI';
+
+  @override
+  String get aiErrorGeneric => 'Sesuatu tidak kena. Sila cuba lagi.';
+
+  @override
+  String aiEmptyChat(Object language) {
+    return 'Tanya apa sahaja tentang $language — maksud, tatabahasa atau penggunaan.';
+  }
+
+  @override
+  String aiQuestionHint(Object language) {
+    return 'Taip soalan anda tentang $language...';
+  }
+
+  @override
+  String aiEmptyAnalysis(Object language) {
+    return 'Tampal ayat $language untuk melihat huraian strukturnya.';
+  }
+
+  @override
+  String get aiEmptyCloze =>
+      'Masukkan perkataan untuk menjana latihan isi tempat kosong.';
+
+  @override
+  String get aiEmptyWriting =>
+      'Tampal karangan anda dan pilih jenis peperiksaan untuk maklum balas bermarkah.';
+
+  @override
+  String get achievementsScreenTitle => 'Pencapaian';
+
+  @override
+  String get achievementsHeaderTitle => 'Pencapaian Anda';
+
+  @override
+  String achievementsUnlockedCount(int unlocked, int total) {
+    return '$unlocked / $total dibuka';
+  }
+
+  @override
+  String get achievementUnlockedLabel => 'Dibuka';
+
+  @override
+  String get achievementLearn100Title => 'Sarjana Seabad';
+
+  @override
+  String get achievementLearn100Desc => 'Kuasai 100 perkataan';
+
+  @override
+  String get achievementQuizPerfectTitle => 'Larian Sempurna';
+
+  @override
+  String get achievementQuizPerfectDesc =>
+      'Selesaikan sesi kuiz dengan ketepatan 100% (4+ soalan)';
+
+  @override
+  String get achievementFirstListeningTitle => 'Gema Pertama';
+
+  @override
+  String get achievementFirstListeningDesc =>
+      'Selesaikan latihan mendengar pertama anda';
+
+  @override
+  String get achievementFirstMapLanguageTitle => 'Kartografer';
+
+  @override
+  String get achievementFirstMapLanguageDesc => 'Pilih bahasa dari peta bahasa';
+
+  @override
+  String get assetInventoryTitle => 'Aset Saya';
+
+  @override
+  String get assetInventoryEmpty =>
+      'Tiada aset lagi. Cuba nasib anda di Cabutan Bertuah!';
+
+  @override
+  String assetInventoryTotalOwned(int count) {
+    return '$count item dimiliki';
+  }
+
+  @override
+  String assetInventoryTotalFragments(int count) {
+    return '$count serpihan';
+  }
+
+  @override
+  String assetInventoryQuantityBadge(int count) {
+    return '×$count';
+  }
+
+  @override
+  String get luckyDrawViewMyAssets => 'Lihat aset saya';
+
+  @override
+  String get analyticsReportTitle => 'Laporan pembelajaran';
+
+  @override
+  String get analyticsReportSubtitle => 'Kemajuan, carta dan fokus anda';
+
+  @override
+  String analyticsScopeLabel(Object scope) {
+    return 'Skop: $scope';
+  }
+
+  @override
+  String get analyticsXpTrendTitle => 'Trend XP';
+
+  @override
+  String get analyticsAbilityTitle => 'Dimensi keupayaan';
+
+  @override
+  String get analyticsModalityTitle => 'Ketepatan ikut jenis';
+
+  @override
+  String get analyticsMasteryTitle => 'Penguasaan perkataan';
+
+  @override
+  String get analyticsDetailTitle => 'Statistik terperinci';
+
+  @override
+  String get analyticsFocusTitle => 'Latihan disyorkan';
+
+  @override
+  String get analyticsReviewLoad => 'Beban ulang kaji';
+
+  @override
+  String get analyticsWeekXp => 'XP minggu ini';
+
+  @override
+  String get analyticsTodayXp => 'XP hari ini';
+
+  @override
+  String get analyticsWeakWords => 'Perkataan lemah';
+
+  @override
+  String get analyticsDueNow => 'Perlu ulang kaji';
+
+  @override
+  String get analyticsMasteryNew => 'Baharu';
+
+  @override
+  String get analyticsMasteryLearning => 'Belajar';
+
+  @override
+  String get analyticsMasteryMastered => 'Dikuasai';
+
+  @override
+  String get analyticsDimMeaningRecognition => 'Pengecaman';
+
+  @override
+  String get analyticsDimMeaningRecall => 'Ingatan';
+
+  @override
+  String get analyticsDimContext => 'Konteks';
+
+  @override
+  String get analyticsDimListening => 'Mendengar';
+
+  @override
+  String get analyticsDimSpelling => 'Ejaan';
+
+  @override
+  String get analyticsModalityMeaning => 'Makna';
+
+  @override
+  String get analyticsModalityListening => 'Mendengar';
+
+  @override
+  String get analyticsModalitySpelling => 'Ejaan';
+
+  @override
+  String get analyticsModalityContext => 'Konteks';
+
+  @override
+  String get analyticsTopErrors => 'Jenis ralat utama';
+
+  @override
+  String get readingTitle => 'Bacaan';
+
+  @override
+  String get readingDiscoverEntry => 'Bacaan';
+
+  @override
+  String get readingRecommended => 'Disyorkan untuk anda';
+
+  @override
+  String get readingAllArticles => 'Semua artikel';
+
+  @override
+  String readingArticlesForTheme(Object theme) {
+    return 'Artikel $theme';
+  }
+
+  @override
+  String get readingFilterLevel => 'Tahap';
+
+  @override
+  String get readingFilterTheme => 'Tema';
+
+  @override
+  String get readingFilterAll => 'Semua';
+
+  @override
+  String readingMinutes(int count) {
+    return '$count min';
+  }
+
+  @override
+  String get readingEmpty => 'Tiada artikel untuk penapis ini lagi.';
+
+  @override
+  String get readingProgressInProgress => 'Sedang dibaca';
+
+  @override
+  String get readingProgressDone => 'Sudah dibaca';
+
+  @override
+  String get readingToggleTranslation => 'Terjemahan';
+
+  @override
+  String get readingToggleReading => 'Bacaan';
+
+  @override
+  String get readingParagraphAudio => 'Main';
+
+  @override
+  String get readingTapWordHint => 'Ketik perkataan diserlah untuk maksudnya.';
+
+  @override
+  String get readingWordAddToVocab => 'Tambah ke buku kosa kata';
+
+  @override
+  String get readingWordAdded => 'Ditambah ke buku kosa kata';
+
+  @override
+  String get readingComprehensionCta => 'Mula kefahaman';
+
+  @override
+  String get readingComprehensionSoon =>
+      'Soalan kefahaman akan hadir pada fasa seterusnya.';
+
+  @override
+  String get readingThemeCampus => 'Kampus';
+
+  @override
+  String get readingThemeLife => 'Kehidupan';
+
+  @override
+  String get readingThemeTravel => 'Pelancongan';
+
+  @override
+  String get readingThemeTech => 'Teknologi';
+
+  @override
+  String get readingThemeCulture => 'Budaya';
+
+  @override
+  String get readingThemeNews => 'Berita';
+
+  @override
+  String get readingThemeBusiness => 'Perniagaan';
+
+  @override
+  String get readingThemeExam => 'Peperiksaan';
+
+  @override
+  String get readingToggleHighlight => 'Sorotan';
+
+  @override
+  String get readingLegendTitle => 'Sorotan perkataan';
+
+  @override
+  String get readingClassKey => 'Kata kunci';
+
+  @override
+  String get readingClassUnknown => 'Perlu ulang kaji';
+
+  @override
+  String get readingClassNew => 'Baharu';
+
+  @override
+  String get readingClassKnown => 'Dikuasai';
+
+  @override
+  String get readingComprehensionStart => 'Mula kefahaman';
+
+  @override
+  String get readingComprehensionTitle => 'Kefahaman';
+
+  @override
+  String readingComprehensionQuestion(int current, int total) {
+    return 'Soalan $current daripada $total';
+  }
+
+  @override
+  String get readingComprehensionNext => 'Seterusnya';
+
+  @override
+  String get readingComprehensionFinish => 'Selesai';
+
+  @override
+  String get readingComprehensionResultTitle => 'Kefahaman selesai';
+
+  @override
+  String readingComprehensionScore(int correct, int total) {
+    return '$correct / $total betul';
+  }
+
+  @override
+  String readingComprehensionAccuracy(int pct) {
+    return 'Ketepatan $pct%';
+  }
+
+  @override
+  String get readingComprehensionDone => 'Selesai';
+
+  @override
+  String get readingComprehensionEmpty =>
+      'Tiada soalan kefahaman untuk artikel ini lagi.';
+
+  @override
+  String get readingAnalyticsTitle => 'Bacaan';
+
+  @override
+  String get readingAnalyticsArticlesRead => 'Artikel dibaca';
+
+  @override
+  String get readingAnalyticsAccuracy => 'Ketepatan kefahaman';
+
+  @override
+  String get readingAnalyticsThemes => 'Mengikut tema';
+
+  @override
+  String get readingAnalyticsEmpty =>
+      'Lengkapkan kefahaman bacaan untuk melihat statistik di sini.';
+
+  @override
+  String get readingExplainTooltip => 'Terangkan dengan AI';
+
+  @override
+  String get readingExplainTitle => 'Penerangan AI';
+
+  @override
+  String get readingExplainLoading => 'Menerangkan perenggan ini...';
+
+  @override
+  String get readingExplainGist => 'Inti pati';
+
+  @override
+  String get readingExplainKeyWords => 'Perkataan penting';
+
+  @override
+  String get readingExplainGrammar => 'Tatabahasa';
+
+  @override
+  String get readingExplainStructure => 'Struktur ayat';
+
+  @override
+  String get readingExplainTranslation => 'Terjemahan';
+
+  @override
+  String get readingExplainPractice => 'Latihan';
 }

@@ -1,4 +1,5 @@
 const allowedStudyPlanStatuses = {'active', 'paused'};
+const allowedLanguages = {'zh', 'ja', 'en', 'es', 'fr', 'ms'};
 const allowedWordBookIds = {
   'hsk1',
   'hsk2',
@@ -6,6 +7,15 @@ const allowedWordBookIds = {
   'hsk4',
   'hsk5',
   'hsk6',
+  'jlpt_n5',
+  'jlpt_n4',
+  'jlpt_n3',
+  'jlpt_n2',
+  'jlpt_n1',
+  'en_basic',
+  'es_basic',
+  'fr_basic',
+  'ms_basic',
 };
 
 // Wordbook ids from before the HSK pivot. Existing study plans (and any older

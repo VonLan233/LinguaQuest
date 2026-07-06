@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
+import '../../core/services/answer_sound_service.dart';
 import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/utils/custom_word_localization.dart';
@@ -198,7 +200,7 @@ class _MixedStudySessionScreenState
     final state = ref.read(appControllerProvider);
     if (await _restoreDraft(state)) return;
     final dailyGoal = state.dailyNewTarget;
-    final newWords = state.currentLesson?.words ?? const <Word>[];
+    final newWords = state.availableNewWords;
     final plan = _builder.build(
       newWords: newWords,
       dueWords: state.dueWords,
@@ -274,12 +276,16 @@ class _MixedStudySessionScreenState
     }
     final currentLesson = state.currentLesson;
     if (draft.lessonId != (currentLesson?.id ?? '')) return false;
-    final currentLessonWordIds = {
-      for (final word in currentLesson?.words ?? const <Word>[]) word.id,
+    // New words are drawn from the whole current wordbook (see availableNewWords),
+    // not just the 3-word currentLesson, so validate a restored draft's new-word
+    // items against the wordbook pool.
+    final newWordIds = {
+      for (final word in state.currentWordBook?.words ?? const <Word>[])
+        word.id,
     };
     final customWordIds = {for (final word in state.customWords) word.id};
     for (final item in draft.queue) {
-      if (item.isNewWord && !currentLessonWordIds.contains(item.wordId)) {
+      if (item.isNewWord && !newWordIds.contains(item.wordId)) {
         return false;
       }
       if (!item.isNewWord && !customWordIds.contains(item.wordId)) {
@@ -312,6 +318,12 @@ class _MixedStudySessionScreenState
     final isCorrect =
         answer.trim().toLowerCase() ==
         item.meaningFor(localeCode).trim().toLowerCase();
+    unawaited(
+      AnswerSoundService.play(
+        isCorrect: isCorrect,
+        enabled: ref.read(appControllerProvider).sensorySettings.soundEnabled,
+      ),
+    );
     final responseTime = DateTime.now()
         .difference(_itemStartedAt)
         .inMilliseconds;

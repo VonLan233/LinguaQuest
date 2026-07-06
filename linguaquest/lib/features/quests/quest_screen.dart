@@ -70,14 +70,6 @@ class QuestScreen extends ConsumerWidget {
         ),
         const SizedBox(height: 10),
         _QuestRow(
-          icon: AppIcons.groups,
-          title: l10n.questClassMode,
-          body: l10n.questClassModeBody,
-          value: l10n.questClassCode,
-          route: '/class-mode',
-        ),
-        const SizedBox(height: 10),
-        _QuestRow(
           icon: AppIcons.smartToy,
           title: l10n.questAiTutor,
           body: l10n.questAiTutorBody,

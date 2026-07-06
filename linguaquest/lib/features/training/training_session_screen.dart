@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/services/answer_sound_service.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_icons.dart';
@@ -27,7 +29,8 @@ import '../quiz/lesson_result_screen.dart';
 enum TrainingGameType {
   wordRush('word-rush', AppIcons.timer),
   survival('survival', AppIcons.stairs),
-  spelling('spelling', AppIcons.editNote);
+  spelling('spelling', AppIcons.editNote),
+  listeningSprint('listening-sprint', AppIcons.hearing);
 
   const TrainingGameType(this.id, this.icon);
 
@@ -45,6 +48,7 @@ enum TrainingGameType {
     TrainingGameType.wordRush => l10n.trainingSpeedGame,
     TrainingGameType.survival => l10n.trainingSurvivor,
     TrainingGameType.spelling => l10n.trainingSpelling,
+    TrainingGameType.listeningSprint => l10n.trainingListening,
   };
 }
 
@@ -82,6 +86,7 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
   bool _lastCorrect = false;
   bool _usedReviveForLastMistake = false;
   bool _isSubmitting = false;
+  bool _listeningRevealed = false;
   String? _selected;
   int _index = 0;
   int _attempts = 0;
@@ -202,6 +207,14 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
                           game: game,
                           question: question,
                           mistakesOnly: widget.mistakesOnly,
+                          language: state.currentLanguage,
+                          onListeningPlayed: () =>
+                              setState(() => _listeningRevealed = true),
+                          hideWordCue:
+                              !_checked &&
+                              (game == TrainingGameType.listeningSprint ||
+                                  question.type ==
+                                      QuizQuestionType.chineseChoice),
                         ),
                         const SizedBox(height: 18),
                         if (game == TrainingGameType.spelling)
@@ -210,6 +223,12 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
                             checked: _checked,
                             isCorrect: _lastCorrect,
                             onChanged: () => setState(() {}),
+                          )
+                        else if (game == TrainingGameType.listeningSprint &&
+                            !_listeningRevealed &&
+                            !_checked)
+                          _ListeningRevealHint(
+                            message: l10n.trainingListeningRevealHint,
                           )
                         else
                           _ChoiceInput(
@@ -346,6 +365,7 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
       TrainingGameType.survival => [...currentBookWords, ...weakWords],
       TrainingGameType.spelling =>
         spellingWeakWords.map(_wordFromCustom).toList(),
+      TrainingGameType.listeningSprint => [...currentBookWords, ...weakWords],
     };
     return source.isEmpty ? state.trainingWords : source;
   }
@@ -370,6 +390,7 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
       TrainingGameType.wordRush => words.length * 4,
       TrainingGameType.survival => _survivalQuestionCount,
       TrainingGameType.spelling => _spellingQuestionCount,
+      TrainingGameType.listeningSprint => _survivalQuestionCount,
     };
     return [
       for (var index = 0; index < count; index++)
@@ -470,11 +491,17 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
           prompt: prompt,
           answer: word.word,
           options: const [],
-          explanation: l10n.trainingExplanationSpelling(
-            word.word,
-            word.exampleSentence,
-          ),
+          explanation: l10n
+              .trainingExplanationSpelling(word.exampleSentence, word.word)
+              .trimRight(),
           word: word,
+        );
+      case TrainingGameType.listeningSprint:
+        return buildListeningQuestion(
+          word,
+          words,
+          index,
+          l10n.trainingPromptListening,
         );
     }
   }
@@ -503,7 +530,7 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
     ) {
       add(cleanValues[(offset + step + 1) % cleanValues.length]);
     }
-    return List.unmodifiable(options);
+    return List.unmodifiable(options..shuffle(Random(offset)));
   }
 
   String _blankExample(Word word, String localeCode) {
@@ -528,6 +555,12 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
     final question = _questions[_index % _questions.length];
     final normalizedAnswer = answer.trim().toLowerCase();
     final isCorrect = normalizedAnswer == question.answer.trim().toLowerCase();
+    unawaited(
+      AnswerSoundService.play(
+        isCorrect: isCorrect,
+        enabled: ref.read(appControllerProvider).sensorySettings.soundEnabled,
+      ),
+    );
     final answeredAt = DateTime.now();
     final nextStreak = isCorrect ? _streak + 1 : 0;
     final consumedRevive =
@@ -574,7 +607,8 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
     });
 
     if (game == TrainingGameType.wordRush ||
-        game == TrainingGameType.survival) {
+        game == TrainingGameType.survival ||
+        game == TrainingGameType.listeningSprint) {
       Future<void>.delayed(_feedbackDuration, () {
         if (!mounted || _isSubmitting) return;
         if (game == TrainingGameType.survival &&
@@ -594,6 +628,7 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
       TrainingGameType.wordRush => _remainingSeconds <= 0,
       TrainingGameType.survival => _index >= _questions.length - 1,
       TrainingGameType.spelling => _index >= _questions.length - 1,
+      TrainingGameType.listeningSprint => _index >= _questions.length - 1,
     };
     if (shouldFinish) {
       _finishTraining();
@@ -604,6 +639,7 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
       _checked = false;
       _lastCorrect = false;
       _usedReviveForLastMistake = false;
+      _listeningRevealed = false;
       _selected = null;
       _textController.clear();
       _questionStartedAt = DateTime.now();
@@ -619,6 +655,7 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
         );
       case TrainingGameType.survival:
       case TrainingGameType.spelling:
+      case TrainingGameType.listeningSprint:
         return ((_index + 1) / _questions.length).clamp(0.0, 1.0);
     }
   }
@@ -635,6 +672,9 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
   }
 
   ReviewDimension _dimensionFor(QuizQuestion question, TrainingGameType game) {
+    if (game == TrainingGameType.listeningSprint) {
+      return ReviewDimension.listening;
+    }
     if (game == TrainingGameType.spelling) {
       return _promptType(question, game) == 'audio-spelling'
           ? ReviewDimension.listening
@@ -660,6 +700,8 @@ class _TrainingSessionScreenState extends ConsumerState<TrainingSessionScreen> {
             .toInt(),
       TrainingGameType.spelling =>
         (_correct * 5 + accuracyBonus).clamp(0, 80).toInt(),
+      TrainingGameType.listeningSprint =>
+        (_correct * 4 + accuracyBonus).clamp(0, 80).toInt(),
     };
   }
 
@@ -779,7 +821,7 @@ class _TrainingStatusLine extends StatelessWidget {
               AppPill(
                 label: AppLocalizations.of(
                   context,
-                ).trainingSurvivalResources(revives, nodeRewards),
+                ).trainingSurvivalResources(nodeRewards, revives),
                 icon: AppIcons.favorite,
                 variant: PillVariant.streak,
               ),
@@ -803,11 +845,20 @@ class _TrainingPromptPanel extends StatelessWidget {
     required this.game,
     required this.question,
     required this.mistakesOnly,
+    this.language = '',
+    this.onListeningPlayed,
+    this.hideWordCue = false,
   });
 
   final TrainingGameType game;
   final QuizQuestion question;
   final bool mistakesOnly;
+  final String language;
+  final VoidCallback? onListeningPlayed;
+
+  /// Hides the target word's character in the top cue badge (listening
+  /// questions before the answer is committed) so it cannot leak the answer.
+  final bool hideWordCue;
 
   @override
   Widget build(BuildContext context) {
@@ -820,7 +871,11 @@ class _TrainingPromptPanel extends StatelessWidget {
     return AppCard(
       child: Column(
         children: [
-          ImageCueBadge(cue: question.word.imageCue, size: 104),
+          ImageCueBadge(
+            cue: question.word.imageCue,
+            size: 104,
+            icon: hideWordCue ? game.icon : null,
+          ),
           const SizedBox(height: 14),
           Text(
             question.prompt,
@@ -833,6 +888,20 @@ class _TrainingPromptPanel extends StatelessWidget {
               child: PronunciationControls(
                 word: question.word.word,
                 compact: true,
+                language: language,
+              ),
+            ),
+          ],
+          if (game == TrainingGameType.listeningSprint) ...[
+            const SizedBox(height: 10),
+            Center(
+              child: PronunciationControls(
+                word: question.word.word,
+                audioUKUrl: question.word.audioUKUrl,
+                audioUSUrl: question.word.audioUSUrl,
+                compact: true,
+                language: language,
+                onPlayed: onListeningPlayed,
               ),
             ),
           ],
@@ -906,6 +975,33 @@ class _ChoiceInput extends StatelessWidget {
             ),
           ),
       ],
+    );
+  }
+}
+
+class _ListeningRevealHint extends StatelessWidget {
+  const _ListeningRevealHint({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return AppCard(
+      child: Row(
+        children: [
+          Icon(AppIcons.hearing, color: theme.colorScheme.primary),
+          const SizedBox(width: AppTokens.s12),
+          Expanded(
+            child: Text(
+              message,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -1011,4 +1107,35 @@ class _TrainingFeedback extends StatelessWidget {
 
 Word _wordFromCustom(CustomWord word) {
   return wordFromCustomWord(word);
+}
+
+/// Builds a listening-choice question: the prompt is an instruction (the word
+/// is spoken, not shown); options are candidate words incl. the answer.
+QuizQuestion buildListeningQuestion(
+  Word word,
+  List<Word> words,
+  int index,
+  String prompt,
+) {
+  final values = words.map((w) => w.word).toList();
+  final options = <String>[];
+  final seen = <String>{};
+  void add(String v) {
+    final key = v.trim().toLowerCase();
+    if (v.trim().isNotEmpty && seen.add(key)) options.add(v.trim());
+  }
+
+  add(word.word);
+  for (var step = 0; step < values.length && options.length < 4; step++) {
+    add(values[(index + step + 1) % values.length]);
+  }
+  return QuizQuestion(
+    id: 'listening-sprint-${word.id}-$index',
+    type: QuizQuestionType.listeningWordChoice,
+    prompt: prompt,
+    answer: word.word,
+    options: List.unmodifiable(options..shuffle(Random(index))),
+    explanation: word.exampleSentence,
+    word: word,
+  );
 }

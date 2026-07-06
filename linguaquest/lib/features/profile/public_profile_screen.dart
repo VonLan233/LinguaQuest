@@ -1,6 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../core/constants/app_constants.dart';
 import '../../core/state/app_controller.dart';
@@ -10,15 +10,18 @@ import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/app_progress_bar.dart';
 import '../../core/widgets/fallback_back_button.dart';
+import '../../core/widgets/mascot_empty_state.dart';
 import '../../data/repositories/api_repositories.dart';
 import '../../data/repositories/mock_repositories.dart';
 import '../../data/repositories/profile_repository.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 // ---------------------------------------------------------------------------
 // Provider
 // ---------------------------------------------------------------------------
 
-final _profileRepositoryProvider = Provider<ProfileRepository>((ref) {
+/// Public so tests can inject a fake repository via [ProviderScope] overrides.
+final profileRepositoryProvider = Provider<ProfileRepository>((ref) {
   if (AppConstants.apiBaseUrl.isNotEmpty) {
     final client = ref.watch(apiClientProvider);
     return ApiProfileRepository(client);
@@ -27,12 +30,11 @@ final _profileRepositoryProvider = Provider<ProfileRepository>((ref) {
   return MockProfileRepository(currentUserId: state.user?.uid);
 });
 
-final _publicProfileProvider = FutureProvider.family<Map<String, dynamic>, String>(
-  (ref, userId) async {
-    final repo = ref.watch(_profileRepositoryProvider);
-    return repo.getPublicProfile(userId);
-  },
-);
+final _publicProfileProvider =
+    FutureProvider.family<Map<String, dynamic>, String>((ref, userId) async {
+      final repo = ref.watch(profileRepositoryProvider);
+      return repo.getPublicProfile(userId);
+    });
 
 // ---------------------------------------------------------------------------
 // Screen
@@ -50,30 +52,50 @@ class PublicProfileScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/home'),
-        title: const Text('Profile'),
-        actions: [
-          // Owner: show settings shortcut.
-          if (profileAsync.asData?.value['isOwner'] == true)
-            IconButton(
-              icon: const Icon(AppIcons.edit),
-              tooltip: 'Edit profile',
-              onPressed: () => context.push('/settings'),
-            ),
-        ],
+        title: Text(AppLocalizations.of(context).commonProfile),
       ),
       body: profileAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, _) => Center(
-          child: Padding(
-            padding: const EdgeInsets.all(AppTokens.s20),
-            child: Text(
-              'Could not load profile.\n$err',
-              textAlign: TextAlign.center,
-            ),
-          ),
+        error: (err, _) => _ProfileError(
+          error: err,
+          onRetry: () => ref.invalidate(_publicProfileProvider(userId)),
         ),
-        data: (profile) => _ProfileBody(profile: profile),
+        data: (profile) => _ProfileBody(profile: profile, userId: userId),
       ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Error state
+// ---------------------------------------------------------------------------
+
+class _ProfileError extends StatelessWidget {
+  const _ProfileError({required this.error, required this.onRetry});
+
+  final Object error;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final isNotFound =
+        error is DioException &&
+        (error as DioException).response?.statusCode == 404;
+
+    if (isNotFound) {
+      // The user was deleted or their profile is private — a friendly, dead-end
+      // empty state (no retry, since retrying will not change the outcome).
+      return MascotEmptyState(
+        title: l10n.publicProfileNotFoundTitle,
+        message: l10n.publicProfileNotFoundMessage,
+      );
+    }
+
+    return MascotEmptyState(
+      title: l10n.publicProfileLoadFailedTitle,
+      message: l10n.publicProfileLoadFailedMessage,
+      action: FilledButton(onPressed: onRetry, child: Text(l10n.commonRetry)),
     );
   }
 }
@@ -82,18 +104,102 @@ class PublicProfileScreen extends ConsumerWidget {
 // Body
 // ---------------------------------------------------------------------------
 
-class _ProfileBody extends StatelessWidget {
-  const _ProfileBody({required this.profile});
+/// Simple nickname editor: a one-field dialog that updates the display name.
+/// No avatar upload — nickname only, per product decision.
+Future<void> _editNickname(
+  BuildContext context,
+  WidgetRef ref, {
+  required String userId,
+  required String current,
+}) async {
+  final l10n = AppLocalizations.of(context);
+  final newName = await showDialog<String>(
+    context: context,
+    builder: (dialogContext) => _NicknameEditDialog(current: current),
+  );
+  if (newName == null || newName.isEmpty || newName == current) return;
+  final error = await ref
+      .read(appControllerProvider.notifier)
+      .updateDisplayName(newName);
+  if (!context.mounted) return;
+  if (error != null) {
+    final message = switch (error) {
+      'not_signed_in' => l10n.profileEditNicknameSignInRequired,
+      'empty' => l10n.profileEditNicknameEmpty,
+      _ => l10n.profileEditNicknameSaveFailed,
+    };
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+    return;
+  }
+  ref.invalidate(_publicProfileProvider(userId));
+}
 
-  final Map<String, dynamic> profile;
+class _NicknameEditDialog extends StatefulWidget {
+  const _NicknameEditDialog({required this.current});
+
+  final String current;
+
+  @override
+  State<_NicknameEditDialog> createState() => _NicknameEditDialogState();
+}
+
+class _NicknameEditDialogState extends State<_NicknameEditDialog> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.current);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return AlertDialog(
+      title: Text(l10n.profileEditNicknameTitle),
+      content: TextField(
+        controller: _controller,
+        autofocus: true,
+        maxLength: 30,
+        decoration: InputDecoration(labelText: l10n.authNickname),
+        onSubmitted: (value) => Navigator.of(context).pop(value.trim()),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.of(context).pop(_controller.text.trim()),
+          child: Text(MaterialLocalizations.of(context).saveButtonLabel),
+        ),
+      ],
+    );
+  }
+}
+
+class _ProfileBody extends ConsumerWidget {
+  const _ProfileBody({required this.profile, required this.userId});
+
+  final Map<String, dynamic> profile;
+  final String userId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     final name = profile['name'] as String? ?? 'User';
     final isOwner = profile['isOwner'] as bool? ?? false;
     final streak = profile['streak'] as int?;
     final stats = profile['stats'] as Map<String, dynamic>?;
-    final achievements = (profile['achievements'] as List?)?.cast<Map<String, dynamic>>();
+    final achievements = (profile['achievements'] as List?)
+        ?.cast<Map<String, dynamic>>();
     final wordbookProgress = profile['wordbookProgress'] as int?;
     final posts = (profile['posts'] as List?)?.cast<Map<String, dynamic>>();
 
@@ -105,8 +211,15 @@ class _ProfileBody extends StatelessWidget {
         88,
       ),
       children: [
-        // Header: avatar + name + owner badge.
-        _ProfileHeader(name: name, isOwner: isOwner),
+        // Header: avatar + name + owner badge. Owners get a pencil next to the
+        // name to edit just their nickname (no navigation to settings).
+        _ProfileHeader(
+          name: name,
+          isOwner: isOwner,
+          onEditName: isOwner
+              ? () => _editNickname(context, ref, userId: userId, current: name)
+              : null,
+        ),
         const SizedBox(height: AppTokens.s24),
 
         // Achievements row.
@@ -151,14 +264,12 @@ class _ProfileBody extends StatelessWidget {
               children: [
                 Text(
                   '$wordbookProgress words mastered',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: AppTokens.s8),
-                AppProgressBar(
-                  value: (wordbookProgress / 100).clamp(0.0, 1.0),
-                ),
+                AppProgressBar(value: (wordbookProgress / 100).clamp(0.0, 1.0)),
               ],
             ),
           ),
@@ -190,23 +301,34 @@ class _SectionLabel extends StatelessWidget {
     return Text(
       label,
       style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: AppTokens.textSecondaryLight,
-            fontWeight: FontWeight.w700,
-          ),
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+        fontWeight: FontWeight.w700,
+      ),
     );
   }
 }
 
 class _ProfileHeader extends StatelessWidget {
-  const _ProfileHeader({required this.name, required this.isOwner});
+  const _ProfileHeader({
+    required this.name,
+    required this.isOwner,
+    this.onEditName,
+  });
 
   final String name;
   final bool isOwner;
+  final VoidCallback? onEditName;
 
   @override
   Widget build(BuildContext context) {
     final initials = name.isNotEmpty
-        ? name.trim().split(RegExp(r'\s+')).map((w) => w[0]).take(2).join().toUpperCase()
+        ? name
+              .trim()
+              .split(RegExp(r'\s+'))
+              .map((w) => w[0])
+              .take(2)
+              .join()
+              .toUpperCase()
         : '?';
 
     return Row(
@@ -228,11 +350,25 @@ class _ProfileHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                name,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w800,
+              Row(
+                children: [
+                  Flexible(
+                    child: Text(
+                      name,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
+                  ),
+                  if (onEditName != null)
+                    IconButton(
+                      icon: const Icon(AppIcons.edit, size: 20),
+                      tooltip: AppLocalizations.of(
+                        context,
+                      ).profileEditNicknameTitle,
+                      onPressed: onEditName,
+                    ),
+                ],
               ),
               if (isOwner) ...[
                 const SizedBox(height: AppTokens.s4),
@@ -316,9 +452,9 @@ class _StatRow extends StatelessWidget {
         Text(label, style: Theme.of(context).textTheme.bodyMedium),
         Text(
           value,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
         ),
       ],
     );

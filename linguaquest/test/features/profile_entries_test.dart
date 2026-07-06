@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:linguaquest/app.dart';
+import 'package:linguaquest/data/models/study_plan.dart';
 import 'package:linguaquest/data/models/user_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   testWidgets(
-    'ProfileScreen contains Privacy, Data & storage, and Notifications entries',
+    'ProfileScreen contains Privacy, Data & Account, and Notifications entries',
     (tester) async {
       final now = DateTime(2026, 6, 20);
       final profile = UserProfile(
@@ -24,8 +25,14 @@ void main() {
         createdAt: now,
         updatedAt: now,
       );
+      final plan = StudyPlan.defaultsFor(
+        uid: profile.uid,
+        targetExam: 'HSK 1',
+        dailyGoal: 10,
+      );
       SharedPreferences.setMockInitialValues({
         'linguaquest.profile': jsonEncode(profile.toJson()),
+        'linguaquest.studyPlan.${profile.uid}': jsonEncode(plan.toJson()),
       });
 
       await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
@@ -46,13 +53,13 @@ void main() {
       expect(find.text('Privacy'), findsOneWidget);
 
       await tester.scrollUntilVisible(
-        find.text('Data & storage'),
+        find.text('Data & Account'),
         300,
         scrollable: find.byType(Scrollable).first,
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Data & storage'), findsOneWidget);
+      expect(find.text('Data & Account'), findsOneWidget);
 
       await tester.scrollUntilVisible(
         find.text('Notifications'),

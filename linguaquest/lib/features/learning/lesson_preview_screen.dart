@@ -46,6 +46,9 @@ class _LessonPreviewScreenState extends ConsumerState<LessonPreviewScreen> {
     if (lesson == null) {
       return Scaffold(body: Center(child: Text(l10n.lessonPreviewNoLesson)));
     }
+    final currentLanguage = ref.watch(
+      appControllerProvider.select((s) => s.currentLanguage),
+    );
 
     final words = lesson.words;
     final currentIndex = words.isEmpty
@@ -135,7 +138,7 @@ class _LessonPreviewScreenState extends ConsumerState<LessonPreviewScreen> {
                   message: l10n.lessonPreviewNoCardsBody,
                 )
               else ...[
-                _WordStudyCard(word: word),
+                _WordStudyCard(word: word, language: currentLanguage),
                 const SizedBox(height: 14),
                 _ConfidenceSelector(
                   selected: selectedConfidence,
@@ -211,9 +214,10 @@ class _LessonPreviewScreenState extends ConsumerState<LessonPreviewScreen> {
 }
 
 class _WordStudyCard extends StatelessWidget {
-  const _WordStudyCard({required this.word});
+  const _WordStudyCard({required this.word, this.language = ''});
 
   final Word word;
+  final String language;
 
   @override
   Widget build(BuildContext context) {
@@ -239,7 +243,11 @@ class _WordStudyCard extends StatelessWidget {
                       runSpacing: 8,
                       children: [
                         Text(word.word, style: theme.textTheme.headlineSmall),
-                        PronunciationControls(word: word.word, compact: true),
+                        PronunciationControls(
+                          word: word.word,
+                          compact: true,
+                          language: language,
+                        ),
                       ],
                     ),
                     const SizedBox(height: 3),

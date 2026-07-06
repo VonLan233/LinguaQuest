@@ -114,9 +114,21 @@ class _MistakeWordRow extends StatelessWidget {
               ),
             ),
             const SizedBox(width: AppTokens.s8),
-            AppPill(
-              label: l10n.mistakeBookLessonMistakes,
-              variant: PillVariant.streak,
+            // Flexible lets the pill shrink (its text ellipsizes) under tight
+            // width so the Explain-with-AI button below never gets pushed out
+            // of the visible/tappable area. See SVV D-09.
+            Flexible(
+              child: AppPill(
+                label: l10n.mistakeBookLessonMistakes,
+                variant: PillVariant.streak,
+              ),
+            ),
+            IconButton(
+              icon: const Icon(AppIcons.autoAwesome),
+              tooltip: l10n.aiExplainWithAi,
+              onPressed: () => context.push(
+                '/ai-learning?word=${Uri.encodeComponent(mistake.word.word)}',
+              ),
             ),
           ],
         ),

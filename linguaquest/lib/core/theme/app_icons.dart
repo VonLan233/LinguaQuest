@@ -71,6 +71,7 @@ class AppIcons {
   static const IconData keyboardArrowUp = Symbols.keyboard_arrow_up_rounded;
   static const IconData label = Symbols.label_rounded;
   static const IconData language = Symbols.language_rounded;
+  static const IconData locationOn = Symbols.location_on_rounded;
   static const IconData leaderboard = Symbols.leaderboard_rounded;
   static const IconData libraryBooks = Symbols.library_books_rounded;
   static const IconData lightMode = Symbols.light_mode_rounded;
@@ -80,6 +81,8 @@ class AppIcons {
   static const IconData lockClock = Symbols.lock_clock_rounded;
   static const IconData login = Symbols.login_rounded;
   static const IconData mail = Symbols.mail_rounded;
+  static const IconData map = Symbols.map_rounded;
+  static const IconData menu = Symbols.menu_rounded;
   static const IconData menuBook = Symbols.menu_book_rounded;
   static const IconData militaryTech = Symbols.military_tech_rounded;
   static const IconData modeComment = Symbols.mode_comment_rounded;
@@ -111,6 +114,7 @@ class AppIcons {
   static const IconData schedule = Symbols.schedule_rounded;
   static const IconData school = Symbols.school_rounded;
   static const IconData search = Symbols.search_rounded;
+  static const IconData settings = Symbols.settings_rounded;
   static const IconData sell = Symbols.sell_rounded;
   static const IconData sentimentSatisfied = Symbols.sentiment_satisfied_rounded;
   static const IconData sentimentSatisfiedAlt = Symbols.sentiment_satisfied_alt_rounded;

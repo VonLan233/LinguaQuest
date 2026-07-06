@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
-import 'dart:typed_data';
 
+import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
@@ -25,6 +25,7 @@ import 'privacy_policy.dart';
 import 'reward_policy.dart';
 import 'reward_task_policy.dart';
 import 'study_plan_policy.dart';
+import 'study_spot_policy.dart';
 
 final _httpClient = http.Client();
 
@@ -44,68 +45,61 @@ Router buildRouter(
   });
 
   router.get('/tts', (Request request) async {
-    final word = request.url.queryParameters['word']?.trim() ?? '';
-    final type = request.url.queryParameters['type']?.trim() ?? '1';
-    if (word.isEmpty || word.length > 100) {
+    final text = request.url.queryParameters['text']?.trim() ?? '';
+    final lang = request.url.queryParameters['lang']?.trim() ?? '';
+    final slow = request.url.queryParameters['slow']?.trim() ?? 'false';
+    if (text.isEmpty || text.length > 500) {
       return jsonResponse({
-        'error': 'word is required and must be under 100 characters',
+        'error': 'text is required and must be 500 characters or fewer',
       }, status: 400);
     }
-    if (type != '1' && type != '2') {
+    if (!isTtsLangValid(lang)) {
       return jsonResponse({
-        'error': 'type must be 1 (UK) or 2 (US)',
+        'error': 'lang must be one of: zh, en, ja',
       }, status: 400);
+    }
+    final voice = ttsVoiceFor(lang);
+    final rate = ttsRateFor(slow);
+    final cacheKey =
+        sha256.convert(utf8.encode('$text|$voice|$rate')).toString();
+    final cacheDir = Directory(config.ttsCacheDir);
+    await cacheDir.create(recursive: true);
+    final cacheFile = File('${cacheDir.path}/$cacheKey.mp3');
+    if (await cacheFile.exists()) {
+      final cached = await cacheFile.readAsBytes();
+      if (cached.isNotEmpty) {
+        return Response.ok(
+          cached,
+          headers: {
+            'Content-Type': 'audio/mpeg',
+            'Cache-Control': 'public, max-age=86400',
+          },
+        );
+      }
     }
     try {
-      final uri = Uri.https('dict.youdao.com', '/dictvoice', {
-        'audio': word,
-        'type': type,
-      });
-      final streamedResponse = await client
-          .send(http.Request('GET', uri))
-          .timeout(const Duration(seconds: 5));
-      if (streamedResponse.statusCode != 200) {
-        await streamedResponse.stream.listen((_) {}).cancel();
+      final base = Uri.parse(config.ttsServiceUrl);
+      final uri = Uri(
+        scheme: base.scheme,
+        host: base.host,
+        port: base.port,
+        path: '/synthesize',
+        queryParameters: {'text': text, 'voice': voice, 'rate': rate},
+      );
+      final response = await client
+          .get(uri)
+          .timeout(const Duration(seconds: 30));
+      if (response.statusCode != 200 || response.bodyBytes.isEmpty) {
+        stderr.writeln(
+          'TTS microservice error: status=${response.statusCode}',
+        );
         return jsonResponse({'error': 'tts unavailable'}, status: 502);
       }
-      final contentLength = streamedResponse.contentLength;
-      if (contentLength != null && contentLength > 5 * 1024 * 1024) {
-        await streamedResponse.stream.listen((_) {}).cancel();
-        return jsonResponse({'error': 'tts response too large'}, status: 502);
-      }
-      final contentType =
-          (streamedResponse.headers['content-type'] ??
-                  streamedResponse.headers['Content-Type'] ??
-                  'audio/mpeg')
-              .toLowerCase();
-      if (!contentType.startsWith('audio/')) {
-        await streamedResponse.stream.listen((_) {}).cancel();
-        return jsonResponse({'error': 'tts unavailable'}, status: 502);
-      }
-      final bytesBuilder = BytesBuilder();
-      var totalBytes = 0;
-      const maxBytes = 5 * 1024 * 1024;
-      await for (final chunk in streamedResponse.stream.timeout(
-        const Duration(seconds: 5),
-      )) {
-        totalBytes += chunk.length;
-        if (totalBytes > maxBytes) {
-          return jsonResponse({
-            'error': 'tts response invalid or too large',
-          }, status: 502);
-        }
-        bytesBuilder.add(chunk);
-      }
-      final bytes = bytesBuilder.takeBytes();
-      if (bytes.isEmpty) {
-        return jsonResponse({
-          'error': 'tts response invalid or too large',
-        }, status: 502);
-      }
+      await cacheFile.writeAsBytes(response.bodyBytes);
       return Response.ok(
-        bytes,
+        response.bodyBytes,
         headers: {
-          'Content-Type': contentType,
+          'Content-Type': 'audio/mpeg',
           'Cache-Control': 'public, max-age=86400',
         },
       );
@@ -311,6 +305,12 @@ Router buildRouter(
           'error': 'word and meaning are required',
         }, status: 400);
       }
+      final existing = await database.customWordByWord(uid, (body['word'] as String).trim());
+      if (existing != null) {
+        return jsonResponse({'word': wordDto(existing)}, status: 200);
+      }
+      // ponytail: 并发下两个请求可能同时通过查重再插入，唯一索引会让第二个 INSERT 抛冲突 500。
+      // 单用户 coursework 概率极低；多端并发写时需在 upsertCustomWord 外层 catch 唯一冲突并回查返回既有。
       final word = await database.upsertCustomWord(uid, {...body, 'id': id});
       return jsonResponse({'word': wordDto(word)}, status: 201);
     });
@@ -324,6 +324,9 @@ Router buildRouter(
         return jsonResponse({'error': 'word not found'}, status: 404);
       }
       final merged = {...wordDto(existing), ...body, 'id': id};
+      // ponytail: 若将 word 改为与同 uid 另一行相同（大小写不敏感），upsertCustomWord
+      // 的 ON CONFLICT(id) UPDATE 会触发唯一索引冲突 500；coursework 单账户场景极低概率，
+      // 如需保护需在 upsertCustomWord 捕获 unique violation 后返回 400/409。
       final word = await database.upsertCustomWord(uid, merged, id: id);
       return jsonResponse({'word': wordDto(word)});
     });
@@ -332,6 +335,14 @@ Router buildRouter(
   router.delete('/custom-words/<id>', (Request request, String id) async {
     return _protected(config, request, (uid) async {
       await database.deleteCustomWord(uid, id);
+      return jsonResponse({'deleted': true});
+    });
+  });
+
+  // Permanently deletes the authenticated user's account and all their data.
+  router.delete('/account', (Request request) async {
+    return _protected(config, request, (uid) async {
+      await database.deleteAccount(uid);
       return jsonResponse({'deleted': true});
     });
   });
@@ -833,7 +844,7 @@ Router buildRouter(
 
   router.get('/analytics', (Request request) async {
     return _protected(config, request, (uid) async {
-      final analytics = LearningAnalytics.mock();
+      final analytics = await computeAnalytics(database, uid);
       return jsonResponse(analytics.toJson());
     });
   });
@@ -888,6 +899,13 @@ Router buildRouter(
     });
   });
 
+  router.post('/map-language-selected', (Request request) async {
+    return _protected(config, request, (uid) async {
+      await database.setFirstMapLanguageAt(uid);
+      return jsonResponse({'recorded': true}, status: 200);
+    });
+  });
+
   router.get('/achievements', (Request request) async {
     return _protected(config, request, (uid) async {
       final user = await database.userById(uid);
@@ -898,12 +916,22 @@ Router buildRouter(
           .where((w) => (w['mastery_level'] as int? ?? 0) >= 4)
           .length;
       final studySessions = await database.completedLessonIds(uid);
-      final totalStudyDays = studySessions.length > 0 ? 1 : 0;
+      final totalStudyDays = studySessions.isNotEmpty ? 1 : 0;
+      final hasPerfectQuiz = await database.hasPerfectSession(uid);
+      final hasListening = await database.hasListeningRecord(uid);
+      final mapAt = await database.firstMapLanguageAt(uid);
+      final hasJapaneseStudy = await database.hasJapaneseStudy(uid);
+      final hasReadingComprehension = await database.hasReadingRecord(uid);
       final achievements = AchievementPolicy.evaluate(
         streakDays: streak,
         masteredWords: masteredWords,
         totalStudyDays: totalStudyDays,
         trainingXp: xp,
+        hasPerfectQuiz: hasPerfectQuiz,
+        hasListening: hasListening,
+        hasMapLanguage: mapAt != null,
+        hasJapaneseStudy: hasJapaneseStudy,
+        hasReadingComprehension: hasReadingComprehension,
       );
       return jsonResponse(achievements.map((a) => a.toJson()).toList());
     });
@@ -997,6 +1025,9 @@ Router buildRouter(
       prompt: prompt,
       targetWord: targetWord,
       targetLanguage: targetLanguage,
+      modelOverride: featureType == 'cloze' && config.aiClozeModel.isNotEmpty
+          ? config.aiClozeModel
+          : null,
     );
     final response = await effectiveAiPolicy.handle(aiRequest);
     if (!response.success) {
@@ -1125,7 +1156,7 @@ Router buildRouter(
         final postId = post['id'].toString();
         final liked = await database.hasLiked(uid, postId);
         final favorited = await database.hasFavorited(uid, postId);
-        result.add(_forumPostDto(post, isLiked: liked, isFavorited: favorited));
+        result.add(forumPostDto(post, isLiked: liked, isFavorited: favorited));
       }
       return jsonResponse({'posts': result});
     });
@@ -1150,8 +1181,16 @@ Router buildRouter(
         'tag': tag,
         'status': status.name,
       });
+      final author = await database.userById(uid);
       return jsonResponse(
-        {'post': _forumPostDto(post, isLiked: false, isFavorited: false)},
+        {
+          'post': forumPostDto(
+            post,
+            isLiked: false,
+            isFavorited: false,
+            authorName: author?['name'] as String?,
+          ),
+        },
         status: 201,
       );
     });
@@ -1167,7 +1206,7 @@ Router buildRouter(
       final liked = await database.hasLiked(uid, id);
       final favorited = await database.hasFavorited(uid, id);
       return jsonResponse({
-        'post': _forumPostDto(post, isLiked: liked, isFavorited: favorited),
+        'post': forumPostDto(post, isLiked: liked, isFavorited: favorited),
         'comments': comments.map(_forumCommentDto).toList(),
       });
     });
@@ -1225,6 +1264,22 @@ Router buildRouter(
     },
   );
 
+  // 列出当前用户收藏的所有帖子
+  router.get('/forum/favorites', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final posts = await database.listFavoritedPostsByUser(uid);
+      final result = <Map<String, dynamic>>[];
+      // ponytail: O(n) hasLiked 逐帖查询；收藏列表 n 通常极小，不预优化。
+      // 升级路径：批量 SELECT post_id FROM forum_likes WHERE user_id=? AND post_id = ANY(?)
+      for (final post in posts) {
+        final postId = post['id'].toString();
+        final liked = await database.hasLiked(uid, postId);
+        result.add(forumPostDto(post, isLiked: liked, isFavorited: true));
+      }
+      return jsonResponse({'posts': result});
+    });
+  });
+
   router.post('/reports', (Request request) async {
     return _protected(config, request, (uid) async {
       final body = await readJsonMap(request);
@@ -1273,6 +1328,30 @@ Router buildRouter(
       config,
       request,
       (uid) => _handleAiRequest(request, 'cloze', uid),
+    );
+  });
+
+  router.post('/ai/confusion', (Request request) async {
+    return _protected(
+      config,
+      request,
+      (uid) => _handleAiRequest(request, 'confusion', uid),
+    );
+  });
+
+  router.post('/ai/sentence', (Request request) async {
+    return _protected(
+      config,
+      request,
+      (uid) => _handleAiRequest(request, 'sentence_gen', uid),
+    );
+  });
+
+  router.post('/ai/reading-explain', (Request request) async {
+    return _protected(
+      config,
+      request,
+      (uid) => _handleAiRequest(request, 'reading_explain', uid),
     );
   });
 
@@ -1350,17 +1429,67 @@ Router buildRouter(
     });
   });
 
+  router.get('/study-spots', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final spots = await database.listStudySpots(uid);
+      return jsonResponse({'spots': spots});
+    });
+  });
+
+  router.post('/study-spots', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      final name = (body['name']?.toString() ?? '').trim();
+      final rawLat = body['latitude'];
+      final rawLng = body['longitude'];
+      // 安全解析坐标：客户端可能传 num 或 String 数字；任何非数值→null→400。
+      final lat = rawLat is num
+          ? rawLat.toDouble()
+          : num.tryParse(rawLat?.toString() ?? '')?.toDouble();
+      final lng = rawLng is num
+          ? rawLng.toDouble()
+          : num.tryParse(rawLng?.toString() ?? '')?.toDouble();
+      if (lat == null || lng == null) {
+        return jsonResponse({'error': 'invalid_coordinates'}, status: 400);
+      }
+      final err =
+          StudySpotPolicy.validate(name: name, latitude: lat, longitude: lng);
+      if (err != null) return jsonResponse({'error': err}, status: 400);
+      final spot = await database.recordStudyVisit(
+        uid,
+        name: name,
+        latitude: lat,
+        longitude: lng,
+      );
+      return jsonResponse(spot, status: 201);
+    });
+  });
+
+  router.delete('/study-spots/<id>', (Request request, String id) async {
+    return _protected(config, request, (uid) async {
+      // 预检 UUID 格式，避免非法字符串触发 Postgres invalid input syntax for type uuid → 500。
+      if (!_isValidUuid(id)) {
+        return jsonResponse({'error': 'not found'}, status: 404);
+      }
+      final ok = await database.deleteStudySpot(uid, id);
+      if (!ok) return jsonResponse({'error': 'not found'}, status: 404);
+      return jsonResponse({'deleted': true});
+    });
+  });
+
   return router;
 }
 
-Map<String, dynamic> _forumPostDto(
+Map<String, dynamic> forumPostDto(
   Map<String, dynamic> row, {
   required bool isLiked,
   required bool isFavorited,
+  String? authorName,
 }) {
   return {
     'id': row['id'].toString(),
     'authorId': row['author_id'],
+    'authorName': authorName ?? row['author_name'] ?? 'User',
     'title': row['title'],
     'body': row['body'],
     'tag': row['tag'],
@@ -1469,22 +1598,41 @@ List<Map<String, dynamic>>? _cachedWordBooks;
 Future<List<Map<String, dynamic>>>? _loadingWordBooks;
 
 Future<List<Map<String, dynamic>>> _readWordBooks() async {
-  final file = _wordBookDataFile();
-  final decoded = jsonDecode(await file.readAsString());
-  if (decoded is! List) {
-    throw const FormatException('wordbooks_p0.json must be a list');
+  final books = <Map<String, dynamic>>[];
+  for (final file in _wordBookDataFiles()) {
+    final decoded = jsonDecode(await file.readAsString());
+    if (decoded is! List) {
+      throw FormatException('${file.path} must be a list');
+    }
+    for (final item in decoded.whereType<Map>()) {
+      books.add(Map<String, dynamic>.from(item));
+    }
   }
-  return decoded.whereType<Map>().map((item) {
-    return Map<String, dynamic>.from(item);
-  }).toList();
+  return books;
 }
 
-File _wordBookDataFile() {
-  final serverRelative = File('data/wordbooks_p0.json');
-  if (serverRelative.existsSync()) return serverRelative;
-  final repoRelative = File('server/data/wordbooks_p0.json');
-  if (repoRelative.existsSync()) return repoRelative;
-  return serverRelative;
+// ponytail: JLPT data is duplicated from the client assets into server/data/.
+// If this duplication ever drifts, regenerate wordbooks_jlpt.json from
+// linguaquest/lib/assets/data/wordbook_jlpt_*.json.
+List<File> _wordBookDataFiles() {
+  final files = <File>[];
+  for (final name in const [
+    'wordbooks_p0.json',
+    'wordbooks_jlpt.json',
+    'wordbooks_extra.json',
+  ]) {
+    final serverRelative = File('data/$name');
+    final repoRelative = File('server/data/$name');
+    if (serverRelative.existsSync()) {
+      files.add(serverRelative);
+    } else if (repoRelative.existsSync()) {
+      files.add(repoRelative);
+    }
+  }
+  if (files.isEmpty) {
+    files.add(File('data/wordbooks_p0.json'));
+  }
+  return files;
 }
 
 Map<String, dynamic>? _wordBookById(
@@ -1583,6 +1731,8 @@ Map<String, dynamic> userDto(Map<String, dynamic> row) {
     'streak': row['streak'],
     'emailVerified': row['email_verified'] ?? true,
     'lastStudyDate': (row['last_study_date'] as DateTime?)?.toIso8601String(),
+    'currentWordBookId': row['current_word_book_id'] as String?,
+    'language': row['language'] as String?,
     'createdAt': (row['created_at'] as DateTime).toIso8601String(),
     'updatedAt': (row['updated_at'] as DateTime).toIso8601String(),
   };
@@ -1945,6 +2095,11 @@ String? nullableDateValue(Object? value) {
   return value.toString();
 }
 
+final _uuidPattern = RegExp(
+  r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$',
+);
+bool _isValidUuid(String id) => _uuidPattern.hasMatch(id);
+
 final _emailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
 
 bool isValidEmail(String email) => _emailPattern.hasMatch(email.trim());
@@ -1973,3 +2128,20 @@ Future<void> _issueAndSendCode(
   );
   await mailer.sendVerificationCode(to: email, code: code);
 }
+
+// ── TTS pure helpers ──────────────────────────────────────────────────────────
+
+/// Returns the edge-tts voice name for the given language code.
+/// Defaults to zh voice for unknown inputs (callers should validate lang first).
+String ttsVoiceFor(String lang) => switch (lang) {
+  'zh' => 'zh-CN-XiaoxiaoNeural',
+  'en' => 'en-US-AriaNeural',
+  'ja' => 'ja-JP-NanamiNeural',
+  _ => 'zh-CN-XiaoxiaoNeural',
+};
+
+/// Returns the edge-tts rate string for the given slow flag value.
+String ttsRateFor(String slow) => slow == 'true' ? '-25%' : '+0%';
+
+/// Returns true if lang is in the supported whitelist {zh, en, ja}.
+bool isTtsLangValid(String lang) => const {'zh', 'en', 'ja'}.contains(lang);

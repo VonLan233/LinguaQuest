@@ -1,23 +1,29 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/utils/custom_word_localization.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
+import '../../core/widgets/language_wordbook_picker.dart';
 import '../../core/widgets/learning_badges.dart';
-import '../../core/widgets/mascot_empty_state.dart';
 import '../../core/widgets/mascot_image.dart';
 import '../../core/widgets/section_header.dart';
 import '../../core/widgets/stat_tile.dart';
-import '../../core/utils/custom_word_localization.dart';
 import '../../data/models/custom_word.dart';
 import '../../l10n/generated/app_localizations.dart';
+
+/// Deterministic Word-of-the-Day index: rotates daily, stable within a day.
+int wordOfDayIndex(int epochDay, int wordCount) {
+  if (wordCount <= 0) return 0;
+  return epochDay % wordCount;
+}
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -45,8 +51,12 @@ class HomeScreen extends ConsumerWidget {
     final pathComplete =
         state.formalLessons.isNotEmpty &&
         state.formalLessons.every((lesson) => lesson.status == 'completed');
-    final wordOfDay = (currentLesson?.words.isNotEmpty ?? false)
-        ? currentLesson!.words.first
+    final wodPool = currentLesson?.words ?? const [];
+    final wordOfDay = wodPool.isNotEmpty
+        ? wodPool[wordOfDayIndex(
+            DateTime.now().millisecondsSinceEpoch ~/ Duration.millisecondsPerDay,
+            wodPool.length,
+          )]
         : null;
 
     return ListView(
@@ -54,6 +64,24 @@ class HomeScreen extends ConsumerWidget {
       children: [
         Row(
           children: [
+            Builder(
+              builder: (ctx) => Tooltip(
+                message: 'Menu',
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(AppTokens.radiusPill),
+                  onTap: () => Scaffold.of(ctx).openDrawer(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppTokens.s4),
+                    child: Icon(
+                      AppIcons.menu,
+                      size: 24,
+                      color: Theme.of(ctx).colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: AppTokens.s4),
             Tooltip(
               message: l10n.homePersonalSpace,
               child: InkWell(
@@ -116,6 +144,7 @@ class HomeScreen extends ConsumerWidget {
             totalWork: totalWork,
             progress: dailyProgress,
             isPaused: state.isStudyPlanPaused,
+            onTargetTap: () => showLanguageWordbookPicker(context),
             l10n: l10n,
           ),
         ),
@@ -138,7 +167,9 @@ class HomeScreen extends ConsumerWidget {
             currentSection:
                 currentLesson?.section ??
                 currentBook?.nameFor(localeCode) ??
-                displayTarget(user?.targetExam ?? '雅思核心词汇', l10n: l10n),
+                (user?.targetExam != null
+                    ? displayTarget(user!.targetExam, l10n: l10n)
+                    : l10n.commonWordbook),
             dailyGoal: dailyGoal,
             dueCount: dueCount,
             isPaused: state.isStudyPlanPaused,
@@ -171,7 +202,7 @@ class HomeScreen extends ConsumerWidget {
                 icon: AppIcons.article,
                 title: l10n.homeDailyArticle,
                 subtitle: l10n.homeDailyArticleSubtitle,
-                onTap: () => context.go('/ai-learning'),
+                onTap: () => context.push('/reading'),
               ),
               _HomeShortcutData(
                 icon: AppIcons.route,
@@ -208,21 +239,30 @@ class HomeScreen extends ConsumerWidget {
             children: [
               SectionHeader(
                 title: l10n.homeWeakWords,
-                subtitle: state.weakWords.isEmpty
-                    ? l10n.homeNoWeakWords
-                    : l10n.homeWeakWordsReview,
+                subtitle: state.weakWords.isEmpty ? null : l10n.homeWeakWordsReview,
                 trailing: TextButton(
                   onPressed: () => context.push('/study/review'),
                   child: Text(l10n.commonReview),
                 ),
               ),
               if (state.weakWords.isEmpty)
-                MascotEmptyState(
-                  title: l10n.homeNoWeakWords,
-                  message: l10n.homeWeakWordsEmptyHint,
-                  action: AppSecondaryButton(
-                    label: l10n.commonReview,
-                    onPressed: () => context.push('/study/review'),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppTokens.s24,
+                      vertical: AppTokens.s20,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const MascotImage(size: 96),
+                        const SizedBox(height: AppTokens.s20),
+                        AppSecondaryButton(
+                          label: l10n.commonReview,
+                          onPressed: () => context.push('/study/review'),
+                        ),
+                      ],
+                    ),
                   ),
                 )
               else ...[
@@ -230,6 +270,15 @@ class HomeScreen extends ConsumerWidget {
                 ...state.weakWords
                     .take(3)
                     .map((word) => _WeakWordLink(word: word)),
+                if (state.weakWords.length > 3)
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton(
+                      key: const ValueKey('home-see-all-mistakes'),
+                      onPressed: () => context.push('/mistake-book'),
+                      child: Text(l10n.commonViewAll),
+                    ),
+                  ),
               ],
             ],
           ),
@@ -492,6 +541,7 @@ class _DailyFocusHeader extends StatelessWidget {
     required this.progress,
     required this.isPaused,
     required this.l10n,
+    this.onTargetTap,
   });
 
   final int streak;
@@ -502,6 +552,7 @@ class _DailyFocusHeader extends StatelessWidget {
   final double progress;
   final bool isPaused;
   final AppLocalizations l10n;
+  final VoidCallback? onTargetTap;
 
   @override
   Widget build(BuildContext context) {
@@ -513,9 +564,12 @@ class _DailyFocusHeader extends StatelessWidget {
           spacing: AppTokens.s8,
           runSpacing: AppTokens.s8,
           children: [
-            AppPill(
-              label: '$target · $level',
-              icon: AppIcons.trackChanges,
+            GestureDetector(
+              onTap: onTargetTap,
+              child: AppPill(
+                label: '$target · $level',
+                icon: AppIcons.trackChanges,
+              ),
             ),
             AppPill(
               variant: PillVariant.streak,

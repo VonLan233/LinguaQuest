@@ -12,7 +12,7 @@ List<Lesson> lessonsFromWordBook(WordBook book, {int wordsPerLesson = 3}) {
     lessons.add(
       Lesson(
         id: lessonId,
-        title: '${book.title} 第 $lessonNumber 组',
+        title: '${book.title} Group $lessonNumber',
         section: book.title,
         description: book.description,
         status: lessonNumber == 1 ? 'current' : 'locked',
@@ -35,31 +35,31 @@ List<Lesson> trainingLessonsFromWordBook(WordBook book) {
   return [
     _trainingLesson(
       id: '${book.id}-training-speed',
-      title: '${book.title} · 抢词挑战',
-      description: '从当前词书抽题，快速辨认词义和英文拼写。',
+      title: '${book.title} · Campus Sprint',
+      description: 'Draw from the current wordbook for quick meaning and spelling checks.',
       xpReward: 25,
       words: _takeTrainingWords(book.words, 0, 4),
       distractorWords: book.words,
     ),
     _trainingLesson(
       id: '${book.id}-training-gauntlet',
-      title: '${book.title} · 一站到底',
-      description: '连续完成多题型挑战，错词会进入后续复习记录。',
+      title: '${book.title} · Last One Standing',
+      description: 'Complete a mixed challenge; missed words are saved for later review.',
       xpReward: 30,
       words: _takeTrainingWords(book.words, 4, 4),
       distractorWords: book.words,
     ),
     _spellingLesson(
       id: '${book.id}-training-spelling',
-      title: '${book.title} · 单词拼写',
-      description: '根据中文释义和语境输入英文，强化可产出能力。',
+      title: '${book.title} · Word Spelling',
+      description: 'Type the target word from meaning and context cues.',
       xpReward: 24,
       words: _takeTrainingWords(book.words, 8, 4),
     ),
     _listeningLesson(
       id: '${book.id}-training-listening',
-      title: '${book.title} · 听音速答',
-      description: '围绕当前词书进行发音识别和词义选择。',
+      title: '${book.title} · Listening Sprint',
+      description: 'Practice pronunciation recognition and meaning choice from the current wordbook.',
       xpReward: 22,
       words: _takeTrainingWords(book.words, 12, 4),
       distractorWords: book.words,
@@ -409,7 +409,7 @@ Lesson _trainingLesson({
   return Lesson(
     id: id,
     title: title,
-    section: '训练场',
+    section: 'Training Ground',
     description: description,
     status: 'current',
     xpReward: xpReward,
@@ -433,7 +433,7 @@ Lesson _spellingLesson({
   return Lesson(
     id: id,
     title: title,
-    section: '训练场',
+    section: 'Training Ground',
     description: description,
     status: 'current',
     xpReward: xpReward,
@@ -466,7 +466,7 @@ Lesson _listeningLesson({
   return Lesson(
     id: id,
     title: title,
-    section: '训练场',
+    section: 'Training Ground',
     description: description,
     status: 'current',
     xpReward: xpReward,

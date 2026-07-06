@@ -51,53 +51,52 @@ class TargetWordDetailScreen extends ConsumerWidget {
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Expanded(
-                child: AppSecondaryButton(
-                  onPressed: () => _toggleFavorite(
-                    context,
-                    ref,
-                    word,
-                    wordBookId,
-                    progress?.isFavorite ?? false,
-                    l10n,
-                  ),
-                  label: progress?.isFavorite == true
-                      ? l10n.wordbookFavorited
-                      : l10n.wordbookFavorite,
+              AppSecondaryButton(
+                onPressed: () => _toggleFavorite(
+                  context,
+                  ref,
+                  word,
+                  wordBookId,
+                  progress?.isFavorite ?? false,
+                  l10n,
                 ),
+                label: progress?.isFavorite == true
+                    ? l10n.wordbookFavorited
+                    : l10n.wordbookFavorite,
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: FilledButton.icon(
-                  style: FilledButton.styleFrom(
-                    backgroundColor: AppTokens.azure,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                        AppTokens.radiusButton,
-                      ),
+              const SizedBox(height: 12),
+              FilledButton.icon(
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppTokens.azure,
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size.fromHeight(48),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      AppTokens.radiusButton,
                     ),
                   ),
-                  onPressed: () => _toggleNewWordbook(
-                    context,
-                    ref,
-                    word,
-                    wordBookId,
-                    isInNewWordbook,
-                    l10n,
-                  ),
-                  icon: Icon(
-                    isInNewWordbook
-                        ? AppIcons.checkCircle
-                        : AppIcons.addCircle,
-                  ),
-                  label: Text(
-                    isInNewWordbook
-                        ? l10n.wordbookRemoveCustomWord
-                        : l10n.wordbookAddToCustomWords,
-                  ),
+                ),
+                onPressed: () => _toggleNewWordbook(
+                  context,
+                  ref,
+                  word,
+                  wordBookId,
+                  isInNewWordbook,
+                  l10n,
+                ),
+                icon: Icon(
+                  isInNewWordbook
+                      ? AppIcons.checkCircle
+                      : AppIcons.addCircle,
+                ),
+                label: Text(
+                  isInNewWordbook
+                      ? l10n.wordbookRemoveCustomWord
+                      : l10n.wordbookAddToCustomWords,
                 ),
               ),
             ],
@@ -116,6 +115,7 @@ class TargetWordDetailScreen extends ConsumerWidget {
             AppCard(
               child: _WordHero(
                 word: word,
+                bookLanguage: detail.book.language,
                 bookTitle: detail.book.nameFor(
                   Localizations.localeOf(context).languageCode,
                 ),
@@ -365,11 +365,14 @@ class _AiWordSupportLink extends StatelessWidget {
 class _WordHero extends StatelessWidget {
   const _WordHero({
     required this.word,
+    required this.bookLanguage,
     required this.bookTitle,
     required this.l10n,
   });
 
   final Word word;
+  /// ISO language code of the WordBook this word belongs to (e.g. 'zh', 'ja').
+  final String bookLanguage;
   final String bookTitle;
   final AppLocalizations l10n;
 
@@ -387,9 +390,9 @@ class _WordHero extends StatelessWidget {
             style: Theme.of(context).textTheme.displaySmall,
           ),
           const SizedBox(height: 8),
-          _PhoneticLine(word: word),
+          _PhoneticLine(word: word, bookLanguage: bookLanguage),
           const SizedBox(height: 12),
-          _PronunciationControls(word: word),
+          _PronunciationControls(word: word, language: bookLanguage),
           const SizedBox(height: 12),
           Wrap(
             alignment: WrapAlignment.center,
@@ -417,9 +420,10 @@ class _WordHero extends StatelessWidget {
 }
 
 class _PronunciationControls extends StatelessWidget {
-  const _PronunciationControls({required this.word});
+  const _PronunciationControls({required this.word, this.language = ''});
 
   final Word word;
+  final String language;
 
   @override
   Widget build(BuildContext context) {
@@ -427,17 +431,48 @@ class _PronunciationControls extends StatelessWidget {
       word: word.word,
       audioUKUrl: word.audioUKUrl,
       audioUSUrl: word.audioUSUrl,
+      language: language,
     );
   }
 }
 
 class _PhoneticLine extends StatelessWidget {
-  const _PhoneticLine({required this.word});
+  const _PhoneticLine({required this.word, required this.bookLanguage});
 
   final Word word;
+  /// ISO language code of the book this word belongs to (e.g. 'zh', 'ja').
+  final String bookLanguage;
 
   @override
   Widget build(BuildContext context) {
+    // --- Japanese: show kana (primary) + romaji (secondary) ---
+    if (bookLanguage == 'ja') {
+      final kana = word.kana.trim();
+      final romaji = word.romaji.trim();
+      if (kana.isEmpty && romaji.isEmpty) return const SizedBox();
+      return Column(
+        children: [
+          if (kana.isNotEmpty)
+            Text(
+              kana,
+              textAlign: TextAlign.center,
+              key: const Key('phonetic-kana'),
+            ),
+          if (romaji.isNotEmpty)
+            Text(
+              romaji,
+              textAlign: TextAlign.center,
+              key: const Key('phonetic-romaji'),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontSize: 13,
+              ),
+            ),
+        ],
+      );
+    }
+
+    // --- Chinese (HSK) and other languages: existing behaviour ---
     final uk = word.phoneticUK.trim();
     final us = word.phoneticUS.trim();
     final fallback = word.phonetic.trim();
@@ -445,14 +480,18 @@ class _PhoneticLine extends StatelessWidget {
 
     // Chinese (HSK) words carry pinyin, not regional IPA — show it once,
     // without the UK/US split.
-    if (containsCjkText(word.word)) {
+    if (bookLanguage == 'zh' || containsCjkText(word.word)) {
       final pinyin = uk.isNotEmpty
           ? uk
           : us.isNotEmpty
           ? us
           : fallback;
       if (pinyin.isEmpty) return const SizedBox();
-      return Text(pinyin, textAlign: TextAlign.center);
+      return Text(
+        pinyin,
+        textAlign: TextAlign.center,
+        key: const Key('phonetic-pinyin'),
+      );
     }
 
     return Wrap(
@@ -478,54 +517,21 @@ class _DefinitionSections extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cn = word.definitions.isEmpty ? [word.meaning] : word.definitions;
     final en = word.englishDefinitions.isEmpty
         ? [word.definition]
         : word.englishDefinitions;
     final ms = word.malayDefinitions;
 
-    // Chinese (HSK) words: the "Chinese definitions" list duplicates the English
-    // meanings, so show only the English definitions.
-    if (containsCjkText(word.word)) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _DefinitionList(
-            title: l10n.wordbookEnglishDefinitions,
-            values: en,
-            highFrequency: true,
-            l10n: l10n,
-          ),
-          if (ms.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            _DefinitionList(
-              title: l10n.wordbookMalayDefinitions,
-              values: ms,
-              l10n: l10n,
-            ),
-          ],
-        ],
-      );
-    }
-
+    // The app teaches Chinese (HSK); the localized "Chinese definitions" list
+    // only duplicates the English meanings, so show just the English (+ Malay)
+    // definitions for every word.
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          l10n.wordbookBilingualDefinitions,
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        const SizedBox(height: 12),
-        _DefinitionList(
-          title: l10n.wordbookChineseDefinitions,
-          values: cn,
-          highFrequency: true,
-          l10n: l10n,
-        ),
-        const SizedBox(height: 12),
         _DefinitionList(
           title: l10n.wordbookEnglishDefinitions,
           values: en,
+          highFrequency: true,
           l10n: l10n,
         ),
         if (ms.isNotEmpty) ...[

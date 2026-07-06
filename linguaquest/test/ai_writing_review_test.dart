@@ -6,6 +6,7 @@ import 'package:linguaquest/core/theme/app_theme.dart';
 import 'package:linguaquest/data/models/ai_feature.dart';
 import 'package:linguaquest/data/repositories/mock_repositories.dart';
 import 'package:linguaquest/features/ai_learning/ai_writing_review_screen.dart';
+import 'package:linguaquest/l10n/generated/app_localizations.dart';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -17,6 +18,9 @@ Widget _buildScreen() {
   return ProviderScope(
     child: MaterialApp(
       theme: AppTheme.light(),
+      locale: const Locale('en'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(
         body: Builder(
           builder: (context) => ElevatedButton(
@@ -195,7 +199,7 @@ void main() {
       final repo = MockAiRepository();
       await repo.reviewWriting(
         essay: 'Test essay',
-        examType: 'IELTS',
+        examType: 'Academic',
         targetLanguage: 'zh',
       );
       final history = await repo.listHistory();
@@ -241,10 +245,11 @@ void main() {
       await _openScreen(tester);
 
       expect(find.text('General'), findsOneWidget);
-      expect(find.text('IELTS'), findsOneWidget);
-      expect(find.text('CET-4'), findsOneWidget);
-      expect(find.text('CET-6'), findsOneWidget);
-      expect(find.text('TOEFL'), findsOneWidget);
+      expect(find.text('Academic'), findsOneWidget);
+      expect(find.text('Business'), findsOneWidget);
+      expect(find.text('Casual'), findsOneWidget);
+      expect(find.text('IELTS'), findsNothing);
+      expect(find.text('TOEFL'), findsNothing);
     });
 
     testWidgets('shows character count hint for essay field', (tester) async {
@@ -290,17 +295,17 @@ void main() {
     testWidgets('can select a different exam type chip', (tester) async {
       await _openScreen(tester);
 
-      await tester.tap(find.text('IELTS'));
+      await tester.tap(find.text('Academic'));
       await tester.pump();
 
-      // After tapping IELTS, it should be selected (ChoiceChip is selected).
-      final ieltsChip = tester.widget<ChoiceChip>(
+      // After tapping Academic, it should be selected (ChoiceChip is selected).
+      final academicChip = tester.widget<ChoiceChip>(
         find.ancestor(
-          of: find.text('IELTS'),
+          of: find.text('Academic'),
           matching: find.byType(ChoiceChip),
         ),
       );
-      expect(ieltsChip.selected, isTrue);
+      expect(academicChip.selected, isTrue);
     });
 
     testWidgets('does not show result view initially', (tester) async {
@@ -311,5 +316,35 @@ void main() {
       expect(find.text('Score Breakdown'), findsNothing);
       expect(find.text('New Essay'), findsNothing);
     });
+
+    testWidgets(
+      'copy-expression snackbar is floating with short duration '
+      '(SVV D-11 regression)',
+      (tester) async {
+        await _openScreen(tester);
+
+        // Submit a valid essay so the (mock) result view with copyable
+        // high-score expressions is shown.
+        await tester.enterText(
+          find.byType(TextFormField),
+          'This is a sufficiently long essay used only for the writing '
+          'review widget test so it passes the fifty character minimum.',
+        );
+        await tester.tap(find.text('Submit for Review'));
+        await tester.pumpAndSettle();
+
+        // High-Score Expressions section renders a copy button per expression.
+        final copyBtn = find.byIcon(Icons.copy).first;
+        await tester.ensureVisible(copyBtn);
+        await tester.pumpAndSettle();
+
+        await tester.tap(copyBtn);
+        await tester.pump(); // let the snackbar mount
+
+        final snackBar = tester.widget<SnackBar>(find.byType(SnackBar));
+        expect(snackBar.behavior, SnackBarBehavior.floating);
+        expect(snackBar.duration, const Duration(milliseconds: 1500));
+      },
+    );
   });
 }

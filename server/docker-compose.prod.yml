@@ -37,5 +37,11 @@ services:
       timeout: 5s
       retries: 5
 
+  tts:
+    build: ./tts
+    restart: unless-stopped
+    expose:
+      - "5002"
+
 volumes:
   pgdata_prod:

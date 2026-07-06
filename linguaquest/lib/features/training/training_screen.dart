@@ -10,7 +10,6 @@ import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/compact_entry_card.dart';
 import '../../core/widgets/learning_badges.dart';
-import '../../core/widgets/section_header.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 class TrainingScreen extends ConsumerWidget {
@@ -42,8 +41,6 @@ class TrainingScreen extends ConsumerWidget {
           streakLabel: l10n.homeStreakLabel,
         ),
         const SizedBox(height: AppTokens.s32),
-        SectionHeader(title: l10n.trainingTimedTests),
-        const SizedBox(height: AppTokens.s12),
         _TrainingGameList(
           children: [
             _TrainingGameRow(
@@ -60,13 +57,6 @@ class TrainingScreen extends ConsumerWidget {
               color: AppTokens.mangoColor(context),
               onTap: () => context.push('/training/word-rush'),
             ),
-          ],
-        ),
-        const SizedBox(height: AppTokens.s24),
-        SectionHeader(title: l10n.trainingSpecialDrills),
-        const SizedBox(height: AppTokens.s12),
-        _TrainingGameList(
-          children: [
             _TrainingGameRow(
               icon: AppIcons.stairs,
               title: l10n.trainingSurvivor,
@@ -83,13 +73,13 @@ class TrainingScreen extends ConsumerWidget {
               icon: AppIcons.article,
               title: l10n.trainingPassageCloze,
               color: AppTokens.successColor(context),
-              onTap: null,
+              onTap: () => context.push('/training/passage-cloze'),
             ),
             _TrainingGameRow(
               icon: AppIcons.hearing,
               title: l10n.trainingListening,
               color: AppTokens.mangoColor(context),
-              onTap: null,
+              onTap: () => context.push('/training/listening-sprint'),
             ),
           ],
         ),

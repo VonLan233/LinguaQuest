@@ -5,11 +5,13 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/widgets/ai_error_card.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_progress_bar.dart';
 import '../../data/models/ai_feature.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class AiWritingReviewScreen extends ConsumerStatefulWidget {
   const AiWritingReviewScreen({super.key});
@@ -19,22 +21,16 @@ class AiWritingReviewScreen extends ConsumerStatefulWidget {
       _AiWritingReviewScreenState();
 }
 
-class _AiWritingReviewScreenState
-    extends ConsumerState<AiWritingReviewScreen> {
+class _AiWritingReviewScreenState extends ConsumerState<AiWritingReviewScreen> {
   final _formKey = GlobalKey<FormState>();
   final _essayController = TextEditingController();
   String _selectedExamType = 'General';
   bool _isLoading = false;
   WritingReviewResult? _result;
   bool _showRewrite = false;
+  String? _errorMessage;
 
-  static const _examTypes = [
-    'General',
-    'IELTS',
-    'CET-4',
-    'CET-6',
-    'TOEFL',
-  ];
+  static const _examTypes = ['General', 'Academic', 'Business', 'Casual'];
 
   @override
   void dispose() {
@@ -47,25 +43,28 @@ class _AiWritingReviewScreenState
     setState(() {
       _isLoading = true;
       _result = null;
+      _errorMessage = null;
     });
-    final raw = await ref.read(appControllerProvider.notifier).reviewWriting(
-      essay: _essayController.text.trim(),
-      examType:
-          _selectedExamType == 'General' ? null : _selectedExamType,
-    );
+    final raw = await ref
+        .read(appControllerProvider.notifier)
+        .reviewWriting(
+          essay: _essayController.text.trim(),
+          examType: _selectedExamType == 'General' ? null : _selectedExamType,
+        );
     if (mounted) {
       if (raw.isEmpty) {
         final errMsg = ref.read(appControllerProvider).errorMessage;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errMsg ?? 'An error occurred. Please try again.')),
-        );
-      }
-      setState(() {
-        _isLoading = false;
-        if (raw.isNotEmpty) {
+        setState(() {
+          _isLoading = false;
+          _errorMessage = errMsg ?? AppLocalizations.of(context).aiErrorGeneric;
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
           _result = WritingReviewResult.fromJson(raw);
-        }
-      });
+          _errorMessage = null;
+        });
+      }
     }
   }
 
@@ -73,6 +72,7 @@ class _AiWritingReviewScreenState
     setState(() {
       _result = null;
       _showRewrite = false;
+      _errorMessage = null;
     });
   }
 
@@ -103,10 +103,11 @@ class _AiWritingReviewScreenState
                 essayController: _essayController,
                 examTypes: _examTypes,
                 selectedExamType: _selectedExamType,
-                onExamTypeChanged: (v) =>
-                    setState(() => _selectedExamType = v),
+                onExamTypeChanged: (v) => setState(() => _selectedExamType = v),
                 isLoading: _isLoading,
                 onSubmit: _submit,
+                errorMessage: _errorMessage,
+                onRetry: _submit,
               ),
       ),
     );
@@ -124,6 +125,8 @@ class _InputView extends StatelessWidget {
     required this.onExamTypeChanged,
     required this.isLoading,
     required this.onSubmit,
+    this.errorMessage,
+    required this.onRetry,
   });
 
   final GlobalKey<FormState> formKey;
@@ -133,99 +136,136 @@ class _InputView extends StatelessWidget {
   final ValueChanged<String> onExamTypeChanged;
   final bool isLoading;
   final VoidCallback onSubmit;
+  final String? errorMessage;
+  final VoidCallback onRetry;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     return Form(
       key: formKey,
-      child: ListView(
-        padding: const EdgeInsets.all(AppTokens.s20),
+      child: Column(
         children: [
-          // Exam type selector
-          AppCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.all(AppTokens.s20),
               children: [
-                Text(
-                  'Exam Type',
-                  style: theme.textTheme.labelLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
+                // Guidance text (aiEmptyWriting)
+                AppCard(
+                  padding: const EdgeInsets.all(AppTokens.s12),
+                  child: Text(
+                    l10n.aiEmptyWriting,
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ),
-                const SizedBox(height: AppTokens.s12),
-                Wrap(
-                  spacing: AppTokens.s8,
-                  runSpacing: AppTokens.s8,
-                  children: examTypes.map((type) {
-                    final selected = type == selectedExamType;
-                    return ChoiceChip(
-                      label: Text(type),
-                      selected: selected,
-                      onSelected: (_) => onExamTypeChanged(type),
-                    );
-                  }).toList(),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: AppTokens.s16),
-          // Essay input
-          AppCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Your Essay',
-                  style: theme.textTheme.labelLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: AppTokens.s8),
-                ValueListenableBuilder<TextEditingValue>(
-                  valueListenable: essayController,
-                  builder: (context, value, _) {
-                    return Text(
-                      '${value.text.length} / 3000 characters',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: value.text.length > 3000
-                            ? theme.colorScheme.error
-                            : theme.colorScheme.onSurfaceVariant,
+                const SizedBox(height: AppTokens.s16),
+                // Exam type selector
+                AppCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Exam Type',
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    );
-                  },
-                ),
-                const SizedBox(height: AppTokens.s8),
-                TextFormField(
-                  controller: essayController,
-                  maxLines: null,
-                  minLines: 8,
-                  maxLength: 3000,
-                  maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                  decoration: const InputDecoration(
-                    hintText:
-                        'Paste or type your essay here (50–3000 characters)...',
-                    border: OutlineInputBorder(),
-                    counterText: '',
+                      const SizedBox(height: AppTokens.s12),
+                      Wrap(
+                        spacing: AppTokens.s8,
+                        runSpacing: AppTokens.s8,
+                        children: examTypes.map((type) {
+                          final selected = type == selectedExamType;
+                          return ChoiceChip(
+                            label: Text(type),
+                            selected: selected,
+                            onSelected: (_) => onExamTypeChanged(type),
+                          );
+                        }).toList(),
+                      ),
+                    ],
                   ),
-                  validator: (v) {
-                    if (v == null || v.trim().length < 50) {
-                      return 'Essay must be at least 50 characters';
-                    }
-                    return null;
-                  },
                 ),
+                const SizedBox(height: AppTokens.s16),
+                // Essay input
+                AppCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Your Essay',
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: AppTokens.s8),
+                      ValueListenableBuilder<TextEditingValue>(
+                        valueListenable: essayController,
+                        builder: (context, value, _) {
+                          return Text(
+                            '${value.text.length} / 3000 characters',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: value.text.length > 3000
+                                  ? theme.colorScheme.error
+                                  : theme.colorScheme.onSurfaceVariant,
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: AppTokens.s8),
+                      TextFormField(
+                        controller: essayController,
+                        maxLines: null,
+                        minLines: 8,
+                        maxLength: 3000,
+                        maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                        decoration: const InputDecoration(
+                          hintText:
+                              'Paste or type your essay here (50–3000 characters)...',
+                          border: OutlineInputBorder(),
+                          counterText: '',
+                        ),
+                        validator: (v) {
+                          if (v == null || v.trim().length < 50) {
+                            return 'Essay must be at least 50 characters';
+                          }
+                          return null;
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: AppTokens.s24),
+                // ERROR state (shown in input view instead of result)
+                if (errorMessage != null) ...[
+                  AiErrorCard(message: errorMessage!, onRetry: onRetry),
+                  const SizedBox(height: AppTokens.s16),
+                ],
               ],
             ),
           ),
-          const SizedBox(height: AppTokens.s24),
-          if (isLoading)
-            const Center(child: CircularProgressIndicator())
-          else
-            AppPrimaryButton(
-              label: 'Submit for Review',
-              onPressed: onSubmit,
+          // Pinned submit / loading control — always built and reachable,
+          // independent of how tall the scrollable form grows.
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppTokens.s20,
+              0,
+              AppTokens.s20,
+              AppTokens.s20,
             ),
+            child: isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : errorMessage == null
+                ? AppPrimaryButton(
+                    label: 'Submit for Review',
+                    onPressed: onSubmit,
+                  )
+                : const SizedBox.shrink(),
+          ),
         ],
       ),
     );
@@ -347,8 +387,7 @@ class _ResultView extends StatelessWidget {
                 const SizedBox(height: AppTokens.s8),
                 ...result.mainIssues.map(
                   (issue) => Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: AppTokens.s4),
+                    padding: const EdgeInsets.symmetric(vertical: AppTokens.s4),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -381,28 +420,31 @@ class _ResultView extends StatelessWidget {
                   final corrected = issue['corrected'] ?? '';
                   final rule = issue['rule'] ?? '';
                   return Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: AppTokens.s4),
+                    padding: const EdgeInsets.symmetric(vertical: AppTokens.s4),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text.rich(TextSpan(children: [
+                        Text.rich(
                           TextSpan(
-                            text: original,
-                            style: TextStyle(
-                              color: theme.colorScheme.error,
-                              decoration: TextDecoration.lineThrough,
-                            ),
+                            children: [
+                              TextSpan(
+                                text: original,
+                                style: TextStyle(
+                                  color: theme.colorScheme.error,
+                                  decoration: TextDecoration.lineThrough,
+                                ),
+                              ),
+                              const TextSpan(text: '  →  '),
+                              TextSpan(
+                                text: corrected,
+                                style: TextStyle(
+                                  color: theme.colorScheme.primary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
                           ),
-                          const TextSpan(text: '  →  '),
-                          TextSpan(
-                            text: corrected,
-                            style: TextStyle(
-                              color: theme.colorScheme.primary,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ])),
+                        ),
                         if (rule.isNotEmpty)
                           Text(
                             rule,
@@ -447,7 +489,14 @@ class _ResultView extends StatelessWidget {
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: expr));
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Copied!')),
+                          const SnackBar(
+                            content: Text('Copied!'),
+                            // Floating + short duration so the toast does not
+                            // sit over the submit control for the default 4s.
+                            // See SVV D-11.
+                            behavior: SnackBarBehavior.floating,
+                            duration: Duration(milliseconds: 1500),
+                          ),
                         );
                       },
                     ),
@@ -475,8 +524,7 @@ class _ResultView extends StatelessWidget {
                   final para = s['paragraph'] ?? '';
                   final suggestion = s['suggestion'] ?? '';
                   return Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: AppTokens.s4),
+                    padding: const EdgeInsets.symmetric(vertical: AppTokens.s4),
                     child: Text('Paragraph $para: $suggestion'),
                   );
                 }),
@@ -502,9 +550,7 @@ class _ResultView extends StatelessWidget {
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      Icon(showRewrite
-                          ? Icons.expand_less
-                          : Icons.expand_more),
+                      Icon(showRewrite ? Icons.expand_less : Icons.expand_more),
                     ],
                   ),
                 ),

@@ -71,5 +71,20 @@ void main() {
       // Most recent first
       expect(history.first.featureType, equals('sentence_analysis'));
     });
+
+    test('MockAiRepository.generateConfusion returns pairs', () async {
+      final repo = MockAiRepository();
+      final result = await repo.generateConfusion(
+          prompt: 'p', targetLanguage: 'zh', targetWord: '近');
+      expect(result['pairs'], isA<List>());
+    });
+
+    test('MockAiRepository.generateSentences returns sentences + rewrites', () async {
+      final repo = MockAiRepository();
+      final result = await repo.generateSentences(
+          prompt: 'p', targetLanguage: 'zh', targetWord: '学');
+      expect(result['sentences'], isA<List>());
+      expect(result['rewrites'], isA<List>());
+    });
   });
 }
