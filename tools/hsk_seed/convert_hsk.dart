@@ -39,14 +39,26 @@ void main(List<String> args) {
     if (simplified.isEmpty) continue;
     final forms = (entry['forms'] as List?) ?? const [];
     if (forms.isEmpty) continue;
-    final form = Map<String, dynamic>.from(forms.first as Map);
+    // #B2: 优先选拼音首字母小写的 form（常用词），避免姓氏/专名读音（如 Bǎi）。
+    Map<String, dynamic> pickForm() {
+      for (final f in forms) {
+        final m = Map<String, dynamic>.from(f as Map);
+        final p = (Map<String, dynamic>.from((m['transcriptions'] ?? {}) as Map)['pinyin'] ?? '').toString();
+        if (p.isNotEmpty && p[0].toLowerCase() == p[0]) return m;
+      }
+      return Map<String, dynamic>.from(forms.first as Map);
+    }
+    final form = pickForm();
     final transcriptions =
         Map<String, dynamic>.from((form['transcriptions'] ?? {}) as Map);
     final pinyin = (transcriptions['pinyin'] ?? '').toString();
     final meanings = <String>[
       for (final m in (form['meanings'] as List? ?? const []))
         m.toString().trim(),
-    ].where((m) => m.isNotEmpty && !_containsCjk(m)).toList();
+    ].where((m) =>
+        m.isNotEmpty &&
+        !_containsCjk(m) &&
+        !m.toLowerCase().startsWith('surname ')).toList();
     if (meanings.isEmpty) continue;
     final pos = <String>[
       for (final p in (entry['pos'] as List? ?? const [])) p.toString().trim(),

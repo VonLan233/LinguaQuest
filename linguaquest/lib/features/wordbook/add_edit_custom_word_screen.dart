@@ -194,9 +194,16 @@ class _AddEditCustomWordScreenState
     final l10n = AppLocalizations.of(context);
     if (!succeeded) {
       final message = ref.read(appControllerProvider).errorMessage;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message ?? l10n.customWordsSaveFailed)),
-      );
+      // Add path with no error = the word already exists (idempotent no-op):
+      // tell the user it's already there instead of the generic "saved"/"failed".
+      final text =
+          message ??
+          (existing == null
+              ? l10n.customWordsAlreadyInWordbook
+              : l10n.customWordsSaveFailed);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(text)));
       return;
     }
     ScaffoldMessenger.of(

@@ -2,16 +2,60 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../data/models/achievement.dart';
+import '../../data/models/ai_feature.dart';
+import '../../data/models/analytics.dart';
 import '../../data/models/app_notification.dart';
 import '../../data/models/custom_word.dart';
 import '../../data/models/daily_reward_task.dart';
+import '../../data/models/forum.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/lesson_result.dart';
 import '../../data/models/lottery.dart';
+import '../../data/models/recommendation.dart';
 import '../../data/models/study_plan.dart';
+import '../../data/models/study_spot.dart';
+import '../../data/models/user_privacy.dart';
 import '../../data/models/user_word.dart';
 import '../../data/models/user_profile.dart';
 import '../utils/custom_word_localization.dart';
+
+class SensorySettings {
+  const SensorySettings({
+    this.soundEnabled = true,
+    this.vibrationEnabled = true,
+    this.highContrastMode = false,
+  });
+
+  final bool soundEnabled;
+  final bool vibrationEnabled;
+  final bool highContrastMode;
+
+  static const defaults = SensorySettings();
+
+  SensorySettings copyWith({
+    bool? soundEnabled,
+    bool? vibrationEnabled,
+    bool? highContrastMode,
+  }) => SensorySettings(
+    soundEnabled: soundEnabled ?? this.soundEnabled,
+    vibrationEnabled: vibrationEnabled ?? this.vibrationEnabled,
+    highContrastMode: highContrastMode ?? this.highContrastMode,
+  );
+
+  Map<String, dynamic> toJson() => {
+    'soundEnabled': soundEnabled,
+    'vibrationEnabled': vibrationEnabled,
+    'highContrastMode': highContrastMode,
+  };
+
+  factory SensorySettings.fromJson(Map<String, dynamic> json) =>
+      SensorySettings(
+        soundEnabled: json['soundEnabled'] as bool? ?? true,
+        vibrationEnabled: json['vibrationEnabled'] as bool? ?? true,
+        highContrastMode: json['highContrastMode'] as bool? ?? false,
+      );
+}
 
 class DailyReminderSettings {
   const DailyReminderSettings({
@@ -70,6 +114,7 @@ class AppState {
     required this.reminderSettings,
     required this.completedLessonIds,
     required this.todayCompletedLessonIds,
+    required this.todayLearnedWordIds,
     required this.todayReviewWordIds,
     required this.todayTrainingSessionIds,
     required this.todayTrainingGameIds,
@@ -81,13 +126,24 @@ class AppState {
     required this.notifications,
     required this.lotteryPrizes,
     required this.userAssets,
+    required this.aiHistory,
+    required this.forumPosts,
+    this.favoritedPosts = const [],
     this.targetLanguage = 'zh',
+    this.currentLanguage = 'zh',
+    this.sensorySettings = SensorySettings.defaults,
+    this.privacySettings = UserPrivacySettings.defaults,
     this.locale,
     this.user,
     this.lastResult,
     this.lastLotteryResult,
     this.studyPlan,
     this.errorMessage,
+    this.analyticsSnapshot,
+    this.achievements = const [],
+    this.leaderboardSnapshot,
+    this.recommendations = const [],
+    this.studySpots = const [],
     List<CustomWord>? reviewWords,
   }) : _reviewWords = List.unmodifiable(
          reviewWords ?? _buildReviewWords(userWords, customWords, wordBooks),
@@ -107,6 +163,12 @@ class AppState {
   final StudyPlan? studyPlan;
   final Set<String> completedLessonIds;
   final Set<String> todayCompletedLessonIds;
+
+  /// Ids of the new words learned *today* (from mixed sessions and formal
+  /// lessons alike). Unlike [todayCompletedLessonIds] this is not tied to the
+  /// 3-word lesson chunk, so a session that studies [dailyNewTarget] new words
+  /// is counted in full by [todayLearningWords].
+  final Set<String> todayLearnedWordIds;
   final Set<String> todayReviewWordIds;
   final Set<String> todayTrainingSessionIds;
   final Set<String> todayTrainingGameIds;
@@ -119,9 +181,20 @@ class AppState {
   final List<LotteryPrize> lotteryPrizes;
   final List<UserAsset> userAssets;
   final String targetLanguage;
+  final String currentLanguage;
+  final SensorySettings sensorySettings;
+  final UserPrivacySettings privacySettings;
   final LessonResult? lastResult;
   final LotteryDrawResult? lastLotteryResult;
   final String? errorMessage;
+  final List<AiHistoryEntry> aiHistory;
+  final List<ForumPost> forumPosts;
+  final List<ForumPost> favoritedPosts;
+  final LearningAnalytics? analyticsSnapshot;
+  final List<Achievement> achievements;
+  final LeaderboardResult? leaderboardSnapshot;
+  final List<Recommendation> recommendations;
+  final List<StudySpot> studySpots;
   final List<CustomWord> _reviewWords;
 
   bool get isAuthenticated => user != null;
@@ -131,9 +204,18 @@ class AppState {
 
   String? get learningTarget => studyPlan?.wordBookId ?? user?.targetExam;
 
-  StudyBookInfo get currentStudyBook => studyBookInfoForId(
-    studyPlan?.wordBookId ?? studyBookIdForTarget(user?.targetExam),
-  );
+  StudyBookInfo get currentStudyBook {
+    final book = currentWordBook;
+    if (book != null) {
+      return StudyBookInfo(
+        id: book.id,
+        name: book.title,
+        cover: studyPlanCoverEmoji(book.language),
+        description: book.description,
+      );
+    }
+    return studyBookInfoForId(studyPlan?.wordBookId ?? '');
+  }
 
   bool get isStudyPlanPaused => studyPlan?.isPaused ?? false;
 
@@ -165,6 +247,26 @@ class AppState {
     return formalLessons.isEmpty ? null : formalLessons.last;
   }
 
+  /// New words the learner can still study from the current wordbook: every
+  /// word in [currentWordBook] whose id is not yet tracked in [userWords],
+  /// deduped by id with original book order preserved.
+  ///
+  /// The daily study session seeds new words from this (not from a single
+  /// [currentLesson], which is only a 3-word chunk) so the number of new words
+  /// follows [dailyNewTarget] instead of being capped at the lesson size.
+  List<Word> get availableNewWords {
+    final book = currentWordBook;
+    if (book == null) return const [];
+    final startedIds = {for (final word in userWords) word.wordId};
+    final seen = <String>{};
+    final result = <Word>[];
+    for (final word in book.words) {
+      if (startedIds.contains(word.id)) continue;
+      if (seen.add(word.id)) result.add(word);
+    }
+    return List.unmodifiable(result);
+  }
+
   int get totalLearningWords =>
       formalLessons.fold(0, (total, lesson) => total + lesson.words.length);
 
@@ -185,9 +287,19 @@ class AppState {
       if (todayCompletedLessonIds.contains(lesson.id)) lesson.id,
   };
 
-  int get todayLearningWords => formalLessons
-      .where((lesson) => todayCompletedLessonIds.contains(lesson.id))
-      .fold(0, (total, lesson) => total + lesson.words.length);
+  /// New words counted toward *today's* learning: the union of every word in
+  /// today's completed formal lessons and [todayLearnedWordIds] (the new words
+  /// a mixed session actually studied). Taking the union — rather than summing
+  /// lesson chunks — means a session that studies [dailyNewTarget] new words is
+  /// counted in full (bug 6.1: it was pinned to the 3-word current lesson) while
+  /// staying backward-compatible with progress persisted only as completed
+  /// lessons. Deduping by word id prevents a word from being counted twice.
+  int get todayLearningWords => <String>{
+    for (final lesson in formalLessons)
+      if (todayCompletedLessonIds.contains(lesson.id))
+        for (final word in lesson.words) word.id,
+    ...todayLearnedWordIds,
+  }.length;
 
   double get learningPathProgress {
     if (totalLearningWords == 0) return 0;
@@ -267,6 +379,7 @@ class AppState {
     bool clearStudyPlan = false,
     Set<String>? completedLessonIds,
     Set<String>? todayCompletedLessonIds,
+    Set<String>? todayLearnedWordIds,
     Set<String>? todayReviewWordIds,
     Set<String>? todayTrainingSessionIds,
     Set<String>? todayTrainingGameIds,
@@ -279,11 +392,24 @@ class AppState {
     List<LotteryPrize>? lotteryPrizes,
     List<UserAsset>? userAssets,
     String? targetLanguage,
+    String? currentLanguage,
+    SensorySettings? sensorySettings,
+    UserPrivacySettings? privacySettings,
     LessonResult? lastResult,
     LotteryDrawResult? lastLotteryResult,
     bool clearLastResult = false,
     String? errorMessage,
     bool clearError = false,
+    List<AiHistoryEntry>? aiHistory,
+    List<ForumPost>? forumPosts,
+    List<ForumPost>? favoritedPosts,
+    LearningAnalytics? analyticsSnapshot,
+    bool clearAnalyticsSnapshot = false,
+    List<Achievement>? achievements,
+    LeaderboardResult? leaderboardSnapshot,
+    bool clearLeaderboardSnapshot = false,
+    List<Recommendation>? recommendations,
+    List<StudySpot>? studySpots,
   }) {
     final nextCustomWords = customWords ?? this.customWords;
     final nextUserWords = userWords ?? this.userWords;
@@ -304,6 +430,7 @@ class AppState {
       completedLessonIds: completedLessonIds ?? this.completedLessonIds,
       todayCompletedLessonIds:
           todayCompletedLessonIds ?? this.todayCompletedLessonIds,
+      todayLearnedWordIds: todayLearnedWordIds ?? this.todayLearnedWordIds,
       todayReviewWordIds: todayReviewWordIds ?? this.todayReviewWordIds,
       todayTrainingSessionIds:
           todayTrainingSessionIds ?? this.todayTrainingSessionIds,
@@ -318,9 +445,24 @@ class AppState {
       lotteryPrizes: lotteryPrizes ?? this.lotteryPrizes,
       userAssets: userAssets ?? this.userAssets,
       targetLanguage: targetLanguage ?? this.targetLanguage,
+      currentLanguage: currentLanguage ?? this.currentLanguage,
+      sensorySettings: sensorySettings ?? this.sensorySettings,
+      privacySettings: privacySettings ?? this.privacySettings,
       lastResult: clearLastResult ? null : lastResult ?? this.lastResult,
       lastLotteryResult: lastLotteryResult ?? this.lastLotteryResult,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
+      aiHistory: aiHistory ?? this.aiHistory,
+      forumPosts: forumPosts ?? this.forumPosts,
+      favoritedPosts: favoritedPosts ?? this.favoritedPosts,
+      analyticsSnapshot: clearAnalyticsSnapshot
+          ? null
+          : analyticsSnapshot ?? this.analyticsSnapshot,
+      achievements: achievements ?? this.achievements,
+      leaderboardSnapshot: clearLeaderboardSnapshot
+          ? null
+          : leaderboardSnapshot ?? this.leaderboardSnapshot,
+      recommendations: recommendations ?? this.recommendations,
+      studySpots: studySpots ?? this.studySpots,
       reviewWords: customWords == null && userWords == null && wordBooks == null
           ? _reviewWords
           : _buildReviewWords(nextUserWords, nextCustomWords, nextWordBooks),
@@ -341,6 +483,7 @@ class AppState {
       reminderSettings: DailyReminderSettings.defaults,
       completedLessonIds: {},
       todayCompletedLessonIds: {},
+      todayLearnedWordIds: {},
       todayReviewWordIds: {},
       todayTrainingSessionIds: {},
       todayTrainingGameIds: {},
@@ -352,6 +495,10 @@ class AppState {
       notifications: [],
       lotteryPrizes: [],
       userAssets: [],
+      aiHistory: const [],
+      forumPosts: const [],
+      recommendations: const [],
+      studySpots: const [],
     );
   }
 }

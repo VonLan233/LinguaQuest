@@ -388,6 +388,18 @@ abstract class AppLocalizations {
   /// **' times'**
   String get commonTimesSuffix;
 
+  /// No description provided for @commonViewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'View all'**
+  String get commonViewAll;
+
+  /// No description provided for @commonView.
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get commonView;
+
   /// No description provided for @authRegisterTitle.
   ///
   /// In en, this message translates to:
@@ -553,7 +565,7 @@ abstract class AppLocalizations {
   /// No description provided for @splashTagline.
   ///
   /// In en, this message translates to:
-  /// **'Image word cards, clear paths, smart review.'**
+  /// **'Word cards, clear paths, smart review.'**
   String get splashTagline;
 
   /// No description provided for @studyNewScreenTitle.
@@ -946,24 +958,6 @@ abstract class AppLocalizations {
   /// **'Trends'**
   String get questTrend;
 
-  /// No description provided for @questClassMode.
-  ///
-  /// In en, this message translates to:
-  /// **'Class Mode'**
-  String get questClassMode;
-
-  /// No description provided for @questClassModeBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Join with a class code to see the teacher dashboard and group learning.'**
-  String get questClassModeBody;
-
-  /// No description provided for @questClassCode.
-  ///
-  /// In en, this message translates to:
-  /// **'Class code'**
-  String get questClassCode;
-
   /// No description provided for @questAiTutor.
   ///
   /// In en, this message translates to:
@@ -999,78 +993,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Affect is usually a verb: \"The weather affects my mood.\" Effect is usually a noun: \"The effect was immediate.\" Try writing a sentence with each word.'**
   String get aiTutorSampleAnswer;
-
-  /// No description provided for @classModeTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Class learning'**
-  String get classModeTitle;
-
-  /// No description provided for @classModeSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Enter a class code to join a group and view class progress and weak-spot summaries.'**
-  String get classModeSubtitle;
-
-  /// No description provided for @classModeJoined.
-  ///
-  /// In en, this message translates to:
-  /// **'Joined class {code}'**
-  String classModeJoined(Object code);
-
-  /// No description provided for @classModeJoin.
-  ///
-  /// In en, this message translates to:
-  /// **'Join class'**
-  String get classModeJoin;
-
-  /// No description provided for @classModeViewProgress.
-  ///
-  /// In en, this message translates to:
-  /// **'View class progress'**
-  String get classModeViewProgress;
-
-  /// No description provided for @classProgressTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Class progress'**
-  String get classProgressTitle;
-
-  /// No description provided for @classProgressOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Class overview'**
-  String get classProgressOverview;
-
-  /// No description provided for @classProgressSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Teacher-side completion and weak-word summary.'**
-  String get classProgressSubtitle;
-
-  /// No description provided for @classProgressWeakWord.
-  ///
-  /// In en, this message translates to:
-  /// **'Weak word: {word}'**
-  String classProgressWeakWord(Object word);
-
-  /// No description provided for @classTopicExamSignals.
-  ///
-  /// In en, this message translates to:
-  /// **'Exam signal words'**
-  String get classTopicExamSignals;
-
-  /// No description provided for @classTopicTravelBasics.
-  ///
-  /// In en, this message translates to:
-  /// **'Travel basics'**
-  String get classTopicTravelBasics;
-
-  /// No description provided for @classTopicWorkplace.
-  ///
-  /// In en, this message translates to:
-  /// **'Workplace expressions'**
-  String get classTopicWorkplace;
 
   /// No description provided for @leaderboardDefaultName.
   ///
@@ -1147,7 +1069,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingFeatureImageCards.
   ///
   /// In en, this message translates to:
-  /// **'Image Word Cards'**
+  /// **'Word Cards'**
   String get onboardingFeatureImageCards;
 
   /// No description provided for @onboardingFeatureImageCardsDesc.
@@ -1227,6 +1149,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Target'**
   String get goalSetupTarget;
+
+  /// No description provided for @goalSetupPlanBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan by'**
+  String get goalSetupPlanBy;
 
   /// No description provided for @goalSetupDailyGoal.
   ///
@@ -1486,6 +1414,54 @@ abstract class AppLocalizations {
   /// **'No email set'**
   String get profileNoEmail;
 
+  /// No description provided for @publicProfileNotFoundTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile unavailable'**
+  String get publicProfileNotFoundTitle;
+
+  /// No description provided for @publicProfileNotFoundMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This user doesn\'t exist or their profile is private.'**
+  String get publicProfileNotFoundMessage;
+
+  /// No description provided for @publicProfileLoadFailedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load profile'**
+  String get publicProfileLoadFailedTitle;
+
+  /// No description provided for @publicProfileLoadFailedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get publicProfileLoadFailedMessage;
+
+  /// No description provided for @profileEditNicknameTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit nickname'**
+  String get profileEditNicknameTitle;
+
+  /// No description provided for @profileEditNicknameSignInRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please sign in before editing your nickname.'**
+  String get profileEditNicknameSignInRequired;
+
+  /// No description provided for @profileEditNicknameEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nickname cannot be empty.'**
+  String get profileEditNicknameEmpty;
+
+  /// No description provided for @profileEditNicknameSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not update nickname.'**
+  String get profileEditNicknameSaveFailed;
+
   /// No description provided for @profileDashboard.
   ///
   /// In en, this message translates to:
@@ -1501,7 +1477,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileLearnedWords.
   ///
   /// In en, this message translates to:
-  /// **'Words Learned'**
+  /// **'Learned'**
   String get profileLearnedWords;
 
   /// No description provided for @profileMasteredWords.
@@ -1531,8 +1507,8 @@ abstract class AppLocalizations {
   /// No description provided for @profileStreakDays.
   ///
   /// In en, this message translates to:
-  /// **'days streak'**
-  String get profileStreakDays;
+  /// **'{count, plural, =1{1 day streak} other{{count} days streak}}'**
+  String profileStreakDays(num count);
 
   /// No description provided for @profileCurrentBookProgress.
   ///
@@ -1660,6 +1636,12 @@ abstract class AppLocalizations {
   /// **'Provides audio feedback for quiz results and practice rhythm'**
   String get settingsSoundFeedbackSubtitle;
 
+  /// No description provided for @settingsTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get settingsTheme;
+
   /// No description provided for @settingsThemeSystem.
   ///
   /// In en, this message translates to:
@@ -1707,6 +1689,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reminder Time'**
   String get settingsReminderTime;
+
+  /// No description provided for @settingsReminderDisplay.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily · {time}'**
+  String settingsReminderDisplay(String time);
 
   /// No description provided for @settingsReminderOff.
   ///
@@ -1852,6 +1840,96 @@ abstract class AppLocalizations {
   /// **'Community'**
   String get discoverCommunityPostsSubtitle;
 
+  /// No description provided for @discoverMyFavorites.
+  ///
+  /// In en, this message translates to:
+  /// **'My Favorites'**
+  String get discoverMyFavorites;
+
+  /// No description provided for @favoritesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t favorited any posts yet.'**
+  String get favoritesEmpty;
+
+  /// No description provided for @communityFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get communityFilterAll;
+
+  /// No description provided for @communityTagGrammar.
+  ///
+  /// In en, this message translates to:
+  /// **'Grammar'**
+  String get communityTagGrammar;
+
+  /// No description provided for @communityTagVocabulary.
+  ///
+  /// In en, this message translates to:
+  /// **'Vocabulary'**
+  String get communityTagVocabulary;
+
+  /// No description provided for @communityTagCulture.
+  ///
+  /// In en, this message translates to:
+  /// **'Culture'**
+  String get communityTagCulture;
+
+  /// No description provided for @communityTagGeneral.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get communityTagGeneral;
+
+  /// No description provided for @communityTagProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get communityTagProgress;
+
+  /// No description provided for @communityShareUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Share an update'**
+  String get communityShareUpdate;
+
+  /// No description provided for @communityNewPost.
+  ///
+  /// In en, this message translates to:
+  /// **'New Post'**
+  String get communityNewPost;
+
+  /// No description provided for @communityNoPostsInFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'No posts in this category yet'**
+  String get communityNoPostsInFilter;
+
+  /// No description provided for @communityTimeJustNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Just now'**
+  String get communityTimeJustNow;
+
+  /// No description provided for @communityTimeMinutesAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}m ago'**
+  String communityTimeMinutesAgo(int count);
+
+  /// No description provided for @communityTimeHoursAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}h ago'**
+  String communityTimeHoursAgo(int count);
+
+  /// No description provided for @communityTimeDaysAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}d ago'**
+  String communityTimeDaysAgo(int count);
+
   /// No description provided for @discoverXpUsage.
   ///
   /// In en, this message translates to:
@@ -1867,7 +1945,7 @@ abstract class AppLocalizations {
   /// No description provided for @discoverGoComplete.
   ///
   /// In en, this message translates to:
-  /// **'Go +{points} XP'**
+  /// **'Complete for +{points} XP'**
   String discoverGoComplete(Object points);
 
   /// No description provided for @discoverClaim.
@@ -1987,7 +2065,7 @@ abstract class AppLocalizations {
   /// No description provided for @discoverForumPost2Title.
   ///
   /// In en, this message translates to:
-  /// **'How do you memorize \'abstract\' in IELTS reading?'**
+  /// **'How do you memorize the word \'abstract\'?'**
   String get discoverForumPost2Title;
 
   /// No description provided for @discoverForumPost2Body.
@@ -2386,12 +2464,6 @@ abstract class AppLocalizations {
   /// **'Leaderboard'**
   String get trainingLeaderboard;
 
-  /// No description provided for @trainingTimedTests.
-  ///
-  /// In en, this message translates to:
-  /// **'Timed Tests'**
-  String get trainingTimedTests;
-
   /// No description provided for @trainingTimedTestsSubtitle.
   ///
   /// In en, this message translates to:
@@ -2445,12 +2517,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Coming Soon'**
   String get trainingComingSoon;
-
-  /// No description provided for @trainingSpecialDrills.
-  ///
-  /// In en, this message translates to:
-  /// **'Skill Drills'**
-  String get trainingSpecialDrills;
 
   /// No description provided for @trainingSpecialDrillsSubtitle.
   ///
@@ -2681,13 +2747,13 @@ abstract class AppLocalizations {
   /// No description provided for @trainingPromptChineseSpelling.
   ///
   /// In en, this message translates to:
-  /// **'Spell the English word from the meaning: {meaning}'**
+  /// **'Spell the word from its meaning: {meaning}'**
   String trainingPromptChineseSpelling(Object meaning);
 
   /// No description provided for @trainingPromptAudioSpelling.
   ///
   /// In en, this message translates to:
-  /// **'Spell the English word after listening: {cue}'**
+  /// **'Spell the word after listening: {cue}'**
   String trainingPromptAudioSpelling(Object cue);
 
   /// No description provided for @trainingPromptContextSpelling.
@@ -2753,7 +2819,7 @@ abstract class AppLocalizations {
   /// No description provided for @trainingSpellingInputLabel.
   ///
   /// In en, this message translates to:
-  /// **'Enter English spelling'**
+  /// **'Type the word'**
   String get trainingSpellingInputLabel;
 
   /// No description provided for @trainingReviveConsumed.
@@ -2773,6 +2839,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Correct. Streak continues!'**
   String get trainingCorrectFeedback;
+
+  /// No description provided for @trainingPromptListening.
+  ///
+  /// In en, this message translates to:
+  /// **'Listen and choose the word you heard'**
+  String get trainingPromptListening;
+
+  /// No description provided for @trainingListeningRevealHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Play the audio first, then the options appear.'**
+  String get trainingListeningRevealHint;
 
   /// No description provided for @learningPathTitle.
   ///
@@ -3403,24 +3481,6 @@ abstract class AppLocalizations {
   /// **'CET-6 Core'**
   String get labelTargetCET6;
 
-  /// No description provided for @labelTargetIELTS.
-  ///
-  /// In en, this message translates to:
-  /// **'IELTS Core'**
-  String get labelTargetIELTS;
-
-  /// No description provided for @labelTargetTOEFL.
-  ///
-  /// In en, this message translates to:
-  /// **'TOEFL High-Freq'**
-  String get labelTargetTOEFL;
-
-  /// No description provided for @labelTargetGRE.
-  ///
-  /// In en, this message translates to:
-  /// **'GRE High-Freq'**
-  String get labelTargetGRE;
-
   /// No description provided for @labelTargetKaoyan.
   ///
   /// In en, this message translates to:
@@ -3643,24 +3703,6 @@ abstract class AppLocalizations {
   /// **'CET-6'**
   String get labelWordTagCET6;
 
-  /// No description provided for @labelWordTagIELTS.
-  ///
-  /// In en, this message translates to:
-  /// **'IELTS'**
-  String get labelWordTagIELTS;
-
-  /// No description provided for @labelWordTagTOEFL.
-  ///
-  /// In en, this message translates to:
-  /// **'TOEFL'**
-  String get labelWordTagTOEFL;
-
-  /// No description provided for @labelWordTagGRE.
-  ///
-  /// In en, this message translates to:
-  /// **'GRE'**
-  String get labelWordTagGRE;
-
   /// No description provided for @labelWordTagKaoyan.
   ///
   /// In en, this message translates to:
@@ -3865,6 +3907,54 @@ abstract class AppLocalizations {
   /// **'Unable to switch wordbook'**
   String get wordbookSwitchFailed;
 
+  /// No description provided for @pickerChooseLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get pickerChooseLanguage;
+
+  /// No description provided for @pickerChooseWordbook.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Wordbook'**
+  String get pickerChooseWordbook;
+
+  /// No description provided for @pickerLanguageChinese.
+  ///
+  /// In en, this message translates to:
+  /// **'Chinese (中文)'**
+  String get pickerLanguageChinese;
+
+  /// No description provided for @pickerLanguageJapanese.
+  ///
+  /// In en, this message translates to:
+  /// **'Japanese (日本語)'**
+  String get pickerLanguageJapanese;
+
+  /// No description provided for @pickerComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming Soon'**
+  String get pickerComingSoon;
+
+  /// No description provided for @pickerCurrentBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Current'**
+  String get pickerCurrentBadge;
+
+  /// No description provided for @pickerSwitchSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Switched to {wordbook}'**
+  String pickerSwitchSuccess(String wordbook);
+
+  /// No description provided for @pickerSwitchFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to switch wordbook right now'**
+  String get pickerSwitchFailed;
+
   /// No description provided for @wordbookTargetSection.
   ///
   /// In en, this message translates to:
@@ -3888,42 +3978,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'High-frequency words for beginners and daily expression.'**
   String get wordbookDescBeginner;
-
-  /// No description provided for @wordbookNameIELTS.
-  ///
-  /// In en, this message translates to:
-  /// **'IELTS Core Words'**
-  String get wordbookNameIELTS;
-
-  /// No description provided for @wordbookDescIELTS.
-  ///
-  /// In en, this message translates to:
-  /// **'High-frequency academic words for IELTS reading, listening, and writing.'**
-  String get wordbookDescIELTS;
-
-  /// No description provided for @wordbookNameTOEFL.
-  ///
-  /// In en, this message translates to:
-  /// **'TOEFL High-Frequency Words'**
-  String get wordbookNameTOEFL;
-
-  /// No description provided for @wordbookDescTOEFL.
-  ///
-  /// In en, this message translates to:
-  /// **'Academic vocabulary and campus expressions for TOEFL.'**
-  String get wordbookDescTOEFL;
-
-  /// No description provided for @wordbookNameGRE.
-  ///
-  /// In en, this message translates to:
-  /// **'GRE High-Frequency Words'**
-  String get wordbookNameGRE;
-
-  /// No description provided for @wordbookDescGRE.
-  ///
-  /// In en, this message translates to:
-  /// **'Advanced words commonly seen in GRE reading and fill-in-the-blank.'**
-  String get wordbookDescGRE;
 
   /// No description provided for @wordbookNameCET4.
   ///
@@ -3966,6 +4020,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Notifications'**
   String get notificationTitle;
+
+  /// No description provided for @dataAccountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Data & Account'**
+  String get dataAccountTitle;
 
   /// No description provided for @notificationMarkAllRead.
   ///
@@ -4225,24 +4285,6 @@ abstract class AppLocalizations {
   /// **'Recommended 5-30 words, max 200.'**
   String get studyPlanDailyNewHint;
 
-  /// No description provided for @studyPlanDailyReview.
-  ///
-  /// In en, this message translates to:
-  /// **'Daily Review Limit'**
-  String get studyPlanDailyReview;
-
-  /// No description provided for @studyPlanDailyReviewHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Review queue beyond limit will be kept for later dates.'**
-  String get studyPlanDailyReviewHint;
-
-  /// No description provided for @studyPlanTargetDate.
-  ///
-  /// In en, this message translates to:
-  /// **'Exam/Target Completion Date'**
-  String get studyPlanTargetDate;
-
   /// No description provided for @studyPlanReminderTime.
   ///
   /// In en, this message translates to:
@@ -4290,12 +4332,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Confirm Reset'**
   String get studyPlanConfirm;
-
-  /// No description provided for @studyPlanInvalidDate.
-  ///
-  /// In en, this message translates to:
-  /// **'Target completion date cannot be earlier than today.'**
-  String get studyPlanInvalidDate;
 
   /// No description provided for @studyPlanSaved.
   ///
@@ -4450,7 +4486,7 @@ abstract class AppLocalizations {
   /// No description provided for @aiLearningToolAiAnalysisDesc.
   ///
   /// In en, this message translates to:
-  /// **'Extract main clauses, divide subordinate clauses, explain modifiers and key words, and provide natural Chinese translation.'**
+  /// **'Extract main clauses, divide subordinate clauses, explain modifiers and key words, and provide a natural translation.'**
   String get aiLearningToolAiAnalysisDesc;
 
   /// No description provided for @aiLearningToolAiWriting.
@@ -4734,6 +4770,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Word saved'**
   String get customWordsSaved;
+
+  /// No description provided for @customWordsAlreadyInWordbook.
+  ///
+  /// In en, this message translates to:
+  /// **'This word is already in your wordbook'**
+  String get customWordsAlreadyInWordbook;
 
   /// No description provided for @customWordsDifficulty.
   ///
@@ -5050,13 +5092,13 @@ abstract class AppLocalizations {
   /// No description provided for @aboutVersion.
   ///
   /// In en, this message translates to:
-  /// **'LinguaQuest · Version 1.0.0'**
-  String get aboutVersion;
+  /// **'LinguaQuest · Version {version}'**
+  String aboutVersion(String version);
 
   /// No description provided for @aboutIntro.
   ///
   /// In en, this message translates to:
-  /// **'LinguaQuest brings visual word cards, learning paths, spaced review, XP, streaks, and personal word cards into a mobile-first English learning app.'**
+  /// **'LinguaQuest brings word cards, learning paths, spaced review, XP, streaks, and personal word cards into a mobile-first English learning app.'**
   String get aboutIntro;
 
   /// No description provided for @aboutGoalTitle.
@@ -5092,7 +5134,7 @@ abstract class AppLocalizations {
   /// No description provided for @aboutCoreSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Goal planning, visual vocabulary, quiz practice, review scheduling, and personal word cards.'**
+  /// **'Goal planning, vocabulary building, quiz practice, review scheduling, and personal word cards.'**
   String get aboutCoreSubtitle;
 
   /// No description provided for @aboutPrivacyTitle.
@@ -5128,7 +5170,7 @@ abstract class AppLocalizations {
   /// No description provided for @communityPostAbstractTitle.
   ///
   /// In en, this message translates to:
-  /// **'How to remember \"abstract\" in IELTS reading?'**
+  /// **'How to remember the word \'abstract\'?'**
   String get communityPostAbstractTitle;
 
   /// No description provided for @communityPostMistakeTag.
@@ -5176,8 +5218,8 @@ abstract class AppLocalizations {
   /// No description provided for @luckyDrawInventoryCount.
   ///
   /// In en, this message translates to:
-  /// **'{count} items in stock'**
-  String luckyDrawInventoryCount(Object count);
+  /// **'{count, plural, =1{1 item in stock} other{{count} items in stock}}'**
+  String luckyDrawInventoryCount(num count);
 
   /// No description provided for @luckyDrawNoBoost.
   ///
@@ -5454,6 +5496,726 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'In {count} minutes'**
   String dueInMinutes(int count);
+
+  /// No description provided for @languageMapTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Language'**
+  String get languageMapTitle;
+
+  /// No description provided for @languageMapSelectPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a country to choose the language you want to learn.'**
+  String get languageMapSelectPrompt;
+
+  /// No description provided for @languageMapChinese.
+  ///
+  /// In en, this message translates to:
+  /// **'Chinese (中文)'**
+  String get languageMapChinese;
+
+  /// No description provided for @languageMapConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn {language}'**
+  String languageMapConfirm(String language);
+
+  /// No description provided for @languageMapSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'Now learning {language}'**
+  String languageMapSelected(String language);
+
+  /// No description provided for @languageMapComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'{language} — coming soon'**
+  String languageMapComingSoon(String language);
+
+  /// No description provided for @aboutCompanyName.
+  ///
+  /// In en, this message translates to:
+  /// **'LinguaQuest'**
+  String get aboutCompanyName;
+
+  /// No description provided for @aboutCompanyAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Xiamen University Malaysia, Bandar Sunsuria, 43900 Sepang, Selangor, Malaysia (virtual)'**
+  String get aboutCompanyAddress;
+
+  /// No description provided for @aboutCompanyDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Our virtual campus where LinguaQuest is built.'**
+  String get aboutCompanyDescription;
+
+  /// No description provided for @aiLearningStatusAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Available'**
+  String get aiLearningStatusAvailable;
+
+  /// No description provided for @aiExplainWithAi.
+  ///
+  /// In en, this message translates to:
+  /// **'Explain with AI'**
+  String get aiExplainWithAi;
+
+  /// No description provided for @aiErrorGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get aiErrorGeneric;
+
+  /// No description provided for @aiEmptyChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask anything about {language} — meanings, grammar, or usage.'**
+  String aiEmptyChat(Object language);
+
+  /// No description provided for @aiQuestionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Type your question about {language}...'**
+  String aiQuestionHint(Object language);
+
+  /// No description provided for @aiEmptyAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste a {language} sentence to see its structure broken down.'**
+  String aiEmptyAnalysis(Object language);
+
+  /// No description provided for @aiEmptyCloze.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a word to generate a fill-in-the-blank exercise.'**
+  String get aiEmptyCloze;
+
+  /// No description provided for @aiEmptyWriting.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste your essay and pick an exam type to get scored feedback.'**
+  String get aiEmptyWriting;
+
+  /// No description provided for @achievementsScreenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Achievements'**
+  String get achievementsScreenTitle;
+
+  /// No description provided for @achievementsHeaderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Achievements'**
+  String get achievementsHeaderTitle;
+
+  /// No description provided for @achievementsUnlockedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{unlocked} / {total} unlocked'**
+  String achievementsUnlockedCount(int unlocked, int total);
+
+  /// No description provided for @achievementUnlockedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlocked'**
+  String get achievementUnlockedLabel;
+
+  /// No description provided for @achievementLearn100Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Century Scholar'**
+  String get achievementLearn100Title;
+
+  /// No description provided for @achievementLearn100Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Master 100 words'**
+  String get achievementLearn100Desc;
+
+  /// No description provided for @achievementQuizPerfectTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Flawless Run'**
+  String get achievementQuizPerfectTitle;
+
+  /// No description provided for @achievementQuizPerfectDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete a quiz session with 100% accuracy (4+ questions)'**
+  String get achievementQuizPerfectDesc;
+
+  /// No description provided for @achievementFirstListeningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'First Echo'**
+  String get achievementFirstListeningTitle;
+
+  /// No description provided for @achievementFirstListeningDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete your first listening exercise'**
+  String get achievementFirstListeningDesc;
+
+  /// No description provided for @achievementFirstMapLanguageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cartographer'**
+  String get achievementFirstMapLanguageTitle;
+
+  /// No description provided for @achievementFirstMapLanguageDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a language from the language map'**
+  String get achievementFirstMapLanguageDesc;
+
+  /// No description provided for @assetInventoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My Assets'**
+  String get assetInventoryTitle;
+
+  /// No description provided for @assetInventoryEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No assets yet. Try your luck in the Lucky Draw!'**
+  String get assetInventoryEmpty;
+
+  /// No description provided for @assetInventoryTotalOwned.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} items owned'**
+  String assetInventoryTotalOwned(int count);
+
+  /// No description provided for @assetInventoryTotalFragments.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} fragments'**
+  String assetInventoryTotalFragments(int count);
+
+  /// No description provided for @assetInventoryQuantityBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'×{count}'**
+  String assetInventoryQuantityBadge(int count);
+
+  /// No description provided for @luckyDrawViewMyAssets.
+  ///
+  /// In en, this message translates to:
+  /// **'View my assets'**
+  String get luckyDrawViewMyAssets;
+
+  /// No description provided for @analyticsReportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning report'**
+  String get analyticsReportTitle;
+
+  /// No description provided for @analyticsReportSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your progress, charts, and focus areas'**
+  String get analyticsReportSubtitle;
+
+  /// No description provided for @analyticsScopeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Scope: {scope}'**
+  String analyticsScopeLabel(Object scope);
+
+  /// No description provided for @analyticsXpTrendTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'XP trend'**
+  String get analyticsXpTrendTitle;
+
+  /// No description provided for @analyticsAbilityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ability dimensions'**
+  String get analyticsAbilityTitle;
+
+  /// No description provided for @analyticsModalityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Accuracy by type'**
+  String get analyticsModalityTitle;
+
+  /// No description provided for @analyticsMasteryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Word mastery'**
+  String get analyticsMasteryTitle;
+
+  /// No description provided for @analyticsDetailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed stats'**
+  String get analyticsDetailTitle;
+
+  /// No description provided for @analyticsFocusTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended practice'**
+  String get analyticsFocusTitle;
+
+  /// No description provided for @analyticsReviewLoad.
+  ///
+  /// In en, this message translates to:
+  /// **'Review load'**
+  String get analyticsReviewLoad;
+
+  /// No description provided for @analyticsWeekXp.
+  ///
+  /// In en, this message translates to:
+  /// **'This week XP'**
+  String get analyticsWeekXp;
+
+  /// No description provided for @analyticsTodayXp.
+  ///
+  /// In en, this message translates to:
+  /// **'Today XP'**
+  String get analyticsTodayXp;
+
+  /// No description provided for @analyticsWeakWords.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak words'**
+  String get analyticsWeakWords;
+
+  /// No description provided for @analyticsDueNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Due now'**
+  String get analyticsDueNow;
+
+  /// No description provided for @analyticsMasteryNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get analyticsMasteryNew;
+
+  /// No description provided for @analyticsMasteryLearning.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning'**
+  String get analyticsMasteryLearning;
+
+  /// No description provided for @analyticsMasteryMastered.
+  ///
+  /// In en, this message translates to:
+  /// **'Mastered'**
+  String get analyticsMasteryMastered;
+
+  /// No description provided for @analyticsDimMeaningRecognition.
+  ///
+  /// In en, this message translates to:
+  /// **'Recognition'**
+  String get analyticsDimMeaningRecognition;
+
+  /// No description provided for @analyticsDimMeaningRecall.
+  ///
+  /// In en, this message translates to:
+  /// **'Recall'**
+  String get analyticsDimMeaningRecall;
+
+  /// No description provided for @analyticsDimContext.
+  ///
+  /// In en, this message translates to:
+  /// **'Context'**
+  String get analyticsDimContext;
+
+  /// No description provided for @analyticsDimListening.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening'**
+  String get analyticsDimListening;
+
+  /// No description provided for @analyticsDimSpelling.
+  ///
+  /// In en, this message translates to:
+  /// **'Spelling'**
+  String get analyticsDimSpelling;
+
+  /// No description provided for @analyticsModalityMeaning.
+  ///
+  /// In en, this message translates to:
+  /// **'Meaning'**
+  String get analyticsModalityMeaning;
+
+  /// No description provided for @analyticsModalityListening.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening'**
+  String get analyticsModalityListening;
+
+  /// No description provided for @analyticsModalitySpelling.
+  ///
+  /// In en, this message translates to:
+  /// **'Spelling'**
+  String get analyticsModalitySpelling;
+
+  /// No description provided for @analyticsModalityContext.
+  ///
+  /// In en, this message translates to:
+  /// **'Context'**
+  String get analyticsModalityContext;
+
+  /// No description provided for @analyticsTopErrors.
+  ///
+  /// In en, this message translates to:
+  /// **'Top error types'**
+  String get analyticsTopErrors;
+
+  /// No description provided for @readingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading'**
+  String get readingTitle;
+
+  /// No description provided for @readingDiscoverEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading'**
+  String get readingDiscoverEntry;
+
+  /// No description provided for @readingRecommended.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended for you'**
+  String get readingRecommended;
+
+  /// No description provided for @readingAllArticles.
+  ///
+  /// In en, this message translates to:
+  /// **'All articles'**
+  String get readingAllArticles;
+
+  /// No description provided for @readingArticlesForTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'{theme} articles'**
+  String readingArticlesForTheme(Object theme);
+
+  /// No description provided for @readingFilterLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Level'**
+  String get readingFilterLevel;
+
+  /// No description provided for @readingFilterTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get readingFilterTheme;
+
+  /// No description provided for @readingFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get readingFilterAll;
+
+  /// No description provided for @readingMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} min'**
+  String readingMinutes(int count);
+
+  /// No description provided for @readingEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No articles for this filter yet.'**
+  String get readingEmpty;
+
+  /// No description provided for @readingProgressInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In progress'**
+  String get readingProgressInProgress;
+
+  /// No description provided for @readingProgressDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Read'**
+  String get readingProgressDone;
+
+  /// No description provided for @readingToggleTranslation.
+  ///
+  /// In en, this message translates to:
+  /// **'Translation'**
+  String get readingToggleTranslation;
+
+  /// No description provided for @readingToggleReading.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading'**
+  String get readingToggleReading;
+
+  /// No description provided for @readingParagraphAudio.
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get readingParagraphAudio;
+
+  /// No description provided for @readingTapWordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a highlighted word for its meaning.'**
+  String get readingTapWordHint;
+
+  /// No description provided for @readingWordAddToVocab.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to vocab notebook'**
+  String get readingWordAddToVocab;
+
+  /// No description provided for @readingWordAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to vocab notebook'**
+  String get readingWordAdded;
+
+  /// No description provided for @readingComprehensionCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Start comprehension'**
+  String get readingComprehensionCta;
+
+  /// No description provided for @readingComprehensionSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Comprehension questions arrive in the next phase.'**
+  String get readingComprehensionSoon;
+
+  /// No description provided for @readingThemeCampus.
+  ///
+  /// In en, this message translates to:
+  /// **'Campus'**
+  String get readingThemeCampus;
+
+  /// No description provided for @readingThemeLife.
+  ///
+  /// In en, this message translates to:
+  /// **'Life'**
+  String get readingThemeLife;
+
+  /// No description provided for @readingThemeTravel.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel'**
+  String get readingThemeTravel;
+
+  /// No description provided for @readingThemeTech.
+  ///
+  /// In en, this message translates to:
+  /// **'Tech'**
+  String get readingThemeTech;
+
+  /// No description provided for @readingThemeCulture.
+  ///
+  /// In en, this message translates to:
+  /// **'Culture'**
+  String get readingThemeCulture;
+
+  /// No description provided for @readingThemeNews.
+  ///
+  /// In en, this message translates to:
+  /// **'News'**
+  String get readingThemeNews;
+
+  /// No description provided for @readingThemeBusiness.
+  ///
+  /// In en, this message translates to:
+  /// **'Business'**
+  String get readingThemeBusiness;
+
+  /// No description provided for @readingThemeExam.
+  ///
+  /// In en, this message translates to:
+  /// **'Exam'**
+  String get readingThemeExam;
+
+  /// No description provided for @readingToggleHighlight.
+  ///
+  /// In en, this message translates to:
+  /// **'Highlight'**
+  String get readingToggleHighlight;
+
+  /// No description provided for @readingLegendTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Word highlights'**
+  String get readingLegendTitle;
+
+  /// No description provided for @readingClassKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Key word'**
+  String get readingClassKey;
+
+  /// No description provided for @readingClassUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs review'**
+  String get readingClassUnknown;
+
+  /// No description provided for @readingClassNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get readingClassNew;
+
+  /// No description provided for @readingClassKnown.
+  ///
+  /// In en, this message translates to:
+  /// **'Known'**
+  String get readingClassKnown;
+
+  /// No description provided for @readingComprehensionStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start comprehension'**
+  String get readingComprehensionStart;
+
+  /// No description provided for @readingComprehensionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Comprehension'**
+  String get readingComprehensionTitle;
+
+  /// No description provided for @readingComprehensionQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Question {current} of {total}'**
+  String readingComprehensionQuestion(int current, int total);
+
+  /// No description provided for @readingComprehensionNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get readingComprehensionNext;
+
+  /// No description provided for @readingComprehensionFinish.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish'**
+  String get readingComprehensionFinish;
+
+  /// No description provided for @readingComprehensionResultTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Comprehension complete'**
+  String get readingComprehensionResultTitle;
+
+  /// No description provided for @readingComprehensionScore.
+  ///
+  /// In en, this message translates to:
+  /// **'{correct} / {total} correct'**
+  String readingComprehensionScore(int correct, int total);
+
+  /// No description provided for @readingComprehensionAccuracy.
+  ///
+  /// In en, this message translates to:
+  /// **'Accuracy {pct}%'**
+  String readingComprehensionAccuracy(int pct);
+
+  /// No description provided for @readingComprehensionDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get readingComprehensionDone;
+
+  /// No description provided for @readingComprehensionEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No comprehension questions for this article yet.'**
+  String get readingComprehensionEmpty;
+
+  /// No description provided for @readingAnalyticsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading'**
+  String get readingAnalyticsTitle;
+
+  /// No description provided for @readingAnalyticsArticlesRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Articles read'**
+  String get readingAnalyticsArticlesRead;
+
+  /// No description provided for @readingAnalyticsAccuracy.
+  ///
+  /// In en, this message translates to:
+  /// **'Comprehension accuracy'**
+  String get readingAnalyticsAccuracy;
+
+  /// No description provided for @readingAnalyticsThemes.
+  ///
+  /// In en, this message translates to:
+  /// **'By theme'**
+  String get readingAnalyticsThemes;
+
+  /// No description provided for @readingAnalyticsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete a reading comprehension to see stats here.'**
+  String get readingAnalyticsEmpty;
+
+  /// No description provided for @readingExplainTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Explain with AI'**
+  String get readingExplainTooltip;
+
+  /// No description provided for @readingExplainTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'AI explanation'**
+  String get readingExplainTitle;
+
+  /// No description provided for @readingExplainLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Explaining this paragraph...'**
+  String get readingExplainLoading;
+
+  /// No description provided for @readingExplainGist.
+  ///
+  /// In en, this message translates to:
+  /// **'Gist'**
+  String get readingExplainGist;
+
+  /// No description provided for @readingExplainKeyWords.
+  ///
+  /// In en, this message translates to:
+  /// **'Key words'**
+  String get readingExplainKeyWords;
+
+  /// No description provided for @readingExplainGrammar.
+  ///
+  /// In en, this message translates to:
+  /// **'Grammar points'**
+  String get readingExplainGrammar;
+
+  /// No description provided for @readingExplainStructure.
+  ///
+  /// In en, this message translates to:
+  /// **'Sentence structure'**
+  String get readingExplainStructure;
+
+  /// No description provided for @readingExplainTranslation.
+  ///
+  /// In en, this message translates to:
+  /// **'Translation'**
+  String get readingExplainTranslation;
+
+  /// No description provided for @readingExplainPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice'**
+  String get readingExplainPractice;
 }
 
 class _AppLocalizationsDelegate

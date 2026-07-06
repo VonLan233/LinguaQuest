@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/routing/app_router.dart';
+import 'core/state/app_controller.dart';
 import 'core/theme/app_theme.dart';
 import 'l10n/generated/app_localizations.dart';
 import 'services/local_notification_service.dart';
@@ -20,6 +21,9 @@ class LinguaQuestApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
+    final themeMode = ref.watch(
+      appControllerProvider.select((s) => s.themeMode),
+    );
 
     ref.listen<String?>(localNotificationTapRouteProvider, (previous, next) {
       if (next == null || next.isEmpty) return;
@@ -30,8 +34,9 @@ class LinguaQuestApp extends ConsumerWidget {
     return MaterialApp.router(
       title: 'LinguaQuest',
       debugShowCheckedModeBanner: false,
-      // Light-only: dark mode was removed (the theme was not production-ready).
       theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
+      themeMode: themeMode,
       // Hard-locked to English regardless of device or persisted locale.
       locale: const Locale('en'),
       supportedLocales: AppLocalizations.supportedLocales,

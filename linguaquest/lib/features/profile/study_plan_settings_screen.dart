@@ -8,14 +8,13 @@ import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
-import '../../core/utils/date_formatting.dart';
-import '../../core/utils/ui_labels.dart';
 import '../../core/utils/wordbook_progress.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/app_progress_bar.dart';
 import '../../core/widgets/fallback_back_button.dart';
+import '../../core/widgets/language_wordbook_picker.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../core/widgets/wordbook_cover_card.dart';
@@ -36,13 +35,11 @@ class _StudyPlanSettingsScreenState
     extends ConsumerState<StudyPlanSettingsScreen> {
   final _formKey = GlobalKey<FormState>();
   final _dailyNewController = TextEditingController();
-  final _dailyReviewController = TextEditingController();
 
   late final ProviderSubscription<AppState> _stateSubscription;
   _PlanInitializationKey? _lastInitializedPlanKey;
   var _initialized = false;
   var _wordBookId = 'beginner';
-  var _targetFinishDate = DateTime.now().add(const Duration(days: 30));
   var _reminderTime = const TimeOfDay(hour: 20, minute: 0);
 
   @override
@@ -60,7 +57,6 @@ class _StudyPlanSettingsScreenState
   void dispose() {
     _stateSubscription.close();
     _dailyNewController.dispose();
-    _dailyReviewController.dispose();
     super.dispose();
   }
 
@@ -93,7 +89,14 @@ class _StudyPlanSettingsScreenState
       learnedWords: completedWords,
       totalWords: totalWords,
     );
-    final book = studyBookInfoForId(_wordBookId);
+    final book = selectedWordBook != null
+        ? StudyBookInfo(
+            id: selectedWordBook.id,
+            name: selectedWordBook.nameFor(localeCode),
+            cover: studyPlanCoverEmoji(selectedWordBook.language),
+            description: selectedWordBook.description,
+          )
+        : studyBookInfoForId(_wordBookId);
     final plan = state.studyPlan;
 
     return Scaffold(
@@ -142,18 +145,23 @@ class _StudyPlanSettingsScreenState
                 completedWords: completedWords,
                 progress: progress,
                 status: plan?.status ?? 'active',
-                daysLeft: (plan ?? _fallbackPlan(user.uid)).daysLeft(
-                  DateTime.now(),
-                ),
                 l10n: l10n,
               ),
               const SizedBox(height: 24),
+              _CurrentLanguageTile(
+                currentLanguage: state.currentLanguage,
+                l10n: l10n,
+                onTap: () => showLanguageWordbookPicker(context),
+              ),
+              const SizedBox(height: AppTokens.s12),
               _StudyBookSelector(
-                books: state.wordBooks,
+                books: state.wordBooks
+                    .where((b) => b.language == state.currentLanguage)
+                    .toList(),
                 userWords: state.userWords,
                 selectedId: _wordBookId,
                 localeCode: localeCode,
-                onSelected: (value) => setState(() => _wordBookId = value),
+                onSelected: (value) => _selectWordBook(value),
                 l10n: l10n,
               ),
               const SizedBox(height: 40),
@@ -166,21 +174,9 @@ class _StudyPlanSettingsScreenState
                 max: 200,
                 l10n: l10n,
               ),
-              const SizedBox(height: 16),
-              _NumberField(
-                controller: _dailyReviewController,
-                label: l10n.studyPlanDailyReview,
-                helperText: l10n.studyPlanDailyReviewHint,
-                icon: AppIcons.replay,
-                min: 0,
-                max: 500,
-                l10n: l10n,
-              ),
               const SizedBox(height: 22),
               _PlanDateTimeSection(
-                targetFinishDate: _targetFinishDate,
                 reminderTimeLabel: _reminderTimeLabel,
-                onPickDate: _pickTargetFinishDate,
                 onPickTime: _pickReminderTime,
                 l10n: l10n,
               ),
@@ -215,8 +211,6 @@ class _StudyPlanSettingsScreenState
     void updateFields() {
       _wordBookId = plan.wordBookId;
       _dailyNewController.text = plan.dailyNewTarget.toString();
-      _dailyReviewController.text = plan.dailyReviewLimit.toString();
-      _targetFinishDate = plan.targetFinishDate;
       _reminderTime = parseStudyPlanReminderTime(plan.reminderTime);
       _initialized = true;
       _lastInitializedPlanKey = planKey;
@@ -244,22 +238,20 @@ class _StudyPlanSettingsScreenState
     final user = state.user;
     if (user == null) return;
     final today = _dateOnly(DateTime.now());
-    final finishDate = _dateOnly(_targetFinishDate);
-    final basePlan = state.studyPlan ?? _fallbackPlan(user.uid);
-    if (rejectChangedExpiredTargetFinishDate(
-      finishDate: finishDate,
-      originalFinishDate: basePlan.targetFinishDate,
+    final dailyNew = int.parse(_dailyNewController.text.trim());
+    final selectedWordBook = _wordBookForId(state.wordBooks, _wordBookId);
+    final finishDate = studyPlanAutoFinishDate(
+      totalWords: selectedWordBook?.totalWords ?? 0,
+      dailyNewTarget: dailyNew,
       today: today,
-    )) {
-      _showMessage(AppLocalizations.of(context).studyPlanInvalidDate);
-      return;
-    }
+    );
+    final basePlan = state.studyPlan ?? _fallbackPlan(user.uid);
 
     final plan = basePlan.copyWith(
       uid: user.uid,
       wordBookId: _wordBookId,
-      dailyNewTarget: int.parse(_dailyNewController.text.trim()),
-      dailyReviewLimit: int.parse(_dailyReviewController.text.trim()),
+      dailyNewTarget: dailyNew,
+      dailyReviewLimit: state.dueWords.length.clamp(0, 200).toInt(),
       targetFinishDate: finishDate,
       reminderTime: _reminderTimeLabel,
       updatedAt: DateTime.now(),
@@ -275,6 +267,16 @@ class _StudyPlanSettingsScreenState
           : latestState.errorMessage ??
                 AppLocalizations.of(context).studyPlanSaveFailed,
     );
+  }
+
+  Future<void> _selectWordBook(String value) async {
+    setState(() => _wordBookId = value);
+    final succeeded = await ref
+        .read(appControllerProvider.notifier)
+        .switchWordBook(value);
+    if (!mounted || succeeded) return;
+    final error = ref.read(appControllerProvider).errorMessage;
+    _showMessage(error ?? AppLocalizations.of(context).pickerSwitchFailed);
   }
 
   Future<void> _togglePause() async {
@@ -323,23 +325,6 @@ class _StudyPlanSettingsScreenState
     );
   }
 
-  Future<void> _pickTargetFinishDate() async {
-    final today = _dateOnly(DateTime.now());
-    final lastDate = today.add(const Duration(days: 730));
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: clampStudyPlanPickerInitialDate(
-        selected: _targetFinishDate,
-        today: today,
-        lastDate: lastDate,
-      ),
-      firstDate: today,
-      lastDate: lastDate,
-    );
-    if (picked == null || !mounted) return;
-    setState(() => _targetFinishDate = picked);
-  }
-
   Future<void> _pickReminderTime() async {
     final picked = await showTimePicker(
       context: context,
@@ -372,25 +357,33 @@ const studyPlanReminderTimePickerEntryMode = TimePickerEntryMode.inputOnly;
 
 WordBook? _wordBookForId(List<WordBook> books, String id) {
   for (final book in books) {
-    if (normalizedStudyBookId(book.id) == normalizedStudyBookId(id)) {
-      return book;
-    }
+    if (book.id == id) return book;
   }
   return null;
 }
 
-bool rejectChangedExpiredTargetFinishDate({
-  required DateTime finishDate,
-  required DateTime originalFinishDate,
-  required DateTime today,
-}) {
-  final normalizedFinishDate = _studyPlanDateOnly(finishDate);
-  return normalizedFinishDate.isBefore(_studyPlanDateOnly(today)) &&
-      normalizedFinishDate != _studyPlanDateOnly(originalFinishDate);
-}
+/// Test-only accessor for [_wordBookForId].
+WordBook? wordBookForIdForTest(List<WordBook> books, String id) =>
+    _wordBookForId(books, id);
 
 DateTime _studyPlanDateOnly(DateTime value) {
   return DateTime(value.year, value.month, value.day);
+}
+
+/// Auto-derives the study-plan finish date from the wordbook size and the
+/// daily new-word target, so the date stays bound to the daily pace instead
+/// of being manually picked.
+DateTime studyPlanAutoFinishDate({
+  required int totalWords,
+  required int dailyNewTarget,
+  required DateTime today,
+}) {
+  final base = _studyPlanDateOnly(today);
+  if (totalWords <= 0 || dailyNewTarget <= 0) {
+    return base.add(const Duration(days: 30));
+  }
+  final days = (totalWords / dailyNewTarget).ceil().clamp(1, 3650);
+  return base.add(Duration(days: days));
 }
 
 class _PlanInitializationKey {
@@ -416,19 +409,6 @@ class _PlanInitializationKey {
 
   @override
   int get hashCode => Object.hash(id, updatedAt);
-}
-
-DateTime clampStudyPlanPickerInitialDate({
-  required DateTime selected,
-  required DateTime today,
-  required DateTime lastDate,
-}) {
-  final selectedDay = _studyPlanDateOnly(selected);
-  final firstDay = _studyPlanDateOnly(today);
-  final lastDay = _studyPlanDateOnly(lastDate);
-  if (selectedDay.isBefore(firstDay)) return firstDay;
-  if (selectedDay.isAfter(lastDay)) return lastDay;
-  return selectedDay;
 }
 
 TimeOfDay parseStudyPlanReminderTime(String value) {
@@ -460,7 +440,6 @@ class _PlanHeroCard extends StatelessWidget {
     required this.completedWords,
     required this.progress,
     required this.status,
-    required this.daysLeft,
     required this.l10n,
   });
 
@@ -469,7 +448,6 @@ class _PlanHeroCard extends StatelessWidget {
   final int completedWords;
   final double progress;
   final String status;
-  final int daysLeft;
   final AppLocalizations l10n;
 
   @override
@@ -492,13 +470,10 @@ class _PlanHeroCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      displayWordbookTitle(book.id, l10n: l10n),
-                      style: theme.textTheme.titleLarge,
-                    ),
+                    Text(book.name, style: theme.textTheme.titleLarge),
                     const SizedBox(height: 4),
                     Text(
-                      displayWordbookDescription(book.id, l10n: l10n),
+                      book.description,
                       style: TextStyle(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
@@ -527,11 +502,6 @@ class _PlanHeroCard extends StatelessWidget {
                 label: l10n.wordbookWordsLearned(completedWords, totalWords),
                 icon: AppIcons.school,
                 variant: PillVariant.primary,
-              ),
-              AppPill(
-                label: l10n.studyPlanDaysLeft(daysLeft),
-                icon: AppIcons.event,
-                variant: PillVariant.streak,
               ),
               AppPill(
                 label: status == 'paused'
@@ -587,9 +557,7 @@ class _StudyBookSelector extends StatelessWidget {
             separatorBuilder: (_, _) => const SizedBox(width: AppTokens.s12),
             itemBuilder: (context, index) {
               final book = _books[index];
-              final selected =
-                  normalizedStudyBookId(selectedId) ==
-                  normalizedStudyBookId(book.id);
+              final selected = selectedId == book.id;
               final learned = learnedWordCountForBook(
                 userWords: userWords,
                 wordBookId: book.id,
@@ -660,7 +628,12 @@ class _StudyBookCoverOption extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Material(
-      color: selected ? AppTokens.primarySoft : theme.colorScheme.surface,
+      // Keep the dark card when selected (inverting to a light fill made the
+      // white progress bar vanish). Show selection as a "floating" highlight:
+      // elevation + azure shadow, plus the azure border below.
+      color: theme.colorScheme.surface,
+      elevation: selected ? 6 : 0,
+      shadowColor: AppTokens.azure,
       borderRadius: BorderRadius.circular(AppTokens.radiusTile + 4),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -694,19 +667,17 @@ class _StudyBookCoverOption extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          displayWordbookTitle(book.id, l10n: l10n),
+                          book.nameFor(localeCode),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: theme.textTheme.labelLarge?.copyWith(
                             fontWeight: FontWeight.w800,
-                            color: selected
-                                ? AppTokens.primarySoftText
-                                : theme.colorScheme.onSurface,
+                            color: theme.colorScheme.onSurface,
                           ),
                         ),
                         const SizedBox(height: AppTokens.s4),
                         Text(
-                          displayWordbookDescription(book.id, l10n: l10n),
+                          book.description,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: theme.textTheme.bodySmall?.copyWith(
@@ -781,16 +752,12 @@ class _NumberField extends StatelessWidget {
 
 class _PlanDateTimeSection extends StatelessWidget {
   const _PlanDateTimeSection({
-    required this.targetFinishDate,
     required this.reminderTimeLabel,
-    required this.onPickDate,
     required this.onPickTime,
     required this.l10n,
   });
 
-  final DateTime targetFinishDate;
   final String reminderTimeLabel;
-  final VoidCallback onPickDate;
   final VoidCallback onPickTime;
   final AppLocalizations l10n;
 
@@ -801,22 +768,11 @@ class _PlanDateTimeSection extends StatelessWidget {
         horizontal: AppTokens.s16,
         vertical: AppTokens.s8,
       ),
-      child: Column(
-        children: [
-          _PlanActionRow(
-            icon: AppIcons.event,
-            title: l10n.studyPlanTargetDate,
-            subtitle: formatShortDate(targetFinishDate),
-            onTap: onPickDate,
-          ),
-          const Divider(height: 18),
-          _PlanActionRow(
-            icon: AppIcons.schedule,
-            title: l10n.studyPlanReminderTime,
-            subtitle: reminderTimeLabel,
-            onTap: onPickTime,
-          ),
-        ],
+      child: _PlanActionRow(
+        icon: AppIcons.schedule,
+        title: l10n.studyPlanReminderTime,
+        subtitle: reminderTimeLabel,
+        onTap: onPickTime,
       ),
     );
   }
@@ -913,6 +869,50 @@ class _PlanActionRow extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _CurrentLanguageTile extends StatelessWidget {
+  const _CurrentLanguageTile({
+    required this.currentLanguage,
+    required this.l10n,
+    required this.onTap,
+  });
+
+  final String currentLanguage;
+  final AppLocalizations l10n;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppTokens.s16,
+        vertical: AppTokens.s12,
+      ),
+      onTap: onTap,
+      child: Row(
+        children: [
+          Text(
+            l10n.pickerChooseLanguage,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(width: AppTokens.s8),
+          AppPill(
+            label: languageLabel(currentLanguage, l10n),
+            variant: PillVariant.primary,
+          ),
+          const Spacer(),
+          Icon(
+            AppIcons.chevronRight,
+            size: 18,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        ],
       ),
     );
   }

@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/services/answer_sound_service.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_theme.dart';
@@ -172,6 +175,12 @@ class _ReviewStudyScreenState extends ConsumerState<ReviewStudyScreen> {
 
   Future<void> _review(CustomWord word, {required bool isCorrect}) async {
     if (_isSubmitting) return;
+    unawaited(
+      AnswerSoundService.play(
+        isCorrect: isCorrect,
+        enabled: ref.read(appControllerProvider).sensorySettings.soundEnabled,
+      ),
+    );
     setState(() => _isSubmitting = true);
     final isReinforcementPass =
         isCorrect && _reinforcementIds.contains(word.id);
@@ -400,9 +409,7 @@ class _MemoryHintLine extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         IconCueBadge(
-          icon: isRevealed
-              ? AppIcons.lightbulb
-              : AppIcons.visibility,
+          icon: isRevealed ? AppIcons.lightbulb : AppIcons.visibility,
           color: colorScheme.secondary,
           size: 38,
         ),

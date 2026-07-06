@@ -1,10 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import '../../core/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/services/answer_sound_service.dart';
 import '../../core/state/app_controller.dart';
-import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/utils/pinyin.dart';
 import '../../core/utils/quiz_localization.dart';
@@ -12,6 +14,7 @@ import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
+import '../../core/widgets/pronunciation_controls.dart';
 import '../../core/widgets/app_progress_bar.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/word_choice_button.dart';
@@ -40,6 +43,11 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
     with SingleTickerProviderStateMixin {
   static const _autoAdvanceDelay = Duration(milliseconds: 1500);
 
+  // A wrong answer stays retryable, but only up to this many wrong attempts;
+  // then the question locks, reveals the answer and auto-advances so learners
+  // cannot brute-force by tapping every option until one is correct.
+  static const _maxWrongAttempts = 2;
+
   // Times the 1500ms pause before auto-advancing after a correct answer;
   // it drives no visual property, only the delay.
   late final AnimationController _autoAdvanceController;
@@ -49,11 +57,11 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
   final Set<String> _wrongTries = {};
   int _index = 0;
   int _correct = 0;
+  int _wrongCount = 0;
   String? _selected;
   bool _checked = false;
-  bool _lastCorrect = false;
   bool _isSubmitting = false;
-  bool _lockedCorrect = false;
+  bool _locked = false;
 
   @override
   void initState() {
@@ -83,6 +91,9 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
     final allLessons = ref.watch(
       appControllerProvider.select((state) => state.lessons),
     );
+    final currentLanguage = ref.watch(
+      appControllerProvider.select((state) => state.currentLanguage),
+    );
     final lesson = _findLesson(lessons);
     if (lesson == null) {
       return Scaffold(body: Center(child: Text(l10n.quizNoLesson)));
@@ -110,7 +121,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
       child: Scaffold(
         appBar: AppBar(
           leading: BackButton(onPressed: () => _handleBack(context)),
-          title: Text(isTimed ? l10n.quizTimedTest : lesson.title),
+          title: Text(lesson.title),
         ),
         body: SafeArea(
           child: Padding(
@@ -137,46 +148,41 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
                   ],
                 ),
                 const SizedBox(height: 14),
+                // The question is centered in the available space so it stays
+                // readable; the options are anchored to the bottom of the
+                // screen for easy reach.
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        _QuestionPromptPanel(question: question),
-                        const SizedBox(height: 18),
-                        _QuestionInput(
-                          question: question,
-                          selected: _selected,
-                          lockedCorrect: _lockedCorrect,
-                          wrongTries: _wrongTries,
-                          controller: _textController,
-                          onSelected: (value) =>
-                              _judge(lesson, question, value),
-                          onInputChanged: () => setState(() {}),
-                        ),
-                        if (_checked) ...[
-                          const SizedBox(height: 14),
-                          _FeedbackPanel(
-                            isCorrect: _lastCorrect,
-                            revealAnswer: _lastCorrect,
-                            question: question,
-                          ),
-                        ],
-                      ],
+                  child: Center(
+                    child: SingleChildScrollView(
+                      child: QuizPromptPanel(
+                        question: question,
+                        language: currentLanguage,
+                      ),
                     ),
                   ),
                 ),
-                if (question.type == QuizQuestionType.spelling)
+                // Correctness is conveyed by option colors and answer sound,
+                // keeping the prompt and options visible on compact screens.
+                _QuestionInput(
+                  question: question,
+                  selected: _selected,
+                  locked: _locked,
+                  wrongTries: _wrongTries,
+                  controller: _textController,
+                  onSelected: (value) => _judge(lesson, question, value),
+                  onInputChanged: () => setState(() {}),
+                ),
+                if (question.type == QuizQuestionType.spelling) ...[
+                  const SizedBox(height: 12),
                   AppPrimaryButton(
                     label: l10n.quizCheck,
                     icon: AppIcons.check,
                     onPressed:
-                        _hasAnswer(question) &&
-                            !_lockedCorrect &&
-                            !_isSubmitting
+                        _hasAnswer(question) && !_locked && !_isSubmitting
                         ? () => _submitSpelling(lesson, question)
                         : null,
                   ),
+                ],
               ],
             ),
           ),
@@ -265,22 +271,42 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
     }
   }
 
+  /// Whether [wrongAttempts] wrong tries exhausts the retry budget for
+  /// [question]. Choice questions also lock once every distractor has been
+  /// tried, so the correct option can never be reached by elimination.
+  bool _reachedAttemptLimit(QuizQuestion question, int wrongAttempts) {
+    final distractors = question.options.length - 1;
+    final limit = distractors > 0 && distractors < _maxWrongAttempts
+        ? distractors
+        : _maxWrongAttempts;
+    return wrongAttempts >= limit;
+  }
+
   /// Instant judgment for a tapped choice [option].
   void _judge(Lesson lesson, QuizQuestion question, String option) {
-    if (_lockedCorrect) return;
-    final isCorrect = option.toLowerCase() == question.answer.toLowerCase();
+    if (_locked) return;
+    final isCorrect =
+        option.trim().toLowerCase() == question.answer.trim().toLowerCase();
+    unawaited(
+      AnswerSoundService.play(
+        isCorrect: isCorrect,
+        enabled: ref.read(appControllerProvider).sensorySettings.soundEnabled,
+      ),
+    );
     setState(() {
       _recordAttempt(question, isCorrect);
       _selected = option;
       _checked = true;
-      _lastCorrect = isCorrect;
       if (isCorrect) {
-        _lockedCorrect = true;
-      } else {
-        _wrongTries.add(option);
+        _locked = true;
+      } else if (_wrongTries.add(option)) {
+        // Only a distinct distractor consumes the retry budget, so repeatedly
+        // tapping the same wrong option can't fast-track the reveal.
+        _wrongCount++;
+        if (_reachedAttemptLimit(question, _wrongCount)) _locked = true;
       }
     });
-    if (isCorrect) {
+    if (_locked) {
       _autoAdvanceController
         ..reset()
         ..forward().whenComplete(() {
@@ -292,24 +318,36 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
 
   /// Submit handler for spelling questions (keeps the explicit check button).
   void _submitSpelling(Lesson lesson, QuizQuestion question) {
-    if (_lockedCorrect) return;
+    if (_locked) return;
     final answer = _textController.text.trim();
     if (answer.isEmpty) return;
     final isCorrect =
         normalizePinyin(answer) == normalizePinyin(question.answer);
+    unawaited(
+      AnswerSoundService.play(
+        isCorrect: isCorrect,
+        enabled: ref.read(appControllerProvider).sensorySettings.soundEnabled,
+      ),
+    );
+    final exhausted =
+        !isCorrect && _reachedAttemptLimit(question, _wrongCount + 1);
     setState(() {
       _recordAttempt(question, isCorrect);
       _checked = true;
-      _lastCorrect = isCorrect;
       if (isCorrect) {
-        _lockedCorrect = true;
+        _locked = true;
       } else {
-        // Hide the feedback panel so the still-enabled field invites an
-        // immediate retry (the field stays enabled via !_lockedCorrect).
-        _checked = false;
+        _wrongCount++;
+        if (exhausted) {
+          _locked = true;
+        } else {
+          // Hide the feedback panel so the still-enabled field invites an
+          // immediate retry (the field stays enabled via !_locked).
+          _checked = false;
+        }
       }
     });
-    if (isCorrect) {
+    if (isCorrect || exhausted) {
       _autoAdvanceController
         ..reset()
         ..forward().whenComplete(() {
@@ -360,18 +398,40 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
       _index++;
       _selected = null;
       _checked = false;
-      _lastCorrect = false;
-      _lockedCorrect = false;
+      _locked = false;
+      _wrongCount = 0;
       _wrongTries.clear();
       _textController.clear();
     });
   }
 }
 
-class _QuestionPromptPanel extends StatelessWidget {
-  const _QuestionPromptPanel({required this.question});
+class QuizPromptPanel extends StatelessWidget {
+  const QuizPromptPanel({
+    required this.question,
+    this.language = '',
+    super.key,
+  });
 
   final QuizQuestion question;
+  final String language;
+
+  /// True for question types whose answer IS the target word/character, so
+  /// showing the cue badge (the character) would leak the answer — e.g. the
+  /// Campus Sprint "Select the Chinese word for: …" (chineseChoice).
+  bool get _cueRevealsAnswer {
+    switch (question.type) {
+      case QuizQuestionType.chineseChoice:
+      case QuizQuestionType.listeningWordChoice:
+      case QuizQuestionType.sentenceCloze:
+      case QuizQuestionType.confusableChoice:
+      case QuizQuestionType.collocationChoice:
+      case QuizQuestionType.derivativeChoice:
+        return true;
+      default:
+        return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -379,7 +439,11 @@ class _QuestionPromptPanel extends StatelessWidget {
     return AppCard(
       child: Column(
         children: [
-          ImageCueBadge(cue: question.word.imageCue, size: 104),
+          ImageCueBadge(
+            cue: question.word.imageCue,
+            size: 104,
+            icon: _cueRevealsAnswer ? AppIcons.help : null,
+          ),
           const SizedBox(height: 14),
           Text(
             question.prompt,
@@ -404,6 +468,16 @@ class _QuestionPromptPanel extends StatelessWidget {
               ),
             ],
           ),
+          if (question.type == QuizQuestionType.listeningWordChoice ||
+              question.type == QuizQuestionType.listeningMeaningChoice) ...[
+            const SizedBox(height: 12),
+            PronunciationControls(
+              word: question.word.word,
+              audioUKUrl: question.word.audioUKUrl,
+              audioUSUrl: question.word.audioUSUrl,
+              language: language,
+            ),
+          ],
         ],
       ),
     );
@@ -424,6 +498,15 @@ class _QuestionPromptPanel extends StatelessWidget {
         return AppIcons.hearing;
       case QuizQuestionType.spelling:
         return AppIcons.edit;
+      // 新题型图标：复用语义最接近的已有图标
+      case QuizQuestionType.sentenceCloze:
+        return AppIcons.formatQuote; // 填空与上下文题同属句子语境
+      case QuizQuestionType.confusableChoice:
+        return AppIcons.swapHoriz; // 易混词辨析类似中英互选
+      case QuizQuestionType.collocationChoice:
+        return AppIcons.translate; // 搭配选择偏向词义辨析
+      case QuizQuestionType.derivativeChoice:
+        return AppIcons.edit; // 词形变化类似拼写题
     }
   }
 }
@@ -432,7 +515,7 @@ class _QuestionInput extends StatelessWidget {
   const _QuestionInput({
     required this.question,
     required this.selected,
-    required this.lockedCorrect,
+    required this.locked,
     required this.wrongTries,
     required this.controller,
     required this.onSelected,
@@ -441,7 +524,7 @@ class _QuestionInput extends StatelessWidget {
 
   final QuizQuestion question;
   final String? selected;
-  final bool lockedCorrect;
+  final bool locked;
   final Set<String> wrongTries;
   final TextEditingController controller;
   final ValueChanged<String> onSelected;
@@ -452,7 +535,7 @@ class _QuestionInput extends StatelessWidget {
     if (question.type == QuizQuestionType.spelling) {
       return TextField(
         controller: controller,
-        enabled: !lockedCorrect,
+        enabled: !locked,
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context).quizInputWord,
           prefixIcon: const Icon(AppIcons.edit),
@@ -470,9 +553,7 @@ class _QuestionInput extends StatelessWidget {
               letter: String.fromCharCode(65 + i),
               text: question.options[i],
               state: _optionState(question.options[i]),
-              onTap: lockedCorrect
-                  ? null
-                  : () => onSelected(question.options[i]),
+              onTap: locked ? null : () => onSelected(question.options[i]),
             ),
           ),
       ],
@@ -480,91 +561,12 @@ class _QuestionInput extends StatelessWidget {
   }
 
   bool _isCorrectOption(String option) {
-    return option.toLowerCase() == question.answer.toLowerCase();
+    return option.trim().toLowerCase() == question.answer.trim().toLowerCase();
   }
 
   ChoiceState _optionState(String option) {
-    if (lockedCorrect && _isCorrectOption(option)) return ChoiceState.correct;
+    if (locked && _isCorrectOption(option)) return ChoiceState.correct;
     if (wrongTries.contains(option)) return ChoiceState.wrong;
     return ChoiceState.idle;
-  }
-}
-
-class _FeedbackPanel extends StatelessWidget {
-  const _FeedbackPanel({
-    required this.isCorrect,
-    required this.revealAnswer,
-    required this.question,
-  });
-
-  final bool isCorrect;
-
-  /// When false (wrong attempt) the panel only shows a retry hint and hides the
-  /// explanation, correct word and example so retrying stays meaningful.
-  final bool revealAnswer;
-  final QuizQuestion question;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
-    final color = isCorrect
-        ? (theme.brightness == Brightness.dark
-              ? theme.colorScheme.primary
-              : AppTheme.success)
-        : theme.colorScheme.error;
-    return AppCard(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.12),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              isCorrect ? AppIcons.check : AppIcons.close,
-              color: color,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  revealAnswer
-                      ? '${l10n.quizCorrect}${question.explanation}'
-                      : '${l10n.quizWrong}${l10n.quizRetry}',
-                  style: TextStyle(color: color),
-                ),
-                if (revealAnswer) ...[
-                  const SizedBox(height: 8),
-                  Text(
-                    '${l10n.quizReinforce}${question.word.word} · ${question.word.primaryDefinitionFor(Localizations.localeOf(context).languageCode)}',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                  if (question.word.exampleSentence.isNotEmpty) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      question.word.exampleSentence,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        height: 1.35,
-                      ),
-                    ),
-                  ],
-                ],
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }

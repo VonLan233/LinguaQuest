@@ -10,6 +10,7 @@ import 'package:linguaquest/app.dart';
 import 'package:linguaquest/core/state/app_controller.dart';
 import 'package:linguaquest/core/state/app_state.dart';
 import 'package:linguaquest/data/models/app_notification.dart';
+import 'package:linguaquest/data/models/study_plan.dart';
 import 'package:linguaquest/data/models/user_profile.dart';
 import 'package:linguaquest/l10n/generated/app_localizations.dart';
 import 'package:linguaquest/data/remote/api_client.dart';
@@ -449,8 +450,14 @@ void main() {
         createdAt: now,
         updatedAt: now,
       );
+      final plan = StudyPlan.defaultsFor(
+        uid: profile.uid,
+        targetExam: 'HSK 1',
+        dailyGoal: 10,
+      );
       SharedPreferences.setMockInitialValues({
         'linguaquest.profile': jsonEncode(profile.toJson()),
+        'linguaquest.studyPlan.${profile.uid}': jsonEncode(plan.toJson()),
       });
 
       await tester.pumpWidget(

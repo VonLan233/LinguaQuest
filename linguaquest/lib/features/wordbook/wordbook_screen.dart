@@ -51,7 +51,7 @@ class WordbookScreen extends ConsumerWidget {
     );
     final percent = (progress * 100).round();
     final bookName = currentBook != null
-        ? displayWordbookTitle(currentBook.id, l10n: l10n)
+        ? currentBook.nameFor(localeCode)
         : studyBook.name;
     final examType = currentBook?.examType ?? '';
 
@@ -473,10 +473,8 @@ class _WordListRow extends StatelessWidget {
     final theme = Theme.of(context);
     final muted = theme.colorScheme.onSurfaceVariant;
     final meaning = word.primaryDefinitionFor(localeCode);
-    final phoneticPos = [
-      if (word.phonetic.isNotEmpty) word.phonetic,
-      if (word.partOfSpeech.isNotEmpty) word.partOfSpeech,
-    ].join(' · ');
+    // #B1: 拼音行只显拼音，POS 代码（v/vn/b 等）不再泄漏到显示。
+    final phoneticPos = word.phonetic;
     final favorite = userWord?.isFavorite ?? false;
     final status = userWord?.status;
 
@@ -495,7 +493,7 @@ class _WordListRow extends StatelessWidget {
               child: Text(
                 index.toString().padLeft(3, '0'),
                 style: theme.textTheme.labelSmall?.copyWith(
-                  color: AppTokens.textHintLight,
+                  color: muted,
                   fontFeatures: const [FontFeature.tabularFigures()],
                 ),
               ),
@@ -552,7 +550,7 @@ class _WordListRow extends StatelessWidget {
                 Icon(
                   favorite ? AppIcons.star : AppIcons.starBorder,
                   size: 18,
-                  color: favorite ? AppTokens.amber : AppTokens.textHintLight,
+                  color: favorite ? AppTokens.amber : muted,
                 ),
                 if (status != null) ...[
                   const SizedBox(height: AppTokens.s8),

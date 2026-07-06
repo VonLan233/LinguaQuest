@@ -153,6 +153,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get commonTimesSuffix => ' 次';
 
   @override
+  String get commonViewAll => '查看全部';
+
+  @override
+  String get commonView => '查看';
+
+  @override
   String get authRegisterTitle => '注册';
 
   @override
@@ -234,7 +240,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingTagStreak => '连续打卡';
 
   @override
-  String get splashTagline => '图像词卡、清晰路径、智能复习。';
+  String get splashTagline => '单词卡、清晰路径、智能复习。';
 
   @override
   String get studyNewScreenTitle => '新学';
@@ -445,15 +451,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get questTrend => '趋势';
 
   @override
-  String get questClassMode => '课堂模式';
-
-  @override
-  String get questClassModeBody => '通过班级码加入，查看教师进度看板和小组学习情况。';
-
-  @override
-  String get questClassCode => '班级码';
-
-  @override
   String get questAiTutor => 'AI 助教';
 
   @override
@@ -471,46 +468,6 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get aiTutorSampleAnswer =>
       'Affect is usually a verb: \"The weather affects my mood.\" Effect is usually a noun: \"The effect was immediate.\" 你可以分别用两个词各造一个句子。';
-
-  @override
-  String get classModeTitle => '班级学习';
-
-  @override
-  String get classModeSubtitle => '输入班级码加入小组，查看班级进度和弱项摘要。';
-
-  @override
-  String classModeJoined(Object code) {
-    return '已加入班级 $code';
-  }
-
-  @override
-  String get classModeJoin => '加入班级';
-
-  @override
-  String get classModeViewProgress => '查看班级进度';
-
-  @override
-  String get classProgressTitle => '班级进度';
-
-  @override
-  String get classProgressOverview => '班级概览';
-
-  @override
-  String get classProgressSubtitle => '教师端完成度和弱项词摘要。';
-
-  @override
-  String classProgressWeakWord(Object word) {
-    return '弱项词：$word';
-  }
-
-  @override
-  String get classTopicExamSignals => '考试信号词';
-
-  @override
-  String get classTopicTravelBasics => '旅行基础';
-
-  @override
-  String get classTopicWorkplace => '职场表达';
 
   @override
   String get leaderboardDefaultName => '探索者';
@@ -551,7 +508,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get analyticsAccuracy => '正确率';
 
   @override
-  String get onboardingFeatureImageCards => '图像词卡';
+  String get onboardingFeatureImageCards => '单词卡';
 
   @override
   String get onboardingFeatureImageCardsDesc => '单词、释义、例句串联学习';
@@ -591,6 +548,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get goalSetupTarget => '目标';
+
+  @override
+  String get goalSetupPlanBy => '规划方式';
 
   @override
   String get goalSetupDailyGoal => '每日目标';
@@ -728,13 +688,37 @@ class AppLocalizationsZh extends AppLocalizations {
   String get profileNoEmail => '未设置邮箱';
 
   @override
+  String get publicProfileNotFoundTitle => '无法查看该资料';
+
+  @override
+  String get publicProfileNotFoundMessage => '该用户不存在或资料不可见。';
+
+  @override
+  String get publicProfileLoadFailedTitle => '资料加载失败';
+
+  @override
+  String get publicProfileLoadFailedMessage => '出了点问题，请稍后重试。';
+
+  @override
+  String get profileEditNicknameTitle => '编辑昵称';
+
+  @override
+  String get profileEditNicknameSignInRequired => '请先登录再编辑昵称。';
+
+  @override
+  String get profileEditNicknameEmpty => '昵称不能为空。';
+
+  @override
+  String get profileEditNicknameSaveFailed => '昵称更新失败，请稍后重试。';
+
+  @override
   String get profileDashboard => '学习仪表盘';
 
   @override
   String get profileDashboardSubtitle => '学习数据一览';
 
   @override
-  String get profileLearnedWords => '已学单词';
+  String get profileLearnedWords => '已学';
 
   @override
   String get profileMasteredWords => '已掌握';
@@ -749,7 +733,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get profilePlansCompleted => '完成计划';
 
   @override
-  String get profileStreakDays => '天连续';
+  String profileStreakDays(num count) {
+    return '连续 $count 天';
+  }
 
   @override
   String get profileCurrentBookProgress => '当前词书进度';
@@ -815,6 +801,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsSoundFeedbackSubtitle => '用于提醒答题结果和练习节奏';
 
   @override
+  String get settingsTheme => '主题';
+
+  @override
   String get settingsThemeSystem => '跟随系统';
 
   @override
@@ -837,6 +826,11 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get settingsReminderTime => '提醒时间';
+
+  @override
+  String settingsReminderDisplay(String time) {
+    return '每日 · $time';
+  }
 
   @override
   String get settingsReminderOff => '提醒已关闭';
@@ -909,6 +903,57 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get discoverCommunityPostsSubtitle => '社区动态';
+
+  @override
+  String get discoverMyFavorites => '我的收藏';
+
+  @override
+  String get favoritesEmpty => '你还没有收藏任何帖子。';
+
+  @override
+  String get communityFilterAll => '全部';
+
+  @override
+  String get communityTagGrammar => '语法';
+
+  @override
+  String get communityTagVocabulary => '词汇';
+
+  @override
+  String get communityTagCulture => '文化';
+
+  @override
+  String get communityTagGeneral => '综合';
+
+  @override
+  String get communityTagProgress => '学习进展';
+
+  @override
+  String get communityShareUpdate => '分享学习进展';
+
+  @override
+  String get communityNewPost => '发帖';
+
+  @override
+  String get communityNoPostsInFilter => '该分类还没有帖子';
+
+  @override
+  String get communityTimeJustNow => '刚刚';
+
+  @override
+  String communityTimeMinutesAgo(int count) {
+    return '$count 分钟前';
+  }
+
+  @override
+  String communityTimeHoursAgo(int count) {
+    return '$count 小时前';
+  }
+
+  @override
+  String communityTimeDaysAgo(int count) {
+    return '$count 天前';
+  }
 
   @override
   String get discoverXpUsage => 'XP 用途';
@@ -989,7 +1034,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get discoverForumPost1Body => '错词集中在近义辨析，明天准备从训练场的易混词挑战开始。';
 
   @override
-  String get discoverForumPost2Title => '雅思阅读里怎么记 abstract?';
+  String get discoverForumPost2Title => '怎么记住 abstract 这个词？';
 
   @override
   String get discoverForumPost2Body => 'abstract 在论文和阅读文章里经常不是“抽象”的意思，要结合语境判断。';
@@ -1206,9 +1251,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get trainingLeaderboard => '排行榜';
 
   @override
-  String get trainingTimedTests => '限时测试';
-
-  @override
   String get trainingTimedTestsSubtitle => '校园词包与抢词挑战';
 
   @override
@@ -1234,9 +1276,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get trainingComingSoon => '即将开放';
-
-  @override
-  String get trainingSpecialDrills => '专项训练';
 
   @override
   String get trainingSpecialDrillsSubtitle => '围绕拼写、听音、搭配和短文挖词补弱项。';
@@ -1370,12 +1409,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String trainingPromptChineseSpelling(Object meaning) {
-    return '看中文拼写英文：$meaning';
+    return '根据释义拼写单词：$meaning';
   }
 
   @override
   String trainingPromptAudioSpelling(Object cue) {
-    return '听音后拼写英文：$cue';
+    return '听音后拼写单词：$cue';
   }
 
   @override
@@ -1425,7 +1464,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get trainingRealSource => '真实题源';
 
   @override
-  String get trainingSpellingInputLabel => '输入英文拼写';
+  String get trainingSpellingInputLabel => '输入单词';
 
   @override
   String get trainingReviveConsumed => '已消耗一次复活机会，继续闯关。';
@@ -1435,6 +1474,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get trainingCorrectFeedback => '回答正确，连击继续！';
+
+  @override
+  String get trainingPromptListening => '听音频，选择你听到的词';
+
+  @override
+  String get trainingListeningRevealHint => '先播放音频，随后显示选项。';
 
   @override
   String get learningPathTitle => '学习路径';
@@ -1779,15 +1824,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get labelTargetCET6 => '六级核心词汇';
 
   @override
-  String get labelTargetIELTS => '雅思核心词汇';
-
-  @override
-  String get labelTargetTOEFL => '托福高频词汇';
-
-  @override
-  String get labelTargetGRE => 'GRE 高频词汇';
-
-  @override
   String get labelTargetKaoyan => '考研英语核心词汇';
 
   @override
@@ -1897,15 +1933,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get labelWordTagCET6 => '六级';
-
-  @override
-  String get labelWordTagIELTS => '雅思';
-
-  @override
-  String get labelWordTagTOEFL => '托福';
-
-  @override
-  String get labelWordTagGRE => 'GRE';
 
   @override
   String get labelWordTagKaoyan => '考研';
@@ -2020,6 +2047,32 @@ class AppLocalizationsZh extends AppLocalizations {
   String get wordbookSwitchFailed => '暂时无法切换词书';
 
   @override
+  String get pickerChooseLanguage => '选择语言';
+
+  @override
+  String get pickerChooseWordbook => '选择词书';
+
+  @override
+  String get pickerLanguageChinese => '中文';
+
+  @override
+  String get pickerLanguageJapanese => '日语';
+
+  @override
+  String get pickerComingSoon => '即将上线';
+
+  @override
+  String get pickerCurrentBadge => '当前';
+
+  @override
+  String pickerSwitchSuccess(String wordbook) {
+    return '已切换到$wordbook';
+  }
+
+  @override
+  String get pickerSwitchFailed => '暂时无法切换词书';
+
+  @override
   String get wordbookTargetSection => '目标词';
 
   @override
@@ -2032,24 +2085,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get wordbookDescBeginner => '适合初级英语和日常表达入门的基础高频词。';
-
-  @override
-  String get wordbookNameIELTS => '雅思核心词汇';
-
-  @override
-  String get wordbookDescIELTS => '覆盖雅思阅读、听力和写作中的高频学术词。';
-
-  @override
-  String get wordbookNameTOEFL => '托福高频词汇';
-
-  @override
-  String get wordbookDescTOEFL => '面向托福场景的学术词汇和校园表达。';
-
-  @override
-  String get wordbookNameGRE => 'GRE 高频词汇';
-
-  @override
-  String get wordbookDescGRE => '强化 GRE 阅读和填空常见高阶词。';
 
   @override
   String get wordbookNameCET4 => '四级核心词汇';
@@ -2071,6 +2106,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get notificationTitle => '消息通知';
+
+  @override
+  String get dataAccountTitle => '数据与账户';
 
   @override
   String get notificationMarkAllRead => '全部已读';
@@ -2212,15 +2250,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get studyPlanDailyNewHint => '建议 5-30 词，最多 200 词。';
 
   @override
-  String get studyPlanDailyReview => '每日复习上限';
-
-  @override
-  String get studyPlanDailyReviewHint => '复习队列超过上限时会保留到后续日期。';
-
-  @override
-  String get studyPlanTargetDate => '考试/目标完成日期';
-
-  @override
   String get studyPlanReminderTime => '学习提醒时间';
 
   @override
@@ -2244,9 +2273,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get studyPlanConfirm => '确认重置';
-
-  @override
-  String get studyPlanInvalidDate => '目标完成日期不能早于今天。';
 
   @override
   String get studyPlanSaved => '学习计划已保存。';
@@ -2328,7 +2354,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get aiLearningToolAiAnalysis => 'AI 长难句分析';
 
   @override
-  String get aiLearningToolAiAnalysisDesc => '提取主干、划分从句、解释修饰成分和关键词，并给出自然中文翻译。';
+  String get aiLearningToolAiAnalysisDesc => '提取主干、划分从句、解释修饰成分和关键词，并给出自然译文。';
 
   @override
   String get aiLearningToolAiWriting => 'AI 作文批改';
@@ -2477,6 +2503,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get customWordsSaved => '单词已保存';
+
+  @override
+  String get customWordsAlreadyInWordbook => '该词已在生词本';
 
   @override
   String get customWordsDifficulty => '难度';
@@ -2651,11 +2680,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get helpContactSupport => '联系支持';
 
   @override
-  String get aboutVersion => '词境星球 · 版本 1.0.0';
+  String aboutVersion(String version) {
+    return '词境星球 · 版本 $version';
+  }
 
   @override
   String get aboutIntro =>
-      'LinguaQuest 将图像词卡、学习路径、间隔复习、XP、连续打卡和个人生词卡整合到一个移动优先的英语学习应用中。';
+      'LinguaQuest 将单词卡、学习路径、间隔复习、XP、连续打卡和个人生词卡整合到一个移动优先的英语学习应用中。';
 
   @override
   String get aboutGoalTitle => '项目目标';
@@ -2673,7 +2704,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get aboutCoreTitle => '核心体验';
 
   @override
-  String get aboutCoreSubtitle => '目标规划、视觉词汇、测验练习、复习排程和个人词卡。';
+  String get aboutCoreSubtitle => '目标规划、词汇学习、测验练习、复习排程和个人词卡。';
 
   @override
   String get aboutPrivacyTitle => '隐私';
@@ -2691,7 +2722,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get communityPostCheckinBody => '错词集中在近义辨析，明天准备从训练场的易混词挑战开始。';
 
   @override
-  String get communityPostAbstractTitle => '雅思阅读里怎么记 abstract?';
+  String get communityPostAbstractTitle => '怎么记住 abstract 这个词？';
 
   @override
   String get communityPostMistakeTag => '错题讨论';
@@ -2720,7 +2751,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String luckyDrawInventoryCount(Object count) {
+  String luckyDrawInventoryCount(num count) {
     return '库存 $count 件';
   }
 
@@ -2887,4 +2918,396 @@ class AppLocalizationsZh extends AppLocalizations {
   String dueInMinutes(int count) {
     return '$count 分钟后';
   }
+
+  @override
+  String get languageMapTitle => '选择学习语言';
+
+  @override
+  String get languageMapSelectPrompt => '点击国家选择你想学习的语言。';
+
+  @override
+  String get languageMapChinese => '中文';
+
+  @override
+  String languageMapConfirm(String language) {
+    return '学习$language';
+  }
+
+  @override
+  String languageMapSelected(String language) {
+    return '已切换到$language';
+  }
+
+  @override
+  String languageMapComingSoon(String language) {
+    return '$language：暂未开放';
+  }
+
+  @override
+  String get aboutCompanyName => 'LinguaQuest';
+
+  @override
+  String get aboutCompanyAddress => '厦门大学马来西亚分校，雪兰莪州雪邦 43900（虚拟地址）';
+
+  @override
+  String get aboutCompanyDescription => '我们打造 LinguaQuest 的虚拟园区。';
+
+  @override
+  String get aiLearningStatusAvailable => '可用';
+
+  @override
+  String get aiExplainWithAi => '用 AI 讲解';
+
+  @override
+  String get aiErrorGeneric => '出错了，请重试。';
+
+  @override
+  String aiEmptyChat(Object language) {
+    return '关于$language的任何问题都可以问——词义、语法或用法。';
+  }
+
+  @override
+  String aiQuestionHint(Object language) {
+    return '输入你关于$language的问题……';
+  }
+
+  @override
+  String aiEmptyAnalysis(Object language) {
+    return '粘贴一个$language句子，查看它的结构拆解。';
+  }
+
+  @override
+  String get aiEmptyCloze => '输入一个词，生成填空练习。';
+
+  @override
+  String get aiEmptyWriting => '粘贴你的作文并选择考试类型，获取评分反馈。';
+
+  @override
+  String get achievementsScreenTitle => '成就';
+
+  @override
+  String get achievementsHeaderTitle => '我的成就';
+
+  @override
+  String achievementsUnlockedCount(int unlocked, int total) {
+    return '$unlocked / $total 已解锁';
+  }
+
+  @override
+  String get achievementUnlockedLabel => '已解锁';
+
+  @override
+  String get achievementLearn100Title => '词汇百人斩';
+
+  @override
+  String get achievementLearn100Desc => '掌握 100 个单词';
+
+  @override
+  String get achievementQuizPerfectTitle => '完美发挥';
+
+  @override
+  String get achievementQuizPerfectDesc => '完成一次 100% 正确率的测验（4 题以上）';
+
+  @override
+  String get achievementFirstListeningTitle => '初次聆听';
+
+  @override
+  String get achievementFirstListeningDesc => '完成第一次听力练习';
+
+  @override
+  String get achievementFirstMapLanguageTitle => '探图者';
+
+  @override
+  String get achievementFirstMapLanguageDesc => '在语言地图中选择一门语言';
+
+  @override
+  String get assetInventoryTitle => '我的资产';
+
+  @override
+  String get assetInventoryEmpty => '暂无资产，快去幸运抽奖试试手气！';
+
+  @override
+  String assetInventoryTotalOwned(int count) {
+    return '拥有 $count 件';
+  }
+
+  @override
+  String assetInventoryTotalFragments(int count) {
+    return '$count 碎片';
+  }
+
+  @override
+  String assetInventoryQuantityBadge(int count) {
+    return '×$count';
+  }
+
+  @override
+  String get luckyDrawViewMyAssets => '查看我的资产';
+
+  @override
+  String get analyticsReportTitle => '学习报告';
+
+  @override
+  String get analyticsReportSubtitle => '你的进度、图表与重点';
+
+  @override
+  String analyticsScopeLabel(Object scope) {
+    return '范围：$scope';
+  }
+
+  @override
+  String get analyticsXpTrendTitle => '经验值趋势';
+
+  @override
+  String get analyticsAbilityTitle => '能力维度';
+
+  @override
+  String get analyticsModalityTitle => '各题型正确率';
+
+  @override
+  String get analyticsMasteryTitle => '单词掌握度';
+
+  @override
+  String get analyticsDetailTitle => '详细数据';
+
+  @override
+  String get analyticsFocusTitle => '推荐练习';
+
+  @override
+  String get analyticsReviewLoad => '复习负荷';
+
+  @override
+  String get analyticsWeekXp => '本周经验';
+
+  @override
+  String get analyticsTodayXp => '今日经验';
+
+  @override
+  String get analyticsWeakWords => '薄弱单词';
+
+  @override
+  String get analyticsDueNow => '待复习';
+
+  @override
+  String get analyticsMasteryNew => '新词';
+
+  @override
+  String get analyticsMasteryLearning => '学习中';
+
+  @override
+  String get analyticsMasteryMastered => '已掌握';
+
+  @override
+  String get analyticsDimMeaningRecognition => '认词';
+
+  @override
+  String get analyticsDimMeaningRecall => '回忆';
+
+  @override
+  String get analyticsDimContext => '语境';
+
+  @override
+  String get analyticsDimListening => '听力';
+
+  @override
+  String get analyticsDimSpelling => '拼写';
+
+  @override
+  String get analyticsModalityMeaning => '词义';
+
+  @override
+  String get analyticsModalityListening => '听力';
+
+  @override
+  String get analyticsModalitySpelling => '拼写';
+
+  @override
+  String get analyticsModalityContext => '语境';
+
+  @override
+  String get analyticsTopErrors => '主要错误类型';
+
+  @override
+  String get readingTitle => '时文阅读';
+
+  @override
+  String get readingDiscoverEntry => '时文阅读';
+
+  @override
+  String get readingRecommended => '为你推荐';
+
+  @override
+  String get readingAllArticles => '全部文章';
+
+  @override
+  String readingArticlesForTheme(Object theme) {
+    return '$theme文章';
+  }
+
+  @override
+  String get readingFilterLevel => '级别';
+
+  @override
+  String get readingFilterTheme => '主题';
+
+  @override
+  String get readingFilterAll => '全部';
+
+  @override
+  String readingMinutes(int count) {
+    return '$count 分钟';
+  }
+
+  @override
+  String get readingEmpty => '该筛选下暂无文章。';
+
+  @override
+  String get readingProgressInProgress => '阅读中';
+
+  @override
+  String get readingProgressDone => '已读';
+
+  @override
+  String get readingToggleTranslation => '翻译';
+
+  @override
+  String get readingToggleReading => '注音';
+
+  @override
+  String get readingParagraphAudio => '播放';
+
+  @override
+  String get readingTapWordHint => '点击高亮词查看释义。';
+
+  @override
+  String get readingWordAddToVocab => '加入生词本';
+
+  @override
+  String get readingWordAdded => '已加入生词本';
+
+  @override
+  String get readingComprehensionCta => '开始练习';
+
+  @override
+  String get readingComprehensionSoon => '阅读理解题将在下个阶段上线。';
+
+  @override
+  String get readingThemeCampus => '校园';
+
+  @override
+  String get readingThemeLife => '生活';
+
+  @override
+  String get readingThemeTravel => '旅行';
+
+  @override
+  String get readingThemeTech => '科技';
+
+  @override
+  String get readingThemeCulture => '文化';
+
+  @override
+  String get readingThemeNews => '新闻';
+
+  @override
+  String get readingThemeBusiness => '商务';
+
+  @override
+  String get readingThemeExam => '考试';
+
+  @override
+  String get readingToggleHighlight => '高亮';
+
+  @override
+  String get readingLegendTitle => '词汇高亮';
+
+  @override
+  String get readingClassKey => '重点词';
+
+  @override
+  String get readingClassUnknown => '需复习';
+
+  @override
+  String get readingClassNew => '生词';
+
+  @override
+  String get readingClassKnown => '已掌握';
+
+  @override
+  String get readingComprehensionStart => '开始做题';
+
+  @override
+  String get readingComprehensionTitle => '阅读理解';
+
+  @override
+  String readingComprehensionQuestion(int current, int total) {
+    return '第 $current / $total 题';
+  }
+
+  @override
+  String get readingComprehensionNext => '下一题';
+
+  @override
+  String get readingComprehensionFinish => '完成';
+
+  @override
+  String get readingComprehensionResultTitle => '阅读理解完成';
+
+  @override
+  String readingComprehensionScore(int correct, int total) {
+    return '答对 $correct / $total';
+  }
+
+  @override
+  String readingComprehensionAccuracy(int pct) {
+    return '正确率 $pct%';
+  }
+
+  @override
+  String get readingComprehensionDone => '完成';
+
+  @override
+  String get readingComprehensionEmpty => '本篇暂无理解题。';
+
+  @override
+  String get readingAnalyticsTitle => '阅读';
+
+  @override
+  String get readingAnalyticsArticlesRead => '已读文章';
+
+  @override
+  String get readingAnalyticsAccuracy => '理解正确率';
+
+  @override
+  String get readingAnalyticsThemes => '按主题';
+
+  @override
+  String get readingAnalyticsEmpty => '完成一次阅读理解后这里会显示数据。';
+
+  @override
+  String get readingExplainTooltip => 'AI 讲解';
+
+  @override
+  String get readingExplainTitle => 'AI 讲解';
+
+  @override
+  String get readingExplainLoading => '正在讲解这一段...';
+
+  @override
+  String get readingExplainGist => '大意';
+
+  @override
+  String get readingExplainKeyWords => '重点词';
+
+  @override
+  String get readingExplainGrammar => '语法点';
+
+  @override
+  String get readingExplainStructure => '句子结构';
+
+  @override
+  String get readingExplainTranslation => '翻译';
+
+  @override
+  String get readingExplainPractice => '练习';
 }

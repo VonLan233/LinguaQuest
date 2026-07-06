@@ -1,33 +1,47 @@
-version: "2.4"
+version: "3.9"
 
 services:
+  api:
+    build: .
+    restart: always
+    ports:
+      - "${PORT:-8080}:${PORT:-8080}"
+    env_file: .env.prod
+    # DATABASE_URL and JWT_SECRET come from .env.prod (the single prod source).
+    # Don't redeclare them here: a compose `environment:` entry overrides
+    # env_file, so host-side ${VAR} interpolation would silently win over
+    # .env.prod (e.g. a dev DB leaking into prod). PORT stays so the published
+    # port and the in-container port resolve from the same host value.
+    environment:
+      PORT: ${PORT:-8080}
+    depends_on:
+      db:
+        condition: service_healthy
+    # No container healthcheck: the API runs on a `FROM scratch` image with no
+    # shell or curl, so a CMD-SHELL healthcheck can never succeed (it would mark
+    # the container permanently unhealthy). Health is observed externally via
+    # the /health endpoint (e.g. nginx/uptime monitoring).
+
   db:
     image: postgres:16-alpine
-    restart: unless-stopped
+    restart: always
+    volumes:
+      - pgdata_prod:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-linguaquest}
       POSTGRES_USER: ${POSTGRES_USER:-linguaquest}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
-    volumes:
-      - linguaquest_pg:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-linguaquest} -d ${POSTGRES_DB:-linguaquest}"]
       interval: 10s
       timeout: 5s
-      retries: 10
+      retries: 5
 
-  api:
-    build: .
+  tts:
+    build: ./tts
     restart: unless-stopped
-    depends_on:
-      db:
-        condition: service_healthy
-    environment:
-      PORT: ${PORT:-8080}
-      DATABASE_URL: ${DATABASE_URL}
-      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
-    ports:
-      - "${PORT:-8080}:${PORT:-8080}"
+    expose:
+      - "5002"
 
 volumes:
-  linguaquest_pg:
+  pgdata_prod:

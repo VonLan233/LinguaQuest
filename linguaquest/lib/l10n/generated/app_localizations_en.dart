@@ -154,6 +154,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commonTimesSuffix => ' times';
 
   @override
+  String get commonViewAll => 'View all';
+
+  @override
+  String get commonView => 'View';
+
+  @override
   String get authRegisterTitle => 'Register';
 
   @override
@@ -239,7 +245,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingTagStreak => 'Daily streak';
 
   @override
-  String get splashTagline => 'Image word cards, clear paths, smart review.';
+  String get splashTagline => 'Word cards, clear paths, smart review.';
 
   @override
   String get studyNewScreenTitle => 'New words';
@@ -463,16 +469,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get questTrend => 'Trends';
 
   @override
-  String get questClassMode => 'Class Mode';
-
-  @override
-  String get questClassModeBody =>
-      'Join with a class code to see the teacher dashboard and group learning.';
-
-  @override
-  String get questClassCode => 'Class code';
-
-  @override
   String get questAiTutor => 'AI tutor';
 
   @override
@@ -493,48 +489,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get aiTutorSampleAnswer =>
       'Affect is usually a verb: \"The weather affects my mood.\" Effect is usually a noun: \"The effect was immediate.\" Try writing a sentence with each word.';
-
-  @override
-  String get classModeTitle => 'Class learning';
-
-  @override
-  String get classModeSubtitle =>
-      'Enter a class code to join a group and view class progress and weak-spot summaries.';
-
-  @override
-  String classModeJoined(Object code) {
-    return 'Joined class $code';
-  }
-
-  @override
-  String get classModeJoin => 'Join class';
-
-  @override
-  String get classModeViewProgress => 'View class progress';
-
-  @override
-  String get classProgressTitle => 'Class progress';
-
-  @override
-  String get classProgressOverview => 'Class overview';
-
-  @override
-  String get classProgressSubtitle =>
-      'Teacher-side completion and weak-word summary.';
-
-  @override
-  String classProgressWeakWord(Object word) {
-    return 'Weak word: $word';
-  }
-
-  @override
-  String get classTopicExamSignals => 'Exam signal words';
-
-  @override
-  String get classTopicTravelBasics => 'Travel basics';
-
-  @override
-  String get classTopicWorkplace => 'Workplace expressions';
 
   @override
   String get leaderboardDefaultName => 'Explorer';
@@ -578,7 +532,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get analyticsAccuracy => 'Accuracy';
 
   @override
-  String get onboardingFeatureImageCards => 'Image Word Cards';
+  String get onboardingFeatureImageCards => 'Word Cards';
 
   @override
   String get onboardingFeatureImageCardsDesc =>
@@ -622,6 +576,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get goalSetupTarget => 'Target';
+
+  @override
+  String get goalSetupPlanBy => 'Plan by';
 
   @override
   String get goalSetupDailyGoal => 'Daily Goal';
@@ -767,6 +724,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileNoEmail => 'No email set';
 
   @override
+  String get publicProfileNotFoundTitle => 'Profile unavailable';
+
+  @override
+  String get publicProfileNotFoundMessage =>
+      'This user doesn\'t exist or their profile is private.';
+
+  @override
+  String get publicProfileLoadFailedTitle => 'Couldn\'t load profile';
+
+  @override
+  String get publicProfileLoadFailedMessage =>
+      'Something went wrong. Please try again.';
+
+  @override
+  String get profileEditNicknameTitle => 'Edit nickname';
+
+  @override
+  String get profileEditNicknameSignInRequired =>
+      'Please sign in before editing your nickname.';
+
+  @override
+  String get profileEditNicknameEmpty => 'Nickname cannot be empty.';
+
+  @override
+  String get profileEditNicknameSaveFailed => 'Could not update nickname.';
+
+  @override
   String get profileDashboard => 'Learning Dashboard';
 
   @override
@@ -774,7 +758,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Key progress at a glance, with settings at the bottom.';
 
   @override
-  String get profileLearnedWords => 'Words Learned';
+  String get profileLearnedWords => 'Learned';
 
   @override
   String get profileMasteredWords => 'Mastered';
@@ -789,7 +773,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profilePlansCompleted => 'Plans Done';
 
   @override
-  String get profileStreakDays => 'days streak';
+  String profileStreakDays(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days streak',
+      one: '1 day streak',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get profileCurrentBookProgress => 'Current Wordbook Progress';
@@ -859,6 +851,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Provides audio feedback for quiz results and practice rhythm';
 
   @override
+  String get settingsTheme => 'Theme';
+
+  @override
   String get settingsThemeSystem => 'Follow System';
 
   @override
@@ -883,6 +878,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsReminderTime => 'Reminder Time';
+
+  @override
+  String settingsReminderDisplay(String time) {
+    return 'Daily · $time';
+  }
 
   @override
   String get settingsReminderOff => 'Reminder Off';
@@ -966,6 +966,57 @@ class AppLocalizationsEn extends AppLocalizations {
   String get discoverCommunityPostsSubtitle => 'Community';
 
   @override
+  String get discoverMyFavorites => 'My Favorites';
+
+  @override
+  String get favoritesEmpty => 'You haven\'t favorited any posts yet.';
+
+  @override
+  String get communityFilterAll => 'All';
+
+  @override
+  String get communityTagGrammar => 'Grammar';
+
+  @override
+  String get communityTagVocabulary => 'Vocabulary';
+
+  @override
+  String get communityTagCulture => 'Culture';
+
+  @override
+  String get communityTagGeneral => 'General';
+
+  @override
+  String get communityTagProgress => 'Progress';
+
+  @override
+  String get communityShareUpdate => 'Share an update';
+
+  @override
+  String get communityNewPost => 'New Post';
+
+  @override
+  String get communityNoPostsInFilter => 'No posts in this category yet';
+
+  @override
+  String get communityTimeJustNow => 'Just now';
+
+  @override
+  String communityTimeMinutesAgo(int count) {
+    return '${count}m ago';
+  }
+
+  @override
+  String communityTimeHoursAgo(int count) {
+    return '${count}h ago';
+  }
+
+  @override
+  String communityTimeDaysAgo(int count) {
+    return '${count}d ago';
+  }
+
+  @override
   String get discoverXpUsage => 'XP Usage';
 
   @override
@@ -974,7 +1025,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String discoverGoComplete(Object points) {
-    return 'Go +$points XP';
+    return 'Complete for +$points XP';
   }
 
   @override
@@ -1053,7 +1104,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get discoverForumPost2Title =>
-      'How do you memorize \'abstract\' in IELTS reading?';
+      'How do you memorize the word \'abstract\'?';
 
   @override
   String get discoverForumPost2Body =>
@@ -1281,9 +1332,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get trainingLeaderboard => 'Leaderboard';
 
   @override
-  String get trainingTimedTests => 'Timed Tests';
-
-  @override
   String get trainingTimedTestsSubtitle => 'Campus packs & speed challenges';
 
   @override
@@ -1311,9 +1359,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get trainingComingSoon => 'Coming Soon';
-
-  @override
-  String get trainingSpecialDrills => 'Skill Drills';
 
   @override
   String get trainingSpecialDrillsSubtitle =>
@@ -1454,12 +1499,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String trainingPromptChineseSpelling(Object meaning) {
-    return 'Spell the English word from the meaning: $meaning';
+    return 'Spell the word from its meaning: $meaning';
   }
 
   @override
   String trainingPromptAudioSpelling(Object cue) {
-    return 'Spell the English word after listening: $cue';
+    return 'Spell the word after listening: $cue';
   }
 
   @override
@@ -1510,7 +1555,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get trainingRealSource => 'Real question source';
 
   @override
-  String get trainingSpellingInputLabel => 'Enter English spelling';
+  String get trainingSpellingInputLabel => 'Type the word';
 
   @override
   String get trainingReviveConsumed => 'One revive was consumed. Keep going.';
@@ -1520,6 +1565,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get trainingCorrectFeedback => 'Correct. Streak continues!';
+
+  @override
+  String get trainingPromptListening => 'Listen and choose the word you heard';
+
+  @override
+  String get trainingListeningRevealHint =>
+      'Play the audio first, then the options appear.';
 
   @override
   String get learningPathTitle => 'Learning Path';
@@ -1880,15 +1932,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get labelTargetCET6 => 'CET-6 Core';
 
   @override
-  String get labelTargetIELTS => 'IELTS Core';
-
-  @override
-  String get labelTargetTOEFL => 'TOEFL High-Freq';
-
-  @override
-  String get labelTargetGRE => 'GRE High-Freq';
-
-  @override
   String get labelTargetKaoyan => 'Postgrad Core';
 
   @override
@@ -1998,15 +2041,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get labelWordTagCET6 => 'CET-6';
-
-  @override
-  String get labelWordTagIELTS => 'IELTS';
-
-  @override
-  String get labelWordTagTOEFL => 'TOEFL';
-
-  @override
-  String get labelWordTagGRE => 'GRE';
 
   @override
   String get labelWordTagKaoyan => 'Postgrad';
@@ -2122,6 +2156,32 @@ class AppLocalizationsEn extends AppLocalizations {
   String get wordbookSwitchFailed => 'Unable to switch wordbook';
 
   @override
+  String get pickerChooseLanguage => 'Language';
+
+  @override
+  String get pickerChooseWordbook => 'Choose Wordbook';
+
+  @override
+  String get pickerLanguageChinese => 'Chinese (中文)';
+
+  @override
+  String get pickerLanguageJapanese => 'Japanese (日本語)';
+
+  @override
+  String get pickerComingSoon => 'Coming Soon';
+
+  @override
+  String get pickerCurrentBadge => 'Current';
+
+  @override
+  String pickerSwitchSuccess(String wordbook) {
+    return 'Switched to $wordbook';
+  }
+
+  @override
+  String get pickerSwitchFailed => 'Unable to switch wordbook right now';
+
+  @override
   String get wordbookTargetSection => 'Target Words';
 
   @override
@@ -2135,27 +2195,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get wordbookDescBeginner =>
       'High-frequency words for beginners and daily expression.';
-
-  @override
-  String get wordbookNameIELTS => 'IELTS Core Words';
-
-  @override
-  String get wordbookDescIELTS =>
-      'High-frequency academic words for IELTS reading, listening, and writing.';
-
-  @override
-  String get wordbookNameTOEFL => 'TOEFL High-Frequency Words';
-
-  @override
-  String get wordbookDescTOEFL =>
-      'Academic vocabulary and campus expressions for TOEFL.';
-
-  @override
-  String get wordbookNameGRE => 'GRE High-Frequency Words';
-
-  @override
-  String get wordbookDescGRE =>
-      'Advanced words commonly seen in GRE reading and fill-in-the-blank.';
 
   @override
   String get wordbookNameCET4 => 'CET-4 Core Words';
@@ -2180,6 +2219,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notificationTitle => 'Notifications';
+
+  @override
+  String get dataAccountTitle => 'Data & Account';
 
   @override
   String get notificationMarkAllRead => 'Mark All Read';
@@ -2332,16 +2374,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get studyPlanDailyNewHint => 'Recommended 5-30 words, max 200.';
 
   @override
-  String get studyPlanDailyReview => 'Daily Review Limit';
-
-  @override
-  String get studyPlanDailyReviewHint =>
-      'Review queue beyond limit will be kept for later dates.';
-
-  @override
-  String get studyPlanTargetDate => 'Exam/Target Completion Date';
-
-  @override
   String get studyPlanReminderTime => 'Study Reminder Time';
 
   @override
@@ -2365,10 +2397,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get studyPlanConfirm => 'Confirm Reset';
-
-  @override
-  String get studyPlanInvalidDate =>
-      'Target completion date cannot be earlier than today.';
 
   @override
   String get studyPlanSaved => 'Study plan saved.';
@@ -2455,7 +2483,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aiLearningToolAiAnalysisDesc =>
-      'Extract main clauses, divide subordinate clauses, explain modifiers and key words, and provide natural Chinese translation.';
+      'Extract main clauses, divide subordinate clauses, explain modifiers and key words, and provide a natural translation.';
 
   @override
   String get aiLearningToolAiWriting => 'AI Writing Correction';
@@ -2613,6 +2641,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get customWordsSaved => 'Word saved';
+
+  @override
+  String get customWordsAlreadyInWordbook =>
+      'This word is already in your wordbook';
 
   @override
   String get customWordsDifficulty => 'Difficulty';
@@ -2799,11 +2831,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get helpContactSupport => 'Contact support';
 
   @override
-  String get aboutVersion => 'LinguaQuest · Version 1.0.0';
+  String aboutVersion(String version) {
+    return 'LinguaQuest · Version $version';
+  }
 
   @override
   String get aboutIntro =>
-      'LinguaQuest brings visual word cards, learning paths, spaced review, XP, streaks, and personal word cards into a mobile-first English learning app.';
+      'LinguaQuest brings word cards, learning paths, spaced review, XP, streaks, and personal word cards into a mobile-first English learning app.';
 
   @override
   String get aboutGoalTitle => 'Project goal';
@@ -2824,7 +2858,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aboutCoreSubtitle =>
-      'Goal planning, visual vocabulary, quiz practice, review scheduling, and personal word cards.';
+      'Goal planning, vocabulary building, quiz practice, review scheduling, and personal word cards.';
 
   @override
   String get aboutPrivacyTitle => 'Privacy';
@@ -2846,7 +2880,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get communityPostAbstractTitle =>
-      'How to remember \"abstract\" in IELTS reading?';
+      'How to remember the word \'abstract\'?';
 
   @override
   String get communityPostMistakeTag => 'Mistake Discussion';
@@ -2875,8 +2909,14 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String luckyDrawInventoryCount(Object count) {
-    return '$count items in stock';
+  String luckyDrawInventoryCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items in stock',
+      one: '1 item in stock',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -3044,4 +3084,409 @@ class AppLocalizationsEn extends AppLocalizations {
   String dueInMinutes(int count) {
     return 'In $count minutes';
   }
+
+  @override
+  String get languageMapTitle => 'Choose Language';
+
+  @override
+  String get languageMapSelectPrompt =>
+      'Tap a country to choose the language you want to learn.';
+
+  @override
+  String get languageMapChinese => 'Chinese (中文)';
+
+  @override
+  String languageMapConfirm(String language) {
+    return 'Learn $language';
+  }
+
+  @override
+  String languageMapSelected(String language) {
+    return 'Now learning $language';
+  }
+
+  @override
+  String languageMapComingSoon(String language) {
+    return '$language — coming soon';
+  }
+
+  @override
+  String get aboutCompanyName => 'LinguaQuest';
+
+  @override
+  String get aboutCompanyAddress =>
+      'Xiamen University Malaysia, Bandar Sunsuria, 43900 Sepang, Selangor, Malaysia (virtual)';
+
+  @override
+  String get aboutCompanyDescription =>
+      'Our virtual campus where LinguaQuest is built.';
+
+  @override
+  String get aiLearningStatusAvailable => 'Available';
+
+  @override
+  String get aiExplainWithAi => 'Explain with AI';
+
+  @override
+  String get aiErrorGeneric => 'Something went wrong. Please try again.';
+
+  @override
+  String aiEmptyChat(Object language) {
+    return 'Ask anything about $language — meanings, grammar, or usage.';
+  }
+
+  @override
+  String aiQuestionHint(Object language) {
+    return 'Type your question about $language...';
+  }
+
+  @override
+  String aiEmptyAnalysis(Object language) {
+    return 'Paste a $language sentence to see its structure broken down.';
+  }
+
+  @override
+  String get aiEmptyCloze =>
+      'Enter a word to generate a fill-in-the-blank exercise.';
+
+  @override
+  String get aiEmptyWriting =>
+      'Paste your essay and pick an exam type to get scored feedback.';
+
+  @override
+  String get achievementsScreenTitle => 'Achievements';
+
+  @override
+  String get achievementsHeaderTitle => 'Your Achievements';
+
+  @override
+  String achievementsUnlockedCount(int unlocked, int total) {
+    return '$unlocked / $total unlocked';
+  }
+
+  @override
+  String get achievementUnlockedLabel => 'Unlocked';
+
+  @override
+  String get achievementLearn100Title => 'Century Scholar';
+
+  @override
+  String get achievementLearn100Desc => 'Master 100 words';
+
+  @override
+  String get achievementQuizPerfectTitle => 'Flawless Run';
+
+  @override
+  String get achievementQuizPerfectDesc =>
+      'Complete a quiz session with 100% accuracy (4+ questions)';
+
+  @override
+  String get achievementFirstListeningTitle => 'First Echo';
+
+  @override
+  String get achievementFirstListeningDesc =>
+      'Complete your first listening exercise';
+
+  @override
+  String get achievementFirstMapLanguageTitle => 'Cartographer';
+
+  @override
+  String get achievementFirstMapLanguageDesc =>
+      'Pick a language from the language map';
+
+  @override
+  String get assetInventoryTitle => 'My Assets';
+
+  @override
+  String get assetInventoryEmpty =>
+      'No assets yet. Try your luck in the Lucky Draw!';
+
+  @override
+  String assetInventoryTotalOwned(int count) {
+    return '$count items owned';
+  }
+
+  @override
+  String assetInventoryTotalFragments(int count) {
+    return '$count fragments';
+  }
+
+  @override
+  String assetInventoryQuantityBadge(int count) {
+    return '×$count';
+  }
+
+  @override
+  String get luckyDrawViewMyAssets => 'View my assets';
+
+  @override
+  String get analyticsReportTitle => 'Learning report';
+
+  @override
+  String get analyticsReportSubtitle =>
+      'Your progress, charts, and focus areas';
+
+  @override
+  String analyticsScopeLabel(Object scope) {
+    return 'Scope: $scope';
+  }
+
+  @override
+  String get analyticsXpTrendTitle => 'XP trend';
+
+  @override
+  String get analyticsAbilityTitle => 'Ability dimensions';
+
+  @override
+  String get analyticsModalityTitle => 'Accuracy by type';
+
+  @override
+  String get analyticsMasteryTitle => 'Word mastery';
+
+  @override
+  String get analyticsDetailTitle => 'Detailed stats';
+
+  @override
+  String get analyticsFocusTitle => 'Recommended practice';
+
+  @override
+  String get analyticsReviewLoad => 'Review load';
+
+  @override
+  String get analyticsWeekXp => 'This week XP';
+
+  @override
+  String get analyticsTodayXp => 'Today XP';
+
+  @override
+  String get analyticsWeakWords => 'Weak words';
+
+  @override
+  String get analyticsDueNow => 'Due now';
+
+  @override
+  String get analyticsMasteryNew => 'New';
+
+  @override
+  String get analyticsMasteryLearning => 'Learning';
+
+  @override
+  String get analyticsMasteryMastered => 'Mastered';
+
+  @override
+  String get analyticsDimMeaningRecognition => 'Recognition';
+
+  @override
+  String get analyticsDimMeaningRecall => 'Recall';
+
+  @override
+  String get analyticsDimContext => 'Context';
+
+  @override
+  String get analyticsDimListening => 'Listening';
+
+  @override
+  String get analyticsDimSpelling => 'Spelling';
+
+  @override
+  String get analyticsModalityMeaning => 'Meaning';
+
+  @override
+  String get analyticsModalityListening => 'Listening';
+
+  @override
+  String get analyticsModalitySpelling => 'Spelling';
+
+  @override
+  String get analyticsModalityContext => 'Context';
+
+  @override
+  String get analyticsTopErrors => 'Top error types';
+
+  @override
+  String get readingTitle => 'Reading';
+
+  @override
+  String get readingDiscoverEntry => 'Reading';
+
+  @override
+  String get readingRecommended => 'Recommended for you';
+
+  @override
+  String get readingAllArticles => 'All articles';
+
+  @override
+  String readingArticlesForTheme(Object theme) {
+    return '$theme articles';
+  }
+
+  @override
+  String get readingFilterLevel => 'Level';
+
+  @override
+  String get readingFilterTheme => 'Theme';
+
+  @override
+  String get readingFilterAll => 'All';
+
+  @override
+  String readingMinutes(int count) {
+    return '$count min';
+  }
+
+  @override
+  String get readingEmpty => 'No articles for this filter yet.';
+
+  @override
+  String get readingProgressInProgress => 'In progress';
+
+  @override
+  String get readingProgressDone => 'Read';
+
+  @override
+  String get readingToggleTranslation => 'Translation';
+
+  @override
+  String get readingToggleReading => 'Reading';
+
+  @override
+  String get readingParagraphAudio => 'Play';
+
+  @override
+  String get readingTapWordHint => 'Tap a highlighted word for its meaning.';
+
+  @override
+  String get readingWordAddToVocab => 'Add to vocab notebook';
+
+  @override
+  String get readingWordAdded => 'Added to vocab notebook';
+
+  @override
+  String get readingComprehensionCta => 'Start comprehension';
+
+  @override
+  String get readingComprehensionSoon =>
+      'Comprehension questions arrive in the next phase.';
+
+  @override
+  String get readingThemeCampus => 'Campus';
+
+  @override
+  String get readingThemeLife => 'Life';
+
+  @override
+  String get readingThemeTravel => 'Travel';
+
+  @override
+  String get readingThemeTech => 'Tech';
+
+  @override
+  String get readingThemeCulture => 'Culture';
+
+  @override
+  String get readingThemeNews => 'News';
+
+  @override
+  String get readingThemeBusiness => 'Business';
+
+  @override
+  String get readingThemeExam => 'Exam';
+
+  @override
+  String get readingToggleHighlight => 'Highlight';
+
+  @override
+  String get readingLegendTitle => 'Word highlights';
+
+  @override
+  String get readingClassKey => 'Key word';
+
+  @override
+  String get readingClassUnknown => 'Needs review';
+
+  @override
+  String get readingClassNew => 'New';
+
+  @override
+  String get readingClassKnown => 'Known';
+
+  @override
+  String get readingComprehensionStart => 'Start comprehension';
+
+  @override
+  String get readingComprehensionTitle => 'Comprehension';
+
+  @override
+  String readingComprehensionQuestion(int current, int total) {
+    return 'Question $current of $total';
+  }
+
+  @override
+  String get readingComprehensionNext => 'Next';
+
+  @override
+  String get readingComprehensionFinish => 'Finish';
+
+  @override
+  String get readingComprehensionResultTitle => 'Comprehension complete';
+
+  @override
+  String readingComprehensionScore(int correct, int total) {
+    return '$correct / $total correct';
+  }
+
+  @override
+  String readingComprehensionAccuracy(int pct) {
+    return 'Accuracy $pct%';
+  }
+
+  @override
+  String get readingComprehensionDone => 'Done';
+
+  @override
+  String get readingComprehensionEmpty =>
+      'No comprehension questions for this article yet.';
+
+  @override
+  String get readingAnalyticsTitle => 'Reading';
+
+  @override
+  String get readingAnalyticsArticlesRead => 'Articles read';
+
+  @override
+  String get readingAnalyticsAccuracy => 'Comprehension accuracy';
+
+  @override
+  String get readingAnalyticsThemes => 'By theme';
+
+  @override
+  String get readingAnalyticsEmpty =>
+      'Complete a reading comprehension to see stats here.';
+
+  @override
+  String get readingExplainTooltip => 'Explain with AI';
+
+  @override
+  String get readingExplainTitle => 'AI explanation';
+
+  @override
+  String get readingExplainLoading => 'Explaining this paragraph...';
+
+  @override
+  String get readingExplainGist => 'Gist';
+
+  @override
+  String get readingExplainKeyWords => 'Key words';
+
+  @override
+  String get readingExplainGrammar => 'Grammar points';
+
+  @override
+  String get readingExplainStructure => 'Sentence structure';
+
+  @override
+  String get readingExplainTranslation => 'Translation';
+
+  @override
+  String get readingExplainPractice => 'Practice';
 }

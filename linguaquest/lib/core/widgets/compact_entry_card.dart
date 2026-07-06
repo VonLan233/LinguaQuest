@@ -61,7 +61,7 @@ class CompactEntryCard extends StatelessWidget {
         Expanded(
           child: Text(
             title,
-            maxLines: 1,
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w700,

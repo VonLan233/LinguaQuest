@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'profile_repository.dart';
 
 import '../../core/utils/email_validation.dart';
 import '../models/app_notification.dart';
@@ -18,9 +21,19 @@ import '../models/user_word.dart';
 import '../models/user_profile.dart';
 import '../lesson_factory.dart';
 import '../wordbook_asset_loader.dart';
+import 'ai_repository.dart';
+import 'analytics_repository.dart';
 import 'auth_repository.dart';
 import 'custom_word_repository.dart';
+import '../models/achievement.dart';
+import '../models/ai_feature.dart';
+import '../models/analytics.dart';
+import '../models/forum.dart';
+import '../models/recommendation.dart';
+import '../models/study_spot.dart';
+import 'forum_repository.dart';
 import 'learning_repository.dart';
+import 'study_spot_repository.dart';
 import 'lottery_repository.dart';
 import 'notification_repository.dart';
 import 'reward_repository.dart';
@@ -33,6 +46,10 @@ class MockAuthRepository implements AuthRepository {
   static const _profileKey = 'linguaquest.profile';
   static const _registeredEmailsKey = 'linguaquest.mock.registered_emails';
   UserProfile? _profile;
+
+  /// In offline/demo mode, any 6-digit all-digit code is accepted as correct.
+  /// Passing any non-numeric or wrong-length value throws [EmailVerificationException]
+  /// with reason 'invalid_code', so UI error paths can be exercised in tests.
 
   @override
   Future<UserProfile?> loadSession() async {
@@ -124,12 +141,35 @@ class MockAuthRepository implements AuthRepository {
     required String email,
     required String code,
   }) async {
+    // In demo/offline mode we accept any all-digit 6-character code.
+    // Any other value simulates a wrong-code error so UI error-handling paths
+    // can be exercised in unit tests.
+    final trimmed = code.trim();
+    final isNumeric = RegExp(r'^\d{6}$').hasMatch(trimmed);
+    if (!isNumeric) {
+      throw const EmailVerificationException('invalid_code');
+    }
     final existing = await loadSession();
     if (existing != null) return existing;
-    return login(email: email, password: '');
+    // Register was called earlier — look up the profile via the registered list.
+    final normalizedEmail = email.trim().toLowerCase();
+    final prefs = await SharedPreferences.getInstance();
+    final registered = (prefs.getStringList(_registeredEmailsKey) ?? const [])
+        .map((e) => e.trim().toLowerCase())
+        .toSet();
+    if (!registered.contains(normalizedEmail)) {
+      throw StateError('account not found');
+    }
+    final profile = UserProfile.demo().copyWith(
+      email: normalizedEmail,
+      updatedAt: DateTime.now(),
+    );
+    return updateProfile(profile);
   }
 
   @override
+  // In offline/demo mode resendCode is a no-op — the mock OTP is always
+  // accepted, so there is nothing to re-issue.
   Future<void> resendCode(String email) async {}
 
   @override
@@ -145,6 +185,22 @@ class MockAuthRepository implements AuthRepository {
     _profile = null;
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_profileKey);
+  }
+
+  @override
+  Future<void> deleteAccount() async {
+    final prefs = await SharedPreferences.getInstance();
+    final email = _profile?.email.trim().toLowerCase();
+    _profile = null;
+    await prefs.remove(_profileKey);
+    if (email != null && email.isNotEmpty) {
+      final registered =
+          prefs.getStringList(_registeredEmailsKey) ?? const <String>[];
+      await prefs.setStringList(
+        _registeredEmailsKey,
+        registered.where((item) => item.trim().toLowerCase() != email).toList(),
+      );
+    }
   }
 }
 
@@ -235,6 +291,9 @@ class MockLearningRepository implements LearningRepository {
 
   @override
   Future<List<WordBook>> listWordBooks() => _loader.loadWordBooks();
+
+  @override
+  Future<void> clearOfflineCache() async => _loader.clearCache();
 
   @override
   Future<List<Lesson>> listLessons() async {
@@ -668,56 +727,145 @@ class MockLotteryRepository implements LotteryRepository {
 const _mockPrizePool = [
   LotteryPrize(
     id: 'avatar-frame-starry',
-    name: '星轨头像框',
+    name: 'Star Trail Avatar Frame',
     category: 'avatarFrame',
     rarity: 'rare',
-    description: '围绕头像的星轨装饰，不提供学习分数加成。',
-    probability: 6,
+    description:
+        'A star-trail decoration around your avatar. Cosmetic only — no learning-score boost.',
+    probability: 4,
+    fragmentValue: 18,
+  ),
+  LotteryPrize(
+    id: 'avatar-frame-ember',
+    name: 'Ember Flame Avatar Frame',
+    category: 'avatarFrame',
+    rarity: 'rare',
+    description:
+        'A burning-ember style avatar frame. Decorative only — does not affect learning fairness.',
+    probability: 3,
     fragmentValue: 18,
   ),
   LotteryPrize(
     id: 'profile-bg-aurora',
-    name: '极光主页背景',
+    name: 'Aurora Home Background',
     category: 'profileBackground',
     rarity: 'rare',
-    description: '个人空间可展示的极光背景，不影响学习公平性。',
-    probability: 7,
+    description:
+        'An aurora backdrop for your profile space. Decorative only — does not affect learning fairness.',
+    probability: 4,
+    fragmentValue: 16,
+  ),
+  LotteryPrize(
+    id: 'profile-bg-dawn-harbor',
+    name: 'Dawn Harbor Background',
+    category: 'profileBackground',
+    rarity: 'rare',
+    description: 'A dawn harbor scene background. Display decoration only.',
+    probability: 3,
     fragmentValue: 16,
   ),
   LotteryPrize(
     id: 'badge-focus-sprinter',
-    name: '专注冲刺徽章',
+    name: 'Focus Sprint Badge',
     category: 'badge',
     rarity: 'uncommon',
-    description: '学习资料页展示徽章，仅作荣誉装饰。',
-    probability: 16,
+    description: 'A badge shown on your study page. Honorary decoration only.',
+    probability: 9,
     fragmentValue: 8,
+  ),
+  LotteryPrize(
+    id: 'badge-night-owl',
+    name: 'Night Owl Badge',
+    category: 'badge',
+    rarity: 'uncommon',
+    description: 'A badge for late-night learners. Does not raise quiz scores.',
+    probability: 7,
+    fragmentValue: 8,
+  ),
+  LotteryPrize(
+    id: 'badge-anniversary-lantern',
+    name: 'Anniversary Lantern Badge',
+    category: 'badge',
+    rarity: 'rare',
+    description: 'A limited event badge. Honorary keepsake only.',
+    probability: 2,
+    fragmentValue: 20,
   ),
   LotteryPrize(
     id: 'title-arena-scout',
-    name: '训练场侦察员称号',
+    name: 'Training Ground Scout Title',
     category: 'title',
     rarity: 'uncommon',
-    description: '训练场称号展示，不提高答题分数。',
-    probability: 14,
+    description: 'A training-ground title. Does not raise quiz scores.',
+    probability: 8,
     fragmentValue: 8,
   ),
   LotteryPrize(
+    id: 'title-lexicon-keeper',
+    name: 'Vocabulary Guardian Title',
+    category: 'title',
+    rarity: 'uncommon',
+    description:
+        'A title for dedicated vocabulary learners. Does not affect learning fairness.',
+    probability: 7,
+    fragmentValue: 8,
+  ),
+  LotteryPrize(
+    id: 'title-dawn-voyager',
+    name: 'Dawn Voyager Title',
+    category: 'title',
+    rarity: 'rare',
+    description: 'A rare explorer title. Decorative only.',
+    probability: 3,
+    fragmentValue: 16,
+  ),
+  LotteryPrize(
     id: 'card-skin-mint',
-    name: '薄荷卡片皮肤',
+    name: 'Mint Card Skin',
     category: 'cardSkin',
     rarity: 'common',
-    description: '单词卡片视觉皮肤，不改变记忆算法。',
-    probability: 22,
+    description:
+        'A word-card visual skin. Does not change the memory algorithm.',
+    probability: 12,
     fragmentValue: 5,
   ),
   LotteryPrize(
+    id: 'card-skin-sakura',
+    name: 'Sakura Card Skin',
+    category: 'cardSkin',
+    rarity: 'common',
+    description:
+        'A sakura-style card skin. Does not change the memory algorithm.',
+    probability: 11,
+    fragmentValue: 5,
+  ),
+  LotteryPrize(
+    id: 'card-skin-midnight',
+    name: 'Midnight Card Skin',
+    category: 'cardSkin',
+    rarity: 'common',
+    description:
+        'A dark midnight-style card skin. Does not affect learning results.',
+    probability: 10,
+    fragmentValue: 5,
+  ),
+  LotteryPrize(
+    id: 'card-skin-citrus',
+    name: 'Citrus Card Skin',
+    category: 'cardSkin',
+    rarity: 'common',
+    description: 'A fresh citrus-toned card skin. Visual decoration only.',
+    probability: 7,
+    fragmentValue: 4,
+  ),
+  LotteryPrize(
     id: 'comfort-star-fragments',
-    name: '星尘碎片',
+    name: 'Stardust Fragment',
     category: 'fragment',
     rarity: 'comfort',
-    description: '安慰奖励，可累计兑换装饰资产。',
-    probability: 35,
+    description:
+        'A consolation reward you can accumulate to redeem decorative assets.',
+    probability: 10,
     fragmentValue: 3,
   ),
 ];
@@ -975,5 +1123,743 @@ class MockRewardRepository implements RewardRepository {
     granted.add(key);
     await prefs.setStringList(_grantedSourceKeys, granted.toList());
     return PointGrantResult(pointsAwarded: points, alreadyGranted: false);
+  }
+}
+
+class MockAiRepository implements AiRepository {
+  final List<AiHistoryEntry> _history = [];
+  int _idCounter = 0;
+
+  @override
+  Future<Map<String, dynamic>> chat({
+    required String prompt,
+    required String targetLanguage,
+    String? targetWord,
+  }) async {
+    final snippet = prompt.length > 30 ? prompt.substring(0, 30) : prompt;
+    final result = <String, dynamic>{
+      'answer': 'Mock answer for: $snippet',
+      'cautions': <String>[],
+      'relatedWords': <String>[],
+    };
+    _history.insert(
+      0,
+      AiHistoryEntry(
+        id: 'mock-${_idCounter++}',
+        featureType: 'chat',
+        prompt: prompt,
+        response: result,
+        createdAt: DateTime.now(),
+      ),
+    );
+    return result;
+  }
+
+  @override
+  Future<Map<String, dynamic>> analyzeStatement({
+    required String prompt,
+    required String targetLanguage,
+  }) async {
+    final result = <String, dynamic>{
+      'mainClause': 'Mock main clause',
+      'clauses': <String>[],
+      'modifiers': <String>[],
+      'translation': 'Mock translation',
+      'vocabularyNotes': <String>[],
+    };
+    _history.insert(
+      0,
+      AiHistoryEntry(
+        id: 'mock-${_idCounter++}',
+        featureType: 'sentence_analysis',
+        prompt: prompt,
+        response: result,
+        createdAt: DateTime.now(),
+      ),
+    );
+    return result;
+  }
+
+  @override
+  Future<Map<String, dynamic>> generateCloze({
+    required String prompt,
+    required String targetLanguage,
+    String? targetWord,
+  }) async {
+    final word = targetWord ?? 'word';
+    final result = <String, dynamic>{
+      'passage': 'The ___ was very interesting.',
+      'blanks': [
+        {
+          'index': 0,
+          'answer': word,
+          'options': [word, 'thing', 'idea', 'place'],
+        },
+      ],
+      'explanations': <String>[],
+    };
+    _history.insert(
+      0,
+      AiHistoryEntry(
+        id: 'mock-${_idCounter++}',
+        featureType: 'cloze',
+        prompt: prompt,
+        response: result,
+        createdAt: DateTime.now(),
+      ),
+    );
+    return result;
+  }
+
+  @override
+  Future<Map<String, dynamic>> generateConfusion({
+    required String prompt,
+    required String targetLanguage,
+    String? targetWord,
+  }) async {
+    final word = targetWord ?? 'word';
+    final result = <String, dynamic>{
+      'pairs': [
+        {
+          'word': word,
+          'confusedWith': 'similar',
+          'distinction': 'Mock distinction for $word.',
+          'examples': <String>[],
+        },
+      ],
+    };
+    _history.insert(
+      0,
+      AiHistoryEntry(
+        id: 'mock-${_idCounter++}',
+        featureType: 'confusion',
+        prompt: prompt,
+        response: result,
+        createdAt: DateTime.now(),
+      ),
+    );
+    return result;
+  }
+
+  @override
+  Future<Map<String, dynamic>> generateSentences({
+    required String prompt,
+    required String targetLanguage,
+    String? targetWord,
+  }) async {
+    final word = targetWord ?? 'word';
+    final result = <String, dynamic>{
+      'sentences': [
+        {
+          'sentence': 'Mock sentence with $word.',
+          'translation': 'Mock translation.',
+        },
+      ],
+      'rewrites': [
+        {'original': word, 'rewritten': 'Mock rewrite.', 'note': 'Mock note.'},
+      ],
+    };
+    _history.insert(
+      0,
+      AiHistoryEntry(
+        id: 'mock-${_idCounter++}',
+        featureType: 'sentence_gen',
+        prompt: prompt,
+        response: result,
+        createdAt: DateTime.now(),
+      ),
+    );
+    return result;
+  }
+
+  @override
+  Future<Map<String, dynamic>> explainParagraph({
+    required String paragraph,
+    required String language,
+    String? level,
+  }) async {
+    final result = <String, dynamic>{
+      'gist': 'Mock gist of the paragraph.',
+      'keyWords': <Map<String, String>>[
+        {'word': '示例', 'reading': 'shìlì', 'meaning': 'example'},
+      ],
+      'grammarPoints': <String>['Mock grammar point'],
+      'structure': 'Mock sentence structure analysis.',
+      'translation': 'Mock English translation of the paragraph.',
+      'practice': <Map<String, dynamic>>[
+        {
+          'prompt': 'Mock practice question?',
+          'answer': '示例',
+          'options': <String>['示例', '其它', '别的', '另一个'],
+        },
+      ],
+    };
+    _history.insert(
+      0,
+      AiHistoryEntry(
+        id: 'mock-re-${_idCounter++}',
+        featureType: 'reading_explain',
+        prompt: paragraph,
+        response: result,
+        createdAt: DateTime.now(),
+      ),
+    );
+    return result;
+  }
+
+  @override
+  Future<List<AiHistoryEntry>> listHistory() async {
+    return List.unmodifiable(_history);
+  }
+
+  @override
+  Future<void> deleteHistory(String id) async {
+    _history.removeWhere((entry) => entry.id == id);
+  }
+
+  @override
+  Future<Map<String, dynamic>> reviewWriting({
+    required String essay,
+    required String targetLanguage,
+    String? examType,
+    double? targetScore,
+  }) async {
+    final result = <String, dynamic>{
+      'totalScore': 75,
+      'rubricScores': <String, int>{
+        'content': 18,
+        'language': 15,
+        'structure': 14,
+        'vocabulary': 15,
+        'accuracy': 13,
+      },
+      'mainIssues': <String>['Limited vocabulary variety'],
+      'paragraphSuggestions': <Map<String, String>>[],
+      'highScoreExpressions': <String>[
+        'Furthermore, it is worth noting that...',
+      ],
+      'grammarIssues': <Map<String, String>>[],
+      'rewrittenSample': 'Mock rewritten sample.',
+    };
+    _history.insert(
+      0,
+      AiHistoryEntry(
+        id: 'mock-wr-${_idCounter++}',
+        featureType: 'writing_review',
+        prompt: essay,
+        response: result,
+        createdAt: DateTime.now(),
+      ),
+    );
+    return result;
+  }
+}
+
+class MockForumRepository implements ForumRepository {
+  final List<ForumPost> _posts = _buildSeedPosts();
+
+  final Map<String, List<ForumComment>> _comments = {};
+  final Set<String> _likedPostIds = {};
+  final Set<String> _favoritedPostIds = {};
+  int _postIdCounter = 10;
+  int _commentIdCounter = 100;
+
+  @override
+  Future<List<ForumPost>> listPosts() async {
+    return _posts
+        .map(
+          (post) => post.copyWith(
+            isLiked: _likedPostIds.contains(post.id),
+            isFavorited: _favoritedPostIds.contains(post.id),
+          ),
+        )
+        .toList();
+  }
+
+  @override
+  Future<ForumPost> getPost(String id) async {
+    final post = _posts.firstWhere(
+      (post) => post.id == id,
+      orElse: () => throw StateError('post not found: $id'),
+    );
+    return post.copyWith(
+      isLiked: _likedPostIds.contains(id),
+      isFavorited: _favoritedPostIds.contains(id),
+    );
+  }
+
+  @override
+  Future<ForumPost> createPost({
+    required String title,
+    required String body,
+    required String tag,
+  }) async {
+    final id = 'mock-post-${++_postIdCounter}';
+    final post = ForumPost(
+      id: id,
+      authorId: 'current-user',
+      authorName: 'You',
+      title: title,
+      body: body,
+      tag: tag,
+      status: 'approved',
+      likeCount: 0,
+      commentCount: 0,
+      isLiked: false,
+      isFavorited: false,
+      createdAt: DateTime.now(),
+    );
+    _posts.insert(0, post);
+    return post;
+  }
+
+  @override
+  Future<ForumComment> createComment({
+    required String postId,
+    required String body,
+  }) async {
+    final id = 'mock-comment-${++_commentIdCounter}';
+    final comment = ForumComment(
+      id: id,
+      postId: postId,
+      authorId: 'current-user',
+      authorName: 'You',
+      body: body,
+      createdAt: DateTime.now(),
+    );
+    _comments.putIfAbsent(postId, () => []).add(comment);
+    final idx = _posts.indexWhere((p) => p.id == postId);
+    if (idx >= 0) {
+      _posts[idx] = _posts[idx].copyWith(
+        commentCount: _posts[idx].commentCount + 1,
+      );
+    }
+    return comment;
+  }
+
+  @override
+  Future<List<ForumComment>> listComments(String postId) async {
+    return List.unmodifiable(_comments[postId] ?? const []);
+  }
+
+  @override
+  Future<bool> toggleLike(String postId) async {
+    final idx = _posts.indexWhere((p) => p.id == postId);
+    if (idx < 0) return false;
+    if (_likedPostIds.contains(postId)) {
+      _likedPostIds.remove(postId);
+      _posts[idx] = _posts[idx].copyWith(
+        likeCount: (_posts[idx].likeCount - 1).clamp(0, 999999),
+        isLiked: false,
+      );
+      return false;
+    } else {
+      _likedPostIds.add(postId);
+      _posts[idx] = _posts[idx].copyWith(
+        likeCount: _posts[idx].likeCount + 1,
+        isLiked: true,
+      );
+      return true;
+    }
+  }
+
+  @override
+  Future<bool> toggleFavorite(String postId) async {
+    if (_favoritedPostIds.contains(postId)) {
+      _favoritedPostIds.remove(postId);
+      return false;
+    } else {
+      _favoritedPostIds.add(postId);
+      return true;
+    }
+  }
+
+  @override
+  Future<void> reportPost(
+    String postId,
+    String reason, {
+    String? detail,
+  }) async {
+    // No-op in mock — report acknowledged silently.
+  }
+
+  @override
+  Future<List<ForumPost>> listFavoritedPosts() async {
+    return _posts
+        .where((post) => _favoritedPostIds.contains(post.id))
+        .map(
+          (post) => post.copyWith(
+            isLiked: _likedPostIds.contains(post.id),
+            isFavorited: true,
+          ),
+        )
+        .toList();
+  }
+}
+
+List<ForumPost> _buildSeedPosts() => [
+  ForumPost(
+    id: 'mock-post-1',
+    authorId: 'demo-user',
+    authorName: 'Demo User',
+    title: 'How to use Present Perfect tense?',
+    body:
+        'I always mix up "have done" and "did". What is the rule? Any tips for remembering when to use each?',
+    tag: 'Grammar',
+    status: 'approved',
+    likeCount: 12,
+    commentCount: 4,
+    isLiked: false,
+    isFavorited: false,
+    createdAt: DateTime.utc(2026, 6, 18, 10, 0, 0),
+  ),
+  ForumPost(
+    id: 'mock-post-2',
+    authorId: 'demo-user-2',
+    authorName: 'LinguaLearner',
+    title: 'Best vocabulary strategy for HSK 4?',
+    body:
+        'I am preparing for HSK 4 and struggling with the new vocabulary. I find spaced repetition helps but I want more tips. How did others pass this level?',
+    tag: 'Vocabulary',
+    status: 'approved',
+    likeCount: 8,
+    commentCount: 6,
+    isLiked: false,
+    isFavorited: false,
+    createdAt: DateTime.utc(2026, 6, 17, 14, 30, 0),
+  ),
+  ForumPost(
+    id: 'mock-post-3',
+    authorId: 'demo-user-3',
+    authorName: 'CultureExplorer',
+    title: 'Chinese New Year greetings — what do they really mean?',
+    body:
+        '新年快乐 is common but I have heard 恭喜发财 and 万事如意 too. What is the cultural significance of each greeting? When do you use them?',
+    tag: 'Culture',
+    status: 'approved',
+    likeCount: 15,
+    commentCount: 9,
+    isLiked: false,
+    isFavorited: false,
+    createdAt: DateTime.utc(2026, 6, 15, 9, 0, 0),
+  ),
+];
+
+class MockAnalyticsRepository implements AnalyticsRepository {
+  @override
+  Future<LearningAnalytics> getAnalytics(String uid) async {
+    return LearningAnalytics.mock();
+  }
+
+  @override
+  Future<List<Achievement>> getAchievements(String uid) async {
+    // Use mock analytics data to evaluate achievements
+    final analytics = LearningAnalytics.mock();
+    return AchievementEvaluator.evaluate(
+      streakDays: analytics.streakDays,
+      masteredWords: analytics.masteredWords,
+      totalStudyDays: analytics.totalStudyDays,
+      trainingXp: analytics.trainingXp,
+      hasPerfectQuiz: true,
+      hasListening: true,
+      hasMapLanguage: false,
+      hasJapaneseStudy: true,
+      hasReadingComprehension: true,
+    );
+  }
+
+  @override
+  Future<List<Recommendation>> getRecommendations(String uid) async {
+    return const [
+      Recommendation(
+        targetWordIds: ['mock_w1', 'mock_w2'],
+        exerciseType: 'listeningWordChoice',
+        reason: 'Strengthen your listening recognition with these words',
+        priority: 1,
+        estimatedMinutes: 2,
+      ),
+      Recommendation(
+        targetWordIds: ['mock_w3', 'mock_w4'],
+        exerciseType: 'sentenceCloze',
+        reason: 'Practice using these words in context',
+        priority: 2,
+        estimatedMinutes: 2,
+      ),
+      Recommendation(
+        targetWordIds: ['mock_w5'],
+        exerciseType: 'meaningChoice',
+        reason: 'Review the meanings of these recently learned words',
+        priority: 3,
+        estimatedMinutes: 1,
+      ),
+    ];
+  }
+
+  @override
+  Future<LeaderboardResult> getLeaderboard({
+    required String dimension,
+    required String uid,
+  }) async {
+    final List<LeaderboardEntry> entries;
+    switch (dimension) {
+      case 'friends':
+        entries = const [
+          LeaderboardEntry(
+            rank: 1,
+            userId: 'mock_f1',
+            name: 'Alex',
+            xp: 450,
+            isCurrentUser: false,
+          ),
+          LeaderboardEntry(
+            rank: 2,
+            userId: 'mock_f2',
+            name: 'Jordan',
+            xp: 350,
+            isCurrentUser: false,
+          ),
+          LeaderboardEntry(
+            rank: 3,
+            userId: 'mock_me',
+            name: 'You',
+            xp: 300,
+            isCurrentUser: true,
+          ),
+          LeaderboardEntry(
+            rank: 4,
+            userId: 'mock_f3',
+            name: 'Morgan',
+            xp: 220,
+            isCurrentUser: false,
+          ),
+        ];
+      case 'class':
+        entries = const [
+          LeaderboardEntry(
+            rank: 1,
+            userId: 'mock_c1',
+            name: 'Sam',
+            xp: 500,
+            isCurrentUser: false,
+          ),
+          LeaderboardEntry(
+            rank: 2,
+            userId: 'mock_me',
+            name: 'You',
+            xp: 300,
+            isCurrentUser: true,
+          ),
+          LeaderboardEntry(
+            rank: 3,
+            userId: 'mock_c2',
+            name: 'Taylor',
+            xp: 180,
+            isCurrentUser: false,
+          ),
+        ];
+      default: // global
+        entries = const [
+          LeaderboardEntry(
+            rank: 1,
+            userId: 'mock_g1',
+            name: 'Alice',
+            xp: 800,
+            isCurrentUser: false,
+          ),
+          LeaderboardEntry(
+            rank: 2,
+            userId: 'mock_g2',
+            name: 'Bob',
+            xp: 600,
+            isCurrentUser: false,
+          ),
+          LeaderboardEntry(
+            rank: 3,
+            userId: 'mock_g3',
+            name: 'Charlie',
+            xp: 400,
+            isCurrentUser: false,
+          ),
+          LeaderboardEntry(
+            rank: 4,
+            userId: 'mock_g4',
+            name: 'Diana',
+            xp: 320,
+            isCurrentUser: false,
+          ),
+          LeaderboardEntry(
+            rank: 5,
+            userId: 'mock_me',
+            name: 'You',
+            xp: 300,
+            isCurrentUser: true,
+          ),
+        ];
+    }
+    final currentUserRank = entries
+        .firstWhere(
+          (e) => e.isCurrentUser,
+          orElse: () => const LeaderboardEntry(
+            rank: -1,
+            userId: '',
+            name: '',
+            xp: 0,
+            isCurrentUser: true,
+          ),
+        )
+        .rank;
+    return LeaderboardResult(
+      dimension: dimension,
+      entries: entries,
+      currentUserRank: currentUserRank,
+    );
+  }
+}
+
+class MockProfileRepository implements ProfileRepository {
+  MockProfileRepository({this.currentUserId});
+
+  final String? currentUserId;
+
+  @override
+  Future<Map<String, dynamic>> getPublicProfile(String userId) async {
+    // Simulate a short network delay in demo mode.
+    await Future<void>.delayed(const Duration(milliseconds: 150));
+
+    final isOwner = currentUserId != null && currentUserId == userId;
+    return {
+      'uid': userId,
+      'name': isOwner ? 'You' : 'Demo User',
+      'isOwner': isOwner,
+      'streak': 5,
+      'stats': {'learnedWords': 89, 'masteredWords': 34, 'totalDays': 12},
+      'achievements': [
+        {
+          'id': 'first_lesson',
+          'title': 'First Step',
+          'iconKey': 'school',
+          'unlocked': true,
+        },
+        {
+          'id': 'streak_3',
+          'title': '3-Day Streak',
+          'iconKey': 'local_fire_department',
+          'unlocked': true,
+        },
+      ],
+      'posts': <Map<String, dynamic>>[],
+      'wordbookProgress': 18,
+    };
+  }
+}
+
+class MockStudySpotRepository implements StudySpotRepository {
+  static const _key = 'mock_study_spots';
+
+  Future<List<StudySpot>> _read(SharedPreferences prefs) async {
+    final raw = prefs.getString(_key);
+    if (raw == null || raw.isEmpty) return [];
+    final list = jsonDecode(raw) as List;
+    return list
+        .map((e) => StudySpot.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
+  Future<void> _write(SharedPreferences prefs, List<StudySpot> spots) async {
+    await prefs.setString(
+      _key,
+      jsonEncode(spots.map((s) => s.toJson()).toList()),
+    );
+  }
+
+  @override
+  Future<List<StudySpot>> list() async {
+    final prefs = await SharedPreferences.getInstance();
+    final spots = await _read(prefs);
+    spots.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return spots;
+  }
+
+  @override
+  Future<StudySpot> add(StudySpot spot) async {
+    final prefs = await SharedPreferences.getInstance();
+    final spots = await _read(prefs);
+    final id = spot.id.isNotEmpty
+        ? spot.id
+        : 'spot-${DateTime.now().microsecondsSinceEpoch}';
+    final saved = StudySpot(
+      id: id,
+      name: spot.name,
+      latitude: spot.latitude,
+      longitude: spot.longitude,
+      studyMinutes: spot.studyMinutes,
+      createdAt: spot.createdAt,
+    );
+    spots.add(saved);
+    await _write(prefs, spots);
+    return saved;
+  }
+
+  @override
+  // ponytail: read-modify-write of the prefs list is not atomic; concurrent
+  // visits could clobber an increment. Single-user offline store with
+  // sequential visits, so acceptable.
+  Future<StudySpot> recordVisit({
+    required double latitude,
+    required double longitude,
+    required String name,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    final spots = await _read(prefs);
+    final distance = const Distance();
+    final here = LatLng(latitude, longitude);
+    var nearestIndex = -1;
+    var nearestMeters = 100.0; // ≤100m aggregates
+    for (var i = 0; i < spots.length; i++) {
+      final d = distance.as(
+        LengthUnit.Meter,
+        here,
+        LatLng(spots[i].latitude, spots[i].longitude),
+      );
+      if (d <= nearestMeters) {
+        nearestMeters = d;
+        nearestIndex = i;
+      }
+    }
+    final StudySpot saved;
+    if (nearestIndex >= 0) {
+      final old = spots[nearestIndex];
+      saved = StudySpot(
+        id: old.id,
+        name: old.name,
+        latitude: old.latitude,
+        longitude: old.longitude,
+        studyMinutes: old.studyMinutes,
+        visitCount: old.visitCount + 1,
+        createdAt: DateTime.now().toUtc(),
+      );
+      spots[nearestIndex] = saved;
+    } else {
+      saved = StudySpot(
+        id: 'spot-${DateTime.now().microsecondsSinceEpoch}',
+        name: name,
+        latitude: latitude,
+        longitude: longitude,
+        studyMinutes: 0,
+        visitCount: 1,
+        createdAt: DateTime.now().toUtc(),
+      );
+      spots.add(saved);
+    }
+    await _write(prefs, spots);
+    return saved;
+  }
+
+  @override
+  Future<void> remove(String id) async {
+    final prefs = await SharedPreferences.getInstance();
+    final spots = await _read(prefs);
+    spots.removeWhere((s) => s.id == id);
+    await _write(prefs, spots);
   }
 }

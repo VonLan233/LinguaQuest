@@ -72,7 +72,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   l10n.authWelcomeBackSubtitle,
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: AppTokens.textSecondaryLight,
+                    color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
                 const SizedBox(height: AppTokens.s32),
@@ -115,14 +115,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       onPressed: state.isLoading ? null : _submit,
                     ),
                     if (state.isLoading)
-                      const Positioned(
+                      Positioned(
                         right: AppTokens.s20,
                         child: SizedBox(
                           width: 18,
                           height: 18,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            color: AppTokens.textHintLight,
+                            color: theme.colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ),
@@ -157,7 +157,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (!mounted) return;
     switch (step) {
       case AuthStep.authenticated:
-        context.go('/home');
+        context.go(
+          ref.read(appControllerProvider).studyPlan == null
+              ? '/goal-setup'
+              : '/home',
+        );
       case AuthStep.needsVerification:
         context.go(
           '/verify-email?email=${Uri.encodeComponent(_emailController.text.trim())}',

@@ -47,7 +47,13 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
         .read(appControllerProvider.notifier)
         .verifyEmail(email: widget.email, code: code);
     if (!mounted) return;
-    if (ok) context.go('/home');
+    if (ok) {
+      context.go(
+        ref.read(appControllerProvider).studyPlan == null
+            ? '/goal-setup'
+            : '/home',
+      );
+    }
   }
 
   Future<void> _resend() async {

@@ -28,12 +28,15 @@ cd ../linguaquest
 flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8080
 ```
 
-For the deployed API on `intro-server`, use:
+For the deployed API on `intro-server`, use the public HTTPS endpoint:
 
 ```bash
 cd ../linguaquest
-flutter run --dart-define=API_BASE_URL=http://64.90.1.138:8080
+flutter run --dart-define=API_BASE_URL=https://api.vonlan233.top
 ```
+
+(The raw `http://64.90.1.138:8080` still works for debugging, but release
+builds must use the HTTPS endpoint — Android blocks cleartext by default.)
 
 ## Endpoints
 
@@ -43,6 +46,8 @@ flutter run --dart-define=API_BASE_URL=http://64.90.1.138:8080
 - `GET /words?wordBookId=<id>&q=<query>`
 - `GET /words/:id`
 - `POST /auth/register`
+- `POST /auth/verify` (email OTP)
+- `POST /auth/resend` (resend email OTP)
 - `POST /auth/login`
 - `GET /me`
 - `PATCH /me`
@@ -77,3 +82,22 @@ chmod +x deploy/vps_deploy.sh
 ```
 
 The production compose file is `docker-compose.prod.yml`. It keeps PostgreSQL on a named volume and exposes the API on `PORT`. The deploy script supports both the Docker Compose plugin (`docker compose`) and legacy `docker-compose` v1.
+
+Runtime secrets live in the remote `.env.prod` (git-ignored), which
+`docker-compose.prod.yml` injects via `env_file`. This includes
+`RESEND_API_KEY` and `MAIL_FROM` for OTP email delivery — set them there, not in
+`.env` (the app reads container env vars only).
+
+## Public HTTPS endpoint (nginx + TLS)
+
+The API is served at `https://api.vonlan233.top`, terminated by the host nginx
+and reverse-proxied to the dockerized server on `127.0.0.1:8080`.
+
+1. DNS: add an A record `api.vonlan233.top` → the server's public IP.
+2. nginx: install the reverse-proxy block (see
+   `deploy/nginx/api.vonlan233.top.conf` for the file and exact commands). It is
+   an additive `server_name`-specific block and does not affect other sites on
+   the host.
+3. TLS: `sudo certbot --nginx -d api.vonlan233.top --redirect` issues a Let's
+   Encrypt certificate, adds the `:443` block, and enables HTTP→HTTPS redirect.
+   Renewal is automatic via certbot's scheduled task.

@@ -26,12 +26,7 @@ class LuckyDrawScreen extends ConsumerWidget {
         leading: const FallbackBackButton(fallbackLocation: '/discover'),
         title: Text(l10n.discoverLuckyDraw),
       ),
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(AppTokens.s20),
-          children: const [_LotteryPanel()],
-        ),
-      ),
+      body: const SafeArea(child: _LotteryPanel()),
     );
   }
 }
@@ -52,88 +47,114 @@ class _LotteryPanel extends ConsumerWidget {
       (sum, asset) => sum + asset.quantity,
     );
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        AppCard(
-          padding: const EdgeInsets.all(AppTokens.s20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+        Expanded(
+          child: ListView(
+            padding: const EdgeInsets.all(AppTokens.s20),
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const ImageCueBadge(cue: '🎁', size: 52),
-                  const SizedBox(width: AppTokens.s12),
-                  Expanded(
-                    child: Column(
+              AppCard(
+                padding: const EdgeInsets.all(AppTokens.s20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          l10n.luckyDrawCostLine(lotteryDrawCost),
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        const SizedBox(height: AppTokens.s4),
-                        Text(
-                          l10n.luckyDrawBalanceHint(user?.xp ?? 0),
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
+                        const ImageCueBadge(cue: '🎁', size: 52),
+                        const SizedBox(width: AppTokens.s12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                l10n.luckyDrawCostLine(lotteryDrawCost),
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(height: AppTokens.s4),
+                              Text(
+                                l10n.luckyDrawBalanceHint(user?.xp ?? 0),
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
-                  ),
-                ],
+                    const SizedBox(height: AppTokens.s12),
+                    Wrap(
+                      spacing: AppTokens.s8,
+                      runSpacing: AppTokens.s8,
+                      children: [
+                        AppPill(
+                          label: l10n.luckyDrawInventoryCount(inventoryCount),
+                          variant: PillVariant.primary,
+                          icon: AppIcons.inventory2,
+                        ),
+                        AppPill(
+                          label: l10n.luckyDrawNoBoost,
+                          variant: PillVariant.neutral,
+                          icon: AppIcons.balance,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: AppTokens.s12),
-              Wrap(
-                spacing: AppTokens.s8,
-                runSpacing: AppTokens.s8,
+              AppCard(child: _ProbabilityList(prizes: state.lotteryPrizes)),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(
+            AppTokens.s20,
+            AppTokens.s12,
+            AppTokens.s20,
+            AppTokens.s16,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Stack(
+                alignment: Alignment.center,
                 children: [
-                  AppPill(
-                    label: l10n.luckyDrawInventoryCount(inventoryCount),
-                    variant: PillVariant.primary,
-                    icon: AppIcons.inventory2,
+                  AppPrimaryButton(
+                    onPressed: canDraw ? () => _draw(context, ref) : null,
+                    icon: state.isLoading ? null : AppIcons.casino,
+                    label: canDraw
+                        ? l10n.luckyDrawNow
+                        : l10n.luckyDrawInsufficient,
                   ),
-                  AppPill(
-                    label: l10n.luckyDrawNoBoost,
-                    variant: PillVariant.neutral,
-                    icon: AppIcons.balance,
-                  ),
+                  if (state.isLoading)
+                    const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
                 ],
+              ),
+              if ((user?.xp ?? 0) < lotteryDrawCost) ...[
+                const SizedBox(height: AppTokens.s8),
+                Text(
+                  l10n.luckyDrawShortfall(lotteryDrawCost - (user?.xp ?? 0)),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+              const SizedBox(height: AppTokens.s12),
+              AppSecondaryButton(
+                label: l10n.luckyDrawViewMyAssets,
+                onPressed: () => context.go('/discover/assets'),
               ),
             ],
           ),
         ),
-        const SizedBox(height: AppTokens.s12),
-        AppCard(child: _ProbabilityList(prizes: state.lotteryPrizes)),
-        const SizedBox(height: AppTokens.s16),
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            AppPrimaryButton(
-              onPressed: canDraw ? () => _draw(context, ref) : null,
-              icon: state.isLoading ? null : AppIcons.casino,
-              label: canDraw ? l10n.luckyDrawNow : l10n.luckyDrawInsufficient,
-            ),
-            if (state.isLoading)
-              const SizedBox(
-                width: 18,
-                height: 18,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-          ],
-        ),
-        if ((user?.xp ?? 0) < lotteryDrawCost) ...[
-          const SizedBox(height: AppTokens.s8),
-          Text(
-            l10n.luckyDrawShortfall(lotteryDrawCost - (user?.xp ?? 0)),
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ],
       ],
     );
   }
@@ -169,7 +190,7 @@ class _LotteryPanel extends ConsumerWidget {
             const SizedBox(height: AppTokens.s8),
             Text(result.prize.description),
             const SizedBox(height: AppTokens.s12),
-            Text(l10n.luckyDrawDeducted(result.cost, result.balanceAfter)),
+            Text(l10n.luckyDrawDeducted(result.balanceAfter, result.cost)),
           ],
         ),
         actions: [
@@ -181,7 +202,7 @@ class _LotteryPanel extends ConsumerWidget {
             onPressed: () {
               Navigator.of(dialogContext).pop();
               if (context.mounted) {
-                context.go('/profile');
+                context.go('/discover/assets');
               }
             },
             child: Text(l10n.luckyDrawViewAssets),
@@ -209,34 +230,85 @@ class _ProbabilityList extends StatelessWidget {
         ),
       );
     }
-    return Column(
-      children: [
-        for (final prize in prizes)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: AppTokens.s4),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    '${prize.name} · '
-                    '${displayLotteryCategory(prize.category, l10n: l10n)}',
-                    overflow: TextOverflow.ellipsis,
-                  ),
+
+    const categoryOrder = [
+      'avatarFrame',
+      'profileBackground',
+      'badge',
+      'title',
+      'cardSkin',
+      'fragment',
+    ];
+    final grouped = <String, List<LotteryPrize>>{};
+    for (final prize in prizes) {
+      grouped.putIfAbsent(prize.category, () => []).add(prize);
+    }
+    final orderedCategories = [
+      ...categoryOrder.where(grouped.containsKey),
+      ...grouped.keys.where((k) => !categoryOrder.contains(k)),
+    ];
+
+    return Padding(
+      padding: const EdgeInsets.all(AppTokens.s12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (final category in orderedCategories) ...[
+            Padding(
+              padding: const EdgeInsets.only(
+                top: AppTokens.s8,
+                bottom: AppTokens.s4,
+              ),
+              child: Text(
+                displayLotteryCategory(category, l10n: l10n),
+                style: theme.textTheme.labelMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: theme.colorScheme.primary,
                 ),
-                const SizedBox(width: AppTokens.s8),
-                Text(
-                  '${displayLotteryRarity(prize.rarity, l10n: l10n)} '
-                  '${_formatProbability(prize.probability)}%',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-      ],
+            for (final prize in grouped[category]!)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: AppTokens.s4),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        prize.name,
+                        style: theme.textTheme.bodySmall,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(width: AppTokens.s8),
+                    AppPill(
+                      label: displayLotteryRarity(prize.rarity, l10n: l10n),
+                      variant: _rarityVariant(prize.rarity),
+                    ),
+                    const SizedBox(width: AppTokens.s8),
+                    Text(
+                      '${_formatProbability(prize.probability)}%',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                        fontFamily: 'monospace',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ],
+      ),
     );
   }
+}
+
+PillVariant _rarityVariant(String rarity) {
+  return switch (rarity) {
+    'rare' => PillVariant.primary,
+    'uncommon' => PillVariant.xp,
+    'comfort' => PillVariant.streak,
+    _ => PillVariant.neutral,
+  };
 }
 
 String _formatProbability(double probability) {

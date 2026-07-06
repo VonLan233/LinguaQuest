@@ -6,10 +6,10 @@ import 'package:go_router/go_router.dart';
 import '../../core/state/app_controller.dart';
 import '../../core/state/app_state.dart';
 import '../../core/theme/app_tokens.dart';
-import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/app_card.dart';
+import '../../data/models/lesson.dart';
 import '../../core/widgets/fallback_back_button.dart';
-import '../../core/widgets/target_language_picker.dart';
+import '../../core/widgets/language_wordbook_picker.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -32,7 +32,7 @@ class SettingsScreen extends ConsumerWidget {
               icon: AppIcons.flag,
               title: l10n.commonStudyPlan,
               subtitle:
-                  '${displayWordbookTitle(state.currentStudyBook.id, l10n: l10n)} · ${l10n.commonNew} ${state.dailyNewTarget} · ${l10n.commonReview} ${state.dailyReviewLimit}',
+                  '${state.currentStudyBook.name} · ${l10n.commonNew} ${state.dailyNewTarget} · ${l10n.commonReview} ${state.dailyReviewLimit}',
               route: '/settings/study-plan',
             ),
             const SizedBox(height: AppTokens.s12),
@@ -40,22 +40,40 @@ class SettingsScreen extends ConsumerWidget {
               icon: AppIcons.notifications,
               title: l10n.commonDailyReminder,
               subtitle: state.reminderSettings.enabled
-                  ? '${l10n.commonDay} ${state.reminderSettings.formattedTime}'
+                  ? l10n.settingsReminderDisplay(state.reminderSettings.formattedTime)
                   : l10n.settingsReminderOff,
               route: '/settings/reminder',
             ),
             const SizedBox(height: AppTokens.s12),
-            _TargetLanguageSetting(
-              targetLanguage: state.targetLanguage,
-              onChanged: (code) => ref
-                  .read(appControllerProvider.notifier)
-                  .updateTargetLanguage(code),
+            _LearningLanguageSetting(
+              currentLanguage: state.currentLanguage,
+              currentWordBookId: state.currentWordBookId,
+              currentWordBook: state.currentWordBook,
             ),
             const SizedBox(height: AppTokens.s12),
-            _SettingsInfoLine(
-              icon: AppIcons.volumeUp,
-              title: l10n.settingsSoundFeedback,
-              subtitle: l10n.settingsSoundFeedbackSubtitle,
+            _SensorySettingsCard(sensorySettings: state.sensorySettings),
+            const SizedBox(height: AppTokens.s12),
+            _ThemeSettingCard(
+              themeMode: ref.watch(
+                appControllerProvider.select((s) => s.themeMode),
+              ),
+              onChanged: (mode) => ref
+                  .read(appControllerProvider.notifier)
+                  .updateThemeMode(mode),
+            ),
+            const SizedBox(height: AppTokens.s12),
+            _SettingsAction(
+              icon: AppIcons.lock,
+              title: 'Privacy Settings',
+              subtitle: 'Control what others can see about you',
+              route: '/profile/privacy',
+            ),
+            const SizedBox(height: AppTokens.s12),
+            _SettingsAction(
+              icon: AppIcons.person,
+              title: l10n.dataAccountTitle,
+              subtitle: 'Cache, export, and account deletion',
+              route: '/profile/data',
             ),
           ],
         ),
@@ -147,25 +165,27 @@ class ReminderSettingsScreen extends ConsumerWidget {
   }
 }
 
-class _TargetLanguageSetting extends StatelessWidget {
-  const _TargetLanguageSetting({
-    required this.targetLanguage,
-    required this.onChanged,
+class _LearningLanguageSetting extends StatelessWidget {
+  const _LearningLanguageSetting({
+    required this.currentLanguage,
+    required this.currentWordBookId,
+    this.currentWordBook,
   });
 
-  final String targetLanguage;
-  final ValueChanged<String> onChanged;
+  final String currentLanguage;
+  final String currentWordBookId;
+  final WordBook? currentWordBook;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final label = targetLanguageLabel(targetLanguage);
+    final l10n = AppLocalizations.of(context);
+    final localeCode = Localizations.localeOf(context).languageCode;
+    final langLabel = languageLabel(currentLanguage, l10n);
+    final bookLabel =
+        currentWordBook?.nameFor(localeCode) ?? currentWordBookId;
     return AppCard(
-      onTap: () => showTargetLanguageSheet(
-        context,
-        targetLanguage: targetLanguage,
-        onChanged: onChanged,
-      ),
+      onTap: () => context.push('/language-map'),
       child: Row(
         children: [
           Icon(AppIcons.language, color: theme.colorScheme.primary),
@@ -174,9 +194,9 @@ class _TargetLanguageSetting extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Target Language', style: theme.textTheme.titleMedium),
+                Text('Learning Language', style: theme.textTheme.titleMedium),
                 Text(
-                  label,
+                  '$langLabel · $bookLabel',
                   style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                 ),
               ],
@@ -230,36 +250,108 @@ class _SettingsAction extends StatelessWidget {
   }
 }
 
-class _SettingsInfoLine extends StatelessWidget {
-  const _SettingsInfoLine({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
+class _ThemeSettingCard extends StatelessWidget {
+  const _ThemeSettingCard({
+    required this.themeMode,
+    required this.onChanged,
   });
 
-  final IconData icon;
-  final String title;
-  final String subtitle;
+  final ThemeMode themeMode;
+  final ValueChanged<ThemeMode> onChanged;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     return AppCard(
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: theme.colorScheme.onSurfaceVariant),
-          const SizedBox(width: AppTokens.s12),
-          Expanded(
+          Row(
+            children: [
+              Icon(AppIcons.contrastCircle, color: theme.colorScheme.primary),
+              const SizedBox(width: AppTokens.s12),
+              Text(l10n.settingsTheme, style: theme.textTheme.titleMedium),
+            ],
+          ),
+          RadioGroup<ThemeMode>(
+            groupValue: themeMode,
+            onChanged: (m) { if (m != null) onChanged(m); },
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: theme.textTheme.titleMedium),
-                Text(
-                  subtitle,
-                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                RadioListTile<ThemeMode>(
+                  value: ThemeMode.system,
+                  title: Text(l10n.settingsThemeSystem),
+                  subtitle: Text(l10n.settingsThemeSystemSubtitle),
+                  secondary: const Icon(Icons.brightness_auto),
+                  contentPadding: EdgeInsets.zero,
+                ),
+                const Divider(),
+                RadioListTile<ThemeMode>(
+                  value: ThemeMode.light,
+                  title: Text(l10n.settingsThemeLight),
+                  subtitle: Text(l10n.settingsThemeLightSubtitle),
+                  secondary: const Icon(Icons.brightness_7),
+                  contentPadding: EdgeInsets.zero,
+                ),
+                const Divider(),
+                RadioListTile<ThemeMode>(
+                  value: ThemeMode.dark,
+                  title: Text(l10n.settingsThemeDark),
+                  subtitle: Text(l10n.settingsThemeDarkSubtitle),
+                  secondary: const Icon(Icons.brightness_2),
+                  contentPadding: EdgeInsets.zero,
                 ),
               ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SensorySettingsCard extends ConsumerWidget {
+  const _SensorySettingsCard({required this.sensorySettings});
+
+  final SensorySettings sensorySettings;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    void update(SensorySettings updated) =>
+        ref.read(appControllerProvider.notifier).updateSensorySettings(updated);
+
+    return AppCard(
+      child: Column(
+        children: [
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            secondary: const Icon(AppIcons.volumeUp),
+            title: const Text('Sound Effects'),
+            subtitle: const Text('Play sounds during quizzes'),
+            value: sensorySettings.soundEnabled,
+            onChanged: (v) =>
+                update(sensorySettings.copyWith(soundEnabled: v)),
+          ),
+          const Divider(height: AppTokens.s16),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            secondary: const Icon(AppIcons.vibration),
+            title: const Text('Vibration'),
+            subtitle: const Text('Haptic feedback on answers'),
+            value: sensorySettings.vibrationEnabled,
+            onChanged: (v) =>
+                update(sensorySettings.copyWith(vibrationEnabled: v)),
+          ),
+          const Divider(height: AppTokens.s16),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            secondary: const Icon(AppIcons.contrastCircle),
+            title: const Text('High Contrast'),
+            subtitle: const Text('Enhanced color contrast for answer feedback'),
+            value: sensorySettings.highContrastMode,
+            onChanged: (v) =>
+                update(sensorySettings.copyWith(highContrastMode: v)),
           ),
         ],
       ),

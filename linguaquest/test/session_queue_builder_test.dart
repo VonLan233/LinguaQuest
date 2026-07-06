@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:linguaquest/data/models/custom_word.dart';
 import 'package:linguaquest/data/models/lesson.dart';
+import 'package:linguaquest/data/lesson_factory.dart';
 import 'package:linguaquest/features/study/session/session_queue_builder.dart';
 
 void main() {
@@ -172,9 +173,148 @@ void main() {
     expect(recallIndexes.first, inInclusiveRange(3, 6));
     expect(recallIndexes.last, requeued.length - 1);
   });
+
+  // ── 新题型测试（TDD：先红后绿）────────────────────────────────────────────
+
+  group('new exercise types', () {
+    final distractors = [
+      for (var i = 0; i < 6; i++) _word('dist-$i'),
+    ];
+
+    test('sentenceCloze question prompt contains ____ blank', () {
+      // 给定有 exampleSentence 的词，生成 sentenceCloze 时 prompt 应含 ____
+      final word = _word(
+        'allocate',
+        exampleSentence: 'The manager will allocate the budget next week.',
+      );
+      final question = buildQuestionsForWords(
+        lessonId: 'test-lesson',
+        words: [word],
+        distractorWords: distractors,
+        forceType: QuizQuestionType.sentenceCloze,
+      ).single;
+
+      expect(question.type, QuizQuestionType.sentenceCloze);
+      expect(question.prompt, contains('____'));
+      expect(question.answer, word.word);
+      expect(question.options, contains(word.word));
+      expect(question.options, hasLength(4));
+    });
+
+    test('confusableChoice question is generated without throwing', () {
+      // confusableChoice 使用 synonyms 或干扰词构建选项，不应抛异常
+      final word = _wordWithExampleAndCollocations('distribute');
+      final question = buildQuestionsForWords(
+        lessonId: 'test-lesson',
+        words: [word],
+        distractorWords: distractors,
+        forceType: QuizQuestionType.confusableChoice,
+      ).single;
+
+      expect(question.type, QuizQuestionType.confusableChoice);
+      expect(question.options, isNotEmpty);
+      expect(question.answer, isNotEmpty);
+    });
+
+    test('collocationChoice uses word collocations when available', () {
+      final word = _wordWithExampleAndCollocations('allocate');
+      final question = buildQuestionsForWords(
+        lessonId: 'test-lesson',
+        words: [word],
+        distractorWords: distractors,
+        forceType: QuizQuestionType.collocationChoice,
+      ).single;
+
+      expect(question.type, QuizQuestionType.collocationChoice);
+      expect(question.answer, isNotEmpty);
+      expect(question.options, hasLength(greaterThanOrEqualTo(2)));
+    });
+
+    test('collocationChoice degrades to meaningChoice when no collocations', () {
+      // 无搭配词时降级为 meaningChoice
+      final word = _word('basic'); // 无 collocations
+      final question = buildQuestionsForWords(
+        lessonId: 'test-lesson',
+        words: [word],
+        distractorWords: distractors,
+        forceType: QuizQuestionType.collocationChoice,
+      ).single;
+
+      expect(question.type, QuizQuestionType.meaningChoice);
+    });
+
+    test('derivativeChoice uses derivatives when available', () {
+      final word = _wordWithExampleAndCollocations('allocate');
+      final question = buildQuestionsForWords(
+        lessonId: 'test-lesson',
+        words: [word],
+        distractorWords: distractors,
+        forceType: QuizQuestionType.derivativeChoice,
+      ).single;
+
+      expect(question.type, QuizQuestionType.derivativeChoice);
+      expect(question.answer, isNotEmpty);
+    });
+
+    test('derivativeChoice degrades to meaningChoice when no derivatives', () {
+      final word = _word('simple'); // 无 derivatives
+      final question = buildQuestionsForWords(
+        lessonId: 'test-lesson',
+        words: [word],
+        distractorWords: distractors,
+        forceType: QuizQuestionType.derivativeChoice,
+      ).single;
+
+      expect(question.type, QuizQuestionType.meaningChoice);
+    });
+
+    test('sentenceCloze degrades gracefully when no exampleSentence', () {
+      // 无例句时降级为 meaningChoice
+      final word = Word(
+        id: 'bare',
+        word: 'bare',
+        phonetic: '/beə/',
+        meaning: 'basic',
+        definition: 'having no covering',
+        partOfSpeech: 'adj',
+        exampleSentence: '', // 无例句
+        exampleTranslation: '',
+        imageCue: 'B',
+        difficulty: 'Easy',
+        tags: const [],
+      );
+      final question = buildQuestionsForWords(
+        lessonId: 'test-lesson',
+        words: [word],
+        distractorWords: distractors,
+        forceType: QuizQuestionType.sentenceCloze,
+      ).single;
+
+      expect(question.type, QuizQuestionType.meaningChoice);
+    });
+
+    test('_typeForWord covers multiple question types in large enough word pool', () {
+      // 扩展后 _typeForWord 应能返回新题型
+      // 通过生成大量词并检查类型分布
+      final words = [
+        for (var i = 0; i < 50; i++)
+          _wordWithExampleAndCollocations('word-$i'),
+      ];
+      final allWords = [...words];
+      final questions = buildQuestionsForWords(
+        lessonId: 'type-coverage',
+        words: words,
+        distractorWords: allWords,
+      );
+
+      final types = questions.map((q) => q.type).toSet();
+      // 至少应出现4种题型（扩展后覆盖更多）
+      expect(types.length, greaterThanOrEqualTo(4));
+    });
+  });
 }
 
-Word _word(String id) {
+Word _word(String id, {String exampleSentence = ''}) {
   return Word(
     id: id,
     word: id,
@@ -182,11 +322,30 @@ Word _word(String id) {
     meaning: '释义 $id',
     definition: 'definition $id',
     partOfSpeech: 'noun',
-    exampleSentence: 'Use $id in a sentence.',
+    exampleSentence: exampleSentence.isEmpty ? 'Use $id in a sentence.' : exampleSentence,
     exampleTranslation: '例句 $id',
     imageCue: '⭐',
     difficulty: 'Easy',
     tags: const ['test'],
+  );
+}
+
+Word _wordWithExampleAndCollocations(String id) {
+  return Word(
+    id: id,
+    word: id,
+    phonetic: '/$id/',
+    meaning: '释义 $id',
+    definition: 'definition $id',
+    partOfSpeech: 'verb',
+    exampleSentence: 'She will $id the resources carefully.',
+    exampleTranslation: '她将仔细地 $id 资源。',
+    imageCue: '⭐',
+    difficulty: 'Easy',
+    tags: const ['test'],
+    collocations: [WordPhrase(phrase: '$id resources'), WordPhrase(phrase: '$id time')],
+    synonyms: ['distribute', 'assign'],
+    derivatives: ['${id}d', '${id}ing', '${id}ion'],
   );
 }
 
@@ -200,3 +359,4 @@ CustomWord _customWord(String id, DateTime now, {int wrongCount = 0}) {
     now: now,
   ).copyWith(wrongCount: wrongCount, nextReviewAt: now);
 }
+

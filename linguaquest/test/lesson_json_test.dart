@@ -30,6 +30,41 @@ void main() {
     expect(question.word.word, 'allocate');
   });
 
+  test('new quiz question types round-trip through JSON correctly', () {
+    // 验证4个新题型能被正确序列化和反序列化
+    for (final typeName in [
+      'sentenceCloze',
+      'confusableChoice',
+      'collocationChoice',
+      'derivativeChoice',
+    ]) {
+      final question = QuizQuestion.fromJson({
+        'id': 'q-$typeName',
+        'type': typeName,
+        'prompt': 'Test prompt for $typeName',
+        'answer': 'allocate',
+        'options': ['allocate', 'distribute', 'assign', 'deploy'],
+        'explanation': 'Test explanation.',
+        'word': {
+          'id': 'allocate',
+          'word': 'allocate',
+          'meaning': '分配',
+          'definitions': ['分配'],
+          'partOfSpeech': 'verb',
+        },
+      });
+      expect(
+        question.type.name,
+        typeName,
+        reason: 'QuizQuestionType.$typeName should be parsed correctly',
+      );
+      // 序列化再反序列化
+      final restored = QuizQuestion.fromJson(question.toJson());
+      expect(restored.type.name, typeName);
+      expect(restored.answer, 'allocate');
+    }
+  });
+
   test('lesson JSON tolerates null and non-string text fields', () {
     final lesson = Lesson.fromJson({
       'id': 42,

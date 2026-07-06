@@ -3,3 +3,6 @@ LinguaQuest_PRD_Development_Guide.md
 PR_DESCRIPTION.md
 
 .superpowers/
+__pycache__/
+**/__pycache__/
+*.pyc

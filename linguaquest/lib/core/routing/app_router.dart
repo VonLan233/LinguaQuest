@@ -6,11 +6,21 @@ import '../../features/auth/goal_setup_screen.dart';
 import '../../features/auth/login_screen.dart';
 import '../../features/auth/register_screen.dart';
 import '../../features/auth/verify_email_screen.dart';
+import '../../features/ai_learning/ai_chat_screen.dart';
+import '../../features/ai_learning/ai_cloze_screen.dart';
+import '../../features/ai_learning/ai_confusable_words_screen.dart';
+import '../../features/ai_learning/ai_sentence_gen_screen.dart';
+import '../../features/ai_learning/ai_writing_review_screen.dart';
 import '../../features/ai_learning/ai_learning_screen.dart';
+import '../../features/ai_learning/ai_sentence_analysis_screen.dart';
 import '../../features/discover/discover_screen.dart';
 import '../../features/discover/xp_tasks_screen.dart';
 import '../../features/discover/lucky_draw_screen.dart';
+import '../../features/discover/asset_inventory_screen.dart';
 import '../../features/discover/community_screen.dart';
+import '../../features/discover/forum_post_detail_screen.dart';
+import '../../features/discover/forum_compose_screen.dart';
+import '../../features/discover/my_favorites_screen.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/learning/learning_path_screen.dart';
 import '../../features/learning/lesson_preview_screen.dart';
@@ -18,13 +28,17 @@ import '../../features/notifications/notifications_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/onboarding/splash_screen.dart';
 import '../../features/profile/profile_screen.dart';
+import '../../features/profile/public_profile_screen.dart';
 import '../../features/profile/about_screen.dart';
+import '../../features/profile/data_settings_screen.dart';
 import '../../features/profile/help_support_screen.dart';
+import '../../features/profile/privacy_settings_screen.dart';
 import '../../features/profile/settings_screen.dart';
 import '../../features/profile/study_plan_settings_screen.dart';
+import '../../features/reading/reading_list_screen.dart';
+import '../../features/reading/article_reader_screen.dart';
 import '../../features/quests/ai_tutor_screen.dart';
-import '../../features/quests/class_mode_screen.dart';
-import '../../features/quests/class_progress_screen.dart';
+import '../../features/quests/achievements_screen.dart';
 import '../../features/quests/leaderboard_screen.dart';
 import '../../features/quests/progress_analytics_screen.dart';
 import '../../features/quests/quest_screen.dart';
@@ -36,12 +50,16 @@ import '../../features/search/search_screen.dart';
 import '../../features/shell/app_shell.dart';
 import '../../features/study/mixed_study_session_screen.dart';
 import '../../features/study/session/session_queue_builder.dart';
+import '../../features/training/passage_cloze_screen.dart';
 import '../../features/training/training_screen.dart';
 import '../../features/training/training_session_screen.dart';
 import '../../features/wordbook/add_edit_custom_word_screen.dart';
 import '../../features/wordbook/custom_word_list_screen.dart';
 import '../../features/wordbook/target_word_detail_screen.dart';
 import '../../features/wordbook/word_detail_screen.dart';
+import '../../features/map/language_map_screen.dart';
+import '../../features/map/study_map_screen.dart';
+import '../../features/map/study_spots_list_screen.dart';
 import '../../features/wordbook/wordbook_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -61,9 +79,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/verify-email',
-        builder: (context, state) => VerifyEmailScreen(
-          email: state.uri.queryParameters['email'] ?? '',
-        ),
+        builder: (context, state) =>
+            VerifyEmailScreen(email: state.uri.queryParameters['email'] ?? ''),
       ),
       GoRoute(
         path: '/goal-setup',
@@ -121,12 +138,25 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const ReviewCenterScreen(),
       ),
       GoRoute(
+        path: '/reading',
+        builder: (context, state) => const ReadingListScreen(),
+      ),
+      GoRoute(
+        path: '/reading/:id',
+        builder: (context, state) =>
+            ArticleReaderScreen(articleId: state.pathParameters['id']!),
+      ),
+      GoRoute(
         path: '/notifications',
         builder: (context, state) => const NotificationsScreen(),
       ),
       GoRoute(
         path: '/mistake-book',
         builder: (context, state) => const MistakeBookScreen(),
+      ),
+      GoRoute(
+        path: '/achievements',
+        builder: (context, state) => const AchievementsScreen(),
       ),
       GoRoute(
         path: '/leaderboard',
@@ -137,16 +167,36 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const ProgressAnalyticsScreen(),
       ),
       GoRoute(
-        path: '/class-mode',
-        builder: (context, state) => const ClassModeScreen(),
-      ),
-      GoRoute(
-        path: '/class-progress',
-        builder: (context, state) => const ClassProgressScreen(),
-      ),
-      GoRoute(
         path: '/ai-tutor',
         builder: (context, state) => const AiTutorScreen(),
+      ),
+      GoRoute(
+        path: '/ai-chat',
+        builder: (context, state) => AiChatScreen(
+          word: state.uri.queryParameters['word'],
+          example: state.uri.queryParameters['example'],
+        ),
+      ),
+      GoRoute(
+        path: '/ai-analysis',
+        builder: (context, state) => const AiSentenceAnalysisScreen(),
+      ),
+      GoRoute(
+        path: '/ai-cloze',
+        builder: (context, state) =>
+            AiClozeScreen(word: state.uri.queryParameters['word']),
+      ),
+      GoRoute(
+        path: '/ai-writing-review',
+        builder: (context, state) => const AiWritingReviewScreen(),
+      ),
+      GoRoute(
+        path: '/ai-confusion',
+        builder: (context, state) => const AiConfusableWordsScreen(),
+      ),
+      GoRoute(
+        path: '/ai-sentence',
+        builder: (context, state) => const AiSentenceGenScreen(),
       ),
       GoRoute(
         path: '/settings',
@@ -161,10 +211,35 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const ReminderSettingsScreen(),
       ),
       GoRoute(
+        path: '/profile/privacy',
+        builder: (context, state) => const PrivacySettingsScreen(),
+      ),
+      GoRoute(
+        path: '/profile/data',
+        builder: (context, state) => const DataSettingsScreen(),
+      ),
+      GoRoute(
+        path: '/profile/:userId',
+        builder: (context, state) =>
+            PublicProfileScreen(userId: state.pathParameters['userId']!),
+      ),
+      GoRoute(
         path: '/help',
         builder: (context, state) => const HelpSupportScreen(),
       ),
       GoRoute(path: '/about', builder: (context, state) => const AboutScreen()),
+      GoRoute(
+        path: '/language-map',
+        builder: (context, state) => const LanguageMapScreen(),
+      ),
+      GoRoute(
+        path: '/map',
+        builder: (context, state) => const StudyMapScreen(),
+      ),
+      GoRoute(
+        path: '/map/spots',
+        builder: (context, state) => const StudySpotsListScreen(),
+      ),
       GoRoute(
         path: '/search',
         builder: (context, state) => const SearchScreen(),
@@ -178,8 +253,25 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const LuckyDrawScreen(),
       ),
       GoRoute(
+        path: '/discover/assets',
+        builder: (context, state) => const AssetInventoryScreen(),
+      ),
+      GoRoute(
         path: '/discover/community',
         builder: (context, state) => const CommunityScreen(),
+      ),
+      GoRoute(
+        path: '/forum/posts/:id',
+        builder: (context, state) =>
+            ForumPostDetailScreen(postId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/forum/compose',
+        builder: (context, state) => const ForumComposeScreen(),
+      ),
+      GoRoute(
+        path: '/forum/favorites',
+        builder: (context, state) => const MyFavoritesScreen(),
       ),
       GoRoute(
         path: '/wordbook',
@@ -224,6 +316,10 @@ final routerProvider = Provider<GoRouter>((ref) {
           lessonId: state.pathParameters['id']!,
           mode: QuizSessionMode.timed,
         ),
+      ),
+      GoRoute(
+        path: '/training/passage-cloze',
+        builder: (context, state) => const PassageClozeScreen(),
       ),
       GoRoute(
         path: '/training/:game',

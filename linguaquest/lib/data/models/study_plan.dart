@@ -89,7 +89,7 @@ class StudyPlan {
     return StudyPlan(
       id: json['id'] as String? ?? 'study-plan-$uid',
       uid: uid,
-      wordBookId: normalizedStudyBookId(json['wordBookId'] as String?),
+      wordBookId: _wordBookIdOrDefault(json['wordBookId']),
       dailyNewTarget: _intInRange(json['dailyNewTarget'], 1, 200, 10),
       dailyReviewLimit: _intInRange(json['dailyReviewLimit'], 0, 500, 20),
       startDate: _date(json['startDate']) ?? today,
@@ -151,18 +151,132 @@ const studyBooks = [
 ];
 
 StudyBookInfo studyBookInfoForId(String id) {
-  return studyBooks.firstWhere(
-    (book) => book.id == normalizedStudyBookId(id),
-    orElse: () => studyBooks.first,
+  final normalized = normalizedStudyBookId(id);
+  for (final book in studyBooks) {
+    if (book.id == normalized) return book;
+  }
+  return StudyBookInfo(
+    id: normalized,
+    name: targetForStudyBookId(normalized),
+    cover: studyPlanCoverEmoji(_languageForStudyBookId(normalized)),
+    description: 'Vocabulary for ${targetForStudyBookId(normalized)}.',
   );
 }
 
-// Only one book exists for now; every legacy/exam/HSK target resolves to it.
-String normalizedStudyBookId(String? value) => 'hsk1';
+/// Keeps the real wordbook id from a server/stored plan; only falls back to
+/// the default book when the value is missing or blank. (HSK-pivot used to
+/// collapse everything to hsk1; with 15 books shipping that collapse is gone.)
+String _wordBookIdOrDefault(Object? value) {
+  final raw = (value as String?)?.trim() ?? '';
+  return raw.isEmpty ? 'hsk1' : raw;
+}
 
-String studyBookIdForTarget(String? target) => 'hsk1';
+/// Emoji cover for the study-plan hero when a wordbook ships no artwork.
+String studyPlanCoverEmoji(String language) {
+  switch (language) {
+    case 'ja':
+      return '🗾';
+    case 'en':
+    case 'es':
+    case 'fr':
+    case 'ms':
+      return '🔤';
+    default:
+      return '🀄';
+  }
+}
 
-String targetForStudyBookId(String wordBookId) => 'HSK 1';
+String normalizedStudyBookId(String? value) {
+  final raw = value?.trim().toLowerCase().replaceAll('-', '_') ?? '';
+  if (raw.isEmpty) return 'hsk1';
+  return _targetToBookId[raw] ?? raw;
+}
+
+String studyBookIdForTarget(String? target) {
+  final normalized = target?.trim().toLowerCase().replaceAll('-', '_') ?? '';
+  if (normalized.isEmpty) return 'hsk1';
+  return _targetToBookId[normalized] ?? normalized;
+}
+
+String targetForStudyBookId(String wordBookId) {
+  final normalized = normalizedStudyBookId(wordBookId);
+  return _bookIdToTarget[normalized] ?? wordBookId;
+}
+
+String _languageForStudyBookId(String wordBookId) {
+  final normalized = normalizedStudyBookId(wordBookId);
+  if (normalized.startsWith('jlpt_')) return 'ja';
+  if (normalized == 'en_basic') return 'en';
+  if (normalized == 'es_basic') return 'es';
+  if (normalized == 'fr_basic') return 'fr';
+  if (normalized == 'ms_basic') return 'ms';
+  return 'zh';
+}
+
+const _targetToBookId = <String, String>{
+  'hsk 1': 'hsk1',
+  'hsk1': 'hsk1',
+  'hsk 2': 'hsk2',
+  'hsk2': 'hsk2',
+  'hsk 3': 'hsk3',
+  'hsk3': 'hsk3',
+  'hsk 4': 'hsk4',
+  'hsk4': 'hsk4',
+  'hsk 5': 'hsk5',
+  'hsk5': 'hsk5',
+  'hsk 6': 'hsk6',
+  'hsk6': 'hsk6',
+  'jlpt n5': 'jlpt_n5',
+  'jlpt_n5': 'jlpt_n5',
+  'jlpt n4': 'jlpt_n4',
+  'jlpt_n4': 'jlpt_n4',
+  'jlpt n3': 'jlpt_n3',
+  'jlpt_n3': 'jlpt_n3',
+  'jlpt n2': 'jlpt_n2',
+  'jlpt_n2': 'jlpt_n2',
+  'jlpt n1': 'jlpt_n1',
+  'jlpt_n1': 'jlpt_n1',
+  'daily english': 'en_basic',
+  'business english': 'en_basic',
+  'beginner': 'en_basic',
+  'basic': 'en_basic',
+  'english basics': 'en_basic',
+  'english': 'en_basic',
+  'spanish': 'es_basic',
+  'español básico': 'es_basic',
+  'french': 'fr_basic',
+  'français débutant': 'fr_basic',
+  'malay': 'ms_basic',
+  'bahasa melayu asas': 'ms_basic',
+  'cet 4': 'cet4',
+  'cet_4': 'cet4',
+  'cet4': 'cet4',
+  'cet 6': 'cet6',
+  'cet_6': 'cet6',
+  'cet6': 'cet6',
+  '考研': 'kaoyan',
+};
+
+const _bookIdToTarget = <String, String>{
+  'hsk1': 'HSK 1',
+  'hsk2': 'HSK 2',
+  'hsk3': 'HSK 3',
+  'hsk4': 'HSK 4',
+  'hsk5': 'HSK 5',
+  'hsk6': 'HSK 6',
+  'jlpt_n5': 'JLPT N5',
+  'jlpt_n4': 'JLPT N4',
+  'jlpt_n3': 'JLPT N3',
+  'jlpt_n2': 'JLPT N2',
+  'jlpt_n1': 'JLPT N1',
+  'en_basic': 'Daily English',
+  'es_basic': 'Spanish',
+  'fr_basic': 'French',
+  'ms_basic': 'Malay',
+  'cet4': 'CET-4',
+  'cet6': 'CET-6',
+  'kaoyan': '考研',
+};
 
 String normalizedPlanStatus(String? value) {
   return value == 'paused' ? 'paused' : 'active';

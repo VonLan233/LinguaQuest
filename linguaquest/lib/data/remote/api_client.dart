@@ -7,8 +7,13 @@ class ApiClient {
     : dio = Dio(
         BaseOptions(
           baseUrl: AppConstants.apiBaseUrl,
-          connectTimeout: const Duration(seconds: 8),
-          receiveTimeout: const Duration(seconds: 8),
+          // Mobile networks + a remote HTTPS endpoint mean a cold first request
+          // (DNS + TLS handshake) can exceed a tight budget and surface as a
+          // spurious "network request failed" on login/switch/save. 20s is
+          // forgiving enough for those while still bounding genuine hangs.
+          // (AI endpoints override receiveTimeout to 60s for slow LLM calls.)
+          connectTimeout: const Duration(seconds: 20),
+          receiveTimeout: const Duration(seconds: 20),
           headers: {'Content-Type': 'application/json'},
         ),
       );

@@ -13,6 +13,8 @@ class UserProfile {
     this.avatarUrl,
     this.lastStudyDate,
     this.emailVerified = true,
+    this.currentWordBookId,
+    this.language,
   });
 
   final String uid;
@@ -28,6 +30,8 @@ class UserProfile {
   final DateTime createdAt;
   final DateTime updatedAt;
   final bool emailVerified;
+  final String? currentWordBookId;
+  final String? language;
 
   factory UserProfile.demo() {
     final now = DateTime.now();
@@ -58,6 +62,8 @@ class UserProfile {
       streak: json['streak'] as int? ?? 0,
       emailVerified: json['emailVerified'] as bool? ?? true,
       lastStudyDate: _date(json['lastStudyDate']),
+      currentWordBookId: json['currentWordBookId'] as String?,
+      language: json['language'] as String?,
       createdAt: _date(json['createdAt']) ?? DateTime.now(),
       updatedAt: _date(json['updatedAt']) ?? DateTime.now(),
     );
@@ -76,6 +82,8 @@ class UserProfile {
       'streak': streak,
       'emailVerified': emailVerified,
       'lastStudyDate': lastStudyDate?.toIso8601String(),
+      'currentWordBookId': currentWordBookId,
+      'language': language,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
     };
@@ -95,6 +103,8 @@ class UserProfile {
     DateTime? createdAt,
     DateTime? updatedAt,
     bool? emailVerified,
+    String? currentWordBookId,
+    String? language,
   }) {
     return UserProfile(
       uid: uid ?? this.uid,
@@ -110,6 +120,8 @@ class UserProfile {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       emailVerified: emailVerified ?? this.emailVerified,
+      currentWordBookId: currentWordBookId ?? this.currentWordBookId,
+      language: language ?? this.language,
     );
   }
 

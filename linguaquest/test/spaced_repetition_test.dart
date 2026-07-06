@@ -6,6 +6,27 @@ import 'package:linguaquest/data/models/lesson.dart';
 import 'package:linguaquest/data/models/user_word.dart';
 
 void main() {
+  test('custom word learned correctly once is not weak (mistake book 6.2)', () {
+    final now = DateTime(2026, 1, 1);
+    final created = CustomWord.create(
+      id: 'c1',
+      uid: 'u1',
+      word: '爱',
+      meaning: '爱',
+      exampleSentence: '',
+      now: now,
+      englishDefinitions: const ['to love'],
+    );
+    final learned = created.reviewed(isCorrect: true, now: now);
+    expect(learned.masteryLevel, 1);
+    expect(learned.wrongCount, 0);
+    // masteryLevel 1 with no mistakes must NOT surface in the mistake book.
+    expect(learned.isWeak, isFalse);
+
+    final missed = created.reviewed(isCorrect: false, now: now);
+    expect(missed.isWeak, isTrue);
+  });
+
   test('review intervals follow the blueprint', () {
     expect(reviewIntervalForLevel(0), Duration.zero);
     expect(reviewIntervalForLevel(1), const Duration(days: 1));
@@ -163,11 +184,17 @@ void main() {
     expect(learned.status, 'Review');
     expect(learned.correctCount, 1);
     expect(learned.nextReviewAt, now.add(const Duration(days: 1)));
+    // A word answered correctly (masteryLevel 0->1, no mistakes) must NOT be
+    // "weak", otherwise the mistake book lists every studied word (bug 6.2).
+    expect(learned.masteryLevel, 1);
+    expect(learned.isWeak, isFalse);
 
     final relearning = created.learned(hadMistake: true, now: now);
     expect(relearning.status, 'Relearning');
     expect(relearning.wrongCount, 1);
     expect(relearning.nextReviewAt.day, now.day);
+    // A word answered wrong is genuinely weak and belongs in the mistake book.
+    expect(relearning.isWeak, isTrue);
   });
 
   test('review words deduplicate custom copies and prefer target progress', () {

@@ -11,12 +11,12 @@ import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
+import '../../core/widgets/language_wordbook_picker.dart';
 import '../../core/widgets/mascot_empty_state.dart';
 import '../../core/widgets/mascot_image.dart';
 import '../../core/widgets/progress_ring.dart';
 import '../../core/widgets/section_header.dart';
 import '../../core/widgets/stat_tile.dart';
-import '../../core/widgets/target_language_picker.dart';
 import '../../data/models/lottery.dart';
 import '../../l10n/generated/app_localizations.dart';
 
@@ -28,6 +28,7 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final localeCode = Localizations.localeOf(context).languageCode;
     final state = ref.watch(appControllerProvider);
     final user = state.user;
     final reviewWords = state.reviewWords;
@@ -53,6 +54,9 @@ class ProfileScreen extends ConsumerWidget {
           xp: user?.xp ?? 0,
           streak: user?.streak ?? 0,
           l10n: l10n,
+          onAvatarTap: user?.uid != null
+              ? () => context.push('/profile/${user!.uid}')
+              : null,
         ),
         const SizedBox(height: AppTokens.s32),
         // Key stats in a clean row.
@@ -77,12 +81,15 @@ class ProfileScreen extends ConsumerWidget {
         _SettingsGroup(
           children: [
             _SettingsItem(
+              icon: AppIcons.settings,
+              title: l10n.commonSettings,
+              onTap: () => context.push('/settings'),
+            ),
+            _SettingsItem(
               icon: AppIcons.flag,
               title: l10n.profilePlanLabel,
-              value: displayWordbookTitle(
-                state.currentStudyBook.id,
-                l10n: l10n,
-              ),
+              value: state.currentWordBook?.nameFor(localeCode) ??
+                  state.currentStudyBook.name,
               onTap: () => context.push('/settings/study-plan'),
             ),
             _SettingsItem(
@@ -90,6 +97,14 @@ class ProfileScreen extends ConsumerWidget {
               title: l10n.commonWordbook,
               value: '${state.totalLearningWords} ${l10n.commonWords}',
               onTap: () => context.push('/wordbook'),
+            ),
+            _SettingsItem(
+              icon: AppIcons.language,
+              title: l10n.pickerChooseLanguage,
+              value: languageLabel(state.currentLanguage, l10n),
+              valueSubtitle:
+                  state.currentWordBook?.nameFor(localeCode) ?? state.currentWordBookId,
+              onTap: () => context.push('/language-map'),
             ),
             _SettingsItem(
               icon: AppIcons.style,
@@ -116,11 +131,25 @@ class ProfileScreen extends ConsumerWidget {
                   : l10n.settingsReminderOff,
               onTap: () => context.push('/settings/reminder'),
             ),
-            _LanguageSettingsItem(
-              targetLanguage: state.targetLanguage,
-              onChanged: (code) => ref
-                  .read(appControllerProvider.notifier)
-                  .updateTargetLanguage(code),
+          ],
+        ),
+        const SizedBox(height: AppTokens.s16),
+        _SettingsGroup(
+          children: [
+            _SettingsItem(
+              icon: AppIcons.privacyTip,
+              title: l10n.aboutPrivacyTitle,
+              onTap: () => context.push('/profile/privacy'),
+            ),
+            _SettingsItem(
+              icon: AppIcons.inventory2,
+              title: l10n.dataAccountTitle,
+              onTap: () => context.push('/profile/data'),
+            ),
+            _SettingsItem(
+              icon: AppIcons.notifications,
+              title: l10n.notificationTitle,
+              onTap: () => context.push('/notifications'),
             ),
           ],
         ),
@@ -167,6 +196,7 @@ class _ProfileHeader extends StatelessWidget {
     required this.xp,
     required this.streak,
     required this.l10n,
+    this.onAvatarTap,
   });
 
   final String name;
@@ -176,6 +206,7 @@ class _ProfileHeader extends StatelessWidget {
   final int xp;
   final int streak;
   final AppLocalizations l10n;
+  final VoidCallback? onAvatarTap;
 
   @override
   Widget build(BuildContext context) {
@@ -190,7 +221,10 @@ class _ProfileHeader extends StatelessWidget {
         ),
         child: Column(
           children: [
-            const MascotImage(size: 72),
+            GestureDetector(
+              onTap: onAvatarTap,
+              child: const MascotImage(size: 72),
+            ),
             const SizedBox(height: AppTokens.s16),
             Text(
               name,
@@ -221,7 +255,7 @@ class _ProfileHeader extends StatelessWidget {
                   icon: AppIcons.bolt,
                 ),
                 AppPill(
-                  label: '$streak ${l10n.profileStreakDays}',
+                  label: l10n.profileStreakDays(streak),
                   variant: PillVariant.streak,
                   icon: AppIcons.localFireDepartment,
                 ),
@@ -367,12 +401,14 @@ class _SettingsItem extends StatelessWidget {
     required this.icon,
     required this.title,
     this.value,
+    this.valueSubtitle,
     required this.onTap,
   });
 
   final IconData icon;
   final String title;
   final String? value;
+  final String? valueSubtitle;
   final VoidCallback onTap;
 
   @override
@@ -393,75 +429,48 @@ class _SettingsItem extends StatelessWidget {
             children: [
               Icon(icon, color: theme.colorScheme.primary, size: 22),
               const SizedBox(width: AppTokens.s16),
-              Expanded(child: Text(title, style: theme.textTheme.bodyMedium)),
-              if (value != null)
-                Text(
-                  value!,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
+              Expanded(
+                flex: value == null ? 1 : 2,
+                child: Text(
+                  title,
+                  style: theme.textTheme.bodyMedium,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              if (value != null) ...[
+                const SizedBox(width: AppTokens.s8),
+                Flexible(
+                  flex: 3,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        value!,
+                        textAlign: TextAlign.right,
+                        maxLines: valueSubtitle == null ? 1 : 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                      if (valueSubtitle != null && valueSubtitle!.isNotEmpty) ...[
+                        const SizedBox(height: AppTokens.s2),
+                        Text(
+                          valueSubtitle!,
+                          textAlign: TextAlign.right,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
-              const SizedBox(width: AppTokens.s4),
-              Icon(
-                AppIcons.chevronRight,
-                color: theme.colorScheme.onSurfaceVariant,
-                size: 20,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _LanguageSettingsItem extends StatelessWidget {
-  const _LanguageSettingsItem({
-    required this.targetLanguage,
-    required this.onChanged,
-  });
-
-  final String targetLanguage;
-  final ValueChanged<String> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Material(
-      color: Colors.transparent,
-      borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () => showTargetLanguageSheet(
-          context,
-          targetLanguage: targetLanguage,
-          onChanged: onChanged,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppTokens.s16,
-            vertical: AppTokens.s12,
-          ),
-          child: Row(
-            children: [
-              Icon(
-                AppIcons.language,
-                color: theme.colorScheme.primary,
-                size: 22,
-              ),
-              const SizedBox(width: AppTokens.s16),
-              Expanded(
-                child: Text(
-                  'Target Language',
-                  style: theme.textTheme.bodyMedium,
-                ),
-              ),
-              Text(
-                targetLanguageLabel(targetLanguage),
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
+              ],
               const SizedBox(width: AppTokens.s4),
               Icon(
                 AppIcons.chevronRight,

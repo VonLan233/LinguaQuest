@@ -1,23 +1,31 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
-import 'dart:typed_data';
 
+import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
+import 'achievement_policy.dart';
+import 'ai_policy.dart';
+import 'analytics_policy.dart';
 import 'auth.dart';
+import 'recommendation_policy.dart';
 import 'config.dart';
 import 'database.dart';
 import 'email_sender.dart';
+import 'forum_policy.dart';
 import 'json_response.dart';
 import 'lesson_catalog.dart';
 import 'lottery_policy.dart';
+import 'moderation_policy.dart';
 import 'notification_policy.dart';
+import 'privacy_policy.dart';
 import 'reward_policy.dart';
 import 'reward_task_policy.dart';
 import 'study_plan_policy.dart';
+import 'study_spot_policy.dart';
 
 final _httpClient = http.Client();
 
@@ -26,6 +34,7 @@ Router buildRouter(
   AppDatabase database, {
   http.Client? httpClient,
   EmailSender? emailSender,
+  AiPolicyService? aiPolicy,
 }) {
   final client = httpClient ?? _httpClient;
   final mailer = emailSender ?? EmailSender.fromConfig(config);
@@ -36,68 +45,61 @@ Router buildRouter(
   });
 
   router.get('/tts', (Request request) async {
-    final word = request.url.queryParameters['word']?.trim() ?? '';
-    final type = request.url.queryParameters['type']?.trim() ?? '1';
-    if (word.isEmpty || word.length > 100) {
+    final text = request.url.queryParameters['text']?.trim() ?? '';
+    final lang = request.url.queryParameters['lang']?.trim() ?? '';
+    final slow = request.url.queryParameters['slow']?.trim() ?? 'false';
+    if (text.isEmpty || text.length > 500) {
       return jsonResponse({
-        'error': 'word is required and must be under 100 characters',
+        'error': 'text is required and must be 500 characters or fewer',
       }, status: 400);
     }
-    if (type != '1' && type != '2') {
+    if (!isTtsLangValid(lang)) {
       return jsonResponse({
-        'error': 'type must be 1 (UK) or 2 (US)',
+        'error': 'lang must be one of: zh, en, ja',
       }, status: 400);
+    }
+    final voice = ttsVoiceFor(lang);
+    final rate = ttsRateFor(slow);
+    final cacheKey =
+        sha256.convert(utf8.encode('$text|$voice|$rate')).toString();
+    final cacheDir = Directory(config.ttsCacheDir);
+    await cacheDir.create(recursive: true);
+    final cacheFile = File('${cacheDir.path}/$cacheKey.mp3');
+    if (await cacheFile.exists()) {
+      final cached = await cacheFile.readAsBytes();
+      if (cached.isNotEmpty) {
+        return Response.ok(
+          cached,
+          headers: {
+            'Content-Type': 'audio/mpeg',
+            'Cache-Control': 'public, max-age=86400',
+          },
+        );
+      }
     }
     try {
-      final uri = Uri.https('dict.youdao.com', '/dictvoice', {
-        'audio': word,
-        'type': type,
-      });
-      final streamedResponse = await client
-          .send(http.Request('GET', uri))
-          .timeout(const Duration(seconds: 5));
-      if (streamedResponse.statusCode != 200) {
-        await streamedResponse.stream.listen((_) {}).cancel();
+      final base = Uri.parse(config.ttsServiceUrl);
+      final uri = Uri(
+        scheme: base.scheme,
+        host: base.host,
+        port: base.port,
+        path: '/synthesize',
+        queryParameters: {'text': text, 'voice': voice, 'rate': rate},
+      );
+      final response = await client
+          .get(uri)
+          .timeout(const Duration(seconds: 30));
+      if (response.statusCode != 200 || response.bodyBytes.isEmpty) {
+        stderr.writeln(
+          'TTS microservice error: status=${response.statusCode}',
+        );
         return jsonResponse({'error': 'tts unavailable'}, status: 502);
       }
-      final contentLength = streamedResponse.contentLength;
-      if (contentLength != null && contentLength > 5 * 1024 * 1024) {
-        await streamedResponse.stream.listen((_) {}).cancel();
-        return jsonResponse({'error': 'tts response too large'}, status: 502);
-      }
-      final contentType =
-          (streamedResponse.headers['content-type'] ??
-                  streamedResponse.headers['Content-Type'] ??
-                  'audio/mpeg')
-              .toLowerCase();
-      if (!contentType.startsWith('audio/')) {
-        await streamedResponse.stream.listen((_) {}).cancel();
-        return jsonResponse({'error': 'tts unavailable'}, status: 502);
-      }
-      final bytesBuilder = BytesBuilder();
-      var totalBytes = 0;
-      const maxBytes = 5 * 1024 * 1024;
-      await for (final chunk in streamedResponse.stream.timeout(
-        const Duration(seconds: 5),
-      )) {
-        totalBytes += chunk.length;
-        if (totalBytes > maxBytes) {
-          return jsonResponse({
-            'error': 'tts response invalid or too large',
-          }, status: 502);
-        }
-        bytesBuilder.add(chunk);
-      }
-      final bytes = bytesBuilder.takeBytes();
-      if (bytes.isEmpty) {
-        return jsonResponse({
-          'error': 'tts response invalid or too large',
-        }, status: 502);
-      }
+      await cacheFile.writeAsBytes(response.bodyBytes);
       return Response.ok(
-        bytes,
+        response.bodyBytes,
         headers: {
-          'Content-Type': contentType,
+          'Content-Type': 'audio/mpeg',
           'Cache-Control': 'public, max-age=86400',
         },
       );
@@ -303,6 +305,12 @@ Router buildRouter(
           'error': 'word and meaning are required',
         }, status: 400);
       }
+      final existing = await database.customWordByWord(uid, (body['word'] as String).trim());
+      if (existing != null) {
+        return jsonResponse({'word': wordDto(existing)}, status: 200);
+      }
+      // ponytail: 并发下两个请求可能同时通过查重再插入，唯一索引会让第二个 INSERT 抛冲突 500。
+      // 单用户 coursework 概率极低；多端并发写时需在 upsertCustomWord 外层 catch 唯一冲突并回查返回既有。
       final word = await database.upsertCustomWord(uid, {...body, 'id': id});
       return jsonResponse({'word': wordDto(word)}, status: 201);
     });
@@ -316,6 +324,9 @@ Router buildRouter(
         return jsonResponse({'error': 'word not found'}, status: 404);
       }
       final merged = {...wordDto(existing), ...body, 'id': id};
+      // ponytail: 若将 word 改为与同 uid 另一行相同（大小写不敏感），upsertCustomWord
+      // 的 ON CONFLICT(id) UPDATE 会触发唯一索引冲突 500；coursework 单账户场景极低概率，
+      // 如需保护需在 upsertCustomWord 捕获 unique violation 后返回 400/409。
       final word = await database.upsertCustomWord(uid, merged, id: id);
       return jsonResponse({'word': wordDto(word)});
     });
@@ -324,6 +335,14 @@ Router buildRouter(
   router.delete('/custom-words/<id>', (Request request, String id) async {
     return _protected(config, request, (uid) async {
       await database.deleteCustomWord(uid, id);
+      return jsonResponse({'deleted': true});
+    });
+  });
+
+  // Permanently deletes the authenticated user's account and all their data.
+  router.delete('/account', (Request request) async {
+    return _protected(config, request, (uid) async {
+      await database.deleteAccount(uid);
       return jsonResponse({'deleted': true});
     });
   });
@@ -821,7 +840,684 @@ Router buildRouter(
     });
   });
 
+  // ── Analytics & Achievement & Leaderboard 路由 ────────────────────────────
+
+  router.get('/analytics', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final analytics = await computeAnalytics(database, uid);
+      return jsonResponse(analytics.toJson());
+    });
+  });
+
+  router.get('/recommendations', (Request request) async {
+    return _protected(config, request, (uid) async {
+      // Build word stats from the user's custom words in the database.
+      // For mock/initial deployments we return 3 representative recommendations.
+      final customWords = await database.customWords(uid);
+      final wordStats = customWords.map((w) {
+        return <String, dynamic>{
+          'wordId': w['id']?.toString() ?? '',
+          'listeningScore': _intValue(w['listening_score'] ?? w['listeningScore']) ?? 100,
+          'contextScore': _intValue(w['context_score'] ?? w['contextScore']) ?? 100,
+          'meaningRecallScore': _intValue(w['meaning_recall_score'] ?? w['meaningRecallScore']) ?? 100,
+          'wrongCount': _intValue(w['wrong_count'] ?? w['wrongCount']) ?? 0,
+        };
+      }).toList();
+
+      final recs = RecommendationPolicy.generate(wordStats: wordStats);
+
+      // When there are no real weak words (e.g. new user), return mock recs
+      // so the UI always has something useful to show.
+      if (recs.isEmpty) {
+        final mockRecs = [
+          const Recommendation(
+            targetWordIds: ['mock_w1', 'mock_w2'],
+            exerciseType: 'listeningWordChoice',
+            reason: 'Strengthen your listening recognition with these words',
+            priority: 1,
+            estimatedMinutes: 2,
+          ),
+          const Recommendation(
+            targetWordIds: ['mock_w3', 'mock_w4'],
+            exerciseType: 'sentenceCloze',
+            reason: 'Practice using these words in context',
+            priority: 2,
+            estimatedMinutes: 2,
+          ),
+          const Recommendation(
+            targetWordIds: ['mock_w5'],
+            exerciseType: 'meaningChoice',
+            reason: 'Review the meanings of these recently learned words',
+            priority: 3,
+            estimatedMinutes: 1,
+          ),
+        ];
+        return jsonResponse(mockRecs.map((r) => r.toJson()).toList());
+      }
+
+      return jsonResponse(recs.map((r) => r.toJson()).toList());
+    });
+  });
+
+  router.post('/map-language-selected', (Request request) async {
+    return _protected(config, request, (uid) async {
+      await database.setFirstMapLanguageAt(uid);
+      return jsonResponse({'recorded': true}, status: 200);
+    });
+  });
+
+  router.get('/achievements', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final user = await database.userById(uid);
+      final streak = user == null ? 0 : (user['streak'] as int? ?? 0);
+      final xp = user == null ? 0 : (user['xp'] as int? ?? 0);
+      final userWords = await database.userWords(uid);
+      final masteredWords = userWords
+          .where((w) => (w['mastery_level'] as int? ?? 0) >= 4)
+          .length;
+      final studySessions = await database.completedLessonIds(uid);
+      final totalStudyDays = studySessions.isNotEmpty ? 1 : 0;
+      final hasPerfectQuiz = await database.hasPerfectSession(uid);
+      final hasListening = await database.hasListeningRecord(uid);
+      final mapAt = await database.firstMapLanguageAt(uid);
+      final hasJapaneseStudy = await database.hasJapaneseStudy(uid);
+      final hasReadingComprehension = await database.hasReadingRecord(uid);
+      final achievements = AchievementPolicy.evaluate(
+        streakDays: streak,
+        masteredWords: masteredWords,
+        totalStudyDays: totalStudyDays,
+        trainingXp: xp,
+        hasPerfectQuiz: hasPerfectQuiz,
+        hasListening: hasListening,
+        hasMapLanguage: mapAt != null,
+        hasJapaneseStudy: hasJapaneseStudy,
+        hasReadingComprehension: hasReadingComprehension,
+      );
+      return jsonResponse(achievements.map((a) => a.toJson()).toList());
+    });
+  });
+
+  router.get('/leaderboard', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final dimension =
+          request.url.queryParameters['dimension'] ?? 'global';
+      final user = await database.userById(uid);
+      final currentXp = user == null ? 0 : (user['xp'] as int? ?? 0);
+      final currentName = user == null
+          ? 'You'
+          : (user['name'] as String? ?? 'You');
+
+      final List<Map<String, dynamic>> mockEntries;
+      switch (dimension) {
+        case 'friends':
+          mockEntries = [
+            {'rank': 1, 'userId': 'mock_f1', 'name': 'Alex', 'xp': currentXp + 150, 'isCurrentUser': false},
+            {'rank': 2, 'userId': 'mock_f2', 'name': 'Jordan', 'xp': currentXp + 50, 'isCurrentUser': false},
+            {'rank': 3, 'userId': uid, 'name': currentName, 'xp': currentXp, 'isCurrentUser': true},
+            {'rank': 4, 'userId': 'mock_f3', 'name': 'Morgan', 'xp': currentXp - 80, 'isCurrentUser': false},
+          ];
+        case 'class':
+          mockEntries = [
+            {'rank': 1, 'userId': 'mock_c1', 'name': 'Sam', 'xp': currentXp + 200, 'isCurrentUser': false},
+            {'rank': 2, 'userId': uid, 'name': currentName, 'xp': currentXp, 'isCurrentUser': true},
+            {'rank': 3, 'userId': 'mock_c2', 'name': 'Taylor', 'xp': currentXp - 120, 'isCurrentUser': false},
+          ];
+        default: // global
+          mockEntries = [
+            {'rank': 1, 'userId': 'mock_g1', 'name': 'Alice', 'xp': currentXp + 500, 'isCurrentUser': false},
+            {'rank': 2, 'userId': 'mock_g2', 'name': 'Bob', 'xp': currentXp + 300, 'isCurrentUser': false},
+            {'rank': 3, 'userId': 'mock_g3', 'name': 'Charlie', 'xp': currentXp + 100, 'isCurrentUser': false},
+            {'rank': 4, 'userId': 'mock_g4', 'name': 'Diana', 'xp': currentXp + 20, 'isCurrentUser': false},
+            {'rank': 5, 'userId': uid, 'name': currentName, 'xp': currentXp, 'isCurrentUser': true},
+          ];
+      }
+
+      final currentUserRank = mockEntries
+          .firstWhere(
+            (e) => e['isCurrentUser'] == true,
+            orElse: () => {'rank': -1},
+          )['rank'] as int;
+
+      return jsonResponse({
+        'dimension': dimension,
+        'entries': mockEntries,
+        'currentUserRank': currentUserRank,
+      });
+    });
+  });
+
+  // ── AI 路由 ──────────────────────────────────────────────────────────────
+
+  AiProvider _buildAiProvider() {
+    if (config.aiProvider == 'remote' && config.aiApiKey.isNotEmpty) {
+      return RemoteAiProvider(
+        client: client,
+        apiKey: config.aiApiKey,
+        baseUrl: config.aiApiBaseUrl,
+        model: config.aiModel,
+      );
+    }
+    return MockAiProvider();
+  }
+
+  final effectiveAiPolicy = aiPolicy ??
+      AiPolicyService(
+        provider: _buildAiProvider(),
+        dailyLimitPerUser: config.aiDailyLimitPerUser,
+        dailyCountLookup: database.countAiHistoryToday,
+      );
+
+  Future<Response> _handleAiRequest(
+    Request request,
+    String featureType,
+    String uid,
+  ) async {
+    final body = await readJsonMap(request);
+    final prompt = body['prompt'] as String? ?? '';
+    final targetWord = body['targetWord'] as String?;
+    final targetLanguage = body['targetLanguage'] as String? ?? 'zh';
+    if (prompt.isEmpty) {
+      return jsonResponse({'error': 'prompt is required'}, status: 400);
+    }
+    final aiRequest = AiRequest(
+      featureType: featureType,
+      userId: uid,
+      prompt: prompt,
+      targetWord: targetWord,
+      targetLanguage: targetLanguage,
+      modelOverride: featureType == 'cloze' && config.aiClozeModel.isNotEmpty
+          ? config.aiClozeModel
+          : null,
+    );
+    final response = await effectiveAiPolicy.handle(aiRequest);
+    if (!response.success) {
+      final code = response.errorCode ?? 'ai_error';
+      final status = switch (code) {
+        'too_long' || 'blocked' => 400,
+        'rate_limited' => 429,
+        'ai_unavailable' => 503,
+        _ => 422,
+      };
+      return jsonResponse({'error': code}, status: status);
+    }
+    final record = await database.insertAiHistory(
+      uid,
+      featureType,
+      prompt,
+      response.data,
+    );
+    return jsonResponse({
+      'historyId': record['id'],
+      'featureType': featureType,
+      'data': response.data,
+      'createdAt': record['createdAt'],
+    });
+  }
+
+  // ── Public profile route (no auth required; isOwner determined by optional JWT) ──
+
+  router.get('/users/<userId>/profile', (Request request, String userId) async {
+    // Try to extract the requester's UID from the Bearer token (if present).
+    final callerUid = verifyToken(config, request.headers['Authorization']);
+
+    // Load the target user's data.
+    final user = await database.userById(userId);
+    if (user == null) {
+      return jsonResponse({'error': 'user not found'}, status: 404);
+    }
+
+    // Load the target user's privacy flags.
+    final privacyRow = await database.getUserPrivacy(userId);
+    final flags = privacyRow == null
+        ? const UserPrivacyFlags()
+        : UserPrivacyFlags.fromJson({
+            'publicStats': privacyRow['publicStats'],
+            'publicStreak': privacyRow['publicStreak'],
+            'publicWordbook': privacyRow['publicWordbook'],
+            'publicPosts': privacyRow['publicPosts'],
+          });
+
+    final isOwner = callerUid != null && callerUid == userId;
+
+    // Build the full profile before filtering.
+    final streak = user['streak'] as int? ?? 0;
+    final xp = user['xp'] as int? ?? 0;
+    final userWords = await database.userWords(userId);
+    final masteredWords = userWords
+        .where((w) => (w['mastery_level'] as int? ?? 0) >= 4)
+        .length;
+    final learnedWords = userWords.length;
+
+    final achievements = AchievementPolicy.evaluate(
+      streakDays: streak,
+      masteredWords: masteredWords,
+      totalStudyDays: 0,
+      trainingXp: xp,
+    );
+    final unlockedAchievements = achievements
+        .where((a) => a.unlocked)
+        .take(3)
+        .map((a) => a.toJson())
+        .toList();
+
+    final fullProfile = <String, dynamic>{
+      'uid': userId,
+      'name': user['name'] ?? '',
+      'streak': streak,
+      'stats': {
+        'learnedWords': learnedWords,
+        'masteredWords': masteredWords,
+        'totalDays': 0,
+      },
+      'wordbookProgress': masteredWords,
+      'posts': <Map<String, dynamic>>[],
+    };
+
+    final filtered = PrivacyPolicy.filterPublicProfile(fullProfile, flags);
+
+    return jsonResponse({
+      ...filtered,
+      'isOwner': isOwner,
+      'achievements': unlockedAchievements,
+    });
+  });
+
+  router.get('/privacy', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final row = await database.getUserPrivacy(uid);
+      final flags = row == null
+          ? const UserPrivacyFlags()
+          : UserPrivacyFlags.fromJson({
+              'publicStats': row['publicStats'],
+              'publicStreak': row['publicStreak'],
+              'publicWordbook': row['publicWordbook'],
+              'publicPosts': row['publicPosts'],
+            });
+      return jsonResponse(flags.toJson());
+    });
+  });
+
+  router.put('/privacy', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      final flags = UserPrivacyFlags.fromJson(body);
+      await database.upsertUserPrivacy(uid, flags.toJson());
+      return jsonResponse(flags.toJson());
+    });
+  });
+
+  // ── Forum routes ──────────────────────────────────────────────────────────
+
+  router.get('/forum/posts', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final posts = await database.listForumPosts(status: 'approved');
+      final result = <Map<String, dynamic>>[];
+      for (final post in posts) {
+        final postId = post['id'].toString();
+        final liked = await database.hasLiked(uid, postId);
+        final favorited = await database.hasFavorited(uid, postId);
+        result.add(forumPostDto(post, isLiked: liked, isFavorited: favorited));
+      }
+      return jsonResponse({'posts': result});
+    });
+  });
+
+  router.post('/forum/posts', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      final title = (body['title'] as String? ?? '').trim();
+      final postBody = (body['body'] as String? ?? '').trim();
+      final tag = (body['tag'] as String? ?? 'General').trim();
+      final status = ForumPolicy.autoModeratePost(title, postBody);
+      if (status == ContentStatus.rejected) {
+        return jsonResponse({
+          'error': 'title and body are required, title ≤ 200 chars, body ≤ 5000 chars',
+        }, status: 400);
+      }
+      final post = await database.insertForumPost({
+        'authorId': uid,
+        'title': title,
+        'body': postBody,
+        'tag': tag,
+        'status': status.name,
+      });
+      final author = await database.userById(uid);
+      return jsonResponse(
+        {
+          'post': forumPostDto(
+            post,
+            isLiked: false,
+            isFavorited: false,
+            authorName: author?['name'] as String?,
+          ),
+        },
+        status: 201,
+      );
+    });
+  });
+
+  router.get('/forum/posts/<id>', (Request request, String id) async {
+    return _protected(config, request, (uid) async {
+      final post = await database.getForumPost(id);
+      if (post == null) {
+        return jsonResponse({'error': 'post not found'}, status: 404);
+      }
+      final comments = await database.listForumComments(id);
+      final liked = await database.hasLiked(uid, id);
+      final favorited = await database.hasFavorited(uid, id);
+      return jsonResponse({
+        'post': forumPostDto(post, isLiked: liked, isFavorited: favorited),
+        'comments': comments.map(_forumCommentDto).toList(),
+      });
+    });
+  });
+
+  router.post(
+    '/forum/posts/<id>/comments',
+    (Request request, String id) async {
+      return _protected(config, request, (uid) async {
+        final post = await database.getForumPost(id);
+        if (post == null) {
+          return jsonResponse({'error': 'post not found'}, status: 404);
+        }
+        final body = await readJsonMap(request);
+        final commentBody = (body['body'] as String? ?? '').trim();
+        final status = ForumPolicy.autoModerateComment(commentBody);
+        if (status == ContentStatus.rejected) {
+          return jsonResponse({
+            'error': 'body is required and must be under 5000 chars',
+          }, status: 400);
+        }
+        final comment = await database.insertForumComment({
+          'postId': id,
+          'authorId': uid,
+          'body': commentBody,
+          'status': status.name,
+        });
+        return jsonResponse({'comment': comment}, status: 201);
+      });
+    },
+  );
+
+  router.post('/forum/posts/<id>/like', (Request request, String id) async {
+    return _protected(config, request, (uid) async {
+      final post = await database.getForumPost(id);
+      if (post == null) {
+        return jsonResponse({'error': 'post not found'}, status: 404);
+      }
+      final liked = await database.toggleLike(uid, id);
+      return jsonResponse({'liked': liked});
+    });
+  });
+
+  router.post(
+    '/forum/posts/<id>/favorite',
+    (Request request, String id) async {
+      return _protected(config, request, (uid) async {
+        final post = await database.getForumPost(id);
+        if (post == null) {
+          return jsonResponse({'error': 'post not found'}, status: 404);
+        }
+        final favorited = await database.toggleFavorite(uid, id);
+        return jsonResponse({'favorited': favorited});
+      });
+    },
+  );
+
+  // 列出当前用户收藏的所有帖子
+  router.get('/forum/favorites', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final posts = await database.listFavoritedPostsByUser(uid);
+      final result = <Map<String, dynamic>>[];
+      // ponytail: O(n) hasLiked 逐帖查询；收藏列表 n 通常极小，不预优化。
+      // 升级路径：批量 SELECT post_id FROM forum_likes WHERE user_id=? AND post_id = ANY(?)
+      for (final post in posts) {
+        final postId = post['id'].toString();
+        final liked = await database.hasLiked(uid, postId);
+        result.add(forumPostDto(post, isLiked: liked, isFavorited: true));
+      }
+      return jsonResponse({'posts': result});
+    });
+  });
+
+  router.post('/reports', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      final contentType = body['contentType'] as String? ?? '';
+      final contentId = body['contentId'] as String? ?? '';
+      final reason = body['reason'] as String? ?? '';
+      final detail = body['detail'] as String?;
+      if (contentType.isEmpty || contentId.isEmpty) {
+        return jsonResponse(
+          {'error': 'contentType and contentId are required'},
+          status: 400,
+        );
+      }
+      if (!ModerationPolicy.isValidReport(reason, detail)) {
+        return jsonResponse({'error': 'invalid reason'}, status: 400);
+      }
+      final report = await database.insertContentReport({
+        'reporterUserId': uid,
+        'contentType': contentType,
+        'contentId': contentId,
+        'reason': reason,
+        'detail': detail,
+      });
+      return jsonResponse(report, status: 201);
+    });
+  });
+
+  router.post('/ai/chat', (Request request) async {
+    return _protected(
+      config,
+      request,
+      (uid) => _handleAiRequest(request, 'chat', uid),
+    );
+  });
+
+  router.post('/ai/sentence-analysis', (Request request) async {
+    return _protected(
+      config,
+      request,
+      (uid) => _handleAiRequest(request, 'sentence_analysis', uid),
+    );
+  });
+
+  router.post('/ai/cloze', (Request request) async {
+    return _protected(
+      config,
+      request,
+      (uid) => _handleAiRequest(request, 'cloze', uid),
+    );
+  });
+
+  router.post('/ai/confusion', (Request request) async {
+    return _protected(
+      config,
+      request,
+      (uid) => _handleAiRequest(request, 'confusion', uid),
+    );
+  });
+
+  router.post('/ai/sentence', (Request request) async {
+    return _protected(
+      config,
+      request,
+      (uid) => _handleAiRequest(request, 'sentence_gen', uid),
+    );
+  });
+
+  router.post('/ai/reading-explain', (Request request) async {
+    return _protected(
+      config,
+      request,
+      (uid) => _handleAiRequest(request, 'reading_explain', uid),
+    );
+  });
+
+  router.get('/ai/history', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final history = await database.listAiHistory(uid);
+      return jsonResponse({
+        'history': history.map((h) {
+          return {
+            'id': h['id'],
+            'featureType': h['featureType'],
+            'prompt': h['prompt'],
+            'response': h['response'],
+            'createdAt': h['createdAt'],
+          };
+        }).toList(),
+      });
+    });
+  });
+
+  router.delete('/ai/history/<id>', (Request request, String id) async {
+    return _protected(config, request, (uid) async {
+      final deleted = await database.softDeleteAiHistory(uid, id);
+      if (!deleted) {
+        return jsonResponse({'error': 'not found'}, status: 404);
+      }
+      return jsonResponse({'deleted': true});
+    });
+  });
+
+  router.post('/ai/writing-review', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      final prompt = body['prompt'] as String? ?? '';
+      final examType = body['examType'] as String?;
+      final targetScore = body['targetScore'];
+      final targetLanguage = body['targetLanguage'] as String? ?? 'zh';
+      if (prompt.isEmpty) {
+        return jsonResponse({'error': 'prompt is required'}, status: 400);
+      }
+      final aiPrompt = buildWritingReviewPrompt(
+        prompt,
+        examType: examType,
+        targetScore: targetScore,
+      );
+      final aiRequest = AiRequest(
+        featureType: 'writing_review',
+        userId: uid,
+        prompt: aiPrompt,
+        targetLanguage: targetLanguage,
+      );
+      final response = await effectiveAiPolicy.handle(aiRequest);
+      if (!response.success) {
+        final code = response.errorCode ?? 'ai_error';
+        final status = switch (code) {
+          'too_long' || 'blocked' => 400,
+          'rate_limited' => 429,
+          'ai_unavailable' => 503,
+          _ => 422,
+        };
+        return jsonResponse({'error': code}, status: status);
+      }
+      final record = await database.insertAiHistory(
+        uid,
+        'writing_review',
+        prompt,
+        response.data,
+      );
+      return jsonResponse({
+        'historyId': record['id'],
+        'featureType': 'writing_review',
+        'data': response.data,
+        'createdAt': record['createdAt'],
+      });
+    });
+  });
+
+  router.get('/study-spots', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final spots = await database.listStudySpots(uid);
+      return jsonResponse({'spots': spots});
+    });
+  });
+
+  router.post('/study-spots', (Request request) async {
+    return _protected(config, request, (uid) async {
+      final body = await readJsonMap(request);
+      final name = (body['name']?.toString() ?? '').trim();
+      final rawLat = body['latitude'];
+      final rawLng = body['longitude'];
+      // 安全解析坐标：客户端可能传 num 或 String 数字；任何非数值→null→400。
+      final lat = rawLat is num
+          ? rawLat.toDouble()
+          : num.tryParse(rawLat?.toString() ?? '')?.toDouble();
+      final lng = rawLng is num
+          ? rawLng.toDouble()
+          : num.tryParse(rawLng?.toString() ?? '')?.toDouble();
+      if (lat == null || lng == null) {
+        return jsonResponse({'error': 'invalid_coordinates'}, status: 400);
+      }
+      final err =
+          StudySpotPolicy.validate(name: name, latitude: lat, longitude: lng);
+      if (err != null) return jsonResponse({'error': err}, status: 400);
+      final spot = await database.recordStudyVisit(
+        uid,
+        name: name,
+        latitude: lat,
+        longitude: lng,
+      );
+      return jsonResponse(spot, status: 201);
+    });
+  });
+
+  router.delete('/study-spots/<id>', (Request request, String id) async {
+    return _protected(config, request, (uid) async {
+      // 预检 UUID 格式，避免非法字符串触发 Postgres invalid input syntax for type uuid → 500。
+      if (!_isValidUuid(id)) {
+        return jsonResponse({'error': 'not found'}, status: 404);
+      }
+      final ok = await database.deleteStudySpot(uid, id);
+      if (!ok) return jsonResponse({'error': 'not found'}, status: 404);
+      return jsonResponse({'deleted': true});
+    });
+  });
+
   return router;
+}
+
+Map<String, dynamic> forumPostDto(
+  Map<String, dynamic> row, {
+  required bool isLiked,
+  required bool isFavorited,
+  String? authorName,
+}) {
+  return {
+    'id': row['id'].toString(),
+    'authorId': row['author_id'],
+    'authorName': authorName ?? row['author_name'] ?? 'User',
+    'title': row['title'],
+    'body': row['body'],
+    'tag': row['tag'],
+    'status': row['status'],
+    'likeCount': row['like_count'],
+    'commentCount': row['comment_count'],
+    'isLiked': isLiked,
+    'isFavorited': isFavorited,
+    'createdAt': _isoString(row['created_at']),
+    'updatedAt': _isoString(row['updated_at']),
+  };
+}
+
+Map<String, dynamic> _forumCommentDto(Map<String, dynamic> row) {
+  return {
+    'id': row['id'].toString(),
+    'postId': row['post_id'].toString(),
+    'authorId': row['author_id'],
+    'body': row['body'],
+    'status': row['status'],
+    'createdAt': _isoString(row['created_at']),
+  };
+}
+
+String _isoString(Object? value) {
+  if (value == null) return '';
+  if (value is DateTime) return value.toIso8601String();
+  return value.toString();
 }
 
 Future<Map<String, dynamic>> learningProgressDto(
@@ -902,22 +1598,41 @@ List<Map<String, dynamic>>? _cachedWordBooks;
 Future<List<Map<String, dynamic>>>? _loadingWordBooks;
 
 Future<List<Map<String, dynamic>>> _readWordBooks() async {
-  final file = _wordBookDataFile();
-  final decoded = jsonDecode(await file.readAsString());
-  if (decoded is! List) {
-    throw const FormatException('wordbooks_p0.json must be a list');
+  final books = <Map<String, dynamic>>[];
+  for (final file in _wordBookDataFiles()) {
+    final decoded = jsonDecode(await file.readAsString());
+    if (decoded is! List) {
+      throw FormatException('${file.path} must be a list');
+    }
+    for (final item in decoded.whereType<Map>()) {
+      books.add(Map<String, dynamic>.from(item));
+    }
   }
-  return decoded.whereType<Map>().map((item) {
-    return Map<String, dynamic>.from(item);
-  }).toList();
+  return books;
 }
 
-File _wordBookDataFile() {
-  final serverRelative = File('data/wordbooks_p0.json');
-  if (serverRelative.existsSync()) return serverRelative;
-  final repoRelative = File('server/data/wordbooks_p0.json');
-  if (repoRelative.existsSync()) return repoRelative;
-  return serverRelative;
+// ponytail: JLPT data is duplicated from the client assets into server/data/.
+// If this duplication ever drifts, regenerate wordbooks_jlpt.json from
+// linguaquest/lib/assets/data/wordbook_jlpt_*.json.
+List<File> _wordBookDataFiles() {
+  final files = <File>[];
+  for (final name in const [
+    'wordbooks_p0.json',
+    'wordbooks_jlpt.json',
+    'wordbooks_extra.json',
+  ]) {
+    final serverRelative = File('data/$name');
+    final repoRelative = File('server/data/$name');
+    if (serverRelative.existsSync()) {
+      files.add(serverRelative);
+    } else if (repoRelative.existsSync()) {
+      files.add(repoRelative);
+    }
+  }
+  if (files.isEmpty) {
+    files.add(File('data/wordbooks_p0.json'));
+  }
+  return files;
 }
 
 Map<String, dynamic>? _wordBookById(
@@ -1016,6 +1731,8 @@ Map<String, dynamic> userDto(Map<String, dynamic> row) {
     'streak': row['streak'],
     'emailVerified': row['email_verified'] ?? true,
     'lastStudyDate': (row['last_study_date'] as DateTime?)?.toIso8601String(),
+    'currentWordBookId': row['current_word_book_id'] as String?,
+    'language': row['language'] as String?,
     'createdAt': (row['created_at'] as DateTime).toIso8601String(),
     'updatedAt': (row['updated_at'] as DateTime).toIso8601String(),
   };
@@ -1331,6 +2048,20 @@ DateTime? _dateTimeValue(Object? value) {
 
 String _targetExamForWordBook(String wordBookId) {
   switch (wordBookId) {
+    case 'hsk1':
+      return 'HSK 1';
+    case 'hsk2':
+      return 'HSK 2';
+    case 'hsk3':
+      return 'HSK 3';
+    case 'hsk4':
+      return 'HSK 4';
+    case 'hsk5':
+      return 'HSK 5';
+    case 'hsk6':
+      return 'HSK 6';
+    // Legacy pre-HSK targets, retained for safety. Study-plan validation now
+    // normalizes these wordbook ids to hsk1 before this is reached.
     case 'toefl':
       return 'TOEFL';
     case 'gre':
@@ -1342,7 +2073,7 @@ String _targetExamForWordBook(String wordBookId) {
     case 'daily-english':
       return 'Daily English';
   }
-  return 'Daily English';
+  return 'HSK 1';
 }
 
 String _dateKey(DateTime date) {
@@ -1363,6 +2094,11 @@ String? nullableDateValue(Object? value) {
   if (value is DateTime) return value.toIso8601String();
   return value.toString();
 }
+
+final _uuidPattern = RegExp(
+  r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$',
+);
+bool _isValidUuid(String id) => _uuidPattern.hasMatch(id);
 
 final _emailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
 
@@ -1392,3 +2128,20 @@ Future<void> _issueAndSendCode(
   );
   await mailer.sendVerificationCode(to: email, code: code);
 }
+
+// ── TTS pure helpers ──────────────────────────────────────────────────────────
+
+/// Returns the edge-tts voice name for the given language code.
+/// Defaults to zh voice for unknown inputs (callers should validate lang first).
+String ttsVoiceFor(String lang) => switch (lang) {
+  'zh' => 'zh-CN-XiaoxiaoNeural',
+  'en' => 'en-US-AriaNeural',
+  'ja' => 'ja-JP-NanamiNeural',
+  _ => 'zh-CN-XiaoxiaoNeural',
+};
+
+/// Returns the edge-tts rate string for the given slow flag value.
+String ttsRateFor(String slow) => slow == 'true' ? '-25%' : '+0%';
+
+/// Returns true if lang is in the supported whitelist {zh, en, ja}.
+bool isTtsLangValid(String lang) => const {'zh', 'en', 'ja'}.contains(lang);

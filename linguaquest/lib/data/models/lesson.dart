@@ -8,6 +8,10 @@ enum QuizQuestionType {
   listeningWordChoice,
   listeningMeaningChoice,
   spelling,
+  sentenceCloze,       // 例句填空：把目标词替换为 ____ 让学习者选择
+  confusableChoice,    // 易混词辨析：从语义相近词中选出正确答案
+  collocationChoice,   // 搭配选择：从常用搭配中选出正确的动词/名词搭配
+  derivativeChoice,    // 词形变化：选择正确的词形（名词/动词/形容词等）
 }
 
 class WordExample {
@@ -71,6 +75,10 @@ class Word {
     this.rootAffix = '',
     this.imageUrl = '',
     this.hskLevel,
+    // P2a: Japanese language fields (all default empty/null — zh data unaffected)
+    this.kana = '',
+    this.romaji = '',
+    this.examLevel,
   });
 
   final String id;
@@ -99,8 +107,34 @@ class Word {
   final String rootAffix;
   final String imageUrl;
   final int? hskLevel;
+  // P2a: Japanese fields — empty/''/null for all existing zh data.
+  /// Hiragana/katakana reading (Japanese words). Empty for zh/en words.
+  final String kana;
+  /// Romanized reading (Japanese words). Empty for zh/en words.
+  final String romaji;
+  /// Generic exam level (JLPT level number for ja; null for zh where hskLevel is used).
+  final int? examLevel;
 
   String get audioUrl => audioUSUrl.isNotEmpty ? audioUSUrl : audioUKUrl;
+
+  /// Returns the phonetic reading appropriate for [language]:
+  /// - `'zh'` → pinyin (`phonetic`/`phoneticUK`).
+  /// - `'ja'` → kana (primary), falling back to romaji.
+  /// - anything else → empty string (screens adapt in P2f).
+  ///
+  /// This is a model-level accessor only; screen wiring happens in P2f.
+  /// Backward-compat: for `'zh'` this returns exactly what `phonetic` returns today.
+  String phoneticFor(String language) {
+    switch (language) {
+      case 'zh':
+        return phonetic;
+      case 'ja':
+        if (kana.isNotEmpty) return kana;
+        return romaji;
+      default:
+        return '';
+    }
+  }
 
   /// Returns the list of meanings localized for [languageCode]:
   /// - 'en' → [englishDefinitions], falling back to [definitions].
@@ -240,6 +274,10 @@ class Word {
       rootAffix: _string(json['rootAffix']),
       imageUrl: _string(json['imageUrl']),
       hskLevel: _int(json['hskLevel']),
+      // P2a: Japanese fields — default '' / null when absent (all existing JSON unaffected)
+      kana: _string(json['kana']),
+      romaji: _string(json['romaji']),
+      examLevel: _int(json['examLevel']),
     );
   }
 
@@ -269,6 +307,10 @@ class Word {
       'difficulty': difficulty,
       'imageUrl': imageUrl,
       'hskLevel': hskLevel,
+      // P2a: Japanese fields — always serialized so round-trips are lossless
+      'kana': kana,
+      'romaji': romaji,
+      'examLevel': examLevel,
     };
   }
 }
@@ -298,6 +340,8 @@ class WordBook {
     required this.words,
     this.titleEn = '',
     this.titleMs = '',
+    // P2a: language code for this wordbook. Default 'zh' for all existing HSK data.
+    this.language = 'zh',
   });
 
   final String id;
@@ -313,6 +357,9 @@ class WordBook {
   final List<String> wordIds;
   final DateTime createdAt;
   final List<Word> words;
+  /// ISO language code for this wordbook ('zh', 'ja', …). Default 'zh'.
+  /// All existing HSK JSON (which lacks this field) will parse to 'zh'.
+  final String language;
 
   /// The wordbook title localized for [languageCode]:
   /// - 'en' → [titleEn], falling back to [title].
@@ -356,6 +403,8 @@ class WordBook {
           DateTime.tryParse(_string(json['createdAt'])) ??
           DateTime.now().toUtc(),
       words: List.unmodifiable(words),
+      // P2a: default 'zh' so all existing HSK JSON (which lacks this field) loads unchanged
+      language: _string(json['language'], fallback: 'zh'),
     );
   }
 
@@ -373,6 +422,8 @@ class WordBook {
       'description': description,
       'wordIds': wordIds,
       'createdAt': createdAt.toIso8601String(),
+      // P2a: always serialized so round-trips are lossless
+      'language': language,
       if (includeWords) 'words': [for (final word in words) word.toJson()],
     };
   }
@@ -387,6 +438,9 @@ class QuizQuestion {
     required this.options,
     required this.explanation,
     required this.word,
+    this.promptEn,
+    this.optionsEn,
+    this.explanationEn,
   });
 
   final String id;
@@ -396,6 +450,9 @@ class QuizQuestion {
   final List<String> options;
   final String explanation;
   final Word word;
+  final String? promptEn;
+  final List<String>? optionsEn;
+  final String? explanationEn;
 
   factory QuizQuestion.fromJson(Map<String, dynamic> json) {
     final wordData = json['word'];
@@ -407,6 +464,9 @@ class QuizQuestion {
       options: _stringList(json['options']),
       explanation: _string(json['explanation']),
       word: Word.fromJson(_questionWordJson(json, wordData)),
+      promptEn: json['promptEn'] == null ? null : _string(json['promptEn']),
+      optionsEn: json['optionsEn'] == null ? null : _stringList(json['optionsEn']),
+      explanationEn: json['explanationEn'] == null ? null : _string(json['explanationEn']),
     );
   }
 
@@ -419,6 +479,9 @@ class QuizQuestion {
       'options': options,
       'explanation': explanation,
       'word': word.toJson(),
+      if (promptEn != null) 'promptEn': promptEn,
+      if (optionsEn != null) 'optionsEn': optionsEn,
+      if (explanationEn != null) 'explanationEn': explanationEn,
     };
   }
 }
@@ -446,7 +509,7 @@ class Lesson {
   final List<Word> words;
   final List<QuizQuestion> questions;
 
-  bool get isTrainingPack => section == '训练场';
+  bool get isTrainingPack => section == 'Training Ground' || section == '训练场';
 
   factory Lesson.fromJson(Map<String, dynamic> json) {
     return Lesson(

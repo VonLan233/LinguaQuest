@@ -12,11 +12,16 @@ import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/fallback_back_button.dart';
+import '../../core/widgets/language_wordbook_picker.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/lesson.dart';
 import '../../data/models/study_plan.dart';
 import '../../l10n/generated/app_localizations.dart';
+
+/// The daily-word-count plan and the deadline plan are mutually exclusive: the
+/// learner picks exactly one, and only that mode's input is shown/saved.
+enum _GoalMode { daily, deadline }
 
 class GoalSetupScreen extends ConsumerStatefulWidget {
   const GoalSetupScreen({super.key});
@@ -30,10 +35,10 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
   String _level = 'Intermediate';
   int _dailyGoal = 10;
   DateTime? _deadline;
+  _GoalMode _mode = _GoalMode.daily;
   var _initializedFromState = false;
   late final ProviderSubscription<AppState> _stateSubscription;
 
-  static const targets = ['HSK 1'];
   static const goals = [5, 10, 15, 20];
 
   @override
@@ -57,8 +62,20 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final state = ref.watch(appControllerProvider);
-    final selectedBook = _bookForTarget(state.wordBooks, _target);
-    final selectedLessons = learningLessonsForTarget(state.lessons, _target);
+    final localeCode = Localizations.localeOf(context).languageCode;
+    final currentBook = state.currentWordBook;
+    final currentTarget = currentBook == null
+        ? _target
+        : targetForStudyBookId(currentBook.id);
+    final selectedBook =
+        currentBook ?? _bookForTarget(state.wordBooks, _target);
+    final currentBookName =
+        currentBook?.nameFor(localeCode) ??
+        displayTarget(currentTarget, l10n: l10n);
+    final selectedLessons = learningLessonsForTarget(
+      state.lessons,
+      currentBook?.id ?? currentTarget,
+    );
     final totalWords =
         selectedBook?.totalWords ??
         selectedLessons.fold<int>(
@@ -70,9 +87,9 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
               .where((lesson) => state.completedLessonIds.contains(lesson.id))
               .fold<int>(0, (total, lesson) => total + lesson.words.length)
         : 0;
-    final plannedDailyWords = _deadline == null
-        ? null
-        : _dailyWordsForDeadline(totalWords - completedWords);
+    final plannedDailyWords = (_mode == _GoalMode.deadline && _deadline != null)
+        ? _dailyWordsForDeadline(totalWords - completedWords)
+        : null;
     final dailyWords = plannedDailyWords ?? _dailyGoal;
     return Scaffold(
       appBar: AppBar(
@@ -98,7 +115,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
                   variant: PillVariant.primary,
                 ),
                 AppPill(
-                  label: displayTarget(_target, l10n: l10n),
+                  label: displayTarget(currentTarget, l10n: l10n),
                   icon: AppIcons.flag,
                   variant: PillVariant.neutral,
                 ),
@@ -111,7 +128,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
             ),
             const SizedBox(height: 16),
             _PlanSnapshotLine(
-              target: displayTarget(_target, l10n: l10n),
+              target: displayTarget(currentTarget, l10n: l10n),
               totalWords: totalWords,
               completedWords: completedWords,
               dailyWords: dailyWords,
@@ -119,69 +136,83 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
               onOpenWordbook: () => context.push('/wordbook'),
             ),
             const SizedBox(height: 20),
-            _ChoiceSection<String>(
-              title: l10n.goalSetupTarget,
-              values: targets,
-              selected: _target,
-              labelFor: (v) => displayTarget(v, l10n: l10n),
-              onSelected: (value) => setState(() => _target = value),
+            Text(
+              l10n.goalSetupTarget,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8),
+            _LanguageBookPickerTile(
+              currentLanguage: state.currentLanguage,
+              currentBookName: currentBookName,
+              l10n: l10n,
+              onTap: () => showLanguageWordbookPicker(context),
             ),
             const SizedBox(height: 24),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.goalSetupDailyGoal,
-                  style: Theme.of(context).textTheme.titleMedium,
+            Text(
+              l10n.goalSetupPlanBy,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8),
+            SegmentedButton<_GoalMode>(
+              segments: [
+                ButtonSegment(
+                  value: _GoalMode.daily,
+                  icon: const Icon(AppIcons.today),
+                  label: Text(l10n.goalSetupDailyGoal),
                 ),
-                const SizedBox(height: 8),
-                _ChoiceList<int>(
-                  values: goals,
-                  selected: _dailyGoal,
-                  labelFor: (goal) => '$goal ${l10n.commonWords}',
-                  onSelected: (goal) => setState(() => _dailyGoal = goal),
+                ButtonSegment(
+                  value: _GoalMode.deadline,
+                  icon: const Icon(AppIcons.event),
+                  label: Text(l10n.goalSetupDeadlinePlan),
                 ),
               ],
+              selected: {_mode},
+              showSelectedIcon: false,
+              onSelectionChanged: (selection) =>
+                  setState(() => _mode = selection.first),
             ),
-            const SizedBox(height: 24),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.goalSetupDeadlinePlan,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  _deadline == null
-                      ? l10n.goalSetupDeadlineHint
-                      : '${formatShortDate(_deadline!)} · ${plannedDailyWords ?? _dailyGoal} ${l10n.commonWords}/${l10n.commonDay}',
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: AppSecondaryButton(
-                        onPressed: _pickDeadline,
-                        icon: AppIcons.event,
-                        label: _deadline == null
-                            ? l10n.goalSetupPickDate
-                            : l10n.goalSetupChangeDate,
+            const SizedBox(height: 16),
+            if (_mode == _GoalMode.daily)
+              _ChoiceList<int>(
+                values: goals,
+                selected: _dailyGoal,
+                labelFor: (goal) => '$goal ${l10n.commonWords}',
+                onSelected: (goal) => setState(() => _dailyGoal = goal),
+              )
+            else
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _deadline == null
+                        ? l10n.goalSetupDeadlineHint
+                        : '${formatShortDate(_deadline!)} · ${plannedDailyWords ?? _dailyGoal} ${l10n.commonWords}/${l10n.commonDay}',
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: AppSecondaryButton(
+                          onPressed: _pickDeadline,
+                          icon: AppIcons.event,
+                          label: _deadline == null
+                              ? l10n.goalSetupPickDate
+                              : l10n.goalSetupChangeDate,
+                        ),
                       ),
-                    ),
-                    if (_deadline != null) ...[
-                      const SizedBox(width: 10),
-                      QuestIconButton(
-                        tooltip: l10n.goalSetupClearDate,
-                        onPressed: () => setState(() => _deadline = null),
-                        icon: AppIcons.close,
-                        color: AppTheme.coral,
-                      ),
+                      if (_deadline != null) ...[
+                        const SizedBox(width: 10),
+                        QuestIconButton(
+                          tooltip: l10n.goalSetupClearDate,
+                          onPressed: () => setState(() => _deadline = null),
+                          icon: AppIcons.close,
+                          color: AppTheme.coral,
+                        ),
+                      ],
                     ],
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
             const SizedBox(height: 28),
             AppPrimaryButton(
               onPressed: _save,
@@ -205,6 +236,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
       _level = user.level;
       _dailyGoal = state.studyPlan?.dailyNewTarget ?? user.dailyGoal;
       _deadline = state.studyPlan?.targetFinishDate;
+      _mode = _deadline == null ? _GoalMode.daily : _GoalMode.deadline;
       _initializedFromState = true;
     }
 
@@ -216,13 +248,22 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
   }
 
   Future<void> _save() async {
+    // The two-level picker commits the chosen (language, wordbook) to state via
+    // switchWordBook, so the active wordbook id is the source of truth for the
+    // target exam here — fall back to _target if no wordbook is set yet.
+    final state = ref.read(appControllerProvider);
+    final targetExam = state.currentWordBookId.isEmpty
+        ? _target
+        : targetForStudyBookId(state.currentWordBookId);
+    // Mutually exclusive: only the selected mode is persisted. Daily mode
+    // clears the deadline so it cannot silently override the daily goal.
     final succeeded = await ref
         .read(appControllerProvider.notifier)
         .completeGoalSetup(
-          targetExam: _target,
+          targetExam: targetExam,
           level: _level,
           dailyGoal: _dailyGoal,
-          deadline: _deadline,
+          deadline: _mode == _GoalMode.deadline ? _deadline : null,
         );
     if (!mounted) return;
     if (!succeeded) return;
@@ -285,6 +326,55 @@ DateTime clampDeadlinePickerInitialDate({
   if (selectedDay.isBefore(today)) return today.add(const Duration(days: 30));
   if (selectedDay.isAfter(lastDate)) return lastDate;
   return selectedDay;
+}
+
+class _LanguageBookPickerTile extends StatelessWidget {
+  const _LanguageBookPickerTile({
+    required this.currentLanguage,
+    required this.currentBookName,
+    required this.l10n,
+    required this.onTap,
+  });
+
+  final String currentLanguage;
+  final String currentBookName;
+  final AppLocalizations l10n;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      onTap: onTap,
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AppPill(
+                  label: languageLabel(currentLanguage, l10n),
+                  variant: PillVariant.primary,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  currentBookName,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Icon(
+            AppIcons.chevronRight,
+            size: 20,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _PlanSnapshotLine extends StatelessWidget {
@@ -379,39 +469,6 @@ class _PlanSnapshotLine extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _ChoiceSection<T> extends StatelessWidget {
-  const _ChoiceSection({
-    required this.title,
-    required this.values,
-    required this.selected,
-    required this.onSelected,
-    this.labelFor,
-  });
-
-  final String title;
-  final List<T> values;
-  final T selected;
-  final ValueChanged<T> onSelected;
-  final String Function(T value)? labelFor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(title, style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 8),
-        _ChoiceList<T>(
-          values: values,
-          selected: selected,
-          labelFor: labelFor ?? (value) => value.toString(),
-          onSelected: onSelected,
-        ),
-      ],
     );
   }
 }

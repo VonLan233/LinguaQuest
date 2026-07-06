@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'profile_repository.dart';
+
 import '../models/app_notification.dart';
 import '../models/custom_word.dart';
 import '../models/daily_reward_task.dart';
@@ -16,6 +18,8 @@ import '../models/user_profile.dart';
 import '../lesson_factory.dart';
 import '../remote/api_client.dart';
 import '../wordbook_asset_loader.dart';
+import 'ai_repository.dart';
+import 'analytics_repository.dart';
 import 'auth_repository.dart';
 import 'custom_word_repository.dart';
 import 'learning_repository.dart';
@@ -26,6 +30,63 @@ import 'reward_task_repository.dart';
 import 'review_repository.dart';
 import 'study_plan_repository.dart';
 import 'user_word_repository.dart';
+import '../models/achievement.dart';
+import '../models/ai_feature.dart';
+import '../models/analytics.dart';
+import '../models/forum.dart';
+import '../models/recommendation.dart';
+import '../models/study_spot.dart';
+import 'forum_repository.dart';
+import 'study_spot_repository.dart';
+
+class ApiStudySpotRepository implements StudySpotRepository {
+  ApiStudySpotRepository(this._client);
+
+  final ApiClient _client;
+
+  @override
+  Future<List<StudySpot>> list() async {
+    final response = await _client.dio.get<Map<String, dynamic>>(
+      '/study-spots',
+    );
+    final list = (response.data?['spots'] as List?) ?? [];
+    return list
+        .map((e) => StudySpot.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
+  @override
+  Future<StudySpot> add(StudySpot spot) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/study-spots',
+      data: {
+        'name': spot.name,
+        'latitude': spot.latitude,
+        'longitude': spot.longitude,
+        'studyMinutes': spot.studyMinutes,
+      },
+    );
+    return StudySpot.fromJson(response.data!);
+  }
+
+  @override
+  Future<StudySpot> recordVisit({
+    required double latitude,
+    required double longitude,
+    required String name,
+  }) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/study-spots',
+      data: {'name': name, 'latitude': latitude, 'longitude': longitude},
+    );
+    return StudySpot.fromJson(response.data!);
+  }
+
+  @override
+  Future<void> remove(String id) async {
+    await _client.dio.delete<void>('/study-spots/$id');
+  }
+}
 
 class ApiAuthRepository implements AuthRepository {
   ApiAuthRepository(this._client);
@@ -141,6 +202,15 @@ class ApiAuthRepository implements AuthRepository {
     await prefs.remove(_tokenKey);
   }
 
+  @override
+  Future<void> deleteAccount() async {
+    await _client.dio.delete<void>('/account');
+    _profile = null;
+    _client.setToken(null);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_tokenKey);
+  }
+
   Future<UserProfile> _saveAuthResponse(Map<String, dynamic> data) async {
     final token = data['token'] as String;
     _client.setToken(token);
@@ -202,7 +272,9 @@ class ApiLearningRepository implements LearningRepository {
     final cached = _cache;
     if (cached != null) return cached;
     try {
-      final response = await _client.dio.get<List<dynamic>>('/wordbooks');
+      final response = await _client.dio
+          .get<List<dynamic>>('/wordbooks')
+          .timeout(const Duration(milliseconds: 1200));
       final books = (response.data ?? const <dynamic>[]).whereType<Map>().map((
         item,
       ) {
@@ -213,6 +285,12 @@ class ApiLearningRepository implements LearningRepository {
     } catch (_) {
       return _fallbackLoader.loadWordBooks();
     }
+  }
+
+  @override
+  Future<void> clearOfflineCache() async {
+    _cache = null;
+    _fallbackLoader.clearCache();
   }
 
   @override
@@ -591,8 +669,318 @@ class ApiRewardRepository implements RewardRepository {
   }
 }
 
+class ApiAiRepository implements AiRepository {
+  ApiAiRepository(this._client);
+
+  final ApiClient _client;
+
+  // AI requests hit a remote LLM that can take far longer than the global
+  // 8s receiveTimeout. Without this override they fail as "network error".
+  static const _aiTimeout = Duration(seconds: 60);
+
+  @override
+  Future<Map<String, dynamic>> chat({
+    required String prompt,
+    required String targetLanguage,
+    String? targetWord,
+  }) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/ai/chat',
+      data: {
+        'prompt': prompt,
+        'targetWord': targetWord,
+        'targetLanguage': targetLanguage,
+      },
+      options: Options(receiveTimeout: _aiTimeout),
+    );
+    return response.data!['data'] as Map<String, dynamic>;
+  }
+
+  @override
+  Future<Map<String, dynamic>> analyzeStatement({
+    required String prompt,
+    required String targetLanguage,
+  }) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/ai/sentence-analysis',
+      data: {'prompt': prompt, 'targetLanguage': targetLanguage},
+      options: Options(receiveTimeout: _aiTimeout),
+    );
+    return response.data!['data'] as Map<String, dynamic>;
+  }
+
+  @override
+  Future<Map<String, dynamic>> generateCloze({
+    required String prompt,
+    required String targetLanguage,
+    String? targetWord,
+  }) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/ai/cloze',
+      data: {
+        'prompt': prompt,
+        'targetWord': targetWord,
+        'targetLanguage': targetLanguage,
+      },
+      options: Options(receiveTimeout: _aiTimeout),
+    );
+    return response.data!['data'] as Map<String, dynamic>;
+  }
+
+  @override
+  Future<Map<String, dynamic>> generateConfusion({
+    required String prompt,
+    required String targetLanguage,
+    String? targetWord,
+  }) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/ai/confusion',
+      data: {
+        'prompt': prompt,
+        'targetWord': targetWord,
+        'targetLanguage': targetLanguage,
+      },
+      options: Options(receiveTimeout: _aiTimeout),
+    );
+    return response.data!['data'] as Map<String, dynamic>;
+  }
+
+  @override
+  Future<Map<String, dynamic>> generateSentences({
+    required String prompt,
+    required String targetLanguage,
+    String? targetWord,
+  }) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/ai/sentence',
+      data: {
+        'prompt': prompt,
+        'targetWord': targetWord,
+        'targetLanguage': targetLanguage,
+      },
+      options: Options(receiveTimeout: _aiTimeout),
+    );
+    return response.data!['data'] as Map<String, dynamic>;
+  }
+
+  @override
+  Future<Map<String, dynamic>> explainParagraph({
+    required String paragraph,
+    required String language,
+    String? level,
+  }) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/ai/reading-explain',
+      data: {'prompt': paragraph, 'targetLanguage': language},
+      options: Options(receiveTimeout: _aiTimeout),
+    );
+    return (response.data?['data'] as Map<String, dynamic>?) ?? {};
+  }
+
+  @override
+  Future<List<AiHistoryEntry>> listHistory() async {
+    final response = await _client.dio.get<Map<String, dynamic>>('/ai/history');
+    final items = response.data!['history'] as List<dynamic>? ?? const [];
+    return items
+        .whereType<Map>()
+        .map((item) => AiHistoryEntry.fromJson(Map<String, dynamic>.from(item)))
+        .toList();
+  }
+
+  @override
+  Future<void> deleteHistory(String id) async {
+    await _client.dio.delete<void>('/ai/history/$id');
+  }
+
+  @override
+  Future<Map<String, dynamic>> reviewWriting({
+    required String essay,
+    required String targetLanguage,
+    String? examType,
+    double? targetScore,
+  }) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/ai/writing-review',
+      data: {
+        'prompt': essay,
+        'examType': ?examType,
+        'targetScore': ?targetScore,
+        'targetLanguage': targetLanguage,
+      },
+      options: Options(receiveTimeout: _aiTimeout),
+    );
+    return (response.data?['data'] as Map<String, dynamic>?) ?? {};
+  }
+}
+
+class ApiForumRepository implements ForumRepository {
+  ApiForumRepository(this._client);
+
+  final ApiClient _client;
+
+  @override
+  Future<List<ForumPost>> listPosts() async {
+    final response = await _client.dio.get<Map<String, dynamic>>(
+      '/forum/posts',
+    );
+    final posts = response.data!['posts'] as List<dynamic>? ?? const [];
+    return posts
+        .whereType<Map>()
+        .map((item) => ForumPost.fromJson(Map<String, dynamic>.from(item)))
+        .toList();
+  }
+
+  @override
+  Future<ForumPost> getPost(String id) async {
+    final response = await _client.dio.get<Map<String, dynamic>>(
+      '/forum/posts/$id',
+    );
+    return ForumPost.fromJson(response.data!['post'] as Map<String, dynamic>);
+  }
+
+  @override
+  Future<ForumPost> createPost({
+    required String title,
+    required String body,
+    required String tag,
+  }) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/forum/posts',
+      data: {'title': title, 'body': body, 'tag': tag},
+    );
+    return ForumPost.fromJson(response.data!['post'] as Map<String, dynamic>);
+  }
+
+  @override
+  Future<ForumComment> createComment({
+    required String postId,
+    required String body,
+  }) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/forum/posts/$postId/comments',
+      data: {'body': body},
+    );
+    return ForumComment.fromJson(
+      response.data!['comment'] as Map<String, dynamic>,
+    );
+  }
+
+  @override
+  Future<List<ForumComment>> listComments(String postId) async {
+    final response = await _client.dio.get<Map<String, dynamic>>(
+      '/forum/posts/$postId',
+    );
+    final comments = response.data!['comments'] as List<dynamic>? ?? const [];
+    return comments
+        .whereType<Map>()
+        .map((item) => ForumComment.fromJson(Map<String, dynamic>.from(item)))
+        .toList();
+  }
+
+  @override
+  Future<bool> toggleLike(String postId) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/forum/posts/$postId/like',
+    );
+    return response.data!['liked'] as bool? ?? false;
+  }
+
+  @override
+  Future<bool> toggleFavorite(String postId) async {
+    final response = await _client.dio.post<Map<String, dynamic>>(
+      '/forum/posts/$postId/favorite',
+    );
+    return response.data!['favorited'] as bool? ?? false;
+  }
+
+  @override
+  Future<void> reportPost(
+    String postId,
+    String reason, {
+    String? detail,
+  }) async {
+    await _client.dio.post<Map<String, dynamic>>(
+      '/reports',
+      data: {
+        'contentType': 'post',
+        'contentId': postId,
+        'reason': reason,
+        'detail': ?detail,
+      },
+    );
+  }
+
+  @override
+  Future<List<ForumPost>> listFavoritedPosts() async {
+    final response = await _client.dio.get<Map<String, dynamic>>(
+      '/forum/favorites',
+    );
+    final posts = response.data!['posts'] as List<dynamic>? ?? const [];
+    return posts
+        .whereType<Map>()
+        .map((item) => ForumPost.fromJson(Map<String, dynamic>.from(item)))
+        .toList();
+  }
+}
+
+class ApiAnalyticsRepository implements AnalyticsRepository {
+  ApiAnalyticsRepository(this._client);
+
+  final ApiClient _client;
+
+  @override
+  Future<LearningAnalytics> getAnalytics(String uid) async {
+    final response = await _client.dio.get<Map<String, dynamic>>('/analytics');
+    return LearningAnalytics.fromJson(response.data!);
+  }
+
+  @override
+  Future<List<Achievement>> getAchievements(String uid) async {
+    final response = await _client.dio.get<List<dynamic>>('/achievements');
+    return (response.data ?? const <dynamic>[])
+        .whereType<Map<String, dynamic>>()
+        .map(Achievement.fromJson)
+        .toList();
+  }
+
+  @override
+  Future<LeaderboardResult> getLeaderboard({
+    required String dimension,
+    required String uid,
+  }) async {
+    final response = await _client.dio.get<Map<String, dynamic>>(
+      '/leaderboard',
+      queryParameters: {'dimension': dimension},
+    );
+    return LeaderboardResult.fromJson(response.data!);
+  }
+
+  @override
+  Future<List<Recommendation>> getRecommendations(String uid) async {
+    final response = await _client.dio.get<List<dynamic>>('/recommendations');
+    return (response.data ?? const <dynamic>[])
+        .whereType<Map>()
+        .map((e) => Recommendation.fromJson(Map<String, dynamic>.from(e)))
+        .toList();
+  }
+}
+
 String _localDateKey(DateTime date) {
   final month = date.month.toString().padLeft(2, '0');
   final day = date.day.toString().padLeft(2, '0');
   return '${date.year}-$month-$day';
+}
+
+class ApiProfileRepository implements ProfileRepository {
+  ApiProfileRepository(this._client);
+
+  final ApiClient _client;
+
+  @override
+  Future<Map<String, dynamic>> getPublicProfile(String userId) async {
+    final response = await _client.dio.get<Map<String, dynamic>>(
+      '/users/$userId/profile',
+    );
+    return response.data ?? {};
+  }
 }

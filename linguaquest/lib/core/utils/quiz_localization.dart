@@ -13,6 +13,11 @@ bool quizOptionsAreMeanings(QuizQuestionType type) {
     case QuizQuestionType.chineseChoice:
     case QuizQuestionType.listeningWordChoice:
     case QuizQuestionType.spelling:
+    // 新题型：选项为英文单词本身，不需要释义本地化
+    case QuizQuestionType.sentenceCloze:
+    case QuizQuestionType.confusableChoice:
+    case QuizQuestionType.collocationChoice:
+    case QuizQuestionType.derivativeChoice:
       return false;
   }
 }
@@ -40,7 +45,7 @@ Map<String, String> buildMeaningTranslations(
 /// [languageCode] using [translations]; returns the original when no mapping
 /// exists so nothing is ever dropped.
 String localizeMeaning(String value, Map<String, String> translations) {
-  return translations[value.trim()] ?? value;
+  return translations[value.trim()] ?? value.trim();
 }
 
 /// Returns a copy of [question] with its `options` and `answer` resolved to

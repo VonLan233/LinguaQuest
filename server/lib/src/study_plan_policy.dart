@@ -1,9 +1,38 @@
 const allowedStudyPlanStatuses = {'active', 'paused'};
+const allowedLanguages = {'zh', 'ja', 'en', 'es', 'fr', 'ms'};
 const allowedWordBookIds = {
+  'hsk1',
+  'hsk2',
+  'hsk3',
+  'hsk4',
+  'hsk5',
+  'hsk6',
+  'jlpt_n5',
+  'jlpt_n4',
+  'jlpt_n3',
+  'jlpt_n2',
+  'jlpt_n1',
+  'en_basic',
+  'es_basic',
+  'fr_basic',
+  'ms_basic',
+};
+
+// Wordbook ids from before the HSK pivot. Existing study plans (and any older
+// client) may still send these; map them to the only shipping HSK book so they
+// keep validating instead of failing with "invalid wordBookId".
+const _legacyWordBookIds = {
   'beginner',
   'ielts',
   'toefl',
   'gre',
+  'cet4',
+  'cet6',
+  'kaoyan',
+  'daily-english',
+  'exam-core',
+  'business-english',
+  'travel-english',
 };
 
 class StudyPlanValidationResult {
@@ -86,18 +115,8 @@ StudyPlanValidationResult validateStudyPlanPayload(
 String normalizeStudyPlanWordBookId(Object? value) {
   final normalized = (value?.toString() ?? '').trim().toLowerCase();
   if (allowedWordBookIds.contains(normalized)) return normalized;
-  if (normalized == 'daily-english') return 'beginner';
-  if (normalized == 'exam-core') return 'ielts';
-  // Backward compatibility: silently map deprecated wordbooks to beginner
-  if (const {
-    'business-english',
-    'travel-english',
-    'cet4',
-    'cet6',
-    'kaoyan',
-  }.contains(normalized)) {
-    return 'beginner';
-  }
+  // Pre-HSK wordbooks all collapse to the only shipping HSK book.
+  if (_legacyWordBookIds.contains(normalized)) return 'hsk1';
   return normalized;
 }
 

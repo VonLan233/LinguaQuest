@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/app_icons.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
+import '../../core/theme/app_icons.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/fallback_back_button.dart';
@@ -69,10 +72,13 @@ class AboutScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: AppTokens.s8),
-                    Text(
-                      l10n.aboutVersion,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: Colors.white,
+                    FutureBuilder<PackageInfo>(
+                      future: PackageInfo.fromPlatform(),
+                      builder: (c, snap) => Text(
+                        l10n.aboutVersion(snap.data?.version ?? ''),
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ],
@@ -119,6 +125,89 @@ class AboutScreen extends StatelessWidget {
                       ],
                     ),
                   ],
+                ],
+              ),
+            ),
+            const SizedBox(height: AppTokens.s16),
+            // Company locator map card
+            AppCard(
+              padding: EdgeInsets.zero,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(AppTokens.s16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.aboutCompanyName,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: AppTokens.s4),
+                        Text(
+                          l10n.aboutCompanyAddress,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        const SizedBox(height: AppTokens.s4),
+                        Text(
+                          l10n.aboutCompanyDescription,
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                  ),
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(AppTokens.radiusCard),
+                      bottomRight: Radius.circular(AppTokens.radiusCard),
+                    ),
+                    child: SizedBox(
+                      height: 200,
+                      child: FlutterMap(
+                        options: const MapOptions(
+                          initialCenter: LatLng(2.8316, 101.7070),
+                          initialZoom: 14,
+                          interactionOptions: InteractionOptions(
+                            flags: InteractiveFlag.none,
+                          ),
+                        ),
+                        children: [
+                          TileLayer(
+                            urlTemplate:
+                                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                            userAgentPackageName: 'com.example.linguaquest',
+                          ),
+                          MarkerLayer(
+                            markers: [
+                              Marker(
+                                point: const LatLng(2.8316, 101.7070),
+                                width: 40,
+                                height: 40,
+                                child: Icon(
+                                  Icons.place,
+                                  key: const ValueKey('company-pin'),
+                                  color: AppTokens.coral,
+                                  size: 36,
+                                ),
+                              ),
+                            ],
+                          ),
+                          RichAttributionWidget(
+                            attributions: [
+                              TextSourceAttribution(
+                                '© OpenStreetMap contributors',
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

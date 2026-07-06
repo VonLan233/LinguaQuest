@@ -1,20 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:linguaquest/core/theme/app_icons.dart';
 
+import '../../core/state/app_controller.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/section_header.dart';
 import '../../l10n/generated/app_localizations.dart';
 
-class QuestScreen extends StatelessWidget {
+class QuestScreen extends ConsumerWidget {
   const QuestScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final state = ref.watch(appControllerProvider);
+    final unlockedCount = state.achievements.where((a) => a.unlocked).length;
+    final totalAchievements = state.achievements.length;
+    final achievementValue = totalAchievements > 0
+        ? '$unlockedCount / $totalAchievements'
+        : l10n.questAchievementsValue;
+
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 88),
       children: [
@@ -40,7 +49,8 @@ class QuestScreen extends StatelessWidget {
           icon: AppIcons.workspacePremium,
           title: l10n.questAchievements,
           body: l10n.questAchievementsBody,
-          value: l10n.questAchievementsValue,
+          value: achievementValue,
+          route: '/achievements',
         ),
         const SizedBox(height: 10),
         _QuestRow(
@@ -57,14 +67,6 @@ class QuestScreen extends StatelessWidget {
           body: l10n.questAnalyticsBody,
           value: l10n.questTrend,
           route: '/progress',
-        ),
-        const SizedBox(height: 10),
-        _QuestRow(
-          icon: AppIcons.groups,
-          title: l10n.questClassMode,
-          body: l10n.questClassModeBody,
-          value: l10n.questClassCode,
-          route: '/class-mode',
         ),
         const SizedBox(height: 10),
         _QuestRow(

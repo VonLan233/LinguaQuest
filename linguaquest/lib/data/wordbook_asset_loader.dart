@@ -10,6 +10,23 @@ class WordBookAssetLoader {
 
   static const _bookIds = [
     'hsk1',
+    'hsk2',
+    'hsk3',
+    'hsk4',
+    'hsk5',
+    'hsk6',
+    'cet4',
+    'cet6',
+    'kaoyan',
+    'jlpt_n5',
+    'jlpt_n4',
+    'jlpt_n3',
+    'jlpt_n2',
+    'jlpt_n1',
+    'en_basic',
+    'es_basic',
+    'fr_basic',
+    'ms_basic',
   ];
 
   final AssetBundle _bundle;
@@ -33,6 +50,12 @@ class WordBookAssetLoader {
     }();
 
     return _loadFuture!;
+  }
+
+  /// Drops the memoized load future so the next [loadWordBooks] re-reads the
+  /// bundled assets from disk (used by the manual "Refresh content" action).
+  void clearCache() {
+    _loadFuture = null;
   }
 
   Future<String> _loadAssetString(String bookId) async {

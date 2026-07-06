@@ -19,7 +19,7 @@ void main() {
       baseWord(id).copyWith(nextReviewAt: now.subtract(const Duration(days: 1)));
 
   CustomWord reviewed(String id) =>
-      baseWord(id).copyWith(nextReviewAt: now.add(const Duration(days: 1)));
+      baseWord(id).copyWith(nextReviewAt: now.add(const Duration(days: 365)));
 
   StudyPlan plan({required int reviewLimit, String status = 'active'}) =>
       StudyPlan(
