@@ -1438,6 +1438,30 @@ abstract class AppLocalizations {
   /// **'Something went wrong. Please try again.'**
   String get publicProfileLoadFailedMessage;
 
+  /// No description provided for @profileEditNicknameTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit nickname'**
+  String get profileEditNicknameTitle;
+
+  /// No description provided for @profileEditNicknameSignInRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please sign in before editing your nickname.'**
+  String get profileEditNicknameSignInRequired;
+
+  /// No description provided for @profileEditNicknameEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nickname cannot be empty.'**
+  String get profileEditNicknameEmpty;
+
+  /// No description provided for @profileEditNicknameSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not update nickname.'**
+  String get profileEditNicknameSaveFailed;
+
   /// No description provided for @profileDashboard.
   ///
   /// In en, this message translates to:
@@ -3886,7 +3910,7 @@ abstract class AppLocalizations {
   /// No description provided for @pickerChooseLanguage.
   ///
   /// In en, this message translates to:
-  /// **'Choose Language'**
+  /// **'Language'**
   String get pickerChooseLanguage;
 
   /// No description provided for @pickerChooseWordbook.

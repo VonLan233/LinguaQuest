@@ -13,7 +13,6 @@ import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/language_wordbook_picker.dart';
 import '../../core/widgets/learning_badges.dart';
-import '../../core/widgets/mascot_empty_state.dart';
 import '../../core/widgets/mascot_image.dart';
 import '../../core/widgets/section_header.dart';
 import '../../core/widgets/stat_tile.dart';
@@ -240,21 +239,30 @@ class HomeScreen extends ConsumerWidget {
             children: [
               SectionHeader(
                 title: l10n.homeWeakWords,
-                subtitle: state.weakWords.isEmpty
-                    ? l10n.homeNoWeakWords
-                    : l10n.homeWeakWordsReview,
+                subtitle: state.weakWords.isEmpty ? null : l10n.homeWeakWordsReview,
                 trailing: TextButton(
                   onPressed: () => context.push('/study/review'),
                   child: Text(l10n.commonReview),
                 ),
               ),
               if (state.weakWords.isEmpty)
-                MascotEmptyState(
-                  title: l10n.homeNoWeakWords,
-                  message: l10n.homeWeakWordsEmptyHint,
-                  action: AppSecondaryButton(
-                    label: l10n.commonReview,
-                    onPressed: () => context.push('/study/review'),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppTokens.s24,
+                      vertical: AppTokens.s20,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const MascotImage(size: 96),
+                        const SizedBox(height: AppTokens.s20),
+                        AppSecondaryButton(
+                          label: l10n.commonReview,
+                          onPressed: () => context.push('/study/review'),
+                        ),
+                      ],
+                    ),
                   ),
                 )
               else ...[

@@ -739,6 +739,20 @@ class AppLocalizationsMs extends AppLocalizations {
       'Sesuatu tidak kena. Sila cuba lagi.';
 
   @override
+  String get profileEditNicknameTitle => 'Edit nama panggilan';
+
+  @override
+  String get profileEditNicknameSignInRequired =>
+      'Sila log masuk sebelum mengedit nama panggilan.';
+
+  @override
+  String get profileEditNicknameEmpty => 'Nama panggilan tidak boleh kosong.';
+
+  @override
+  String get profileEditNicknameSaveFailed =>
+      'Tidak dapat mengemas kini nama panggilan.';
+
+  @override
   String get profileDashboard => 'Papan Pemuka Pembelajaran';
 
   @override

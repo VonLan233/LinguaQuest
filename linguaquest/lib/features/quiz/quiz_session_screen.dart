@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/services/answer_sound_service.dart';
 import '../../core/state/app_controller.dart';
-import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/utils/pinyin.dart';
 import '../../core/utils/quiz_localization.dart';
@@ -61,7 +60,6 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
   int _wrongCount = 0;
   String? _selected;
   bool _checked = false;
-  bool _lastCorrect = false;
   bool _isSubmitting = false;
   bool _locked = false;
 
@@ -150,39 +148,32 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
                   ],
                 ),
                 const SizedBox(height: 14),
+                // The question is centered in the available space so it stays
+                // readable; the options are anchored to the bottom of the
+                // screen for easy reach.
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        QuizPromptPanel(
-                          question: question,
-                          language: currentLanguage,
-                        ),
-                        const SizedBox(height: 18),
-                        _QuestionInput(
-                          question: question,
-                          selected: _selected,
-                          locked: _locked,
-                          wrongTries: _wrongTries,
-                          controller: _textController,
-                          onSelected: (value) =>
-                              _judge(lesson, question, value),
-                          onInputChanged: () => setState(() {}),
-                        ),
-                        if (_checked) ...[
-                          const SizedBox(height: 14),
-                          _FeedbackPanel(
-                            isCorrect: _lastCorrect,
-                            revealAnswer: _locked,
-                            question: question,
-                          ),
-                        ],
-                      ],
+                  child: Center(
+                    child: SingleChildScrollView(
+                      child: QuizPromptPanel(
+                        question: question,
+                        language: currentLanguage,
+                      ),
                     ),
                   ),
                 ),
-                if (question.type == QuizQuestionType.spelling)
+                // Correctness is conveyed by option colors and answer sound,
+                // keeping the prompt and options visible on compact screens.
+                _QuestionInput(
+                  question: question,
+                  selected: _selected,
+                  locked: _locked,
+                  wrongTries: _wrongTries,
+                  controller: _textController,
+                  onSelected: (value) => _judge(lesson, question, value),
+                  onInputChanged: () => setState(() {}),
+                ),
+                if (question.type == QuizQuestionType.spelling) ...[
+                  const SizedBox(height: 12),
                   AppPrimaryButton(
                     label: l10n.quizCheck,
                     icon: AppIcons.check,
@@ -191,6 +182,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
                         ? () => _submitSpelling(lesson, question)
                         : null,
                   ),
+                ],
               ],
             ),
           ),
@@ -305,7 +297,6 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
       _recordAttempt(question, isCorrect);
       _selected = option;
       _checked = true;
-      _lastCorrect = isCorrect;
       if (isCorrect) {
         _locked = true;
       } else if (_wrongTries.add(option)) {
@@ -343,7 +334,6 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
     setState(() {
       _recordAttempt(question, isCorrect);
       _checked = true;
-      _lastCorrect = isCorrect;
       if (isCorrect) {
         _locked = true;
       } else {
@@ -408,7 +398,6 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen>
       _index++;
       _selected = null;
       _checked = false;
-      _lastCorrect = false;
       _locked = false;
       _wrongCount = 0;
       _wrongTries.clear();
@@ -427,13 +416,34 @@ class QuizPromptPanel extends StatelessWidget {
   final QuizQuestion question;
   final String language;
 
+  /// True for question types whose answer IS the target word/character, so
+  /// showing the cue badge (the character) would leak the answer — e.g. the
+  /// Campus Sprint "Select the Chinese word for: …" (chineseChoice).
+  bool get _cueRevealsAnswer {
+    switch (question.type) {
+      case QuizQuestionType.chineseChoice:
+      case QuizQuestionType.listeningWordChoice:
+      case QuizQuestionType.sentenceCloze:
+      case QuizQuestionType.confusableChoice:
+      case QuizQuestionType.collocationChoice:
+      case QuizQuestionType.derivativeChoice:
+        return true;
+      default:
+        return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return AppCard(
       child: Column(
         children: [
-          ImageCueBadge(cue: question.word.imageCue, size: 104),
+          ImageCueBadge(
+            cue: question.word.imageCue,
+            size: 104,
+            icon: _cueRevealsAnswer ? AppIcons.help : null,
+          ),
           const SizedBox(height: 14),
           Text(
             question.prompt,
@@ -558,98 +568,5 @@ class _QuestionInput extends StatelessWidget {
     if (locked && _isCorrectOption(option)) return ChoiceState.correct;
     if (wrongTries.contains(option)) return ChoiceState.wrong;
     return ChoiceState.idle;
-  }
-}
-
-class _FeedbackPanel extends StatelessWidget {
-  const _FeedbackPanel({
-    required this.isCorrect,
-    required this.revealAnswer,
-    required this.question,
-  });
-
-  final bool isCorrect;
-
-  /// When false (wrong attempt) the panel only shows a retry hint and hides the
-  /// explanation, correct word and example so retrying stays meaningful.
-  final bool revealAnswer;
-  final QuizQuestion question;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
-    final color = isCorrect
-        ? (theme.brightness == Brightness.dark
-              ? theme.colorScheme.primary
-              : AppTheme.success)
-        : theme.colorScheme.error;
-    return AppCard(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.12),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              isCorrect ? AppIcons.check : AppIcons.close,
-              color: color,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Label goes purely through l10n; the (possibly other-language)
-                // explanation is kept in its own run below so the fixed prefix
-                // and the content are never concatenated into mixed-language text.
-                Text(
-                  isCorrect
-                      ? l10n.quizCorrect
-                      : revealAnswer
-                      ? l10n.quizWrong
-                      : '${l10n.quizWrong}${l10n.quizRetry}',
-                  style: TextStyle(color: color),
-                ),
-                if (revealAnswer) ...[
-                  if (question.explanation.isNotEmpty) ...[
-                    const SizedBox(height: 8),
-                    Text(
-                      question.explanation,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                  const SizedBox(height: 8),
-                  Text(
-                    '${l10n.quizReinforce}${question.word.word} · ${question.word.primaryDefinitionFor(Localizations.localeOf(context).languageCode)}',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                  if (question.word.exampleSentence.isNotEmpty) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      question.word.exampleSentence,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        height: 1.35,
-                      ),
-                    ),
-                  ],
-                ],
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }

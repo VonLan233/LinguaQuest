@@ -72,8 +72,8 @@ class ImageCueBadge extends StatelessWidget {
       ),
       alignment: Alignment.center,
       child: icon != null
-          ? Icon(icon, size: size * 0.5)
-          : Text(cue, style: TextStyle(fontSize: size * 0.48)),
+          ? Icon(icon, size: size * 0.5, color: theme.colorScheme.onSurface)
+          : Text(cue, style: TextStyle(fontSize: size * 0.48, color: theme.colorScheme.onSurface)),
     );
   }
 }

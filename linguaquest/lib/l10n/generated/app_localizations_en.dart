@@ -738,6 +738,19 @@ class AppLocalizationsEn extends AppLocalizations {
       'Something went wrong. Please try again.';
 
   @override
+  String get profileEditNicknameTitle => 'Edit nickname';
+
+  @override
+  String get profileEditNicknameSignInRequired =>
+      'Please sign in before editing your nickname.';
+
+  @override
+  String get profileEditNicknameEmpty => 'Nickname cannot be empty.';
+
+  @override
+  String get profileEditNicknameSaveFailed => 'Could not update nickname.';
+
+  @override
   String get profileDashboard => 'Learning Dashboard';
 
   @override
@@ -2143,7 +2156,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get wordbookSwitchFailed => 'Unable to switch wordbook';
 
   @override
-  String get pickerChooseLanguage => 'Choose Language';
+  String get pickerChooseLanguage => 'Language';
 
   @override
   String get pickerChooseWordbook => 'Choose Wordbook';

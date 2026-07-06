@@ -93,4 +93,55 @@ void main() {
       // (We confirm 'HSK Level 2' is present; the raw name check is implicit.)
     },
   );
+
+  testWidgets(
+    'Language row uses a short title and wraps long language/book values without overflow',
+    (tester) async {
+      tester.view.physicalSize = const Size(393, 1200);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      final overflowErrors = <FlutterErrorDetails>[];
+      final originalHandler = FlutterError.onError;
+      FlutterError.onError = (details) {
+        if (details.exceptionAsString().contains('overflowed')) {
+          overflowErrors.add(details);
+        } else {
+          originalHandler?.call(details);
+        }
+      };
+      addTearDown(() => FlutterError.onError = originalHandler);
+
+      final book = _book(
+        id: 'very-long-book',
+        title: 'Very Long Book',
+        titleEn: 'A Very Long Campus Spanish Wordbook Name That Should Wrap',
+      );
+      final state = AppState.initial().copyWith(
+        isBootstrapped: true,
+        wordBooks: [book],
+        currentWordBookId: book.id,
+        currentLanguage: 'es',
+      );
+
+      await tester.pumpWidget(_pumpProfileScreen(state));
+      await tester.pump();
+
+      expect(find.text('Language'), findsOneWidget);
+      expect(find.text('Choose Language'), findsNothing);
+      expect(find.text('Spanish (Español)'), findsOneWidget);
+      expect(
+        find.text('A Very Long Campus Spanish Wordbook Name That Should Wrap'),
+        findsWidgets,
+      );
+      expect(
+        overflowErrors,
+        isEmpty,
+        reason:
+            'Profile Language row overflowed on a 393 px viewport: '
+            '${overflowErrors.map((e) => e.exceptionAsString()).join(', ')}',
+      );
+    },
+  );
 }

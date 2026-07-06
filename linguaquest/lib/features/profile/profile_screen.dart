@@ -101,8 +101,9 @@ class ProfileScreen extends ConsumerWidget {
             _SettingsItem(
               icon: AppIcons.language,
               title: l10n.pickerChooseLanguage,
-              value:
-                  '${languageLabel(state.currentLanguage, l10n)} · ${state.currentWordBook?.nameFor(localeCode) ?? state.currentWordBookId}',
+              value: languageLabel(state.currentLanguage, l10n),
+              valueSubtitle:
+                  state.currentWordBook?.nameFor(localeCode) ?? state.currentWordBookId,
               onTap: () => context.push('/language-map'),
             ),
             _SettingsItem(
@@ -400,12 +401,14 @@ class _SettingsItem extends StatelessWidget {
     required this.icon,
     required this.title,
     this.value,
+    this.valueSubtitle,
     required this.onTap,
   });
 
   final IconData icon;
   final String title;
   final String? value;
+  final String? valueSubtitle;
   final VoidCallback onTap;
 
   @override
@@ -426,14 +429,48 @@ class _SettingsItem extends StatelessWidget {
             children: [
               Icon(icon, color: theme.colorScheme.primary, size: 22),
               const SizedBox(width: AppTokens.s16),
-              Expanded(child: Text(title, style: theme.textTheme.bodyMedium)),
-              if (value != null)
-                Text(
-                  value!,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
+              Expanded(
+                flex: value == null ? 1 : 2,
+                child: Text(
+                  title,
+                  style: theme.textTheme.bodyMedium,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              if (value != null) ...[
+                const SizedBox(width: AppTokens.s8),
+                Flexible(
+                  flex: 3,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        value!,
+                        textAlign: TextAlign.right,
+                        maxLines: valueSubtitle == null ? 1 : 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                      if (valueSubtitle != null && valueSubtitle!.isNotEmpty) ...[
+                        const SizedBox(height: AppTokens.s2),
+                        Text(
+                          valueSubtitle!,
+                          textAlign: TextAlign.right,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
+              ],
               const SizedBox(width: AppTokens.s4),
               Icon(
                 AppIcons.chevronRight,

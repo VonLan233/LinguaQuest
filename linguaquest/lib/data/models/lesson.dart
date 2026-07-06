@@ -509,7 +509,7 @@ class Lesson {
   final List<Word> words;
   final List<QuizQuestion> questions;
 
-  bool get isTrainingPack => section == '训练场';
+  bool get isTrainingPack => section == 'Training Ground' || section == '训练场';
 
   factory Lesson.fromJson(Map<String, dynamic> json) {
     return Lesson(

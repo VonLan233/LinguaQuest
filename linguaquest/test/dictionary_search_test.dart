@@ -21,7 +21,7 @@ void main() {
         expect(results, hasLength(1));
         expect(results.single.word.id, 'w1');
         expect(results.single.book.id, 'current');
-        expect(results.single.book.title, '当前词书');
+        expect(results.single.book.title, 'Current wordbook');
         expect(results.single.inCurrentWordBook, isTrue);
       },
     );
@@ -59,22 +59,64 @@ void main() {
       expect(results.single.book.id, 'b');
     });
 
+    test('search result system labels stay English for the English UI', () {
+      final word = _word(id: 'hola', text: 'hola', meaning: 'hello');
+      final book = _wordBook(id: 'es_basic', words: [word]);
+
+      final results = searchDictionaryWords(
+        wordBooks: [book],
+        currentWordBookId: book.id,
+        scope: DictionarySearchScope.currentWordBook,
+        query: 'hola',
+      );
+
+      expect(
+        dictionaryScopeLabel(DictionarySearchScope.currentWordBook),
+        'Current wordbook',
+      );
+      expect(
+        dictionaryScopeLabel(DictionarySearchScope.allWordBooks),
+        'Full library',
+      );
+      expect(results.single.matchedBy, 'Word / phrase');
+      expect(
+        [
+          dictionaryScopeLabel(DictionarySearchScope.currentWordBook),
+          dictionaryScopeLabel(DictionarySearchScope.allWordBooks),
+          results.single.matchedBy,
+        ].join(' '),
+        isNot(contains(RegExp(r'[\u3400-\u9fff]'))),
+      );
+    });
+
     test('custom word search ranks exact and prefix matches first', () {
       final now = DateTime(2026, 1, 1);
       final results = searchCustomWords(
         query: 'app',
         customWords: [
-          _customWord(id: 'note', text: 'banana', meaning: 'app note', now: now),
-          _customWord(id: 'prefix', text: 'application', meaning: '应用', now: now),
+          _customWord(
+            id: 'note',
+            text: 'banana',
+            meaning: 'app note',
+            now: now,
+          ),
+          _customWord(
+            id: 'prefix',
+            text: 'application',
+            meaning: '应用',
+            now: now,
+          ),
           _customWord(id: 'exact', text: 'app', meaning: '应用程序', now: now),
           _customWord(id: 'middle', text: 'snapple', meaning: '饮料', now: now),
         ],
       );
 
-      expect(
-        results.map((result) => result.word.id),
-        ['exact', 'prefix', 'middle', 'note'],
-      );
+      expect(results.map((result) => result.word.id), [
+        'exact',
+        'prefix',
+        'middle',
+        'note',
+      ]);
     });
 
     // -----------------------------------------------------------------------
@@ -121,7 +163,7 @@ void main() {
 
       expect(results, hasLength(1));
       expect(results.single.word.id, 'nihongo');
-      expect(results.single.matchedBy, 'かな');
+      expect(results.single.matchedBy, 'Kana');
     });
 
     test('P2f: Japanese word is found by romaji (full)', () {
@@ -143,7 +185,7 @@ void main() {
 
       expect(results, hasLength(1));
       expect(results.single.word.id, 'nihongo');
-      expect(results.single.matchedBy, 'ローマ字');
+      expect(results.single.matchedBy, 'Romaji');
     });
 
     test('P2f: Japanese word is found by partial romaji prefix', () {
@@ -200,7 +242,7 @@ void main() {
       );
 
       expect(results.first.word.id, 'ai');
-      expect(results.first.matchedBy, '汉字拼音精确');
+      expect(results.first.matchedBy, 'Exact pinyin');
     });
 
     test('P-pinyin-exact: 精确拼音 ai 置顶于子串拼音（爱 在 太 之前）', () {
@@ -217,9 +259,9 @@ void main() {
       );
 
       expect(results.first.word.id, 'ai');
-      expect(results.first.matchedBy, '汉字拼音精确');
+      expect(results.first.matchedBy, 'Exact pinyin');
       final taiResult = results.firstWhere((r) => r.word.id == 'tai');
-      expect(taiResult.matchedBy, '汉字拼音'); // 子串
+      expect(taiResult.matchedBy, 'Pinyin'); // 子串
     });
   });
 }

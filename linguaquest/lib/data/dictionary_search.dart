@@ -3,6 +3,15 @@ import 'models/lesson.dart';
 import '../core/utils/pinyin.dart';
 
 final _whitespaceRegExp = RegExp(r'\s+');
+const _labelWordPhrase = 'Word / phrase';
+const _labelPinyin = 'Pinyin';
+const _labelExactPinyin = 'Exact pinyin';
+const _labelKana = 'Kana';
+const _labelRomaji = 'Romaji';
+const _labelChineseMeaning = 'Chinese meaning';
+const _labelEnglishMeaning = 'English meaning';
+const _labelMalayMeaning = 'Malay meaning';
+const _labelExample = 'Example';
 
 enum DictionarySearchScope { currentWordBook, allWordBooks }
 
@@ -149,9 +158,9 @@ String normalizeDictionaryQuery(String query) {
 String dictionaryScopeLabel(DictionarySearchScope scope) {
   switch (scope) {
     case DictionarySearchScope.currentWordBook:
-      return '当前词书';
+      return 'Current wordbook';
     case DictionarySearchScope.allWordBooks:
-      return '全词库';
+      return 'Full library';
   }
 }
 
@@ -160,25 +169,25 @@ _SearchMatch? _targetWordMatch(
   String query,
   String Function(String tag) tagLabeler,
 ) {
-  return _matchText('英文单词/词组', word.word, query) ??
-      _matchPinyin('汉字拼音', word.phonetic, query) ??
+  return _matchText(_labelWordPhrase, word.word, query) ??
+      _matchPinyin(_labelPinyin, word.phonetic, query) ??
       // Japanese phonetic fields (kana + romaji) — no-op for zh words (empty).
-      _matchText('かな', word.kana, query) ??
-      _matchText('ローマ字', word.romaji, query) ??
-      _matchText('中文释义', word.meaning, query) ??
-      _matchList('中文释义', word.definitions, query) ??
-      _matchText('英文释义', word.definition, query) ??
-      _matchList('英文释义', word.englishDefinitions, query) ??
-      _matchList('马来语释义', word.malayDefinitions, query) ??
-      _matchText('例句片段', word.exampleSentence, query) ??
-      _matchText('例句翻译', word.exampleTranslation, query) ??
+      _matchText(_labelKana, word.kana, query) ??
+      _matchText(_labelRomaji, word.romaji, query) ??
+      _matchText(_labelChineseMeaning, word.meaning, query) ??
+      _matchList(_labelChineseMeaning, word.definitions, query) ??
+      _matchText(_labelEnglishMeaning, word.definition, query) ??
+      _matchList(_labelEnglishMeaning, word.englishDefinitions, query) ??
+      _matchList(_labelMalayMeaning, word.malayDefinitions, query) ??
+      _matchText(_labelExample, word.exampleSentence, query) ??
+      _matchText('Example translation', word.exampleTranslation, query) ??
       _matchExamples(word.examples, query) ??
       _matchPhrases(word.collocations, query) ??
-      _matchList('近义词', word.synonyms, query) ??
-      _matchList('反义词', word.antonyms, query) ??
-      _matchList('派生词族', word.derivatives, query) ??
-      _matchText('词根词缀', word.rootAffix, query) ??
-      _matchLabeledList('考试标签', word.tags, query, tagLabeler);
+      _matchList('Synonym', word.synonyms, query) ??
+      _matchList('Antonym', word.antonyms, query) ??
+      _matchList('Word family', word.derivatives, query) ??
+      _matchText('Root / affix', word.rootAffix, query) ??
+      _matchLabeledList('Exam tag', word.tags, query, tagLabeler);
 }
 
 _SearchMatch? _customWordMatch(
@@ -186,19 +195,19 @@ _SearchMatch? _customWordMatch(
   String query,
   String Function(String tag) tagLabeler,
 ) {
-  return _matchText('英文单词/词组', word.word, query) ??
-      _matchText('中文释义', word.meaning, query) ??
-      _matchText('例句片段', word.exampleSentence, query) ??
-      _matchText('笔记', word.note, query) ??
-      _matchText('标签', word.tag, query) ??
-      _matchText('标签', tagLabeler(word.tag), query);
+  return _matchText(_labelWordPhrase, word.word, query) ??
+      _matchText(_labelChineseMeaning, word.meaning, query) ??
+      _matchText(_labelExample, word.exampleSentence, query) ??
+      _matchText('Note', word.note, query) ??
+      _matchText('Tag', word.tag, query) ??
+      _matchText('Tag', tagLabeler(word.tag), query);
 }
 
 _SearchMatch? _matchExamples(List<WordExample> examples, String query) {
   for (final example in examples) {
     final match =
-        _matchText('例句片段', example.en, query) ??
-        _matchText('例句翻译', example.cn, query);
+        _matchText(_labelExample, example.en, query) ??
+        _matchText('Example translation', example.cn, query);
     if (match != null) return match;
   }
   return null;
@@ -207,8 +216,8 @@ _SearchMatch? _matchExamples(List<WordExample> examples, String query) {
 _SearchMatch? _matchPhrases(List<WordPhrase> phrases, String query) {
   for (final phrase in phrases) {
     final match =
-        _matchText('词组搭配', phrase.phrase, query) ??
-        _matchText('搭配释义', phrase.cn, query);
+        _matchText('Collocation', phrase.phrase, query) ??
+        _matchText('Collocation meaning', phrase.cn, query);
     if (match != null) return match;
   }
   return null;
@@ -250,7 +259,7 @@ _SearchMatch? _matchPinyin(String label, String value, String query) {
   // 去声调后匹配：'ài' -> 'ai'，'tài' -> 'tai'。精确=整串相等，否则子串。
   final normalized = normalizePinyin(trimmed);
   if (!normalized.contains(query)) return null;
-  final matchLabel = normalized == query ? '汉字拼音精确' : label;
+  final matchLabel = normalized == query ? _labelExactPinyin : label;
   return _SearchMatch(label: matchLabel, preview: trimmed);
 }
 
@@ -258,13 +267,13 @@ int _matchRank(DictionaryWordSearchResult result, String query) {
   final word = result.word.word.toLowerCase();
   if (word == query) return 0;
   if (word.startsWith(query)) return 1;
-  if (result.matchedBy == '汉字拼音精确') return 1;
-  if (result.matchedBy == '汉字拼音') return 2;
-  if (result.matchedBy == '英文单词/词组') return 2;
+  if (result.matchedBy == _labelExactPinyin) return 1;
+  if (result.matchedBy == _labelPinyin) return 2;
+  if (result.matchedBy == _labelWordPhrase) return 2;
   // Japanese phonetic matches rank alongside word-text matches.
-  if (result.matchedBy == 'かな' || result.matchedBy == 'ローマ字') return 2;
-  if (result.matchedBy == '中文释义') return 3;
-  if (result.matchedBy == '例句片段') return 4;
+  if (result.matchedBy == _labelKana || result.matchedBy == _labelRomaji) return 2;
+  if (result.matchedBy == _labelChineseMeaning) return 3;
+  if (result.matchedBy == _labelExample) return 4;
   return 5;
 }
 
@@ -272,9 +281,9 @@ int _customMatchRank(CustomWordSearchResult result, String query) {
   final word = normalizeDictionaryQuery(result.word.word);
   if (word == query) return 0;
   if (word.startsWith(query)) return 1;
-  if (result.matchedBy == '英文单词/词组') return 2;
-  if (result.matchedBy == '中文释义') return 3;
-  if (result.matchedBy == '例句片段') return 4;
+  if (result.matchedBy == _labelWordPhrase) return 2;
+  if (result.matchedBy == _labelChineseMeaning) return 3;
+  if (result.matchedBy == _labelExample) return 4;
   return 5;
 }
 
@@ -312,7 +321,7 @@ WordBook _fallbackWordBook({
 }) {
   return WordBook(
     id: currentWordBookId,
-    title: '当前词书',
+    title: 'Current wordbook',
     category: 'exam',
     examType: '',
     coverUrl: '',

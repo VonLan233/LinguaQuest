@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:linguaquest/core/state/app_controller.dart';
 import 'package:linguaquest/core/state/app_state.dart';
+import 'package:linguaquest/core/widgets/word_choice_button.dart';
 import 'package:linguaquest/data/lesson_factory.dart';
 import 'package:linguaquest/data/models/lesson.dart';
 import 'package:linguaquest/features/quiz/quiz_session_screen.dart';
@@ -103,15 +104,17 @@ void main() {
       await tester.tap(find.text('爱'));
       await tester.pump(); // settle the setState from _judge, before auto-advance
 
-      // Correct feedback starts with "Correct. "; the wrong path shows
-      // "Not quite. Retry". If the judge mis-scores the correct pick, the wrong
-      // feedback appears and the word is recorded as a mistake.
-      expect(
-        find.textContaining('Not quite'),
-        findsNothing,
-        reason: 'correct pick must not be judged wrong',
+      // A correct pick locks the question and marks that option green
+      // (ChoiceState.correct); if the judge mis-scored it, the option would be
+      // flagged wrong instead.
+      final button = tester.widget<WordChoiceButton>(
+        find.widgetWithText(WordChoiceButton, '爱'),
       );
-      expect(find.textContaining('Correct.'), findsOneWidget);
+      expect(
+        button.state,
+        ChoiceState.correct,
+        reason: 'correct pick must be judged correct, not wrong',
+      );
     },
   );
 }

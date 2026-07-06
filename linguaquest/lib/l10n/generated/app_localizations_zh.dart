@@ -700,6 +700,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get publicProfileLoadFailedMessage => '出了点问题，请稍后重试。';
 
   @override
+  String get profileEditNicknameTitle => '编辑昵称';
+
+  @override
+  String get profileEditNicknameSignInRequired => '请先登录再编辑昵称。';
+
+  @override
+  String get profileEditNicknameEmpty => '昵称不能为空。';
+
+  @override
+  String get profileEditNicknameSaveFailed => '昵称更新失败，请稍后重试。';
+
+  @override
   String get profileDashboard => '学习仪表盘';
 
   @override

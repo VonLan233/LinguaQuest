@@ -6,7 +6,7 @@ import 'package:linguaquest/features/shell/app_drawer.dart';
 import 'package:linguaquest/l10n/generated/app_localizations.dart';
 
 void main() {
-  testWidgets('AppDrawer lists Choose Language and About entries', (
+  testWidgets('AppDrawer lists Language and About entries', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -20,13 +20,13 @@ void main() {
     );
     tester.state<ScaffoldState>(find.byType(Scaffold)).openDrawer();
     await tester.pumpAndSettle();
-    expect(find.text('Choose Language'), findsOneWidget);
+    expect(find.text('Language'), findsOneWidget);
     expect(find.text('About'), findsOneWidget);
   });
 
-  // Task 7.4: the Choose Language entry must go through l10n, not a hardcoded
+  // Task 7.4: the Language entry must go through l10n, not a hardcoded
   // English literal (the literal caused an untranslated / dark-mode wrap issue).
-  test('AppDrawer Choose Language uses l10n.pickerChooseLanguage', () {
+  test('AppDrawer Language uses l10n.pickerChooseLanguage', () {
     final src = File('lib/features/shell/app_drawer.dart').readAsStringSync();
     expect(src.contains('l10n.pickerChooseLanguage'), isTrue);
     expect(src.contains("'Choose Language'"), isFalse);

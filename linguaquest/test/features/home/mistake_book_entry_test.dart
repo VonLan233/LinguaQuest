@@ -134,4 +134,21 @@ void main() {
       findsNothing,
     );
   });
+
+  testWidgets('Weak Words empty state keeps the card but removes explanatory copy', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1080, 3000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(_buildHarness(_makeState(weakWordCount: 0)));
+    await tester.pump();
+
+    expect(find.text('Weak Words'), findsOneWidget);
+    expect(find.text('Review'), findsWidgets);
+    expect(find.text('No high-frequency mistake words yet.'), findsNothing);
+    expect(find.textContaining('words needing focus'), findsNothing);
+  });
 }

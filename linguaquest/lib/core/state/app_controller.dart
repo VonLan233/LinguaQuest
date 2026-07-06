@@ -408,6 +408,26 @@ class AppController extends Notifier<AppState> {
     await prefs.setString(_localeKey, locale.languageCode);
   }
 
+  /// Updates the signed-in user's display name (nickname). Returns null on
+  /// success, or a short error code for the UI to localize.
+  Future<String?> updateDisplayName(String name) async {
+    final user = state.user;
+    if (user == null) return 'not_signed_in';
+    final trimmed = name.trim();
+    if (trimmed.isEmpty) return 'empty';
+    if (trimmed == user.name) return null;
+    try {
+      final updated = await _authRepository.updateProfile(
+        user.copyWith(name: trimmed, updatedAt: DateTime.now()),
+      );
+      if (!ref.mounted) return null;
+      state = state.copyWith(user: updated);
+      return null;
+    } catch (_) {
+      return 'save_failed';
+    }
+  }
+
   Future<void> updateTargetLanguage(String code) async {
     state = state.copyWith(targetLanguage: code);
     final prefs = await SharedPreferences.getInstance();
@@ -776,6 +796,8 @@ class AppController extends Notifier<AppState> {
         updatedUser = await _authRepository.updateProfile(
           updatedUser.copyWith(
             targetExam: book.examType,
+            currentWordBookId: wordBookId,
+            language: language,
             updatedAt: DateTime.now(),
           ),
         );
@@ -913,10 +935,32 @@ class AppController extends Notifier<AppState> {
 
   Future<bool> clearAllDataAndRestart() {
     return _run(() async {
+      // Load bundle data BEFORE clearing the token so the backend call succeeds.
+      final wordBooks = await _learningRepository.listWordBooks();
+      final currentWordBookId =
+          wordBooks.isEmpty ? 'hsk1' : wordBooks.first.id;
+      final lessons = wordBooks.isEmpty
+          ? <Lesson>[]
+          : _applyLessonProgression(
+              await _learningRepository.listLessonsForWordBook(
+                currentWordBookId,
+              ),
+              <String>{},
+            );
+
       await _authRepository.logout();
       final prefs = await SharedPreferences.getInstance();
       await prefs.clear();
-      await _resetToFreshLocalState();
+
+      state = AppState.initial().copyWith(
+        isBootstrapped: true,
+        wordBooks: wordBooks,
+        currentWordBookId: currentWordBookId,
+        currentLanguage: wordBooks.isEmpty ? 'zh' : wordBooks.first.language,
+        targetLanguage: wordBooks.isEmpty ? 'zh' : wordBooks.first.language,
+        lessons: lessons,
+        clearLastResult: true,
+      );
     });
   }
 

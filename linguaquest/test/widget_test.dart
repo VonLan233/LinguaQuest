@@ -1699,8 +1699,8 @@ void main() {
     await tester.enterText(find.byType(TextField), 'commute');
     await tester.pumpAndSettle();
 
-    expect(find.text('commute'), findsWidgets);
-    expect(find.textContaining('例句片段'), findsWidgets);
+    expect(find.text('commute'), findsOneWidget);
+    expect(find.textContaining('通勤'), findsNothing);
   });
 
   testWidgets(
@@ -1771,7 +1771,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text(currentWord.word), findsWidgets);
-      expect(find.textContaining('中文释义'), findsWidgets);
+      expect(find.textContaining('Chinese meaning'), findsWidgets);
 
       await tester.tap(find.text('全词库'));
       await tester.pumpAndSettle();
@@ -1781,7 +1781,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('老师'), findsWidgets);
-      expect(find.textContaining('中文释义'), findsWidgets);
+      expect(find.textContaining('Chinese meaning'), findsWidgets);
     },
   );
 
@@ -2166,12 +2166,15 @@ void main() {
 
     expect(find.byType(AppCard), findsWidgets);
     expect(find.text('Continue'), findsNothing);
-    expect(find.textContaining('Correct.'), findsOneWidget);
+    // A correct tap marks that option green (ChoiceState.correct); the answer
+    // is revealed through the option colour, not a feedback panel.
     expect(
-      find.textContaining(
-        'Reinforce: ${choiceQuestion.word.word} · ${choiceQuestion.word.meaning}',
-      ),
-      findsOneWidget,
+      tester
+          .widget<WordChoiceButton>(
+            find.widgetWithText(WordChoiceButton, choiceQuestion.answer),
+          )
+          .state,
+      ChoiceState.correct,
     );
     // Still on the choice question prompt before the auto-advance delay.
     expect(find.text(choicePrompt), findsOneWidget);
@@ -2223,24 +2226,32 @@ void main() {
     final choicePrompt = choiceQuestion.prompt;
     final nextPrompt = nextQuestion.prompt;
 
-    // A wrong tap shows the retry feedback and does NOT advance or reveal.
+    // A wrong tap flags that option red and does NOT advance or reveal the
+    // correct one (still retryable, not locked).
     await _tapAnyOptionExceptNoSettle(tester, choiceQuestion.answer);
-    expect(find.textContaining('Not quite.'), findsOneWidget);
-    // Does not reveal the explanation / reinforce block on a wrong attempt.
     expect(
-      find.textContaining(
-        'Reinforce: ${choiceQuestion.word.word} · ${choiceQuestion.word.meaning}',
-      ),
-      findsNothing,
+      tester
+          .widget<WordChoiceButton>(
+            find.widgetWithText(WordChoiceButton, choiceQuestion.answer),
+          )
+          .state,
+      ChoiceState.idle,
     );
     // Still on the same question (no auto-advance on wrong).
     await tester.pump(const Duration(milliseconds: 1600));
     expect(find.text(choicePrompt), findsOneWidget);
     expect(find.text(nextPrompt), findsNothing);
 
-    // Re-selecting the correct option now judges correct and advances.
+    // Re-selecting the correct option now judges correct (green) and advances.
     await _tapOptionNoSettle(tester, choiceQuestion.answer);
-    expect(find.textContaining('Correct.'), findsOneWidget);
+    expect(
+      tester
+          .widget<WordChoiceButton>(
+            find.widgetWithText(WordChoiceButton, choiceQuestion.answer),
+          )
+          .state,
+      ChoiceState.correct,
+    );
     await tester.pump(const Duration(milliseconds: 1500));
     await tester.pumpAndSettle();
     expect(find.text(nextPrompt), findsOneWidget);

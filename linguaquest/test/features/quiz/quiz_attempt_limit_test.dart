@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:linguaquest/core/state/app_controller.dart';
 import 'package:linguaquest/core/state/app_state.dart';
+import 'package:linguaquest/core/widgets/word_choice_button.dart';
 import 'package:linguaquest/data/models/lesson.dart';
 import 'package:linguaquest/features/quiz/quiz_session_screen.dart';
 import 'package:linguaquest/l10n/generated/app_localizations.dart';
@@ -112,64 +113,37 @@ void main() {
       await tester.pumpWidget(_app(seed));
       await tester.pumpAndSettle();
 
-      // First wrong tap: still retryable, answer not revealed.
+      WordChoiceButton buttonFor(String text) => tester.widget<WordChoiceButton>(
+        find.widgetWithText(WordChoiceButton, text),
+      );
+
+      // First wrong tap: still retryable, correct answer not yet revealed.
       await tester.tap(find.text('好'));
       await tester.pump();
       expect(
-        find.textContaining('Reinforce'),
-        findsNothing,
-        reason: 'first wrong attempt must not reveal the answer',
+        buttonFor('爱').state,
+        ChoiceState.idle,
+        reason: 'first wrong attempt must not reveal the correct option',
       );
-      expect(find.textContaining('Retry'), findsOneWidget);
+      expect(
+        buttonFor('爱').onTap,
+        isNotNull,
+        reason: 'the question is still retryable after one wrong attempt',
+      );
 
-      // Second wrong tap reaches the limit -> lock + reveal, no more retries.
+      // Second wrong tap reaches the limit -> lock + reveal the correct option
+      // (green) and stop accepting taps.
       await tester.tap(find.text('人'));
       await tester.pump();
       expect(
-        find.textContaining('Reinforce'),
-        findsOneWidget,
-        reason: 'reaching the attempt limit must reveal the answer',
+        buttonFor('爱').state,
+        ChoiceState.correct,
+        reason: 'reaching the attempt limit reveals the correct option',
       );
       expect(
-        find.textContaining('Retry'),
-        findsNothing,
-        reason: 'a locked question must not keep inviting retries',
-      );
-    },
-  );
-
-  testWidgets(
-    'correct feedback keeps the l10n label and the explanation as separate '
-    'text runs (no mixed-language concatenation)',
-    (tester) async {
-      final target = _word('t', '爱', 'to love');
-      final question = _chineseChoice(
-        'q1',
-        target,
-        const ['爱', '好'],
-        'EXPLAIN_CONTENT',
-      );
-      final filler = _chineseChoice('q2', target, const ['爱', '好'], 'x');
-      final seed = AppState.initial().copyWith(
-        isBootstrapped: true,
-        lessons: [
-          _lesson([question, filler], [target]),
-        ],
-      );
-
-      await tester.pumpWidget(_app(seed));
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('爱')); // correct
-      await tester.pump();
-
-      // The explanation must render as its own Text, not concatenated into the
-      // localized label run. If it were crammed into 'Correct. EXPLAIN_CONTENT'
-      // the exact-text finder would fail.
-      expect(
-        find.text('EXPLAIN_CONTENT'),
-        findsOneWidget,
-        reason: 'explanation must not be crammed into the l10n label run',
+        buttonFor('爱').onTap,
+        isNull,
+        reason: 'a locked question must not keep accepting taps',
       );
     },
   );
