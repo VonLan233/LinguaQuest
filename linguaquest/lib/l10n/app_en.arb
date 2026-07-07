@@ -361,7 +361,7 @@
   "discoverForumPost1Title": "Check-in: reviewed 18 words in 12 minutes",
   "discoverForumPost1Body": "Mistakes cluster around near-synonyms; tomorrow I'll start with the confusable-word challenge in training.",
   "discoverForumPost2Title": "How do you memorize the word 'abstract'?",
-  "discoverForumPost2Body": "In papers and reading passages 'abstract' often doesn't mean '抽象'; judge it by context.",
+  "discoverForumPost2Body": "In papers and reading passages 'abstract' often means a summary; judge it by context.",
   "discoverForumHint": "Tap \"Record interaction\" on a community post below to finish the forum interaction task.",
   "discoverCheckinSuccess": "Checked in! Today's check-in points are ready to claim.",
   "discoverCheckinFailed": "Check-in failed, please try again later.",
@@ -680,8 +680,8 @@
   "wordbookSwitchFailed": "Unable to switch wordbook",
   "pickerChooseLanguage": "Language",
   "pickerChooseWordbook": "Choose Wordbook",
-  "pickerLanguageChinese": "Chinese (中文)",
-  "pickerLanguageJapanese": "Japanese (日本語)",
+  "pickerLanguageChinese": "Chinese",
+  "pickerLanguageJapanese": "Japanese",
   "pickerComingSoon": "Coming Soon",
   "pickerCurrentBadge": "Current",
   "pickerSwitchSuccess": "Switched to {wordbook}",
@@ -972,7 +972,7 @@
   "lotteryRarityUncommon": "Advanced",
   "lotteryRarityCommon": "Common",
   "lotteryRarityComfort": "Comfort",
-  "languageChinese": "中文",
+  "languageChinese": "Chinese",
   "languageMalay": "Bahasa Melayu",
   "languageEnglish": "English",
   "wordKnowledgeTitle": "Word breakdown",
@@ -1042,7 +1042,7 @@
 
   "languageMapTitle": "Choose Language",
   "languageMapSelectPrompt": "Tap a country to choose the language you want to learn.",
-  "languageMapChinese": "Chinese (中文)",
+  "languageMapChinese": "Chinese",
   "languageMapConfirm": "Learn {language}",
   "@languageMapConfirm": {
     "placeholders": {

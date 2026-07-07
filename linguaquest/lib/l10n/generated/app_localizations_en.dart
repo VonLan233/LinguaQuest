@@ -1108,7 +1108,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get discoverForumPost2Body =>
-      'In papers and reading passages \'abstract\' often doesn\'t mean \'抽象\'; judge it by context.';
+      'In papers and reading passages \'abstract\' often means a summary; judge it by context.';
 
   @override
   String get discoverForumHint =>
@@ -2162,10 +2162,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pickerChooseWordbook => 'Choose Wordbook';
 
   @override
-  String get pickerLanguageChinese => 'Chinese (中文)';
+  String get pickerLanguageChinese => 'Chinese';
 
   @override
-  String get pickerLanguageJapanese => 'Japanese (日本語)';
+  String get pickerLanguageJapanese => 'Japanese';
 
   @override
   String get pickerComingSoon => 'Coming Soon';
@@ -3008,7 +3008,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lotteryRarityComfort => 'Comfort';
 
   @override
-  String get languageChinese => '中文';
+  String get languageChinese => 'Chinese';
 
   @override
   String get languageMalay => 'Bahasa Melayu';
@@ -3093,7 +3093,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Tap a country to choose the language you want to learn.';
 
   @override
-  String get languageMapChinese => 'Chinese (中文)';
+  String get languageMapChinese => 'Chinese';
 
   @override
   String languageMapConfirm(String language) {

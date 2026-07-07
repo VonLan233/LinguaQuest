@@ -1,11 +1,11 @@
 import '../../l10n/generated/app_localizations.dart';
 
-String formatShortDate(DateTime date) => '${date.month}月${date.day}日';
+String formatShortDate(DateTime date) => '${date.month}/${date.day}';
 
 String formatFullDate(DateTime date) {
   final hour = date.hour.toString().padLeft(2, '0');
   final minute = date.minute.toString().padLeft(2, '0');
-  return '${date.month}月${date.day}日 $hour:$minute';
+  return '${date.month}/${date.day} $hour:$minute';
 }
 
 String formatRelativeDue(DateTime date, DateTime now, AppLocalizations l10n) {

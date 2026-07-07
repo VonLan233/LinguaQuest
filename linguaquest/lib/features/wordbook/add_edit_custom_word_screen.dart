@@ -31,7 +31,7 @@ class _AddEditCustomWordScreenState
   final _meaningController = TextEditingController();
   final _exampleController = TextEditingController();
   final _noteController = TextEditingController();
-  final _tagController = TextEditingController(text: '自定义');
+  final _tagController = TextEditingController(text: 'Custom');
   String _difficulty = 'Medium';
   bool _hydrated = false;
 
@@ -184,7 +184,7 @@ class _AddEditCustomWordScreenState
           exampleSentence: _exampleController.text.trim(),
           note: _noteController.text.trim(),
           tag: _tagController.text.trim().isEmpty
-              ? '自定义'
+              ? 'Custom'
               : _tagController.text.trim(),
           difficulty: _difficulty,
         ),
@@ -201,9 +201,7 @@ class _AddEditCustomWordScreenState
           (existing == null
               ? l10n.customWordsAlreadyInWordbook
               : l10n.customWordsSaveFailed);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(text)));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
       return;
     }
     ScaffoldMessenger.of(

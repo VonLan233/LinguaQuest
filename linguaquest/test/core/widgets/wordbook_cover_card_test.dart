@@ -12,15 +12,15 @@ void main() {
           body: WordbookCoverCard(
             examType: 'IELTS',
             bookId: 'ielts',
-            title: '雅思核心词汇',
+            title: 'IELTS Core Vocabulary',
           ),
         ),
       ),
     );
 
     expect(find.text('IELTS'), findsOneWidget);
-    expect(find.text('雅思核心'), findsOneWidget);
-    expect(find.text('词汇'), findsOneWidget);
+    expect(find.text('IELTS Core'), findsOneWidget);
+    expect(find.text('Vocabulary'), findsOneWidget);
     // Programmatic cover — must not pull a network image.
     expect(find.byType(Image), findsNothing);
   });
