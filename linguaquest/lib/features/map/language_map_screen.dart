@@ -29,12 +29,42 @@ const _langPins = [
   // Coordinates are each language's capital city (Beijing/Washington/Madrid/
   // Paris/Tokyo/Kuala Lumpur). Only the badge is tappable (see _LangMarker) so
   // nearby capitals do not steal each other's taps.
-  _LangPin(code: 'zh', label: 'Chinese (中文)', point: LatLng(39.9042, 116.4074), enabled: true),
-  _LangPin(code: 'en', label: 'English', point: LatLng(38.9072, -77.0369), enabled: true),
-  _LangPin(code: 'es', label: 'Spanish (Español)', point: LatLng(40.4168, -3.7038), enabled: true),
-  _LangPin(code: 'fr', label: 'French (Français)', point: LatLng(48.8566, 2.3522), enabled: true),
-  _LangPin(code: 'ja', label: 'Japanese (日本語)', point: LatLng(35.6762, 139.6503), enabled: true),
-  _LangPin(code: 'ms', label: 'Malay (Bahasa Melayu)', point: LatLng(3.1390, 101.6869), enabled: true),
+  _LangPin(
+    code: 'zh',
+    label: 'Chinese',
+    point: LatLng(39.9042, 116.4074),
+    enabled: true,
+  ),
+  _LangPin(
+    code: 'en',
+    label: 'English',
+    point: LatLng(38.9072, -77.0369),
+    enabled: true,
+  ),
+  _LangPin(
+    code: 'es',
+    label: 'Spanish (Español)',
+    point: LatLng(40.4168, -3.7038),
+    enabled: true,
+  ),
+  _LangPin(
+    code: 'fr',
+    label: 'French (Français)',
+    point: LatLng(48.8566, 2.3522),
+    enabled: true,
+  ),
+  _LangPin(
+    code: 'ja',
+    label: 'Japanese',
+    point: LatLng(35.6762, 139.6503),
+    enabled: true,
+  ),
+  _LangPin(
+    code: 'ms',
+    label: 'Malay (Bahasa Melayu)',
+    point: LatLng(3.1390, 101.6869),
+    enabled: true,
+  ),
 ];
 
 /// 全屏世界地图（真 OSM 瓦片）：国家 marker 代表可学语言。点击 marker 弹卡片，
@@ -56,11 +86,13 @@ class _LanguageMapScreenState extends ConsumerState<LanguageMapScreen>
   void initState() {
     super.initState();
     _entrance = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 900))
-      ..forward();
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    )..forward();
     _pulse = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1600))
-      ..repeat(reverse: true);
+      vsync: this,
+      duration: const Duration(milliseconds: 1600),
+    )..repeat(reverse: true);
   }
 
   @override
@@ -70,11 +102,14 @@ class _LanguageMapScreenState extends ConsumerState<LanguageMapScreen>
     super.dispose();
   }
 
-  _LangPin? get _selected =>
-      _selectedCode == null ? null : _langPins.firstWhere((p) => p.code == _selectedCode);
+  _LangPin? get _selected => _selectedCode == null
+      ? null
+      : _langPins.firstWhere((p) => p.code == _selectedCode);
 
   Future<void> _startLearning(_LangPin pin) async {
-    await ref.read(appControllerProvider.notifier).updateTargetLanguage(pin.code);
+    await ref
+        .read(appControllerProvider.notifier)
+        .updateTargetLanguage(pin.code);
     if (!mounted) return;
     await showLanguageWordbookPicker(context, initialLanguage: pin.code);
   }
@@ -149,23 +184,26 @@ class _LanguageMapScreenState extends ConsumerState<LanguageMapScreen>
             child: IgnorePointer(
               child: Container(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: AppTokens.s16, vertical: AppTokens.s12),
+                  horizontal: AppTokens.s16,
+                  vertical: AppTokens.s12,
+                ),
                 decoration: BoxDecoration(
                   color: cs.surface.withValues(alpha: 0.92),
                   borderRadius: BorderRadius.circular(AppTokens.radiusCard),
                   boxShadow: [
                     BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.12),
-                        blurRadius: 10,
-                        offset: const Offset(0, 3)),
+                      color: Colors.black.withValues(alpha: 0.12),
+                      blurRadius: 10,
+                      offset: const Offset(0, 3),
+                    ),
                   ],
                 ),
                 child: Text(
                   l10n.languageMapSelectPrompt,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: cs.onSurface,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    color: cs.onSurface,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),
@@ -214,24 +252,33 @@ class _LegendDot extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return Container(
-      padding:
-          const EdgeInsets.symmetric(horizontal: AppTokens.s8, vertical: 4),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppTokens.s8,
+        vertical: 4,
+      ),
       decoration: BoxDecoration(
         color: cs.surface.withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(AppTokens.radiusPill),
       ),
-      child: Row(mainAxisSize: MainAxisSize.min, children: [
-        Container(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
             width: 10,
             height: 10,
-            decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
-        const SizedBox(width: 6),
-        Text(label,
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+          ),
+          const SizedBox(width: 6),
+          Text(
+            label,
             style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-                color: cs.onSurface)),
-      ]),
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: cs.onSurface,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -256,8 +303,11 @@ class _LangMarker extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final start = (index * 0.12).clamp(0.0, 0.6);
-    final curve = Interval(start, (start + 0.4).clamp(0.0, 1.0),
-        curve: Curves.easeOutBack);
+    final curve = Interval(
+      start,
+      (start + 0.4).clamp(0.0, 1.0),
+      curve: Curves.easeOutBack,
+    );
     // 点击热区只包住 badge（~56px），不包含更宽的文字标签列。marker 命中框仍是
     // 140×110，但除 badge 外的区域不吸收点击，避免相邻 marker（尤其经度相近的
     // zh/ja、es/fr）的宽标签互相遮挡抢占点击。标签保持可见、仅不可点。
@@ -287,17 +337,21 @@ class _LangMarker extends StatelessWidget {
                     child: Center(
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 3),
+                          horizontal: 8,
+                          vertical: 3,
+                        ),
                         decoration: BoxDecoration(
                           color: cs.surface,
-                          borderRadius:
-                              BorderRadius.circular(AppTokens.radiusPill),
+                          borderRadius: BorderRadius.circular(
+                            AppTokens.radiusPill,
+                          ),
                           border: Border.all(color: cs.outlineVariant),
                           boxShadow: [
                             BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.18),
-                                blurRadius: 6,
-                                offset: const Offset(0, 2)),
+                              color: Colors.black.withValues(alpha: 0.18),
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
+                            ),
                           ],
                         ),
                         child: ConstrainedBox(
@@ -325,7 +379,10 @@ class _LangMarker extends StatelessWidget {
                     onTap: onTap,
                     behavior: HitTestBehavior.opaque,
                     child: _Badge(
-                        pin: pin, selected: selected, pulse: pulse.value),
+                      pin: pin,
+                      selected: selected,
+                      pulse: pulse.value,
+                    ),
                   ),
                 ],
               ),
@@ -338,8 +395,11 @@ class _LangMarker extends StatelessWidget {
 }
 
 class _Badge extends StatelessWidget {
-  const _Badge(
-      {required this.pin, required this.selected, required this.pulse});
+  const _Badge({
+    required this.pin,
+    required this.selected,
+    required this.pulse,
+  });
   final _LangPin pin;
   final bool selected;
   final double pulse;
@@ -348,8 +408,8 @@ class _Badge extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final glow = pin.enabled || selected;
-    final ring = (selected ? 44.0 : 36.0) *
-        (1.0 + (pin.enabled ? pulse * 0.22 : 0.0));
+    final ring =
+        (selected ? 44.0 : 36.0) * (1.0 + (pin.enabled ? pulse * 0.22 : 0.0));
     final dot = selected ? 30.0 : 26.0;
     final glowColor = pin.enabled ? cs.primary : cs.onSurfaceVariant;
     return SizedBox(
@@ -383,9 +443,10 @@ class _Badge extends StatelessWidget {
               border: Border.all(color: Colors.white, width: 2),
               boxShadow: [
                 BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.25),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2)),
+                  color: Colors.black.withValues(alpha: 0.25),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
               ],
             ),
             child: pin.enabled
@@ -429,11 +490,10 @@ class _LangCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     pin.label,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium
-                        ?.copyWith(
-                            fontWeight: FontWeight.w700, color: cs.onSurface),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: cs.onSurface,
+                    ),
                   ),
                 ),
                 IconButton(

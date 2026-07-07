@@ -2422,7 +2422,7 @@ void main() {
     );
     expect(
       container.read(appControllerProvider).errorMessage,
-      '该邮箱已经注册，请直接登录。',
+      'This email is already registered. Please log in instead.',
     );
 
     await controller.logout();
@@ -2432,7 +2432,7 @@ void main() {
     );
     expect(
       container.read(appControllerProvider).errorMessage,
-      '该邮箱已经注册，请直接登录。',
+      'This email is already registered. Please log in instead.',
     );
   });
 
@@ -3873,7 +3873,10 @@ void main() {
       false,
     );
     final state = container.read(appControllerProvider);
-    expect(state.errorMessage, '该任务尚未完成，无法领取奖励。');
+    expect(
+      state.errorMessage,
+      'This task is not complete yet, so the reward cannot be claimed.',
+    );
     expect(state.pendingRewardTaskIds, isNot(contains('dailyCheckIn')));
   });
 

@@ -144,7 +144,7 @@ class _StudyHeader extends StatelessWidget {
               ? l10n.studyNewNoLessonHint
               : isPaused
               ? l10n.studyNewPausedResume(section)
-              : '$section · 目标 $dailyGoal 词 · 不做限时测试',
+              : '$section · Goal $dailyGoal words · No timed test',
           style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
         ),
         const SizedBox(height: 14),

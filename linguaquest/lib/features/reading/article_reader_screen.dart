@@ -179,12 +179,16 @@ class _ReaderBody extends ConsumerWidget {
     final wordBook = ref.watch(
       appControllerProvider.select((s) => s.currentWordBook),
     );
-    final userWords =
-        ref.watch(appControllerProvider.select((s) => s.userWords));
-    final reviewWords =
-        ref.watch(appControllerProvider.select((s) => s.reviewWords));
-    final highlightVocab =
-        buildHighlightVocab(article: article, wordBook: wordBook);
+    final userWords = ref.watch(
+      appControllerProvider.select((s) => s.userWords),
+    );
+    final reviewWords = ref.watch(
+      appControllerProvider.select((s) => s.reviewWords),
+    );
+    final highlightVocab = buildHighlightVocab(
+      article: article,
+      wordBook: wordBook,
+    );
 
     return CustomScrollView(
       slivers: [
@@ -257,12 +261,8 @@ class _ReaderBody extends ConsumerWidget {
                   onVisible: () => onParagraphSeen(paragraph.index),
                   onTapWord: (token) =>
                       _showWordSheet(context, ref, token, language),
-                  onExplain: () => _showExplainSheet(
-                    context,
-                    ref,
-                    paragraph.text,
-                    language,
-                  ),
+                  onExplain: () =>
+                      _showExplainSheet(context, ref, paragraph.text, language),
                 ),
               const SizedBox(height: AppTokens.s16),
               // P3e: graded comprehension over article.comprehension, reusing the
@@ -301,11 +301,8 @@ class _ReaderBody extends ConsumerWidget {
     await showModalBottomSheet<void>(
       context: context,
       showDragHandle: true,
-      builder: (sheetContext) => _WordSheet(
-        token: token,
-        language: language,
-        article: article,
-      ),
+      builder: (sheetContext) =>
+          _WordSheet(token: token, language: language, article: article),
     );
   }
 
@@ -322,13 +319,10 @@ class _ReaderBody extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       showDragHandle: true,
-      builder: (sheetContext) => _ExplainSheet(
-        paragraphText: paragraphText,
-        language: language,
-      ),
+      builder: (sheetContext) =>
+          _ExplainSheet(paragraphText: paragraphText, language: language),
     );
   }
-
 }
 
 /// A small legend mapping highlight colors to word classes (P3d).
@@ -381,8 +375,8 @@ class _LegendChip extends StatelessWidget {
         Text(
           label,
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
       ],
     );
@@ -629,8 +623,9 @@ class _ParagraphTextState extends State<_ParagraphText> {
             color: style.color,
             backgroundColor: style.background,
             fontWeight: style.bold ? FontWeight.w800 : FontWeight.w600,
-            decoration:
-                style.underline ? TextDecoration.underline : TextDecoration.none,
+            decoration: style.underline
+                ? TextDecoration.underline
+                : TextDecoration.none,
             decorationColor: style.color.withValues(alpha: 0.5),
           ),
           recognizer: recognizer,
@@ -740,10 +735,7 @@ class _ParagraphAudioButtonState extends State<_ParagraphAudioButton> {
                 dimension: 14,
                 child: CircularProgressIndicator(strokeWidth: 2),
               )
-            : Icon(
-                _failed ? AppIcons.refresh : AppIcons.volumeUp,
-                size: 18,
-              ),
+            : Icon(_failed ? AppIcons.refresh : AppIcons.volumeUp, size: 18),
         label: Text(l10n.readingParagraphAudio),
       ),
     );
@@ -793,8 +785,11 @@ class _WordSheet extends ConsumerWidget {
                 ),
               ),
               AppPill(
-                label: readingLevelLabel(language, article.level,
-                    examLevel: article.examLevel),
+                label: readingLevelLabel(
+                  language,
+                  article.level,
+                  examLevel: article.examLevel,
+                ),
                 variant: PillVariant.neutral,
               ),
             ],
@@ -821,12 +816,14 @@ class _WordSheet extends ConsumerWidget {
               final messenger = ScaffoldMessenger.of(context);
               final router = GoRouter.of(context);
               final navigator = Navigator.of(context);
-              await ref.read(appControllerProvider.notifier).addCustomWord(
+              await ref
+                  .read(appControllerProvider.notifier)
+                  .addCustomWord(
                     word: surface,
                     meaning: meaning,
                     exampleSentence: '',
                     note: reading,
-                    tag: '阅读',
+                    tag: 'Reading',
                     difficulty: 'medium',
                   );
               navigator.pop();
@@ -851,10 +848,7 @@ class _WordSheet extends ConsumerWidget {
 /// state for one explain request and reuses [AiErrorCard] for error + retry,
 /// mirroring `ai_sentence_analysis_screen.dart`'s flow.
 class _ExplainSheet extends ConsumerStatefulWidget {
-  const _ExplainSheet({
-    required this.paragraphText,
-    required this.language,
-  });
+  const _ExplainSheet({required this.paragraphText, required this.language});
 
   final String paragraphText;
   final String language;
@@ -924,8 +918,11 @@ class _ExplainSheetState extends ConsumerState<_ExplainSheet> {
             children: [
               Row(
                 children: [
-                  Icon(AppIcons.autoAwesome,
-                      size: 20, color: theme.colorScheme.primary),
+                  Icon(
+                    AppIcons.autoAwesome,
+                    size: 20,
+                    color: theme.colorScheme.primary,
+                  ),
                   const SizedBox(width: AppTokens.s8),
                   Text(
                     l10n.readingExplainTitle,
@@ -986,30 +983,37 @@ class _ExplainResultCard extends StatelessWidget {
     final structure = result['structure'] as String? ?? '';
     final translation = result['translation'] as String? ?? '';
     final grammarPoints =
-        (result['grammarPoints'] as List<dynamic>?)?.cast<dynamic>() ?? const [];
+        (result['grammarPoints'] as List<dynamic>?)?.cast<dynamic>() ??
+        const [];
     final keyWords =
         (result['keyWords'] as List<dynamic>?)?.cast<dynamic>() ?? const [];
     final practice =
         (result['practice'] as List<dynamic>?)?.cast<dynamic>() ?? const [];
 
-    final keyWordLines = keyWords.map((w) {
-      final m = (w as Map).cast<String, dynamic>();
-      final word = m['word'] as String? ?? '';
-      final reading = m['reading'] as String? ?? '';
-      final meaning = m['meaning'] as String? ?? '';
-      final readingPart = reading.isEmpty ? '' : ' [$reading]';
-      return '$word$readingPart — $meaning';
-    }).join('\n');
+    final keyWordLines = keyWords
+        .map((w) {
+          final m = (w as Map).cast<String, dynamic>();
+          final word = m['word'] as String? ?? '';
+          final reading = m['reading'] as String? ?? '';
+          final meaning = m['meaning'] as String? ?? '';
+          final readingPart = reading.isEmpty ? '' : ' [$reading]';
+          return '$word$readingPart — $meaning';
+        })
+        .join('\n');
 
-    final practiceLines = practice.map((p) {
-      final m = (p as Map).cast<String, dynamic>();
-      final prompt = m['prompt'] as String? ?? '';
-      final answer = m['answer'] as String? ?? '';
-      final options =
-          (m['options'] as List<dynamic>?)?.cast<String>() ?? const [];
-      final optionsPart = options.isEmpty ? '' : '\n  (${options.join(' / ')})';
-      return '$prompt$optionsPart\n  ✓ $answer';
-    }).join('\n\n');
+    final practiceLines = practice
+        .map((p) {
+          final m = (p as Map).cast<String, dynamic>();
+          final prompt = m['prompt'] as String? ?? '';
+          final answer = m['answer'] as String? ?? '';
+          final options =
+              (m['options'] as List<dynamic>?)?.cast<String>() ?? const [];
+          final optionsPart = options.isEmpty
+              ? ''
+              : '\n  (${options.join(' / ')})';
+          return '$prompt$optionsPart\n  ✓ $answer';
+        })
+        .join('\n\n');
 
     return AppCard(
       key: const ValueKey('reading-explain-result'),
@@ -1022,7 +1026,9 @@ class _ExplainResultCard extends StatelessWidget {
           if (keyWordLines.isNotEmpty) ...[
             const SizedBox(height: AppTokens.s8),
             _ExplainSection(
-                label: l10n.readingExplainKeyWords, content: keyWordLines),
+              label: l10n.readingExplainKeyWords,
+              content: keyWordLines,
+            ),
           ],
           if (grammarPoints.isNotEmpty) ...[
             const SizedBox(height: AppTokens.s8),
@@ -1034,17 +1040,23 @@ class _ExplainResultCard extends StatelessWidget {
           if (structure.isNotEmpty) ...[
             const SizedBox(height: AppTokens.s8),
             _ExplainSection(
-                label: l10n.readingExplainStructure, content: structure),
+              label: l10n.readingExplainStructure,
+              content: structure,
+            ),
           ],
           if (translation.isNotEmpty) ...[
             const SizedBox(height: AppTokens.s8),
             _ExplainSection(
-                label: l10n.readingExplainTranslation, content: translation),
+              label: l10n.readingExplainTranslation,
+              content: translation,
+            ),
           ],
           if (practiceLines.isNotEmpty) ...[
             const SizedBox(height: AppTokens.s8),
             _ExplainSection(
-                label: l10n.readingExplainPractice, content: practiceLines),
+              label: l10n.readingExplainPractice,
+              content: practiceLines,
+            ),
           ],
         ],
       ),

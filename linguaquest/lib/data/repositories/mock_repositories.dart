@@ -647,8 +647,9 @@ class MockLotteryRepository implements LotteryRepository {
           id: 'lottery-${now.microsecondsSinceEpoch}',
           uid: uid,
           type: AppNotificationType.activity,
-          title: '积分抽奖结果',
-          body: '获得「${prize.name}」，已放入个人资产。',
+          title: 'Lucky draw result',
+          body:
+              'Won "${prize.name}". It has been added to your profile assets.',
           targetRoute: '/profile',
           isRead: false,
           createdAt: now,
@@ -949,8 +950,8 @@ class MockRewardTaskRepository implements RewardTaskRepository {
     return [
       _task(
         id: 'dailyCheckIn',
-        title: '每日签到',
-        condition: '当天打开并点击签到',
+        title: 'Daily check-in',
+        condition: 'Open the app and tap check-in today',
         points: 5,
         targetRoute: '/discover',
         done: state.checkedIn,
@@ -958,8 +959,8 @@ class MockRewardTaskRepository implements RewardTaskRepository {
       ),
       _task(
         id: 'newLearning',
-        title: '完成新学',
-        condition: '完成今日新学任务',
+        title: 'Finish new learning',
+        condition: 'Complete today\'s new learning task',
         points: 20,
         targetRoute: '/study/new',
         done: state.newLearningDone,
@@ -967,8 +968,8 @@ class MockRewardTaskRepository implements RewardTaskRepository {
       ),
       _task(
         id: 'reviewDone',
-        title: '完成复习',
-        condition: '完成今日到期复习',
+        title: 'Finish review',
+        condition: 'Complete today\'s due review',
         points: 15,
         targetRoute: '/study/review',
         done: state.reviewDone,
@@ -976,8 +977,8 @@ class MockRewardTaskRepository implements RewardTaskRepository {
       ),
       _task(
         id: 'trainingChallenge',
-        title: '训练场挑战',
-        condition: '完成任意训练场游戏',
+        title: 'Training challenge',
+        condition: 'Complete any training game',
         points: 20,
         targetRoute: '/training',
         done: state.trainingChallengeDone,
@@ -985,8 +986,8 @@ class MockRewardTaskRepository implements RewardTaskRepository {
       ),
       _task(
         id: 'wrongCleanup',
-        title: '错词清理',
-        condition: '今日错词再次答对',
+        title: 'Mistake cleanup',
+        condition: 'Answer one of today\'s missed words correctly again',
         points: 10,
         targetRoute: '/review',
         done: state.wrongCleanupDone,
@@ -994,8 +995,8 @@ class MockRewardTaskRepository implements RewardTaskRepository {
       ),
       _task(
         id: 'forumInteraction',
-        title: '论坛互动',
-        condition: '发帖或评论通过审核',
+        title: 'Forum interaction',
+        condition: 'Post or comment and pass moderation',
         points: 5,
         targetRoute: '/discover',
         done: state.forumInteractionDone,

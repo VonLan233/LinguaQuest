@@ -48,7 +48,7 @@ void main() {
       expect(assets.single.quantity, 1);
       expect(assets.single.acquiredAt.isUtc, isTrue);
       expect(assets.single.updatedAt.isUtc, isTrue);
-      expect(response.notifications.single.title, '积分抽奖结果');
+      expect(response.notifications.single.title, 'Lucky draw result');
       expect(response.notifications.single.targetRoute, '/profile');
       expect(response.notifications.single.createdAt.isUtc, isTrue);
     },
@@ -84,7 +84,7 @@ void main() {
     expect(prize.fragmentValue, 7);
     expect(prize.isActive, isFalse);
     expect(asset.prizeId, 'snake-prize');
-    expect(asset.categoryLabel, '学习徽章');
+    expect(asset.categoryLabel, 'Learning badge');
     expect(asset.quantity, 2);
     expect(asset.fragmentValue, 7);
     expect(asset.acquiredAt, acquiredAt);

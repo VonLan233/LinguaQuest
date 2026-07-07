@@ -39,7 +39,9 @@ class _AiConfusableWordsScreenState
       _result = null;
       _errorMessage = null;
     });
-    final result = await ref.read(appControllerProvider.notifier).askAi(
+    final result = await ref
+        .read(appControllerProvider.notifier)
+        .askAi(
           featureType: 'confusion',
           prompt: 'Distinguish words confusable with: $input',
           targetWord: input,
@@ -48,7 +50,8 @@ class _AiConfusableWordsScreenState
     setState(() {
       _isLoading = false;
       if (result.isEmpty) {
-        _errorMessage = ref.read(appControllerProvider).errorMessage ??
+        _errorMessage =
+            ref.read(appControllerProvider).errorMessage ??
             AppLocalizations.of(context).aiErrorGeneric;
       } else {
         _result = result;
@@ -71,22 +74,29 @@ class _AiConfusableWordsScreenState
         key: _formKey,
         child: ListView(
           padding: const EdgeInsets.fromLTRB(
-              AppTokens.s20, AppTokens.s20, AppTokens.s20, 88),
+            AppTokens.s20,
+            AppTokens.s20,
+            AppTokens.s20,
+            88,
+          ),
           children: [
             AppCard(
               padding: const EdgeInsets.all(AppTokens.s16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Enter a word to compare with its look-alikes',
-                      style: theme.textTheme.titleMedium
-                          ?.copyWith(fontWeight: FontWeight.w700)),
+                  Text(
+                    'Enter a word to compare with its look-alikes',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                   const SizedBox(height: AppTokens.s12),
                   TextFormField(
                     controller: _controller,
                     maxLength: 100,
                     decoration: const InputDecoration(
-                      hintText: 'e.g. 在 / 再, affect / effect...',
+                      hintText: 'e.g. affect / effect, there / their...',
                       border: OutlineInputBorder(),
                     ),
                     validator: (v) => (v == null || v.trim().isEmpty)
@@ -111,8 +121,9 @@ class _AiConfusableWordsScreenState
                 child: Text(
                   'Enter a word to see commonly confused look-alikes and how to tell them apart.',
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyMedium
-                      ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ),
             ],
@@ -143,8 +154,10 @@ class _ConfusionResult extends StatelessWidget {
     if (pairs.isEmpty) {
       return AppCard(
         padding: const EdgeInsets.all(AppTokens.s16),
-        child: Text('No confusable words found.',
-            style: theme.textTheme.bodyMedium),
+        child: Text(
+          'No confusable words found.',
+          style: theme.textTheme.bodyMedium,
+        ),
       );
     }
     return Column(
@@ -160,21 +173,27 @@ class _ConfusionResult extends StatelessWidget {
                   children: [
                     Text(
                       '${raw['word'] ?? ''}  vs  ${raw['confusedWith'] ?? ''}',
-                      style: theme.textTheme.titleMedium
-                          ?.copyWith(fontWeight: FontWeight.w700),
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     const SizedBox(height: AppTokens.s8),
-                    Text('${raw['distinction'] ?? ''}',
-                        style: theme.textTheme.bodyMedium),
+                    Text(
+                      '${raw['distinction'] ?? ''}',
+                      style: theme.textTheme.bodyMedium,
+                    ),
                     if (raw['examples'] is List &&
                         (raw['examples'] as List).isNotEmpty) ...[
                       const SizedBox(height: AppTokens.s8),
                       for (final ex in (raw['examples'] as List))
                         Padding(
                           padding: const EdgeInsets.only(top: AppTokens.s4),
-                          child: Text('• $ex',
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                  color: theme.colorScheme.onSurfaceVariant)),
+                          child: Text(
+                            '• $ex',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
                         ),
                     ],
                   ],

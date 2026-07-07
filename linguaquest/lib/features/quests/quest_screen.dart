@@ -73,7 +73,7 @@ class QuestScreen extends ConsumerWidget {
           icon: AppIcons.smartToy,
           title: l10n.questAiTutor,
           body: l10n.questAiTutorBody,
-          value: '暂未开放',
+          value: 'Coming soon',
           route: '/ai-tutor',
         ),
       ],

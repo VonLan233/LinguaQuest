@@ -34,21 +34,21 @@ String displayTarget(String? value, {AppLocalizations? l10n}) {
   }
   switch (value) {
     case 'CET-4':
-      return '四级核心词汇';
+      return 'CET-4 Core Vocabulary';
     case 'CET-6':
-      return '六级核心词汇';
+      return 'CET-6 Core Vocabulary';
     case '考研':
-      return '考研英语核心词汇';
+      return 'Kaoyan English Core Vocabulary';
     case 'Beginner':
-      return '入门基础词汇';
+      return 'Beginner Vocabulary';
     case 'MUET':
-      return 'MUET 高频词汇';
+      return 'MUET High-Frequency Vocabulary';
     case 'Daily English':
-      return '日常英语';
+      return 'Daily English';
     case 'Business English':
-      return '商务英语';
+      return 'Business English';
     case null:
-      return '日常英语';
+      return 'Daily English';
     default:
       return value;
   }
@@ -71,7 +71,7 @@ String displayQuestionType(QuizQuestionType type, {AppLocalizations? l10n}) {
         return l10n.labelQuestionTypeListeningMeaningChoice;
       case QuizQuestionType.spelling:
         return l10n.labelQuestionTypeSpelling;
-      // 新题型使用硬编码文本（i18n 翻译冻结，不添加新 ARB key）
+      // Newer question types do not have ARB keys yet, so use English labels.
       case QuizQuestionType.sentenceCloze:
         return 'Cloze';
       case QuizQuestionType.confusableChoice:
@@ -84,20 +84,20 @@ String displayQuestionType(QuizQuestionType type, {AppLocalizations? l10n}) {
   }
   switch (type) {
     case QuizQuestionType.meaningChoice:
-      return '英文选义';
+      return 'Meaning choice';
     case QuizQuestionType.chineseChoice:
-      return '中文选词';
+      return 'Chinese choice';
     case QuizQuestionType.contextChoice:
-      return '语境选义';
+      return 'Context choice';
     case QuizQuestionType.imageChoice:
-      return '图片选词';
+      return 'Image choice';
     case QuizQuestionType.listeningWordChoice:
-      return '听音选词';
+      return 'Listening word choice';
     case QuizQuestionType.listeningMeaningChoice:
-      return '听音选义';
+      return 'Listening meaning choice';
     case QuizQuestionType.spelling:
-      return '拼写';
-    // 新题型（i18n 翻译冻结，不添加 ARB key，直接硬编码中文显示名）
+      return 'Spelling';
+    // Newer question types do not have ARB keys yet, so use English labels.
     case QuizQuestionType.sentenceCloze:
       return 'Cloze';
     case QuizQuestionType.confusableChoice:
@@ -128,15 +128,15 @@ String displayLevel(String? value, {AppLocalizations? l10n}) {
   }
   switch (value) {
     case 'Beginner':
-      return '入门';
+      return 'Beginner';
     case 'Elementary':
-      return '基础';
+      return 'Elementary';
     case 'Intermediate':
-      return '中级';
+      return 'Intermediate';
     case 'Advanced':
-      return '高级';
+      return 'Advanced';
     case null:
-      return '基础';
+      return 'Elementary';
     default:
       return value;
   }
@@ -157,11 +157,11 @@ String displayDifficulty(String value, {AppLocalizations? l10n}) {
   }
   switch (value) {
     case 'Easy':
-      return '简单';
+      return 'Easy';
     case 'Medium':
-      return '中等';
+      return 'Medium';
     case 'Hard':
-      return '困难';
+      return 'Hard';
     default:
       return value;
   }
@@ -180,9 +180,9 @@ String displayDifficultyFilter(String value, {AppLocalizations? l10n}) {
   }
   switch (value) {
     case 'All':
-      return '全部';
+      return 'All';
     case 'Weak':
-      return '弱项';
+      return 'Weak';
     default:
       return displayDifficulty(value);
   }
@@ -211,19 +211,19 @@ String displayWordStatus(String value, {AppLocalizations? l10n}) {
   }
   switch (value) {
     case 'New':
-      return '未学习';
+      return 'New';
     case 'Previewed':
-      return '已预览';
+      return 'Previewed';
     case 'Learning':
-      return '学习中';
+      return 'Learning';
     case 'Review':
-      return '复习中';
+      return 'Review';
     case 'Relearning':
-      return '需巩固';
+      return 'Relearning';
     case 'Mastered':
-      return '已掌握';
+      return 'Mastered';
     case 'Ignored':
-      return '已忽略';
+      return 'Ignored';
     default:
       return value;
   }
@@ -232,7 +232,7 @@ String displayWordStatus(String value, {AppLocalizations? l10n}) {
 String displayCustomTag(String value, {AppLocalizations? l10n}) {
   final trimmed = value.trim();
   if (trimmed.isEmpty) {
-    return l10n?.labelCustomTagCustom ?? '自定义';
+    return l10n?.labelCustomTagCustom ?? 'Custom';
   }
 
   if (l10n != null) {
@@ -249,11 +249,11 @@ String displayCustomTag(String value, {AppLocalizations? l10n}) {
   }
   switch (trimmed.toLowerCase()) {
     case 'custom':
-      return '自定义';
+      return 'Custom';
     case 'mistake':
-      return '错题';
+      return 'Mistake';
     case 'character':
-      return '品格';
+      return 'Character';
     default:
       return displayWordTag(trimmed);
   }
@@ -299,38 +299,38 @@ String displayWordTag(String value, {AppLocalizations? l10n}) {
   }
   switch (value.trim().toLowerCase()) {
     case 'academic':
-      return '学术';
+      return 'Academic';
     case 'beginner':
-      return '入门';
+      return 'Beginner';
     case 'business':
-      return '商务';
+      return 'Business';
     case 'campus':
-      return '校园';
+      return 'Campus';
     case 'daily':
-      return '日常';
+      return 'Daily';
     case 'exam':
-      return '考试';
+      return 'Exam';
     case 'cet4':
     case 'cet-4':
-      return '四级';
+      return 'CET-4';
     case 'cet6':
     case 'cet-6':
-      return '六级';
+      return 'CET-6';
     case 'kaoyan':
     case '考研':
-      return '考研';
+      return 'Kaoyan';
     case 'food':
-      return '饮食';
+      return 'Food';
     case 'health':
-      return '健康';
+      return 'Health';
     case 'study':
-      return '学习';
+      return 'Study';
     case 'travel':
-      return '旅行';
+      return 'Travel';
     case 'writing':
-      return '写作';
+      return 'Writing';
     default:
-      return value.trim().isEmpty ? '目标词' : value.trim();
+      return value.trim().isEmpty ? 'Target word' : value.trim();
   }
 }
 
@@ -400,19 +400,19 @@ String displayLotteryCategory(String value, {AppLocalizations? l10n}) {
   }
   switch (value) {
     case 'avatarFrame':
-      return '头像框';
+      return 'Avatar frame';
     case 'profileBackground':
-      return '主页背景';
+      return 'Profile background';
     case 'badge':
-      return '学习徽章';
+      return 'Learning badge';
     case 'title':
-      return '训练称号';
+      return 'Training title';
     case 'cardSkin':
-      return '卡片皮肤';
+      return 'Card skin';
     case 'fragment':
-      return '安慰碎片';
+      return 'Comfort fragment';
     default:
-      return '装饰资产';
+      return 'Decorative asset';
   }
 }
 
@@ -431,12 +431,12 @@ String displayLotteryRarity(String value, {AppLocalizations? l10n}) {
   }
   switch (value) {
     case 'rare':
-      return '稀有';
+      return 'Rare';
     case 'uncommon':
-      return '进阶';
+      return 'Uncommon';
     case 'common':
-      return '普通';
+      return 'Common';
     default:
-      return '安慰';
+      return 'Comfort';
   }
 }

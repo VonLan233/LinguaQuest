@@ -114,7 +114,10 @@ AppNotificationType appNotificationTypeFromName(String? value) {
   return AppNotificationType.activity;
 }
 
-String appNotificationTypeLabel(AppNotificationType type, {AppLocalizations? l10n}) {
+String appNotificationTypeLabel(
+  AppNotificationType type, {
+  AppLocalizations? l10n,
+}) {
   if (l10n != null) {
     switch (type) {
       case AppNotificationType.learningReminder:
@@ -129,13 +132,13 @@ String appNotificationTypeLabel(AppNotificationType type, {AppLocalizations? l10
   }
   switch (type) {
     case AppNotificationType.learningReminder:
-      return '学习提醒';
+      return 'Learning reminder';
     case AppNotificationType.reviewDue:
-      return '复习到期';
+      return 'Review due';
     case AppNotificationType.checkInReminder:
-      return '打卡提醒';
+      return 'Check-in reminder';
     case AppNotificationType.activity:
-      return '活动消息';
+      return 'Activity';
   }
 }
 
