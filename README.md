@@ -1,6 +1,4 @@
-<p align = "center">
-<strong>LinguaQuest </strong>
-</p>
+<h1 align="center">LinguaQuest</h1>
 
 <p align="center">
   <img src="linguaquest/lib/assets/image/icon.png" alt="LinguaQuest app icon" width="120">
