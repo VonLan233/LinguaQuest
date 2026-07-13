@@ -1,234 +1,224 @@
 # LinguaQuest
 
 <p align="center">
-  <strong>词境星球 · A gamified Flutter language-learning app</strong>
+  <img src="linguaquest/lib/assets/image/icon.png" alt="LinguaQuest app icon" width="120">
 </p>
 
 <p align="center">
-  <a href="https://flutter.dev"><img alt="Flutter" src="https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter&logoColor=white"></a>
-  <a href="https://dart.dev"><img alt="Dart" src="https://img.shields.io/badge/Dart-3.11-0175C2?logo=dart&logoColor=white"></a>
-  <img alt="Platform" src="https://img.shields.io/badge/platform-Android-brightgreen?logo=android&logoColor=white">
-  <img alt="Backend" src="https://img.shields.io/badge/API-Dart%20Shelf-2F74C0">
-  <img alt="Status" src="https://img.shields.io/badge/status-active%20prototype-orange">
+  <strong>Plan. Practice. Progress.</strong><br>
+  An Android-first learning platform for structured vocabulary, reading, review, and AI-assisted practice.
 </p>
 
-LinguaQuest is a mobile-first English learning prototype that combines **Baicizhan-style visual vocabulary memory** with **Duolingo-style game progression**. It provides a complete learning loop: onboarding, goal setup, learning paths, short quizzes, mistake review, spaced repetition, custom word cards, quests, profile data, and an optional Dart API backend.
+<p align="center">
+  <a href="https://flutter.dev"><img alt="Flutter 3.41.6" src="https://img.shields.io/badge/Flutter-3.41.6-02569B?logo=flutter&logoColor=white"></a>
+  <a href="https://dart.dev"><img alt="Dart 3.11.4" src="https://img.shields.io/badge/Dart-3.11.4-0175C2?logo=dart&logoColor=white"></a>
+  <img alt="Primary platform: Android" src="https://img.shields.io/badge/platform-Android-3DDC84?logo=android&logoColor=white">
+  <a href="LICENSE"><img alt="License: AGPL-3.0" src="https://img.shields.io/badge/license-AGPL--3.0-663399"></a>
+</p>
 
-## Table of Contents
+<p align="center">
+  <a href="#capabilities">Capabilities</a> ·
+  <a href="#architecture">Architecture</a> ·
+  <a href="#getting-started">Getting started</a> ·
+  <a href="#quality">Quality</a> ·
+  <a href="#documentation">Documentation</a>
+</p>
 
-- [Highlights](#highlights)
-- [Product Flow](#product-flow)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [Getting Started](#getting-started)
-- [Run with Backend API](#run-with-backend-api)
-- [Testing](#testing)
-- [Build an Android APK](#build-an-android-apk)
-- [API Endpoints](#api-endpoints)
-- [Roadmap](#roadmap)
-- [Contributing](#contributing)
-- [License](#license)
+## Overview
 
-## Highlights
+LinguaQuest turns a learning goal into a daily loop: choose a scoped wordbook, study new material, practise retrieval, review weak items, and track progress. The repository combines a Flutter client, an optional Dart API, PostgreSQL persistence, and supporting services in one codebase.
 
-- **Gamified learning path** - lesson cards, XP rewards, streaks, progress states, and short practice sessions.
-- **Visual vocabulary learning** - word cards with meanings, examples, difficulty tags, and image-memory oriented design.
-- **Quiz and result loop** - lesson preview, quiz session, result summary, accuracy feedback, and mistake collection.
-- **Review center** - spaced repetition utilities, due words, weak words, and a dedicated Mistake Book.
-- **Custom word CRUD** - add, edit, view, delete, and review personal vocabulary cards.
-- **Offline-first demo mode** - the Flutter app runs with mock repositories by default, so the full flow works without a server.
-- **Cloud-ready API mode** - optional Dart `shelf` server with JWT auth, PostgreSQL persistence, custom words, study sessions, and review events.
-- **Production-oriented UI** - Material 3 theme, dark mode support, shared cards, empty states, metrics, and mobile-friendly navigation.
+The app works in two modes. With no API URL, local mock repositories provide a complete offline demo without backend-managed accounts, infrastructure, or secrets. With an API URL, the same client connects to the Shelf backend for persistent accounts, study data, social features, and optional remote services.
 
-## Product Flow
+Study content currently covers Chinese HSK, Japanese JLPT, English, Spanish, French, and Malay collections. The product interface is currently fixed to English while localization infrastructure remains in the codebase.
 
-```text
-Splash
-  -> Onboarding
-  -> Register / Login
-  -> Goal Setup
-  -> Home Dashboard
-  -> Learning Path
-  -> Lesson Preview
-  -> Quiz Session
-  -> Lesson Result
-  -> Review Center / Mistake Book
-  -> Wordbook / Custom Words
+## Capabilities
+
+| Area | What is included |
+| --- | --- |
+| Guided learning | Goal setup, scoped study plans, learning paths, mixed study sessions, and daily targets |
+| Practice and review | Quizzes, listening and spelling exercises, passage cloze, mistake book, weak-word review, and spaced repetition |
+| Vocabulary and reading | Built-in wordbooks, search, custom-word CRUD, article reading, vocabulary capture, and pronunciation support |
+| AI learning | Chat, sentence analysis and generation, cloze creation, writing review, reading explanations, and confusable-word practice |
+| Motivation | XP, streaks, achievements, leaderboards, daily tasks, rewards, and cosmetic prize inventory |
+| Community and discovery | Forum posts, likes, favorites, reports, public profiles, notifications, language map, and study spots |
+| Learner controls | Progress analytics, recommendations, reminders, privacy settings, account data controls, light/dark themes, and accessibility-aware widgets |
+
+## Architecture
+
+```mermaid
+flowchart LR
+    App["Flutter application"]
+    Mock["Local mock repositories"]
+    API["Dart Shelf API"]
+    DB[("PostgreSQL")]
+    AI["OpenAI-compatible AI provider"]
+    Mail["SMTP or Resend"]
+    TTS["Edge TTS service"]
+
+    App -->|"API_BASE_URL is empty"| Mock
+    App -->|"API_BASE_URL is set"| API
+    API --> DB
+    API -. optional .-> AI
+    API -. optional .-> Mail
+    API -. optional .-> TTS
 ```
 
-The target daily learning loop is simple: open the app, check today's task, complete a short lesson, review mistakes, earn XP, and return the next day for spaced review.
+The Flutter client selects mock or API-backed repositories at startup. In connected mode, the Shelf service owns authentication, learning records, rewards, community data, and AI policy; PostgreSQL stores durable state. AI, transactional email, and text-to-speech integrations are optional and configured on the server side.
 
-## Tech Stack
+### Technology map
 
-| Layer | Technology |
+| Layer | Primary technology |
 | --- | --- |
-| Mobile app | Flutter, Dart, Material 3 |
-| State management | Riverpod |
-| Navigation | GoRouter |
-| HTTP client | Dio |
-| Local persistence | SharedPreferences / mock repositories |
-| Backend API | Dart `shelf`, `shelf_router` |
-| Auth | JWT |
-| Database | PostgreSQL |
-| Deployment | Docker Compose, VPS deploy script |
+| Client | Flutter, Dart, Material 3 |
+| State and navigation | Riverpod, GoRouter |
+| Networking and device services | Dio, local notifications, TTS/audio, maps, geolocation |
+| API | Dart `shelf`, `shelf_router`, JWT authentication |
+| Data | PostgreSQL, bundled JSON learning assets, local preferences |
+| Optional integrations | OpenAI-compatible AI, SMTP/Resend email, Edge TTS |
+| Delivery | Docker Compose, GitHub Actions, Android APK artifacts |
 
-## Project Structure
+## Repository layout
 
 ```text
 .
-├── LinguaQuest_Product_Blueprint.md   # Product planning blueprint
-├── linguaquest/                       # Flutter mobile app
-│   ├── lib/
-│   │   ├── core/                      # Routing, theme, state, shared widgets, utilities
-│   │   ├── data/                      # Models, repositories, API client, seed lessons
-│   │   └── features/                  # Auth, home, learning, quiz, review, wordbook, quests, profile
-│   └── test/                          # Flutter widget and unit tests
-└── server/                            # Dart Shelf API server
-    ├── bin/
-    ├── lib/src/                       # Routes, database, auth, config, review policy
-    ├── deploy/                        # VPS deployment helper
-    └── test/
+├── linguaquest/             # Flutter application, assets, and client tests
+│   ├── lib/core/            # Routing, state, services, theme, and shared UI
+│   ├── lib/data/            # Models, repositories, remote clients, and seed data
+│   ├── lib/features/        # Product features grouped by domain
+│   └── test/                # Unit, widget, regression, and accessibility tests
+├── server/                  # Dart Shelf API and PostgreSQL integration
+│   ├── bin/                 # Server entry point
+│   ├── lib/src/             # Routes, policies, configuration, and persistence
+│   ├── test/                # API, policy, provider, and data tests
+│   ├── deploy/              # Production deployment assets
+│   └── tts/                 # Optional text-to-speech service
+├── docs/                    # Design, testing, release, and domain documentation
+├── tools/                   # Data preparation and maintenance utilities
+└── .github/workflows/       # Analyze, test, and Android build automation
 ```
 
-## Getting Started
+## Getting started
 
 ### Prerequisites
 
-- Flutter SDK with Dart `^3.11.4`
-- Android Studio or Android SDK for emulator/device builds
-- Docker and Docker Compose if you want to run the backend
+- Flutter `3.41.6` with Dart `3.11.4`
+- Android Studio or an Android SDK with an emulator/device
+- Docker Engine with Docker Compose for connected mode
 
-### Run the Flutter app
+### Option A: offline demo
 
-The app runs in offline demo mode by default.
+No backend or secrets are required. Repository access is required to clone this private project.
 
 ```bash
-cd linguaquest
+git clone https://github.com/VonLan233/LinguaQuest.git
+cd LinguaQuest/linguaquest
 flutter pub get
 flutter run
 ```
 
-Offline demo mode uses mock repositories, so you can test the complete user journey without starting the backend.
+Because `API_BASE_URL` is empty, the app automatically uses its mock repositories. This path is intended for UI development, demonstrations, and client tests.
 
-## Run with Backend API
+Run `flutter devices` first if you want to select a specific Android emulator or device with `flutter run -d <device-id>`.
 
-Start the API and PostgreSQL database:
+### Option B: local API and database
+
+Start PostgreSQL and the API from the repository root:
 
 ```bash
 cd server
 docker compose up --build
 ```
 
-Then run the Flutter app against the API:
+This Compose file contains known development credentials and publishes the database and API ports. Use it only on a trusted development machine or local network; never deploy it to a public or shared host. Optional remote AI, email delivery, and TTS integrations require separate server configuration.
+
+Confirm the API is healthy:
 
 ```bash
-cd ../linguaquest
+curl --fail http://localhost:8080/health
+```
+
+Expected response:
+
+```json
+{"status":"ok"}
+```
+
+In another terminal, run the client against the host service:
+
+```bash
+cd linguaquest
+flutter pub get
 flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8080
 ```
 
-> `10.0.2.2` is the Android emulator address for the host machine. Use your machine IP when testing on a physical Android device.
+`10.0.2.2` is the Android emulator alias for the host loopback interface. Use a reachable host address for a physical device.
 
-To run the Flutter app against the deployed API on `intro-server`:
+## Configuration
 
-```bash
-cd linguaquest
-flutter run --dart-define=API_BASE_URL=http://64.90.1.138:8080
-```
+The client has one compile-time setting:
 
-## Testing
-
-Run Flutter checks:
-
-```bash
-cd linguaquest
-flutter analyze
-flutter test
-```
-
-Run server tests:
-
-```bash
-cd server
-dart test
-```
-
-## Build an Android APK
-
-Build a release APK for group testing:
-
-```bash
-cd linguaquest
-flutter build apk --release
-```
-
-Output path:
-
-```text
-linguaquest/build/app/outputs/flutter-apk/app-release.apk
-```
-
-For a smaller device-specific package, split by ABI:
-
-```bash
-flutter build apk --release --split-per-abi
-```
-
-Most modern Android phones can use:
-
-```text
-linguaquest/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-```
-
-## API Endpoints
-
-| Method | Path | Description |
+| Setting | Required | Purpose |
 | --- | --- | --- |
-| `GET` | `/health` | Health check |
-| `GET` | `/wordbooks` | List available wordbooks |
-| `GET` | `/wordbooks/:id` | Get one wordbook with words |
-| `GET` | `/words` | Search/list words by wordbook and query |
-| `GET` | `/words/:id` | Get one word entry |
-| `POST` | `/auth/register` | Register a learner |
-| `POST` | `/auth/login` | Login and receive JWT |
-| `GET` | `/me` | Get current profile |
-| `PATCH` | `/me` | Update profile and learning goals |
-| `GET` | `/lessons` | Fetch backend-owned lesson catalog |
-| `GET` | `/learning-progress` | Fetch completed lessons, today's review, and claimed rewards |
-| `POST` | `/reward-claims` | Claim a daily XP reward once per local day |
-| `GET` | `/custom-words` | List custom words |
-| `POST` | `/custom-words` | Create a custom word |
-| `PATCH` | `/custom-words/:id` | Update a custom word |
-| `DELETE` | `/custom-words/:id` | Delete a custom word |
-| `POST` | `/study-sessions` | Record lesson completion |
-| `GET` | `/study-plan` | Fetch the current learner study plan |
-| `PUT` | `/study-plan` | Create or update the learner study plan |
-| `POST` | `/study-plan/reset` | Reset the learner study plan |
-| `GET` | `/review/due` | Fetch due review words |
-| `POST` | `/review-events` | Record review outcome |
+| `API_BASE_URL` | No | Empty selects offline mode; a URL selects API-backed repositories |
 
-## Roadmap
+Server configuration is environment-based. [`server/.env.example`](server/.env.example) documents database credentials, JWT secrets, mail delivery, AI provider settings, CORS, and logging. Keep real secrets in ignored environment files or a secret manager; never commit them.
 
-- [x] Core Flutter navigation and learning loop
-- [x] Redesigned mobile UI for onboarding, home, learning, quiz, review, wordbook, quests, and profile
-- [x] Custom word CRUD
-- [x] Mistake Book and review entry points
-- [x] Android release APK build
-- [ ] Add real screenshot assets to `docs/screenshots/`
-- [ ] Add CI workflow for analyze/test/build checks
-- [ ] Add signed release configuration for production APK/AAB distribution
-- [ ] Expand backend coverage and deployment documentation
-- [ ] Implement class mode, leaderboard, and AI tutor as full production flows
+## Quality
+
+The [CI workflow](.github/workflows/flutter-apk.yml) runs client analysis and tests, server tests, and a release-mode APK build before publishing the APK as an internal testing artifact. The current Android project still uses the example application ID and debug signing for release-mode builds, so this artifact is not ready for app-store submission.
+
+Run the same core checks locally from the repository root:
+
+```bash
+(cd linguaquest && flutter analyze && flutter test)
+(cd server && dart test)
+```
+
+## Build and deployment
+
+Verify the project HTTPS endpoint, then build a connected release-mode APK:
+
+```bash
+export API_BASE_URL=https://api.vonlan233.top
+curl --fail "$API_BASE_URL/health"
+
+cd linguaquest
+flutter build apk --release \
+  --dart-define=API_BASE_URL="$API_BASE_URL"
+```
+
+If `API_BASE_URL` is omitted, the release build remains in offline mode. Android release builds should use HTTPS; do not ship a cleartext production API URL. The generated APK is currently intended for testing and sideloading only: configure a production application ID and release signing before store distribution.
+
+Deployment, signing, and release guidance is indexed in [Documentation](#documentation).
+
+## Documentation
+
+| Document | Scope |
+| --- | --- |
+| [Flutter client guide](linguaquest/README.md) | Client modes, development commands, and release behavior |
+| [Server operations guide](server/README.md) | API startup, configuration, Docker, and deployment |
+| [Product blueprint](LinguaQuest_Product_Blueprint.md) | Product model, experience goals, and planning context |
+| [Test plan](docs/testing/TEST_PLAN.md) | Test strategy, environments, and acceptance coverage |
+| [Smoke-test guide](docs/release/smoke-test.md) | Release candidate verification |
+| [Android release checklist](docs/release/android-release-checklist.md) | Packaging, signing, and distribution checks |
+| [Screenshot guide](docs/screenshots/README.md) | Capture conventions and required store assets |
+
+## Project status
+
+LinguaQuest is under active development as a team project. Android is the primary delivery target; Flutter platform scaffolding for other targets is present but is not the current release commitment. Connected deployments require operator-managed secrets and infrastructure, while the default offline mode remains intentionally self-contained.
 
 ## Contributing
 
-This is currently an academic/team project. For clean collaboration:
+1. Create a focused branch from `dev`.
+2. Keep changes scoped and include tests for non-trivial behavior.
+3. Run client analysis, client tests, and server tests as applicable.
+4. Include screenshots or recordings for visible UI changes.
+5. Document new environment variables in `server/.env.example`.
+6. Open a pull request with the user impact, verification evidence, and known limitations.
 
-1. Create a feature branch from `main`.
-2. Keep commits focused and reviewable.
-3. Run `flutter analyze` and `flutter test` before opening a pull request.
-4. Include screenshots or screen recordings for UI changes.
-5. Document new environment variables in `.env.example`.
+Team members can browse [open issues](https://github.com/VonLan233/LinguaQuest/issues) after signing in with repository access.
 
 ## License
 
-No license file has been added yet. Add a license before public reuse or distribution outside the project team.
+LinguaQuest is licensed under the [GNU Affero General Public License v3.0](LICENSE). Review the license text for the terms that apply when using, modifying, or distributing the software.
