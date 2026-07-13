@@ -76,9 +76,7 @@ Widget _harness({
 
 AppState _zhState({String current = 'hsk1', int books = 6}) {
   return AppState.initial().copyWith(
-    wordBooks: [
-      for (var i = 1; i <= books; i++) _fakeBook('hsk$i'),
-    ],
+    wordBooks: [for (var i = 1; i <= books; i++) _fakeBook('hsk$i')],
     currentWordBookId: current,
     currentLanguage: 'zh',
   );
@@ -101,18 +99,20 @@ AppState _bothLangState() {
 
 void main() {
   group('LanguageWordbookPicker', () {
-    testWidgets('shows Chinese (active) and Japanese (active) in language list',
-        (tester) async {
-      await tester.pumpWidget(_harness(state: _bothLangState()));
+    testWidgets(
+      'shows Chinese (active) and Japanese (active) in language list',
+      (tester) async {
+        await tester.pumpWidget(_harness(state: _bothLangState()));
 
-      await tester.tap(find.text('Open'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Open'));
+        await tester.pumpAndSettle();
 
-      expect(find.text('Chinese (中文)'), findsOneWidget);
-      expect(find.text('Japanese (日本語)'), findsOneWidget);
-      // All six languages now ship books, so no "Coming Soon" pill renders.
-      expect(find.text('Coming Soon'), findsNothing);
-    });
+        expect(find.text('Chinese'), findsOneWidget);
+        expect(find.text('Japanese'), findsOneWidget);
+        // All six languages now ship books, so no "Coming Soon" pill renders.
+        expect(find.text('Coming Soon'), findsNothing);
+      },
+    );
 
     testWidgets('level-1 list shows all six languages', (tester) async {
       await tester.pumpWidget(_harness(state: _bothLangState()));
@@ -134,14 +134,15 @@ void main() {
       expect(languageLabelRaw('ms'), 'Malay (Bahasa Melayu)');
     });
 
-    testWidgets('selecting Chinese language shows hsk wordbooks',
-        (tester) async {
+    testWidgets('selecting Chinese language shows hsk wordbooks', (
+      tester,
+    ) async {
       await tester.pumpWidget(_harness(state: _zhState(books: 6)));
 
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Chinese (中文)'));
+      await tester.tap(find.text('Chinese'));
       await tester.pumpAndSettle();
 
       expect(find.text('HSK1'), findsOneWidget);
@@ -160,15 +161,16 @@ void main() {
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Japanese (日本語)'));
+      await tester.tap(find.text('Japanese'));
       await tester.pumpAndSettle();
 
       // Should now show the JLPT book list.
       expect(find.text('JLPT_N5'), findsOneWidget);
     });
 
-    testWidgets('language rows use Expanded (no Spacer) for aligned pills',
-        (tester) async {
+    testWidgets('language rows use Expanded (no Spacer) for aligned pills', (
+      tester,
+    ) async {
       await tester.pumpWidget(_harness(state: _bothLangState()));
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
@@ -177,44 +179,45 @@ void main() {
     });
 
     testWidgets(
-        'selecting a wordbook calls switchWordBook (no other-scope wipe)',
-        (tester) async {
-      late _FakeNotifier notifier;
-      await tester.pumpWidget(_harness(
-        state: _zhState(books: 2),
-        capture: (n) => notifier = n,
-      ));
+      'selecting a wordbook calls switchWordBook (no other-scope wipe)',
+      (tester) async {
+        late _FakeNotifier notifier;
+        await tester.pumpWidget(
+          _harness(state: _zhState(books: 2), capture: (n) => notifier = n),
+        );
 
-      await tester.tap(find.text('Open'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Open'));
+        await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Chinese (中文)'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Chinese'));
+        await tester.pumpAndSettle();
 
-      await tester.tap(find.text('HSK2'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('HSK2'));
+        await tester.pumpAndSettle();
 
-      // The picker delegates to the P2b scope-switch method; it does not
-      // mutate any other scope's keys itself.
-      expect(notifier.switchCalls, contains('hsk2'));
-    });
+        // The picker delegates to the P2b scope-switch method; it does not
+        // mutate any other scope's keys itself.
+        expect(notifier.switchCalls, contains('hsk2'));
+      },
+    );
 
-    testWidgets('selecting a wordbook keeps the sheet open (immediate highlight)',
-        (tester) async {
-      _FakeNotifier? captured;
-      await tester.pumpWidget(_harness(
-        state: _zhState(books: 6),
-        capture: (n) => captured = n,
-      ));
-      await tester.tap(find.text('Open'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Chinese (中文)'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('HSK2'));
-      await tester.pumpAndSettle();
-      // 切换被调用，但 sheet 不再立即关闭（标题仍在）。
-      expect(captured!.switchCalls, contains('hsk2'));
-      expect(find.text('Choose Wordbook'), findsOneWidget);
-    });
+    testWidgets(
+      'selecting a wordbook keeps the sheet open (immediate highlight)',
+      (tester) async {
+        _FakeNotifier? captured;
+        await tester.pumpWidget(
+          _harness(state: _zhState(books: 6), capture: (n) => captured = n),
+        );
+        await tester.tap(find.text('Open'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Chinese'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('HSK2'));
+        await tester.pumpAndSettle();
+        // 切换被调用，但 sheet 不再立即关闭（标题仍在）。
+        expect(captured!.switchCalls, contains('hsk2'));
+        expect(find.text('Choose Wordbook'), findsOneWidget);
+      },
+    );
   });
 }

@@ -26,32 +26,32 @@ class LotteryPrize {
   static String categoryLabelFor(String category) {
     switch (category) {
       case 'avatarFrame':
-        return '头像框';
+        return 'Avatar frame';
       case 'profileBackground':
-        return '主页背景';
+        return 'Profile background';
       case 'badge':
-        return '学习徽章';
+        return 'Learning badge';
       case 'title':
-        return '训练称号';
+        return 'Training title';
       case 'cardSkin':
-        return '卡片皮肤';
+        return 'Card skin';
       case 'fragment':
-        return '安慰碎片';
+        return 'Comfort fragment';
       default:
-        return '装饰资产';
+        return 'Decorative asset';
     }
   }
 
   String get rarityLabel {
     switch (rarity) {
       case 'rare':
-        return '稀有';
+        return 'Rare';
       case 'uncommon':
-        return '进阶';
+        return 'Uncommon';
       case 'common':
-        return '普通';
+        return 'Common';
       case 'comfort':
-        return '安慰';
+        return 'Comfort';
       default:
         return rarity;
     }

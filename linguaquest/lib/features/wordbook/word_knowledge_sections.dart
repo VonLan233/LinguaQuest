@@ -71,7 +71,7 @@ class _WordKnowledgeSectionsState extends State<WordKnowledgeSections> {
         color: AppTheme.teal,
         title: l10n.wordKnowledgeSynAnt,
         body:
-            '近义：${knowledge.synonyms.join('、')}；反义：${knowledge.antonyms.join('、')}',
+            'Synonyms: ${knowledge.synonyms.join(', ')}; antonyms: ${knowledge.antonyms.join(', ')}',
         synonyms: knowledge.synonyms,
         antonyms: knowledge.antonyms,
       ),
@@ -306,7 +306,8 @@ _KnowledgeData _knowledgeFor(
         synonyms: ['assign', 'distribute'],
         antonyms: ['withhold', 'keep'],
         family: ['allocation', 'allocated', 'allocator'],
-        rootNote: '可拆为 al- + locate，记作“把资源放到指定位置”。',
+        rootNote:
+            'Break it into al- + locate: place resources in a specific location.',
       );
     case 'evaluate':
       return const _KnowledgeData(
@@ -314,7 +315,8 @@ _KnowledgeData _knowledgeFor(
         synonyms: ['assess', 'judge'],
         antonyms: ['ignore', 'guess'],
         family: ['evaluation', 'evaluative', 'evaluator'],
-        rootNote: '来自 value，核心是“判断价值或质量”。',
+        rootNote:
+            'Related to value; the core idea is judging worth or quality.',
       );
     case 'contrast':
       return const _KnowledgeData(
@@ -322,7 +324,8 @@ _KnowledgeData _knowledgeFor(
         synonyms: ['compare', 'differentiate'],
         antonyms: ['match', 'resemble'],
         family: ['contrastive', 'contrasting', 'contrastable'],
-        rootNote: 'con- 表示共同，-trast 有拉开之意，可记作“放在一起看差异”。',
+        rootNote:
+            'con- suggests together; contrast means placing things side by side to see differences.',
       );
     case 'brief':
       return const _KnowledgeData(
@@ -330,7 +333,7 @@ _KnowledgeData _knowledgeFor(
         synonyms: ['short', 'concise'],
         antonyms: ['lengthy', 'detailed'],
         family: ['briefly', 'briefing', 'brevity'],
-        rootNote: '和 brevity 同源，记作“短而只保留重点”。',
+        rootNote: 'Related to brevity: short and focused on the main points.',
       );
     case 'negotiate':
       return const _KnowledgeData(
@@ -338,7 +341,8 @@ _KnowledgeData _knowledgeFor(
         synonyms: ['discuss', 'bargain'],
         antonyms: ['reject', 'dictate'],
         family: ['negotiation', 'negotiator', 'negotiable'],
-        rootNote: 'neg- 有处理事务的来源，记作“来回处理条件以达成一致”。',
+        rootNote:
+            'Think of working terms back and forth until both sides can agree.',
       );
     case 'priority':
       return const _KnowledgeData(
@@ -346,7 +350,8 @@ _KnowledgeData _knowledgeFor(
         synonyms: ['preference', 'importance'],
         antonyms: ['afterthought', 'minor issue'],
         family: ['prioritize', 'prior', 'prioritization'],
-        rootNote: 'prior 表示“在前”，priority 就是排在前面的事项。',
+        rootNote:
+            'prior means before; a priority is something placed before others.',
       );
     case 'itinerary':
       return const _KnowledgeData(
@@ -354,7 +359,7 @@ _KnowledgeData _knowledgeFor(
         synonyms: ['route', 'schedule'],
         antonyms: ['detour', 'improvisation'],
         family: ['itinerant', 'itinerate', 'itinerary plan'],
-        rootNote: '和 journey/route 相关，记作“旅途中逐站安排”。',
+        rootNote: 'Related to journey and route: the planned stops of a trip.',
       );
     case 'departure':
       return const _KnowledgeData(
@@ -362,7 +367,8 @@ _KnowledgeData _knowledgeFor(
         synonyms: ['leaving', 'exit'],
         antonyms: ['arrival', 'return'],
         family: ['depart', 'departed', 'departing'],
-        rootNote: 'de- 表示离开，part 表示分开，可记作“从当前位置分离”。',
+        rootNote:
+            'de- suggests away and part suggests separation: leaving a current place.',
       );
     case 'luggage':
       return const _KnowledgeData(
@@ -370,7 +376,8 @@ _KnowledgeData _knowledgeFor(
         synonyms: ['baggage', 'bags'],
         antonyms: ['hand-free travel', 'unpacked items'],
         family: ['luggage tag', 'luggage cart', 'luggage claim'],
-        rootNote: '和 lug “拖、拉”有关，可记作“旅行中拖着的包”。',
+        rootNote:
+            'Related to lug, meaning to drag or carry: bags carried on a trip.',
       );
     case 'appetite':
       return const _KnowledgeData(
@@ -378,7 +385,8 @@ _KnowledgeData _knowledgeFor(
         synonyms: ['hunger', 'craving'],
         antonyms: ['fullness', 'disinterest'],
         family: ['appetizing', 'appetizer', 'appetitive'],
-        rootNote: 'appet- 有追求、渴望之意，可记作“想吃的欲望”。',
+        rootNote:
+            'appet- carries the idea of seeking or craving: the desire to eat.',
       );
     case 'ingredient':
       return const _KnowledgeData(
@@ -386,7 +394,7 @@ _KnowledgeData _knowledgeFor(
         synonyms: ['component', 'element'],
         antonyms: ['whole', 'product'],
         family: ['ingredients list', 'ingredient-based', 'main ingredient'],
-        rootNote: 'in- + grad/gress 有进入之意，可记作“放进配方里的部分”。',
+        rootNote: 'Think of a part that goes into a recipe or mixture.',
       );
     case 'flavor':
       return const _KnowledgeData(
@@ -394,7 +402,7 @@ _KnowledgeData _knowledgeFor(
         synonyms: ['taste', 'savor'],
         antonyms: ['blandness', 'plainness'],
         family: ['flavorful', 'flavored', 'flavoring'],
-        rootNote: '和 taste 相关，记作“食物给人的味觉特征”。',
+        rootNote: 'Related to taste: the sensory character food gives you.',
       );
     case 'recover':
       return const _KnowledgeData(
@@ -402,7 +410,8 @@ _KnowledgeData _knowledgeFor(
         synonyms: ['heal', 'regain'],
         antonyms: ['decline', 'worsen'],
         family: ['recovery', 'recoverable', 'recovered'],
-        rootNote: 're- 表示再一次，cover 有覆盖/找回感，记作“重新恢复状态”。',
+        rootNote:
+            're- means again; recover suggests getting back to a previous state.',
       );
     case 'symptom':
       return const _KnowledgeData(
@@ -410,7 +419,8 @@ _KnowledgeData _knowledgeFor(
         synonyms: ['sign', 'indication'],
         antonyms: ['cause', 'health'],
         family: ['symptomatic', 'asymptomatic', 'symptom-free'],
-        rootNote: 'sym- 表示共同出现，记作“和疾病一起出现的信号”。',
+        rootNote:
+            'sym- suggests together: a sign that appears together with an illness.',
       );
     case 'prevent':
       return const _KnowledgeData(
@@ -418,7 +428,8 @@ _KnowledgeData _knowledgeFor(
         synonyms: ['stop', 'avoid'],
         antonyms: ['allow', 'cause'],
         family: ['prevention', 'preventive', 'preventable'],
-        rootNote: 'pre- 表示在前，vent 表示来，记作“提前挡住事情发生”。',
+        rootNote:
+            'pre- means before; prevent means stopping something before it happens.',
       );
     case 'commute':
       return const _KnowledgeData(
@@ -426,7 +437,7 @@ _KnowledgeData _knowledgeFor(
         synonyms: ['travel', 'journey'],
         antonyms: ['stay', 'remain'],
         family: ['commuter', 'commuting', 'commutable'],
-        rootNote: 'com- 表示共同，mut- 表示改变位置，记作“固定来回移动”。',
+        rootNote: 'Think of repeated movement between two regular places.',
       );
     case 'lecture':
       return const _KnowledgeData(
@@ -434,7 +445,8 @@ _KnowledgeData _knowledgeFor(
         synonyms: ['talk', 'class'],
         antonyms: ['discussion', 'silence'],
         family: ['lecturer', 'lecture hall', 'lecturing'],
-        rootNote: 'lect- 与阅读/讲授相关，记作“围绕材料讲解”。',
+        rootNote:
+            'lect- relates to reading or teaching: explaining material to learners.',
       );
     case 'deadline':
       return const _KnowledgeData(
@@ -442,7 +454,8 @@ _KnowledgeData _knowledgeFor(
         synonyms: ['due date', 'time limit'],
         antonyms: ['extension', 'open date'],
         family: ['deadline-driven', 'deadline pressure', 'deadline day'],
-        rootNote: 'dead + line，可记作“不能再越过的最后一条线”。',
+        rootNote:
+            'dead + line: the final line that cannot be crossed after time runs out.',
       );
     default:
       return _fallbackKnowledge(wordText, meaning, exampleSentence);
@@ -456,8 +469,8 @@ _KnowledgeData _fallbackKnowledge(
 ) {
   final cleanExample = exampleSentence.trim();
   final rootNote = cleanExample.isEmpty
-      ? '结合释义“$meaning”记忆核心用法。'
-      : '结合例句“$cleanExample”记忆核心含义：$meaning。';
+      ? 'Use the meaning "$meaning" to remember the core use.'
+      : 'Use the example "$cleanExample" to remember the core meaning: $meaning.';
   return _KnowledgeData(
     collocations: ['use $wordText', '$wordText in context'],
     synonyms: ['related word'],

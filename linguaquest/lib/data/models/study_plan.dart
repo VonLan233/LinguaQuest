@@ -275,7 +275,7 @@ const _bookIdToTarget = <String, String>{
   'ms_basic': 'Malay',
   'cet4': 'CET-4',
   'cet6': 'CET-6',
-  'kaoyan': '考研',
+  'kaoyan': 'Kaoyan',
 };
 
 String normalizedPlanStatus(String? value) {

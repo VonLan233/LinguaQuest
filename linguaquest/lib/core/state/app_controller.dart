@@ -937,8 +937,7 @@ class AppController extends Notifier<AppState> {
     return _run(() async {
       // Load bundle data BEFORE clearing the token so the backend call succeeds.
       final wordBooks = await _learningRepository.listWordBooks();
-      final currentWordBookId =
-          wordBooks.isEmpty ? 'hsk1' : wordBooks.first.id;
+      final currentWordBookId = wordBooks.isEmpty ? 'hsk1' : wordBooks.first.id;
       final lessons = wordBooks.isEmpty
           ? <Lesson>[]
           : _applyLessonProgression(
@@ -1145,7 +1144,9 @@ class AppController extends Notifier<AppState> {
             ? '${result.lessonId}:${_dateKey(result.completedAt)}'
             : result.lessonId,
         points: result.xpEarned,
-        description: isTraining ? '完成训练场挑战' : '完成新学课程',
+        description: isTraining
+            ? 'Completed training challenge'
+            : 'Completed new lesson',
       );
       final resolvedResult = result.copyWith(
         xpEarned: pointGrant.awarded ? pointGrant.pointsAwarded : 0,
@@ -1301,7 +1302,7 @@ class AppController extends Notifier<AppState> {
               sourceType: 'review_word',
               sourceId: '$id:${_dateKey(now)}',
               points: 3,
-              description: '完成到期复习',
+              description: 'Completed due review',
             )
           : _PointGrantOutcome(
               user: user,
@@ -1677,7 +1678,7 @@ class AppController extends Notifier<AppState> {
         sourceType: 'reward_task',
         sourceId: '$id:${_dateKey(now)}',
         points: points,
-        description: '领取积分任务奖励',
+        description: 'Claimed point task reward',
       );
       if (pointGrant.alreadyGranted) {
         await _saveTodayClaimedRewards(claimedRewardIds, now);
@@ -1883,7 +1884,7 @@ class AppController extends Notifier<AppState> {
           exampleSentence: question.word.exampleSentence,
           note: '${question.word.definition}\n${question.explanation}',
           tag: question.word.tags.isEmpty
-              ? '错题'
+              ? 'Mistake'
               : displayWordTag(question.word.tags.first),
           difficulty: question.word.difficulty,
           now: now,
@@ -2044,7 +2045,9 @@ class AppController extends Notifier<AppState> {
               meaning: word.meaning,
               exampleSentence: word.exampleSentence,
               note: '${word.definition}\n${mistake.explanation}',
-              tag: word.tags.isEmpty ? '错题' : displayWordTag(word.tags.first),
+              tag: word.tags.isEmpty
+                  ? 'Mistake'
+                  : displayWordTag(word.tags.first),
               difficulty: word.difficulty,
             ),
           ),
@@ -2085,27 +2088,27 @@ class AppController extends Notifier<AppState> {
       final data = error.response?.data;
       final message = data is Map ? data['error']?.toString() : null;
       if (message == 'email already registered') {
-        return '该邮箱已经注册，请直接登录。';
+        return 'This email is already registered. Please log in instead.';
       }
       if (message == 'task_not_complete') {
-        return '该任务尚未完成，无法领取奖励。';
+        return 'This task is not complete yet, so the reward cannot be claimed.';
       }
       if (message == 'rate_limited') {
-        return '请求过于频繁，请稍后再试。';
+        return 'Too many requests. Please try again later.';
       }
       if (message == 'blocked') {
-        return '内容不符合使用规范，请修改后重试。';
+        return 'This content does not meet the usage rules. Please revise it and try again.';
       }
       if (message == 'ai_unavailable') {
-        return 'AI 服务暂时不可用，请稍后重试。';
+        return 'The AI service is temporarily unavailable. Please try again later.';
       }
       if (message != null && message.isNotEmpty) return message;
-      return '网络请求失败，请稍后重试。';
+      return 'Network request failed. Please try again later.';
     }
     if (error is StateError) {
       final message = error.message;
       if (message == 'email already registered') {
-        return '该邮箱已经注册，请直接登录。';
+        return 'This email is already registered. Please log in instead.';
       }
       return message;
     }
@@ -2359,8 +2362,9 @@ class AppController extends Notifier<AppState> {
         _generatedNotification(
           uid: uid,
           type: AppNotificationType.learningReminder,
-          title: '今日学习计划待完成',
-          body: '今天目标新学 $dailyGoal 词，先从当前词书开始。',
+          title: 'Today\'s study plan is waiting',
+          body:
+              'Your goal is $dailyGoal new words today. Start with the current wordbook.',
           targetRoute: '/study/new',
           sourceKey: 'learningReminder:$dateKey',
           now: now,
@@ -2373,8 +2377,9 @@ class AppController extends Notifier<AppState> {
         _generatedNotification(
           uid: uid,
           type: AppNotificationType.reviewDue,
-          title: '$dueCount 个词到期复习',
-          body: '先清理复习队列，答错词会自动进入强化阶段。',
+          title: '$dueCount words are due for review',
+          body:
+              'Clear the review queue first. Missed words will move into reinforcement automatically.',
           targetRoute: '/study/review',
           sourceKey: 'reviewDue:$dateKey',
           now: now,
@@ -2387,8 +2392,8 @@ class AppController extends Notifier<AppState> {
         _generatedNotification(
           uid: uid,
           type: AppNotificationType.checkInReminder,
-          title: '今天还没有打卡',
-          body: '去发现页点击签到，签到任务会进入可领取状态。',
+          title: 'No check-in yet today',
+          body: 'Go to Discover and tap check-in to make the task claimable.',
           targetRoute: '/discover',
           sourceKey: 'checkInReminder:$dateKey',
           now: now,
@@ -2400,8 +2405,8 @@ class AppController extends Notifier<AppState> {
       _generatedNotification(
         uid: uid,
         type: AppNotificationType.activity,
-        title: '发现页积分任务已刷新',
-        body: '完成新学、复习和错词清理后可领取 XP。',
+        title: 'Discover XP tasks refreshed',
+        body: 'Complete new learning, review, and mistake cleanup to claim XP.',
         targetRoute: '/discover',
         sourceKey: 'activity:$dateKey',
         now: now,

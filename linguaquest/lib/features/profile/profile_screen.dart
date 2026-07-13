@@ -88,7 +88,8 @@ class ProfileScreen extends ConsumerWidget {
             _SettingsItem(
               icon: AppIcons.flag,
               title: l10n.profilePlanLabel,
-              value: state.currentWordBook?.nameFor(localeCode) ??
+              value:
+                  state.currentWordBook?.nameFor(localeCode) ??
                   state.currentStudyBook.name,
               onTap: () => context.push('/settings/study-plan'),
             ),
@@ -103,7 +104,8 @@ class ProfileScreen extends ConsumerWidget {
               title: l10n.pickerChooseLanguage,
               value: languageLabel(state.currentLanguage, l10n),
               valueSubtitle:
-                  state.currentWordBook?.nameFor(localeCode) ?? state.currentWordBookId,
+                  state.currentWordBook?.nameFor(localeCode) ??
+                  state.currentWordBookId,
               onTap: () => context.push('/language-map'),
             ),
             _SettingsItem(
@@ -169,9 +171,7 @@ class ProfileScreen extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: AppTokens.s32),
-        SectionHeader(
-          title: l10n.profileAssetsTitle,
-        ),
+        SectionHeader(title: l10n.profileAssetsTitle),
         const SizedBox(height: AppTokens.s12),
         _AssetInventory(assets: state.userAssets),
         const SizedBox(height: AppTokens.s32),
@@ -440,7 +440,7 @@ class _SettingsItem extends StatelessWidget {
               ),
               if (value != null) ...[
                 const SizedBox(width: AppTokens.s8),
-                Flexible(
+                Expanded(
                   flex: 3,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -455,7 +455,8 @@ class _SettingsItem extends StatelessWidget {
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
                       ),
-                      if (valueSubtitle != null && valueSubtitle!.isNotEmpty) ...[
+                      if (valueSubtitle != null &&
+                          valueSubtitle!.isNotEmpty) ...[
                         const SizedBox(height: AppTokens.s2),
                         Text(
                           valueSubtitle!,
@@ -494,11 +495,7 @@ class _AssetInventory extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     if (assets.isEmpty) {
-      return AppCard(
-        child: MascotEmptyState(
-          title: l10n.profileAssetsEmpty,
-        ),
-      );
+      return AppCard(child: MascotEmptyState(title: l10n.profileAssetsEmpty));
     }
     return AppCard(
       child: Column(

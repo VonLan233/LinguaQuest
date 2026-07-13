@@ -2071,7 +2071,7 @@ abstract class AppLocalizations {
   /// No description provided for @discoverForumPost2Body.
   ///
   /// In en, this message translates to:
-  /// **'In papers and reading passages \'abstract\' often doesn\'t mean \'抽象\'; judge it by context.'**
+  /// **'In papers and reading passages \'abstract\' often means a summary; judge it by context.'**
   String get discoverForumPost2Body;
 
   /// No description provided for @discoverForumHint.
@@ -3922,13 +3922,13 @@ abstract class AppLocalizations {
   /// No description provided for @pickerLanguageChinese.
   ///
   /// In en, this message translates to:
-  /// **'Chinese (中文)'**
+  /// **'Chinese'**
   String get pickerLanguageChinese;
 
   /// No description provided for @pickerLanguageJapanese.
   ///
   /// In en, this message translates to:
-  /// **'Japanese (日本語)'**
+  /// **'Japanese'**
   String get pickerLanguageJapanese;
 
   /// No description provided for @pickerComingSoon.
@@ -5380,7 +5380,7 @@ abstract class AppLocalizations {
   /// No description provided for @languageChinese.
   ///
   /// In en, this message translates to:
-  /// **'中文'**
+  /// **'Chinese'**
   String get languageChinese;
 
   /// No description provided for @languageMalay.
@@ -5512,7 +5512,7 @@ abstract class AppLocalizations {
   /// No description provided for @languageMapChinese.
   ///
   /// In en, this message translates to:
-  /// **'Chinese (中文)'**
+  /// **'Chinese'**
   String get languageMapChinese;
 
   /// No description provided for @languageMapConfirm.

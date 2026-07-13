@@ -158,7 +158,7 @@ class WordbookCoverCard extends StatelessWidget {
   }
 
   (String, String)? _splitChineseVocabularyTitle(String value) {
-    const suffix = '词汇';
+    const suffix = 'Vocabulary';
     if (!value.endsWith(suffix) || value.length <= suffix.length) {
       return null;
     }

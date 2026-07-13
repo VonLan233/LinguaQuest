@@ -23,12 +23,14 @@ class _PresetAppController extends AppController {
 Widget _buildHarness({required AppState initialState}) {
   return ProviderScope(
     overrides: [
-      appControllerProvider.overrideWith(() => _PresetAppController(initialState)),
+      appControllerProvider.overrideWith(
+        () => _PresetAppController(initialState),
+      ),
     ],
     child: MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      locale: const Locale('zh'),
+      locale: const Locale('en'),
       theme: AppTheme.light(),
       home: const AssetInventoryScreen(),
     ),
@@ -85,7 +87,9 @@ void main() {
   });
 
   group('AssetInventoryScreen — with assets', () {
-    testWidgets('shows asset names when userAssets is non-empty', (tester) async {
+    testWidgets('shows asset names when userAssets is non-empty', (
+      tester,
+    ) async {
       final stateWithAssets = AppState.initial().copyWith(
         isBootstrapped: true,
         userAssets: _seededAssets,
@@ -99,8 +103,9 @@ void main() {
       expect(find.text('星尘碎片'), findsOneWidget);
     });
 
-    testWidgets('shows quantity badge for assets with quantity > 1',
-        (tester) async {
+    testWidgets('shows quantity badge for assets with quantity > 1', (
+      tester,
+    ) async {
       final stateWithAssets = AppState.initial().copyWith(
         isBootstrapped: true,
         userAssets: _seededAssets,
@@ -115,8 +120,9 @@ void main() {
       expect(find.textContaining('×3'), findsWidgets);
     });
 
-    testWidgets('groups assets by category — badge section appears',
-        (tester) async {
+    testWidgets('groups assets by category — badge section appears', (
+      tester,
+    ) async {
       final stateWithAssets = AppState.initial().copyWith(
         isBootstrapped: true,
         userAssets: _seededAssets,
@@ -125,8 +131,7 @@ void main() {
       await tester.pumpWidget(_buildHarness(initialState: stateWithAssets));
       await tester.pump();
 
-      // Category label for 'badge' is '学习徽章' in zh.
-      expect(find.text('学习徽章'), findsAtLeastNWidgets(1));
+      expect(find.text('Learning Badge'), findsAtLeastNWidgets(1));
     });
   });
 }

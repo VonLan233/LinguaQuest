@@ -20,6 +20,6 @@ void main() {
     expect(targetForStudyBookId('jlpt_n5'), 'JLPT N5');
     expect(targetForStudyBookId('en_basic'), 'Daily English');
     expect(targetForStudyBookId('cet4'), 'CET-4');
-    expect(targetForStudyBookId('kaoyan'), '考研');
+    expect(targetForStudyBookId('kaoyan'), 'Kaoyan');
   });
 }
