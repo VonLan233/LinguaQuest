@@ -268,6 +268,12 @@ class _MixedStudySessionScreenState
         _scheduledWrongIds
           ..clear()
           ..addAll(draft.scheduledWrongIds);
+        _checked = draft.checked;
+        _lastCorrect = draft.lastCorrect;
+        _lockedCorrect = draft.checked && draft.lastCorrect;
+        _wrongTries
+          ..clear()
+          ..addAll(draft.wrongTries);
         _completedItems = draft.completedItems;
         _correctAnswers = draft.correctAnswers;
         _confidence = draft.confidence;
@@ -568,7 +574,7 @@ class _MixedStudySessionScreenState
   Future<bool> _saveDraft() async {
     final state = ref.read(appControllerProvider);
     final uid = state.user?.uid;
-    if (uid == null || _isSubmitting) return false;
+    if (uid == null || _isSubmitting || _reviewSaveFailed) return false;
     setState(() => _isSubmitting = true);
     try {
       final draft = StudySessionDraft(
@@ -577,6 +583,9 @@ class _MixedStudySessionScreenState
         lessonId: state.currentLesson?.id ?? '',
         startedAt: _sessionStartedAt,
         savedAt: DateTime.now(),
+        checked: _checked,
+        lastCorrect: _lastCorrect,
+        wrongTries: Set.unmodifiable(_wrongTries),
         completedItems: _completedItems,
         correctAnswers: _correctAnswers,
         confidence: _confidence,
