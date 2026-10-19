@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/state/app_controller.dart';
 import '../../data/repositories/learning_repository.dart';
-import '../../data/models/lesson.dart';
+import '../../data/wordbook_asset_loader.dart';
+import '../../core/utils/wordbook_languages.dart';
+import '../../core/widgets/language_wordbook_picker.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -17,6 +19,7 @@ class OfflineWordbooksScreen extends ConsumerStatefulWidget {
 class _OfflineWordbooksState extends ConsumerState<OfflineWordbooksScreen> {
   Set<String> _downloaded = {};
   String? _busy;
+  String _language = 'all';
   @override
   void initState() {
     super.initState();
@@ -52,7 +55,7 @@ class _OfflineWordbooksState extends ConsumerState<OfflineWordbooksScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              remove ? l10n.offlineBuiltIn : l10n.offlineDownloadSuccess,
+              remove ? l10n.offlineRemoved : l10n.offlineDownloadSuccess,
             ),
           ),
         );
@@ -74,7 +77,7 @@ class _OfflineWordbooksState extends ConsumerState<OfflineWordbooksScreen> {
     final state = ref.watch(appControllerProvider);
     final books =
         state.wordBooks
-            .where((b) => b.language == state.currentLanguage)
+            .where((b) => _language == 'all' || b.language == _language)
             .toList()
           ..sort(
             (a, b) => a.id.endsWith('_starter')
@@ -91,6 +94,21 @@ class _OfflineWordbooksState extends ConsumerState<OfflineWordbooksScreen> {
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
+          DropdownButtonFormField<String>(
+            key: const ValueKey('offline-language-filter'),
+            initialValue: _language,
+            decoration: InputDecoration(labelText: l10n.learningLanguage),
+            items: [
+              DropdownMenuItem(value: 'all', child: Text(l10n.allWordbooks)),
+              for (final code in state.wordBooks.map((b) => b.language).toSet())
+                DropdownMenuItem(
+                  value: code,
+                  child: Text(languageLabel(code, l10n)),
+                ),
+            ],
+            onChanged: (value) => setState(() => _language = value ?? 'all'),
+          ),
+          const SizedBox(height: 20),
           Text(l10n.offlineWordbooksHint),
           const SizedBox(height: 12),
           Text(
@@ -111,13 +129,32 @@ class _OfflineWordbooksState extends ConsumerState<OfflineWordbooksScreen> {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      '${book.words.length} ${l10n.commonWords} · ${_downloaded.contains(book.id) ? l10n.offlineDownloaded : l10n.offlineBuiltIn}',
+                      '${languageLabel(book.language, l10n)} · ${book.words.length} ${l10n.commonWords}',
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      '${l10n.explanationLanguage}: ${_explanationLanguages(book)}',
+                      '${l10n.explanationLanguage}: ${wordbookExplanationLanguages(book).map((c) => languageLabel(c, l10n)).join(' / ')}',
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
+                    if (_downloaded.contains(book.id) ||
+                        WordBookAssetLoader.isBundled(book.id)) ...[
+                      const SizedBox(height: 6),
+                      Text(
+                        _downloaded.contains(book.id)
+                            ? l10n.offlineDownloaded
+                            : l10n.offlineBuiltIn,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                    if (!wordbookExplanationLanguages(
+                      book,
+                    ).contains(l10n.localeName)) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        l10n.wordbookTranslationFallback,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
                     const SizedBox(height: 8),
                     Wrap(
                       spacing: 12,
@@ -154,18 +191,4 @@ class _OfflineWordbooksState extends ConsumerState<OfflineWordbooksScreen> {
       ),
     );
   }
-}
-
-String _explanationLanguages(WordBook book) {
-  const labels = {'zh': '中文', 'ja': '日本語', 'en': 'English'};
-  final complete = labels.keys.where(
-    (code) =>
-        book.words.isNotEmpty &&
-        book.words.every(
-          (word) => word.localizedDefinitions[code]?.isNotEmpty ?? false,
-        ),
-  );
-  return complete.isEmpty
-      ? 'English'
-      : complete.map((code) => labels[code]).join(' / ');
 }

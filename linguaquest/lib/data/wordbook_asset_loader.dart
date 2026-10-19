@@ -32,6 +32,8 @@ class WordBookAssetLoader {
     'en_starter',
   ];
 
+  static bool isBundled(String bookId) => _bookIds.contains(bookId);
+
   final AssetBundle _bundle;
   Future<List<WordBook>>? _loadFuture;
 

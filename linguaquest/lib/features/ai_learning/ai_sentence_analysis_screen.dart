@@ -51,8 +51,7 @@ class _AiSentenceAnalysisScreenState
         final errMsg = ref.read(appControllerProvider).errorMessage;
         setState(() {
           _isLoading = false;
-          _errorMessage =
-              errMsg ?? AppLocalizations.of(context).aiErrorGeneric;
+          _errorMessage = errMsg ?? AppLocalizations.of(context).aiErrorGeneric;
         });
       } else {
         setState(() {
@@ -82,7 +81,7 @@ class _AiSentenceAnalysisScreenState
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('AI Sentence Analysis'),
+        title: Text(AppLocalizations.of(context).aiUiAiSentenceAnalysis),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
@@ -104,7 +103,7 @@ class _AiSentenceAnalysisScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Enter a sentence to analyze',
+                    AppLocalizations.of(context).aiUiEnterASentenceToAnalyze,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w700,
                     ),
@@ -114,13 +113,15 @@ class _AiSentenceAnalysisScreenState
                     controller: _controller,
                     maxLength: 2000,
                     maxLines: 4,
-                    decoration: const InputDecoration(
-                      hintText: 'Type or paste an English sentence...',
+                    decoration: InputDecoration(
+                      hintText: AppLocalizations.of(context).aiUiSentenceHint,
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Please enter a sentence';
+                        return AppLocalizations.of(
+                          context,
+                        ).aiUiPleaseEnterASentence;
                       }
                       return null;
                     },
@@ -129,7 +130,9 @@ class _AiSentenceAnalysisScreenState
                   SizedBox(
                     width: double.infinity,
                     child: AppPrimaryButton(
-                      label: _isLoading ? 'Analyzing...' : 'Analyze',
+                      label: _isLoading
+                          ? AppLocalizations.of(context).aiUiAnalyzing
+                          : AppLocalizations.of(context).aiUiAnalyze,
                       onPressed: _isLoading ? null : _submit,
                     ),
                   ),
@@ -153,10 +156,7 @@ class _AiSentenceAnalysisScreenState
             // ERROR state
             if (_errorMessage != null) ...[
               const SizedBox(height: AppTokens.s20),
-              AiErrorCard(
-                message: _errorMessage!,
-                onRetry: _submit,
-              ),
+              AiErrorCard(message: _errorMessage!, onRetry: _submit),
             ],
             // RESULT state
             if (_result != null) ...[
@@ -166,7 +166,7 @@ class _AiSentenceAnalysisScreenState
             if (history.isNotEmpty) ...[
               const SizedBox(height: AppTokens.s24),
               Text(
-                'History',
+                AppLocalizations.of(context).aiUiHistory,
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w700,
                 ),
@@ -201,8 +201,7 @@ class _AnalysisResultCard extends StatelessWidget {
     final theme = Theme.of(context);
     final mainClause = result['mainClause'] as String? ?? '';
     final translation = result['translation'] as String? ?? '';
-    final clauses =
-        (result['clauses'] as List<dynamic>?)?.cast<String>() ?? [];
+    final clauses = (result['clauses'] as List<dynamic>?)?.cast<String>() ?? [];
     final modifiers =
         (result['modifiers'] as List<dynamic>?)?.cast<String>() ?? [];
     final vocabNotes =
@@ -214,26 +213,41 @@ class _AnalysisResultCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Analysis Result',
+            AppLocalizations.of(context).aiUiAnalysisResult,
             style: theme.textTheme.titleSmall?.copyWith(
               fontWeight: FontWeight.w700,
             ),
           ),
           const SizedBox(height: AppTokens.s12),
-          _Section(label: 'Main Clause', content: mainClause),
+          _Section(
+            label: AppLocalizations.of(context).aiUiMainClause,
+            content: mainClause,
+          ),
           if (clauses.isNotEmpty) ...[
             const SizedBox(height: AppTokens.s8),
-            _Section(label: 'Clauses', content: clauses.join('\n')),
+            _Section(
+              label: AppLocalizations.of(context).aiUiClauses,
+              content: clauses.join('\n'),
+            ),
           ],
           if (modifiers.isNotEmpty) ...[
             const SizedBox(height: AppTokens.s8),
-            _Section(label: 'Modifiers', content: modifiers.join('\n')),
+            _Section(
+              label: AppLocalizations.of(context).aiUiModifiers,
+              content: modifiers.join('\n'),
+            ),
           ],
           const SizedBox(height: AppTokens.s8),
-          _Section(label: 'Translation', content: translation),
+          _Section(
+            label: AppLocalizations.of(context).aiUiTranslation,
+            content: translation,
+          ),
           if (vocabNotes.isNotEmpty) ...[
             const SizedBox(height: AppTokens.s8),
-            _Section(label: 'Vocabulary Notes', content: vocabNotes.join('\n')),
+            _Section(
+              label: AppLocalizations.of(context).aiUiVocabularyNotes,
+              content: vocabNotes.join('\n'),
+            ),
           ],
         ],
       ),
@@ -280,18 +294,18 @@ class _AnalysisHistoryCard extends StatelessWidget {
       onLongPress: () => showDialog<void>(
         context: context,
         builder: (_) => AlertDialog(
-          title: const Text('Delete history?'),
+          title: Text(AppLocalizations.of(context).aiUiDeleteHistory),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: Text(AppLocalizations.of(context).aiUiCancel),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
                 onDelete();
               },
-              child: const Text('Delete'),
+              child: Text(AppLocalizations.of(context).aiUiDelete),
             ),
           ],
         ),

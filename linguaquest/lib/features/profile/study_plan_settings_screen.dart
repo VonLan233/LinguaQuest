@@ -94,7 +94,8 @@ class _StudyPlanSettingsScreenState
             id: selectedWordBook.id,
             name: selectedWordBook.nameFor(localeCode),
             cover: studyPlanCoverEmoji(selectedWordBook.language),
-            description: selectedWordBook.description,
+            description:
+                '${languageLabel(selectedWordBook.language, l10n)} · $totalWords ${l10n.commonWords}',
           )
         : studyBookInfoForId(_wordBookId);
     final plan = state.studyPlan;

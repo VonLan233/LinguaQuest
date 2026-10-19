@@ -7,6 +7,8 @@ import '../../core/state/app_controller.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/utils/wordbook_progress.dart';
+import '../../core/utils/wordbook_languages.dart';
+import '../../core/widgets/language_wordbook_picker.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/app_progress_bar.dart';
@@ -84,6 +86,23 @@ class WordbookScreen extends ConsumerWidget {
             vertical: AppTokens.s16,
           ),
           children: [
+            TextButton.icon(
+              key: const ValueKey('wordbook-language-picker'),
+              onPressed: () => showLanguageWordbookPicker(context),
+              icon: const Icon(Icons.language),
+              label: Text(languageLabel(state.currentLanguage, l10n)),
+            ),
+            const SizedBox(height: 12),
+            if (currentBook != null &&
+                !wordbookExplanationLanguages(
+                  currentBook,
+                ).contains(localeCode)) ...[
+              Text(
+                l10n.wordbookTranslationFallback,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              const SizedBox(height: 16),
+            ],
             _HeroBookCard(
               bookId: bookId,
               bookName: bookName,
@@ -100,7 +119,9 @@ class WordbookScreen extends ConsumerWidget {
             const SizedBox(height: AppTokens.s16),
             if (state.wordBooks.isNotEmpty) ...[
               _BookScroller(
-                books: state.wordBooks,
+                books: state.wordBooks
+                    .where((b) => b.language == state.currentLanguage)
+                    .toList(),
                 currentId: state.currentWordBookId,
                 localeCode: localeCode,
                 l10n: l10n,

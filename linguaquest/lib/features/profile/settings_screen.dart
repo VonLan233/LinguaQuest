@@ -64,7 +64,7 @@ class SettingsScreen extends ConsumerWidget {
               icon: AppIcons.flag,
               title: l10n.commonStudyPlan,
               subtitle:
-                  '${state.currentStudyBook.name} · ${l10n.commonNew} ${state.dailyNewTarget} · ${l10n.commonReview} ${state.dailyReviewLimit}',
+                  '${state.currentWordBook?.nameFor(l10n.localeName) ?? state.currentStudyBook.name} · ${l10n.commonNew} ${state.dailyNewTarget} · ${l10n.commonReview} ${state.dailyReviewLimit}',
               route: '/settings/study-plan',
             ),
             const SizedBox(height: AppTokens.s12),
@@ -98,15 +98,15 @@ class SettingsScreen extends ConsumerWidget {
             const SizedBox(height: AppTokens.s12),
             _SettingsAction(
               icon: AppIcons.lock,
-              title: 'Privacy Settings',
-              subtitle: 'Control what others can see about you',
+              title: l10n.aboutPrivacyTitle,
+              subtitle: l10n.aboutPrivacySubtitle,
               route: '/profile/privacy',
             ),
             const SizedBox(height: AppTokens.s12),
             _SettingsAction(
               icon: AppIcons.person,
               title: l10n.dataAccountTitle,
-              subtitle: 'Cache, export, and account deletion',
+              subtitle: l10n.dataSettingsHint,
               route: '/profile/data',
             ),
           ],
@@ -350,6 +350,7 @@ class _SensorySettingsCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     void update(SensorySettings updated) =>
         ref.read(appControllerProvider.notifier).updateSensorySettings(updated);
 
@@ -359,8 +360,8 @@ class _SensorySettingsCard extends ConsumerWidget {
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
             secondary: const Icon(AppIcons.volumeUp),
-            title: const Text('Sound Effects'),
-            subtitle: const Text('Play sounds during quizzes'),
+            title: Text(l10n.settingsSoundFeedback),
+            subtitle: Text(l10n.settingsSoundFeedbackSubtitle),
             value: sensorySettings.soundEnabled,
             onChanged: (v) => update(sensorySettings.copyWith(soundEnabled: v)),
           ),
@@ -368,8 +369,8 @@ class _SensorySettingsCard extends ConsumerWidget {
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
             secondary: const Icon(AppIcons.vibration),
-            title: const Text('Vibration'),
-            subtitle: const Text('Haptic feedback on answers'),
+            title: Text(l10n.settingsVibrationLabel),
+            subtitle: Text(l10n.settingsVibrationHint),
             value: sensorySettings.vibrationEnabled,
             onChanged: (v) =>
                 update(sensorySettings.copyWith(vibrationEnabled: v)),
@@ -378,8 +379,8 @@ class _SensorySettingsCard extends ConsumerWidget {
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
             secondary: const Icon(AppIcons.contrastCircle),
-            title: const Text('High Contrast'),
-            subtitle: const Text('Enhanced color contrast for answer feedback'),
+            title: Text(l10n.settingsContrastLabel),
+            subtitle: Text(l10n.settingsContrastHint),
             value: sensorySettings.highContrastMode,
             onChanged: (v) =>
                 update(sensorySettings.copyWith(highContrastMode: v)),

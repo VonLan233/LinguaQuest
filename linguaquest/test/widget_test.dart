@@ -495,7 +495,7 @@ void main() {
     );
 
     // Collapsed to a single Audio button (no UK/US accent split).
-    expect(find.text('Audio'), findsOneWidget);
+    expect(find.text('发音'), findsOneWidget);
     expect(find.text('英音'), findsNothing);
     expect(find.text('美音'), findsNothing);
 
@@ -503,7 +503,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // SnackBars are gone; failure now shows as inline retry indicator.
-    expect(find.text('Audio unavailable, tap to retry.'), findsOneWidget);
+    expect(find.text('暂时无法播放，点击重试。'), findsOneWidget);
   });
 
   testWidgets('home new-study entry opens standalone new learning flow', (

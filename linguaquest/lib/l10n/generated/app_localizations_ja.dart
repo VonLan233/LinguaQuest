@@ -1314,8 +1314,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get trainingSpelling => '単語スペル';
 
   @override
-  String get trainingSpellingDesc =>
-      '中国語を見たり、発音を聞いたり、文の穴埋めを読んだりして、英語の単語を入力します。';
+  String get trainingSpellingDesc => '意味、発音、例文を手がかりに、学習中の単語を入力します。';
 
   @override
   String get trainingSpellingSource => 'スペルが苦手な単語';
@@ -1407,7 +1406,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String trainingPromptChineseChoice(Object meaning) {
-    return '次の意味に合う英単語を選ぼう：$meaning';
+    return '次の意味に合う単語を選んでください：$meaning';
   }
 
   @override
@@ -2453,7 +2452,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchStartTitle => 'キーワードを入力して検索を開始';
 
   @override
-  String get searchStartMessage => '英語の単語、フレーズ、中国語の意味、例文の抜粋、カスタム単語を検索できます。';
+  String get searchStartMessage => '単語、意味、例文、自分で追加した単語を検索します。';
 
   @override
   String get searchNoResultsTitle => '結果が見つかりませんでした';
@@ -2679,7 +2678,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get reviewStudyRecallHint =>
-      'まず英単語から中国語の意味を思い出しましょう。思い出せたら次へ進み、思い出せなければナレッジカードを表示します。';
+      'まず単語の意味を思い出しましょう。覚えていれば次へ進み、難しければ学習カードを表示します。';
 
   @override
   String reviewStudyNextReview(Object due) {
@@ -3479,4 +3478,289 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get learningLanguage => '学習する言語';
+
+  @override
+  String get languageSpanish => 'スペイン語';
+
+  @override
+  String get languageFrench => 'フランス語';
+
+  @override
+  String get allWordbooks => 'すべての言語';
+
+  @override
+  String get dataSettingsHint => 'オフライン教材、データ出力とアカウント管理';
+
+  @override
+  String get settingsVibrationLabel => '振動';
+
+  @override
+  String get settingsVibrationHint => '解答時に振動で知らせます';
+
+  @override
+  String get settingsContrastLabel => '高コントラスト';
+
+  @override
+  String get settingsContrastHint => '解答結果の色を見やすくします';
+
+  @override
+  String get wordbookTranslationFallback =>
+      '一部の単語には現在の説明言語の意味がないため、単語帳に収録された説明を表示します。';
+
+  @override
+  String get offlineRemoved => 'ダウンロードしたコピーを削除しました。内蔵教材と学習記録は保持されます。';
+
+  @override
+  String get aiLoginNotice =>
+      'AI はログインとネット接続が必要です。ダウンロード済み単語帳と基本練習はオフラインで使えます。';
+
+  @override
+  String get pronunciationAudio => '発音';
+
+  @override
+  String get pronunciationAudioUnavailable => '再生できません。タップして再試行してください。';
+
+  @override
+  String get aiUiAiQA => 'AI 質問';
+
+  @override
+  String get aiUiAskAQuestion => '質問する';
+
+  @override
+  String get aiUiPleaseEnterAQuestion => '質問を入力してください';
+
+  @override
+  String get aiUiAsking => '回答を生成中…';
+
+  @override
+  String get aiUiAsk => '質問する';
+
+  @override
+  String get aiUiHistory => '履歴';
+
+  @override
+  String get aiUiAnswer => '回答';
+
+  @override
+  String get aiUiCautions => '注意点';
+
+  @override
+  String get aiUiRelatedWords => '関連する単語';
+
+  @override
+  String get aiUiDeleteHistory => 'この履歴を削除しますか？';
+
+  @override
+  String get aiUiCancel => 'キャンセル';
+
+  @override
+  String get aiUiDelete => '削除';
+
+  @override
+  String get aiUiAiSentenceAnalysis => 'AI 文の分析';
+
+  @override
+  String get aiUiEnterASentenceToAnalyze => '分析する文を入力';
+
+  @override
+  String get aiUiSentenceHint => '学習中の言語の文を入力・貼り付け…';
+
+  @override
+  String get aiUiPleaseEnterASentence => '文を入力してください';
+
+  @override
+  String get aiUiAnalyzing => '分析中…';
+
+  @override
+  String get aiUiAnalyze => '分析する';
+
+  @override
+  String get aiUiAnalysisResult => '分析結果';
+
+  @override
+  String get aiUiMainClause => '主節';
+
+  @override
+  String get aiUiClauses => '従属節';
+
+  @override
+  String get aiUiModifiers => '修飾語';
+
+  @override
+  String get aiUiTranslation => '訳';
+
+  @override
+  String get aiUiVocabularyNotes => '単語の説明';
+
+  @override
+  String get aiUiAiClozeTest => 'AI 穴埋め練習';
+
+  @override
+  String get aiUiEnterAWordForClozeTest => '穴埋め練習に使う単語を入力';
+
+  @override
+  String get aiUiPleaseEnterAWord => '単語を入力してください';
+
+  @override
+  String get aiUiGenerating => '生成中…';
+
+  @override
+  String get aiUiGenerate => '生成する';
+
+  @override
+  String get aiUiClozeTest => '穴埋め練習';
+
+  @override
+  String get aiUiCorrect => '正解！';
+
+  @override
+  String get aiUiConfusableWords => '間違えやすい単語';
+
+  @override
+  String get aiUiEnterAWordToCompareWithItsLookAlikes => '似ている単語と比較する語を入力';
+
+  @override
+  String
+  get aiUiEnterAWordToSeeCommonlyConfusedLookAlikesAndHowToTellThemApart =>
+      '単語を入力して、間違えやすい語との違いを確認します。';
+
+  @override
+  String get aiUiNoConfusableWordsFound => '似ている単語が見つかりませんでした。';
+
+  @override
+  String get aiUiSentenceGeneration => '例文と書き換え';
+
+  @override
+  String get aiUiEnterAWordOrASentence => '単語または文を入力';
+
+  @override
+  String get aiUiAWordToBuildSentencesForOrASentenceToRewrite =>
+      '例文を作る単語、または書き換える文';
+
+  @override
+  String get aiUiPleaseEnterAWordOrSentence => '単語または文を入力してください';
+
+  @override
+  String
+  get aiUiEnterAWordToGenerateExampleSentencesOrASentenceToGetRewriteSuggestions =>
+      '単語から例文を作成したり、文の書き換え案を確認できます。';
+
+  @override
+  String get aiUiExampleSentences => '例文';
+
+  @override
+  String get aiUiRewrites => '書き換え案';
+
+  @override
+  String get aiUiAiWritingReview => 'AI 作文添削';
+
+  @override
+  String get aiUiNewEssay => '新しい作文';
+
+  @override
+  String get aiUiExamType => '作文の種類';
+
+  @override
+  String get aiUiYourEssay => 'あなたの作文';
+
+  @override
+  String get aiUiPasteOrTypeYourEssayHere503000Characters =>
+      '作文を入力・貼り付け（50〜3000文字）…';
+
+  @override
+  String get aiUiEssayMustBeAtLeast50Characters => '作文は50文字以上で入力してください';
+
+  @override
+  String get aiUiSubmitForReview => '添削を依頼';
+
+  @override
+  String get aiUiOverallScore => '総合点';
+
+  @override
+  String get aiUiScoreBreakdown => '項目別の評価';
+
+  @override
+  String get aiUiContent => '内容';
+
+  @override
+  String get aiUiLanguage => '表現';
+
+  @override
+  String get aiUiStructure => '構成';
+
+  @override
+  String get aiUiVocabulary => '語彙';
+
+  @override
+  String get aiUiAccuracy => '正確さ';
+
+  @override
+  String get aiUiMainIssues => '主な改善点';
+
+  @override
+  String get aiUiGrammarCorrections => '文法の修正';
+
+  @override
+  String get aiUiHighScoreExpressions => 'おすすめの表現';
+
+  @override
+  String get aiUiCopied => 'コピーしました';
+
+  @override
+  String get aiUiParagraphSuggestions => '段落ごとの提案';
+
+  @override
+  String get aiUiRewrittenSample => '書き換え例';
+
+  @override
+  String aiUiDefaultQuestion(String word) {
+    return '「$word」はどういう意味ですか？';
+  }
+
+  @override
+  String aiUiClozePrompt(String word) {
+    return '穴埋め問題を作成：$word';
+  }
+
+  @override
+  String aiUiComparePrompt(String word) {
+    return '次の語と混同しやすい単語を比較：$word';
+  }
+
+  @override
+  String aiUiSentencePrompt(String word) {
+    return '例文と書き換え案を作成：$word';
+  }
+
+  @override
+  String aiUiBlank(int number) {
+    return '空欄 $number';
+  }
+
+  @override
+  String aiUiWrongAnswer(String word) {
+    return '正解は：$word';
+  }
+
+  @override
+  String aiUiCharacterCount(int number) {
+    return '$number / 3000 文字';
+  }
+
+  @override
+  String aiUiParagraph(String number, String text) {
+    return '段落 $number：$text';
+  }
+
+  @override
+  String get aiUiGeneral => '一般';
+
+  @override
+  String get aiUiAcademic => '学術';
+
+  @override
+  String get aiUiBusiness => 'ビジネス';
+
+  @override
+  String get aiUiCasual => '日常';
 }

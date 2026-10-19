@@ -62,6 +62,14 @@ String languageLabel(String code, AppLocalizations l10n) {
       return l10n.pickerLanguageChinese;
     case 'ja':
       return l10n.pickerLanguageJapanese;
+    case 'en':
+      return l10n.languageEnglish;
+    case 'es':
+      return l10n.languageSpanish;
+    case 'fr':
+      return l10n.languageFrench;
+    case 'ms':
+      return l10n.languageMalay;
     default:
       return languageLabelRaw(code);
   }

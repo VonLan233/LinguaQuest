@@ -80,14 +80,17 @@ class _AiWritingReviewScreenState extends ConsumerState<AiWritingReviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('AI Writing Review'),
+        title: Text(AppLocalizations.of(context).aiUiAiWritingReview),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
         actions: [
           if (_result != null)
-            TextButton(onPressed: _reset, child: const Text('New Essay')),
+            TextButton(
+              onPressed: _reset,
+              child: Text(AppLocalizations.of(context).aiUiNewEssay),
+            ),
         ],
       ),
       body: SafeArea(
@@ -169,7 +172,7 @@ class _InputView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Exam Type',
+                        AppLocalizations.of(context).aiUiExamType,
                         style: theme.textTheme.labelLarge?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
@@ -181,7 +184,13 @@ class _InputView extends StatelessWidget {
                         children: examTypes.map((type) {
                           final selected = type == selectedExamType;
                           return ChoiceChip(
-                            label: Text(type),
+                            label: Text(switch (type) {
+                              'General' => l10n.aiUiGeneral,
+                              'Academic' => l10n.aiUiAcademic,
+                              'Business' => l10n.aiUiBusiness,
+                              'Casual' => l10n.aiUiCasual,
+                              _ => type,
+                            }),
                             selected: selected,
                             onSelected: (_) => onExamTypeChanged(type),
                           );
@@ -197,7 +206,7 @@ class _InputView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Your Essay',
+                        AppLocalizations.of(context).aiUiYourEssay,
                         style: theme.textTheme.labelLarge?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
@@ -207,7 +216,9 @@ class _InputView extends StatelessWidget {
                         valueListenable: essayController,
                         builder: (context, value, _) {
                           return Text(
-                            '${value.text.length} / 3000 characters',
+                            AppLocalizations.of(
+                              context,
+                            ).aiUiCharacterCount(value.text.length),
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: value.text.length > 3000
                                   ? theme.colorScheme.error
@@ -223,15 +234,18 @@ class _InputView extends StatelessWidget {
                         minLines: 8,
                         maxLength: 3000,
                         maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                        decoration: const InputDecoration(
-                          hintText:
-                              'Paste or type your essay here (50–3000 characters)...',
+                        decoration: InputDecoration(
+                          hintText: AppLocalizations.of(
+                            context,
+                          ).aiUiPasteOrTypeYourEssayHere503000Characters,
                           border: OutlineInputBorder(),
                           counterText: '',
                         ),
                         validator: (v) {
                           if (v == null || v.trim().length < 50) {
-                            return 'Essay must be at least 50 characters';
+                            return AppLocalizations.of(
+                              context,
+                            ).aiUiEssayMustBeAtLeast50Characters;
                           }
                           return null;
                         },
@@ -258,10 +272,10 @@ class _InputView extends StatelessWidget {
               AppTokens.s20,
             ),
             child: isLoading
-                ? const Center(child: CircularProgressIndicator())
+                ? Center(child: CircularProgressIndicator())
                 : errorMessage == null
                 ? AppPrimaryButton(
-                    label: 'Submit for Review',
+                    label: AppLocalizations.of(context).aiUiSubmitForReview,
                     onPressed: onSubmit,
                   )
                 : const SizedBox.shrink(),
@@ -296,7 +310,7 @@ class _ResultView extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                'Overall Score',
+                AppLocalizations.of(context).aiUiOverallScore,
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -317,7 +331,7 @@ class _ResultView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Score Breakdown',
+                  AppLocalizations.of(context).aiUiScoreBreakdown,
                   style: theme.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w700,
                   ),
@@ -331,12 +345,12 @@ class _ResultView extends StatelessWidget {
                     'vocabulary': 20,
                     'accuracy': 15,
                   };
-                  const labels = {
-                    'content': 'Content',
-                    'language': 'Language',
-                    'structure': 'Structure',
-                    'vocabulary': 'Vocabulary',
-                    'accuracy': 'Accuracy',
+                  final labels = {
+                    'content': AppLocalizations.of(context).aiUiContent,
+                    'language': AppLocalizations.of(context).aiUiLanguage,
+                    'structure': AppLocalizations.of(context).aiUiStructure,
+                    'vocabulary': AppLocalizations.of(context).aiUiVocabulary,
+                    'accuracy': AppLocalizations.of(context).aiUiAccuracy,
                   };
                   final max = maxScores[entry.key] ?? 20;
                   final label = labels[entry.key] ?? entry.key;
@@ -379,7 +393,7 @@ class _ResultView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Main Issues',
+                  AppLocalizations.of(context).aiUiMainIssues,
                   style: theme.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w700,
                   ),
@@ -391,7 +405,7 @@ class _ResultView extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('• '),
+                        Text('• '),
                         Expanded(child: Text(issue)),
                       ],
                     ),
@@ -409,7 +423,7 @@ class _ResultView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Grammar Corrections',
+                  AppLocalizations.of(context).aiUiGrammarCorrections,
                   style: theme.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w700,
                   ),
@@ -468,7 +482,7 @@ class _ResultView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'High-Score Expressions',
+                  AppLocalizations.of(context).aiUiHighScoreExpressions,
                   style: theme.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w700,
                   ),
@@ -489,8 +503,10 @@ class _ResultView extends StatelessWidget {
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: expr));
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Copied!'),
+                          SnackBar(
+                            content: Text(
+                              AppLocalizations.of(context).aiUiCopied,
+                            ),
                             // Floating + short duration so the toast does not
                             // sit over the submit control for the default 4s.
                             // See SVV D-11.
@@ -514,18 +530,22 @@ class _ResultView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Paragraph Suggestions',
+                  AppLocalizations.of(context).aiUiParagraphSuggestions,
                   style: theme.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 const SizedBox(height: AppTokens.s8),
                 ...result.paragraphSuggestions.map((s) {
-                  final para = s['paragraph'] ?? '';
-                  final suggestion = s['suggestion'] ?? '';
+                  final para = (s['paragraph'] ?? '').toString();
+                  final suggestion = (s['suggestion'] ?? '').toString();
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: AppTokens.s4),
-                    child: Text('Paragraph $para: $suggestion'),
+                    child: Text(
+                      AppLocalizations.of(
+                        context,
+                      ).aiUiParagraph(para, suggestion),
+                    ),
                   );
                 }),
               ],
@@ -545,7 +565,7 @@ class _ResultView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Rewritten Sample',
+                        AppLocalizations.of(context).aiUiRewrittenSample,
                         style: theme.textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.w700,
                         ),

@@ -49,7 +49,9 @@ class ProfileScreen extends ConsumerWidget {
         _ProfileHeader(
           name: displayUserName(user, l10n: l10n),
           email: user?.email ?? l10n.profileNoEmail,
-          target: displayTarget(user?.targetExam, l10n: l10n),
+          target:
+              state.currentWordBook?.nameFor(localeCode) ??
+              displayTarget(user?.targetExam, l10n: l10n),
           level: displayLevel(user?.level, l10n: l10n),
           xp: user?.xp ?? 0,
           streak: user?.streak ?? 0,

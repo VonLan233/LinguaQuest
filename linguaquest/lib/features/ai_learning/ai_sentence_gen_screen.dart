@@ -38,16 +38,19 @@ class _AiSentenceGenScreenState extends ConsumerState<AiSentenceGenScreen> {
       _result = null;
       _errorMessage = null;
     });
-    final result = await ref.read(appControllerProvider.notifier).askAi(
+    final result = await ref
+        .read(appControllerProvider.notifier)
+        .askAi(
           featureType: 'sentence_gen',
-          prompt: 'Generate example sentences and rewrites for: $input',
+          prompt: AppLocalizations.of(context).aiUiSentencePrompt(input),
           targetWord: input,
         );
     if (!mounted) return;
     setState(() {
       _isLoading = false;
       if (result.isEmpty) {
-        _errorMessage = ref.read(appControllerProvider).errorMessage ??
+        _errorMessage =
+            ref.read(appControllerProvider).errorMessage ??
             AppLocalizations.of(context).aiErrorGeneric;
       } else {
         _result = result;
@@ -60,7 +63,7 @@ class _AiSentenceGenScreenState extends ConsumerState<AiSentenceGenScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sentence Generation'),
+        title: Text(AppLocalizations.of(context).aiUiSentenceGeneration),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
@@ -70,33 +73,46 @@ class _AiSentenceGenScreenState extends ConsumerState<AiSentenceGenScreen> {
         key: _formKey,
         child: ListView(
           padding: const EdgeInsets.fromLTRB(
-              AppTokens.s20, AppTokens.s20, AppTokens.s20, 88),
+            AppTokens.s20,
+            AppTokens.s20,
+            AppTokens.s20,
+            88,
+          ),
           children: [
             AppCard(
               padding: const EdgeInsets.all(AppTokens.s16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Enter a word or a sentence',
-                      style: theme.textTheme.titleMedium
-                          ?.copyWith(fontWeight: FontWeight.w700)),
+                  Text(
+                    AppLocalizations.of(context).aiUiEnterAWordOrASentence,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                   const SizedBox(height: AppTokens.s12),
                   TextFormField(
                     controller: _controller,
                     maxLength: 200,
-                    decoration: const InputDecoration(
-                      hintText: 'A word to build sentences for, or a sentence to rewrite',
+                    decoration: InputDecoration(
+                      hintText: AppLocalizations.of(
+                        context,
+                      ).aiUiAWordToBuildSentencesForOrASentenceToRewrite,
                       border: OutlineInputBorder(),
                     ),
                     validator: (v) => (v == null || v.trim().isEmpty)
-                        ? 'Please enter a word or sentence'
+                        ? AppLocalizations.of(
+                            context,
+                          ).aiUiPleaseEnterAWordOrSentence
                         : null,
                   ),
                   const SizedBox(height: AppTokens.s12),
                   SizedBox(
                     width: double.infinity,
                     child: AppPrimaryButton(
-                      label: _isLoading ? 'Generating...' : 'Generate',
+                      label: _isLoading
+                          ? AppLocalizations.of(context).aiUiGenerating
+                          : AppLocalizations.of(context).aiUiGenerate,
                       onPressed: _isLoading ? null : _generate,
                     ),
                   ),
@@ -108,10 +124,13 @@ class _AiSentenceGenScreenState extends ConsumerState<AiSentenceGenScreen> {
               AppCard(
                 padding: const EdgeInsets.all(AppTokens.s16),
                 child: Text(
-                  'Enter a word to generate example sentences, or a sentence to get rewrite suggestions.',
+                  AppLocalizations.of(
+                    context,
+                  ).aiUiEnterAWordToGenerateExampleSentencesOrASentenceToGetRewriteSuggestions,
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyMedium
-                      ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ),
             ],
@@ -144,9 +163,12 @@ class _SentenceResult extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (sentences.isNotEmpty) ...[
-          Text('Example Sentences',
-              style: theme.textTheme.titleMedium
-                  ?.copyWith(fontWeight: FontWeight.w700)),
+          Text(
+            AppLocalizations.of(context).aiUiExampleSentences,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
           const SizedBox(height: AppTokens.s8),
           for (final raw in sentences)
             if (raw is Map)
@@ -157,12 +179,17 @@ class _SentenceResult extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('${raw['sentence'] ?? ''}',
-                          style: theme.textTheme.bodyLarge),
+                      Text(
+                        '${raw['sentence'] ?? ''}',
+                        style: theme.textTheme.bodyLarge,
+                      ),
                       const SizedBox(height: AppTokens.s4),
-                      Text('${raw['translation'] ?? ''}',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant)),
+                      Text(
+                        '${raw['translation'] ?? ''}',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -170,9 +197,12 @@ class _SentenceResult extends StatelessWidget {
         ],
         if (rewrites.isNotEmpty) ...[
           const SizedBox(height: AppTokens.s12),
-          Text('Rewrites',
-              style: theme.textTheme.titleMedium
-                  ?.copyWith(fontWeight: FontWeight.w700)),
+          Text(
+            AppLocalizations.of(context).aiUiRewrites,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
           const SizedBox(height: AppTokens.s8),
           for (final raw in rewrites)
             if (raw is Map)
@@ -183,18 +213,26 @@ class _SentenceResult extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('${raw['original'] ?? ''}',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
-                              decoration: TextDecoration.lineThrough)),
+                      Text(
+                        '${raw['original'] ?? ''}',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                          decoration: TextDecoration.lineThrough,
+                        ),
+                      ),
                       const SizedBox(height: AppTokens.s4),
-                      Text('${raw['rewritten'] ?? ''}',
-                          style: theme.textTheme.bodyLarge),
+                      Text(
+                        '${raw['rewritten'] ?? ''}',
+                        style: theme.textTheme.bodyLarge,
+                      ),
                       if ('${raw['note'] ?? ''}'.isNotEmpty) ...[
                         const SizedBox(height: AppTokens.s4),
-                        Text('${raw['note']}',
-                            style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant)),
+                        Text(
+                          '${raw['note']}',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
                       ],
                     ],
                   ),
