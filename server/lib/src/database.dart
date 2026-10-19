@@ -1143,6 +1143,7 @@ INSERT INTO study_sessions (
 ) VALUES (
   @id, @uid, @lessonId, @startedAt, @endedAt, @totalQuestions, @correctAnswers, @xpEarned, @mistakeWordIds, @answerEvents
 )
+ON CONFLICT (id) DO NOTHING
 '''),
       parameters: {
         'id': data['id'],
@@ -1306,6 +1307,7 @@ INSERT INTO review_events (
 ) VALUES (
   @id, @uid, @wordId, @isCorrect, @answerTimeMs, @confidence, @wrongOption, @reviewedAt, @masteryBefore, @masteryAfter, @nextReviewAt
 )
+ON CONFLICT (id) DO NOTHING
 '''),
       parameters: {
         'id': data['id'],

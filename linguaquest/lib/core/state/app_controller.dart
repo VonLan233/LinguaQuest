@@ -330,14 +330,22 @@ class AppController extends Notifier<AppState> {
           debugPrint('Failed to load remote learning progress: $error');
         }
       }
-      final completedLessonIds =
-          progress?.completedLessonIds ?? localCompletedLessonIds;
-      final todayCompletedLessonIds =
-          progress?.todayCompletedLessonIds ?? localTodayCompletedLessonIds;
-      final todayReviewWordIds =
-          progress?.todayReviewWordIds ?? localTodayReviewWordIds;
-      final todayClaimedRewardIds =
-          progress?.todayClaimedRewardIds ?? localTodayClaimedRewardIds;
+      final completedLessonIds = {
+        ...localCompletedLessonIds,
+        ...?progress?.completedLessonIds,
+      };
+      final todayCompletedLessonIds = {
+        ...localTodayCompletedLessonIds,
+        ...?progress?.todayCompletedLessonIds,
+      };
+      final todayReviewWordIds = {
+        ...localTodayReviewWordIds,
+        ...?progress?.todayReviewWordIds,
+      };
+      final todayClaimedRewardIds = {
+        ...localTodayClaimedRewardIds,
+        ...?progress?.todayClaimedRewardIds,
+      };
       final lessons = _applyLessonProgression(
         await _learningRepository.listLessonsForWordBook(currentWordBookId),
         completedLessonIds,
@@ -589,7 +597,9 @@ class AppController extends Notifier<AppState> {
 
   Future<bool> enterDemo() async {
     return _run(() async {
-      final user = UserProfile.demo();
+      final user = _authRepository is ApiAuthRepository
+          ? await (_authRepository).enterGuest()
+          : UserProfile.demo();
       final lotteryData = await _loadLotteryData(user);
       state = state.copyWith(
         user: user,
@@ -1464,6 +1474,11 @@ class AppController extends Notifier<AppState> {
   }
 
   Future<void> refreshRewardTasks() async {
+    if (AppConstants.apiBaseUrl.isNotEmpty &&
+        ref.read(apiClientProvider).offlineStore.offline) {
+      state = state.copyWith(isRewardLoading: false);
+      return;
+    }
     final user = state.user;
     if (user == null) {
       state = state.copyWith(

@@ -1629,6 +1629,7 @@ List<File> _wordBookDataFiles() {
     'wordbooks_p0.json',
     'wordbooks_jlpt.json',
     'wordbooks_extra.json',
+    'wordbooks_starter.json',
   ]) {
     final serverRelative = File('data/$name');
     final repoRelative = File('server/data/$name');
@@ -2082,7 +2083,7 @@ String _targetExamForWordBook(String wordBookId) {
     case 'daily-english':
       return 'Daily English';
   }
-  return 'HSK 1';
+  return wordBookId;
 }
 
 String _dateKey(DateTime date) {

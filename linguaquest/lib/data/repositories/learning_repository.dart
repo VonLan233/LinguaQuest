@@ -80,3 +80,12 @@ Set<String> _stringSet(Object? value) {
   if (value is! Iterable) return const {};
   return value.map((item) => item.toString()).toSet();
 }
+
+abstract class OfflineWordbookRepository {
+  Future<Set<String>> downloadedWordBookIds() async => {};
+  Future<void> downloadWordBook(String id) async {
+    throw UnsupportedError('Downloads require a connected build');
+  }
+
+  Future<void> removeDownloadedWordBook(String id) async {}
+}

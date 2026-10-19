@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,6 +19,7 @@ import '../models/user_profile.dart';
 import '../lesson_factory.dart';
 import '../remote/api_client.dart';
 import '../wordbook_asset_loader.dart';
+import '../offline_wordbook_store.dart';
 import 'ai_repository.dart';
 import 'analytics_repository.dart';
 import 'auth_repository.dart';
@@ -92,6 +94,7 @@ class ApiAuthRepository implements AuthRepository {
   ApiAuthRepository(this._client);
 
   static const _tokenKey = 'linguaquest.api.token';
+  static const _profileKey = 'linguaquest.api.profile';
   final ApiClient _client;
   UserProfile? _profile;
 
@@ -99,13 +102,60 @@ class ApiAuthRepository implements AuthRepository {
   Future<UserProfile?> loadSession() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString(_tokenKey);
-    if (token == null) return null;
+    final savedProfile = prefs.getString(_profileKey);
+    if (token == null) {
+      if (savedProfile == null) return null;
+      final guest = UserProfile.fromJson(
+        jsonDecode(savedProfile) as Map<String, dynamic>,
+      );
+      if (guest.uid != 'demo-user') return null;
+      return enterGuest(guest);
+    }
+    _client.offlineStore.offline = false;
+    _client.offlineStore.localOnly = false;
     _client.setToken(token);
-    final response = await _client.dio.get<Map<String, dynamic>>('/me');
+    final cachedProfile = prefs.getString(_profileKey);
+    if (cachedProfile != null) {
+      final profile = Map<String, dynamic>.from(
+        jsonDecode(cachedProfile) as Map,
+      );
+      _client.offlineStore.userId = profile['uid'] as String;
+      await _client.offlineStore.flush();
+    }
+    late Response<Map<String, dynamic>> response;
+    try {
+      response = await _client.dio.get<Map<String, dynamic>>(
+        '/me',
+        options: Options(
+          receiveTimeout: const Duration(seconds: 4),
+          sendTimeout: const Duration(seconds: 4),
+        ),
+      );
+    } on DioException catch (error) {
+      if (error.response?.statusCode == 401 ||
+          error.response?.statusCode == 403) {
+        await logout();
+      }
+      rethrow;
+    }
     _profile = UserProfile.fromJson(
       response.data!['user'] as Map<String, dynamic>,
     );
+    await prefs.setString(_profileKey, jsonEncode(_profile!.toJson()));
+    await _client.offlineStore.cacheProfile(_profile!.toJson());
     return _profile;
+  }
+
+  Future<UserProfile> enterGuest([UserProfile? saved]) async {
+    _client.setToken(null);
+    _profile = saved ?? UserProfile.demo();
+    _client.offlineStore.localOnly = true;
+    _client.offlineStore.offline = true;
+    await _client.offlineStore.cacheProfile(_profile!.toJson());
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_tokenKey);
+    await prefs.setString(_profileKey, jsonEncode(_profile!.toJson()));
+    return _profile!;
   }
 
   @override
@@ -191,6 +241,8 @@ class ApiAuthRepository implements AuthRepository {
     _profile = UserProfile.fromJson(
       response.data!['user'] as Map<String, dynamic>,
     );
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_profileKey, jsonEncode(_profile!.toJson()));
     return _profile!;
   }
 
@@ -200,6 +252,7 @@ class ApiAuthRepository implements AuthRepository {
     _client.setToken(null);
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_tokenKey);
+    await prefs.remove(_profileKey);
   }
 
   @override
@@ -209,14 +262,19 @@ class ApiAuthRepository implements AuthRepository {
     _client.setToken(null);
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_tokenKey);
+    await prefs.remove(_profileKey);
   }
 
   Future<UserProfile> _saveAuthResponse(Map<String, dynamic> data) async {
     final token = data['token'] as String;
+    _client.offlineStore.offline = false;
+    _client.offlineStore.localOnly = false;
     _client.setToken(token);
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_tokenKey, token);
     _profile = UserProfile.fromJson(data['user'] as Map<String, dynamic>);
+    await prefs.setString(_profileKey, jsonEncode(_profile!.toJson()));
+    await _client.offlineStore.cacheProfile(_profile!.toJson());
     return _profile!;
   }
 }
@@ -259,32 +317,71 @@ class ApiCustomWordRepository implements CustomWordRepository {
   }
 }
 
-class ApiLearningRepository implements LearningRepository {
+class ApiLearningRepository
+    implements LearningRepository, OfflineWordbookRepository {
   ApiLearningRepository(this._client, {WordBookAssetLoader? fallbackLoader})
     : _fallbackLoader = fallbackLoader ?? WordBookAssetLoader();
 
   final ApiClient _client;
   final WordBookAssetLoader _fallbackLoader;
   List<WordBook>? _cache;
+  final _offlineBooks = OfflineWordbookStore();
 
   @override
   Future<List<WordBook>> listWordBooks() async {
     final cached = _cache;
     if (cached != null) return cached;
-    try {
-      final response = await _client.dio
-          .get<List<dynamic>>('/wordbooks')
-          .timeout(const Duration(milliseconds: 1200));
-      final books = (response.data ?? const <dynamic>[]).whereType<Map>().map((
-        item,
-      ) {
-        return WordBook.fromJson(Map<String, dynamic>.from(item));
-      }).toList();
-      _cache = List.unmodifiable(books);
-      return _cache!;
-    } catch (_) {
-      return _fallbackLoader.loadWordBooks();
+    final booksById = {
+      for (final book in await _fallbackLoader.loadWordBooks()) book.id: book,
+    };
+    var loadedRemote = false;
+    if (!_client.offlineStore.offline) {
+      try {
+        final response = await _client.dio
+            .get<List<dynamic>>('/wordbooks')
+            .timeout(const Duration(milliseconds: 1200));
+        loadedRemote = true;
+        for (final item in response.data ?? []) {
+          final book = WordBook.fromJson(
+            Map<String, dynamic>.from(item as Map),
+          );
+          if (book.words.isNotEmpty) booksById[book.id] = book;
+        }
+      } catch (_) {
+        /* Local books remain available. */
+      }
     }
+    for (final book in await _offlineBooks.load()) {
+      booksById[book.id] = book;
+    }
+    final resolved = List<WordBook>.unmodifiable(booksById.values);
+    if (loadedRemote) _cache = resolved;
+    return resolved;
+  }
+
+  @override
+  Future<Set<String>> downloadedWordBookIds() async =>
+      (await _offlineBooks.load()).map((b) => b.id).toSet();
+
+  @override
+  Future<void> downloadWordBook(String id) async {
+    // Books are public content. Explicit downloads can reconnect even while
+    // account-specific study data is being used offline.
+    final response = await _client.dio.get<Map<String, dynamic>>(
+      '/wordbooks/$id',
+      options: Options(extra: {'offlineReplay': true}),
+    );
+    final book = WordBook.fromJson(
+      Map<String, dynamic>.from(response.data!['wordbook'] as Map),
+    );
+    await _offlineBooks.save(book, id);
+    _cache = null;
+  }
+
+  @override
+  Future<void> removeDownloadedWordBook(String id) async {
+    await _offlineBooks.remove(id);
+    _cache = null;
   }
 
   @override

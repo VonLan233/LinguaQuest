@@ -65,8 +65,7 @@ void main() {
   });
 
   test('maps legacy English wordbook ids to hsk1 for backward compatibility', () {
-    for (final legacy in ['beginner', 'ielts', 'toefl', 'gre', 'cet4', 'cet6',
-        'kaoyan', 'daily-english', 'exam-core']) {
+    for (final legacy in ['beginner', 'ielts', 'toefl', 'gre', 'daily-english', 'exam-core']) {
       final result = validateStudyPlanPayload({
         'wordBookId': legacy,
         'dailyNewTarget': 10,

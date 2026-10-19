@@ -1,0 +1,2285 @@
+[
+  {
+    "id": "zh_starter",
+    "language": "zh",
+    "title": "中文生活入门",
+    "titleEn": "Everyday Chinese",
+    "titleJa": "暮らしの中国語",
+    "category": "daily",
+    "examType": "Daily",
+    "totalWords": 24,
+    "includedWords": 24,
+    "description": "24 everyday words · 中文 / 日本語 / English",
+    "wordIds": [
+      "zh_starter_01",
+      "zh_starter_02",
+      "zh_starter_03",
+      "zh_starter_04",
+      "zh_starter_05",
+      "zh_starter_06",
+      "zh_starter_07",
+      "zh_starter_08",
+      "zh_starter_09",
+      "zh_starter_10",
+      "zh_starter_11",
+      "zh_starter_12",
+      "zh_starter_13",
+      "zh_starter_14",
+      "zh_starter_15",
+      "zh_starter_16",
+      "zh_starter_17",
+      "zh_starter_18",
+      "zh_starter_19",
+      "zh_starter_20",
+      "zh_starter_21",
+      "zh_starter_22",
+      "zh_starter_23",
+      "zh_starter_24"
+    ],
+    "createdAt": "2026-10-19T00:00:00Z",
+    "words": [
+      {
+        "id": "zh_starter_01",
+        "word": "你好",
+        "phonetic": "nǐ hǎo",
+        "kana": "",
+        "definitions": [
+          "见面时表示问候的话"
+        ],
+        "englishDefinitions": [
+          "a greeting when meeting someone"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "见面时表示问候的话"
+          ],
+          "ja": [
+            "人に会ったときのあいさつ"
+          ],
+          "en": [
+            "a greeting when meeting someone"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "zh_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "zh_starter_02",
+        "word": "谢谢",
+        "phonetic": "xiè xie",
+        "kana": "",
+        "definitions": [
+          "表达感谢的话"
+        ],
+        "englishDefinitions": [
+          "an expression of gratitude"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "表达感谢的话"
+          ],
+          "ja": [
+            "感謝の気持ちを伝える言葉"
+          ],
+          "en": [
+            "an expression of gratitude"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "zh_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "zh_starter_03",
+        "word": "再见",
+        "phonetic": "zài jiàn",
+        "kana": "",
+        "definitions": [
+          "分别时的告别语"
+        ],
+        "englishDefinitions": [
+          "a farewell when leaving"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "分别时的告别语"
+          ],
+          "ja": [
+            "別れるときのあいさつ"
+          ],
+          "en": [
+            "a farewell when leaving"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "zh_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "zh_starter_04",
+        "word": "水",
+        "phonetic": "shuǐ",
+        "kana": "",
+        "definitions": [
+          "无色透明、可以饮用的液体"
+        ],
+        "englishDefinitions": [
+          "a clear liquid that people drink"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "无色透明、可以饮用的液体"
+          ],
+          "ja": [
+            "飲むことができる透明な液体"
+          ],
+          "en": [
+            "a clear liquid that people drink"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "zh_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "zh_starter_05",
+        "word": "书",
+        "phonetic": "shū",
+        "kana": "",
+        "definitions": [
+          "装订成册、供阅读的文字作品"
+        ],
+        "englishDefinitions": [
+          "a written work with pages to read"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "装订成册、供阅读的文字作品"
+          ],
+          "ja": [
+            "読むための文字や絵をまとめたもの"
+          ],
+          "en": [
+            "a written work with pages to read"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "zh_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "zh_starter_06",
+        "word": "猫",
+        "phonetic": "māo",
+        "kana": "",
+        "definitions": [
+          "常作为宠物饲养、会喵喵叫的动物"
+        ],
+        "englishDefinitions": [
+          "a small pet animal that meows"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "常作为宠物饲养、会喵喵叫的动物"
+          ],
+          "ja": [
+            "ニャーと鳴く、よくペットにされる動物"
+          ],
+          "en": [
+            "a small pet animal that meows"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "zh_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "zh_starter_07",
+        "word": "狗",
+        "phonetic": "gǒu",
+        "kana": "",
+        "definitions": [
+          "常作为宠物饲养、会汪汪叫的动物"
+        ],
+        "englishDefinitions": [
+          "a pet animal that barks"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "常作为宠物饲养、会汪汪叫的动物"
+          ],
+          "ja": [
+            "ワンワンと鳴く、よくペットにされる動物"
+          ],
+          "en": [
+            "a pet animal that barks"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "zh_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "zh_starter_08",
+        "word": "吃",
+        "phonetic": "chī",
+        "kana": "",
+        "definitions": [
+          "把食物放进嘴里咀嚼并吞下"
+        ],
+        "englishDefinitions": [
+          "to take food into the mouth and swallow it"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "把食物放进嘴里咀嚼并吞下"
+          ],
+          "ja": [
+            "食べ物を口に入れて飲み込む"
+          ],
+          "en": [
+            "to take food into the mouth and swallow it"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "zh_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "zh_starter_09",
+        "word": "喝",
+        "phonetic": "hē",
+        "kana": "",
+        "definitions": [
+          "把液体咽进肚子里"
+        ],
+        "englishDefinitions": [
+          "to swallow a liquid"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "把液体咽进肚子里"
+          ],
+          "ja": [
+            "液体を口から体に入れる"
+          ],
+          "en": [
+            "to swallow a liquid"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "zh_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "zh_starter_10",
+        "word": "看",
+        "phonetic": "kàn",
+        "kana": "",
+        "definitions": [
+          "用眼睛观察事物"
+        ],
+        "englishDefinitions": [
+          "to notice something with the eyes"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "用眼睛观察事物"
+          ],
+          "ja": [
+            "目で物の様子をとらえる"
+          ],
+          "en": [
+            "to notice something with the eyes"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "zh_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "zh_starter_11",
+        "word": "听",
+        "phonetic": "tīng",
+        "kana": "",
+        "definitions": [
+          "注意接收声音"
+        ],
+        "englishDefinitions": [
+          "to pay attention to a sound"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "注意接收声音"
+          ],
+          "ja": [
+            "音や声に注意を向ける"
+          ],
+          "en": [
+            "to pay attention to a sound"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "zh_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "zh_starter_12",
+        "word": "写",
+        "phonetic": "xiě",
+        "kana": "",
+        "definitions": [
+          "用笔或键盘记录文字"
+        ],
+        "englishDefinitions": [
+          "to put words on paper or a screen"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "用笔或键盘记录文字"
+          ],
+          "ja": [
+            "文字を紙などに記す"
+          ],
+          "en": [
+            "to put words on paper or a screen"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "zh_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "zh_starter_13",
+        "word": "学习",
+        "phonetic": "xué xí",
+        "kana": "",
+        "definitions": [
+          "通过练习或阅读获得知识"
+        ],
+        "englishDefinitions": [
+          "to gain knowledge through study or practice"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "通过练习或阅读获得知识"
+          ],
+          "ja": [
+            "練習や読書で知識を身につける"
+          ],
+          "en": [
+            "to gain knowledge through study or practice"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "zh_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "zh_starter_14",
+        "word": "学校",
+        "phonetic": "xué xiào",
+        "kana": "",
+        "definitions": [
+          "学生接受教育的地方"
+        ],
+        "englishDefinitions": [
+          "a place where students are taught"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "学生接受教育的地方"
+          ],
+          "ja": [
+            "生徒が教育を受ける場所"
+          ],
+          "en": [
+            "a place where students are taught"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "zh_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "zh_starter_15",
+        "word": "朋友",
+        "phonetic": "péng you",
+        "kana": "",
+        "definitions": [
+          "相互信任、关系亲近的人"
+        ],
+        "englishDefinitions": [
+          "a person you know well and like"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "相互信任、关系亲近的人"
+          ],
+          "ja": [
+            "親しく付き合い、信頼し合う人"
+          ],
+          "en": [
+            "a person you know well and like"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "zh_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "zh_starter_16",
+        "word": "家",
+        "phonetic": "jiā",
+        "kana": "",
+        "definitions": [
+          "自己生活和居住的地方"
+        ],
+        "englishDefinitions": [
+          "the place where someone lives"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "自己生活和居住的地方"
+          ],
+          "ja": [
+            "自分が生活する場所"
+          ],
+          "en": [
+            "the place where someone lives"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "zh_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "zh_starter_17",
+        "word": "大",
+        "phonetic": "dà",
+        "kana": "",
+        "definitions": [
+          "体积或规模超过一般程度"
+        ],
+        "englishDefinitions": [
+          "large in size or amount"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "体积或规模超过一般程度"
+          ],
+          "ja": [
+            "形や規模が普通よりも大きな程度である"
+          ],
+          "en": [
+            "large in size or amount"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "zh_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "zh_starter_18",
+        "word": "小",
+        "phonetic": "xiǎo",
+        "kana": "",
+        "definitions": [
+          "体积或规模低于一般程度"
+        ],
+        "englishDefinitions": [
+          "little in size or amount"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "体积或规模低于一般程度"
+          ],
+          "ja": [
+            "形や規模が普通よりも小さな程度である"
+          ],
+          "en": [
+            "little in size or amount"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "zh_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "zh_starter_19",
+        "word": "今天",
+        "phonetic": "jīn tiān",
+        "kana": "",
+        "definitions": [
+          "正在度过的这一天"
+        ],
+        "englishDefinitions": [
+          "the day that is happening now"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "正在度过的这一天"
+          ],
+          "ja": [
+            "今過ごしているこの日"
+          ],
+          "en": [
+            "the day that is happening now"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "zh_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "zh_starter_20",
+        "word": "明天",
+        "phonetic": "míng tiān",
+        "kana": "",
+        "definitions": [
+          "今天之后的那一天"
+        ],
+        "englishDefinitions": [
+          "the day after today"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "今天之后的那一天"
+          ],
+          "ja": [
+            "今日の次の日"
+          ],
+          "en": [
+            "the day after today"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "zh_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "zh_starter_21",
+        "word": "一",
+        "phonetic": "yī",
+        "kana": "",
+        "definitions": [
+          "最小的正整数"
+        ],
+        "englishDefinitions": [
+          "the number before two"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "最小的正整数"
+          ],
+          "ja": [
+            "最も小さい正の整数"
+          ],
+          "en": [
+            "the number before two"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "zh_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "zh_starter_22",
+        "word": "二",
+        "phonetic": "èr",
+        "kana": "",
+        "definitions": [
+          "一加一得到的数"
+        ],
+        "englishDefinitions": [
+          "the number after one and before three"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "一加一得到的数"
+          ],
+          "ja": [
+            "一に一を足した数"
+          ],
+          "en": [
+            "the number after one and before three"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "zh_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "zh_starter_23",
+        "word": "三",
+        "phonetic": "sān",
+        "kana": "",
+        "definitions": [
+          "二加一得到的数"
+        ],
+        "englishDefinitions": [
+          "the number after two and before four"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "二加一得到的数"
+          ],
+          "ja": [
+            "二に一を足した数"
+          ],
+          "en": [
+            "the number after two and before four"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "zh_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "zh_starter_24",
+        "word": "喜欢",
+        "phonetic": "xǐ huan",
+        "kana": "",
+        "definitions": [
+          "对某人或某事有好感"
+        ],
+        "englishDefinitions": [
+          "to find someone or something pleasant"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "对某人或某事有好感"
+          ],
+          "ja": [
+            "人や物に好ましい気持ちを持つこと"
+          ],
+          "en": [
+            "to find someone or something pleasant"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "zh_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      }
+    ]
+  },
+  {
+    "id": "ja_starter",
+    "language": "ja",
+    "title": "日语生活入门",
+    "titleEn": "Everyday Japanese",
+    "titleJa": "暮らしの日本語",
+    "category": "daily",
+    "examType": "Daily",
+    "totalWords": 24,
+    "includedWords": 24,
+    "description": "24 everyday words · 中文 / 日本語 / English",
+    "wordIds": [
+      "ja_starter_01",
+      "ja_starter_02",
+      "ja_starter_03",
+      "ja_starter_04",
+      "ja_starter_05",
+      "ja_starter_06",
+      "ja_starter_07",
+      "ja_starter_08",
+      "ja_starter_09",
+      "ja_starter_10",
+      "ja_starter_11",
+      "ja_starter_12",
+      "ja_starter_13",
+      "ja_starter_14",
+      "ja_starter_15",
+      "ja_starter_16",
+      "ja_starter_17",
+      "ja_starter_18",
+      "ja_starter_19",
+      "ja_starter_20",
+      "ja_starter_21",
+      "ja_starter_22",
+      "ja_starter_23",
+      "ja_starter_24"
+    ],
+    "createdAt": "2026-10-19T00:00:00Z",
+    "words": [
+      {
+        "id": "ja_starter_01",
+        "word": "こんにちは",
+        "phonetic": "こんにちは",
+        "kana": "こんにちは",
+        "definitions": [
+          "见面时表示问候的话"
+        ],
+        "englishDefinitions": [
+          "a greeting when meeting someone"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "见面时表示问候的话"
+          ],
+          "ja": [
+            "人に会ったときのあいさつ"
+          ],
+          "en": [
+            "a greeting when meeting someone"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "ja_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "ja_starter_02",
+        "word": "ありがとう",
+        "phonetic": "ありがとう",
+        "kana": "ありがとう",
+        "definitions": [
+          "表达感谢的话"
+        ],
+        "englishDefinitions": [
+          "an expression of gratitude"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "表达感谢的话"
+          ],
+          "ja": [
+            "感謝の気持ちを伝える言葉"
+          ],
+          "en": [
+            "an expression of gratitude"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "ja_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "ja_starter_03",
+        "word": "さようなら",
+        "phonetic": "さようなら",
+        "kana": "さようなら",
+        "definitions": [
+          "分别时的告别语"
+        ],
+        "englishDefinitions": [
+          "a farewell when leaving"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "分别时的告别语"
+          ],
+          "ja": [
+            "別れるときのあいさつ"
+          ],
+          "en": [
+            "a farewell when leaving"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "ja_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "ja_starter_04",
+        "word": "水",
+        "phonetic": "みず",
+        "kana": "みず",
+        "definitions": [
+          "无色透明、可以饮用的液体"
+        ],
+        "englishDefinitions": [
+          "a clear liquid that people drink"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "无色透明、可以饮用的液体"
+          ],
+          "ja": [
+            "飲むことができる透明な液体"
+          ],
+          "en": [
+            "a clear liquid that people drink"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "ja_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "ja_starter_05",
+        "word": "本",
+        "phonetic": "ほん",
+        "kana": "ほん",
+        "definitions": [
+          "装订成册、供阅读的文字作品"
+        ],
+        "englishDefinitions": [
+          "a written work with pages to read"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "装订成册、供阅读的文字作品"
+          ],
+          "ja": [
+            "読むための文字や絵をまとめたもの"
+          ],
+          "en": [
+            "a written work with pages to read"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "ja_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "ja_starter_06",
+        "word": "猫",
+        "phonetic": "ねこ",
+        "kana": "ねこ",
+        "definitions": [
+          "常作为宠物饲养、会喵喵叫的动物"
+        ],
+        "englishDefinitions": [
+          "a small pet animal that meows"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "常作为宠物饲养、会喵喵叫的动物"
+          ],
+          "ja": [
+            "ニャーと鳴く、よくペットにされる動物"
+          ],
+          "en": [
+            "a small pet animal that meows"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "ja_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "ja_starter_07",
+        "word": "犬",
+        "phonetic": "いぬ",
+        "kana": "いぬ",
+        "definitions": [
+          "常作为宠物饲养、会汪汪叫的动物"
+        ],
+        "englishDefinitions": [
+          "a pet animal that barks"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "常作为宠物饲养、会汪汪叫的动物"
+          ],
+          "ja": [
+            "ワンワンと鳴く、よくペットにされる動物"
+          ],
+          "en": [
+            "a pet animal that barks"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "ja_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "ja_starter_08",
+        "word": "食べる",
+        "phonetic": "たべる",
+        "kana": "たべる",
+        "definitions": [
+          "把食物放进嘴里咀嚼并吞下"
+        ],
+        "englishDefinitions": [
+          "to take food into the mouth and swallow it"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "把食物放进嘴里咀嚼并吞下"
+          ],
+          "ja": [
+            "食べ物を口に入れて飲み込む"
+          ],
+          "en": [
+            "to take food into the mouth and swallow it"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "ja_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "ja_starter_09",
+        "word": "飲む",
+        "phonetic": "のむ",
+        "kana": "のむ",
+        "definitions": [
+          "把液体咽进肚子里"
+        ],
+        "englishDefinitions": [
+          "to swallow a liquid"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "把液体咽进肚子里"
+          ],
+          "ja": [
+            "液体を口から体に入れる"
+          ],
+          "en": [
+            "to swallow a liquid"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "ja_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "ja_starter_10",
+        "word": "見る",
+        "phonetic": "みる",
+        "kana": "みる",
+        "definitions": [
+          "用眼睛观察事物"
+        ],
+        "englishDefinitions": [
+          "to notice something with the eyes"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "用眼睛观察事物"
+          ],
+          "ja": [
+            "目で物の様子をとらえる"
+          ],
+          "en": [
+            "to notice something with the eyes"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "ja_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "ja_starter_11",
+        "word": "聞く",
+        "phonetic": "きく",
+        "kana": "きく",
+        "definitions": [
+          "注意接收声音"
+        ],
+        "englishDefinitions": [
+          "to pay attention to a sound"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "注意接收声音"
+          ],
+          "ja": [
+            "音や声に注意を向ける"
+          ],
+          "en": [
+            "to pay attention to a sound"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "ja_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "ja_starter_12",
+        "word": "書く",
+        "phonetic": "かく",
+        "kana": "かく",
+        "definitions": [
+          "用笔或键盘记录文字"
+        ],
+        "englishDefinitions": [
+          "to put words on paper or a screen"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "用笔或键盘记录文字"
+          ],
+          "ja": [
+            "文字を紙などに記す"
+          ],
+          "en": [
+            "to put words on paper or a screen"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "ja_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "ja_starter_13",
+        "word": "学ぶ",
+        "phonetic": "まなぶ",
+        "kana": "まなぶ",
+        "definitions": [
+          "通过练习或阅读获得知识"
+        ],
+        "englishDefinitions": [
+          "to gain knowledge through study or practice"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "通过练习或阅读获得知识"
+          ],
+          "ja": [
+            "練習や読書で知識を身につける"
+          ],
+          "en": [
+            "to gain knowledge through study or practice"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "ja_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "ja_starter_14",
+        "word": "学校",
+        "phonetic": "がっこう",
+        "kana": "がっこう",
+        "definitions": [
+          "学生接受教育的地方"
+        ],
+        "englishDefinitions": [
+          "a place where students are taught"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "学生接受教育的地方"
+          ],
+          "ja": [
+            "生徒が教育を受ける場所"
+          ],
+          "en": [
+            "a place where students are taught"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "ja_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "ja_starter_15",
+        "word": "友達",
+        "phonetic": "ともだち",
+        "kana": "ともだち",
+        "definitions": [
+          "相互信任、关系亲近的人"
+        ],
+        "englishDefinitions": [
+          "a person you know well and like"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "相互信任、关系亲近的人"
+          ],
+          "ja": [
+            "親しく付き合い、信頼し合う人"
+          ],
+          "en": [
+            "a person you know well and like"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "ja_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "ja_starter_16",
+        "word": "家",
+        "phonetic": "いえ",
+        "kana": "いえ",
+        "definitions": [
+          "自己生活和居住的地方"
+        ],
+        "englishDefinitions": [
+          "the place where someone lives"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "自己生活和居住的地方"
+          ],
+          "ja": [
+            "自分が生活する場所"
+          ],
+          "en": [
+            "the place where someone lives"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "ja_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "ja_starter_17",
+        "word": "大きい",
+        "phonetic": "おおきい",
+        "kana": "おおきい",
+        "definitions": [
+          "体积或规模超过一般程度"
+        ],
+        "englishDefinitions": [
+          "large in size or amount"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "体积或规模超过一般程度"
+          ],
+          "ja": [
+            "形や規模が普通よりも大きな程度である"
+          ],
+          "en": [
+            "large in size or amount"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "ja_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "ja_starter_18",
+        "word": "小さい",
+        "phonetic": "ちいさい",
+        "kana": "ちいさい",
+        "definitions": [
+          "体积或规模低于一般程度"
+        ],
+        "englishDefinitions": [
+          "little in size or amount"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "体积或规模低于一般程度"
+          ],
+          "ja": [
+            "形や規模が普通よりも小さな程度である"
+          ],
+          "en": [
+            "little in size or amount"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "ja_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "ja_starter_19",
+        "word": "今日",
+        "phonetic": "きょう",
+        "kana": "きょう",
+        "definitions": [
+          "正在度过的这一天"
+        ],
+        "englishDefinitions": [
+          "the day that is happening now"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "正在度过的这一天"
+          ],
+          "ja": [
+            "今過ごしているこの日"
+          ],
+          "en": [
+            "the day that is happening now"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "ja_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "ja_starter_20",
+        "word": "明日",
+        "phonetic": "あした",
+        "kana": "あした",
+        "definitions": [
+          "今天之后的那一天"
+        ],
+        "englishDefinitions": [
+          "the day after today"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "今天之后的那一天"
+          ],
+          "ja": [
+            "今日の次の日"
+          ],
+          "en": [
+            "the day after today"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "ja_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "ja_starter_21",
+        "word": "一",
+        "phonetic": "いち",
+        "kana": "いち",
+        "definitions": [
+          "最小的正整数"
+        ],
+        "englishDefinitions": [
+          "the number before two"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "最小的正整数"
+          ],
+          "ja": [
+            "最も小さい正の整数"
+          ],
+          "en": [
+            "the number before two"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "ja_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "ja_starter_22",
+        "word": "二",
+        "phonetic": "に",
+        "kana": "に",
+        "definitions": [
+          "一加一得到的数"
+        ],
+        "englishDefinitions": [
+          "the number after one and before three"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "一加一得到的数"
+          ],
+          "ja": [
+            "一に一を足した数"
+          ],
+          "en": [
+            "the number after one and before three"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "ja_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "ja_starter_23",
+        "word": "三",
+        "phonetic": "さん",
+        "kana": "さん",
+        "definitions": [
+          "二加一得到的数"
+        ],
+        "englishDefinitions": [
+          "the number after two and before four"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "二加一得到的数"
+          ],
+          "ja": [
+            "二に一を足した数"
+          ],
+          "en": [
+            "the number after two and before four"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "ja_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "ja_starter_24",
+        "word": "好き",
+        "phonetic": "すき",
+        "kana": "すき",
+        "definitions": [
+          "对某人或某事有好感"
+        ],
+        "englishDefinitions": [
+          "to find someone or something pleasant"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "对某人或某事有好感"
+          ],
+          "ja": [
+            "人や物に好ましい気持ちを持つこと"
+          ],
+          "en": [
+            "to find someone or something pleasant"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "ja_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      }
+    ]
+  },
+  {
+    "id": "en_starter",
+    "language": "en",
+    "title": "英语生活入门",
+    "titleEn": "Everyday English",
+    "titleJa": "暮らしの英語",
+    "category": "daily",
+    "examType": "Daily",
+    "totalWords": 24,
+    "includedWords": 24,
+    "description": "24 everyday words · 中文 / 日本語 / English",
+    "wordIds": [
+      "en_starter_01",
+      "en_starter_02",
+      "en_starter_03",
+      "en_starter_04",
+      "en_starter_05",
+      "en_starter_06",
+      "en_starter_07",
+      "en_starter_08",
+      "en_starter_09",
+      "en_starter_10",
+      "en_starter_11",
+      "en_starter_12",
+      "en_starter_13",
+      "en_starter_14",
+      "en_starter_15",
+      "en_starter_16",
+      "en_starter_17",
+      "en_starter_18",
+      "en_starter_19",
+      "en_starter_20",
+      "en_starter_21",
+      "en_starter_22",
+      "en_starter_23",
+      "en_starter_24"
+    ],
+    "createdAt": "2026-10-19T00:00:00Z",
+    "words": [
+      {
+        "id": "en_starter_01",
+        "word": "hello",
+        "phonetic": "",
+        "kana": "",
+        "definitions": [
+          "见面时表示问候的话"
+        ],
+        "englishDefinitions": [
+          "a greeting when meeting someone"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "见面时表示问候的话"
+          ],
+          "ja": [
+            "人に会ったときのあいさつ"
+          ],
+          "en": [
+            "a greeting when meeting someone"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "en_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "en_starter_02",
+        "word": "thanks",
+        "phonetic": "",
+        "kana": "",
+        "definitions": [
+          "表达感谢的话"
+        ],
+        "englishDefinitions": [
+          "an expression of gratitude"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "表达感谢的话"
+          ],
+          "ja": [
+            "感謝の気持ちを伝える言葉"
+          ],
+          "en": [
+            "an expression of gratitude"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "en_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "en_starter_03",
+        "word": "goodbye",
+        "phonetic": "",
+        "kana": "",
+        "definitions": [
+          "分别时的告别语"
+        ],
+        "englishDefinitions": [
+          "a farewell when leaving"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "分别时的告别语"
+          ],
+          "ja": [
+            "別れるときのあいさつ"
+          ],
+          "en": [
+            "a farewell when leaving"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "en_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "en_starter_04",
+        "word": "water",
+        "phonetic": "",
+        "kana": "",
+        "definitions": [
+          "无色透明、可以饮用的液体"
+        ],
+        "englishDefinitions": [
+          "a clear liquid that people drink"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "无色透明、可以饮用的液体"
+          ],
+          "ja": [
+            "飲むことができる透明な液体"
+          ],
+          "en": [
+            "a clear liquid that people drink"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "en_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "en_starter_05",
+        "word": "book",
+        "phonetic": "",
+        "kana": "",
+        "definitions": [
+          "装订成册、供阅读的文字作品"
+        ],
+        "englishDefinitions": [
+          "a written work with pages to read"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "装订成册、供阅读的文字作品"
+          ],
+          "ja": [
+            "読むための文字や絵をまとめたもの"
+          ],
+          "en": [
+            "a written work with pages to read"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "en_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "en_starter_06",
+        "word": "cat",
+        "phonetic": "",
+        "kana": "",
+        "definitions": [
+          "常作为宠物饲养、会喵喵叫的动物"
+        ],
+        "englishDefinitions": [
+          "a small pet animal that meows"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "常作为宠物饲养、会喵喵叫的动物"
+          ],
+          "ja": [
+            "ニャーと鳴く、よくペットにされる動物"
+          ],
+          "en": [
+            "a small pet animal that meows"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "en_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "en_starter_07",
+        "word": "dog",
+        "phonetic": "",
+        "kana": "",
+        "definitions": [
+          "常作为宠物饲养、会汪汪叫的动物"
+        ],
+        "englishDefinitions": [
+          "a pet animal that barks"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "常作为宠物饲养、会汪汪叫的动物"
+          ],
+          "ja": [
+            "ワンワンと鳴く、よくペットにされる動物"
+          ],
+          "en": [
+            "a pet animal that barks"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "en_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "en_starter_08",
+        "word": "eat",
+        "phonetic": "",
+        "kana": "",
+        "definitions": [
+          "把食物放进嘴里咀嚼并吞下"
+        ],
+        "englishDefinitions": [
+          "to take food into the mouth and swallow it"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "把食物放进嘴里咀嚼并吞下"
+          ],
+          "ja": [
+            "食べ物を口に入れて飲み込む"
+          ],
+          "en": [
+            "to take food into the mouth and swallow it"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "en_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "en_starter_09",
+        "word": "drink",
+        "phonetic": "",
+        "kana": "",
+        "definitions": [
+          "把液体咽进肚子里"
+        ],
+        "englishDefinitions": [
+          "to swallow a liquid"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "把液体咽进肚子里"
+          ],
+          "ja": [
+            "液体を口から体に入れる"
+          ],
+          "en": [
+            "to swallow a liquid"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "en_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "en_starter_10",
+        "word": "see",
+        "phonetic": "",
+        "kana": "",
+        "definitions": [
+          "用眼睛观察事物"
+        ],
+        "englishDefinitions": [
+          "to notice something with the eyes"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "用眼睛观察事物"
+          ],
+          "ja": [
+            "目で物の様子をとらえる"
+          ],
+          "en": [
+            "to notice something with the eyes"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "en_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "en_starter_11",
+        "word": "listen",
+        "phonetic": "",
+        "kana": "",
+        "definitions": [
+          "注意接收声音"
+        ],
+        "englishDefinitions": [
+          "to pay attention to a sound"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "注意接收声音"
+          ],
+          "ja": [
+            "音や声に注意を向ける"
+          ],
+          "en": [
+            "to pay attention to a sound"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "en_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "en_starter_12",
+        "word": "write",
+        "phonetic": "",
+        "kana": "",
+        "definitions": [
+          "用笔或键盘记录文字"
+        ],
+        "englishDefinitions": [
+          "to put words on paper or a screen"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "用笔或键盘记录文字"
+          ],
+          "ja": [
+            "文字を紙などに記す"
+          ],
+          "en": [
+            "to put words on paper or a screen"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "en_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "en_starter_13",
+        "word": "learn",
+        "phonetic": "",
+        "kana": "",
+        "definitions": [
+          "通过练习或阅读获得知识"
+        ],
+        "englishDefinitions": [
+          "to gain knowledge through study or practice"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "通过练习或阅读获得知识"
+          ],
+          "ja": [
+            "練習や読書で知識を身につける"
+          ],
+          "en": [
+            "to gain knowledge through study or practice"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "en_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "en_starter_14",
+        "word": "school",
+        "phonetic": "",
+        "kana": "",
+        "definitions": [
+          "学生接受教育的地方"
+        ],
+        "englishDefinitions": [
+          "a place where students are taught"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "学生接受教育的地方"
+          ],
+          "ja": [
+            "生徒が教育を受ける場所"
+          ],
+          "en": [
+            "a place where students are taught"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "en_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "en_starter_15",
+        "word": "friend",
+        "phonetic": "",
+        "kana": "",
+        "definitions": [
+          "相互信任、关系亲近的人"
+        ],
+        "englishDefinitions": [
+          "a person you know well and like"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "相互信任、关系亲近的人"
+          ],
+          "ja": [
+            "親しく付き合い、信頼し合う人"
+          ],
+          "en": [
+            "a person you know well and like"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "en_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "en_starter_16",
+        "word": "home",
+        "phonetic": "",
+        "kana": "",
+        "definitions": [
+          "自己生活和居住的地方"
+        ],
+        "englishDefinitions": [
+          "the place where someone lives"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "自己生活和居住的地方"
+          ],
+          "ja": [
+            "自分が生活する場所"
+          ],
+          "en": [
+            "the place where someone lives"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "en_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "en_starter_17",
+        "word": "big",
+        "phonetic": "",
+        "kana": "",
+        "definitions": [
+          "体积或规模超过一般程度"
+        ],
+        "englishDefinitions": [
+          "large in size or amount"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "体积或规模超过一般程度"
+          ],
+          "ja": [
+            "形や規模が普通よりも大きな程度である"
+          ],
+          "en": [
+            "large in size or amount"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "en_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "en_starter_18",
+        "word": "small",
+        "phonetic": "",
+        "kana": "",
+        "definitions": [
+          "体积或规模低于一般程度"
+        ],
+        "englishDefinitions": [
+          "little in size or amount"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "体积或规模低于一般程度"
+          ],
+          "ja": [
+            "形や規模が普通よりも小さな程度である"
+          ],
+          "en": [
+            "little in size or amount"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "en_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "en_starter_19",
+        "word": "today",
+        "phonetic": "",
+        "kana": "",
+        "definitions": [
+          "正在度过的这一天"
+        ],
+        "englishDefinitions": [
+          "the day that is happening now"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "正在度过的这一天"
+          ],
+          "ja": [
+            "今過ごしているこの日"
+          ],
+          "en": [
+            "the day that is happening now"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "en_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "en_starter_20",
+        "word": "tomorrow",
+        "phonetic": "",
+        "kana": "",
+        "definitions": [
+          "今天之后的那一天"
+        ],
+        "englishDefinitions": [
+          "the day after today"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "今天之后的那一天"
+          ],
+          "ja": [
+            "今日の次の日"
+          ],
+          "en": [
+            "the day after today"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "en_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "en_starter_21",
+        "word": "one",
+        "phonetic": "",
+        "kana": "",
+        "definitions": [
+          "最小的正整数"
+        ],
+        "englishDefinitions": [
+          "the number before two"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "最小的正整数"
+          ],
+          "ja": [
+            "最も小さい正の整数"
+          ],
+          "en": [
+            "the number before two"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "en_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "en_starter_22",
+        "word": "two",
+        "phonetic": "",
+        "kana": "",
+        "definitions": [
+          "一加一得到的数"
+        ],
+        "englishDefinitions": [
+          "the number after one and before three"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "一加一得到的数"
+          ],
+          "ja": [
+            "一に一を足した数"
+          ],
+          "en": [
+            "the number after one and before three"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "en_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "en_starter_23",
+        "word": "three",
+        "phonetic": "",
+        "kana": "",
+        "definitions": [
+          "二加一得到的数"
+        ],
+        "englishDefinitions": [
+          "the number after two and before four"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "二加一得到的数"
+          ],
+          "ja": [
+            "二に一を足した数"
+          ],
+          "en": [
+            "the number after two and before four"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "en_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      },
+      {
+        "id": "en_starter_24",
+        "word": "like",
+        "phonetic": "",
+        "kana": "",
+        "definitions": [
+          "对某人或某事有好感"
+        ],
+        "englishDefinitions": [
+          "to find someone or something pleasant"
+        ],
+        "localizedDefinitions": {
+          "zh": [
+            "对某人或某事有好感"
+          ],
+          "ja": [
+            "人や物に好ましい気持ちを持つこと"
+          ],
+          "en": [
+            "to find someone or something pleasant"
+          ]
+        },
+        "difficulty": "Easy",
+        "partOfSpeech": "word",
+        "examTags": [
+          "en_starter"
+        ],
+        "exampleSentence": "",
+        "exampleTranslation": ""
+      }
+    ]
+  }
+]

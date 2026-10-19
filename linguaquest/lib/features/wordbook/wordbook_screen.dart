@@ -61,6 +61,11 @@ class WordbookScreen extends ConsumerWidget {
         title: Text(l10n.wordbookTitle),
         actions: [
           IconButton(
+            tooltip: l10n.offlineWordbooks,
+            icon: const Icon(Icons.download_for_offline_outlined),
+            onPressed: () => context.push('/offline-wordbooks'),
+          ),
+          IconButton(
             tooltip: l10n.wordbookSearchHint,
             icon: const Icon(AppIcons.search),
             onPressed: () => context.push('/search'),

@@ -28,6 +28,12 @@ class DataSettingsScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.all(AppTokens.s20),
           children: [
+            ListTile(
+              leading: const Icon(Icons.download_for_offline_outlined),
+              title: Text(AppLocalizations.of(context).offlineWordbooks),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => context.push('/offline-wordbooks'),
+            ),
             // §7 (P4e): offline content status + manual refresh.
             AppCard(
               key: const ValueKey('offline-content-card'),
