@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/state/app_controller.dart';
 import '../../data/repositories/learning_repository.dart';
+import '../../data/models/lesson.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/fallback_back_button.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -112,6 +113,11 @@ class _OfflineWordbooksState extends ConsumerState<OfflineWordbooksScreen> {
                     Text(
                       '${book.words.length} ${l10n.commonWords} · ${_downloaded.contains(book.id) ? l10n.offlineDownloaded : l10n.offlineBuiltIn}',
                     ),
+                    const SizedBox(height: 6),
+                    Text(
+                      '${l10n.explanationLanguage}: ${_explanationLanguages(book)}',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                     const SizedBox(height: 8),
                     Wrap(
                       spacing: 12,
@@ -148,4 +154,18 @@ class _OfflineWordbooksState extends ConsumerState<OfflineWordbooksScreen> {
       ),
     );
   }
+}
+
+String _explanationLanguages(WordBook book) {
+  const labels = {'zh': '中文', 'ja': '日本語', 'en': 'English'};
+  final complete = labels.keys.where(
+    (code) =>
+        book.words.isNotEmpty &&
+        book.words.every(
+          (word) => word.localizedDefinitions[code]?.isNotEmpty ?? false,
+        ),
+  );
+  return complete.isEmpty
+      ? 'English'
+      : complete.map((code) => labels[code]).join(' / ');
 }
