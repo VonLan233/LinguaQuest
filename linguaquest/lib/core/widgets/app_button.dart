@@ -105,9 +105,12 @@ class AppSecondaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final style = OutlinedButton.styleFrom(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      foregroundColor: AppTokens.azure,
+      foregroundColor: Theme.of(context).colorScheme.primary,
       padding: const EdgeInsets.symmetric(horizontal: AppTokens.s12),
-      side: const BorderSide(color: AppTokens.primarySoftText, width: 2),
+      side: BorderSide(
+        color: Theme.of(context).colorScheme.primary,
+        width: 1.5,
+      ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppTokens.radiusButton),
       ),

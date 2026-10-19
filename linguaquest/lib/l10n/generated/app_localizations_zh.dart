@@ -3421,4 +3421,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get homeAiHelpHint => '问问 AI 学习伙伴';
+
+  @override
+  String get learningLanguage => '学习语言';
 }

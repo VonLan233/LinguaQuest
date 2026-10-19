@@ -1,227 +1,244 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 import '../../core/constants/app_constants.dart';
-import '../../core/theme/app_icons.dart';
-import '../../core/theme/app_theme.dart';
-import '../../core/theme/app_tokens.dart';
+import '../../core/state/app_controller.dart';
 import '../../core/widgets/app_card.dart';
-import '../../core/widgets/app_pill.dart';
-import '../../core/widgets/compact_entry_card.dart';
-import '../../core/widgets/learning_badges.dart';
-import '../../core/widgets/section_header.dart';
+import '../../core/widgets/study_cat.dart';
 import '../../l10n/generated/app_localizations.dart';
 
-class AiLearningScreen extends StatelessWidget {
+class AiLearningScreen extends ConsumerWidget {
   const AiLearningScreen({super.key});
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final colors = Theme.of(context).colorScheme;
     final query = GoRouterState.of(context).uri.queryParameters;
-    final word = query['word']?.trim() ?? '';
-    final example = query['example']?.trim() ?? '';
-    final translation = query['translation']?.trim() ?? '';
-
+    final state = ref.watch(appControllerProvider);
+    final todayWords = state.currentLesson?.words ?? [];
+    final word =
+        query['word']?.trim() ??
+        (todayWords.isEmpty ? '' : todayWords.first.word);
+    final suffix = word.isEmpty ? '' : '?word=${Uri.encodeComponent(word)}';
     return ListView(
-      padding: const EdgeInsets.fromLTRB(
-        AppTokens.s20,
-        AppTokens.s20,
-        AppTokens.s20,
-        88,
-      ),
+      padding: const EdgeInsets.fromLTRB(20, 22, 20, 24),
       children: [
-        if (AppConstants.apiBaseUrl.isEmpty) ...[
-          AppCard(
-            child: Row(
-              children: [
-                Icon(
-                  AppIcons.info,
-                  color: Theme.of(context).colorScheme.primary,
-                  size: 20,
-                ),
-                const SizedBox(width: AppTokens.s12),
-                const Expanded(
-                  child: Text(
-                    'AI features use demo responses. Connect to a server for real AI.',
-                    style: TextStyle(fontSize: 13),
+        Text(
+          l10n.aiLearningTitle,
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        const SizedBox(height: 24),
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.aiCenterTitle,
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
-                ),
-              ],
+                  const SizedBox(height: 10),
+                  Text(
+                    l10n.aiCenterHint,
+                    style: TextStyle(
+                      color: colors.onSurfaceVariant,
+                      height: 1.5,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: AppTokens.s12),
-        ],
-        SectionHeader(
-          title: l10n.aiLearningTitle,
-          trailing: QuestIconButton(
-            tooltip: l10n.aiLearningTooltip,
-            onPressed: () => context.push('/ai-tutor'),
-            icon: AppIcons.chatBubble,
-            color: AppTheme.cyan,
+            const SizedBox(width: 14),
+            const StudyCat(size: 94),
+          ],
+        ),
+        const SizedBox(height: 20),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(
+              AppConstants.apiBaseUrl.isEmpty
+                  ? Icons.info_outline
+                  : Icons.wifi_outlined,
+              size: 18,
+              color: colors.onSurfaceVariant,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                AppConstants.apiBaseUrl.isEmpty
+                    ? l10n.aiDemoNotice
+                    : l10n.aiNetworkNotice,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: colors.onSurfaceVariant,
+                  height: 1.5,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 24),
+        AppCard(
+          onTap: () => context.push('/ai-chat$suffix'),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.chat_bubble_outline_rounded,
+                    color: colors.primary,
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      l10n.aiTryThis,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 14),
+              if (word.isNotEmpty)
+                Text(word, style: Theme.of(context).textTheme.headlineSmall),
+              if ((query['example'] ?? '').isNotEmpty) ...[
+                const SizedBox(height: 6),
+                Text(query['example']!),
+              ],
+              if ((query['translation'] ?? '').isNotEmpty) ...[
+                const SizedBox(height: 6),
+                Text(query['translation']!),
+              ],
+              const SizedBox(height: 8),
+              Text(
+                l10n.aiAskWord,
+                style: TextStyle(color: colors.onSurfaceVariant),
+              ),
+              const SizedBox(height: 14),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      l10n.aiLearningToolAiQA,
+                      style: TextStyle(
+                        color: colors.primary,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_rounded,
+                    color: colors.primary,
+                    size: 20,
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
-        const SizedBox(height: AppTokens.s12),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: AppPill(
-            label: l10n.aiLearningPillError,
-            variant: PillVariant.primary,
-            icon: AppIcons.psychologyAlt,
-          ),
+        const SizedBox(height: 28),
+        Text(
+          l10n.aiScenarioTitle,
+          style: Theme.of(context).textTheme.titleMedium,
         ),
-        const SizedBox(height: AppTokens.s32),
-        if (word.isNotEmpty) ...[
-          _AiWordContextCard(
-            word: word,
-            example: example,
-            translation: translation,
-            l10n: l10n,
-          ),
-          const SizedBox(height: AppTokens.s32),
-        ],
-        SectionHeader(title: l10n.aiLearningToolsTitle),
-        const SizedBox(height: AppTokens.s16),
+        const SizedBox(height: 14),
         _AiToolRow(
-          icon: AppIcons.questionAnswer,
+          icon: Icons.question_answer_outlined,
           title: l10n.aiLearningToolAiQA,
-          color: AppTheme.cyan,
-          onTap: () => context.push(
-            '/ai-chat${word.isNotEmpty ? '?word=${Uri.encodeComponent(word)}' : ''}',
-          ),
+          description: l10n.aiQaShort,
+          route: '/ai-chat$suffix',
         ),
-        const SizedBox(height: AppTokens.s12),
         _AiToolRow(
-          icon: AppIcons.accountTree,
+          icon: Icons.subject_rounded,
           title: l10n.aiLearningToolAiAnalysis,
-          color: AppTokens.azure,
-          onTap: () => context.push('/ai-analysis'),
+          description: l10n.aiAnalysisShort,
+          route: '/ai-analysis',
         ),
-        const SizedBox(height: AppTokens.s12),
         _AiToolRow(
-          icon: AppIcons.autoStories,
-          title: l10n.aiLearningToolCloze,
-          color: AppTokens.mangoColor(context),
-          onTap: () => context.push(
-            '/ai-cloze${word.isNotEmpty ? '?word=${Uri.encodeComponent(word)}' : ''}',
-          ),
-        ),
-        const SizedBox(height: AppTokens.s12),
-        _AiToolRow(
-          icon: AppIcons.rateReview,
+          icon: Icons.edit_note_rounded,
           title: l10n.aiLearningToolAiWriting,
-          color: AppTokens.coralColor(context),
-          onTap: () => context.push('/ai-writing-review'),
+          description: l10n.aiWritingShort,
+          route: '/ai-writing-review',
         ),
-        const SizedBox(height: AppTokens.s12),
         _AiToolRow(
-          icon: AppIcons.compareArrows,
+          icon: Icons.compare_arrows_rounded,
           title: l10n.aiLearningToolConfusion,
-          color: AppTheme.cyan,
-          onTap: () => context.push('/ai-confusion'),
+          description: l10n.aiConfusionShort,
+          route: '/ai-confusion',
         ),
-        const SizedBox(height: AppTokens.s12),
         _AiToolRow(
-          icon: AppIcons.tipsAndUpdates,
+          icon: Icons.auto_stories_outlined,
+          title: l10n.aiLearningToolCloze,
+          description: l10n.aiClozeShort,
+          route: '/ai-cloze$suffix',
+        ),
+        _AiToolRow(
+          icon: Icons.notes_rounded,
           title: l10n.aiLearningToolSentence,
-          color: AppTokens.azure,
-          onTap: () => context.push('/ai-sentence'),
+          description: l10n.aiSentenceShort,
+          route: '/ai-sentence',
         ),
       ],
     );
   }
 }
 
-/// A compact AI tool entry: icon + name + status pill, no blurb.
-/// When [onTap] is provided, the row is enabled and shows a success pill.
 class _AiToolRow extends StatelessWidget {
   const _AiToolRow({
     required this.icon,
     required this.title,
-    required this.color,
-    this.onTap,
+    required this.description,
+    required this.route,
   });
-
   final IconData icon;
-  final String title;
-  final Color color;
-  final VoidCallback? onTap;
-
+  final String title, description, route;
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    final enabled = onTap != null;
-    return GestureDetector(
-      onTap: onTap,
-      child: CompactEntryCard(
-        icon: icon,
-        title: title,
-        color: color,
-        enabled: enabled,
-        trailing: AppPill(
-          label: enabled ? l10n.aiLearningStatusAvailable : '',
-          variant: enabled ? PillVariant.success : PillVariant.neutral,
+    final colors = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: AppCard(
+        onTap: () => context.push(route),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: colors.primaryContainer,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: colors.primary, size: 22),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    description,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: colors.onSurfaceVariant,
+                      height: 1.4,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 10),
+            Icon(Icons.chevron_right, size: 18, color: colors.onSurfaceVariant),
+          ],
         ),
       ),
     );
   }
 }
-
-class _AiWordContextCard extends StatelessWidget {
-  const _AiWordContextCard({
-    required this.word,
-    required this.example,
-    required this.translation,
-    required this.l10n,
-  });
-
-  final String word;
-  final String example;
-  final String translation;
-  final AppLocalizations l10n;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return AppCard(
-      padding: const EdgeInsets.all(AppTokens.s16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const IconCueBadge(
-            icon: AppIcons.travelExplore,
-            color: AppTheme.cyan,
-          ),
-          const SizedBox(width: AppTokens.s12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '${l10n.aiLearningCurrentWord}: $word',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                if (example.isNotEmpty) ...[
-                  const SizedBox(height: AppTokens.s8),
-                  Text(example),
-                ],
-                if (translation.isNotEmpty) ...[
-                  const SizedBox(height: AppTokens.s4),
-                  Text(
-                    translation,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-

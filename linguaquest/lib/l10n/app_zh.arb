@@ -1147,5 +1147,6 @@
   "practiceReviewAnswer": "一起记住这个词",
   "practiceExitHint": "已完成的复习记录已保存。保留草稿后可继续剩余题目。",
   "homeAiHelp": "有一点卡住了？",
-  "homeAiHelpHint": "问问 AI 学习伙伴"
+  "homeAiHelpHint": "问问 AI 学习伙伴",
+  "learningLanguage": "学习语言"
 }

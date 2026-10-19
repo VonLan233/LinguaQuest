@@ -3608,4 +3608,7 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get homeAiHelpHint => 'Ask your AI study companion';
+
+  @override
+  String get learningLanguage => 'Learning Language';
 }

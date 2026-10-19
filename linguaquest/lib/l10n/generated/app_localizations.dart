@@ -6440,6 +6440,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Ask your AI study companion'**
   String get homeAiHelpHint;
+
+  /// No description provided for @learningLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning Language'**
+  String get learningLanguage;
 }
 
 class _AppLocalizationsDelegate

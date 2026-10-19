@@ -1288,5 +1288,6 @@
   "practiceReviewAnswer": "Let’s remember this one",
   "practiceExitHint": "Completed review records are already saved. Keep a draft to resume the remaining questions.",
   "homeAiHelp": "Need a little help?",
-  "homeAiHelpHint": "Ask your AI study companion"
+  "homeAiHelpHint": "Ask your AI study companion",
+  "learningLanguage": "Learning Language"
 }

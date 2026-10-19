@@ -31,8 +31,8 @@ class AppTokens {
   static const Duration medium = Duration(milliseconds: 260);
 
   // Brand palette (light) — Cozy Quest.
-  static const Color brandNavy = Color(0xFF233A66);
-  static const Color azure = Color(0xFF2C7BE0);
+  static const Color brandNavy = Color(0xFF193956);
+  static const Color azure = Color(0xFF2469DF);
   static const Color azurePressed = Color(0xFF1F5FAE);
   static const Color sky = Color(0xFF8FD0F2);
   static const Color success = Color(0xFF5FB23C);
@@ -46,15 +46,15 @@ class AppTokens {
 
   // Neutrals.
   // Cool off-white page background (reference comps float white cards on it).
-  static const Color bgLight = Color(0xFFF4F6FA);
+  static const Color bgLight = Color(0xFFF7F9FC);
   static const Color surfaceLight = Color(0xFFFFFFFF);
-  static const Color surfaceSunken = Color(0xFFF2EFEA);
-  static const Color hairline = Color(0xFFECE7E0);
+  static const Color surfaceSunken = Color(0xFFEDF1F7);
+  static const Color hairline = Color(0xFFE5EBF3);
   static const Color chipLight = Color(0xFFEAF2FC); // = primarySoft
-  static const Color textPrimaryLight = Color(0xFF233A66);
-  static const Color textSecondaryLight = Color(0xFF6B6B73);
-  static const Color textHintLight = Color(0xFFA59B8C);
-  static const Color outlineLight = Color(0xFFECE7E0);
+  static const Color textPrimaryLight = Color(0xFF193956);
+  static const Color textSecondaryLight = Color(0xFF64788B);
+  static const Color textHintLight = Color(0xFF73869A);
+  static const Color outlineLight = Color(0xFFE5EBF3);
 
   // Semantic soft fills (badge / chip backgrounds).
   static const Color xpSoft = Color(0xFFFFF1D6);
@@ -64,7 +64,7 @@ class AppTokens {
   static const Color streakSoft = Color(0xFFFFE2DC);
   static const Color streakSoftText = Color(0xFFE8503B);
   static const Color primarySoft = Color(0xFFEAF2FC);
-  static const Color primarySoftText = Color(0xFF2C7BE0);
+  static const Color primarySoftText = Color(0xFF2469DF);
 
   // Brand palette (dark) — derived from the navy cat.
   static const Color bgDark = Color(0xFF0E1626);

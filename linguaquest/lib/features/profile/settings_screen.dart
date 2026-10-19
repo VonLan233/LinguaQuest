@@ -227,7 +227,7 @@ class _LearningLanguageSetting extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Learning Language', style: theme.textTheme.titleMedium),
+                Text(l10n.learningLanguage, style: theme.textTheme.titleMedium),
                 Text(
                   '$langLabel · $bookLabel',
                   style: TextStyle(color: theme.colorScheme.onSurfaceVariant),

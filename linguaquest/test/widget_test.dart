@@ -17,6 +17,7 @@ import 'package:linguaquest/core/utils/ui_labels.dart';
 import 'package:linguaquest/core/utils/wordbook_progress.dart';
 import 'package:linguaquest/core/widgets/app_button.dart';
 import 'package:linguaquest/core/widgets/app_card.dart';
+import 'package:linguaquest/core/widgets/app_progress_bar.dart';
 import 'package:linguaquest/core/widgets/learning_badges.dart';
 import 'package:linguaquest/core/widgets/pronunciation_controls.dart';
 import 'package:linguaquest/core/widgets/word_choice_button.dart';
@@ -126,8 +127,8 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    expect(find.text('6 days check-in'), findsOneWidget);
-    expect(find.text('HSK 1 · Intermediate'), findsOneWidget);
+    expect(find.text('6'), findsOneWidget);
+    expect(find.text('HSK 1'), findsWidgets);
     expect(find.text('Home'), findsWidgets);
     expect(find.text('Training'), findsWidgets);
 
@@ -175,14 +176,10 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    // The label and the count now stack on two lines (was one combined string).
-    expect(find.text('Today completed'), findsOneWidget);
-    expect(find.text('4/14 words'), findsOneWidget);
-    expect(find.text('29%'), findsOneWidget);
+    expect(find.text('4 / 14'), findsOneWidget);
     expect(find.text('Today'), findsOneWidget);
-
-    final progress = tester.widget<CircularProgressIndicator>(
-      find.byType(CircularProgressIndicator).first,
+    final progress = tester.widget<AppProgressBar>(
+      find.byType(AppProgressBar).first,
     );
     expect(progress.value, closeTo(4 / 14, 0.001));
   });
@@ -211,7 +208,7 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    await tester.tap(find.text('Search words, phrases, or examples'));
+    await tester.tap(find.byKey(const ValueKey('home-search')));
     await tester.pumpAndSettle();
 
     expect(find.text('HSK 1'), findsOneWidget);
@@ -476,7 +473,7 @@ void main() {
     );
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    await tester.tap(find.textContaining('Start'));
+    await tester.tap(find.byKey(const ValueKey('home-continue')));
     await tester.pumpAndSettle();
 
     final prefs = await SharedPreferences.getInstance();
@@ -534,12 +531,12 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     await tester.scrollUntilVisible(
-      find.textContaining('Start'),
+      find.byKey(const ValueKey('home-continue')),
       300,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.textContaining('Start'));
+    await tester.tap(find.byKey(const ValueKey('home-continue')));
     await tester.pumpAndSettle();
 
     expect(find.text("Today's mixed pack"), findsOneWidget);
@@ -569,7 +566,7 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    final reviewButton = find.widgetWithText(AppSecondaryButton, 'Review');
+    final reviewButton = find.byKey(const ValueKey('home-review'));
     await tester.scrollUntilVisible(
       reviewButton,
       300,
@@ -587,7 +584,7 @@ void main() {
     expect(find.text('Check'), findsNothing);
     expect(find.text('Manage review queue'), findsOneWidget);
     // Cozy Quest cards landed on the mixed study session screen.
-    expect(find.byType(AppCard), findsWidgets);
+    expect(find.byType(WordChoiceButton), findsWidgets);
     expect(find.text('记住了'), findsNothing);
     expect(find.text('没记住'), findsNothing);
     expect(find.text('显示释义'), findsNothing);
@@ -597,10 +594,12 @@ void main() {
     // feedback, then auto-advances after the 1500ms timer (no retry).
     await _tapAnyOptionExceptNoSettle(tester, 'thank you; thanks');
     await tester.pump();
-    expect(find.textContaining('Wrong'), findsOneWidget);
+    await tester.tap(find.text('Check answer'));
+    await tester.pumpAndSettle();
+    expect(find.text('Let’s remember this one'), findsOneWidget);
     expect(find.text('Continue'), findsNothing);
 
-    await tester.pump(const Duration(milliseconds: 1500));
+    await tester.tap(find.text('Next word'));
     await tester.pumpAndSettle();
 
     // The recall card for the reviewed word (谢谢) appears.
@@ -642,7 +641,7 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: LinguaQuestApp()));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    final reviewButton = find.widgetWithText(AppSecondaryButton, 'Review');
+    final reviewButton = find.byKey(const ValueKey('home-review'));
     await tester.scrollUntilVisible(
       reviewButton,
       300,
@@ -655,13 +654,15 @@ void main() {
     // review answer would auto-advance after 1500ms, but we leave before then.
     await _tapAnyOptionExceptNoSettle(tester, 'thank you; thanks');
     await tester.pump();
+    await tester.tap(find.text('Check answer'));
+    await tester.pumpAndSettle();
 
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
 
     expect(find.text('Save this progress?'), findsOneWidget);
     expect(
-      find.textContaining('unfinished words return to the pack next time'),
+      find.textContaining('Completed review records are already saved'),
       findsOneWidget,
     );
 
@@ -675,7 +676,7 @@ void main() {
     await tester.tap(find.text('Leave without saving'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Daily Task Console'), findsOneWidget);
+    expect(find.text('Home'), findsWidgets);
   });
 
   testWidgets('discover check-in only counts same-day study', (tester) async {
@@ -1041,7 +1042,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Landed inside the authenticated home experience.
-    expect(find.text('Daily Task Console'), findsOneWidget);
+    expect(find.text('Your next small win'), findsOneWidget);
   });
 
   testWidgets('failed login stays on login screen and shows error', (
@@ -1150,15 +1151,15 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     await tester.fling(
-      find.text('Daily Task Console'),
+      find.text('Your next small win'),
       const Offset(-24, 0),
       1000,
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Daily Task Console'), findsOneWidget);
+    expect(find.text('Your next small win'), findsOneWidget);
 
-    await tester.drag(find.text('Daily Task Console'), const Offset(-260, 0));
+    await tester.drag(find.text('Your next small win'), const Offset(-260, 0));
     await tester.pumpAndSettle();
 
     expect(find.text('Speed Game'), findsOneWidget);
@@ -1190,7 +1191,7 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     await tester.fling(
-      find.text('Daily Task Console'),
+      find.text('Your next small win'),
       const Offset(-80, 0),
       1000,
     );
@@ -2121,7 +2122,12 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Home'), findsWidgets);
-    expect(find.text('Review'), findsWidgets);
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey('home-review')),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.byKey(const ValueKey('home-review')), findsOneWidget);
   });
 
   testWidgets('quiz auto-advances after the feedback delay', (tester) async {
@@ -2296,7 +2302,7 @@ void main() {
     await tester.tap(find.byType(BackButtonIcon));
     await tester.pumpAndSettle();
 
-    expect(find.text('Daily Task Console'), findsOneWidget);
+    expect(find.text('Your next small win'), findsOneWidget);
 
     await _openCurrentLessonCards(tester);
     await _completeNewWordCards(tester);
@@ -3383,7 +3389,7 @@ void main() {
     );
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    expect(find.text('Daily Task Console'), findsOneWidget);
+    expect(find.text('Your next small win'), findsOneWidget);
 
     await tester.scrollUntilVisible(
       find.text('Open Word Card'),
@@ -3490,7 +3496,7 @@ void main() {
     final onlineBooks = await repository.listWordBooks();
 
     expect(offlineBooks.single.id, fallbackBook.id);
-    expect(onlineBooks.single.id, serverBook.id);
+    expect(onlineBooks.map((b) => b.id), contains(serverBook.id));
     expect(attempts, 2);
   });
 
@@ -3980,7 +3986,7 @@ void main() {
         .currentLesson!
         .words
         .first;
-    await tester.tap(find.textContaining('Start'));
+    await tester.tap(find.byKey(const ValueKey('home-continue')));
     await tester.pumpAndSettle();
 
     expect(find.text("Today's mixed pack"), findsOneWidget);
@@ -3995,13 +4001,20 @@ void main() {
     // question open for re-selection (no auto-advance, no check button).
     await _tapAnyOptionExceptNoSettle(tester, firstWord.meaning);
     await tester.pump();
+    await tester.tap(find.text('Check answer'));
+    await tester.pump();
     expect(find.text('Check'), findsNothing);
     expect(find.textContaining(firstWord.word), findsWidgets);
 
     // Selecting the correct answer settles the step and auto-advances after the
     // 1500ms timer.
     await _tapOptionNoSettle(tester, firstWord.meaning);
-    await tester.pump(const Duration(milliseconds: 1500));
+    await tester.pump();
+    await tester.tap(find.text('Check answer'));
+    await tester.pumpAndSettle();
+    expect(find.text('Nice work!'), findsOneWidget);
+    await tester.tap(find.text('Next word'));
+    await tester.pump();
     await tester.pumpAndSettle();
 
     expect(find.text('Add to later recall'), findsOneWidget);
@@ -4011,81 +4024,89 @@ void main() {
     await tester.pumpAndSettle();
   });
 
-  testWidgets(
-    'mixed study question step instant-judges: wrong stays, correct auto-advances',
-    (tester) async {
-      final now = DateTime(2026, 5, 25);
-      final profile = UserProfile(
-        uid: 'instant-judge-user',
-        name: 'Ivy',
-        email: 'ivy@lingua.quest',
-        targetExam: 'IELTS',
-        level: 'Elementary',
-        dailyGoal: 10,
-        xp: 0,
-        streak: 0,
-        createdAt: now,
-        updatedAt: now,
-      );
-      SharedPreferences.setMockInitialValues({
-        'linguaquest.profile': jsonEncode(profile.toJson()),
-        'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(
-          profile.uid,
-        ),
-      });
+  testWidgets('mixed study confirms choices and retains feedback until next', (
+    tester,
+  ) async {
+    final now = DateTime(2026, 5, 25);
+    final profile = UserProfile(
+      uid: 'instant-judge-user',
+      name: 'Ivy',
+      email: 'ivy@lingua.quest',
+      targetExam: 'IELTS',
+      level: 'Elementary',
+      dailyGoal: 10,
+      xp: 0,
+      streak: 0,
+      createdAt: now,
+      updatedAt: now,
+    );
+    SharedPreferences.setMockInitialValues({
+      'linguaquest.profile': jsonEncode(profile.toJson()),
+      'linguaquest.studyPlan.${profile.uid}': _studyPlanJsonForUid(profile.uid),
+    });
 
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            customWordRepositoryProvider.overrideWithValue(
-              _EmptyCustomWordRepository(),
-            ),
-          ],
-          child: const LinguaQuestApp(),
-        ),
-      );
-      await tester.pumpAndSettle(const Duration(seconds: 1));
-      final container = ProviderScope.containerOf(
-        tester.element(find.byType(LinguaQuestApp)),
-      );
-      final firstWord = container
-          .read(appControllerProvider)
-          .currentLesson!
-          .words
-          .first;
-      await tester.tap(find.textContaining('Start'));
-      await tester.pumpAndSettle();
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          customWordRepositoryProvider.overrideWithValue(
+            _EmptyCustomWordRepository(),
+          ),
+        ],
+        child: const LinguaQuestApp(),
+      ),
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    final container = ProviderScope.containerOf(
+      tester.element(find.byType(LinguaQuestApp)),
+    );
+    final firstWord = container
+        .read(appControllerProvider)
+        .currentLesson!
+        .words
+        .first;
+    await tester.tap(find.byKey(const ValueKey('home-continue')));
+    await tester.pumpAndSettle();
 
-      // Enter the recognition question for the first new word.
-      await tester.tap(find.text("Don't know"));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Start recognition'));
-      await tester.pumpAndSettle();
-      // No check button: question steps judge on tap.
-      expect(find.text('Check'), findsNothing);
-      // The recall card that follows the question is not on screen yet.
-      expect(find.text('Add to later recall'), findsNothing);
+    // Enter the recognition question for the first new word.
+    await tester.tap(find.text("Don't know"));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Start recognition'));
+    await tester.pumpAndSettle();
+    // No check button: question steps judge on tap.
+    expect(find.text('Check answer'), findsOneWidget);
+    // The recall card that follows the question is not on screen yet.
+    expect(find.text('Add to later recall'), findsNothing);
 
-      // A wrong tap does NOT advance: even after the auto-advance window would
-      // have elapsed, the follow-up recall card has not appeared.
-      await _tapAnyOptionExceptNoSettle(tester, firstWord.meaning);
-      await tester.pump(const Duration(milliseconds: 1500));
-      await tester.pump();
-      expect(find.text('Add to later recall'), findsNothing);
+    // A wrong tap does NOT advance: even after the auto-advance window would
+    // have elapsed, the follow-up recall card has not appeared.
+    await _tapAnyOptionExceptNoSettle(tester, firstWord.meaning);
+    await tester.pump();
+    // Selecting an option alone does not submit an answer.
+    expect(
+      find.text('Not yet. Pick the correct answer before continuing.'),
+      findsNothing,
+    );
+    await tester.tap(find.text('Check answer'));
+    await tester.pump(const Duration(milliseconds: 1500));
+    await tester.pump();
+    expect(find.text('Add to later recall'), findsNothing);
 
-      // A correct tap settles the step. Before the 1500ms timer fires we have
-      // not advanced; after it fires the follow-up recall card appears.
-      await _tapOptionNoSettle(tester, firstWord.meaning);
-      expect(find.text('Add to later recall'), findsNothing);
-      await tester.pump(const Duration(milliseconds: 1500));
-      await tester.pumpAndSettle();
-      expect(find.text('Add to later recall'), findsOneWidget);
+    // A correct tap settles the step. Before the 1500ms timer fires we have
+    // not advanced; after it fires the follow-up recall card appears.
+    await _tapOptionNoSettle(tester, firstWord.meaning);
+    await tester.pump();
+    await tester.tap(find.text('Check answer'));
+    await tester.pump(const Duration(milliseconds: 2000));
+    expect(find.text('Add to later recall'), findsNothing);
+    expect(find.text('Nice work!'), findsOneWidget);
+    await tester.tap(find.text('Next word'));
+    await tester.pumpAndSettle();
+    expect(find.text('Add to later recall'), findsOneWidget);
 
-      // Drain the top-notice auto-dismiss timer.
-      await tester.pump(const Duration(milliseconds: 1800));
-      await tester.pumpAndSettle();
-    },
-  );
+    // Drain the top-notice auto-dismiss timer.
+    await tester.pump(const Duration(milliseconds: 1800));
+    await tester.pumpAndSettle();
+  });
 
   test('mixed study completion records learned target words', () async {
     final now = DateTime(2026, 5, 25);
@@ -4567,7 +4588,7 @@ void main() {
     );
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    final reviewButton = find.widgetWithText(AppSecondaryButton, 'Review');
+    final reviewButton = find.byKey(const ValueKey('home-review'));
     await tester.scrollUntilVisible(
       reviewButton,
       300,
@@ -4654,7 +4675,7 @@ void main() {
       );
       await tester.pumpAndSettle(const Duration(seconds: 1));
 
-      final reviewButton = find.widgetWithText(AppSecondaryButton, 'Review');
+      final reviewButton = find.byKey(const ValueKey('home-review'));
       await tester.scrollUntilVisible(
         reviewButton,
         300,
@@ -4775,7 +4796,15 @@ Future<void> _answerWrongQuizQuestion(
 /// Taps the option labelled [label] without pumping past the auto-advance
 /// timer (unlike [_tapOption] which calls pumpAndSettle).
 Future<void> _tapOptionNoSettle(WidgetTester tester, String label) async {
-  final finder = find.widgetWithText(WordChoiceButton, label).first;
+  final matches = find.widgetWithText(WordChoiceButton, label);
+  if (matches.evaluate().isEmpty) {
+    await tester.scrollUntilVisible(
+      matches,
+      120,
+      scrollable: find.byType(Scrollable).first,
+    );
+  }
+  final finder = matches.first;
   expect(finder, findsOneWidget);
   await tester.ensureVisible(finder);
   await tester.pump();

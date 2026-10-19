@@ -33,7 +33,9 @@ class AppProgressBar extends StatelessWidget {
       borderRadius: BorderRadius.circular(AppTokens.radiusPill),
       child: Container(
         height: height,
-        color: AppTokens.surfaceSunken,
+        color: Theme.of(context).brightness == Brightness.dark
+            ? Theme.of(context).colorScheme.surfaceContainerHighest
+            : AppTokens.surfaceSunken,
         alignment: Alignment.centerLeft,
         child: FractionallySizedBox(
           widthFactor: factor,

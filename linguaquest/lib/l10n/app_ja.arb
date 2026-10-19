@@ -1054,5 +1054,6 @@
   "readingExplainGrammar": "文法ポイント",
   "readingExplainStructure": "文構造",
   "readingExplainTranslation": "翻訳",
-  "readingExplainPractice": "練習"
+  "readingExplainPractice": "練習",
+  "learningLanguage": "学習する言語"
 }

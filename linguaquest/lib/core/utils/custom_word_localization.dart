@@ -19,8 +19,9 @@ String customWordMeaningFor(CustomWord word, String languageCode) {
     word.localizedDefinitions[normalizedLanguage] ?? [],
   );
   if (localized != null) return localized;
-  if (normalizedLanguage == 'ja')
+  if (normalizedLanguage == 'ja') {
     return _firstNonEmpty(word.englishDefinitions) ?? word.meaning;
+  }
   final meaning = word.meaning.trim();
   final fallback = meaning.isEmpty ? word.word.trim() : meaning;
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_icons.dart';
@@ -50,34 +51,39 @@ class _AppShellState extends State<AppShell> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: const AppDrawer(),
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: SafeArea(
-        bottom: false,
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onHorizontalDragStart: (_) => _dragDeltaX = 0,
-          onHorizontalDragUpdate: (details) {
-            _dragDeltaX += details.primaryDelta ?? 0;
-          },
-          onHorizontalDragEnd: _handleHorizontalDrag,
-          child: ColoredBox(
-            color: Theme.of(context).scaffoldBackgroundColor,
-            child: ClipRect(
-              child: AnimatedSlide(
-                offset: _pageOffset,
-                duration: const Duration(milliseconds: 260),
-                curve: Curves.easeOutCubic,
-                child: widget.child,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: Theme.of(context).brightness == Brightness.dark
+          ? SystemUiOverlayStyle.light
+          : SystemUiOverlayStyle.dark,
+      child: Scaffold(
+        drawer: const AppDrawer(),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: SafeArea(
+          bottom: false,
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onHorizontalDragStart: (_) => _dragDeltaX = 0,
+            onHorizontalDragUpdate: (details) {
+              _dragDeltaX += details.primaryDelta ?? 0;
+            },
+            onHorizontalDragEnd: _handleHorizontalDrag,
+            child: ColoredBox(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              child: ClipRect(
+                child: AnimatedSlide(
+                  offset: _pageOffset,
+                  duration: const Duration(milliseconds: 260),
+                  curve: Curves.easeOutCubic,
+                  child: widget.child,
+                ),
               ),
             ),
           ),
         ),
-      ),
-      bottomNavigationBar: _QuestBottomNav(
-        selectedIndex: widget.selectedIndex,
-        onSelected: (index) => _goToIndex(context, index),
+        bottomNavigationBar: _QuestBottomNav(
+          selectedIndex: widget.selectedIndex,
+          onSelected: (index) => _goToIndex(context, index),
+        ),
       ),
     );
   }
@@ -128,12 +134,12 @@ class _QuestBottomNav extends StatelessWidget {
       ),
       _QuestTabData(
         label: l10n.tabTraining,
-        icon: AppIcons.sportsEsports,
+        icon: Icons.school_outlined,
         color: AppTheme.leaf,
       ),
       _QuestTabData(
         label: l10n.tabAiLearning,
-        icon: AppIcons.psychologyAlt,
+        icon: Icons.chat_bubble_outline_rounded,
         color: AppTheme.cyan,
       ),
       _QuestTabData(
@@ -201,7 +207,9 @@ class _QuestTabButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final tabColor = selected ? colorScheme.primary : colorScheme.onSurfaceVariant;
+    final tabColor = selected
+        ? colorScheme.primary
+        : colorScheme.onSurfaceVariant;
     return Semantics(
       selected: selected,
       button: true,
@@ -266,12 +274,7 @@ class _QuestTabIcon extends StatelessWidget {
         color: selected ? indicatorColor : Colors.transparent,
         borderRadius: BorderRadius.circular(AppTokens.radiusPill),
       ),
-      child: Icon(
-        data.icon,
-        color: color,
-        size: 22,
-        fill: selected ? 1 : 0,
-      ),
+      child: Icon(data.icon, color: color, size: 22, fill: selected ? 1 : 0),
     );
   }
 }

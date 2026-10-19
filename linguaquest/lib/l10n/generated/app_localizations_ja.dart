@@ -3476,4 +3476,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get homeAiHelpHint => 'AI 学習パートナーに聞こう';
+
+  @override
+  String get learningLanguage => '学習する言語';
 }

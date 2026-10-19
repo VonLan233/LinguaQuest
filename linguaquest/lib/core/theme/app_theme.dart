@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'app_tokens.dart';
 
@@ -119,8 +120,8 @@ class AppTheme {
     // `Typography.material2021().black/white` carries colour only — its label
     // styles have a null fontSize (geometry is merged elsewhere). Pin the M3
     // chip label size (14) so the style is complete and its colour applies.
-    final chipBaseStyle =
-        (baseTextTheme.labelLarge ?? const TextStyle()).copyWith(fontSize: 14);
+    final chipBaseStyle = (baseTextTheme.labelLarge ?? const TextStyle())
+        .copyWith(fontSize: 14);
     // 普通 TextStyle（非 WidgetStateTextStyle）：ChoiceChip 不会 resolve
     // WidgetStateTextStyle，会导致 label color 解析为 null、在 light 下白底白字。
     // 这里直接给 onSurface，light/dark 都可读；选中态靠 selectedColor 背景区分。
@@ -131,9 +132,20 @@ class AppTheme {
 
     return ThemeData(
       useMaterial3: true,
-      colorScheme: scheme,
+      colorScheme: scheme.copyWith(
+        primaryContainer: isDark
+            ? const Color(0xFF1C3456)
+            : const Color(0xFFEAF2FF),
+        onPrimaryContainer: scheme.onSurface,
+      ),
       fontFamily: 'Avenir',
-      iconTheme: IconThemeData(color: scheme.onSurface, weight: 400, grade: 0, opticalSize: 24, fill: 0),
+      iconTheme: IconThemeData(
+        color: scheme.onSurface,
+        weight: 400,
+        grade: 0,
+        opticalSize: 24,
+        fill: 0,
+      ),
       textTheme: baseTextTheme.copyWith(
         displayMedium: baseTextTheme.displayMedium?.copyWith(
           fontWeight: FontWeight.w800,
@@ -155,6 +167,9 @@ class AppTheme {
         ),
       ),
       appBarTheme: AppBarTheme(
+        systemOverlayStyle: isDark
+            ? SystemUiOverlayStyle.light
+            : SystemUiOverlayStyle.dark,
         centerTitle: false,
         elevation: 0,
         backgroundColor: Colors.transparent,
