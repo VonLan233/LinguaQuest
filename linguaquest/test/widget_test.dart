@@ -4099,6 +4099,19 @@ void main() {
     await tester.pump(const Duration(milliseconds: 2000));
     expect(find.text('Add to later recall'), findsNothing);
     expect(find.text('Nice work!'), findsOneWidget);
+    await tester.tap(find.byType(BackButtonIcon));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Save and leave'));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey('home-continue')),
+      -150,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(find.byKey(const ValueKey('home-continue')));
+    await tester.pumpAndSettle();
+    expect(find.text('Nice work!'), findsOneWidget);
+    expect(find.text('Check answer'), findsNothing);
     await tester.tap(find.text('Next word'));
     await tester.pumpAndSettle();
     expect(find.text('Add to later recall'), findsOneWidget);
