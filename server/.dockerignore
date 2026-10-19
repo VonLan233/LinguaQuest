@@ -1,0 +1,8 @@
+.env
+.env.*
+!.env.example
+.dart_tool/
+build/
+.git/
+.DS_Store
+**/._*

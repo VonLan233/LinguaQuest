@@ -21,6 +21,7 @@ import 'lesson_catalog.dart';
 import 'lottery_policy.dart';
 import 'moderation_policy.dart';
 import 'notification_policy.dart';
+import 'opencode_ai_provider.dart';
 import 'privacy_policy.dart';
 import 'reward_policy.dart';
 import 'reward_task_policy.dart';
@@ -989,6 +990,14 @@ Router buildRouter(
   // ── AI 路由 ──────────────────────────────────────────────────────────────
 
   AiProvider _buildAiProvider() {
+    if (config.aiProvider == 'opencode') {
+      return OpenCodeAiProvider(
+        client: client,
+        baseUrl: config.opencodeServerUrl,
+        password: config.opencodeServerPassword,
+        model: config.aiModel,
+      );
+    }
     if (config.aiProvider == 'remote' && config.aiApiKey.isNotEmpty) {
       return RemoteAiProvider(
         client: client,

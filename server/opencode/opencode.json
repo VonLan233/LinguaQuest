@@ -1,0 +1,18 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "opencode/deepseek-v4.1-flash-free",
+  "small_model": "opencode/deepseek-v4.1-flash-free",
+  "enabled_providers": ["opencode"],
+  "share": "disabled",
+  "autoupdate": false,
+  "permission": {"*": "ask"},
+  "agent": {
+    "tutor": {
+      "description": "LinguaQuest language tutor returning strict JSON without tools",
+      "mode": "primary",
+      "prompt": "Answer the language-learning request using only the requested JSON schema. Never use tools. Output no markdown or code fences.",
+      "temperature": 0.3,
+      "permission": {"*": "ask"}
+    }
+  }
+}
