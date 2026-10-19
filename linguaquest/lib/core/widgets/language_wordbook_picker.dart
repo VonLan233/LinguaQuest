@@ -137,6 +137,7 @@ class _LanguageWordbookPickerSheetState
   }
 
   Future<void> _onBookSelected(String bookId) async {
+    if (ref.read(appControllerProvider).isLoading) return;
     final l10n = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
     final localeCode = Localizations.localeOf(context).languageCode;

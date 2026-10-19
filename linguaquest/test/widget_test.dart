@@ -473,6 +473,8 @@ void main() {
     );
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
+    await tester.ensureVisible(find.byKey(const ValueKey('home-continue')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('home-continue')));
     await tester.pumpAndSettle();
 
@@ -535,6 +537,8 @@ void main() {
       300,
       scrollable: find.byType(Scrollable).first,
     );
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.byKey(const ValueKey('home-continue')));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('home-continue')));
     await tester.pumpAndSettle();
@@ -1163,7 +1167,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Speed Game'), findsOneWidget);
-    expect(find.byType(AppCard), findsWidgets);
+    expect(find.text('Training'), findsWidgets);
   });
 
   testWidgets('main shell fling direction matches drag direction', (
@@ -1285,11 +1289,19 @@ void main() {
     expect(find.text('Study Plan Settings'), findsOneWidget);
     expect(find.text('HSK 1'), findsWidgets);
     expect(find.text('Switch Wordbook'), findsOneWidget);
-    await tester.drag(find.byType(Scrollable).last, const Offset(0, -320));
+    await tester.scrollUntilVisible(
+      find.text('Daily New Words'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.pumpAndSettle();
     expect(find.text('Daily New Words'), findsOneWidget);
     expect(find.text('Daily Review Limit'), findsNothing);
-    await tester.drag(find.byType(Scrollable).last, const Offset(0, -520));
+    await tester.scrollUntilVisible(
+      find.text('View Full Wordbook'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.pumpAndSettle();
     expect(find.text('View Full Wordbook'), findsOneWidget);
   });
@@ -1674,8 +1686,8 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('${state.totalLearningWords} 个目标词'), findsOneWidget);
-    expect(find.text('$fullTargetCount 个目标词'), findsNothing);
+    expect(find.text('0 / ${state.totalLearningWords}'), findsWidgets);
+    expect(find.text('0 / $fullTargetCount'), findsNothing);
     await tester.scrollUntilVisible(
       find.text(firstFormalWord),
       300,
@@ -3004,7 +3016,11 @@ void main() {
               false,
         );
 
-    await tester.drag(find.byType(Scrollable).last, const Offset(0, -260));
+    await tester.scrollUntilVisible(
+      find.byType(TextFormField),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.pumpAndSettle();
     expect(digitOnlyFields(), hasLength(1));
   });
@@ -3061,7 +3077,11 @@ void main() {
       await tester.tap(find.text('Adjust Plan'));
       await tester.pumpAndSettle();
 
-      await tester.drag(find.byType(Scrollable).last, const Offset(0, -360));
+      await tester.scrollUntilVisible(
+        find.byType(TextFormField),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
       await tester.pumpAndSettle();
       final field = tester.widget<TextFormField>(
         find.byType(TextFormField).first,
@@ -3411,7 +3431,7 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(find.text('context'), findsOneWidget);
     expect(find.text('Easy'), findsOneWidget);
-    expect(find.byType(AppCard), findsWidgets);
+    expect(find.byType(WordbookScreen), findsOneWidget);
   });
 
   test('deadline planning saves daily words into the profile', () async {
@@ -3986,6 +4006,8 @@ void main() {
         .currentLesson!
         .words
         .first;
+    await tester.ensureVisible(find.byKey(const ValueKey('home-continue')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('home-continue')));
     await tester.pumpAndSettle();
 
@@ -4064,6 +4086,8 @@ void main() {
         .currentLesson!
         .words
         .first;
+    await tester.ensureVisible(find.byKey(const ValueKey('home-continue')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('home-continue')));
     await tester.pumpAndSettle();
 
@@ -4108,6 +4132,8 @@ void main() {
       -150,
       scrollable: find.byType(Scrollable).first,
     );
+    await tester.ensureVisible(find.byKey(const ValueKey('home-continue')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('home-continue')));
     await tester.pumpAndSettle();
     expect(find.text('Nice work!'), findsOneWidget);

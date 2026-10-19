@@ -54,7 +54,9 @@ class WordChoiceButton extends ConsumerWidget {
     }
 
     final isIdle = state == ChoiceState.idle;
-    final background = isIdle ? colorScheme.surface : accent.withValues(alpha: 0.12);
+    final background = isIdle
+        ? colorScheme.surface
+        : accent.withValues(alpha: 0.12);
     final isTerminal =
         state == ChoiceState.correct || state == ChoiceState.wrong;
     final borderWidth = isIdle ? 1.0 : (highContrast && isTerminal ? 3.0 : 2.0);
@@ -76,10 +78,7 @@ class WordChoiceButton extends ConsumerWidget {
       decoration: BoxDecoration(
         color: background,
         borderRadius: borderRadius,
-        border: Border.all(
-          color: accent,
-          width: borderWidth,
-        ),
+        border: Border.all(color: accent, width: borderWidth),
       ),
       padding: const EdgeInsets.all(AppTokens.s12),
       child: Row(
@@ -91,7 +90,7 @@ class WordChoiceButton extends ConsumerWidget {
               color: isIdle
                   ? colorScheme.surfaceContainerHighest
                   : accent.withValues(alpha: 0.20),
-              shape: BoxShape.circle,
+              borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
             ),
             alignment: Alignment.center,
             child: Text(

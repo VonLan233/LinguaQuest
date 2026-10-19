@@ -21,11 +21,11 @@ class AiLearningScreen extends ConsumerWidget {
         (todayWords.isEmpty ? '' : todayWords.first.word);
     final suffix = word.isEmpty ? '' : '?word=${Uri.encodeComponent(word)}';
     return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 22, 20, 24),
+      padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
       children: [
         Text(
           l10n.aiLearningTitle,
-          style: Theme.of(context).textTheme.titleLarge,
+          style: Theme.of(context).textTheme.headlineLarge,
         ),
         const SizedBox(height: 24),
         Row(
@@ -36,7 +36,7 @@ class AiLearningScreen extends ConsumerWidget {
                 children: [
                   Text(
                     l10n.aiCenterTitle,
-                    style: Theme.of(context).textTheme.headlineSmall,
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 10),
                   Text(
@@ -50,7 +50,7 @@ class AiLearningScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(width: 14),
-            const StudyCat(size: 94),
+            const StudyCat(size: 52),
           ],
         ),
         const SizedBox(height: 20),
@@ -69,7 +69,7 @@ class AiLearningScreen extends ConsumerWidget {
               child: Text(
                 AppConstants.apiBaseUrl.isEmpty
                     ? l10n.aiDemoNotice
-                    : l10n.aiNetworkNotice,
+                    : l10n.aiLoginNotice,
                 style: TextStyle(
                   fontSize: 12,
                   color: colors.onSurfaceVariant,
@@ -102,7 +102,7 @@ class AiLearningScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 14),
               if (word.isNotEmpty)
-                Text(word, style: Theme.of(context).textTheme.headlineSmall),
+                Text(word, style: Theme.of(context).textTheme.headlineLarge),
               if ((query['example'] ?? '').isNotEmpty) ...[
                 const SizedBox(height: 6),
                 Text(query['example']!),
@@ -197,46 +197,41 @@ class _AiToolRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: AppCard(
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
         onTap: () => context.push(route),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: colors.primaryContainer,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(icon, color: colors.primary, size: 22),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          decoration: BoxDecoration(
+            border: Border(bottom: BorderSide(color: colors.outlineVariant)),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(icon, color: colors.primary, size: 24),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: Theme.of(context).textTheme.titleMedium),
+                    const SizedBox(height: 6),
+                    Text(
+                      description,
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    description,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: colors.onSurfaceVariant,
-                      height: 1.4,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(width: 10),
-            Icon(Icons.chevron_right, size: 18, color: colors.onSurfaceVariant),
-          ],
+              const SizedBox(width: 12),
+              Icon(
+                Icons.arrow_forward,
+                size: 18,
+                color: colors.onSurfaceVariant,
+              ),
+            ],
+          ),
         ),
       ),
     );

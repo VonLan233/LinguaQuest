@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_icons.dart';
 import '../theme/app_tokens.dart';
-import 'app_card.dart';
 
-/// A compact, WeChat-style entry row: a soft icon badge on the left, a single
+/// A flat entry row: an icon on the left, a single
 /// title on the right, and an optional [trailing] widget (e.g. a status pill)
 /// or an automatic chevron when the row navigates somewhere.
 ///
@@ -24,7 +23,7 @@ class CompactEntryCard extends StatelessWidget {
   final IconData icon;
   final String title;
 
-  /// Accent for the leading icon and its tinted badge.
+  /// Accent for the leading icon.
   final Color color;
 
   /// Optional right-hand widget (typically a status [AppPill]). When omitted
@@ -47,16 +46,7 @@ class CompactEntryCard extends StatelessWidget {
 
     final row = Row(
       children: [
-        Container(
-          width: 44,
-          height: 44,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.12),
-            borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
-          ),
-          child: Icon(icon, color: color, size: 24),
-        ),
+        Icon(icon, color: color, size: 24),
         const SizedBox(width: AppTokens.s12),
         Expanded(
           child: Text(
@@ -75,13 +65,21 @@ class CompactEntryCard extends StatelessWidget {
       ],
     );
 
-    return AppCard(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppTokens.s16,
-        vertical: AppTokens.s12,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: enabled ? onTap : null,
+        child: Container(
+          constraints: const BoxConstraints(minHeight: 64),
+          padding: const EdgeInsets.symmetric(vertical: 18),
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: theme.colorScheme.outlineVariant),
+            ),
+          ),
+          child: enabled ? row : Opacity(opacity: .6, child: row),
+        ),
       ),
-      onTap: enabled ? onTap : null,
-      child: enabled ? row : Opacity(opacity: 0.6, child: row),
     );
   }
 }

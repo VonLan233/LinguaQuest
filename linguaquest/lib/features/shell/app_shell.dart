@@ -169,7 +169,7 @@ class _QuestBottomNav extends StatelessWidget {
             border: Border(top: BorderSide(color: colorScheme.outlineVariant)),
           ),
           child: SizedBox(
-            height: 76,
+            height: 72,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppTokens.s8),
               child: Row(
@@ -237,7 +237,7 @@ class _QuestTabButton extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.labelSmall?.copyWith(
                     color: tabColor,
-                    fontWeight: selected ? FontWeight.w900 : FontWeight.w800,
+                    fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
                   ),
                 ),
               ],
@@ -263,7 +263,7 @@ class _QuestTabIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final indicatorColor = colorScheme.primary.withValues(alpha: 0.12);
+
     return AnimatedContainer(
       duration: AppTokens.fast,
       curve: Curves.easeOutCubic,
@@ -271,8 +271,12 @@ class _QuestTabIcon extends StatelessWidget {
       height: 34,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: selected ? indicatorColor : Colors.transparent,
-        borderRadius: BorderRadius.circular(AppTokens.radiusPill),
+        border: Border(
+          bottom: BorderSide(
+            color: selected ? colorScheme.primary : Colors.transparent,
+            width: 2,
+          ),
+        ),
       ),
       child: Icon(data.icon, color: color, size: 22, fill: selected ? 1 : 0),
     );

@@ -8,7 +8,7 @@ import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_progress_bar.dart';
 import '../../core/widgets/language_wordbook_picker.dart';
-import '../../core/widgets/mascot_image.dart';
+import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/study_cat.dart';
 import '../../l10n/generated/app_localizations.dart';
 
@@ -46,7 +46,7 @@ class HomeScreen extends ConsumerWidget {
         (state.availableNewWords.isNotEmpty || state.reviewQueue.isNotEmpty);
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+      padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
       children: [
         Row(
           children: [
@@ -57,12 +57,12 @@ class HomeScreen extends ConsumerWidget {
                 icon: Icon(AppIcons.menu, color: colors.onSurface),
               ),
             ),
-            const MascotImage(size: 30),
-            const SizedBox(width: 8),
             const Expanded(
               child: Text(
                 'LinguaQuest',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
             ),
             Icon(
@@ -94,7 +94,7 @@ class HomeScreen extends ConsumerWidget {
         ),
         const SizedBox(height: 22),
         Text(
-          '${l10n.homeGreeting}${state.user == null ? '' : ', ${state.user!.name}'}',
+          '${l10n.homeGreeting}, ${displayUserName(state.user, l10n: l10n)}',
           style: theme.textTheme.bodyMedium?.copyWith(
             color: colors.onSurfaceVariant,
           ),
@@ -107,147 +107,120 @@ class HomeScreen extends ConsumerWidget {
           softWrap: false,
           overflow: TextOverflow.ellipsis,
           style: theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.w800,
-            fontSize: 23,
+            fontWeight: FontWeight.w500,
+            fontSize: 19,
           ),
         ),
         const SizedBox(height: 24),
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: colors.primaryContainer,
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: colors.primary.withValues(alpha: .10)),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
+        const Divider(),
+        const SizedBox(height: 24),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          state.isStudyPlanPaused
-                              ? l10n.homePlanPaused
-                              : l10n.dailyTaskTitle,
-                          style: theme.textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          l10n.dailyTaskHint,
-                          style: TextStyle(
-                            color: colors.onSurfaceVariant,
-                            height: 1.5,
-                          ),
-                        ),
-                      ],
-                    ),
+                  Text(
+                    state.isStudyPlanPaused
+                        ? l10n.homePlanPaused
+                        : l10n.dailyTaskTitle,
+                    style: theme.textTheme.headlineSmall,
                   ),
-                  const SizedBox(width: 12),
-                  const StudyCat(size: 100),
+                  const SizedBox(height: 6),
+                  Text(l10n.dailyTaskHint, style: theme.textTheme.bodySmall),
                 ],
               ),
-              const SizedBox(height: 8),
-              InkWell(
-                onTap: () => showLanguageWordbookPicker(context),
-                borderRadius: BorderRadius.circular(12),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.menu_book_outlined,
-                        size: 18,
-                        color: colors.primary,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          book?.nameFor(l10n.localeName) ?? l10n.commonWordbook,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const Icon(Icons.expand_more, size: 20),
-                    ],
+            ),
+            const SizedBox(width: 16),
+            const StudyCat(size: 58),
+          ],
+        ),
+        const SizedBox(height: 20),
+        InkWell(
+          onTap: () => showLanguageWordbookPicker(context),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    book?.nameFor(l10n.localeName) ?? l10n.commonWordbook,
+                    style: theme.textTheme.titleLarge,
                   ),
                 ),
+                const SizedBox(width: 12),
+                Icon(Icons.expand_more, color: colors.primary),
+              ],
+            ),
+          ),
+        ),
+        Text(
+          '${languageLabel(l10n.localeName, l10n)} → ${languageLabel(state.currentLanguage, l10n)}',
+          style: theme.textTheme.bodySmall,
+        ),
+        const SizedBox(height: 24),
+        Text(l10n.homeTodayProgress, style: theme.textTheme.bodySmall),
+        const SizedBox(height: 4),
+        Text.rich(
+          TextSpan(
+            children: [
+              TextSpan(
+                text: '$done',
+                style: theme.textTheme.displayMedium?.copyWith(
+                  color: colors.primary,
+                ),
               ),
-              Text(
-                '${const {'zh': '中文', 'ja': '日本語', 'en': 'English'}[l10n.localeName] ?? l10n.localeName} → ${languageLabel(state.currentLanguage, l10n)}',
-                style: TextStyle(fontSize: 11, color: colors.onSurfaceVariant),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      l10n.homeTodayProgress,
-                      style: TextStyle(
-                        color: colors.onSurfaceVariant,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    '$done / $total',
-                    style: const TextStyle(fontWeight: FontWeight.w700),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              AppProgressBar(
-                value: progress,
-                height: 7,
-                solid: true,
-                solidColor: colors.primary,
-              ),
-              const SizedBox(height: 20),
-              AppPrimaryButton(
-                key: const ValueKey('home-continue'),
-                label: state.isStudyPlanPaused
-                    ? l10n.homeAdjustPlan
-                    : l10n.continueLearning,
-                icon: Icons.arrow_forward_rounded,
-                onPressed: state.isStudyPlanPaused
-                    ? () => context.push('/settings/study-plan')
-                    : canStudy
-                    ? () => context.push(
-                        newLeft > 0 && state.availableNewWords.isNotEmpty
-                            ? '/study/new'
-                            : '/study/review',
-                      )
-                    : null,
-              ),
-              const SizedBox(height: 18),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      '${l10n.commonNew} $newLeft · ${l10n.commonReview} ${state.reviewQueue.length}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: colors.onSurfaceVariant,
-                      ),
-                    ),
-                  ),
-                  if (!state.isStudyPlanPaused)
-                    TextButton(
-                      key: const ValueKey('home-adjust-plan'),
-                      onPressed: () => context.push('/settings/study-plan'),
-                      child: Text(
-                        l10n.homeAdjustPlan,
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                    ),
-                ],
+              TextSpan(
+                text: ' / $total',
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  color: colors.onSurfaceVariant,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ],
           ),
+        ),
+        const SizedBox(height: 12),
+        AppProgressBar(
+          value: progress,
+          height: 3,
+          solid: true,
+          solidColor: colors.primary,
+        ),
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                '${l10n.commonNew} $newLeft · ${l10n.commonReview} ${state.reviewQueue.length}',
+                style: theme.textTheme.bodySmall,
+              ),
+            ),
+            if (!state.isStudyPlanPaused)
+              TextButton(
+                key: const ValueKey('home-adjust-plan'),
+                onPressed: () => context.push('/settings/study-plan'),
+                child: Text(l10n.homeAdjustPlan),
+              ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        AppPrimaryButton(
+          key: const ValueKey('home-continue'),
+          label: state.isStudyPlanPaused
+              ? l10n.homeAdjustPlan
+              : l10n.continueLearning,
+          icon: Icons.arrow_forward,
+          onPressed: state.isStudyPlanPaused
+              ? () => context.push('/settings/study-plan')
+              : canStudy
+              ? () => context.push(
+                  newLeft > 0 && state.availableNewWords.isNotEmpty
+                      ? '/study/new'
+                      : '/study/review',
+                )
+              : null,
         ),
         const SizedBox(height: 18),
         _HomeEntry(
@@ -392,33 +365,42 @@ class _HomeEntry extends StatelessWidget {
   final IconData icon;
   final String title, subtitle, route;
   @override
-  Widget build(BuildContext context) => AppCard(
-    onTap: () => context.push(route),
-    child: Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(10),
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => context.push(route),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 18),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primaryContainer,
-            borderRadius: BorderRadius.circular(12),
+            border: Border(bottom: BorderSide(color: colors.outlineVariant)),
           ),
-          child: Icon(icon, color: Theme.of(context).colorScheme.primary),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
             children: [
-              Text(title, style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 4),
-              Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
+              Icon(icon, color: colors.primary, size: 24),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: Theme.of(context).textTheme.titleMedium),
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              const Icon(Icons.arrow_forward, size: 18),
             ],
           ),
         ),
-        const Icon(Icons.chevron_right, size: 20),
-      ],
-    ),
-  );
+      ),
+    );
+  }
 }
 
 class _HomeLink extends StatelessWidget {

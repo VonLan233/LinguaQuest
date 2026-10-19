@@ -10,13 +10,12 @@ import '../../core/theme/app_tokens.dart';
 import '../../core/utils/ui_labels.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_card.dart';
-import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/language_wordbook_picker.dart';
 import '../../core/widgets/mascot_empty_state.dart';
-import '../../core/widgets/mascot_image.dart';
-import '../../core/widgets/progress_ring.dart';
+import '../../core/widgets/study_cat.dart';
+import '../../core/widgets/app_progress_bar.dart';
+import '../../core/utils/wordbook_progress.dart';
 import '../../core/widgets/section_header.dart';
-import '../../core/widgets/stat_tile.dart';
 import '../../data/models/lottery.dart';
 import '../../l10n/generated/app_localizations.dart';
 
@@ -31,7 +30,19 @@ class ProfileScreen extends ConsumerWidget {
     final localeCode = Localizations.localeOf(context).languageCode;
     final state = ref.watch(appControllerProvider);
     final user = state.user;
-    final reviewWords = state.reviewWords;
+    final currentBook = state.currentWordBook;
+    final totalWords = currentBook?.totalWords ?? state.totalLearningWords;
+    final learned = learnedWordCountForBook(
+      userWords: state.userWords,
+      wordBookId: state.currentWordBookId,
+      wordIds: currentBook?.wordIds.toSet() ?? {},
+    );
+    final completedWords =
+        (learned > state.completedLearningWords
+                ? learned
+                : state.completedLearningWords)
+            .clamp(0, totalWords);
+    final reviewWords = state.scopedReviewWords;
     final masteredWords = reviewWords
         .where((word) => word.masteryLevel >= 4 || word.status == 'Mastered')
         .length;
@@ -39,13 +50,14 @@ class ProfileScreen extends ConsumerWidget {
     return ListView(
       key: const ValueKey('profileDashboard'),
       padding: const EdgeInsets.fromLTRB(
-        AppTokens.s20,
-        AppTokens.s20,
-        AppTokens.s20,
-        88,
+        AppTokens.s24,
+        AppTokens.s24,
+        AppTokens.s24,
+        32,
       ),
       children: [
-        // Hero: mascot avatar + name/email/target·level + XP/streak pills.
+        Text(l10n.tabProfile, style: Theme.of(context).textTheme.headlineLarge),
+        const SizedBox(height: 28),
         _ProfileHeader(
           name: displayUserName(user, l10n: l10n),
           email: user?.email ?? l10n.profileNoEmail,
@@ -63,18 +75,18 @@ class ProfileScreen extends ConsumerWidget {
         const SizedBox(height: AppTokens.s32),
         // Key stats in a clean row.
         _ProfileStatsRow(
-          learned: state.completedLearningWords,
+          learned: completedWords,
           mastered: masteredWords,
           streak: user?.streak ?? 0,
           l10n: l10n,
         ),
         const SizedBox(height: AppTokens.s32),
         // Progress card.
-        if (state.totalLearningWords > 0) ...[
+        if (totalWords > 0) ...[
           _ProfileProgressCard(
-            progress: state.learningPathProgress,
-            completedWords: state.completedLearningWords,
-            totalWords: state.totalLearningWords,
+            progress: totalWords == 0 ? 0 : completedWords / totalWords,
+            completedWords: completedWords,
+            totalWords: totalWords,
             l10n: l10n,
           ),
           const SizedBox(height: AppTokens.s32),
@@ -98,7 +110,7 @@ class ProfileScreen extends ConsumerWidget {
             _SettingsItem(
               icon: AppIcons.menuBook,
               title: l10n.commonWordbook,
-              value: '${state.totalLearningWords} ${l10n.commonWords}',
+              value: '$totalWords ${l10n.commonWords}',
               onTap: () => context.push('/wordbook'),
             ),
             _SettingsItem(
@@ -213,59 +225,40 @@ class _ProfileHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return AppCard(
-      padding: EdgeInsets.zero,
-      child: Container(
-        padding: const EdgeInsets.all(AppTokens.s24),
-        decoration: BoxDecoration(
-          color: AppTokens.brandNavy,
-          borderRadius: BorderRadius.circular(AppTokens.radiusCard),
-        ),
-        child: Column(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            GestureDetector(
-              onTap: onAvatarTap,
-              child: const MascotImage(size: 72),
-            ),
-            const SizedBox(height: AppTokens.s16),
-            Text(
-              name,
-              style: theme.textTheme.headlineSmall?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w800,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(name, style: theme.textTheme.headlineMedium),
+                  const SizedBox(height: 6),
+                  Text(email, style: theme.textTheme.bodySmall),
+                  const SizedBox(height: 12),
+                  Text(
+                    '$level · $xp ${l10n.commonXP}',
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: AppTokens.s8),
-            Text(
-              email,
-              style: const TextStyle(color: Colors.white70, fontSize: 15),
-            ),
-            const SizedBox(height: AppTokens.s4),
-            Text(
-              '$target · $level',
-              style: const TextStyle(color: Colors.white70, fontSize: 13),
-            ),
-            const SizedBox(height: AppTokens.s12),
-            Wrap(
-              spacing: AppTokens.s12,
-              runSpacing: AppTokens.s12,
-              alignment: WrapAlignment.center,
-              children: [
-                AppPill(
-                  label: '$xp ${l10n.commonXP}',
-                  variant: PillVariant.xp,
-                  icon: AppIcons.bolt,
-                ),
-                AppPill(
-                  label: l10n.profileStreakDays(streak),
-                  variant: PillVariant.streak,
-                  icon: AppIcons.localFireDepartment,
-                ),
-              ],
+            const SizedBox(width: 16),
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: onAvatarTap,
+                child: const StudyCat(size: 64),
+              ),
             ),
           ],
         ),
-      ),
+        const SizedBox(height: 24),
+        Text(target, style: theme.textTheme.titleMedium),
+      ],
     );
   }
 }
@@ -285,33 +278,33 @@ class _ProfileStatsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppCard(
+    final theme = Theme.of(context);
+    Widget metric(int value, String label) => Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('$value', style: theme.textTheme.headlineLarge),
+          const SizedBox(height: 6),
+          Text(label, style: theme.textTheme.bodySmall),
+        ],
+      ),
+    );
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 24),
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(color: theme.colorScheme.outlineVariant),
+          bottom: BorderSide(color: theme.colorScheme.outlineVariant),
+        ),
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: StatTile(
-              value: '$learned',
-              label: l10n.profileLearnedWords,
-              accent: AppTheme.teal,
-            ),
-          ),
-          const SizedBox(width: AppTokens.s8),
-          Expanded(
-            child: StatTile(
-              value: '$mastered',
-              label: l10n.profileMasteredWords,
-              accent: AppTheme.success,
-            ),
-          ),
-          const SizedBox(width: AppTokens.s8),
-          Expanded(
-            child: StatTile(
-              value: '$streak',
-              label: l10n.onboardingTagPillStreak,
-              accent: AppTheme.coral,
-            ),
-          ),
+          metric(learned, l10n.profileLearnedWords),
+          const SizedBox(width: 12),
+          metric(mastered, l10n.profileMasteredWords),
+          const SizedBox(width: 12),
+          metric(streak, l10n.onboardingTagPillStreak),
         ],
       ),
     );
@@ -335,38 +328,35 @@ class _ProfileProgressCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final percent = (progress.clamp(0.0, 1.0) * 100).round();
-    return AppCard(
-      child: Row(
-        children: [
-          ProgressRing(
-            progress: progress,
-            color: AppTheme.success,
-            centerLabel: '$percent%',
-          ),
-          const SizedBox(width: AppTokens.s16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.profileCurrentBookProgress,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                const SizedBox(height: AppTokens.s8),
-                Text(
-                  '$completedWords / $totalWords ${l10n.commonWords}',
-                  style: TextStyle(
-                    color: theme.colorScheme.onSurfaceVariant,
-                    fontSize: 13,
-                  ),
-                ),
-              ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Text(
+                l10n.profileCurrentBookProgress,
+                style: theme.textTheme.titleMedium,
+              ),
             ),
-          ),
-        ],
-      ),
+            const SizedBox(width: 12),
+            Text(
+              '$percent%',
+              style: theme.textTheme.titleLarge?.copyWith(
+                color: theme.colorScheme.primary,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 14),
+        AppProgressBar(value: progress, height: 3),
+        const SizedBox(height: 10),
+        Text(
+          '$completedWords / $totalWords ${l10n.commonWords}',
+          style: theme.textTheme.bodySmall,
+        ),
+      ],
     );
   }
 }
@@ -378,19 +368,13 @@ class _SettingsGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppCard(
+    return Padding(
       padding: EdgeInsets.zero,
       child: Column(
         children: [
           for (var i = 0; i < children.length; i++) ...[
             children[i],
-            if (i < children.length - 1)
-              const Divider(
-                height: 0.5,
-                thickness: 0.5,
-                indent: 56,
-                color: AppTokens.hairline,
-              ),
+            if (i < children.length - 1) const Divider(height: 1),
           ],
         ],
       ),
@@ -424,56 +408,27 @@ class _SettingsItem extends StatelessWidget {
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.symmetric(
-            horizontal: AppTokens.s16,
-            vertical: AppTokens.s12,
+            horizontal: 0,
+            vertical: AppTokens.s16,
           ),
           child: Row(
             children: [
               Icon(icon, color: theme.colorScheme.primary, size: 22),
               const SizedBox(width: AppTokens.s16),
               Expanded(
-                flex: value == null ? 1 : 2,
-                child: Text(
-                  title,
-                  style: theme.textTheme.bodyMedium,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: theme.textTheme.bodyLarge),
+                    if (value != null) ...[
+                      const SizedBox(height: 4),
+                      Text(value!, style: theme.textTheme.bodySmall),
+                    ],
+                    if (valueSubtitle != null && valueSubtitle!.isNotEmpty)
+                      Text(valueSubtitle!, style: theme.textTheme.bodySmall),
+                  ],
                 ),
               ),
-              if (value != null) ...[
-                const SizedBox(width: AppTokens.s8),
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        value!,
-                        textAlign: TextAlign.right,
-                        maxLines: valueSubtitle == null ? 1 : 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                      if (valueSubtitle != null &&
-                          valueSubtitle!.isNotEmpty) ...[
-                        const SizedBox(height: AppTokens.s2),
-                        Text(
-                          valueSubtitle!,
-                          textAlign: TextAlign.right,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-              ],
               const SizedBox(width: AppTokens.s4),
               Icon(
                 AppIcons.chevronRight,

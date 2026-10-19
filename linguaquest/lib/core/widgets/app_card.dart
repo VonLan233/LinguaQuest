@@ -2,13 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_tokens.dart';
 
-/// Standard white content card: warm single-layer shadow, [radiusCard] corners.
-///
-/// When [onTap] is provided the card becomes tappable with a visible ink
-/// ripple. The shadow lives on an outer [Container] (transparent fill) while
-/// the surface fill, corner clipping, and ripple all live on an inner
-/// [Material]/[InkWell] so the splash paints above the fill rather than under
-/// it.
+/// Quiet bordered surface with an optional native ink interaction.
 class AppCard extends StatelessWidget {
   const AppCard({
     required this.child,
@@ -27,11 +21,10 @@ class AppCard extends StatelessWidget {
     final surface = Theme.of(context).colorScheme.surface;
     final padded = Padding(padding: padding, child: child);
 
-    // Outer container carries only the soft shadow + rounded silhouette.
     return Container(
       decoration: BoxDecoration(
         borderRadius: radius,
-        boxShadow: AppTokens.cardShadow(context),
+        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
       ),
       child: Material(
         color: surface,
@@ -39,11 +32,7 @@ class AppCard extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: onTap == null
             ? padded
-            : InkWell(
-                borderRadius: radius,
-                onTap: onTap,
-                child: padded,
-              ),
+            : InkWell(borderRadius: radius, onTap: onTap, child: padded),
       ),
     );
   }

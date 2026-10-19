@@ -28,11 +28,11 @@ Files: `linguaquest/lib/core/widgets/language_wordbook_picker.dart`, profile/set
 
 Files: `core/theme/app_tokens.dart`, `app_theme.dart`, shared buttons/cards/progress/nav, theme/widget tests.
 
-- [ ] Use near-neutral page/surface colors, high-contrast type, restrained blue, 4 px corners, no decorative elevation or simulated 3D edges.
-- [ ] Use the platform sans-serif and explicit type scale; preserve touch targets and focus/disabled semantics through native Material buttons.
-- [ ] Apply the same palette and hierarchy in dark mode; use semantic borders and flat progress indicators.
-- [ ] Run relevant theme, button, accessibility and dark-mode tests.
-- [ ] Commit: `feat(ui): establish Swiss typography and flat controls`.
+- [x] Use near-neutral page/surface colors, high-contrast type, restrained blue, 4 px corners, no decorative elevation or simulated 3D edges.
+- [x] Use the platform sans-serif and explicit type scale; preserve touch targets and focus/disabled semantics through native Material buttons.
+- [x] Apply the same palette and hierarchy in dark mode; use semantic borders and flat progress indicators.
+- [x] Run relevant theme, button, accessibility and dark-mode tests.
+- [x] Commit: `feat(ui): establish Swiss typography and flat controls`.
 
 ### Task 3: Recompose learning screens
 

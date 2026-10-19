@@ -18,7 +18,6 @@ import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/app_progress_bar.dart';
 import '../../core/widgets/pronunciation_controls.dart';
-import '../../core/widgets/learning_badges.dart';
 import '../../core/widgets/mascot_empty_state.dart';
 import '../../core/widgets/word_choice_button.dart';
 import '../../data/models/custom_word.dart';
@@ -709,16 +708,17 @@ class _KnowledgeCardStep extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Center(child: ImageCueBadge(cue: item.imageCue, size: 92)),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               Text(
                 item.displayWord,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w900,
+                textAlign: TextAlign.start,
+                style: theme.textTheme.headlineLarge?.copyWith(
+                  fontSize: 40,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-              Center(
+              Align(
+                alignment: Alignment.centerLeft,
                 child: PronunciationControls(
                   word: item.displayWord,
                   compact: true,
@@ -728,13 +728,13 @@ class _KnowledgeCardStep extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 item.meaningFor(Localizations.localeOf(context).languageCode),
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.start,
                 style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               const SizedBox(height: 14),
-              Text(item.exampleSentence, textAlign: TextAlign.center),
+              Text(item.exampleSentence, textAlign: TextAlign.start),
               const SizedBox(height: 24),
               if (showAssessment) ...[
                 Text(
@@ -743,7 +743,17 @@ class _KnowledgeCardStep extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 SegmentedButton<int>(
+                  showSelectedIcon: false,
                   style: SegmentedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 12,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        AppTokens.radiusSmall,
+                      ),
+                    ),
                     selectedBackgroundColor: theme.colorScheme.primaryContainer,
                     selectedForegroundColor:
                         theme.colorScheme.onPrimaryContainer,
@@ -844,7 +854,7 @@ class _QuestionStepState extends State<_QuestionStep> {
               const SizedBox(height: 16),
               Text(
                 l10n.practiceChooseMeaning,
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.start,
                 style: TextStyle(
                   color: theme.colorScheme.onSurfaceVariant,
                   fontSize: 13,
@@ -853,13 +863,14 @@ class _QuestionStepState extends State<_QuestionStep> {
               const SizedBox(height: 14),
               Text(
                 item.displayWord,
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.start,
                 style: theme.textTheme.headlineLarge?.copyWith(
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w500,
                   fontSize: feedback ? 28 : 38,
                 ),
               ),
-              Center(
+              Align(
+                alignment: Alignment.centerLeft,
                 child: PronunciationControls(
                   word: item.displayWord,
                   compact: true,
@@ -870,7 +881,7 @@ class _QuestionStepState extends State<_QuestionStep> {
                 const SizedBox(height: 6),
                 Text(
                   phonetic,
-                  textAlign: TextAlign.center,
+                  textAlign: TextAlign.start,
                   style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                 ),
               ],
@@ -895,7 +906,7 @@ class _QuestionStepState extends State<_QuestionStep> {
                         ),
                     ],
                   ),
-                  textAlign: TextAlign.center,
+                  textAlign: TextAlign.start,
                   style: theme.textTheme.bodyMedium,
                 ),
               ],
@@ -921,7 +932,7 @@ class _QuestionStepState extends State<_QuestionStep> {
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
               color: accent.withValues(alpha: .10),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
             ),
             child: Semantics(
               liveRegion: true,

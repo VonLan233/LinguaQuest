@@ -79,13 +79,16 @@ class _OfflineWordbooksState extends ConsumerState<OfflineWordbooksScreen> {
         state.wordBooks
             .where((b) => _language == 'all' || b.language == _language)
             .toList()
-          ..sort(
-            (a, b) => a.id.endsWith('_starter')
-                ? -1
-                : b.id.endsWith('_starter')
-                ? 1
-                : 0,
-          );
+          ..sort((a, b) {
+            final priority = (b.id.endsWith('_starter') ? 1 : 0).compareTo(
+              a.id.endsWith('_starter') ? 1 : 0,
+            );
+            return priority != 0
+                ? priority
+                : a
+                      .nameFor(l10n.localeName)
+                      .compareTo(b.nameFor(l10n.localeName));
+          });
     return Scaffold(
       appBar: AppBar(
         leading: const FallbackBackButton(fallbackLocation: '/wordbook'),

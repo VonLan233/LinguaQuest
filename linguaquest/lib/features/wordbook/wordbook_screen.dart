@@ -9,7 +9,6 @@ import '../../core/utils/ui_labels.dart';
 import '../../core/utils/wordbook_progress.dart';
 import '../../core/utils/wordbook_languages.dart';
 import '../../core/widgets/language_wordbook_picker.dart';
-import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/app_progress_bar.dart';
 import '../../core/widgets/fallback_back_button.dart';
@@ -55,7 +54,6 @@ class WordbookScreen extends ConsumerWidget {
     final bookName = currentBook != null
         ? currentBook.nameFor(localeCode)
         : studyBook.name;
-    final examType = currentBook?.examType ?? '';
 
     return Scaffold(
       appBar: AppBar(
@@ -80,77 +78,77 @@ class WordbookScreen extends ConsumerWidget {
         ],
       ),
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppTokens.s16,
-            vertical: AppTokens.s16,
-          ),
-          children: [
-            TextButton.icon(
-              key: const ValueKey('wordbook-language-picker'),
-              onPressed: () => showLanguageWordbookPicker(context),
-              icon: const Icon(Icons.language),
-              label: Text(languageLabel(state.currentLanguage, l10n)),
-            ),
-            const SizedBox(height: 12),
-            if (currentBook != null &&
-                !wordbookExplanationLanguages(
-                  currentBook,
-                ).contains(localeCode)) ...[
-              Text(
-                l10n.wordbookTranslationFallback,
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-              const SizedBox(height: 16),
-            ],
-            _HeroBookCard(
-              bookId: bookId,
-              bookName: bookName,
-              examType: examType,
-              completed: completed,
-              total: total,
-              percent: percent,
-              progress: progress,
-              daysLeft: plan?.daysLeft(DateTime.now()),
-              targetFinishDate: plan?.targetFinishDate,
-              onEditPlan: () => context.push('/settings/study-plan'),
-              l10n: l10n,
-            ),
-            const SizedBox(height: AppTokens.s16),
-            if (state.wordBooks.isNotEmpty) ...[
-              _BookScroller(
-                books: state.wordBooks
-                    .where((b) => b.language == state.currentLanguage)
-                    .toList(),
-                currentId: state.currentWordBookId,
-                localeCode: localeCode,
-                l10n: l10n,
-                userWords: state.userWords,
-                onSelect: (id) => _switchBook(context, ref, l10n, id),
-              ),
-              const SizedBox(height: AppTokens.s20),
-            ],
-            _ListHeader(count: total, l10n: l10n),
-            const SizedBox(height: AppTokens.s8),
-            AppCard(
-              padding: EdgeInsets.zero,
-              child: Column(
+        child: ListView.builder(
+          padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+          itemCount: words.length + 1,
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  for (var i = 0; i < words.length; i++) ...[
-                    if (i > 0) const _RowDivider(),
-                    _WordListRow(
-                      index: i + 1,
-                      word: words[i],
-                      userWord: userWordByWordId[words[i].id],
+                  TextButton.icon(
+                    key: const ValueKey('wordbook-language-picker'),
+                    onPressed: () => showLanguageWordbookPicker(context),
+                    icon: const Icon(Icons.language),
+                    label: Text(languageLabel(state.currentLanguage, l10n)),
+                  ),
+                  const SizedBox(height: 12),
+                  if (currentBook != null &&
+                      !wordbookExplanationLanguages(
+                        currentBook,
+                      ).contains(localeCode)) ...[
+                    Text(
+                      l10n.wordbookTranslationFallback,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                  _HeroBookCard(
+                    bookName: bookName,
+                    completed: completed,
+                    total: total,
+                    percent: percent,
+                    progress: progress,
+                    daysLeft: plan?.daysLeft(DateTime.now()),
+                    targetFinishDate: plan?.targetFinishDate,
+                    onEditPlan: () => context.push('/settings/study-plan'),
+                    l10n: l10n,
+                  ),
+                  const SizedBox(height: AppTokens.s16),
+                  if (state.wordBooks.isNotEmpty) ...[
+                    _BookScroller(
+                      books: state.wordBooks
+                          .where((b) => b.language == state.currentLanguage)
+                          .toList(),
+                      currentId: state.currentWordBookId,
                       localeCode: localeCode,
                       l10n: l10n,
-                      onTap: () => context.push('/wordbook/${words[i].id}'),
+                      userWords: state.userWords,
+                      onSelect: (id) => _switchBook(context, ref, l10n, id),
                     ),
+                    const SizedBox(height: AppTokens.s20),
                   ],
+                  _ListHeader(count: total, l10n: l10n),
+                  const SizedBox(height: AppTokens.s8),
                 ],
-              ),
-            ),
-          ],
+              );
+            }
+            final word = words[index - 1];
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (index > 1) const _RowDivider(),
+                _WordListRow(
+                  index: index,
+                  word: word,
+                  userWord: userWordByWordId[word.id],
+                  localeCode: localeCode,
+                  l10n: l10n,
+                  onTap: () => context.push('/wordbook/${word.id}'),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -180,9 +178,7 @@ class WordbookScreen extends ConsumerWidget {
 /// Hero card for the current book: programmatic cover + name + meta + progress.
 class _HeroBookCard extends StatelessWidget {
   const _HeroBookCard({
-    required this.bookId,
     required this.bookName,
-    required this.examType,
     required this.completed,
     required this.total,
     required this.percent,
@@ -193,9 +189,7 @@ class _HeroBookCard extends StatelessWidget {
     required this.l10n,
   });
 
-  final String bookId;
   final String bookName;
-  final String examType;
   final int completed;
   final int total;
   final int percent;
@@ -208,91 +202,44 @@ class _HeroBookCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return AppCard(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          WordbookCoverCard(
-            examType: examType,
-            bookId: bookId,
-            title: bookName,
-          ),
-          const SizedBox(width: AppTokens.s16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: _EditPlanChip(
-                    label: l10n.wordbookSwitch,
-                    onTap: onEditPlan,
-                  ),
-                ),
-                const SizedBox(height: AppTokens.s8),
-                Text(
-                  bookName,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                const SizedBox(height: AppTokens.s4),
-                Text(
-                  _metaLine,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(height: AppTokens.s12),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    Text(
-                      '$completed',
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w800,
-                        color: AppTokens.azure,
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    const Text('/'),
-                    const SizedBox(width: 4),
-                    Flexible(
-                      child: Text(
-                        l10n.wordbookTargetWords(total),
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    const Spacer(),
-                    Text(
-                      '$percent%',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w800,
-                        color: AppTokens.azure,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: AppTokens.s8),
-                AppProgressBar(value: progress, solid: true, height: 8),
-                if (targetFinishDate != null) ...[
-                  const SizedBox(height: AppTokens.s8),
-                  Text(
-                    _dateKey(targetFinishDate!),
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(bookName, style: theme.textTheme.headlineMedium),
+        const SizedBox(height: 8),
+        Text(_metaLine, style: theme.textTheme.bodySmall),
+        const SizedBox(height: 24),
+        Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 16,
+          children: [
+            Text('$completed / $total', style: theme.textTheme.headlineLarge),
+            Text(
+              '$percent%',
+              style: theme.textTheme.titleLarge?.copyWith(
+                color: theme.colorScheme.primary,
+              ),
             ),
-          ),
+          ],
+        ),
+        const SizedBox(height: 14),
+        AppProgressBar(value: progress, height: 3),
+        if (targetFinishDate != null) ...[
+          const SizedBox(height: 12),
+          Text(_dateKey(targetFinishDate!), style: theme.textTheme.bodySmall),
         ],
-      ),
+        const SizedBox(height: 8),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: TextButton.icon(
+            onPressed: onEditPlan,
+            icon: const Icon(AppIcons.tune, size: 18),
+            label: Text(l10n.wordbookSwitch),
+          ),
+        ),
+        const SizedBox(height: 16),
+        const Divider(),
+      ],
     );
   }
 
@@ -305,50 +252,6 @@ class _HeroBookCard extends StatelessWidget {
 
   String _dateKey(DateTime d) =>
       '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
-}
-
-class _EditPlanChip extends StatelessWidget {
-  const _EditPlanChip({required this.label, required this.onTap});
-
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(AppTokens.radiusPill),
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppTokens.s8,
-          vertical: 3,
-        ),
-        decoration: BoxDecoration(
-          color: AppTokens.primarySoft,
-          borderRadius: BorderRadius.circular(AppTokens.radiusPill),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(
-              AppIcons.tune,
-              size: 13,
-              color: AppTokens.primarySoftText,
-            ),
-            const SizedBox(width: 4),
-            Text(
-              label,
-              style: const TextStyle(
-                color: AppTokens.primarySoftText,
-                fontWeight: FontWeight.w800,
-                fontSize: 11,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 /// Horizontal scroller of the available books as small cover cards.
@@ -398,7 +301,9 @@ class _BookScroller extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(AppTokens.radiusTile + 4),
                 border: Border.all(
-                  color: selected ? AppTokens.azure : Colors.transparent,
+                  color: selected
+                      ? Theme.of(context).colorScheme.primary
+                      : Colors.transparent,
                   width: 2,
                 ),
               ),

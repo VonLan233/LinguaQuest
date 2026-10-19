@@ -39,7 +39,17 @@ class AppPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = _colors;
+    final theme = Theme.of(context);
+    final fg = switch (variant) {
+      PillVariant.xp => AppTokens.mangoColor(context),
+      PillVariant.success => AppTokens.successColor(context),
+      PillVariant.streak => AppTokens.coralColor(context),
+      PillVariant.primary => theme.colorScheme.primary,
+      PillVariant.neutral => theme.colorScheme.onSurfaceVariant,
+    };
+    final c = theme.brightness == Brightness.dark
+        ? (bg: fg.withValues(alpha: .12), fg: fg)
+        : _colors;
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppTokens.s12,
@@ -47,7 +57,7 @@ class AppPill extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: c.bg,
-        borderRadius: BorderRadius.circular(AppTokens.radiusPill),
+        borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -63,7 +73,7 @@ class AppPill extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: c.fg,
-                fontWeight: FontWeight.w800,
+                fontWeight: FontWeight.w600,
                 fontSize: 11,
               ),
             ),

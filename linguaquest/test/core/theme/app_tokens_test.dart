@@ -23,17 +23,17 @@ Future<T> _readWithBrightness<T>(
 }
 
 void main() {
-  test('neutral tokens are locked (cool off-white page bg)', () {
+  test('neutral tokens are locked (neutral Swiss page background)', () {
     expect(
       AppTokens.bgLight,
-      const Color(0xFFF7F9FC),
-    ); // cool off-white page bg
+      const Color(0xFFFAFBFC),
+    ); // neutral Swiss page background
     expect(AppTokens.surfaceLight, const Color(0xFFFFFFFF)); // cards stay white
-    expect(AppTokens.surfaceSunken, const Color(0xFFEDF1F7));
-    expect(AppTokens.hairline, const Color(0xFFE5EBF3));
-    expect(AppTokens.textPrimaryLight, const Color(0xFF193956));
-    expect(AppTokens.textSecondaryLight, const Color(0xFF64788B));
-    expect(AppTokens.textHintLight, const Color(0xFF73869A));
+    expect(AppTokens.surfaceSunken, const Color(0xFFEEF0F3));
+    expect(AppTokens.hairline, const Color(0xFFDDE1E6));
+    expect(AppTokens.textPrimaryLight, const Color(0xFF171B22));
+    expect(AppTokens.textSecondaryLight, const Color(0xFF535E6B));
+    expect(AppTokens.textHintLight, const Color(0xFF626E7D));
   });
 
   test('semantic soft tokens exist', () {
@@ -49,10 +49,10 @@ void main() {
   });
 
   test('radii match spec', () {
-    expect(AppTokens.radiusCard, 22);
-    expect(AppTokens.radiusButton, 18);
-    expect(AppTokens.radiusTile, 18);
-    expect(AppTokens.radiusChip, 12);
+    expect(AppTokens.radiusCard, 4);
+    expect(AppTokens.radiusButton, 4);
+    expect(AppTokens.radiusTile, 4);
+    expect(AppTokens.radiusChip, 4);
   });
 
   test('progressGradient runs mango -> success', () {
@@ -60,7 +60,7 @@ void main() {
     expect(AppTokens.progressGradient.colors.last, AppTokens.success);
   });
 
-  testWidgets('cardShadow present in light, empty in dark', (tester) async {
+  testWidgets('flat surfaces have no shadow in either theme', (tester) async {
     final light = await _readWithBrightness(
       tester,
       Brightness.light,
@@ -71,7 +71,7 @@ void main() {
       Brightness.dark,
       AppTokens.cardShadow,
     );
-    expect(light, isNotEmpty);
+    expect(light, isEmpty);
     expect(dark, isEmpty);
   });
 
