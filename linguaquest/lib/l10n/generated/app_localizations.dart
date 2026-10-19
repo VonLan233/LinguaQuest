@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_en.dart';
+import 'app_localizations_ja.dart';
 import 'app_localizations_ms.dart';
 import 'app_localizations_zh.dart';
 
@@ -96,6 +97,7 @@ abstract class AppLocalizations {
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
+    Locale('ja'),
     Locale('ms'),
     Locale('zh'),
   ];
@@ -6216,6 +6218,228 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Practice'**
   String get readingExplainPractice;
+
+  /// No description provided for @explanationLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Explanation language'**
+  String get explanationLanguage;
+
+  /// No description provided for @explanationLanguageHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Read meanings and instructions in your language. Learning language stays separate.'**
+  String get explanationLanguageHint;
+
+  /// No description provided for @dailyEncouragement.
+  ///
+  /// In en, this message translates to:
+  /// **'A little progress, every day.'**
+  String get dailyEncouragement;
+
+  /// No description provided for @homeGreeting.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back'**
+  String get homeGreeting;
+
+  /// No description provided for @dailyTaskTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your next small win'**
+  String get dailyTaskTitle;
+
+  /// No description provided for @dailyTaskHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep going at your own pace.'**
+  String get dailyTaskHint;
+
+  /// No description provided for @continueLearning.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue learning'**
+  String get continueLearning;
+
+  /// No description provided for @aiCenterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your AI study companion'**
+  String get aiCenterTitle;
+
+  /// No description provided for @aiCenterHint.
+  ///
+  /// In en, this message translates to:
+  /// **'A little help when you need it.'**
+  String get aiCenterHint;
+
+  /// No description provided for @aiNetworkNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'AI needs internet. Your downloaded words and basic practice work offline.'**
+  String get aiNetworkNotice;
+
+  /// No description provided for @aiDemoNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Demo responses · connect a server for live AI.'**
+  String get aiDemoNotice;
+
+  /// No description provided for @aiTryThis.
+  ///
+  /// In en, this message translates to:
+  /// **'Try asking about today’s words'**
+  String get aiTryThis;
+
+  /// No description provided for @aiAskWord.
+  ///
+  /// In en, this message translates to:
+  /// **'Explain this word with a simple example.'**
+  String get aiAskWord;
+
+  /// No description provided for @aiScenarioTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What would you like to work on?'**
+  String get aiScenarioTitle;
+
+  /// No description provided for @aiQaShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Understand a word or grammar point'**
+  String get aiQaShort;
+
+  /// No description provided for @aiAnalysisShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Read a tricky sentence together'**
+  String get aiAnalysisShort;
+
+  /// No description provided for @aiClozeShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Practise words in a short passage'**
+  String get aiClozeShort;
+
+  /// No description provided for @aiWritingShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Get feedback on your own writing'**
+  String get aiWritingShort;
+
+  /// No description provided for @aiConfusionShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell similar words apart'**
+  String get aiConfusionShort;
+
+  /// No description provided for @aiSentenceShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Build a natural example sentence'**
+  String get aiSentenceShort;
+
+  /// No description provided for @offlineWordbooks.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline wordbooks'**
+  String get offlineWordbooks;
+
+  /// No description provided for @offlineWordbooksHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Download or update a local copy. Text learning and review work without internet; online audio and AI need a connection.'**
+  String get offlineWordbooksHint;
+
+  /// No description provided for @offlineBuiltIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Included · works offline'**
+  String get offlineBuiltIn;
+
+  /// No description provided for @offlineDownloaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloaded · works offline'**
+  String get offlineDownloaded;
+
+  /// No description provided for @offlineDownload.
+  ///
+  /// In en, this message translates to:
+  /// **'Download update'**
+  String get offlineDownload;
+
+  /// No description provided for @offlineRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove downloaded copy'**
+  String get offlineRemove;
+
+  /// No description provided for @offlineDownloadSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved on this device'**
+  String get offlineDownloadSuccess;
+
+  /// No description provided for @offlineDownloadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Download failed. Your existing local copy is safe.'**
+  String get offlineDownloadFailed;
+
+  /// No description provided for @offlineLocalProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic learning is saved on this device. Pending study records sync on the next online launch.'**
+  String get offlineLocalProgress;
+
+  /// No description provided for @practiceChooseMeaning.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the meaning'**
+  String get practiceChooseMeaning;
+
+  /// No description provided for @practiceNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next word'**
+  String get practiceNext;
+
+  /// No description provided for @practiceCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Check answer'**
+  String get practiceCheck;
+
+  /// No description provided for @practiceCorrect.
+  ///
+  /// In en, this message translates to:
+  /// **'Nice work!'**
+  String get practiceCorrect;
+
+  /// No description provided for @practiceReviewAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Let’s remember this one'**
+  String get practiceReviewAnswer;
+
+  /// No description provided for @practiceExitHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed review records are already saved. Keep a draft to resume the remaining questions.'**
+  String get practiceExitHint;
+
+  /// No description provided for @homeAiHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Need a little help?'**
+  String get homeAiHelp;
+
+  /// No description provided for @homeAiHelpHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask your AI study companion'**
+  String get homeAiHelpHint;
 }
 
 class _AppLocalizationsDelegate
@@ -6229,7 +6453,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'ms', 'zh'].contains(locale.languageCode);
+      <String>['en', 'ja', 'ms', 'zh'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -6240,6 +6464,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   switch (locale.languageCode) {
     case 'en':
       return AppLocalizationsEn();
+    case 'ja':
+      return AppLocalizationsJa();
     case 'ms':
       return AppLocalizationsMs();
     case 'zh':

@@ -27,6 +27,9 @@ class WordBookAssetLoader {
     'es_basic',
     'fr_basic',
     'ms_basic',
+    'zh_starter',
+    'ja_starter',
+    'en_starter',
   ];
 
   final AssetBundle _bundle;

@@ -28,6 +28,38 @@ class SettingsScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.all(AppTokens.s20),
           children: [
+            AppCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.explanationLanguage,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(l10n.explanationLanguageHint),
+                  const SizedBox(height: 12),
+                  DropdownButtonFormField<String>(
+                    initialValue: ['zh', 'ja', 'en'].contains(l10n.localeName)
+                        ? l10n.localeName
+                        : 'en',
+                    items: const [
+                      DropdownMenuItem(value: 'zh', child: Text('中文')),
+                      DropdownMenuItem(value: 'ja', child: Text('日本語')),
+                      DropdownMenuItem(value: 'en', child: Text('English')),
+                    ],
+                    onChanged: (code) {
+                      if (code != null) {
+                        ref
+                            .read(appControllerProvider.notifier)
+                            .updateLocale(Locale(code));
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: AppTokens.s12),
             _SettingsAction(
               icon: AppIcons.flag,
               title: l10n.commonStudyPlan,
@@ -40,7 +72,9 @@ class SettingsScreen extends ConsumerWidget {
               icon: AppIcons.notifications,
               title: l10n.commonDailyReminder,
               subtitle: state.reminderSettings.enabled
-                  ? l10n.settingsReminderDisplay(state.reminderSettings.formattedTime)
+                  ? l10n.settingsReminderDisplay(
+                      state.reminderSettings.formattedTime,
+                    )
                   : l10n.settingsReminderOff,
               route: '/settings/reminder',
             ),
@@ -182,8 +216,7 @@ class _LearningLanguageSetting extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final localeCode = Localizations.localeOf(context).languageCode;
     final langLabel = languageLabel(currentLanguage, l10n);
-    final bookLabel =
-        currentWordBook?.nameFor(localeCode) ?? currentWordBookId;
+    final bookLabel = currentWordBook?.nameFor(localeCode) ?? currentWordBookId;
     return AppCard(
       onTap: () => context.push('/language-map'),
       child: Row(
@@ -251,10 +284,7 @@ class _SettingsAction extends StatelessWidget {
 }
 
 class _ThemeSettingCard extends StatelessWidget {
-  const _ThemeSettingCard({
-    required this.themeMode,
-    required this.onChanged,
-  });
+  const _ThemeSettingCard({required this.themeMode, required this.onChanged});
 
   final ThemeMode themeMode;
   final ValueChanged<ThemeMode> onChanged;
@@ -276,7 +306,9 @@ class _ThemeSettingCard extends StatelessWidget {
           ),
           RadioGroup<ThemeMode>(
             groupValue: themeMode,
-            onChanged: (m) { if (m != null) onChanged(m); },
+            onChanged: (m) {
+              if (m != null) onChanged(m);
+            },
             child: Column(
               children: [
                 RadioListTile<ThemeMode>(
@@ -330,8 +362,7 @@ class _SensorySettingsCard extends ConsumerWidget {
             title: const Text('Sound Effects'),
             subtitle: const Text('Play sounds during quizzes'),
             value: sensorySettings.soundEnabled,
-            onChanged: (v) =>
-                update(sensorySettings.copyWith(soundEnabled: v)),
+            onChanged: (v) => update(sensorySettings.copyWith(soundEnabled: v)),
           ),
           const Divider(height: AppTokens.s16),
           SwitchListTile(
@@ -358,4 +389,3 @@ class _SensorySettingsCard extends ConsumerWidget {
     );
   }
 }
-

@@ -205,6 +205,7 @@ String targetForStudyBookId(String wordBookId) {
 
 String _languageForStudyBookId(String wordBookId) {
   final normalized = normalizedStudyBookId(wordBookId);
+  if (normalized.endsWith('_starter')) return normalized.split('_').first;
   if (normalized.startsWith('jlpt_')) return 'ja';
   if (normalized == 'en_basic') return 'en';
   if (normalized == 'es_basic') return 'es';

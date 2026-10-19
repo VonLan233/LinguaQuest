@@ -3310,4 +3310,115 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get readingExplainPractice => '练习';
+
+  @override
+  String get explanationLanguage => '讲解语言';
+
+  @override
+  String get explanationLanguageHint => '用熟悉的语言阅读释义和说明，可独立选择学习语言。';
+
+  @override
+  String get dailyEncouragement => '每天一点，离目标更近。';
+
+  @override
+  String get homeGreeting => '欢迎回来';
+
+  @override
+  String get dailyTaskTitle => '今天的小目标';
+
+  @override
+  String get dailyTaskHint => '按自己的节奏，继续就很好。';
+
+  @override
+  String get continueLearning => '继续学习';
+
+  @override
+  String get aiCenterTitle => 'AI 学习伙伴';
+
+  @override
+  String get aiCenterHint => '卡住的时候，一起想明白。';
+
+  @override
+  String get aiNetworkNotice => 'AI 功能需要联网，已下载词书和基础练习可离线使用。';
+
+  @override
+  String get aiDemoNotice => '当前为演示回答，连接服务后可使用真实 AI。';
+
+  @override
+  String get aiTryThis => '从今天的单词开始问';
+
+  @override
+  String get aiAskWord => '用简单的例子解释这个词。';
+
+  @override
+  String get aiScenarioTitle => '今天想解决什么？';
+
+  @override
+  String get aiQaShort => '理解词义与语法';
+
+  @override
+  String get aiAnalysisShort => '一起读懂长句';
+
+  @override
+  String get aiClozeShort => '把单词放进短文里练';
+
+  @override
+  String get aiWritingShort => '修改自己的表达';
+
+  @override
+  String get aiConfusionShort => '分清容易混淆的词';
+
+  @override
+  String get aiSentenceShort => '写出自然的例句';
+
+  @override
+  String get offlineWordbooks => '离线词书';
+
+  @override
+  String get offlineWordbooksHint => '下载或更新本地副本。断网仍可学习和复习文字内容；在线音频与 AI 需要联网。';
+
+  @override
+  String get offlineBuiltIn => '内置 · 可离线';
+
+  @override
+  String get offlineDownloaded => '已下载 · 可离线';
+
+  @override
+  String get offlineDownload => '下载更新';
+
+  @override
+  String get offlineRemove => '移除下载副本';
+
+  @override
+  String get offlineDownloadSuccess => '已保存到本机';
+
+  @override
+  String get offlineDownloadFailed => '下载失败，原有本地词书已保留。';
+
+  @override
+  String get offlineLocalProgress => '基础学习记录保存在本机，待同步记录会在下次联网启动时上传。';
+
+  @override
+  String get practiceChooseMeaning => '选择正确的释义';
+
+  @override
+  String get practiceNext => '下一个';
+
+  @override
+  String get practiceCheck => '确认答案';
+
+  @override
+  String get practiceCorrect => '答对了！';
+
+  @override
+  String get practiceReviewAnswer => '一起记住这个词';
+
+  @override
+  String get practiceExitHint => '已完成的复习记录已保存。保留草稿后可继续剩余题目。';
+
+  @override
+  String get homeAiHelp => '有一点卡住了？';
+
+  @override
+  String get homeAiHelpHint => '问问 AI 学习伙伴';
 }

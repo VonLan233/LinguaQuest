@@ -3491,4 +3491,121 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get readingExplainPractice => 'Latihan';
+
+  @override
+  String get explanationLanguage => 'Explanation language';
+
+  @override
+  String get explanationLanguageHint =>
+      'Read meanings and instructions in your language. Learning language stays separate.';
+
+  @override
+  String get dailyEncouragement => 'A little progress, every day.';
+
+  @override
+  String get homeGreeting => 'Welcome back';
+
+  @override
+  String get dailyTaskTitle => 'Your next small win';
+
+  @override
+  String get dailyTaskHint => 'Keep going at your own pace.';
+
+  @override
+  String get continueLearning => 'Continue learning';
+
+  @override
+  String get aiCenterTitle => 'Your AI study companion';
+
+  @override
+  String get aiCenterHint => 'A little help when you need it.';
+
+  @override
+  String get aiNetworkNotice =>
+      'AI needs internet. Your downloaded words and basic practice work offline.';
+
+  @override
+  String get aiDemoNotice => 'Demo responses · connect a server for live AI.';
+
+  @override
+  String get aiTryThis => 'Try asking about today’s words';
+
+  @override
+  String get aiAskWord => 'Explain this word with a simple example.';
+
+  @override
+  String get aiScenarioTitle => 'What would you like to work on?';
+
+  @override
+  String get aiQaShort => 'Understand a word or grammar point';
+
+  @override
+  String get aiAnalysisShort => 'Read a tricky sentence together';
+
+  @override
+  String get aiClozeShort => 'Practise words in a short passage';
+
+  @override
+  String get aiWritingShort => 'Get feedback on your own writing';
+
+  @override
+  String get aiConfusionShort => 'Tell similar words apart';
+
+  @override
+  String get aiSentenceShort => 'Build a natural example sentence';
+
+  @override
+  String get offlineWordbooks => 'Offline wordbooks';
+
+  @override
+  String get offlineWordbooksHint =>
+      'Download or update a local copy. Text learning and review work without internet; online audio and AI need a connection.';
+
+  @override
+  String get offlineBuiltIn => 'Included · works offline';
+
+  @override
+  String get offlineDownloaded => 'Downloaded · works offline';
+
+  @override
+  String get offlineDownload => 'Download update';
+
+  @override
+  String get offlineRemove => 'Remove downloaded copy';
+
+  @override
+  String get offlineDownloadSuccess => 'Saved on this device';
+
+  @override
+  String get offlineDownloadFailed =>
+      'Download failed. Your existing local copy is safe.';
+
+  @override
+  String get offlineLocalProgress =>
+      'Basic learning is saved on this device. Pending study records sync on the next online launch.';
+
+  @override
+  String get practiceChooseMeaning => 'Choose the meaning';
+
+  @override
+  String get practiceNext => 'Next word';
+
+  @override
+  String get practiceCheck => 'Check answer';
+
+  @override
+  String get practiceCorrect => 'Nice work!';
+
+  @override
+  String get practiceReviewAnswer => 'Let’s remember this one';
+
+  @override
+  String get practiceExitHint =>
+      'Completed review records are already saved. Keep a draft to resume the remaining questions.';
+
+  @override
+  String get homeAiHelp => 'Need a little help?';
+
+  @override
+  String get homeAiHelpHint => 'Ask your AI study companion';
 }
