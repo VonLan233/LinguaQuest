@@ -787,6 +787,7 @@ class ApiAiRepository implements AiRepository {
         'prompt': prompt,
         'targetWord': targetWord,
         'targetLanguage': targetLanguage,
+        'helperLanguage': _client.helperLanguage,
       },
       options: Options(receiveTimeout: _aiTimeout),
     );
@@ -800,7 +801,11 @@ class ApiAiRepository implements AiRepository {
   }) async {
     final response = await _client.dio.post<Map<String, dynamic>>(
       '/ai/sentence-analysis',
-      data: {'prompt': prompt, 'targetLanguage': targetLanguage},
+      data: {
+        'prompt': prompt,
+        'targetLanguage': targetLanguage,
+        'helperLanguage': _client.helperLanguage,
+      },
       options: Options(receiveTimeout: _aiTimeout),
     );
     return response.data!['data'] as Map<String, dynamic>;
@@ -818,6 +823,7 @@ class ApiAiRepository implements AiRepository {
         'prompt': prompt,
         'targetWord': targetWord,
         'targetLanguage': targetLanguage,
+        'helperLanguage': _client.helperLanguage,
       },
       options: Options(receiveTimeout: _aiTimeout),
     );
@@ -836,6 +842,7 @@ class ApiAiRepository implements AiRepository {
         'prompt': prompt,
         'targetWord': targetWord,
         'targetLanguage': targetLanguage,
+        'helperLanguage': _client.helperLanguage,
       },
       options: Options(receiveTimeout: _aiTimeout),
     );
@@ -854,6 +861,7 @@ class ApiAiRepository implements AiRepository {
         'prompt': prompt,
         'targetWord': targetWord,
         'targetLanguage': targetLanguage,
+        'helperLanguage': _client.helperLanguage,
       },
       options: Options(receiveTimeout: _aiTimeout),
     );
@@ -868,7 +876,11 @@ class ApiAiRepository implements AiRepository {
   }) async {
     final response = await _client.dio.post<Map<String, dynamic>>(
       '/ai/reading-explain',
-      data: {'prompt': paragraph, 'targetLanguage': language},
+      data: {
+        'prompt': paragraph,
+        'targetLanguage': language,
+        'helperLanguage': _client.helperLanguage,
+      },
       options: Options(receiveTimeout: _aiTimeout),
     );
     return (response.data?['data'] as Map<String, dynamic>?) ?? {};
@@ -903,6 +915,7 @@ class ApiAiRepository implements AiRepository {
         'examType': ?examType,
         'targetScore': ?targetScore,
         'targetLanguage': targetLanguage,
+        'helperLanguage': _client.helperLanguage,
       },
       options: Options(receiveTimeout: _aiTimeout),
     );

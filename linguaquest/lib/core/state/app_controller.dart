@@ -254,6 +254,11 @@ class AppController extends Notifier<AppState> {
     state = state.copyWith(isLoading: true, clearError: true);
     try {
       final prefs = await SharedPreferences.getInstance();
+      if (AppConstants.apiBaseUrl.isNotEmpty) {
+        ref.read(apiClientProvider).helperLanguage =
+            prefs.getString(_localeKey) ??
+            PlatformDispatcher.instance.locale.languageCode;
+      }
       // Run one-shot migration before reading any scoped keys.
       await _runMigrationV2Scope(prefs);
 
@@ -412,6 +417,9 @@ class AppController extends Notifier<AppState> {
 
   Future<void> updateLocale(Locale locale) async {
     state = state.copyWith(locale: locale);
+    if (AppConstants.apiBaseUrl.isNotEmpty) {
+      ref.read(apiClientProvider).helperLanguage = locale.languageCode;
+    }
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_localeKey, locale.languageCode);
   }

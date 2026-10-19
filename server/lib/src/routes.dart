@@ -1034,6 +1034,7 @@ Router buildRouter(
       prompt: prompt,
       targetWord: targetWord,
       targetLanguage: targetLanguage,
+      helperLanguage: body['helperLanguage'] as String? ?? 'en',
       modelOverride: featureType == 'cloze' && config.aiClozeModel.isNotEmpty
           ? config.aiClozeModel
           : null,
@@ -1411,6 +1412,7 @@ Router buildRouter(
         userId: uid,
         prompt: aiPrompt,
         targetLanguage: targetLanguage,
+        helperLanguage: body['helperLanguage'] as String? ?? 'en',
       );
       final response = await effectiveAiPolicy.handle(aiRequest);
       if (!response.success) {

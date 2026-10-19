@@ -23,6 +23,7 @@ class ApiClient {
   }
 
   final Dio dio;
+  String helperLanguage = 'en';
   late final OfflineStudyStore offlineStore;
 
   void setToken(String? token) {

@@ -12,8 +12,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get appTitle => 'LinguaQuest';
 
   @override
-  String get appSubtitle =>
-      'Build vocabulary with short lessons and smart review.';
+  String get appSubtitle => '短いレッスンとスマート復習で語彙を身につけよう。';
 
   @override
   String get tabHome => 'ホーム';
@@ -148,10 +147,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get commonAlreadyAdded => '追加済み';
 
   @override
-  String get commonWrongPrefix => 'Wrong ';
+  String get commonWrongPrefix => '間違い ';
 
   @override
-  String get commonTimesSuffix => ' times';
+  String get commonTimesSuffix => ' 回';
 
   @override
   String get commonViewAll => 'すべて見る';
@@ -160,163 +159,158 @@ class AppLocalizationsJa extends AppLocalizations {
   String get commonView => '見る';
 
   @override
-  String get authRegisterTitle => 'Register';
+  String get authRegisterTitle => '登録';
 
   @override
-  String get authLoginTitle => 'Login';
+  String get authLoginTitle => 'ログイン';
 
   @override
-  String get authCreateProfile => 'Create Learning Profile';
+  String get authCreateProfile => '学習プロフィールを作成';
 
   @override
-  String get authCreateProfileSubtitle =>
-      'Set up your account, then choose your goals and daily pace.';
+  String get authCreateProfileSubtitle => 'アカウントを設定し、目標と毎日のペースを選びましょう。';
 
   @override
-  String get authStep1of2 => 'Step 1 / 2';
+  String get authStep1of2 => 'ステップ 1 / 2';
 
   @override
-  String get authStep2of2 => 'Step 2 / 2';
+  String get authStep2of2 => 'ステップ 2 / 2';
 
   @override
-  String get authNickname => 'Nickname';
+  String get authNickname => 'ニックネーム';
 
   @override
-  String get authNicknameHint => 'Enter nickname';
+  String get authNicknameHint => 'ニックネームを入力';
 
   @override
-  String get authEmail => 'Email';
+  String get authEmail => 'メールアドレス';
 
   @override
   String get authEmailHint => 'name@example.com';
 
   @override
-  String get authPassword => 'Password';
+  String get authPassword => 'パスワード';
 
   @override
-  String get authPasswordHint => 'Set password';
+  String get authPasswordHint => 'パスワードを設定';
 
   @override
-  String get authNameRequired => 'Please enter a nickname';
+  String get authNameRequired => 'ニックネームを入力してください';
 
   @override
-  String get authEmailRequired => 'Please enter an email';
+  String get authEmailRequired => 'メールアドレスを入力してください';
 
   @override
-  String get authEmailInvalid => 'Please enter a valid email';
+  String get authEmailInvalid => '有効なメールアドレスを入力してください';
 
   @override
-  String get authPasswordRequired => 'Password must be at least 6 characters';
+  String get authPasswordRequired => 'パスワードは6文字以上で入力してください';
 
   @override
-  String get authContinueToGoal => 'Continue to Goal Setup';
+  String get authContinueToGoal => '目標設定へ進む';
 
   @override
-  String get authHaveAccount => 'Already have an account? Log in';
+  String get authHaveAccount => 'すでにアカウントをお持ちですか？ログイン';
 
   @override
-  String get authAccountCreated =>
-      'Account created. Please continue to set up your learning plan.';
+  String get authAccountCreated => 'アカウントを作成しました。続けて学習プランを設定してください。';
 
   @override
-  String get authWelcomeBack => 'Welcome back';
+  String get authWelcomeBack => 'おかえりなさい';
 
   @override
-  String get authWelcomeBackSubtitle =>
-      'Continue today\'s learning path and clear your due review cards.';
+  String get authWelcomeBackSubtitle => '今日の学習パスを続けて、復習期限のカードを消化しましょう。';
 
   @override
-  String get authRegisterNew => 'Register new account';
+  String get authRegisterNew => '新しいアカウントを登録';
 
   @override
   String get onboardingTitle => 'LinguaQuest';
 
   @override
-  String get onboardingSubtitle =>
-      'Short lessons, visual memory cards, and smart review help you build vocabulary steadily.';
+  String get onboardingSubtitle => '短いレッスン、視覚的な記憶カード、スマート復習で語彙を着実に身につけられます。';
 
   @override
-  String get onboardingTagline => 'Level up daily like a game';
+  String get onboardingTagline => 'ゲームのように毎日レベルアップ';
 
   @override
   String get onboardingTagWorld => 'Word Quest World';
 
   @override
-  String get onboardingTagStreak => 'Daily streak';
+  String get onboardingTagStreak => '毎日の連続記録';
 
   @override
-  String get splashTagline => 'Word cards, clear paths, smart review.';
+  String get splashTagline => '単語カード、明確なパス、スマート復習。';
 
   @override
-  String get studyNewScreenTitle => 'New words';
+  String get studyNewScreenTitle => '新しい単語';
 
   @override
-  String get studyWordbookPath => 'Wordbook path';
+  String get studyWordbookPath => '単語帳パス';
 
   @override
-  String get studyEnterCards => 'Start word cards';
+  String get studyEnterCards => '単語カードを開始';
 
   @override
-  String get studyNewPackTitle => 'Today\'s new word pack';
+  String get studyNewPackTitle => '今日の新しい単語パック';
 
   @override
   String get studyNewPackDesc =>
-      'Self-assess first, then view cards, then context questions. Formal review is queued separately.';
+      'まず自己評価し、次にカードを見て、最後に文脈問題に取り組みます。正式な復習は別にキューされます。';
 
   @override
-  String get studyNoNewWords => 'No new words';
+  String get studyNoNewWords => '新しい単語はありません';
 
   @override
-  String get studyNewPausedHint =>
-      'Study plan paused. Resume to continue today\'s new words.';
+  String get studyNewPausedHint => '学習プランが一時停止中です。再開して今日の新しい単語を続けましょう。';
 
   @override
   String get studyNewEmptyHint =>
-      'The current wordbook is finished, or the plan isn\'t generated yet. Check the wordbook path for the next set.';
+      '現在の単語帳は完了しているか、プランがまだ生成されていません。次のセットは単語帳のパスを確認してください。';
 
   @override
-  String get studyOpenWordbookPath => 'Open wordbook path';
+  String get studyOpenWordbookPath => '単語帳のパスを開く';
 
   @override
   String studyTodayLearnCount(Object count) {
-    return 'Learn $count new words today';
+    return '今日は$count個の新しい単語を学ぶ';
   }
 
   @override
   String get studyNewNoLessonHint =>
-      'Finish review before adding new words; keeping a rhythm beats piling on tasks.';
+      '新しい単語を追加する前に復習を終えましょう。タスクを積み上げるより、リズムを保つ方が大切です。';
 
   @override
   String studyNewPausedResume(Object section) {
-    return 'Study plan paused; resume to continue from $section.';
+    return '学習プランは一時停止中です。再開すると$sectionから続けられます。';
   }
 
   @override
-  String get studyRecallKnown => 'Know it';
+  String get studyRecallKnown => 'わかる';
 
   @override
-  String get studyRecallFuzzy => 'Unsure';
+  String get studyRecallFuzzy => 'あいまい';
 
   @override
-  String get studyRecallUnknown => 'Don\'t know';
+  String get studyRecallUnknown => 'わからない';
 
   @override
-  String get studyStepSelfAssess => 'Self-assess';
+  String get studyStepSelfAssess => '自己評価';
 
   @override
-  String get studyStepSelfAssessDesc => 'Reduce wasted repetition';
+  String get studyStepSelfAssessDesc => '無駄な反復を減らす';
 
   @override
-  String get studyStepCards => 'Word cards';
+  String get studyStepCards => '単語カード';
 
   @override
-  String get studyStepCardsDesc => 'Fill in meaning and examples';
+  String get studyStepCardsDesc => '意味と例文を入力';
 
   @override
-  String get studyStepContext => 'Context';
+  String get studyStepContext => '文脈';
 
   @override
-  String get studyStepContextDesc => 'Active recall';
+  String get studyStepContextDesc => '能動的想起';
 
   @override
   String get mixedManageReviewQueue => '復習予定を管理';
@@ -421,206 +415,193 @@ class AppLocalizationsJa extends AppLocalizations {
   String get mixedSaveAndHome => '保存してホームへ';
 
   @override
-  String get questCenterTitle => 'Task center';
+  String get questCenterTitle => 'タスクセンター';
 
   @override
-  String get questCenterSubtitle =>
-      'Earn points after study actions; also view rankings, analytics, and class learning.';
+  String get questCenterSubtitle => '学習アクションでポイントを獲得。ランキング、分析、クラス学習も確認できます。';
 
   @override
-  String get questDailyTask => 'Daily tasks';
+  String get questDailyTask => 'デイリータスク';
 
   @override
-  String get questDailyTaskBody => 'Finish a lesson and review 5 due words.';
+  String get questDailyTaskBody => 'レッスンを1つ完了し、期限の来た単語を5つ復習しましょう。';
 
   @override
-  String get questAchievements => 'Achievements';
+  String get questAchievements => '実績';
 
   @override
-  String get questAchievementsBody =>
-      'Streaks, 100 words learned, first perfect lesson, and more.';
+  String get questAchievementsBody => '連続記録、100語学習、初のパーフェクトレッスンなど。';
 
   @override
   String get questAchievementsValue => '3';
 
   @override
-  String get questLeaderboard => 'Leaderboard';
+  String get questLeaderboard => 'リーダーボード';
 
   @override
-  String get questLeaderboardBody =>
-      'Weekly XP ranking for friends and future classes.';
+  String get questLeaderboardBody => '友達と今後のクラスの週間XPランキング。';
 
   @override
-  String get questWeekly => 'Weekly';
+  String get questWeekly => '週間';
 
   @override
-  String get questAnalytics => 'Learning analytics';
+  String get questAnalytics => '学習分析';
 
   @override
-  String get questAnalyticsBody =>
-      'Accuracy, vocabulary growth, and review completion trends.';
+  String get questAnalyticsBody => '正答率、語彙の増加、復習完了のトレンド。';
 
   @override
-  String get questTrend => 'Trends';
+  String get questTrend => 'トレンド';
 
   @override
-  String get questAiTutor => 'AI tutor';
+  String get questAiTutor => 'AIチューター';
 
   @override
-  String get questAiTutorBody =>
-      'Explain mistakes and suggest example sentences.';
+  String get questAiTutorBody => '間違いを解説し、例文を提案します。';
 
   @override
-  String get aiTutorSamplePrompt =>
-      'Explain the difference between affect and effect';
+  String get aiTutorSamplePrompt => 'affectとeffectの違いを説明して';
 
   @override
-  String get aiTutorSubtitle =>
-      'Enter a word, grammar point, or mistake to get a structured explanation and practice sentences.';
+  String get aiTutorSubtitle => '単語、文法ポイント、間違いを入力すると、構造化された解説と練習用の例文が得られます。';
 
   @override
-  String get aiTutorInputLabel => 'Ask about a word, grammar, or mistake';
+  String get aiTutorInputLabel => '単語、文法、間違いについて質問する';
 
   @override
   String get aiTutorSampleAnswer =>
-      'Affect is usually a verb: \"The weather affects my mood.\" Effect is usually a noun: \"The effect was immediate.\" Try writing a sentence with each word.';
+      'affectは通常動詞です:「The weather affects my mood.」effectは通常名詞です:「The effect was immediate.」それぞれの単語で文を書いてみましょう。';
 
   @override
-  String get leaderboardDefaultName => 'Explorer';
+  String get leaderboardDefaultName => '探検家';
 
   @override
-  String get leaderboardTitle => 'Training leaderboard';
+  String get leaderboardTitle => 'トレーニングリーダーボード';
 
   @override
-  String get leaderboardSubtitle =>
-      'Counts only real completed training XP; no static demo board.';
+  String get leaderboardSubtitle => '実際に完了したトレーニングのXPのみを集計。固定のデモボードはありません。';
 
   @override
-  String get leaderboardEmptyTitle => 'No training results yet';
+  String get leaderboardEmptyTitle => 'まだトレーニング結果がありません';
 
   @override
   String get leaderboardEmptyBody =>
-      'After finishing Word Rush, Survival, or Spelling, real training XP generates the ranking.';
+      'Word Rush、Survival、Spellingを完了すると、実際のトレーニングXPでランキングが生成されます。';
 
   @override
-  String get leaderboardOnlyValidXp => 'Counts valid learning XP only';
+  String get leaderboardOnlyValidXp => '有効な学習XPのみを集計';
 
   @override
-  String get analyticsDataTitle => 'Learning data';
+  String get analyticsDataTitle => '学習データ';
 
   @override
-  String get analyticsDataSubtitle =>
-      'A first analytics view based on word cards and review records.';
+  String get analyticsDataSubtitle => '単語カードと復習記録に基づく最初の分析ビュー。';
 
   @override
   String analyticsAssetsDue(Object due, Object total) {
-    return '$due of $total learning assets are due';
+    return '学習アセット$total件中$due件が期限です';
   }
 
   @override
-  String get analyticsCards => 'Word cards';
+  String get analyticsCards => '単語カード';
 
   @override
-  String get analyticsTrainingXp => 'Training XP';
+  String get analyticsTrainingXp => 'トレーニングXP';
 
   @override
-  String get analyticsAccuracy => 'Accuracy';
+  String get analyticsAccuracy => '正答率';
 
   @override
-  String get onboardingFeatureImageCards => 'Word Cards';
+  String get onboardingFeatureImageCards => '単語カード';
 
   @override
-  String get onboardingFeatureImageCardsDesc =>
-      'Words, meanings, and examples connected in one learning flow.';
+  String get onboardingFeatureImageCardsDesc => '単語・意味・例文が1つの学習フローでつながります。';
 
   @override
-  String get onboardingFeaturePath => 'Clear Path';
+  String get onboardingFeaturePath => '明確な道のり';
 
   @override
-  String get onboardingFeaturePathDesc =>
-      'Short lessons guide your daily learning path.';
+  String get onboardingFeaturePathDesc => '短いレッスンが毎日の学習の道のりを導きます。';
 
   @override
-  String get onboardingFeatureReview => 'Timely Review';
+  String get onboardingFeatureReview => 'タイムリーな復習';
 
   @override
   String get onboardingFeatureReviewDesc =>
-      'Weak words return to queue faster; mastered words get longer review intervals.';
+      '苦手な単語はより早くキューに戻り、習得済みの単語は復習間隔が長くなります。';
 
   @override
   String get onboardingTagPillXp => 'XP';
 
   @override
-  String get onboardingTagPillStreak => 'Streak';
+  String get onboardingTagPillStreak => '連続学習';
 
   @override
   String get onboardingTagPillPlanet => 'LinguaQuest Planet';
 
   @override
-  String get onboardingRegisterButton => 'Register';
+  String get onboardingRegisterButton => '登録';
 
   @override
-  String get goalSetupTitle => 'Goal Setup';
+  String get goalSetupTitle => '目標設定';
 
   @override
-  String get goalSetupSelectPlan => 'Select Learning Plan';
+  String get goalSetupSelectPlan => '学習プランを選択';
 
   @override
-  String get goalSetupSelectPlanSubtitle =>
-      'The system breaks your goal into daily new words, due reviews, and point tasks.';
+  String get goalSetupSelectPlanSubtitle => 'システムが目標を毎日の新規単語・復習・ポイントタスクに分解します。';
 
   @override
-  String get goalSetupTarget => 'Target';
+  String get goalSetupTarget => '目標';
 
   @override
-  String get goalSetupPlanBy => 'Plan by';
+  String get goalSetupPlanBy => '計画方法';
 
   @override
-  String get goalSetupDailyGoal => 'Daily Goal';
+  String get goalSetupDailyGoal => '1日の目標';
 
   @override
-  String get goalSetupDeadlinePlan => 'Plan by Deadline';
+  String get goalSetupDeadlinePlan => '期限で計画';
 
   @override
-  String get goalSetupDeadlineHint =>
-      'Select a target date, and the system will calculate daily word count automatically.';
+  String get goalSetupDeadlineHint => '目標日を選択すると、システムが1日の単語数を自動計算します。';
 
   @override
-  String get goalSetupPickDate => 'Pick Date';
+  String get goalSetupPickDate => '日付を選択';
 
   @override
-  String get goalSetupChangeDate => 'Change Date';
+  String get goalSetupChangeDate => '日付を変更';
 
   @override
-  String get goalSetupClearDate => 'Clear Date Plan';
+  String get goalSetupClearDate => '日付プランをクリア';
 
   @override
-  String get goalSetupEnterApp => 'Enter LinguaQuest';
+  String get goalSetupEnterApp => 'LinguaQuestを始める';
 
   @override
-  String get goalSetupCurrentBook => 'Current Wordbook';
+  String get goalSetupCurrentBook => '現在の単語帳';
 
   @override
-  String get goalSetupLearned => 'Learned';
+  String get goalSetupLearned => '学習済み';
 
   @override
-  String get goalSetupNewWords => 'New';
+  String get goalSetupNewWords => '新規';
 
   @override
   String goalSetupNewWordsCount(Object count) {
-    return '$count new words';
+    return '$count個の新規単語';
   }
 
   @override
-  String get goalSetupReviewLimit => 'Review Cap';
+  String get goalSetupReviewLimit => '復習上限';
 
   @override
   String goalSetupReviewLimitCount(Object count) {
-    return 'Review cap: $count words';
+    return '復習上限：$count語';
   }
 
   @override
-  String get goalSetupViewWordbook => 'View Full Wordbook';
+  String get goalSetupViewWordbook => '単語帳をすべて表示';
 
   @override
   String get homePersonalSpace => 'プロフィール';
@@ -641,7 +622,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get homeReviewLabel => '復習';
 
   @override
-  String get homeTaskConsole => 'Daily Task Console';
+  String get homeTaskConsole => '毎日のタスクコンソール';
 
   @override
   String get homeAdjustPlan => 'プランを調整';
@@ -706,160 +687,150 @@ class AppLocalizationsJa extends AppLocalizations {
   String get homeTodayCompleted => '今日の学習済み';
 
   @override
-  String get profileLearner => 'Explorer';
+  String get profileLearner => '探検家';
 
   @override
-  String get profileNoEmail => 'No email set';
+  String get profileNoEmail => 'メールアドレス未設定';
 
   @override
-  String get publicProfileNotFoundTitle => 'Profile unavailable';
+  String get publicProfileNotFoundTitle => 'プロフィールを利用できません';
 
   @override
-  String get publicProfileNotFoundMessage =>
-      'This user doesn\'t exist or their profile is private.';
+  String get publicProfileNotFoundMessage => 'このユーザーは存在しないか、プロフィールが非公開です。';
 
   @override
-  String get publicProfileLoadFailedTitle => 'Couldn\'t load profile';
+  String get publicProfileLoadFailedTitle => 'プロフィールを読み込めませんでした';
 
   @override
-  String get publicProfileLoadFailedMessage =>
-      'Something went wrong. Please try again.';
+  String get publicProfileLoadFailedMessage => '問題が発生しました。もう一度お試しください。';
 
   @override
-  String get profileEditNicknameTitle => 'Edit nickname';
+  String get profileEditNicknameTitle => 'ニックネームを編集';
 
   @override
-  String get profileEditNicknameSignInRequired =>
-      'Please sign in before editing your nickname.';
+  String get profileEditNicknameSignInRequired => 'ニックネームを編集するにはサインインしてください。';
 
   @override
-  String get profileEditNicknameEmpty => 'Nickname cannot be empty.';
+  String get profileEditNicknameEmpty => 'ニックネームを入力してください。';
 
   @override
-  String get profileEditNicknameSaveFailed => 'Could not update nickname.';
+  String get profileEditNicknameSaveFailed => 'ニックネームを更新できませんでした。';
 
   @override
-  String get profileDashboard => 'Learning Dashboard';
+  String get profileDashboard => '学習ダッシュボード';
 
   @override
-  String get profileDashboardSubtitle =>
-      'Key progress at a glance, with settings at the bottom.';
+  String get profileDashboardSubtitle => '重要な進捗をひと目で確認、設定は下部にあります。';
 
   @override
-  String get profileLearnedWords => 'Learned';
+  String get profileLearnedWords => '学習済み';
 
   @override
-  String get profileMasteredWords => 'Mastered';
+  String get profileMasteredWords => '習得済み';
 
   @override
-  String get profileCustomWords => 'Custom Words';
+  String get profileCustomWords => 'カスタム単語';
 
   @override
-  String get profileAverageAccuracy => 'Avg. Accuracy';
+  String get profileAverageAccuracy => '平均正答率';
 
   @override
-  String get profilePlansCompleted => 'Plans Done';
+  String get profilePlansCompleted => '完了プラン';
 
   @override
   String profileStreakDays(num count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count days streak',
-      one: '1 day streak',
+      other: '$count日連続',
+      one: '1日連続',
     );
     return '$_temp0';
   }
 
   @override
-  String get profileCurrentBookProgress => 'Current Wordbook Progress';
+  String get profileCurrentBookProgress => '現在の単語帳の進捗';
 
   @override
-  String get profileWordbookSubtitle =>
-      'Current wordbook and target vocabulary';
+  String get profileWordbookSubtitle => '現在の単語帳と目標単語数';
 
   @override
-  String get profileCustomWordsSubtitle =>
-      'Saved words and personal vocabulary cards';
+  String get profileCustomWordsSubtitle => '保存した単語と個人用単語カード';
 
   @override
-  String get profileMistakeBookSubtitle => 'Lesson mistakes and weak words';
+  String get profileMistakeBookSubtitle => 'レッスンの間違いと苦手な単語';
 
   @override
-  String get profileReminderSubtitle => 'Set reminder time and toggle';
+  String get profileReminderSubtitle => 'リマインダーの時刻とオン/オフを設定';
 
   @override
-  String get profileDarkModeSubtitle => 'Follow system, light, or dark theme';
+  String get profileDarkModeSubtitle => 'システム連動、ライト、ダークテーマ';
 
   @override
-  String get profileHelpSubtitle => 'FAQ and support';
+  String get profileHelpSubtitle => 'よくある質問とサポート';
 
   @override
-  String get profileHelpTitle => 'Help & Feedback';
+  String get profileHelpTitle => 'ヘルプとフィードバック';
 
   @override
-  String get profileAboutSubtitle => 'LinguaQuest vision & version 1.0.0';
+  String get profileAboutSubtitle => 'LinguaQuestのビジョンとバージョン 1.0.0';
 
   @override
-  String get profileAboutTitle => 'About Us';
+  String get profileAboutTitle => '私たちについて';
 
   @override
-  String get profileLogout => 'Logout';
+  String get profileLogout => 'ログアウト';
 
   @override
-  String get profileSettingsSupport => 'Settings & Support';
+  String get profileSettingsSupport => '設定とサポート';
 
   @override
-  String get profilePlanLabel => 'Study Plan';
+  String get profilePlanLabel => '学習プラン';
 
   @override
-  String get profilePlanRunning => 'Active';
+  String get profilePlanRunning => '実行中';
 
   @override
-  String get profilePlanPaused => 'Paused';
+  String get profilePlanPaused => '一時停止中';
 
   @override
-  String get profileWeaknessAnalysis => 'Weakness Analysis';
+  String get profileWeaknessAnalysis => '苦手分析';
 
   @override
-  String get profileNoWeakness =>
-      'No frequent mistakes yet. Complete learning and reviews to generate analysis.';
+  String get profileNoWeakness => 'よくある間違いはまだありません。学習と復習を完了すると分析が生成されます。';
 
   @override
-  String get profileMostWrongWord => 'Most Wrong Word';
+  String get profileMostWrongWord => '最も間違えた単語';
 
   @override
   String get settingsAppBar => '設定';
 
   @override
-  String get settingsSoundFeedback => 'Answer Sound Feedback';
+  String get settingsSoundFeedback => '回答音のフィードバック';
 
   @override
-  String get settingsSoundFeedbackSubtitle =>
-      'Provides audio feedback for quiz results and practice rhythm';
+  String get settingsSoundFeedbackSubtitle => 'クイズ結果や練習のリズムに音声フィードバックを提供します';
 
   @override
-  String get settingsTheme => 'Theme';
+  String get settingsTheme => 'テーマ';
 
   @override
-  String get settingsThemeSystem => 'Follow System';
+  String get settingsThemeSystem => 'システムに従う';
 
   @override
-  String get settingsThemeSystemSubtitle =>
-      'Automatically switch based on device light/dark preference';
+  String get settingsThemeSystemSubtitle => 'デバイスのライト/ダーク設定に応じて自動的に切り替えます';
 
   @override
-  String get settingsThemeLight => 'Light';
+  String get settingsThemeLight => 'ライト';
 
   @override
-  String get settingsThemeLightSubtitle =>
-      'Keep a bright and clean learning interface';
+  String get settingsThemeLightSubtitle => '明るくクリーンな学習画面を維持します';
 
   @override
-  String get settingsThemeDark => 'Dark';
+  String get settingsThemeDark => 'ダーク';
 
   @override
-  String get settingsThemeDarkSubtitle => 'Use dark learning interface';
+  String get settingsThemeDarkSubtitle => 'ダークな学習画面を使用します';
 
   @override
   String get settingsReminderTitle => '毎日の通知';
@@ -869,7 +840,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String settingsReminderDisplay(String time) {
-    return 'Daily · $time';
+    return '毎日 · $time';
   }
 
   @override
@@ -880,575 +851,549 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get settingsReminderDescription =>
-      'The app remembers your reminder time and schedules local system reminders to prompt daily learning and check-ins.';
+      'アプリは通知時刻を記憶し、毎日の学習とチェックインを促すローカル通知をスケジュールします。';
 
   @override
-  String get discoverTitle => 'Discover';
+  String get discoverTitle => '発見';
 
   @override
   String get discoverSubtitle =>
-      'Check-in, point tasks, lucky draw, and learning community; earned XP adds to your total score.';
+      'チェックイン、ポイントタスク、抽選、学習コミュニティ。獲得したXPは総スコアに加算されます。';
 
   @override
-  String get discoverTaskCenter => 'Task Center';
+  String get discoverTaskCenter => 'タスクセンター';
 
   @override
-  String get discoverXpTasks => 'Point Tasks';
+  String get discoverXpTasks => 'ポイントタスク';
 
   @override
   String get discoverXpTasksSubtitle =>
-      'Complete conditions then tap \"Claim\" — XP instantly adds to your profile and leaderboard.';
+      '条件を達成して「受け取る」をタップすると、XPがすぐにプロフィールとリーダーボードに加算されます。';
 
   @override
-  String get discoverDailyCheckin => 'Daily Check-in';
+  String get discoverDailyCheckin => '毎日のチェックイン';
 
   @override
-  String get discoverDailyCheckinCondition =>
-      'Open the app and complete one learning action today';
+  String get discoverDailyCheckinCondition => '今日アプリを開いて学習アクションを1つ完了する';
 
   @override
-  String get discoverNewLearning => 'Complete New Learning';
+  String get discoverNewLearning => '新規学習を完了';
 
   @override
-  String get discoverNewLearningCondition =>
-      'Finish today\'s new learning task';
+  String get discoverNewLearningCondition => '今日の新規学習タスクを完了する';
 
   @override
-  String get discoverReviewDone => 'Complete Review';
+  String get discoverReviewDone => '復習を完了';
 
   @override
-  String get discoverReviewDoneCondition => 'Finish today\'s due review';
+  String get discoverReviewDoneCondition => '今日の期限の復習を完了する';
 
   @override
-  String get discoverTrainingChallenge => 'Training Challenge';
+  String get discoverTrainingChallenge => 'トレーニングチャレンジ';
 
   @override
-  String get discoverTrainingChallengeCondition => 'Complete any training game';
+  String get discoverTrainingChallengeCondition => 'いずれかのトレーニングゲームを完了する';
 
   @override
-  String get discoverWeakCleanup => 'Weak Word Cleanup';
+  String get discoverWeakCleanup => '苦手単語の克服';
 
   @override
-  String get discoverWeakCleanupCondition =>
-      'Re-answer today\'s mistake words correctly';
+  String get discoverWeakCleanupCondition => '今日の間違えた単語に正しく再回答する';
 
   @override
-  String get discoverLuckyDraw => 'Lucky Draw';
+  String get discoverLuckyDraw => '抽選';
 
   @override
-  String get discoverLuckyDrawSubtitle =>
-      'Prizes are virtual decorations only and do not affect learning fairness.';
+  String get discoverLuckyDrawSubtitle => '景品は仮想の装飾のみで、学習の公平性には影響しません。';
 
   @override
   String get discoverLuckyDrawItems =>
-      'Avatar frames, profile backgrounds, learning badges, training titles, card skins';
+      'アバターフレーム、プロフィール背景、学習バッジ、トレーニング称号、カードスキン';
 
   @override
-  String get discoverLuckyDrawCost =>
-      '30 XP per draw; rare probability displayed transparently, fragments given even without a prize.';
+  String get discoverLuckyDrawCost => '1回30XP。レア確率は透明に表示され、外れてもフラグメントがもらえます。';
 
   @override
-  String get discoverCommunityPosts => 'Community Posts';
+  String get discoverCommunityPosts => 'コミュニティ投稿';
 
   @override
-  String get discoverCommunityPostsSubtitle => 'Community';
+  String get discoverCommunityPostsSubtitle => 'コミュニティ';
 
   @override
-  String get discoverMyFavorites => 'My Favorites';
+  String get discoverMyFavorites => 'お気に入り';
 
   @override
-  String get favoritesEmpty => 'You haven\'t favorited any posts yet.';
+  String get favoritesEmpty => 'まだ投稿をお気に入りに追加していません。';
 
   @override
-  String get communityFilterAll => 'All';
+  String get communityFilterAll => 'すべて';
 
   @override
-  String get communityTagGrammar => 'Grammar';
+  String get communityTagGrammar => '文法';
 
   @override
-  String get communityTagVocabulary => 'Vocabulary';
+  String get communityTagVocabulary => '語彙';
 
   @override
-  String get communityTagCulture => 'Culture';
+  String get communityTagCulture => '文化';
 
   @override
-  String get communityTagGeneral => 'General';
+  String get communityTagGeneral => '一般';
 
   @override
-  String get communityTagProgress => 'Progress';
+  String get communityTagProgress => '進捗';
 
   @override
-  String get communityShareUpdate => 'Share an update';
+  String get communityShareUpdate => '更新をシェア';
 
   @override
-  String get communityNewPost => 'New Post';
+  String get communityNewPost => '新規投稿';
 
   @override
-  String get communityNoPostsInFilter => 'No posts in this category yet';
+  String get communityNoPostsInFilter => 'このカテゴリにはまだ投稿がありません';
 
   @override
-  String get communityTimeJustNow => 'Just now';
+  String get communityTimeJustNow => 'たった今';
 
   @override
   String communityTimeMinutesAgo(int count) {
-    return '${count}m ago';
+    return '$count分前';
   }
 
   @override
   String communityTimeHoursAgo(int count) {
-    return '${count}h ago';
+    return '$count時間前';
   }
 
   @override
   String communityTimeDaysAgo(int count) {
-    return '${count}d ago';
+    return '$count日前';
   }
 
   @override
-  String get discoverXpUsage => 'XP Usage';
+  String get discoverXpUsage => 'XPの使い方';
 
   @override
   String get discoverXpUsageDesc =>
-      'Claimed XP syncs to profile and leaderboard; lucky draw consumes current XP. Current balance';
+      '受け取ったXPはプロフィールとリーダーボードに同期され、抽選で現在のXPを消費します。現在の残高';
 
   @override
   String discoverGoComplete(Object points) {
-    return 'Complete for +$points XP';
+    return '完了で +$points XP';
   }
 
   @override
   String discoverClaim(Object points) {
-    return 'Claim +$points XP';
+    return '+$points XP を受け取る';
   }
 
   @override
   String discoverClaimed(Object points) {
-    return 'Earned +$points XP';
+    return '+$points XP を獲得';
   }
 
   @override
   String discoverClaimedMessage(Object points, Object title, Object total) {
-    return '$title claimed +$points XP, current total $total XP';
+    return '$title が +$points XP を受け取り、現在の合計 $total XP';
   }
 
   @override
-  String get discoverCannotClaim => 'Can\'t claim this task right now';
+  String get discoverCannotClaim => 'このタスクは今すぐには受け取れません';
 
   @override
-  String get discoverViewProfile => 'View Profile';
+  String get discoverViewProfile => 'プロフィールを見る';
 
   @override
   String errorStartupFailed(Object detail) {
-    return 'LinguaQuest failed to start: $detail';
+    return 'LinguaQuest の起動に失敗しました: $detail';
   }
 
   @override
-  String get errorPlanPausedNewLearning =>
-      'Your study plan is paused. Resume it to start new learning.';
+  String get errorPlanPausedNewLearning => '学習プランが一時停止中です。再開して新しい学習を始めましょう。';
 
   @override
-  String get errorPlanPausedReview =>
-      'Your study plan is paused. Resume it to review.';
+  String get errorPlanPausedReview => '学習プランが一時停止中です。再開して復習しましょう。';
 
   @override
-  String get errorCardReviewedToday =>
-      'You\'ve already reviewed this card today.';
+  String get errorCardReviewedToday => 'このカードは今日すでに復習済みです。';
 
   @override
-  String get errorTaskClaimedToday =>
-      'You\'ve already claimed this task today.';
+  String get errorTaskClaimedToday => 'このタスクは今日すでに受け取り済みです。';
 
   @override
-  String get errorTargetReviewedToday =>
-      'You\'ve already reviewed this target word today.';
+  String get errorTargetReviewedToday => 'このターゲット単語は今日すでに復習済みです。';
 
   @override
   String errorInsufficientXp(Object balance, Object cost) {
-    return 'Balance $balance XP is below $cost XP. Finish point tasks before the draw.';
+    return '残高 $balance XP は $cost XP を下回っています。抽選の前にポイントタスクを完了してください。';
   }
 
   @override
-  String get aiTutorInstantFeedback => 'Instant Feedback';
+  String get aiTutorInstantFeedback => '即時フィードバック';
 
   @override
-  String get questTaskXp => 'Task XP';
+  String get questTaskXp => 'タスク XP';
 
   @override
-  String get discoverTasksEmpty => 'Today\'s point tasks haven\'t loaded yet.';
+  String get discoverTasksEmpty => '今日のポイントタスクはまだ読み込まれていません。';
 
   @override
-  String get discoverForumCheckinTag => 'Check-in';
+  String get discoverForumCheckinTag => 'チェックイン';
 
   @override
-  String get discoverForumMistakeTag => 'Mistake Talk';
+  String get discoverForumMistakeTag => '間違いトーク';
 
   @override
-  String get discoverForumPost1Title =>
-      'Check-in: reviewed 18 words in 12 minutes';
+  String get discoverForumPost1Title => 'チェックイン: 12分で18単語を復習';
 
   @override
   String get discoverForumPost1Body =>
-      'Mistakes cluster around near-synonyms; tomorrow I\'ll start with the confusable-word challenge in training.';
+      '間違いは類義語に集中している。明日はトレーニングの紛らわしい単語チャレンジから始めよう。';
 
   @override
-  String get discoverForumPost2Title =>
-      'How do you memorize the word \'abstract\'?';
+  String get discoverForumPost2Title => '「abstract」という単語をどう覚えますか？';
 
   @override
   String get discoverForumPost2Body =>
-      'In papers and reading passages \'abstract\' often means a summary; judge it by context.';
+      '論文や読解問題では「abstract」はしばしば要約を意味する。文脈で判断しよう。';
 
   @override
   String get discoverForumHint =>
-      'Tap \"Record interaction\" on a community post below to finish the forum interaction task.';
+      '下のコミュニティ投稿で「インタラクションを記録」をタップして、フォーラムインタラクションタスクを完了しましょう。';
 
   @override
-  String get discoverCheckinSuccess =>
-      'Checked in! Today\'s check-in points are ready to claim.';
+  String get discoverCheckinSuccess => 'チェックイン完了！今日のチェックインポイントを受け取れます。';
 
   @override
-  String get discoverCheckinFailed =>
-      'Check-in failed, please try again later.';
+  String get discoverCheckinFailed => 'チェックインに失敗しました。後でもう一度お試しください。';
 
   @override
-  String get discoverForumSuccess =>
-      'Forum interaction approved; the point task is ready to claim.';
+  String get discoverForumSuccess => 'フォーラムのインタラクションが承認されました。ポイントタスクを受け取れます。';
 
   @override
-  String get discoverForumFailed =>
-      'Failed to record forum interaction, please try again later.';
+  String get discoverForumFailed => 'フォーラムのインタラクションを記録できませんでした。後でもう一度お試しください。';
 
   @override
-  String get discoverCheckinLoadingHint =>
-      'You can check in once tasks finish loading.';
+  String get discoverCheckinLoadingHint => 'タスクの読み込みが完了するとチェックインできます。';
 
   @override
   String discoverCheckinClaimedDesc(int points) {
-    return 'Checked in today and claimed +$points XP.';
+    return '今日チェックインして +$points XP を受け取りました。';
   }
 
   @override
   String discoverCheckinClaimableDesc(int points) {
-    return 'Checked in today; remember to claim +$points XP.';
+    return '今日チェックイン済み。+$points XP の受け取りを忘れずに。';
   }
 
   @override
-  String get discoverCheckinPrompt =>
-      'After checking in, the check-in task becomes claimable.';
+  String get discoverCheckinPrompt => 'チェックインすると、チェックインタスクを受け取れるようになります。';
 
   @override
-  String get discoverCheckingIn => 'Checking in';
+  String get discoverCheckingIn => 'チェックイン中';
 
   @override
-  String get discoverCheckedIn => 'Checked in';
+  String get discoverCheckedIn => 'チェックイン済み';
 
   @override
-  String get discoverCheckIn => 'Check in';
+  String get discoverCheckIn => 'チェックイン';
 
   @override
-  String get discoverAlreadyClaimed => 'Claimed';
+  String get discoverAlreadyClaimed => '受け取り済み';
 
   @override
-  String get discoverClaimCheckin => 'Claim check-in XP';
+  String get discoverClaimCheckin => 'チェックイン XP を受け取る';
 
   @override
-  String get discoverLoading => 'Loading';
+  String get discoverLoading => '読み込み中';
 
   @override
-  String get discoverReloadTasks => 'Reload tasks';
+  String get discoverReloadTasks => 'タスクを再読み込み';
 
   @override
-  String get discoverConditionMet =>
-      'Conditions met — tap to claim your reward.';
+  String get discoverConditionMet => '条件を満たしました — タップして報酬を受け取りましょう。';
 
   @override
-  String get discoverProcessing => 'Processing';
+  String get discoverProcessing => '処理中';
 
   @override
-  String get discoverRecordInteraction => 'Record interaction';
+  String get discoverRecordInteraction => 'インタラクションを記録';
 
   @override
-  String get quizNoLesson => 'Lesson not found';
+  String get quizNoLesson => 'レッスンが見つかりません';
 
   @override
-  String get quizNoQuestions => 'This lesson has no quiz yet.';
+  String get quizNoQuestions => 'このレッスンにはまだクイズがありません。';
 
   @override
-  String get quizTimedTest => 'Timed Test';
+  String get quizTimedTest => 'タイムテスト';
 
   @override
-  String get quizCampusSpeed => 'Campus Sprint';
+  String get quizCampusSpeed => 'キャンパススプリント';
 
   @override
-  String get quizLeaveTitle => 'Leave Quiz?';
+  String get quizLeaveTitle => 'クイズを終了しますか？';
 
   @override
-  String get quizLeaveContent => 'Current quiz progress will be discarded.';
+  String get quizLeaveContent => '現在のクイズの進捗は破棄されます。';
 
   @override
-  String get quizKeepAnswering => 'Keep Answering';
+  String get quizKeepAnswering => '回答を続ける';
 
   @override
-  String get quizInputWord => 'Enter word';
+  String get quizInputWord => '単語を入力';
 
   @override
-  String get quizCorrect => 'Correct. ';
+  String get quizCorrect => '正解です。 ';
 
   @override
-  String get quizWrong => 'Not quite. ';
+  String get quizWrong => '惜しいです。 ';
 
   @override
-  String get quizReinforce => 'Reinforce: ';
+  String get quizReinforce => '復習: ';
 
   @override
-  String get quizContinue => 'Continue';
+  String get quizContinue => '続ける';
 
   @override
-  String get quizRetry => 'Retry';
+  String get quizRetry => 'もう一度';
 
   @override
-  String get quizCheck => 'Check';
+  String get quizCheck => '確認';
 
   @override
-  String get quizResultTitle => 'Lesson Result';
+  String get quizResultTitle => 'レッスン結果';
 
   @override
-  String get quizTimedResultTitle => 'Timed Test Result';
+  String get quizTimedResultTitle => 'タイムテスト結果';
 
   @override
-  String get quizGreatJob => 'Great job!';
+  String get quizGreatJob => 'よくできました！';
 
   @override
-  String get quizChallengeDone => 'Challenge Done';
+  String get quizChallengeDone => 'チャレンジ完了';
 
   @override
-  String get quizLessonDone => 'Lesson Done';
+  String get quizLessonDone => 'レッスン完了';
 
   @override
-  String get quizChallengeSuccess => 'Challenge Success!';
+  String get quizChallengeSuccess => 'チャレンジ成功！';
 
   @override
-  String get quizAccuracy => 'Accuracy';
+  String get quizAccuracy => '正答率';
 
   @override
-  String get quizMistakes => 'Mistakes';
+  String get quizMistakes => '間違い';
 
   @override
-  String get quizNoResult => 'No lesson result yet';
+  String get quizNoResult => 'レッスン結果はまだありません';
 
   @override
-  String get quizAllCorrect => 'All correct!';
+  String get quizAllCorrect => '全問正解！';
 
   @override
-  String get quizMistakeReview => 'Mistakes saved to review.';
+  String get quizMistakeReview => '間違いを復習に保存しました。';
 
   @override
-  String get quizMistakeTimed =>
-      'Mistakes can be reviewed in the review center.';
+  String get quizMistakeTimed => '間違いは復習センターで確認できます。';
 
   @override
-  String get quizRetryMistakes => 'Practice mistakes again';
+  String get quizRetryMistakes => '間違えた問題をもう一度練習';
 
   @override
-  String get quizGoReviewCenter => 'Go to review center';
+  String get quizGoReviewCenter => '復習センターへ';
 
   @override
-  String get quizBackTraining => 'Back to training';
+  String get quizBackTraining => 'トレーニングに戻る';
 
   @override
-  String get quizBackLearningPath => 'Back to learning path';
+  String get quizBackLearningPath => '学習パスに戻る';
 
   @override
-  String get quizXpBalanceUpdated => 'Total XP updated';
+  String get quizXpBalanceUpdated => '合計XPを更新しました';
 
   @override
   String quizCurrentXp(Object xp) {
-    return 'Current total $xp XP';
+    return '現在の合計 $xp XP';
   }
 
   @override
   String quizXpCredited(Object xp) {
-    return '+$xp XP credited';
+    return '+$xp XP を加算';
   }
 
   @override
   String quizXpImpactBody(Object balance) {
-    return '$balance. XP syncs to your profile, leaderboard, and lucky-draw balance.';
+    return '$balance。XPはプロフィール、リーダーボード、ラッキードローの残高に同期されます。';
   }
 
   @override
-  String get quizTimedReward => 'Timed test reward';
+  String get quizTimedReward => 'タイムテスト報酬';
 
   @override
-  String get quizLessonReward => 'Lesson reward';
+  String get quizLessonReward => 'レッスン報酬';
 
   @override
-  String get quizViewXpUses => 'View XP uses';
+  String get quizViewXpUses => 'XPの使い道を見る';
 
   @override
   String quizXpEarned(Object xp) {
-    return 'Credited +$xp XP';
+    return '+$xp XP を加算';
   }
 
   @override
   String quizTotalXp(Object xp) {
-    return 'Total $xp XP';
+    return '合計 $xp XP';
   }
 
   @override
   String quizMistakeCount(Object count) {
-    return '$count mistakes';
+    return '$count件のミス';
   }
 
   @override
-  String get trainingTitle => 'Training Ground';
+  String get trainingTitle => 'トレーニンググラウンド';
 
   @override
-  String get trainingSubtitle => 'Timed tests, drills, leaderboard';
+  String get trainingSubtitle => 'タイム制テスト・ドリル・ランキング';
 
   @override
-  String get trainingPageSubtitle =>
-      'Timed tests, special drills, and the leaderboard live here.';
+  String get trainingPageSubtitle => 'タイム制テスト、特別ドリル、ランキングはここにあります。';
 
   @override
-  String get trainingWeeklyXpPrefix => 'This week';
+  String get trainingWeeklyXpPrefix => '今週';
 
   @override
-  String get trainingDailyXpAvailable => 'Up to 60 XP today';
+  String get trainingDailyXpAvailable => '今日は最大60 XP';
 
   @override
-  String get trainingLeaderboard => 'Leaderboard';
+  String get trainingLeaderboard => 'ランキング';
 
   @override
-  String get trainingTimedTestsSubtitle => 'Campus packs & speed challenges';
+  String get trainingTimedTestsSubtitle => 'キャンパスパック＆スピードチャレンジ';
 
   @override
-  String get trainingCampusSpeed => 'Campus Sprint';
+  String get trainingCampusSpeed => 'キャンパススプリント';
 
   @override
   String get trainingCampusSpeedDesc =>
-      'Draws from current wordbook. Good for post-class quick checks without affecting formal review rhythm.';
+      '現在の単語帳から出題。正式な復習リズムに影響せず、授業後の簡単な確認に最適です。';
 
   @override
-  String get trainingSpeedGame => 'Speed Game';
+  String get trainingSpeedGame => 'スピードゲーム';
 
   @override
-  String get trainingSpeedGameDesc =>
-      'Answer meaning-choice questions within 60 seconds. Score based on accuracy, combos, and speed.';
+  String get trainingSpeedGameDesc => '60秒以内に意味選択問題に回答。正確さ・コンボ・スピードでスコアが決まります。';
 
   @override
-  String get trainingSpeedGameSource => 'Learned + due words';
+  String get trainingSpeedGameSource => '学習済み＋復習予定の単語';
 
   @override
-  String get trainingNoWordbook => 'No wordbook';
+  String get trainingNoWordbook => '単語帳なし';
 
   @override
-  String get trainingStartTest => 'Start Test';
+  String get trainingStartTest => 'テストを開始';
 
   @override
-  String get trainingComingSoon => 'Coming Soon';
+  String get trainingComingSoon => '近日公開';
 
   @override
   String get trainingSpecialDrillsSubtitle =>
-      'Practice spelling, listening, collocation, and passage cloze to strengthen weak areas.';
+      'スペル・リスニング・コロケーション・長文穴埋めを練習して苦手分野を強化しましょう。';
 
   @override
-  String get trainingSurvivor => 'Last One Standing';
+  String get trainingSurvivor => '最後の生き残り';
 
   @override
-  String get trainingSurvivorDesc =>
-      'Answer questions from easy to hard. Wrong answers go to weak words and mistake book.';
+  String get trainingSurvivorDesc => 'やさしい問題から難しい問題へ出題。間違えると苦手単語とミス帳に追加されます。';
 
   @override
-  String get trainingSurvivorSource => 'Current wordbook + weak words';
+  String get trainingSurvivorSource => '現在の単語帳＋苦手単語';
 
   @override
-  String get trainingSpelling => 'Word Spelling';
+  String get trainingSpelling => '単語スペル';
 
   @override
   String get trainingSpellingDesc =>
-      'See Chinese, hear pronunciation, or read sentence cloze, then type the English word.';
+      '中国語を見たり、発音を聞いたり、文の穴埋めを読んだりして、英語の単語を入力します。';
 
   @override
-  String get trainingSpellingSource => 'Spelling weak words';
+  String get trainingSpellingSource => 'スペルが苦手な単語';
 
   @override
-  String get trainingPassageCloze => 'Passage Cloze';
+  String get trainingPassageCloze => '長文穴埋め';
 
   @override
-  String get trainingPassageClozeDesc =>
-      'Generate passages with today\'s vocabulary, linking memorization and reading comprehension.';
+  String get trainingPassageClozeDesc => '今日の単語で長文を生成し、暗記と読解を結びつけます。';
 
   @override
-  String get trainingPassageClozeSource => 'Today\'s words + AI passage';
+  String get trainingPassageClozeSource => '今日の単語＋AI長文';
 
   @override
-  String get trainingListening => 'Listening Sprint';
+  String get trainingListening => 'リスニングスプリント';
 
   @override
-  String get trainingListeningDesc =>
-      'Listen to pronunciation, then select the word or meaning. Response time affects score.';
+  String get trainingListeningDesc => '発音を聞いて、単語または意味を選択。回答時間がスコアに影響します。';
 
   @override
-  String get trainingListeningSource => 'Listening weak words';
+  String get trainingListeningSource => 'リスニングが苦手な単語';
 
   @override
-  String get trainingDueWords => 'Review';
+  String get trainingDueWords => '復習';
 
   @override
-  String get trainingWeakWords => 'Weak';
+  String get trainingWeakWords => '苦手';
 
   @override
-  String get trainingComboTarget => 'Combo';
+  String get trainingComboTarget => 'コンボ';
 
   @override
-  String get trainingEnterCustomWords => 'Go to Custom Words';
+  String get trainingEnterCustomWords => 'カスタム単語へ';
 
   @override
-  String get trainingEntryMissingTitle => 'Training entry unavailable';
+  String get trainingEntryMissingTitle => 'トレーニングを開始できません';
 
   @override
-  String get trainingEntryMissingHeader => 'Training not found';
+  String get trainingEntryMissingHeader => 'トレーニングが見つかりません';
 
   @override
   String get trainingEntryMissingSubtitle =>
-      'Go back to training and start from Speed Game, Last One Standing, or Word Spelling.';
+      'トレーニングに戻り、スピードゲーム、最後の生き残り、単語スペルのいずれかから始めてください。';
 
   @override
-  String get trainingSourceInsufficientTitle => 'Not enough training questions';
+  String get trainingSourceInsufficientTitle => 'トレーニングの問題が足りません';
 
   @override
   String get trainingSourceInsufficientSubtitle =>
-      'Finish a new lesson, add custom words, or build weak words in the mistake book before challenging again.';
+      '新しいレッスンを終えるか、カスタム単語を追加するか、ミス帳で苦手単語を増やしてから再挑戦してください。';
 
   @override
-  String get trainingBack => 'Back to training';
+  String get trainingBack => 'トレーニングに戻る';
 
   @override
-  String get trainingMistakesOnly => 'Practice mistakes again';
+  String get trainingMistakesOnly => 'ミスをもう一度練習';
 
   @override
-  String get trainingNextQuestion => 'Next question';
+  String get trainingNextQuestion => '次の問題';
 
   @override
-  String get trainingSubmitSpelling => 'Submit spelling';
+  String get trainingSubmitSpelling => 'スペルを送信';
 
   @override
-  String get trainingExitTitle => 'Leave training?';
+  String get trainingExitTitle => 'トレーニングを終了しますか？';
 
   @override
-  String get trainingExitContent =>
-      'Current training progress will not be settled.';
+  String get trainingExitContent => '現在のトレーニングの進捗は記録されません。';
 
   @override
-  String get trainingContinue => 'Keep training';
+  String get trainingContinue => 'トレーニングを続ける';
 
   @override
-  String get trainingExit => 'Leave';
+  String get trainingExit => '終了';
 
   @override
   String trainingPromptWordRush(Object word) {
-    return 'Choose the meaning of \"$word\" quickly';
+    return '「$word」の意味を素早く選ぼう';
   }
 
   @override
@@ -1457,197 +1402,193 @@ class AppLocalizationsJa extends AppLocalizations {
     Object meaning,
     Object word,
   ) {
-    return '\"$word\" means $meaning. $example';
+    return '「$word」は$meaningという意味です。$example';
   }
 
   @override
   String trainingPromptChineseChoice(Object meaning) {
-    return 'Choose the English word for: $meaning';
+    return '次の意味に合う英単語を選ぼう：$meaning';
   }
 
   @override
   String trainingExplanationChineseChoice(Object meaning, Object word) {
-    return '$meaning matches \"$word\".';
+    return '$meaningは「$word」に一致します。';
   }
 
   @override
   String trainingPromptContextChoice(Object example) {
-    return 'Choose the meaning from the example: $example';
+    return '例文から意味を選ぼう：$example';
   }
 
   @override
   String trainingPromptMeaningChoice(Object word) {
-    return 'Choose the meaning of \"$word\"';
+    return '「$word」の意味を選ぼう';
   }
 
   @override
   String trainingExplanationMeaningChoice(Object meaning, Object word) {
-    return 'This question checks $word: $meaning.';
+    return 'この問題では$wordを確認します：$meaning。';
   }
 
   @override
   String trainingPromptChineseSpelling(Object meaning) {
-    return 'Spell the word from its meaning: $meaning';
+    return '意味から単語を綴ろう：$meaning';
   }
 
   @override
   String trainingPromptAudioSpelling(Object cue) {
-    return 'Spell the word after listening: $cue';
+    return '音声を聞いて単語を綴ろう：$cue';
   }
 
   @override
   String trainingPromptContextSpelling(Object example) {
-    return 'Spell the blank in the example: $example';
+    return '例文の空欄を綴ろう：$example';
   }
 
   @override
   String trainingExplanationSpelling(Object example, Object word) {
-    return 'The correct spelling is \"$word\". $example';
+    return '正しい綴りは「$word」です。$example';
   }
 
   @override
   String get trainingNoEffectiveAnswers =>
-      'No valid answer this round, so no training record was saved.';
+      '今回は有効な回答がなかったため、トレーニング記録は保存されませんでした。';
 
   @override
   String trainingResultMistakesSuffix(Object title) {
-    return '$title · mistake practice';
+    return '$title · 間違いの復習';
   }
 
   @override
   String trainingCorrectAttempts(Object attempts, Object correct) {
-    return 'Correct $correct/$attempts';
+    return '正解 $correct/$attempts';
   }
 
   @override
   String trainingStreak(Object streak) {
-    return 'Streak $streak';
+    return '連続 $streak';
   }
 
   @override
   String trainingAccuracyValue(Object accuracy) {
-    return 'Accuracy $accuracy%';
+    return '正答率 $accuracy%';
   }
 
   @override
   String trainingSurvivalResources(Object nodes, Object revives) {
-    return 'Revives $revives · Nodes $nodes';
+    return '復活 $revives · ノード $nodes';
   }
 
   @override
   String trainingBestStreak(Object streak) {
-    return 'Best $streak';
+    return '最高 $streak';
   }
 
   @override
-  String get trainingRealSource => 'Real question source';
+  String get trainingRealSource => '本番の問題ソース';
 
   @override
-  String get trainingSpellingInputLabel => 'Type the word';
+  String get trainingSpellingInputLabel => '単語を入力';
 
   @override
-  String get trainingReviveConsumed => 'One revive was consumed. Keep going.';
+  String get trainingReviveConsumed => '復活を1回使用しました。続けましょう。';
 
   @override
-  String get trainingReviveExhausted => 'No revives left. This round ends.';
+  String get trainingReviveExhausted => '復活はもう使えません。今回のラウンドは終了です。';
 
   @override
-  String get trainingCorrectFeedback => 'Correct. Streak continues!';
+  String get trainingCorrectFeedback => '正解。連続記録が続きます！';
 
   @override
-  String get trainingPromptListening => 'Listen and choose the word you heard';
+  String get trainingPromptListening => '聞いて、聞こえた単語を選ぼう';
 
   @override
-  String get trainingListeningRevealHint =>
-      'Play the audio first, then the options appear.';
+  String get trainingListeningRevealHint => 'まず音声を再生すると、選択肢が表示されます。';
 
   @override
-  String get learningPathTitle => 'Learning Path';
+  String get learningPathTitle => '学習パス';
 
   @override
-  String get learningPathBackToHome => 'Back to Home';
+  String get learningPathBackToHome => 'ホームに戻る';
 
   @override
-  String get learningPathBookPath => 'Wordbook path';
+  String get learningPathBookPath => '単語帳パス';
 
   @override
-  String get learningPathPathSuffix => 'path';
+  String get learningPathPathSuffix => 'パス';
 
   @override
-  String get learningPathPausedHint =>
-      'The study plan is paused, and path progress will be kept.';
+  String get learningPathPausedHint => '学習プランは一時停止中です。パスの進捗は保持されます。';
 
   @override
   String get learningPathDescription =>
-      'This view shows only wordbook progress; formal new learning and review stay at the two separate entrances on Home.';
+      'この画面には単語帳の進捗のみが表示されます。正式な新規学習と復習はホームの2つの入り口から行えます。';
 
   @override
-  String get learningPathPlanLabel => 'Learning plan';
+  String get learningPathPlanLabel => '学習プラン';
 
   @override
-  String get learningPathStartLearning => 'Start Learning';
+  String get learningPathStartLearning => '学習を始める';
 
   @override
-  String get learningPathSubtitle => 'Wordbook progress';
+  String get learningPathSubtitle => '単語帳の進捗';
 
   @override
-  String get learningPathOpenWordbook => 'Open Wordbook & Custom Words';
+  String get learningPathOpenWordbook => '単語帳とカスタム単語を開く';
 
   @override
-  String get learningPathAdjustPlan => 'Adjust Current Study Plan';
+  String get learningPathAdjustPlan => '現在の学習プランを調整';
 
   @override
-  String get learningPathLessonLocked => 'Locked';
+  String get learningPathLessonLocked => 'ロック中';
 
   @override
-  String get learningPathLessonCurrent => 'Current';
+  String get learningPathLessonCurrent => '現在';
 
   @override
-  String get learningPathLessonCompleted => 'Completed';
+  String get learningPathLessonCompleted => '完了';
 
   @override
-  String get learningPathLessonPreview => 'Preview';
+  String get learningPathLessonPreview => 'プレビュー';
 
   @override
-  String get learningPathLessonQuiz => 'Quiz';
+  String get learningPathLessonQuiz => 'クイズ';
 
   @override
-  String get lessonPreviewTitle => 'New Word Cards';
+  String get lessonPreviewTitle => '新規単語カード';
 
   @override
-  String get lessonPreviewNoLesson => 'Lesson not found';
+  String get lessonPreviewNoLesson => 'レッスンが見つかりません';
 
   @override
-  String get lessonPreviewPrevious => 'Previous';
+  String get lessonPreviewPrevious => '前へ';
 
   @override
-  String get lessonPreviewNext => 'Next';
+  String get lessonPreviewNext => '次へ';
 
   @override
-  String get lessonPreviewStartQuiz => 'Start Quiz';
+  String get lessonPreviewStartQuiz => 'クイズを開始';
 
   @override
-  String get lessonPreviewConfidence => 'How well do you know this word?';
+  String get lessonPreviewConfidence => 'この単語をどれくらい知っていますか？';
 
   @override
-  String get lessonPreviewNotYet => 'Not Yet';
+  String get lessonPreviewNotYet => 'まだ';
 
   @override
-  String get lessonPreviewVaguely => 'Vaguely';
+  String get lessonPreviewVaguely => 'なんとなく';
 
   @override
-  String get lessonPreviewGotIt => 'Got It';
+  String get lessonPreviewGotIt => 'わかる';
 
   @override
-  String get lessonPreviewLeaveTitle => 'Leave Preview?';
+  String get lessonPreviewLeaveTitle => 'プレビューを終了しますか？';
 
   @override
-  String get lessonPreviewLeaveContent =>
-      'Current preview progress will be discarded.';
+  String get lessonPreviewLeaveContent => '現在のプレビューの進捗は破棄されます。';
 
   @override
-  String get lessonPreviewBuildUnderstanding =>
-      'Build understanding first, then context questions';
+  String get lessonPreviewBuildUnderstanding => 'まず理解を深めてから、文脈問題に進みます';
 
   @override
   String lessonPreviewProgressMeta(
@@ -1656,325 +1597,315 @@ class AppLocalizationsJa extends AppLocalizations {
     Object section,
     Object total,
   ) {
-    return '$section · $minutes min · $current/$total';
+    return '$section · $minutes分 · $current/$total';
   }
 
   @override
-  String get lessonPreviewLessonCards => 'Lesson cards';
+  String get lessonPreviewLessonCards => 'レッスンカード';
 
   @override
   String lessonPreviewCardMeta(Object count, Object xp) {
-    return '$xp XP · $count context questions';
+    return '$xp XP · $count問の文脈問題';
   }
 
   @override
-  String get lessonPreviewEnterContext => 'Start context practice';
+  String get lessonPreviewEnterContext => '文脈練習を開始';
 
   @override
-  String get lessonPreviewNextCard => 'Next card';
+  String get lessonPreviewNextCard => '次のカード';
 
   @override
-  String get lessonPreviewNoCards => 'No cards';
+  String get lessonPreviewNoCards => 'カードがありません';
 
   @override
-  String get lessonPreviewNoCardsBody =>
-      'This lesson has no words to study yet.';
+  String get lessonPreviewNoCardsBody => 'このレッスンにはまだ学習する単語がありません。';
 
   @override
-  String get lessonPreviewLeaveCardTitle => 'Leave cards?';
+  String get lessonPreviewLeaveCardTitle => 'カードを終了しますか？';
 
   @override
-  String get lessonPreviewLeaveCardContent =>
-      'Your current new-word card progress will be discarded.';
+  String get lessonPreviewLeaveCardContent => '現在の新規単語カードの進捗は破棄されます。';
 
   @override
-  String get lessonPreviewLeave => 'Leave';
+  String get lessonPreviewLeave => '終了';
 
   @override
-  String get lessonPreviewAssessFirst => 'Judge your familiarity first';
+  String get lessonPreviewAssessFirst => 'まず熟知度を判定しましょう';
 
   @override
-  String get lessonPreviewContextExample => 'Context example';
+  String get lessonPreviewContextExample => '文脈の例';
 
   @override
-  String get reviewCenterTitle => 'Review';
+  String get reviewCenterTitle => '復習';
 
   @override
   String reviewCenterCardsDuePrefix(Object count) {
-    return '$count cards due';
+    return '$count枚が復習期限';
   }
 
   @override
-  String get reviewCenterDailyCapPrefix => 'Today\'s review cap ';
+  String get reviewCenterDailyCapPrefix => '本日の復習上限 ';
 
   @override
-  String get reviewCenterDailyCapMiddle => ' words, ';
+  String get reviewCenterDailyCapMiddle => '語、';
 
   @override
-  String get reviewCenterDailyCapSuffix => ' words will be scheduled later.';
+  String get reviewCenterDailyCapSuffix => '語は後でスケジュールされます。';
 
   @override
-  String get reviewCenterCurrentBook => 'Current wordbook';
+  String get reviewCenterCurrentBook => '現在の単語帳';
 
   @override
-  String get reviewCenterAutoQueueHint =>
-      'Wrong answers are added to the review queue automatically.';
+  String get reviewCenterAutoQueueHint => '不正解は自動的に復習キューに追加されます。';
 
   @override
-  String get reviewCenterEmptyTitle => 'Review queue cleared';
+  String get reviewCenterEmptyTitle => '復習キューは空です';
 
   @override
   String get reviewCenterEmptyMessage =>
-      'Add custom word cards, or add mistake cards from wrong answers, and a review queue will be generated here.';
+      'カスタム単語カードを追加するか、不正解から間違いカードを追加すると、ここに復習キューが生成されます。';
 
   @override
-  String get reviewCenterAddCustomWord => 'Add custom word';
+  String get reviewCenterAddCustomWord => 'カスタム単語を追加';
 
   @override
-  String get reviewCenterNoMistakes => 'No weak words or lesson mistakes yet.';
+  String get reviewCenterNoMistakes => '苦手な単語やレッスンの間違いはまだありません。';
 
   @override
-  String get reviewCenterOpenMistakeBook => 'Open mistake book';
+  String get reviewCenterOpenMistakeBook => '間違いノートを開く';
 
   @override
-  String get reviewCenterLimitPrefix => 'Today\'s review is capped at ';
+  String get reviewCenterLimitPrefix => '今日の復習は最大';
 
   @override
-  String get reviewCenterLimitMiddle => ' words; ';
+  String get reviewCenterLimitMiddle => '語です。';
 
   @override
-  String get reviewCenterLimitSuffix =>
-      ' words won\'t be lost and will stay in the review queue.';
+  String get reviewCenterLimitSuffix => '語は失われず、復習キューに残ります。';
 
   @override
-  String get reviewCenterTargetWord => 'Target word';
+  String get reviewCenterTargetWord => '対象の単語';
 
   @override
-  String get reviewCenterCustomCard => 'Custom word card';
+  String get reviewCenterCustomCard => 'カスタム単語カード';
 
   @override
-  String get reviewCenterForgot => 'Forgot';
+  String get reviewCenterForgot => '覚えていない';
 
   @override
-  String get reviewCenterRemembered => 'Remembered';
+  String get reviewCenterRemembered => '覚えた';
 
   @override
-  String get wordDetailNotFound => 'Word not found';
+  String get wordDetailNotFound => '単語が見つかりません';
 
   @override
-  String get wordDetailReviewStats => 'Review stats';
+  String get wordDetailReviewStats => '復習の統計';
 
   @override
-  String get wordDetailMarkRemembered => 'Mark as remembered';
+  String get wordDetailMarkRemembered => '覚えたものとして記録';
 
   @override
-  String get wordDetailScheduleSoon => 'Practice again soon';
+  String get wordDetailScheduleSoon => 'すぐに再練習';
 
   @override
-  String get wordDetailMarkedRemembered => 'Marked as remembered';
+  String get wordDetailMarkedRemembered => '覚えたものとして記録しました';
 
   @override
-  String get wordDetailScheduledSoon => 'Scheduled to practice again soon';
+  String get wordDetailScheduledSoon => 'すぐに再練習するよう設定しました';
 
   @override
-  String get wordDetailStatRemembered => 'Remembered';
+  String get wordDetailStatRemembered => '覚えた';
 
   @override
-  String get wordDetailStatForgot => 'Forgot';
+  String get wordDetailStatForgot => '覚えていない';
 
   @override
-  String get wordDetailStatMastery => 'Mastery';
+  String get wordDetailStatMastery => '習得度';
 
   @override
-  String get wordDetailUpdateFailed => 'Unable to update this card for now';
+  String get wordDetailUpdateFailed => 'このカードは今は更新できません';
 
   @override
   String wordDetailMasteryLabel(Object level) {
-    return 'Mastery $level/5';
+    return '習得度 $level/5';
   }
 
   @override
   String wordDetailNextReview(Object when) {
-    return 'Next $when';
+    return '次回 $when';
   }
 
   @override
-  String get reviewCenterPostponedMessage =>
-      'Marked as remembered; the next review will be delayed';
+  String get reviewCenterPostponedMessage => '覚えたものとして記録しました。次の復習は先に延びます';
 
   @override
-  String get reviewCenterCloserReviewMessage =>
-      'Added to a closer review schedule';
+  String get reviewCenterCloserReviewMessage => 'より早い復習スケジュールに追加しました';
 
   @override
-  String get reviewCenterUpdateFailed => 'Unable to update this card right now';
+  String get reviewCenterUpdateFailed => 'このカードは今すぐには更新できません';
 
   @override
-  String get reviewCenterAddMistakeCards => 'Add mistake cards';
+  String get reviewCenterAddMistakeCards => '間違いカードを追加';
 
   @override
-  String get reviewCenterAllMistakesAdded =>
-      'All recent mistakes are already in the wordbook.';
+  String get reviewCenterAllMistakesAdded => '最近の間違いはすべて単語帳にあります。';
 
   @override
-  String get reviewCenterSelectMistakesHint =>
-      'After selecting mistakes, you can add them directly to review cards.';
+  String get reviewCenterSelectMistakesHint => '間違いを選択すると、そのまま復習カードに追加できます。';
 
   @override
-  String get reviewCenterAddSelected => 'Add selected';
+  String get reviewCenterAddSelected => '選択項目を追加';
 
   @override
-  String get reviewCenterMistakeCardsSuffix => ' mistake cards';
+  String get reviewCenterMistakeCardsSuffix => '枚の間違いカード';
 
   @override
-  String get reviewCenterPlanPaused => 'Study plan paused';
+  String get reviewCenterPlanPaused => '学習プランを一時停止中';
 
   @override
-  String get reviewCenterTodayDone => 'Today\'s review completed';
+  String get reviewCenterTodayDone => '今日の復習は完了しました';
 
   @override
   String reviewCenterCardsDue(num count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count cards due',
-      one: '1 card due',
-      zero: 'No cards due',
+      other: 'カード$count枚',
+      one: 'カード1枚',
+      zero: '期限のカードはありません',
     );
     return '$_temp0';
   }
 
   @override
-  String get reviewCenterPlanPausedHint =>
-      'Resume your study plan to continue receiving review cards.';
+  String get reviewCenterPlanPausedHint => '復習カードを受け取り続けるには、学習プランを再開してください。';
 
   @override
   String reviewCenterDailyCap(Object hidden, Object limit) {
-    return 'Daily review cap $limit words. $hidden more scheduled for later.';
+    return '1日の復習上限は$limit語です。他に$hidden語が後で予定されています。';
   }
 
   @override
-  String get reviewCenterTodayDue => 'Due Today';
+  String get reviewCenterTodayDue => '今日の期限';
 
   @override
-  String get reviewCenterReviewQueue => 'Review Queue';
+  String get reviewCenterReviewQueue => '復習キュー';
 
   @override
-  String get reviewCenterStartReview => 'Start Review';
+  String get reviewCenterStartReview => '復習を開始';
 
   @override
-  String get reviewCenterEmpty => 'All review done for now!';
+  String get reviewCenterEmpty => '今のところ復習はすべて完了！';
 
   @override
-  String get mistakeBookTitle => 'Mistake Book';
+  String get mistakeBookTitle => '間違いノート';
 
   @override
-  String get mistakeBookNoMistakes => 'No lesson mistakes yet';
+  String get mistakeBookNoMistakes => 'レッスンの間違いはまだありません';
 
   @override
   String mistakeBookMistakes(Object count) {
-    return '$count lesson mistakes';
+    return '$count件のレッスンの間違い';
   }
 
   @override
   String mistakeBookMistakesPrefix(Object count) {
-    return '$count lesson mistakes';
+    return '$count件のレッスンの間違い';
   }
 
   @override
-  String get mistakeBookSubtitle =>
-      'Quiz mistakes and weak custom cards are kept here for later review.';
+  String get mistakeBookSubtitle => 'クイズの間違いと苦手なカスタムカードは、後で復習できるようここに保存されます。';
 
   @override
-  String get mistakeBookFixLabel => 'Fix Mistakes';
+  String get mistakeBookFixLabel => '間違いを修正';
 
   @override
-  String get mistakeBookGoPractice => 'Practice a lesson';
+  String get mistakeBookGoPractice => 'レッスンを練習';
 
   @override
-  String get mistakeBookCleared => 'Mistake book cleared';
+  String get mistakeBookCleared => '間違いノートをクリアしました';
 
   @override
   String get mistakeBookClearedMsg =>
-      'After quiz mistakes or marking custom word cards as forgotten, review items will appear here.';
+      'クイズの間違いや、カスタム単語カードを「忘れた」に設定すると、復習項目がここに表示されます。';
 
   @override
-  String get mistakeBookLessonMistakes => 'Lesson Mistakes';
+  String get mistakeBookLessonMistakes => 'レッスンの間違い';
 
   @override
-  String get mistakeBookStartLesson => 'Start a lesson';
+  String get mistakeBookStartLesson => 'レッスンを始める';
 
   @override
-  String get mistakeBookWeakWords => 'Weak Custom Words';
+  String get mistakeBookWeakWords => '苦手なカスタム単語';
 
   @override
-  String get mistakeBookNoLessonMistakes => 'No mistakes in the last lesson.';
+  String get mistakeBookNoLessonMistakes => '前回のレッスンに間違いはありません。';
 
   @override
-  String get mistakeBookNoWeakWords => 'No weak custom words yet.';
+  String get mistakeBookNoWeakWords => '苦手なカスタム単語はまだありません。';
 
   @override
-  String get labelTargetCET4 => 'CET-4 Core';
+  String get labelTargetCET4 => 'CET-4 コア';
 
   @override
-  String get labelTargetCET6 => 'CET-6 Core';
+  String get labelTargetCET6 => 'CET-6 コア';
 
   @override
-  String get labelTargetKaoyan => 'Postgrad Core';
+  String get labelTargetKaoyan => '大学院入試コア';
 
   @override
-  String get labelTargetBeginner => 'Beginner Basic';
+  String get labelTargetBeginner => '初心者基礎';
 
   @override
-  String get labelTargetMUET => 'MUET High-Freq';
+  String get labelTargetMUET => 'MUET 頻出';
 
   @override
-  String get labelTargetDailyEnglish => 'Daily English';
+  String get labelTargetDailyEnglish => '日常英語';
 
   @override
-  String get labelTargetBusinessEnglish => 'Business English';
+  String get labelTargetBusinessEnglish => 'ビジネス英語';
 
   @override
-  String get labelLevelBeginner => 'Beginner';
+  String get labelLevelBeginner => '初級';
 
   @override
-  String get labelLevelElementary => 'Elementary';
+  String get labelLevelElementary => '初中級';
 
   @override
-  String get labelLevelIntermediate => 'Intermediate';
+  String get labelLevelIntermediate => '中級';
 
   @override
-  String get labelLevelAdvanced => 'Advanced';
+  String get labelLevelAdvanced => '上級';
 
   @override
-  String get labelDifficultyEasy => 'Easy';
+  String get labelDifficultyEasy => '簡単';
 
   @override
-  String get labelDifficultyMedium => 'Medium';
+  String get labelDifficultyMedium => '普通';
 
   @override
-  String get labelDifficultyHard => 'Hard';
+  String get labelDifficultyHard => '難しい';
 
   @override
-  String get labelStatusNew => 'Not Learned';
+  String get labelStatusNew => '未学習';
 
   @override
-  String get labelStatusPreviewed => 'Previewed';
+  String get labelStatusPreviewed => 'プレビュー済み';
 
   @override
-  String get labelStatusLearning => 'Learning';
+  String get labelStatusLearning => '学習中';
 
   @override
-  String get labelStatusReview => 'Reviewing';
+  String get labelStatusReview => '復習中';
 
   @override
-  String get labelStatusRelearning => 'Relearning';
+  String get labelStatusRelearning => '再学習中';
 
   @override
-  String get labelStatusMastered => 'Mastered';
+  String get labelStatusMastered => '習得済み';
 
   @override
-  String get labelStatusIgnored => 'Ignored';
+  String get labelStatusIgnored => '無視';
 
   @override
   String get labelQuestionTypeMeaningChoice => 'EN→ZH';
@@ -1983,46 +1914,46 @@ class AppLocalizationsJa extends AppLocalizations {
   String get labelQuestionTypeChineseChoice => 'ZH→EN';
 
   @override
-  String get labelQuestionTypeContextChoice => 'Context';
+  String get labelQuestionTypeContextChoice => '文脈';
 
   @override
-  String get labelQuestionTypeImageChoice => 'Image';
+  String get labelQuestionTypeImageChoice => '画像';
 
   @override
-  String get labelQuestionTypeListeningWordChoice => 'Listen→Word';
+  String get labelQuestionTypeListeningWordChoice => '聞く→単語';
 
   @override
-  String get labelQuestionTypeListeningMeaningChoice => 'Listen→Meaning';
+  String get labelQuestionTypeListeningMeaningChoice => '聞く→意味';
 
   @override
-  String get labelQuestionTypeSpelling => 'Spelling';
+  String get labelQuestionTypeSpelling => 'スペル';
 
   @override
-  String get labelCustomTagCustom => 'Custom';
+  String get labelCustomTagCustom => 'カスタム';
 
   @override
-  String get labelCustomTagMistake => 'Mistake';
+  String get labelCustomTagMistake => '間違い';
 
   @override
-  String get labelCustomTagCharacter => 'Character';
+  String get labelCustomTagCharacter => '文字';
 
   @override
-  String get labelWordTagAcademic => 'Academic';
+  String get labelWordTagAcademic => '学術';
 
   @override
-  String get labelWordTagBeginner => 'Beginner';
+  String get labelWordTagBeginner => '初級';
 
   @override
-  String get labelWordTagBusiness => 'Business';
+  String get labelWordTagBusiness => 'ビジネス';
 
   @override
-  String get labelWordTagCampus => 'Campus';
+  String get labelWordTagCampus => 'キャンパス';
 
   @override
-  String get labelWordTagDaily => 'Daily';
+  String get labelWordTagDaily => '日常';
 
   @override
-  String get labelWordTagExam => 'Exam';
+  String get labelWordTagExam => '試験';
 
   @override
   String get labelWordTagCET4 => 'CET-4';
@@ -2031,117 +1962,116 @@ class AppLocalizationsJa extends AppLocalizations {
   String get labelWordTagCET6 => 'CET-6';
 
   @override
-  String get labelWordTagKaoyan => 'Postgrad';
+  String get labelWordTagKaoyan => '大学院';
 
   @override
-  String get labelWordTagFood => 'Food';
+  String get labelWordTagFood => '食べ物';
 
   @override
-  String get labelWordTagHealth => 'Health';
+  String get labelWordTagHealth => '健康';
 
   @override
-  String get labelWordTagStudy => 'Study';
+  String get labelWordTagStudy => '学習';
 
   @override
-  String get labelWordTagTravel => 'Travel';
+  String get labelWordTagTravel => '旅行';
 
   @override
-  String get labelWordTagWriting => 'Writing';
+  String get labelWordTagWriting => '作文';
 
   @override
-  String get labelWordTagDefault => 'Target';
+  String get labelWordTagDefault => '対象';
 
   @override
-  String get wordbookTitle => 'Wordbook';
+  String get wordbookTitle => '単語帳';
 
   @override
-  String get wordbookSearchHint => 'Search words...';
+  String get wordbookSearchHint => '単語を検索...';
 
   @override
-  String get wordbookNoResults => 'No matching words found.';
+  String get wordbookNoResults => '一致する単語が見つかりません。';
 
   @override
-  String get wordbookAllDifficulty => 'All';
+  String get wordbookAllDifficulty => 'すべて';
 
   @override
-  String get wordbookWeakDifficulty => 'Weak';
+  String get wordbookWeakDifficulty => '苦手';
 
   @override
-  String get wordbookCustomWords => 'Custom Words';
+  String get wordbookCustomWords => 'カスタム単語';
 
   @override
-  String get wordbookAddCustom => 'Add Custom';
+  String get wordbookAddCustom => 'カスタムを追加';
 
   @override
-  String get wordbookEditCustom => 'Edit Custom Word';
+  String get wordbookEditCustom => 'カスタム単語を編集';
 
   @override
-  String get wordbookWordDetail => 'Word Detail';
+  String get wordbookWordDetail => '単語の詳細';
 
   @override
-  String get wordbookMeaning => 'Meaning';
+  String get wordbookMeaning => '意味';
 
   @override
-  String get wordbookExample => 'Example';
+  String get wordbookExample => '例文';
 
   @override
-  String get wordbookPartOfSpeech => 'Part of Speech';
+  String get wordbookPartOfSpeech => '品詞';
 
   @override
-  String get wordbookDifficulty => 'Difficulty';
+  String get wordbookDifficulty => '難易度';
 
   @override
-  String get wordbookMastery => 'Mastery';
+  String get wordbookMastery => '習熟度';
 
   @override
-  String get wordbookDeleteConfirm => 'Delete this word?';
+  String get wordbookDeleteConfirm => 'この単語を削除しますか？';
 
   @override
-  String get wordbookDeleteMessage => 'This action cannot be undone.';
+  String get wordbookDeleteMessage => 'この操作は取り消せません。';
 
   @override
-  String get wordbookImageBook => 'Image Wordbook';
+  String get wordbookImageBook => '画像単語帳';
 
   @override
-  String get wordbookCustomTooltip => 'Custom Words';
+  String get wordbookCustomTooltip => 'カスタム単語';
 
   @override
   String wordbookWordsLearned(Object completed, Object total) {
-    return 'Learned $completed/$total words';
+    return '$completed/$total語を学習済み';
   }
 
   @override
   String wordbookTargetWords(Object count) {
-    return '$count target words';
+    return '$count語の対象単語';
   }
 
   @override
   String wordbookTotalWords(Object count) {
-    return '$count words';
+    return '$count語';
   }
 
   @override
   String wordbookBookCount(Object count) {
-    return '$count wordbooks';
+    return '$count 単語帳';
   }
 
   @override
   String wordbookCompletion(Object percent) {
-    return 'Completion $percent%';
+    return '完了度 $percent%';
   }
 
   @override
-  String get wordbookSwitch => 'Switch Wordbook';
+  String get wordbookSwitch => '単語帳を切り替え';
 
   @override
-  String get wordbookSwitchDesc =>
-      'Current wordbook drives home, learning path, search, training, and review entries.';
+  String get wordbookSwitchDesc => '現在の単語帳がホーム、学習パス、検索、トレーニング、復習の各入口に適用されます。';
 
   @override
-  String get wordbookSwitched => 'Wordbook switched';
+  String get wordbookSwitched => '単語帳を切り替えました';
 
   @override
-  String get wordbookSwitchFailed => 'Unable to switch wordbook';
+  String get wordbookSwitchFailed => '単語帳を切り替えできません';
 
   @override
   String get pickerChooseLanguage => '学習する言語';
@@ -2170,262 +2100,251 @@ class AppLocalizationsJa extends AppLocalizations {
   String get pickerSwitchFailed => '単語帳を切り替えられませんでした';
 
   @override
-  String get wordbookTargetSection => 'Target Words';
+  String get wordbookTargetSection => '対象単語';
 
   @override
   String wordbookTargetDesc(Object count, Object percent) {
-    return '$count words · Learning path $percent% complete';
+    return '$count 語 · 学習パス $percent% 完了';
   }
 
   @override
-  String get wordbookNameBeginner => 'Beginner Basic Words';
+  String get wordbookNameBeginner => '初心者基礎単語';
 
   @override
-  String get wordbookDescBeginner =>
-      'High-frequency words for beginners and daily expression.';
+  String get wordbookDescBeginner => '初心者と日常表現向けの頻出単語。';
 
   @override
-  String get wordbookNameCET4 => 'CET-4 Core Words';
+  String get wordbookNameCET4 => 'CET-4 核心単語';
 
   @override
-  String get wordbookDescCET4 =>
-      'Core vocabulary for College English Test Band 4.';
+  String get wordbookDescCET4 => '大学英語試験4級の核心語彙。';
 
   @override
-  String get wordbookNameCET6 => 'CET-6 Core Words';
+  String get wordbookNameCET6 => 'CET-6 核心単語';
 
   @override
-  String get wordbookDescCET6 =>
-      'Core vocabulary for College English Test Band 6.';
+  String get wordbookDescCET6 => '大学英語試験6級の核心語彙。';
 
   @override
-  String get wordbookNameKaoyan => 'Postgrad Core Words';
+  String get wordbookNameKaoyan => '大学院入試核心単語';
 
   @override
-  String get wordbookDescKaoyan =>
-      'Core vocabulary for postgraduate entrance exams.';
+  String get wordbookDescKaoyan => '大学院入試の核心語彙。';
 
   @override
-  String get notificationTitle => 'Notifications';
+  String get notificationTitle => '通知';
 
   @override
   String get dataAccountTitle => 'データとアカウント';
 
   @override
-  String get notificationMarkAllRead => 'Mark All Read';
+  String get notificationMarkAllRead => 'すべて既読にする';
 
   @override
-  String get notificationCenter => 'Message Center';
+  String get notificationCenter => 'メッセージセンター';
 
   @override
   String get notificationCenterDesc =>
-      'Learning reminders, review due, check-in, and activity messages are gathered here.';
+      '学習リマインダー、復習期限、チェックイン、アクティビティのメッセージがここに集まります。';
 
   @override
   String notificationUnreadCount(Object count) {
-    return '$count unread messages';
+    return '$count 件の未読メッセージ';
   }
 
   @override
-  String get notificationFilterAll => 'All';
+  String get notificationFilterAll => 'すべて';
 
   @override
-  String get notificationFilterUnread => 'Unread';
+  String get notificationFilterUnread => '未読';
 
   @override
-  String get notificationFilterLearning => 'Learning';
+  String get notificationFilterLearning => '学習';
 
   @override
-  String get notificationFilterActivity => 'Activity';
+  String get notificationFilterActivity => 'アクティビティ';
 
   @override
-  String get notificationEmptyTitle => 'No matching messages';
+  String get notificationEmptyTitle => '該当するメッセージはありません';
 
   @override
-  String get notificationEmptyUnread => 'No unread messages right now.';
+  String get notificationEmptyUnread => '現在、未読メッセージはありません。';
 
   @override
   String get notificationEmptyAll =>
-      'After completing learning and review, learning reminders and activity messages will continue to be gathered here.';
+      '学習と復習を完了すると、学習リマインダーやアクティビティのメッセージが引き続きここに集まります。';
 
   @override
-  String get notificationBackHome => 'Back to Home';
+  String get notificationBackHome => 'ホームに戻る';
 
   @override
-  String get notificationTypeLearningReminder => 'Learning Reminder';
+  String get notificationTypeLearningReminder => '学習リマインダー';
 
   @override
-  String get notificationTypeReviewDue => 'Review Due';
+  String get notificationTypeReviewDue => '復習期限';
 
   @override
-  String get notificationTypeCheckIn => 'Check-in Reminder';
+  String get notificationTypeCheckIn => 'チェックインリマインダー';
 
   @override
-  String get notificationTypeActivity => 'Activity Message';
+  String get notificationTypeActivity => 'アクティビティメッセージ';
 
   @override
-  String get notificationLearningReminderTitle =>
-      'Today\'s study plan is waiting';
+  String get notificationLearningReminderTitle => '今日の学習プランが待っています';
 
   @override
   String notificationLearningReminderBody(int dailyGoal) {
-    return 'Today\'s goal: $dailyGoal new words. Start with your current wordbook.';
+    return '今日の目標：新出単語 $dailyGoal 語。現在の単語帳から始めましょう。';
   }
 
   @override
   String notificationReviewDueTitle(int dueCount) {
-    return '$dueCount words due for review';
+    return '復習期限の単語が $dueCount 語';
   }
 
   @override
   String get notificationReviewDueBody =>
-      'Clear your review queue first — missed words move to the reinforcement stage.';
+      'まず復習キューを片付けましょう — 間違えた単語は強化ステージに移ります。';
 
   @override
-  String get notificationCheckInTitle => 'You haven\'t checked in today';
+  String get notificationCheckInTitle => '今日はまだチェックインしていません';
 
   @override
   String get notificationCheckInBody =>
-      'Tap check-in on the Discover page to unlock the claimable task.';
+      '発見ページでチェックインをタップして、受け取り可能なタスクを解除しましょう。';
 
   @override
-  String get notificationActivityTitle => 'Discover point tasks refreshed';
+  String get notificationActivityTitle => '発見ポイントタスクが更新されました';
 
   @override
-  String get notificationActivityBody =>
-      'Earn XP after finishing new words, reviews, and clearing missed words.';
+  String get notificationActivityBody => '新しい単語、復習、間違えた単語のクリアでXPを獲得できます。';
 
   @override
-  String get notificationLotteryTitle => 'Lottery result';
+  String get notificationLotteryTitle => '抽選結果';
 
   @override
   String notificationLotteryBody(String prizeName) {
-    return 'You won \"$prizeName\" — added to your assets.';
+    return '「$prizeName」が当選しました — アセットに追加されました。';
   }
 
   @override
-  String get osNotificationStudyReminderTitle => 'Your study tasks are ready';
+  String get osNotificationStudyReminderTitle => '学習タスクの準備ができました';
 
   @override
   String get osNotificationStudyReminderBody =>
-      'Finish new words, reviews and check-in to keep your streak going.';
+      '新しい単語、復習、チェックインを完了して連続記録を続けましょう。';
 
   @override
-  String get osNotificationReviewDueBody =>
-      'Clear your review queue, then start today\'s new words.';
+  String get osNotificationReviewDueBody => '復習キューを片付けて、今日の新しい単語を始めましょう。';
 
   @override
-  String get osNotificationChannelName => 'Study reminders';
+  String get osNotificationChannelName => '学習リマインダー';
 
   @override
-  String get osNotificationChannelDescription =>
-      'Study reminders, review-due and check-in alerts';
+  String get osNotificationChannelDescription => '学習リマインダー、復習期限、チェックインの通知';
 
   @override
-  String get studyNewStudy => 'New Study';
+  String get studyNewStudy => '新規学習';
 
   @override
-  String get studyReviewOnly => 'Review Only';
+  String get studyReviewOnly => '復習のみ';
 
   @override
-  String get studyStartSession => 'Start Session';
+  String get studyStartSession => 'セッション開始';
 
   @override
-  String get studySessionComplete => 'Session Complete';
+  String get studySessionComplete => 'セッション完了';
 
   @override
   String studyWordsLeft(Object count) {
-    return '$count words left';
+    return '残り$count語';
   }
 
   @override
-  String get studyPlanLoginRequired =>
-      'Please log in before setting up a study plan.';
+  String get studyPlanLoginRequired => '学習プランを設定する前にログインしてください。';
 
   @override
-  String get studyPlanSave => 'Save Study Plan';
+  String get studyPlanSave => '学習プランを保存';
 
   @override
-  String get studyPlanSettings => 'Study Plan Settings';
+  String get studyPlanSettings => '学習プラン設定';
 
   @override
-  String get studyPlanSettingsDesc =>
-      'Manage current wordbook, daily tasks, review rhythm, and reminder time.';
+  String get studyPlanSettingsDesc => '現在の単語帳、毎日のタスク、復習のリズム、リマインダー時間を管理します。';
 
   @override
-  String get studyPlanViewWords => 'View Full Wordbook';
+  String get studyPlanViewWords => '単語帳をすべて表示';
 
   @override
-  String get studyPlanDailyNew => 'Daily New Words';
+  String get studyPlanDailyNew => '1日の新規単語';
 
   @override
-  String get studyPlanDailyNewHint => 'Recommended 5-30 words, max 200.';
+  String get studyPlanDailyNewHint => '推奨5〜30語、最大200語。';
 
   @override
-  String get studyPlanReminderTime => 'Study Reminder Time';
+  String get studyPlanReminderTime => '学習リマインダー時間';
 
   @override
-  String get studyPlanResume => 'Resume Plan';
+  String get studyPlanResume => 'プランを再開';
 
   @override
-  String get studyPlanPause => 'Pause Plan';
+  String get studyPlanPause => 'プランを一時停止';
 
   @override
-  String get studyPlanReset => 'Reset Plan';
+  String get studyPlanReset => 'プランをリセット';
 
   @override
-  String get studyPlanResetConfirm => 'Confirm reset study plan?';
+  String get studyPlanResetConfirm => '学習プランをリセットしてもよろしいですか？';
 
   @override
   String get studyPlanResetDesc =>
-      'Reset will clear current wordbook learning path progress, and reset custom word mastery, correct/wrong counts, and review times; review queue will be regenerated. This affects learning progress and review schedule.';
+      'リセットすると、現在の単語帳の学習パスの進捗が消去され、カスタム単語の習得度、正解/不正解数、復習時間がリセットされます。復習キューは再生成されます。これは学習の進捗と復習スケジュールに影響します。';
 
   @override
-  String get studyPlanCancel => 'Cancel';
+  String get studyPlanCancel => 'キャンセル';
 
   @override
-  String get studyPlanConfirm => 'Confirm Reset';
+  String get studyPlanConfirm => 'リセットを確定';
 
   @override
-  String get studyPlanSaved => 'Study plan saved.';
+  String get studyPlanSaved => '学習プランを保存しました。';
 
   @override
-  String get studyPlanSaveFailed => 'Unable to save plan.';
+  String get studyPlanSaveFailed => 'プランを保存できませんでした。';
 
   @override
-  String get studyPlanResumed => 'Study plan resumed.';
+  String get studyPlanResumed => '学習プランを再開しました。';
 
   @override
-  String get studyPlanPaused =>
-      'Study plan paused. Today\'s reminders and task entries will be temporarily closed.';
+  String get studyPlanPaused => '学習プランを一時停止しました。今日のリマインダーとタスクへの入り口は一時的に閉じられます。';
 
   @override
-  String get studyPlanPauseFailed => 'Unable to update plan status.';
+  String get studyPlanPauseFailed => 'プランの状態を更新できませんでした。';
 
   @override
-  String get studyPlanResetDone => 'Study plan reset.';
+  String get studyPlanResetDone => '学習プランをリセットしました。';
 
   @override
-  String get studyPlanResetFailed => 'Unable to reset plan.';
+  String get studyPlanResetFailed => 'プランをリセットできませんでした。';
 
   @override
-  String get studyPlanEnterNumber => 'Please enter a number';
+  String get studyPlanEnterNumber => '数値を入力してください';
 
   @override
   String studyPlanNumberRange(Object max, Object min) {
-    return 'Range must be $min-$max';
+    return '範囲は$min〜$maxでなければなりません';
   }
 
   @override
   String studyPlanDaysLeft(Object count) {
-    return '$count days left';
+    return '残り$count日';
   }
 
   @override
-  String get studyPlanActive => 'Active';
+  String get studyPlanActive => '有効';
 
   @override
-  String get studyPlanPausedLabel => 'Paused';
+  String get studyPlanPausedLabel => '一時停止中';
 
   @override
   String get aiLearningTitle => 'AI センター';
@@ -2434,20 +2353,20 @@ class AppLocalizationsJa extends AppLocalizations {
   String get aiLearningSubtitle => '読む・書く・練習する';
 
   @override
-  String get aiLearningComingSoon => 'AI learning features coming soon.';
+  String get aiLearningComingSoon => 'AI学習機能は近日公開予定です。';
 
   @override
   String get aiLearningDesc =>
-      'Explain grammar, distinguish word meanings, generate context; formal learning records are still updated by quiz results.';
+      '文法の解説、語義の区別、文脈の生成を行います。正式な学習記録は引き続きクイズの結果によって更新されます。';
 
   @override
   String get aiLearningTooltip => '質問する';
 
   @override
-  String get aiLearningPillError => 'Error Explanation';
+  String get aiLearningPillError => 'エラー解説';
 
   @override
-  String get aiLearningPillNoKey => 'No Client Key Required';
+  String get aiLearningPillNoKey => 'クライアントキー不要';
 
   @override
   String get aiLearningCurrentWord => '今の単語';
@@ -2456,246 +2375,236 @@ class AppLocalizationsJa extends AppLocalizations {
   String get aiLearningToolsTitle => '学習ツール';
 
   @override
-  String get aiLearningToolsSubtitle =>
-      'First version focuses on long sentence analysis and Q&A; writing correction comes later.';
+  String get aiLearningToolsSubtitle => '初版は長文解析とQ&Aに注力し、作文添削は後日対応します。';
 
   @override
   String get aiLearningToolAiQA => '単語・文法の質問';
 
   @override
   String get aiLearningToolAiQADesc =>
-      'Answer questions about word meaning, grammar, and expression naturalness based on current words, examples, and learning goals.';
+      '現在の単語、例文、学習目標に基づいて、語義・文法・表現の自然さに関する質問に回答します。';
 
   @override
   String get aiLearningToolAiAnalysis => '長い文の解説';
 
   @override
   String get aiLearningToolAiAnalysisDesc =>
-      'Extract main clauses, divide subordinate clauses, explain modifiers and key words, and provide a natural translation.';
+      '主節を抽出し、従属節を分割し、修飾語と重要語を説明し、自然な訳文を提供します。';
 
   @override
   String get aiLearningToolAiWriting => '作文の添削';
 
   @override
   String get aiLearningToolAiWritingDesc =>
-      'Select exam type, enter topic and body text, output total score, itemized scores, and paragraph-by-paragraph revision suggestions.';
+      '試験の種類を選択し、お題と本文を入力すると、総合得点、項目別得点、段落ごとの添削提案を出力します。';
 
   @override
   String get aiLearningToolCloze => '穴埋め練習';
 
   @override
   String get aiLearningToolClozeDesc =>
-      'Generate short passages based on today\'s new words, mistake words, or this week\'s weak words, with 5 to 10 target words blanked out.';
+      '今日の新出単語、間違い単語、または今週の苦手単語に基づいて短い文章を生成し、5～10個の対象単語を空欄にします。';
 
   @override
   String get aiLearningToolConfusion => '似た単語の比較';
 
   @override
   String get aiLearningToolConfusionDesc =>
-      'Explain usage scenarios of near-synonyms or confusable words like affect/effect based on mistake records.';
+      '間違い記録に基づいて、affect/effectのような類義語や紛らわしい単語の使い分けを説明します。';
 
   @override
   String get aiLearningToolSentence => '例文を作る';
 
   @override
   String get aiLearningToolSentenceDesc =>
-      'Generate more natural example sentences based on exam goals, with one-click add to notes or wordbook.';
+      '試験目標に基づいてより自然な例文を生成し、ノートや単語帳にワンクリックで追加できます。';
 
   @override
-  String get aiLearningStatusSoon => 'Coming Soon';
+  String get aiLearningStatusSoon => '近日公開';
 
   @override
-  String get aiLearningStatusLater => 'Coming Later';
+  String get aiLearningStatusLater => '後日対応';
 
   @override
-  String get aiLearningStatusPlanning => 'In Planning';
+  String get aiLearningStatusPlanning => '計画中';
 
   @override
-  String get questTitle => 'Quests';
+  String get questTitle => 'クエスト';
 
   @override
-  String get questDailyQuests => 'Daily Quests';
+  String get questDailyQuests => 'デイリークエスト';
 
   @override
-  String get questProgress => 'Progress';
+  String get questProgress => '進捗';
 
   @override
-  String get searchTitle => 'Search';
+  String get searchTitle => '検索';
 
   @override
-  String get searchHint => 'Search words, phrases, examples...';
+  String get searchHint => '単語、フレーズ、例文を検索...';
 
   @override
-  String get searchNoResults => 'No results found.';
+  String get searchNoResults => '結果が見つかりませんでした。';
 
   @override
-  String get searchRecent => 'Recent';
+  String get searchRecent => '最近';
 
   @override
-  String get searchStartTitle => 'Enter a keyword to start searching';
+  String get searchStartTitle => 'キーワードを入力して検索を開始';
 
   @override
-  String get searchStartMessage =>
-      'Search English words, phrases, Chinese meanings, example snippets, and custom words.';
+  String get searchStartMessage => '英語の単語、フレーズ、中国語の意味、例文の抜粋、カスタム単語を検索できます。';
 
   @override
-  String get searchNoResultsTitle => 'No results found';
+  String get searchNoResultsTitle => '結果が見つかりませんでした';
 
   @override
-  String get searchNoResultsMessage =>
-      'Try the full word library, or add a personal word card.';
+  String get searchNoResultsMessage => '単語ライブラリ全体を試すか、個人用の単語カードを追加してください。';
 
   @override
-  String get searchFieldLabel =>
-      'Search words, phrases, Chinese meanings, or example snippets';
+  String get searchFieldLabel => '単語、フレーズ、中国語の意味、または例文の抜粋を検索';
 
   @override
   String searchScopeSummary(Object allWordBooksLabel, Object currentBookTitle) {
-    return 'Scope: $currentBookTitle / $allWordBooksLabel';
+    return '範囲: $currentBookTitle / $allWordBooksLabel';
   }
 
   @override
-  String get searchCurrentWordbookScope => 'Current wordbook';
+  String get searchCurrentWordbookScope => '現在の単語帳';
 
   @override
-  String get searchAllWordbooksScope => 'Full library';
+  String get searchAllWordbooksScope => 'ライブラリ全体';
 
   @override
-  String get searchCurrentPlan => 'Current plan';
+  String get searchCurrentPlan => '現在のプラン';
 
   @override
-  String get customWordsMyCards => 'My word cards';
+  String get customWordsMyCards => 'マイ単語カード';
 
   @override
-  String get customWordsMyCardsSubtitle =>
-      'Create, search, filter, edit, and review your personal word library.';
+  String get customWordsMyCardsSubtitle => '個人用の単語ライブラリを作成、検索、絞り込み、編集、復習できます。';
 
   @override
   String customWordsCardCount(Object count) {
-    return '$count cards';
+    return '$count枚のカード';
   }
 
   @override
-  String get customWordsSearchLabel => 'Search words, meanings, or tags';
+  String get customWordsSearchLabel => '単語、意味、タグを検索';
 
   @override
-  String get customWordsNoMatchTitle => 'No matching word cards';
+  String get customWordsNoMatchTitle => '一致する単語カードがありません';
 
   @override
-  String get customWordsNoMatchMessage =>
-      'Add a personal word card, or adjust the search filters.';
+  String get customWordsNoMatchMessage => '個人用の単語カードを追加するか、検索フィルターを調整してください。';
 
   @override
-  String get customWordsAddCard => 'Add custom word card';
+  String get customWordsAddCard => 'カスタム単語カードを追加';
 
   @override
   String customWordsDeleteTitle(Object word) {
-    return 'Delete \"$word\"?';
+    return '\"$word\"を削除しますか？';
   }
 
   @override
-  String get customWordsDeleteContent =>
-      'This also deletes this personal word card and its review plan.';
+  String get customWordsDeleteContent => 'この個人用単語カードとその復習プランも削除されます。';
 
   @override
-  String get customWordsEditTitle => 'Edit word';
+  String get customWordsEditTitle => '単語を編集';
 
   @override
-  String get customWordsAddTitle => 'Add word';
+  String get customWordsAddTitle => '単語を追加';
 
   @override
-  String get customWordsFieldWord => 'Word';
+  String get customWordsFieldWord => '単語';
 
   @override
-  String get customWordsFieldMeaning => 'Meaning';
+  String get customWordsFieldMeaning => '意味';
 
   @override
-  String get customWordsFieldExample => 'Example';
+  String get customWordsFieldExample => '例文';
 
   @override
-  String get customWordsFieldNote => 'Note';
+  String get customWordsFieldNote => 'メモ';
 
   @override
-  String get customWordsFieldTag => 'Tag';
+  String get customWordsFieldTag => 'タグ';
 
   @override
-  String get customWordsSaveEdit => 'Save changes';
+  String get customWordsSaveEdit => '変更を保存';
 
   @override
-  String get customWordsCreate => 'Create word';
+  String get customWordsCreate => '単語を作成';
 
   @override
-  String get customWordsSaveFailed => 'Unable to save this word for now';
+  String get customWordsSaveFailed => '現在この単語を保存できません';
 
   @override
-  String get customWordsSaved => 'Word saved';
+  String get customWordsSaved => '単語を保存しました';
 
   @override
-  String get customWordsAlreadyInWordbook =>
-      'This word is already in your wordbook';
+  String get customWordsAlreadyInWordbook => 'この単語はすでに単語帳にあります';
 
   @override
-  String get customWordsDifficulty => 'Difficulty';
+  String get customWordsDifficulty => '難易度';
 
   @override
-  String get commonRequired => 'Required';
+  String get commonRequired => '必須';
 
   @override
   String customWordsDeleteFailed(Object word) {
-    return 'Unable to delete $word right now';
+    return '現在$wordを削除できません';
   }
 
   @override
   String customWordsDeleted(Object word) {
-    return 'Deleted $word';
+    return '$wordを削除しました';
   }
 
   @override
-  String get wordbookWordNotFound => 'Word not found';
+  String get wordbookWordNotFound => '単語が見つかりません';
 
   @override
-  String get wordbookFavorite => 'Favorite';
+  String get wordbookFavorite => 'お気に入り';
 
   @override
-  String get wordbookFavorited => 'Favorited';
+  String get wordbookFavorited => 'お気に入りに追加しました';
 
   @override
-  String get wordbookFavoriteRemoved => 'Removed from favorites';
+  String get wordbookFavoriteRemoved => 'お気に入りから削除しました';
 
   @override
-  String get wordbookAddToCustomWords => 'Add to custom words';
+  String get wordbookAddToCustomWords => 'カスタム単語に追加';
 
   @override
-  String get wordbookRemoveCustomWord => 'Remove from custom words';
+  String get wordbookRemoveCustomWord => 'カスタム単語から削除';
 
   @override
-  String get wordbookAddedToCustomWords => 'Added to custom words';
+  String get wordbookAddedToCustomWords => 'カスタム単語に追加しました';
 
   @override
-  String get wordbookRemovedFromCustomWords => 'Removed from custom words';
+  String get wordbookRemovedFromCustomWords => 'カスタム単語から削除しました';
 
   @override
-  String get wordbookResumeLearning => 'Resume learning';
+  String get wordbookResumeLearning => '学習を再開';
 
   @override
-  String get wordbookIgnoreEasy => 'Ignore as too easy';
+  String get wordbookIgnoreEasy => '簡単すぎるので無視';
 
   @override
-  String get wordbookLearningResumed => 'Learning resumed';
+  String get wordbookLearningResumed => '学習を再開しました';
 
   @override
-  String get wordbookIgnored =>
-      'Ignored and excluded from future review queues';
+  String get wordbookIgnored => '無視しました。今後の復習キューから除外されます';
 
   @override
-  String get wordbookUpdateTargetFailed =>
-      'Unable to update target word right now';
+  String get wordbookUpdateTargetFailed => '現在対象の単語を更新できません';
 
   @override
-  String get wordbookCurrentPlan => 'In current plan';
+  String get wordbookCurrentPlan => '現在のプランに含まれる';
 
   @override
-  String get wordbookHighFrequencyDefinition => 'High-frequency exam meaning';
+  String get wordbookHighFrequencyDefinition => '頻出の試験での意味';
 
   @override
   String wordbookUkPhonetic(Object phonetic) {
@@ -2708,192 +2617,183 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get wordbookBilingualDefinitions => 'Chinese and English definitions';
+  String get wordbookBilingualDefinitions => '中国語と英語の定義';
 
   @override
-  String get wordbookChineseDefinitions => 'Chinese definitions';
+  String get wordbookChineseDefinitions => '中国語の定義';
 
   @override
-  String get wordbookEnglishDefinitions => 'English definitions';
+  String get wordbookEnglishDefinitions => '英語の定義';
 
   @override
-  String get wordbookMalayDefinitions => 'Malay definitions';
+  String get wordbookMalayDefinitions => 'マレー語の定義';
 
   @override
-  String get wordbookHighFrequency => 'High frequency';
+  String get wordbookHighFrequency => '頻出';
 
   @override
-  String get wordbookContextExamples => 'Context examples';
+  String get wordbookContextExamples => '文脈の例文';
 
   @override
   String wordbookMasteryLevel(Object level) {
-    return 'Mastery $level/5';
+    return '習熟度 $level/5';
   }
 
   @override
-  String get reviewStudyManageQueue => 'Manage review queue';
+  String get reviewStudyManageQueue => '復習キューを管理';
 
   @override
-  String get reviewStudyTodayTitle => 'Today\'s review';
+  String get reviewStudyTodayTitle => '今日の復習';
 
   @override
   String get reviewStudyTodaySubtitle =>
-      'Recall first, then reveal the answer; missed cards return later in this round for reinforcement.';
+      'まず思い出し、それから答えを表示します。間違えたカードはこのラウンドの後半で復習として再登場します。';
 
   @override
-  String get reviewStudyLeaveTitle => 'Leave review?';
+  String get reviewStudyLeaveTitle => '復習を中断しますか？';
 
   @override
-  String get reviewStudyLeaveContent =>
-      'Completed cards have been saved; unfinished cards will stay in the review queue.';
+  String get reviewStudyLeaveContent => '完了したカードは保存されました。未完了のカードは復習キューに残ります。';
 
   @override
-  String get reviewStudyKeepReviewing => 'Keep reviewing';
+  String get reviewStudyKeepReviewing => '復習を続ける';
 
   @override
-  String get reviewStudyReinforced => 'This reinforcement round is complete';
+  String get reviewStudyReinforced => 'この復習ラウンドは完了しました';
 
   @override
-  String get reviewStudyRememberedMessage =>
-      'Remembered. The review interval has been extended.';
+  String get reviewStudyRememberedMessage => '思い出せました。復習間隔を延長しました。';
 
   @override
   String get reviewStudyNeedsReinforcementMessage =>
-      'Marked for reinforcement. Practice it again later.';
+      '復習対象としてマークしました。後でもう一度練習しましょう。';
 
   @override
-  String get reviewStudyReinforce => 'Add to reinforcement queue';
+  String get reviewStudyReinforce => '復習キューに追加';
 
   @override
-  String get reviewStudyCompleteTitle => 'Today\'s review complete';
+  String get reviewStudyCompleteTitle => '今日の復習が完了しました';
 
   @override
-  String get reviewStudyCompleteMessage =>
-      'Next review times have been updated for this round.';
+  String get reviewStudyCompleteMessage => 'このラウンドの次回復習日時が更新されました。';
 
   @override
   String get reviewStudyRecallHint =>
-      'Recall the Chinese meaning from the English word first. If you remember it, move on; if not, reveal the knowledge card.';
+      'まず英単語から中国語の意味を思い出しましょう。思い出せたら次へ進み、思い出せなければナレッジカードを表示します。';
 
   @override
   String reviewStudyNextReview(Object due) {
-    return 'Next review: $due';
+    return '次回復習：$due';
   }
 
   @override
   String get reviewStudyHiddenHint =>
-      'Correct answers continue smoothly; wrong answers reveal the knowledge card and return later in this round.';
+      '正解するとそのまま進み、不正解の場合はナレッジカードが表示され、このラウンドの後半で再登場します。';
 
   @override
   String aiWordSupportDesc(Object word) {
-    return 'Ask about $word usage, grammar, synonym differences, and example breakdowns.';
+    return '$wordの使い方、文法、類義語の違い、例文の解説について質問できます。';
   }
 
   @override
   String aiWordSupportWithExampleDesc(Object word) {
-    return 'Send $word and the current example to ask about usage, grammar, synonym differences, and example breakdowns.';
+    return '$wordと現在の例文を送信して、使い方、文法、類義語の違い、例文の解説について質問できます。';
   }
 
   @override
-  String get helpFaqReviewScheduleQ => 'How is review time scheduled?';
+  String get helpFaqReviewScheduleQ => '復習のタイミングはどのように決まりますか？';
 
   @override
   String get helpFaqReviewScheduleA =>
-      'Each word moves between mastery levels 0-5. Higher mastery means a longer interval before the next review.';
+      '各単語は習熟度0～5の間で変化します。習熟度が高いほど、次の復習までの間隔が長くなります。';
 
   @override
-  String get helpFaqCustomWordsQ => 'Can I add my own words?';
+  String get helpFaqCustomWordsQ => '自分の単語を追加できますか？';
 
   @override
   String get helpFaqCustomWordsA =>
-      'Yes. Open the wordbook or custom words page, then tap add to create a personal word card.';
+      'はい。単語帳またはカスタム単語ページを開き、追加をタップして自分専用の単語カードを作成できます。';
 
   @override
-  String get helpFaqAiTutorQ => 'What can the AI tutor do?';
+  String get helpFaqAiTutorQ => 'AIチューターは何ができますか？';
 
   @override
-  String get helpFaqAiTutorA =>
-      'It can explain words, grammar, and mistakes, and suggest examples for further practice.';
+  String get helpFaqAiTutorA => '単語や文法、間違いを解説し、さらなる練習用の例文を提案できます。';
 
   @override
-  String get helpContactSupport => 'Contact support';
+  String get helpContactSupport => 'サポートに問い合わせる';
 
   @override
   String aboutVersion(String version) {
-    return 'LinguaQuest · Version $version';
+    return 'LinguaQuest · バージョン $version';
   }
 
   @override
   String get aboutIntro =>
-      'LinguaQuest brings word cards, learning paths, spaced review, XP, streaks, and personal word cards into a mobile-first English learning app.';
+      'LinguaQuestは、単語カード、学習パス、間隔復習、XP、連続学習、個人用単語カードを、モバイルファーストの英語学習アプリにまとめました。';
 
   @override
-  String get aboutGoalTitle => 'Project goal';
+  String get aboutGoalTitle => 'プロジェクトの目標';
 
   @override
   String get aboutGoalSubtitle =>
-      'Help learners build a daily English study habit through short lessons, mistake repair, and visible progress.';
+      '短いレッスン、間違いの修正、目に見える進捗を通じて、学習者が毎日の英語学習習慣を身につけられるよう支援します。';
 
   @override
-  String get aboutTeamTitle => 'Development team';
+  String get aboutTeamTitle => '開発チーム';
 
   @override
-  String get aboutTeamSubtitle =>
-      'ASM2 Mobile team. Focused on a mobile-first English learning experience.';
+  String get aboutTeamSubtitle => 'ASM2 Mobileチーム。モバイルファーストの英語学習体験に注力しています。';
 
   @override
-  String get aboutCoreTitle => 'Core experience';
+  String get aboutCoreTitle => 'コア体験';
 
   @override
-  String get aboutCoreSubtitle =>
-      'Goal planning, vocabulary building, quiz practice, review scheduling, and personal word cards.';
+  String get aboutCoreSubtitle => '目標計画、語彙力の向上、クイズ練習、復習スケジュール、個人用単語カード。';
 
   @override
-  String get aboutPrivacyTitle => 'Privacy';
+  String get aboutPrivacyTitle => 'プライバシー';
 
   @override
-  String get aboutPrivacySubtitle =>
-      'Custom words and learning records belong only to the signed-in user.';
+  String get aboutPrivacySubtitle => 'カスタム単語と学習記録は、サインインしているユーザーだけのものです。';
 
   @override
-  String get communityPostCheckinTitle =>
-      'Today\'s check-in: Reviewed 18 words in 12 minutes';
+  String get communityPostCheckinTitle => '今日のチェックイン：12分で18単語を復習';
 
   @override
-  String get communityPostCheckinTag => 'Daily Check-in';
+  String get communityPostCheckinTag => 'デイリーチェックイン';
 
   @override
   String get communityPostCheckinBody =>
-      'Mistakes were mostly synonyms. Tomorrow I\'ll start with the confusing words challenge in training.';
+      '間違いは主に類義語でした。明日はトレーニングの紛らわしい単語チャレンジから始めます。';
 
   @override
-  String get communityPostAbstractTitle =>
-      'How to remember the word \'abstract\'?';
+  String get communityPostAbstractTitle => '「abstract」という単語をどう覚える？';
 
   @override
-  String get communityPostMistakeTag => 'Mistake Discussion';
+  String get communityPostMistakeTag => '間違いのディスカッション';
 
   @override
   String get communityPostAbstractBody =>
-      '\"abstract\" in academic contexts often does not mean \"not concrete\"; context matters.';
+      '学術的な文脈での「abstract」は、多くの場合「具体的でない」という意味ではありません。文脈が重要です。';
 
   @override
-  String get notificationsTitle => 'Notifications';
+  String get notificationsTitle => '通知';
 
   @override
-  String get notificationsEmpty => 'No notifications yet.';
+  String get notificationsEmpty => '通知はまだありません。';
 
   @override
   String get languageSetting => '言語';
 
   @override
   String luckyDrawCostLine(Object cost) {
-    return 'Spend $cost XP per draw';
+    return '1回引くのに$cost XPを消費';
   }
 
   @override
   String luckyDrawBalanceHint(Object xp) {
-    return 'Current balance $xp XP; prizes include avatar frames, profile backgrounds, badges, titles, card skins, and consolation fragments.';
+    return '現在の残高は$xp XPです。賞品にはアバターフレーム、プロフィール背景、バッジ、称号、カードスキン、残念賞のかけらなどがあります。';
   }
 
   @override
@@ -2901,99 +2801,98 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count items in stock',
-      one: '1 item in stock',
+      other: '在庫$count点',
+      one: '在庫1点',
     );
     return '$_temp0';
   }
 
   @override
-  String get luckyDrawNoBoost => 'No learning boost';
+  String get luckyDrawNoBoost => '学習ブーストなし';
 
   @override
-  String get luckyDrawNow => 'Draw now';
+  String get luckyDrawNow => '今すぐ引く';
 
   @override
-  String get luckyDrawInsufficient => 'Not enough XP — finish tasks first';
+  String get luckyDrawInsufficient => 'XPが足りません — 先にタスクを完了しましょう';
 
   @override
   String luckyDrawShortfall(Object shortfall) {
-    return '$shortfall XP to go. Finish new study, review, or mistake cleanup to earn points.';
+    return 'あと$shortfall XPです。新規学習、復習、間違い直しを完了してポイントを稼ぎましょう。';
   }
 
   @override
-  String get luckyDrawFailed => 'Draw failed, please try again later';
+  String get luckyDrawFailed => '抽選に失敗しました。しばらくしてからもう一度お試しください';
 
   @override
-  String get luckyDrawSuccessTitle => 'Draw successful';
+  String get luckyDrawSuccessTitle => '抽選成功';
 
   @override
   String luckyDrawReward(Object name) {
-    return 'You got: $name';
+    return '獲得: $name';
   }
 
   @override
   String luckyDrawDeducted(Object balance, Object cost) {
-    return 'Deducted $cost XP, $balance XP remaining.';
+    return '$cost XPを消費しました。残り$balance XPです。';
   }
 
   @override
-  String get luckyDrawKeepLooking => 'Keep looking';
+  String get luckyDrawKeepLooking => '見続ける';
 
   @override
-  String get luckyDrawViewAssets => 'View my assets';
+  String get luckyDrawViewAssets => 'マイ資産を見る';
 
   @override
   String get luckyDrawPoolLoading =>
-      'Prize pool loading: avatar frames, profile backgrounds, learning badges, training titles, card skins, consolation fragments.';
+      '賞品プールを読み込み中: アバターフレーム、プロフィール背景、学習バッジ、トレーニング称号、カードスキン、残念賞のかけら。';
 
   @override
-  String get profileAssetsTitle => 'My Assets';
+  String get profileAssetsTitle => 'マイ資産';
 
   @override
-  String get profileAssetsSubtitle =>
-      'Decorative assets won from draws are for display only and don\'t affect learning scores.';
+  String get profileAssetsSubtitle => '抽選で獲得した装飾資産は表示専用で、学習スコアには影響しません。';
 
   @override
-  String get profileAssetsEmpty => 'No Assets Yet';
+  String get profileAssetsEmpty => '資産はまだありません';
 
   @override
   String profileAssetMeta(Object category, Object fragments, Object quantity) {
-    return '$category · Qty $quantity · Fragments $fragments';
+    return '$category · 数量 $quantity · かけら $fragments';
   }
 
   @override
-  String get lotteryCategoryAvatarFrame => 'Avatar Frame';
+  String get lotteryCategoryAvatarFrame => 'アバターフレーム';
 
   @override
-  String get lotteryCategoryProfileBackground => 'Profile Background';
+  String get lotteryCategoryProfileBackground => 'プロフィール背景';
 
   @override
-  String get lotteryCategoryBadge => 'Learning Badge';
+  String get lotteryCategoryBadge => '学習バッジ';
 
   @override
-  String get lotteryCategoryTitle => 'Training Title';
+  String get lotteryCategoryTitle => 'トレーニング称号';
 
   @override
-  String get lotteryCategoryCardSkin => 'Card Skin';
+  String get lotteryCategoryCardSkin => 'カードスキン';
 
   @override
-  String get lotteryCategoryFragment => 'Consolation Fragment';
+  String get lotteryCategoryFragment => '残念賞のかけら';
 
   @override
-  String get lotteryCategoryDefault => 'Decorative Asset';
+  String get lotteryCategoryDefault => '装飾資産';
 
   @override
-  String get lotteryRarityRare => 'Rare';
+  String get lotteryRarityRare => 'レア';
 
   @override
-  String get lotteryRarityUncommon => 'Advanced';
+  String get lotteryRarityUncommon => '上級';
 
   @override
-  String get lotteryRarityCommon => 'Common';
+  String get lotteryRarityCommon => 'ノーマル';
 
   @override
-  String get lotteryRarityComfort => 'Comfort';
+  String get lotteryRarityComfort => '慰め';
 
   @override
   String get languageChinese => '中国語';
@@ -3005,25 +2904,25 @@ class AppLocalizationsJa extends AppLocalizations {
   String get languageEnglish => '英語';
 
   @override
-  String get wordKnowledgeTitle => 'Word breakdown';
+  String get wordKnowledgeTitle => '単語の内訳';
 
   @override
-  String get wordKnowledgeCollocations => 'Collocations';
+  String get wordKnowledgeCollocations => 'コロケーション';
 
   @override
-  String get wordKnowledgeSynAnt => 'Synonyms / Antonyms';
+  String get wordKnowledgeSynAnt => '同義語 / 対義語';
 
   @override
-  String get wordKnowledgeFamily => 'Word family';
+  String get wordKnowledgeFamily => 'ワードファミリー';
 
   @override
-  String get wordKnowledgeRoots => 'Roots & affixes';
+  String get wordKnowledgeRoots => '語根と接辞';
 
   @override
-  String get pronunciationAccentUk => 'UK';
+  String get pronunciationAccentUk => '英';
 
   @override
-  String get pronunciationAccentUs => 'US';
+  String get pronunciationAccentUs => '米';
 
   @override
   String pronunciationAnnounce(String accent, String word) {
@@ -3037,40 +2936,40 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String pronunciationUnavailable(String accent) {
-    return '$accent audio unavailable';
+    return '$accentの音声は利用できません';
   }
 
   @override
   String pronunciationFailedRetry(String accent) {
-    return '$accent playback failed, tap to retry';
+    return '$accentの再生に失敗しました。タップして再試行';
   }
 
   @override
   String pronunciationLoading(String accent) {
-    return '$accent loading';
+    return '$accentを読み込み中';
   }
 
   @override
   String pronunciationRetry(String accent) {
-    return '$accent retry';
+    return '$accentを再試行';
   }
 
   @override
-  String get dueNow => 'Due now';
+  String get dueNow => '今すぐ復習';
 
   @override
   String dueInDays(int count) {
-    return 'In $count days';
+    return '$count日後';
   }
 
   @override
   String dueInHours(int count) {
-    return 'In $count hours';
+    return '$count時間後';
   }
 
   @override
   String dueInMinutes(int count) {
-    return 'In $count minutes';
+    return '$count分後';
   }
 
   @override
@@ -3094,7 +2993,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String languageMapComingSoon(String language) {
-    return '$language — coming soon';
+    return '$language — 近日公開';
   }
 
   @override
@@ -3102,100 +3001,93 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get aboutCompanyAddress =>
-      'Xiamen University Malaysia, Bandar Sunsuria, 43900 Sepang, Selangor, Malaysia (virtual)';
+      'マレーシア、セランゴール州セパン 43900、Bandar Sunsuria、Xiamen University Malaysia（バーチャル）';
 
   @override
-  String get aboutCompanyDescription =>
-      'Our virtual campus where LinguaQuest is built.';
+  String get aboutCompanyDescription => 'LinguaQuestが生まれたバーチャルキャンパス。';
 
   @override
-  String get aiLearningStatusAvailable => 'Available';
+  String get aiLearningStatusAvailable => '利用可能';
 
   @override
-  String get aiExplainWithAi => 'Explain with AI';
+  String get aiExplainWithAi => 'AIで解説';
 
   @override
-  String get aiErrorGeneric => 'Something went wrong. Please try again.';
+  String get aiErrorGeneric => '問題が発生しました。もう一度お試しください。';
 
   @override
   String aiEmptyChat(Object language) {
-    return 'Ask anything about $language — meanings, grammar, or usage.';
+    return '$languageについて何でも質問できます — 意味、文法、使い方など。';
   }
 
   @override
   String aiQuestionHint(Object language) {
-    return 'Type your question about $language...';
+    return '$languageについての質問を入力...';
   }
 
   @override
   String aiEmptyAnalysis(Object language) {
-    return 'Paste a $language sentence to see its structure broken down.';
+    return '$languageの文を貼り付けると、構造を分解して表示します。';
   }
 
   @override
-  String get aiEmptyCloze =>
-      'Enter a word to generate a fill-in-the-blank exercise.';
+  String get aiEmptyCloze => '単語を入力すると、穴埋め問題を生成します。';
 
   @override
-  String get aiEmptyWriting =>
-      'Paste your essay and pick an exam type to get scored feedback.';
+  String get aiEmptyWriting => '作文を貼り付け、試験の種類を選ぶと採点フィードバックが得られます。';
 
   @override
-  String get achievementsScreenTitle => 'Achievements';
+  String get achievementsScreenTitle => '実績';
 
   @override
-  String get achievementsHeaderTitle => 'Your Achievements';
+  String get achievementsHeaderTitle => 'あなたの実績';
 
   @override
   String achievementsUnlockedCount(int unlocked, int total) {
-    return '$unlocked / $total unlocked';
+    return '$unlocked / $total 解除済み';
   }
 
   @override
-  String get achievementUnlockedLabel => 'Unlocked';
+  String get achievementUnlockedLabel => '解除済み';
 
   @override
-  String get achievementLearn100Title => 'Century Scholar';
+  String get achievementLearn100Title => '百語の達人';
 
   @override
-  String get achievementLearn100Desc => 'Master 100 words';
+  String get achievementLearn100Desc => '100語をマスター';
 
   @override
-  String get achievementQuizPerfectTitle => 'Flawless Run';
+  String get achievementQuizPerfectTitle => '完璧なラン';
 
   @override
-  String get achievementQuizPerfectDesc =>
-      'Complete a quiz session with 100% accuracy (4+ questions)';
+  String get achievementQuizPerfectDesc => '正答率100%でクイズを完了（4問以上）';
 
   @override
-  String get achievementFirstListeningTitle => 'First Echo';
+  String get achievementFirstListeningTitle => '初めてのエコー';
 
   @override
-  String get achievementFirstListeningDesc =>
-      'Complete your first listening exercise';
+  String get achievementFirstListeningDesc => '初めてのリスニング問題を完了する';
 
   @override
-  String get achievementFirstMapLanguageTitle => 'Cartographer';
+  String get achievementFirstMapLanguageTitle => '地図製作者';
 
   @override
-  String get achievementFirstMapLanguageDesc =>
-      'Pick a language from the language map';
+  String get achievementFirstMapLanguageDesc => '言語マップから言語を選ぶ';
 
   @override
-  String get assetInventoryTitle => 'My Assets';
+  String get assetInventoryTitle => '所持アイテム';
 
   @override
-  String get assetInventoryEmpty =>
-      'No assets yet. Try your luck in the Lucky Draw!';
+  String get assetInventoryEmpty => 'まだアイテムがありません。ラッキードローで運試し！';
 
   @override
   String assetInventoryTotalOwned(int count) {
-    return '$count items owned';
+    return '$count個所持';
   }
 
   @override
   String assetInventoryTotalFragments(int count) {
-    return '$count fragments';
+    return '$count個のフラグメント';
   }
 
   @override
@@ -3204,278 +3096,274 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get luckyDrawViewMyAssets => 'View my assets';
+  String get luckyDrawViewMyAssets => '所持アイテムを見る';
 
   @override
-  String get analyticsReportTitle => 'Learning report';
+  String get analyticsReportTitle => '学習レポート';
 
   @override
-  String get analyticsReportSubtitle =>
-      'Your progress, charts, and focus areas';
+  String get analyticsReportSubtitle => '進捗、グラフ、重点分野';
 
   @override
   String analyticsScopeLabel(Object scope) {
-    return 'Scope: $scope';
+    return '範囲: $scope';
   }
 
   @override
-  String get analyticsXpTrendTitle => 'XP trend';
+  String get analyticsXpTrendTitle => 'XPの推移';
 
   @override
-  String get analyticsAbilityTitle => 'Ability dimensions';
+  String get analyticsAbilityTitle => '能力の側面';
 
   @override
-  String get analyticsModalityTitle => 'Accuracy by type';
+  String get analyticsModalityTitle => '種類別の正答率';
 
   @override
-  String get analyticsMasteryTitle => 'Word mastery';
+  String get analyticsMasteryTitle => '単語の習熟度';
 
   @override
-  String get analyticsDetailTitle => 'Detailed stats';
+  String get analyticsDetailTitle => '詳細な統計';
 
   @override
-  String get analyticsFocusTitle => 'Recommended practice';
+  String get analyticsFocusTitle => 'おすすめの練習';
 
   @override
-  String get analyticsReviewLoad => 'Review load';
+  String get analyticsReviewLoad => '復習の負荷';
 
   @override
-  String get analyticsWeekXp => 'This week XP';
+  String get analyticsWeekXp => '今週のXP';
 
   @override
-  String get analyticsTodayXp => 'Today XP';
+  String get analyticsTodayXp => '今日のXP';
 
   @override
-  String get analyticsWeakWords => 'Weak words';
+  String get analyticsWeakWords => '苦手な単語';
 
   @override
-  String get analyticsDueNow => 'Due now';
+  String get analyticsDueNow => '復習期限';
 
   @override
-  String get analyticsMasteryNew => 'New';
+  String get analyticsMasteryNew => '新規';
 
   @override
-  String get analyticsMasteryLearning => 'Learning';
+  String get analyticsMasteryLearning => '学習中';
 
   @override
-  String get analyticsMasteryMastered => 'Mastered';
+  String get analyticsMasteryMastered => '習得済み';
 
   @override
-  String get analyticsDimMeaningRecognition => 'Recognition';
+  String get analyticsDimMeaningRecognition => '認識';
 
   @override
-  String get analyticsDimMeaningRecall => 'Recall';
+  String get analyticsDimMeaningRecall => '想起';
 
   @override
-  String get analyticsDimContext => 'Context';
+  String get analyticsDimContext => '文脈';
 
   @override
-  String get analyticsDimListening => 'Listening';
+  String get analyticsDimListening => 'リスニング';
 
   @override
-  String get analyticsDimSpelling => 'Spelling';
+  String get analyticsDimSpelling => '綴り';
 
   @override
-  String get analyticsModalityMeaning => 'Meaning';
+  String get analyticsModalityMeaning => '意味';
 
   @override
-  String get analyticsModalityListening => 'Listening';
+  String get analyticsModalityListening => 'リスニング';
 
   @override
-  String get analyticsModalitySpelling => 'Spelling';
+  String get analyticsModalitySpelling => '綴り';
 
   @override
-  String get analyticsModalityContext => 'Context';
+  String get analyticsModalityContext => '文脈';
 
   @override
-  String get analyticsTopErrors => 'Top error types';
+  String get analyticsTopErrors => '主なエラーの種類';
 
   @override
-  String get readingTitle => 'Reading';
+  String get readingTitle => '読解';
 
   @override
-  String get readingDiscoverEntry => 'Reading';
+  String get readingDiscoverEntry => '読解';
 
   @override
-  String get readingRecommended => 'Recommended for you';
+  String get readingRecommended => 'あなたへのおすすめ';
 
   @override
-  String get readingAllArticles => 'All articles';
+  String get readingAllArticles => 'すべての記事';
 
   @override
   String readingArticlesForTheme(Object theme) {
-    return '$theme articles';
+    return '$themeの記事';
   }
 
   @override
-  String get readingFilterLevel => 'Level';
+  String get readingFilterLevel => 'レベル';
 
   @override
-  String get readingFilterTheme => 'Theme';
+  String get readingFilterTheme => 'テーマ';
 
   @override
-  String get readingFilterAll => 'All';
+  String get readingFilterAll => 'すべて';
 
   @override
   String readingMinutes(int count) {
-    return '$count min';
+    return '$count分';
   }
 
   @override
-  String get readingEmpty => 'No articles for this filter yet.';
+  String get readingEmpty => 'このフィルターの記事はまだありません。';
 
   @override
-  String get readingProgressInProgress => 'In progress';
+  String get readingProgressInProgress => '進行中';
 
   @override
-  String get readingProgressDone => 'Read';
+  String get readingProgressDone => '読了';
 
   @override
-  String get readingToggleTranslation => 'Translation';
+  String get readingToggleTranslation => '翻訳';
 
   @override
-  String get readingToggleReading => 'Reading';
+  String get readingToggleReading => '読解';
 
   @override
-  String get readingParagraphAudio => 'Play';
+  String get readingParagraphAudio => '再生';
 
   @override
-  String get readingTapWordHint => 'Tap a highlighted word for its meaning.';
+  String get readingTapWordHint => 'ハイライトされた単語をタップすると意味が表示されます。';
 
   @override
-  String get readingWordAddToVocab => 'Add to vocab notebook';
+  String get readingWordAddToVocab => '単語帳に追加';
 
   @override
-  String get readingWordAdded => 'Added to vocab notebook';
+  String get readingWordAdded => '単語帳に追加しました';
 
   @override
-  String get readingComprehensionCta => 'Start comprehension';
+  String get readingComprehensionCta => '読解を始める';
 
   @override
-  String get readingComprehensionSoon =>
-      'Comprehension questions arrive in the next phase.';
+  String get readingComprehensionSoon => '読解問題は次のフェーズで登場します。';
 
   @override
-  String get readingThemeCampus => 'Campus';
+  String get readingThemeCampus => 'キャンパス';
 
   @override
-  String get readingThemeLife => 'Life';
+  String get readingThemeLife => '暮らし';
 
   @override
-  String get readingThemeTravel => 'Travel';
+  String get readingThemeTravel => '旅行';
 
   @override
-  String get readingThemeTech => 'Tech';
+  String get readingThemeTech => 'テクノロジー';
 
   @override
-  String get readingThemeCulture => 'Culture';
+  String get readingThemeCulture => '文化';
 
   @override
-  String get readingThemeNews => 'News';
+  String get readingThemeNews => 'ニュース';
 
   @override
-  String get readingThemeBusiness => 'Business';
+  String get readingThemeBusiness => 'ビジネス';
 
   @override
-  String get readingThemeExam => 'Exam';
+  String get readingThemeExam => '試験';
 
   @override
-  String get readingToggleHighlight => 'Highlight';
+  String get readingToggleHighlight => 'ハイライト';
 
   @override
-  String get readingLegendTitle => 'Word highlights';
+  String get readingLegendTitle => '単語のハイライト';
 
   @override
-  String get readingClassKey => 'Key word';
+  String get readingClassKey => '重要語';
 
   @override
-  String get readingClassUnknown => 'Needs review';
+  String get readingClassUnknown => '要復習';
 
   @override
-  String get readingClassNew => 'New';
+  String get readingClassNew => '新規';
 
   @override
-  String get readingClassKnown => 'Known';
+  String get readingClassKnown => '既習';
 
   @override
-  String get readingComprehensionStart => 'Start comprehension';
+  String get readingComprehensionStart => '読解を始める';
 
   @override
-  String get readingComprehensionTitle => 'Comprehension';
+  String get readingComprehensionTitle => '読解';
 
   @override
   String readingComprehensionQuestion(int current, int total) {
-    return 'Question $current of $total';
+    return '問題 $current / $total';
   }
 
   @override
-  String get readingComprehensionNext => 'Next';
+  String get readingComprehensionNext => '次へ';
 
   @override
-  String get readingComprehensionFinish => 'Finish';
+  String get readingComprehensionFinish => '完了';
 
   @override
-  String get readingComprehensionResultTitle => 'Comprehension complete';
+  String get readingComprehensionResultTitle => '読解完了';
 
   @override
   String readingComprehensionScore(int correct, int total) {
-    return '$correct / $total correct';
+    return '$correct / $total 正解';
   }
 
   @override
   String readingComprehensionAccuracy(int pct) {
-    return 'Accuracy $pct%';
+    return '正答率 $pct%';
   }
 
   @override
-  String get readingComprehensionDone => 'Done';
+  String get readingComprehensionDone => '完了';
 
   @override
-  String get readingComprehensionEmpty =>
-      'No comprehension questions for this article yet.';
+  String get readingComprehensionEmpty => 'この記事にはまだ読解問題がありません。';
 
   @override
-  String get readingAnalyticsTitle => 'Reading';
+  String get readingAnalyticsTitle => '読解';
 
   @override
-  String get readingAnalyticsArticlesRead => 'Articles read';
+  String get readingAnalyticsArticlesRead => '読んだ記事';
 
   @override
-  String get readingAnalyticsAccuracy => 'Comprehension accuracy';
+  String get readingAnalyticsAccuracy => '読解の正答率';
 
   @override
-  String get readingAnalyticsThemes => 'By theme';
+  String get readingAnalyticsThemes => 'テーマ別';
 
   @override
-  String get readingAnalyticsEmpty =>
-      'Complete a reading comprehension to see stats here.';
+  String get readingAnalyticsEmpty => '読解を完了すると、ここに統計が表示されます。';
 
   @override
-  String get readingExplainTooltip => 'Explain with AI';
+  String get readingExplainTooltip => 'AIで解説';
 
   @override
-  String get readingExplainTitle => 'AI explanation';
+  String get readingExplainTitle => 'AI解説';
 
   @override
-  String get readingExplainLoading => 'Explaining this paragraph...';
+  String get readingExplainLoading => 'この段落を解説中...';
 
   @override
-  String get readingExplainGist => 'Gist';
+  String get readingExplainGist => '要旨';
 
   @override
-  String get readingExplainKeyWords => 'Key words';
+  String get readingExplainKeyWords => '重要語';
 
   @override
-  String get readingExplainGrammar => 'Grammar points';
+  String get readingExplainGrammar => '文法ポイント';
 
   @override
-  String get readingExplainStructure => 'Sentence structure';
+  String get readingExplainStructure => '文構造';
 
   @override
-  String get readingExplainTranslation => 'Translation';
+  String get readingExplainTranslation => '翻訳';
 
   @override
-  String get readingExplainPractice => 'Practice';
+  String get readingExplainPractice => '練習';
 
   @override
   String get explanationLanguage => '説明の言語';

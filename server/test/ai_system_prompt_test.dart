@@ -18,6 +18,26 @@ void main() {
   });
 
   group('buildSystemPrompt', () {
+    for (final target in ['zh', 'ja', 'en']) {
+      for (final helper in ['zh', 'ja', 'en']) {
+        test('$helper explanations for $target content', () {
+          final prompt = buildSystemPrompt(
+            'chat',
+            languageNameFor(target),
+            helperLanguage: helper,
+          )!;
+          expect(
+            prompt,
+            contains('${languageNameFor(target)}-learning assistant'),
+          );
+          expect(
+            prompt,
+            contains('"answer" and "cautions" in ${languageNameFor(helper)}'),
+          );
+          expect(prompt, contains('${languageNameFor(target)} words'));
+        });
+      }
+    }
     test('chat: explanations English, relatedWords target language', () {
       final p = buildSystemPrompt('chat', 'Chinese')!;
       expect(p, contains('Chinese-learning assistant'));

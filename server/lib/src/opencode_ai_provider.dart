@@ -26,6 +26,7 @@ class OpenCodeAiProvider implements AiProvider {
     final system = buildSystemPrompt(
       request.featureType,
       languageNameFor(request.targetLanguage),
+      helperLanguage: request.helperLanguage,
     );
     if (system == null) {
       return const AiResponse(
