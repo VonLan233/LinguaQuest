@@ -277,7 +277,7 @@ void main() {
 
       expect(tester.takeException(), isNull);
       expect(find.text('AI Learning'), findsWidgets);
-      expect(find.text('Current Word: 爱'), findsOneWidget);
+      expect(find.text('爱'), findsOneWidget);
     },
   );
 }

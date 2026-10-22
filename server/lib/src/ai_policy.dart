@@ -28,6 +28,7 @@ class AiRequest {
     required this.prompt,
     this.targetWord,
     this.targetLanguage = 'zh',
+    this.helperLanguage = 'en',
     this.modelOverride,
   });
 
@@ -36,6 +37,7 @@ class AiRequest {
   final String prompt;
   final String? targetWord;
   final String targetLanguage;
+  final String helperLanguage;
 
   /// When non-null, overrides the provider's default model for this request.
   final String? modelOverride;
@@ -102,11 +104,7 @@ class MockAiProvider implements AiProvider {
           data: {
             'gist': 'Mock gist of the paragraph.',
             'keyWords': [
-              {
-                'word': '示例',
-                'reading': 'shìlì',
-                'meaning': 'example',
-              },
+              {'word': '示例', 'reading': 'shìlì', 'meaning': 'example'},
             ],
             'grammarPoints': ['Mock grammar point'],
             'structure': 'Mock sentence structure analysis.',
@@ -121,31 +119,41 @@ class MockAiProvider implements AiProvider {
           },
         );
       case 'writing_review':
-        return AiResponse(success: true, data: {
-          'totalScore': 75,
-          'rubricScores': {
-            'content': 18,
-            'language': 15,
-            'structure': 14,
-            'vocabulary': 15,
-            'accuracy': 13,
+        return AiResponse(
+          success: true,
+          data: {
+            'totalScore': 75,
+            'rubricScores': {
+              'content': 18,
+              'language': 15,
+              'structure': 14,
+              'vocabulary': 15,
+              'accuracy': 13,
+            },
+            'mainIssues': [
+              'Limited vocabulary variety',
+              'Some grammar errors in complex sentences',
+            ],
+            'paragraphSuggestions': [
+              {
+                'paragraph': 1,
+                'suggestion': 'Strengthen your opening argument',
+              },
+            ],
+            'highScoreExpressions': [
+              'Furthermore, it is worth noting that...',
+              'From the perspective of...',
+            ],
+            'grammarIssues': [
+              {
+                'original': 'I am agree',
+                'corrected': 'I agree',
+                'rule': 'Stative verb',
+              },
+            ],
+            'rewrittenSample': 'Mock rewritten essay paragraph...',
           },
-          'mainIssues': [
-            'Limited vocabulary variety',
-            'Some grammar errors in complex sentences',
-          ],
-          'paragraphSuggestions': [
-            {'paragraph': 1, 'suggestion': 'Strengthen your opening argument'},
-          ],
-          'highScoreExpressions': [
-            'Furthermore, it is worth noting that...',
-            'From the perspective of...',
-          ],
-          'grammarIssues': [
-            {'original': 'I am agree', 'corrected': 'I agree', 'rule': 'Stative verb'},
-          ],
-          'rewrittenSample': 'Mock rewritten essay paragraph...',
-        });
+        );
       case 'confusion':
         final word = request.targetWord ?? 'word';
         return AiResponse(
@@ -167,10 +175,17 @@ class MockAiProvider implements AiProvider {
           success: true,
           data: {
             'sentences': [
-              {'sentence': 'Mock sentence with $word.', 'translation': 'Mock translation.'},
+              {
+                'sentence': 'Mock sentence with $word.',
+                'translation': 'Mock translation.',
+              },
             ],
             'rewrites': [
-              {'original': word, 'rewritten': 'Mock rewrite.', 'note': 'Mock note.'},
+              {
+                'original': word,
+                'rewritten': 'Mock rewrite.',
+                'note': 'Mock note.',
+              },
             ],
           },
         );
@@ -208,8 +223,9 @@ class AiPolicyService {
   final Future<int> Function(String userId)? dailyCountLookup;
 
   String? validateRequest(AiRequest request) {
-    final maxLength =
-        request.featureType == 'writing_review' ? 3000 : _maxPromptLength;
+    final maxLength = request.featureType == 'writing_review'
+        ? 3000
+        : _maxPromptLength;
     if (request.prompt.length > maxLength) return 'too_long';
     final lower = request.prompt.toLowerCase();
     for (final kw in blockedKeywords) {
@@ -240,6 +256,7 @@ class AiPolicyService {
 
 const _languageNames = <String, String>{
   'zh': 'Chinese',
+  'en': 'English',
   'ms': 'Malay',
   'es': 'Spanish',
   'fr': 'French',
@@ -251,20 +268,25 @@ const _languageNames = <String, String>{
 String languageNameFor(String code) => _languageNames[code] ?? 'Chinese';
 
 /// Builds the LLM system prompt for [featureType] in [language] (an English
-/// language name). Explanatory fields are English; taught content stays in
+/// language name). Explanatory fields use the helper language; taught text stays in
 /// [language]. Returns null for an unknown feature.
-String? buildSystemPrompt(String featureType, String language) {
+String? buildSystemPrompt(
+  String featureType,
+  String language, {
+  String helperLanguage = 'en',
+}) {
+  final helper = _languageNames[helperLanguage] ?? 'English';
   switch (featureType) {
     case 'chat':
-      return 'You are a $language-learning assistant for English speakers. '
-          'Write "answer" and "cautions" in English. Keep "relatedWords" as '
+      return 'You are a $language-learning assistant for $helper speakers. '
+          'Write "answer" and "cautions" in $helper. Keep "relatedWords" as '
           '$language words. Reply ONLY with strict JSON: '
           '{"answer": string, "cautions": string[], "relatedWords": string[]}. '
           'No markdown, no code fences.';
     case 'sentence_analysis':
       return 'Analyze the $language sentence. Keep "mainClause", "clauses", '
           'and "modifiers" in the original $language; write "translation" and '
-          '"vocabularyNotes" in English. Reply ONLY with strict JSON: '
+          '"vocabularyNotes" in $helper. Reply ONLY with strict JSON: '
           '{"mainClause": string, "clauses": string[], "modifiers": string[], '
           '"translation": string, "vocabularyNotes": string[]}. '
           'No markdown, no code fences.';
@@ -272,15 +294,15 @@ String? buildSystemPrompt(String featureType, String language) {
       return 'Create a short $language cloze exercise. Write a SHORT $language '
           'passage of only 2-3 sentences containing EXACTLY 3 to 4 blanks. '
           'Keep the "passage" and each blank\'s "answer" and "options" in '
-          '$language; write "explanations" in English. Be concise. Reply ONLY '
+          '$language; write "explanations" in $helper. Be concise. Reply ONLY '
           'with strict JSON: {"passage": string, "blanks": [{"index": number, '
           '"answer": string, "options": string[]}], "explanations": string[]}. '
           'No markdown, no code fences.';
     case 'reading_explain':
-      return 'Explain the $language paragraph for an English speaker learning '
+      return 'Explain the $language paragraph for a speaker of $helper learning '
           '$language. Keep "keyWords" entries\' "word" and "reading" in '
           '$language; write every other field ("gist", each key word\'s '
-          '"meaning", "grammarPoints", "structure", "translation") in English. '
+          '"meaning", "grammarPoints", "structure", "translation") in $helper. '
           'For "practice", each item\'s "prompt" and "options" stay in '
           '$language and "answer" must be one of its "options". Reply ONLY with '
           'strict JSON: {"gist": string, "keyWords": [{"word": string, '
@@ -289,10 +311,10 @@ String? buildSystemPrompt(String featureType, String language) {
           '[{"prompt": string, "answer": string, "options": string[]}]}. '
           'No markdown, no code fences.';
     case 'writing_review':
-      return 'You are a $language writing grader for English speakers. Write '
+      return 'You are a $language writing grader for $helper speakers. Write '
           'all feedback ("mainIssues", "paragraphSuggestions", '
           '"highScoreExpressions", and each grammar issue\'s "rule") in '
-          'English; keep "rewrittenSample" and any quoted student text in the '
+          '$helper; keep "rewrittenSample" and any quoted student text in the '
           'language of the original essay. Reply ONLY with strict JSON: '
           '{"totalScore": number, "rubricScores": {"content": number, '
           '"language": number, "structure": number, "vocabulary": number, '
@@ -304,14 +326,14 @@ String? buildSystemPrompt(String featureType, String language) {
     case 'confusion':
       return 'Identify words commonly confused with the target word in '
           '$language. Keep each pair\'s "word", "confusedWith", and "examples" '
-          'in $language; write "distinction" in English. Reply ONLY with strict '
+          'in $language; write "distinction" in $helper. Reply ONLY with strict '
           'JSON: {"pairs": [{"word": string, "confusedWith": string, '
           '"distinction": string, "examples": string[]}]}. '
           'No markdown, no code fences.';
     case 'sentence_gen':
       return 'For the target word or sentence, write natural example sentences '
           'and improved rewrites in $language. Keep "sentence" and "rewritten" '
-          'in $language; write "translation" and "note" in English. Reply ONLY '
+          'in $language; write "translation" and "note" in $helper. Reply ONLY '
           'with strict JSON: {"sentences": [{"sentence": string, "translation": '
           'string}], "rewrites": [{"original": string, "rewritten": string, '
           '"note": string}]}. No markdown, no code fences.';
@@ -345,6 +367,7 @@ class RemoteAiProvider implements AiProvider {
     final system = buildSystemPrompt(
       request.featureType,
       languageNameFor(request.targetLanguage),
+      helperLanguage: request.helperLanguage,
     );
     if (system == null) {
       return const AiResponse(
@@ -375,8 +398,7 @@ class RemoteAiProvider implements AiProvider {
       }
       final outer = jsonDecode(res.body) as Map<String, dynamic>;
       final choices = outer['choices'] as List;
-      final content =
-          (choices.first as Map)['message']['content'] as String;
+      final content = (choices.first as Map)['message']['content'] as String;
       final data = jsonDecode(content) as Map<String, dynamic>;
       return AiResponse(success: true, data: data);
     } catch (_) {
@@ -395,7 +417,9 @@ class RemoteAiProvider implements AiProvider {
       'Content-Type': 'application/json',
     };
     try {
-      final res = await client.post(uri, headers: headers, body: body).timeout(timeout);
+      final res = await client
+          .post(uri, headers: headers, body: body)
+          .timeout(timeout);
       if (res.statusCode >= 500) {
         return client.post(uri, headers: headers, body: body).timeout(timeout);
       }

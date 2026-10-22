@@ -1,15 +1,12 @@
 {
   "@@locale": "en",
-
   "appTitle": "LinguaQuest",
   "appSubtitle": "Build vocabulary with short lessons and smart review.",
-
   "tabHome": "Home",
   "tabTraining": "Training",
   "tabAiLearning": "AI Learn",
   "tabDiscover": "Discover",
   "tabProfile": "Me",
-
   "commonRegister": "Register",
   "commonLogin": "Login",
   "commonSettings": "Settings",
@@ -53,7 +50,6 @@
   "commonTimesSuffix": " times",
   "commonViewAll": "View all",
   "commonView": "View",
-
   "authRegisterTitle": "Register",
   "authLoginTitle": "Login",
   "authCreateProfile": "Create Learning Profile",
@@ -76,11 +72,9 @@
   "authWelcomeBack": "Welcome back",
   "authWelcomeBackSubtitle": "Continue today's learning path and clear your due review cards.",
   "authRegisterNew": "Register new account",
-
   "onboardingTitle": "LinguaQuest",
-  "onboardingSubtitle": "Short lessons, visual memory cards, and smart review help you steadily build English vocabulary.",
-  "onboardingTagline": "Level up daily like a game",
   "onboardingSubtitle": "Short lessons, visual memory cards, and smart review help you build vocabulary steadily.",
+  "onboardingTagline": "Level up daily like a game",
   "onboardingTagWorld": "Word Quest World",
   "onboardingTagStreak": "Daily streak",
   "splashTagline": "Word cards, clear paths, smart review.",
@@ -140,7 +134,7 @@
   "questCenterSubtitle": "Earn points after study actions; also view rankings, analytics, and class learning.",
   "questDailyTask": "Daily tasks",
   "questDailyTaskBody": "Finish a lesson and review 5 due words.",
-  "questAchievements": "Achievement badges",
+  "questAchievements": "Achievements",
   "questAchievementsBody": "Streaks, 100 words learned, first perfect lesson, and more.",
   "questAchievementsValue": "3",
   "questLeaderboard": "Leaderboard",
@@ -177,7 +171,6 @@
   "onboardingTagPillStreak": "Streak",
   "onboardingTagPillPlanet": "LinguaQuest Planet",
   "onboardingRegisterButton": "Register",
-
   "goalSetupTitle": "Goal Setup",
   "goalSetupSelectPlan": "Select Learning Plan",
   "goalSetupSelectPlanSubtitle": "The system breaks your goal into daily new words, due reviews, and point tasks.",
@@ -197,7 +190,6 @@
   "goalSetupReviewLimit": "Review Cap",
   "goalSetupReviewLimitCount": "Review cap: {count} words",
   "goalSetupViewWordbook": "View Full Wordbook",
-
   "homePersonalSpace": "Personal Space",
   "homeSearchHint": "Search words, phrases, or examples",
   "homeNotifications": "Notifications",
@@ -225,7 +217,6 @@
   "homeWeakWordsEmptyHint": "Add new words or complete reviews, and words needing focus will appear here.",
   "homePlanPaused": "Plan Paused",
   "homeTodayCompleted": "Today completed",
-
   "profileLearner": "Explorer",
   "profileNoEmail": "No email set",
   "publicProfileNotFoundTitle": "Profile unavailable",
@@ -262,7 +253,6 @@
   "profileWeaknessAnalysis": "Weakness Analysis",
   "profileNoWeakness": "No frequent mistakes yet. Complete learning and reviews to generate analysis.",
   "profileMostWrongWord": "Most Wrong Word",
-
   "settingsAppBar": "Settings",
   "settingsSoundFeedback": "Answer Sound Feedback",
   "settingsSoundFeedbackSubtitle": "Provides audio feedback for quiz results and practice rhythm",
@@ -286,7 +276,6 @@
   "settingsReminderOff": "Reminder Off",
   "settingsReminderDisabled": "No local reminders scheduled",
   "settingsReminderDescription": "The app remembers your reminder time and schedules local system reminders to prompt daily learning and check-ins.",
-
   "discoverTitle": "Discover",
   "discoverSubtitle": "Check-in, point tasks, lucky draw, and learning community; earned XP adds to your total score.",
   "discoverTaskCenter": "Task Center",
@@ -323,19 +312,25 @@
   "communityTimeMinutesAgo": "{count}m ago",
   "@communityTimeMinutesAgo": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "communityTimeHoursAgo": "{count}h ago",
   "@communityTimeHoursAgo": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "communityTimeDaysAgo": "{count}d ago",
   "@communityTimeDaysAgo": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "discoverXpUsage": "XP Usage",
@@ -369,9 +364,21 @@
   "discoverForumFailed": "Failed to record forum interaction, please try again later.",
   "discoverCheckinLoadingHint": "You can check in once tasks finish loading.",
   "discoverCheckinClaimedDesc": "Checked in today and claimed +{points} XP.",
-  "@discoverCheckinClaimedDesc": { "placeholders": { "points": { "type": "int" } } },
+  "@discoverCheckinClaimedDesc": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
   "discoverCheckinClaimableDesc": "Checked in today; remember to claim +{points} XP.",
-  "@discoverCheckinClaimableDesc": { "placeholders": { "points": { "type": "int" } } },
+  "@discoverCheckinClaimableDesc": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
   "discoverCheckinPrompt": "After checking in, the check-in task becomes claimable.",
   "discoverCheckingIn": "Checking in",
   "discoverCheckedIn": "Checked in",
@@ -383,7 +390,6 @@
   "discoverConditionMet": "Conditions met — tap to claim your reward.",
   "discoverProcessing": "Processing",
   "discoverRecordInteraction": "Record interaction",
-
   "quizNoLesson": "Lesson not found",
   "quizNoQuestions": "This lesson has no quiz yet.",
   "quizTimedTest": "Timed Test",
@@ -424,7 +430,6 @@
   "quizXpEarned": "Credited +{xp} XP",
   "quizTotalXp": "Total {xp} XP",
   "quizMistakeCount": "{count} mistakes",
-
   "trainingTitle": "Training Ground",
   "trainingSubtitle": "Timed tests, drills, leaderboard",
   "trainingPageSubtitle": "Timed tests, special drills, and the leaderboard live here.",
@@ -445,7 +450,7 @@
   "trainingSurvivorDesc": "Answer questions from easy to hard. Wrong answers go to weak words and mistake book.",
   "trainingSurvivorSource": "Current wordbook + weak words",
   "trainingSpelling": "Word Spelling",
-  "trainingSpellingDesc": "See Chinese, hear pronunciation, or read sentence cloze, then type the English word.",
+  "trainingSpellingDesc": "Read a definition, hear pronunciation, or read a sentence, then type the word you are learning.",
   "trainingSpellingSource": "Spelling weak words",
   "trainingPassageCloze": "Passage Cloze",
   "trainingPassageClozeDesc": "Generate passages with today's vocabulary, linking memorization and reading comprehension.",
@@ -472,7 +477,7 @@
   "trainingExit": "Leave",
   "trainingPromptWordRush": "Choose the meaning of \"{word}\" quickly",
   "trainingExplanationWordRush": "\"{word}\" means {meaning}. {example}",
-  "trainingPromptChineseChoice": "Choose the English word for: {meaning}",
+  "trainingPromptChineseChoice": "Choose the word for: {meaning}",
   "trainingExplanationChineseChoice": "{meaning} matches \"{word}\".",
   "trainingPromptContextChoice": "Choose the meaning from the example: {example}",
   "trainingPromptMeaningChoice": "Choose the meaning of \"{word}\"",
@@ -497,7 +502,6 @@
   "@trainingPromptListening": {},
   "trainingListeningRevealHint": "Play the audio first, then the options appear.",
   "@trainingListeningRevealHint": {},
-
   "learningPathTitle": "Learning Path",
   "learningPathBackToHome": "Back to Home",
   "learningPathBookPath": "Wordbook path",
@@ -514,7 +518,6 @@
   "learningPathLessonCompleted": "Completed",
   "learningPathLessonPreview": "Preview",
   "learningPathLessonQuiz": "Quiz",
-
   "lessonPreviewTitle": "New Word Cards",
   "lessonPreviewNoLesson": "Lesson not found",
   "lessonPreviewPrevious": "Previous",
@@ -539,7 +542,6 @@
   "lessonPreviewLeave": "Leave",
   "lessonPreviewAssessFirst": "Judge your familiarity first",
   "lessonPreviewContextExample": "Context example",
-
   "reviewCenterTitle": "Review",
   "reviewCenterCardsDuePrefix": "{count} cards due",
   "reviewCenterDailyCapPrefix": "Today's review cap ",
@@ -588,7 +590,6 @@
   "reviewCenterReviewQueue": "Review Queue",
   "reviewCenterStartReview": "Start Review",
   "reviewCenterEmpty": "All review done for now!",
-
   "mistakeBookTitle": "Mistake Book",
   "mistakeBookNoMistakes": "No lesson mistakes yet",
   "mistakeBookMistakes": "{count} lesson mistakes",
@@ -603,7 +604,6 @@
   "mistakeBookWeakWords": "Weak Custom Words",
   "mistakeBookNoLessonMistakes": "No mistakes in the last lesson.",
   "mistakeBookNoWeakWords": "No weak custom words yet.",
-
   "labelTargetCET4": "CET-4 Core",
   "labelTargetCET6": "CET-6 Core",
   "labelTargetKaoyan": "Postgrad Core",
@@ -650,7 +650,6 @@
   "labelWordTagTravel": "Travel",
   "labelWordTagWriting": "Writing",
   "labelWordTagDefault": "Target",
-
   "wordbookTitle": "Wordbook",
   "wordbookSearchHint": "Search words...",
   "wordbookNoResults": "No matching words found.",
@@ -687,7 +686,9 @@
   "pickerSwitchSuccess": "Switched to {wordbook}",
   "@pickerSwitchSuccess": {
     "placeholders": {
-      "wordbook": { "type": "String" }
+      "wordbook": {
+        "type": "String"
+      }
     }
   },
   "pickerSwitchFailed": "Unable to switch wordbook right now",
@@ -755,13 +756,11 @@
   "osNotificationReviewDueBody": "Clear your review queue, then start today's new words.",
   "osNotificationChannelName": "Study reminders",
   "osNotificationChannelDescription": "Study reminders, review-due and check-in alerts",
-
   "studyNewStudy": "New Study",
   "studyReviewOnly": "Review Only",
   "studyStartSession": "Start Session",
   "studySessionComplete": "Session Complete",
   "studyWordsLeft": "{count} words left",
-
   "studyPlanLoginRequired": "Please log in before setting up a study plan.",
   "studyPlanSave": "Save Study Plan",
   "studyPlanSettings": "Study Plan Settings",
@@ -789,7 +788,6 @@
   "studyPlanDaysLeft": "{count} days left",
   "studyPlanActive": "Active",
   "studyPlanPausedLabel": "Paused",
-
   "aiLearningTitle": "AI Learning",
   "aiLearningSubtitle": "Reading, writing, and practice",
   "aiLearningComingSoon": "AI learning features coming soon.",
@@ -815,19 +813,15 @@
   "aiLearningStatusSoon": "Coming Soon",
   "aiLearningStatusLater": "Coming Later",
   "aiLearningStatusPlanning": "In Planning",
-
   "questTitle": "Quests",
   "questDailyQuests": "Daily Quests",
-  "questAchievements": "Achievements",
-  "questLeaderboard": "Leaderboard",
   "questProgress": "Progress",
-
   "searchTitle": "Search",
   "searchHint": "Search words, phrases, examples...",
   "searchNoResults": "No results found.",
   "searchRecent": "Recent",
   "searchStartTitle": "Enter a keyword to start searching",
-  "searchStartMessage": "Search English words, phrases, Chinese meanings, example snippets, and custom words.",
+  "searchStartMessage": "Search words, definitions, example sentences and your custom words.",
   "searchNoResultsTitle": "No results found",
   "searchNoResultsMessage": "Try the full word library, or add a personal word card.",
   "searchFieldLabel": "Search words, phrases, Chinese meanings, or example snippets",
@@ -835,7 +829,6 @@
   "searchCurrentWordbookScope": "Current wordbook",
   "searchAllWordbooksScope": "Full library",
   "searchCurrentPlan": "Current plan",
-
   "customWordsMyCards": "My word cards",
   "customWordsMyCardsSubtitle": "Create, search, filter, edit, and review your personal word library.",
   "customWordsCardCount": "{count} cards",
@@ -861,7 +854,6 @@
   "commonRequired": "Required",
   "customWordsDeleteFailed": "Unable to delete {word} right now",
   "customWordsDeleted": "Deleted {word}",
-
   "wordbookWordNotFound": "Word not found",
   "wordbookFavorite": "Favorite",
   "wordbookFavorited": "Favorited",
@@ -886,7 +878,6 @@
   "wordbookHighFrequency": "High frequency",
   "wordbookContextExamples": "Context examples",
   "wordbookMasteryLevel": "Mastery {level}/5",
-
   "reviewStudyManageQueue": "Manage review queue",
   "reviewStudyTodayTitle": "Today's review",
   "reviewStudyTodaySubtitle": "Recall first, then reveal the answer; missed cards return later in this round for reinforcement.",
@@ -899,13 +890,11 @@
   "reviewStudyReinforce": "Add to reinforcement queue",
   "reviewStudyCompleteTitle": "Today's review complete",
   "reviewStudyCompleteMessage": "Next review times have been updated for this round.",
-  "reviewStudyRecallHint": "Recall the Chinese meaning from the English word first. If you remember it, move on; if not, reveal the knowledge card.",
+  "reviewStudyRecallHint": "Recall the meaning of the word first. If you remember it, move on; otherwise reveal the knowledge card.",
   "reviewStudyNextReview": "Next review: {due}",
   "reviewStudyHiddenHint": "Correct answers continue smoothly; wrong answers reveal the knowledge card and return later in this round.",
-
   "aiWordSupportDesc": "Ask about {word} usage, grammar, synonym differences, and example breakdowns.",
   "aiWordSupportWithExampleDesc": "Send {word} and the current example to ask about usage, grammar, synonym differences, and example breakdowns.",
-
   "helpFaqReviewScheduleQ": "How is review time scheduled?",
   "helpFaqReviewScheduleA": "Each word moves between mastery levels 0-5. Higher mastery means a longer interval before the next review.",
   "helpFaqCustomWordsQ": "Can I add my own words?",
@@ -913,7 +902,6 @@
   "helpFaqAiTutorQ": "What can the AI tutor do?",
   "helpFaqAiTutorA": "It can explain words, grammar, and mistakes, and suggest examples for further practice.",
   "helpContactSupport": "Contact support",
-
   "aboutVersion": "LinguaQuest · Version {version}",
   "@aboutVersion": {
     "placeholders": {
@@ -931,17 +919,14 @@
   "aboutCoreSubtitle": "Goal planning, vocabulary building, quiz practice, review scheduling, and personal word cards.",
   "aboutPrivacyTitle": "Privacy",
   "aboutPrivacySubtitle": "Custom words and learning records belong only to the signed-in user.",
-
   "communityPostCheckinTitle": "Today's check-in: Reviewed 18 words in 12 minutes",
   "communityPostCheckinTag": "Daily Check-in",
   "communityPostCheckinBody": "Mistakes were mostly synonyms. Tomorrow I'll start with the confusing words challenge in training.",
   "communityPostAbstractTitle": "How to remember the word 'abstract'?",
   "communityPostMistakeTag": "Mistake Discussion",
   "communityPostAbstractBody": "\"abstract\" in academic contexts often does not mean \"not concrete\"; context matters.",
-
   "notificationsTitle": "Notifications",
   "notificationsEmpty": "No notifications yet.",
-
   "languageSetting": "Language",
   "luckyDrawCostLine": "Spend {cost} XP per draw",
   "luckyDrawBalanceHint": "Current balance {xp} XP; prizes include avatar frames, profile backgrounds, badges, titles, card skins, and consolation fragments.",
@@ -985,86 +970,112 @@
   "pronunciationAnnounce": "{accent} {word}",
   "@pronunciationAnnounce": {
     "placeholders": {
-      "accent": { "type": "String" },
-      "word": { "type": "String" }
+      "accent": {
+        "type": "String"
+      },
+      "word": {
+        "type": "String"
+      }
     }
   },
   "pronunciationPlaying": "{accent}: {word}",
   "@pronunciationPlaying": {
     "placeholders": {
-      "accent": { "type": "String" },
-      "word": { "type": "String" }
+      "accent": {
+        "type": "String"
+      },
+      "word": {
+        "type": "String"
+      }
     }
   },
   "pronunciationUnavailable": "{accent} audio unavailable",
   "@pronunciationUnavailable": {
     "placeholders": {
-      "accent": { "type": "String" }
+      "accent": {
+        "type": "String"
+      }
     }
   },
   "pronunciationFailedRetry": "{accent} playback failed, tap to retry",
   "@pronunciationFailedRetry": {
     "placeholders": {
-      "accent": { "type": "String" }
+      "accent": {
+        "type": "String"
+      }
     }
   },
   "pronunciationLoading": "{accent} loading",
   "@pronunciationLoading": {
     "placeholders": {
-      "accent": { "type": "String" }
+      "accent": {
+        "type": "String"
+      }
     }
   },
   "pronunciationRetry": "{accent} retry",
   "@pronunciationRetry": {
     "placeholders": {
-      "accent": { "type": "String" }
+      "accent": {
+        "type": "String"
+      }
     }
   },
   "dueNow": "Due now",
   "dueInDays": "In {count} days",
   "@dueInDays": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "dueInHours": "In {count} hours",
   "@dueInHours": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "dueInMinutes": "In {count} minutes",
   "@dueInMinutes": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
-
   "languageMapTitle": "Choose Language",
   "languageMapSelectPrompt": "Tap a country to choose the language you want to learn.",
   "languageMapChinese": "Chinese",
   "languageMapConfirm": "Learn {language}",
   "@languageMapConfirm": {
     "placeholders": {
-      "language": { "type": "String" }
+      "language": {
+        "type": "String"
+      }
     }
   },
   "languageMapSelected": "Now learning {language}",
   "@languageMapSelected": {
     "placeholders": {
-      "language": { "type": "String" }
+      "language": {
+        "type": "String"
+      }
     }
   },
   "languageMapComingSoon": "{language} — coming soon",
   "@languageMapComingSoon": {
     "placeholders": {
-      "language": { "type": "String" }
+      "language": {
+        "type": "String"
+      }
     }
   },
   "aboutCompanyName": "LinguaQuest",
   "aboutCompanyAddress": "Xiamen University Malaysia, Bandar Sunsuria, 43900 Sepang, Selangor, Malaysia (virtual)",
   "aboutCompanyDescription": "Our virtual campus where LinguaQuest is built.",
-
   "aiLearningStatusAvailable": "Available",
   "aiExplainWithAi": "Explain with AI",
   "aiErrorGeneric": "Something went wrong. Please try again.",
@@ -1073,18 +1084,20 @@
   "aiEmptyAnalysis": "Paste a {language} sentence to see its structure broken down.",
   "aiEmptyCloze": "Enter a word to generate a fill-in-the-blank exercise.",
   "aiEmptyWriting": "Paste your essay and pick an exam type to get scored feedback.",
-
   "achievementsScreenTitle": "Achievements",
   "achievementsHeaderTitle": "Your Achievements",
   "@achievementsUnlockedCount": {
     "placeholders": {
-      "unlocked": { "type": "int" },
-      "total": { "type": "int" }
+      "unlocked": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "achievementsUnlockedCount": "{unlocked} / {total} unlocked",
   "achievementUnlockedLabel": "Unlocked",
-
   "achievementLearn100Title": "Century Scholar",
   "achievementLearn100Desc": "Master 100 words",
   "achievementQuizPerfectTitle": "Flawless Run",
@@ -1093,29 +1106,33 @@
   "achievementFirstListeningDesc": "Complete your first listening exercise",
   "achievementFirstMapLanguageTitle": "Cartographer",
   "achievementFirstMapLanguageDesc": "Pick a language from the language map",
-
   "assetInventoryTitle": "My Assets",
   "assetInventoryEmpty": "No assets yet. Try your luck in the Lucky Draw!",
   "@assetInventoryTotalOwned": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "assetInventoryTotalOwned": "{count} items owned",
   "@assetInventoryTotalFragments": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "assetInventoryTotalFragments": "{count} fragments",
   "@assetInventoryQuantityBadge": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "assetInventoryQuantityBadge": "×{count}",
   "luckyDrawViewMyAssets": "View my assets",
-
   "analyticsReportTitle": "Learning report",
   "analyticsReportSubtitle": "Your progress, charts, and focus areas",
   "analyticsScopeLabel": "Scope: {scope}",
@@ -1152,7 +1169,13 @@
   "readingFilterTheme": "Theme",
   "readingFilterAll": "All",
   "readingMinutes": "{count} min",
-  "@readingMinutes": { "placeholders": { "count": { "type": "int" } } },
+  "@readingMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "readingEmpty": "No articles for this filter yet.",
   "readingProgressInProgress": "In progress",
   "readingProgressDone": "Read",
@@ -1181,14 +1204,38 @@
   "readingComprehensionStart": "Start comprehension",
   "readingComprehensionTitle": "Comprehension",
   "readingComprehensionQuestion": "Question {current} of {total}",
-  "@readingComprehensionQuestion": { "placeholders": { "current": { "type": "int" }, "total": { "type": "int" } } },
+  "@readingComprehensionQuestion": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "readingComprehensionNext": "Next",
   "readingComprehensionFinish": "Finish",
   "readingComprehensionResultTitle": "Comprehension complete",
   "readingComprehensionScore": "{correct} / {total} correct",
-  "@readingComprehensionScore": { "placeholders": { "correct": { "type": "int" }, "total": { "type": "int" } } },
+  "@readingComprehensionScore": {
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "readingComprehensionAccuracy": "Accuracy {pct}%",
-  "@readingComprehensionAccuracy": { "placeholders": { "pct": { "type": "int" } } },
+  "@readingComprehensionAccuracy": {
+    "placeholders": {
+      "pct": {
+        "type": "int"
+      }
+    }
+  },
   "readingComprehensionDone": "Done",
   "readingComprehensionEmpty": "No comprehension questions for this article yet.",
   "readingAnalyticsTitle": "Reading",
@@ -1204,5 +1251,138 @@
   "readingExplainGrammar": "Grammar points",
   "readingExplainStructure": "Sentence structure",
   "readingExplainTranslation": "Translation",
-  "readingExplainPractice": "Practice"
+  "readingExplainPractice": "Practice",
+  "explanationLanguage": "Explanation language",
+  "explanationLanguageHint": "Read meanings and instructions in your language. Learning language stays separate.",
+  "dailyEncouragement": "A little progress, every day.",
+  "homeGreeting": "Welcome back",
+  "dailyTaskTitle": "Your next small win",
+  "dailyTaskHint": "Keep going at your own pace.",
+  "continueLearning": "Continue learning",
+  "aiCenterTitle": "Your AI study companion",
+  "aiCenterHint": "A little help when you need it.",
+  "aiNetworkNotice": "AI needs internet. Your downloaded words and basic practice work offline.",
+  "aiDemoNotice": "Demo responses · connect a server for live AI.",
+  "aiTryThis": "Try asking about today’s words",
+  "aiAskWord": "Explain this word with a simple example.",
+  "aiScenarioTitle": "What would you like to work on?",
+  "aiQaShort": "Understand a word or grammar point",
+  "aiAnalysisShort": "Read a tricky sentence together",
+  "aiClozeShort": "Practise words in a short passage",
+  "aiWritingShort": "Get feedback on your own writing",
+  "aiConfusionShort": "Tell similar words apart",
+  "aiSentenceShort": "Build a natural example sentence",
+  "offlineWordbooks": "Offline wordbooks",
+  "offlineWordbooksHint": "Download or update a local copy. Text learning and review work without internet; online audio and AI need a connection.",
+  "offlineBuiltIn": "Included · works offline",
+  "offlineDownloaded": "Downloaded · works offline",
+  "offlineDownload": "Download update",
+  "offlineRemove": "Remove downloaded copy",
+  "offlineDownloadSuccess": "Saved on this device",
+  "offlineDownloadFailed": "Download failed. Your existing local copy is safe.",
+  "offlineLocalProgress": "Basic learning is saved on this device. Pending study records sync on the next online launch.",
+  "practiceChooseMeaning": "Choose the meaning",
+  "practiceNext": "Next word",
+  "practiceCheck": "Check answer",
+  "practiceCorrect": "Nice work!",
+  "practiceReviewAnswer": "Let’s remember this one",
+  "practiceExitHint": "Completed review records are already saved. Keep a draft to resume the remaining questions.",
+  "homeAiHelp": "Need a little help?",
+  "homeAiHelpHint": "Ask your AI study companion",
+  "learningLanguage": "Learning Language",
+  "languageSpanish": "Spanish (Español)",
+  "languageFrench": "French (Français)",
+  "allWordbooks": "All languages",
+  "dataSettingsHint": "Offline content, export and account management",
+  "settingsVibrationLabel": "Vibration",
+  "settingsVibrationHint": "Haptic feedback on answers",
+  "settingsContrastLabel": "High contrast",
+  "settingsContrastHint": "Stronger contrast for answer feedback",
+  "wordbookTranslationFallback": "Some entries do not have definitions in your explanation language. Available source definitions are shown.",
+  "offlineRemoved": "Downloaded copy removed. Built-in content and progress are kept.",
+  "aiLoginNotice": "AI requires an account and internet. Downloaded books and basic practice work offline.",
+  "pronunciationAudio": "Audio",
+  "pronunciationAudioUnavailable": "Audio unavailable, tap to retry.",
+  "aiUiAiQA": "AI Q&A",
+  "aiUiAskAQuestion": "Ask a question",
+  "aiUiPleaseEnterAQuestion": "Please enter a question",
+  "aiUiAsking": "Asking...",
+  "aiUiAsk": "Ask",
+  "aiUiHistory": "History",
+  "aiUiAnswer": "Answer",
+  "aiUiCautions": "Cautions",
+  "aiUiRelatedWords": "Related Words",
+  "aiUiDeleteHistory": "Delete history?",
+  "aiUiCancel": "Cancel",
+  "aiUiDelete": "Delete",
+  "aiUiAiSentenceAnalysis": "AI Sentence Analysis",
+  "aiUiEnterASentenceToAnalyze": "Enter a sentence to analyze",
+  "aiUiSentenceHint": "Type or paste a sentence in your learning language...",
+  "aiUiPleaseEnterASentence": "Please enter a sentence",
+  "aiUiAnalyzing": "Analyzing...",
+  "aiUiAnalyze": "Analyze",
+  "aiUiAnalysisResult": "Analysis Result",
+  "aiUiMainClause": "Main Clause",
+  "aiUiClauses": "Clauses",
+  "aiUiModifiers": "Modifiers",
+  "aiUiTranslation": "Translation",
+  "aiUiVocabularyNotes": "Vocabulary Notes",
+  "aiUiAiClozeTest": "AI Cloze Test",
+  "aiUiEnterAWordForClozeTest": "Enter a word for cloze test",
+  "aiUiPleaseEnterAWord": "Please enter a word",
+  "aiUiGenerating": "Generating...",
+  "aiUiGenerate": "Generate",
+  "aiUiClozeTest": "Cloze Test",
+  "aiUiCorrect": "Correct!",
+  "aiUiConfusableWords": "Confusable Words",
+  "aiUiEnterAWordToCompareWithItsLookAlikes": "Enter a word to compare with its look-alikes",
+  "aiUiEnterAWordToSeeCommonlyConfusedLookAlikesAndHowToTellThemApart": "Enter a word to see commonly confused look-alikes and how to tell them apart.",
+  "aiUiNoConfusableWordsFound": "No confusable words found.",
+  "aiUiSentenceGeneration": "Sentence Generation",
+  "aiUiEnterAWordOrASentence": "Enter a word or a sentence",
+  "aiUiAWordToBuildSentencesForOrASentenceToRewrite": "A word to build sentences for, or a sentence to rewrite",
+  "aiUiPleaseEnterAWordOrSentence": "Please enter a word or sentence",
+  "aiUiEnterAWordToGenerateExampleSentencesOrASentenceToGetRewriteSuggestions": "Enter a word to generate example sentences, or a sentence to get rewrite suggestions.",
+  "aiUiExampleSentences": "Example Sentences",
+  "aiUiRewrites": "Rewrites",
+  "aiUiAiWritingReview": "AI Writing Review",
+  "aiUiNewEssay": "New Essay",
+  "aiUiExamType": "Exam Type",
+  "aiUiYourEssay": "Your Essay",
+  "aiUiPasteOrTypeYourEssayHere503000Characters": "Paste or type your essay here (50–3000 characters)...",
+  "aiUiEssayMustBeAtLeast50Characters": "Essay must be at least 50 characters",
+  "aiUiSubmitForReview": "Submit for Review",
+  "aiUiOverallScore": "Overall Score",
+  "aiUiScoreBreakdown": "Score Breakdown",
+  "aiUiContent": "Content",
+  "aiUiLanguage": "Language",
+  "aiUiStructure": "Structure",
+  "aiUiVocabulary": "Vocabulary",
+  "aiUiAccuracy": "Accuracy",
+  "aiUiMainIssues": "Main Issues",
+  "aiUiGrammarCorrections": "Grammar Corrections",
+  "aiUiHighScoreExpressions": "High-Score Expressions",
+  "aiUiCopied": "Copied!",
+  "aiUiParagraphSuggestions": "Paragraph Suggestions",
+  "aiUiRewrittenSample": "Rewritten Sample",
+  "aiUiDefaultQuestion": "What does \"{word}\" mean?",
+  "@aiUiDefaultQuestion": {"placeholders": {"word": {"type": "String"}}},
+  "aiUiClozePrompt": "Generate cloze for: {word}",
+  "@aiUiClozePrompt": {"placeholders": {"word": {"type": "String"}}},
+  "aiUiComparePrompt": "Distinguish words confusable with: {word}",
+  "@aiUiComparePrompt": {"placeholders": {"word": {"type": "String"}}},
+  "aiUiSentencePrompt": "Generate example sentences and rewrites for: {word}",
+  "@aiUiSentencePrompt": {"placeholders": {"word": {"type": "String"}}},
+  "aiUiBlank": "Blank {number}",
+  "@aiUiBlank": {"placeholders": {"number": {"type": "int"}}},
+  "aiUiWrongAnswer": "Wrong! Answer: {word}",
+  "@aiUiWrongAnswer": {"placeholders": {"word": {"type": "String"}}},
+  "aiUiCharacterCount": "{number} / 3000 characters",
+  "@aiUiCharacterCount": {"placeholders": {"number": {"type": "int"}}},
+  "aiUiParagraph": "Paragraph {number}: {text}",
+  "@aiUiParagraph": {"placeholders": {"number": {"type": "String"}, "text": {"type": "String"}}},
+  "aiUiGeneral": "General",
+  "aiUiAcademic": "Academic",
+  "aiUiBusiness": "Business",
+  "aiUiCasual": "Casual"
 }

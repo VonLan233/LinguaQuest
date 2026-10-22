@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:linguaquest/core/theme/app_tokens.dart';
 import 'package:linguaquest/core/widgets/app_button.dart';
 
 void main() {
@@ -31,13 +30,8 @@ void main() {
         home: Scaffold(body: AppPrimaryButton(label: 'x', onPressed: null)),
       ),
     );
-    final gesture = tester.widget<GestureDetector>(
-      find.descendant(
-        of: find.byType(AppPrimaryButton),
-        matching: find.byType(GestureDetector),
-      ),
-    );
-    expect(gesture.onTap, isNull);
+    final button = tester.widget<FilledButton>(find.byType(FilledButton));
+    expect(button.onPressed, isNull);
   });
 
   testWidgets('AppPrimaryButton exposes an enabled button to a11y', (
@@ -69,7 +63,10 @@ void main() {
       ),
     );
     final label = tester.widget<Text>(find.text('off'));
-    expect(label.style?.color, AppTokens.textHintLight);
+    expect(
+      label.style?.color,
+      Theme.of(tester.element(find.text('off'))).colorScheme.onSurfaceVariant,
+    );
   });
 
   testWidgets('AppPrimaryButton constrains long labels', (tester) async {

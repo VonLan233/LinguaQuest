@@ -330,10 +330,18 @@ void main() {
           'This is a sufficiently long essay used only for the writing '
           'review widget test so it passes the fifty character minimum.',
         );
+        await tester.ensureVisible(find.text('Submit for Review'));
+        await tester.pumpAndSettle();
         await tester.tap(find.text('Submit for Review'));
         await tester.pumpAndSettle();
 
         // High-Score Expressions section renders a copy button per expression.
+        await tester.scrollUntilVisible(
+          find.text('High-Score Expressions'),
+          200,
+          scrollable: find.byType(Scrollable).first,
+        );
+        await tester.pumpAndSettle();
         final copyBtn = find.byIcon(Icons.copy).first;
         await tester.ensureVisible(copyBtn);
         await tester.pumpAndSettle();

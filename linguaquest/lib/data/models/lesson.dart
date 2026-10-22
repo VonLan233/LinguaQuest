@@ -8,10 +8,10 @@ enum QuizQuestionType {
   listeningWordChoice,
   listeningMeaningChoice,
   spelling,
-  sentenceCloze,       // 例句填空：把目标词替换为 ____ 让学习者选择
-  confusableChoice,    // 易混词辨析：从语义相近词中选出正确答案
-  collocationChoice,   // 搭配选择：从常用搭配中选出正确的动词/名词搭配
-  derivativeChoice,    // 词形变化：选择正确的词形（名词/动词/形容词等）
+  sentenceCloze, // 例句填空：把目标词替换为 ____ 让学习者选择
+  confusableChoice, // 易混词辨析：从语义相近词中选出正确答案
+  collocationChoice, // 搭配选择：从常用搭配中选出正确的动词/名词搭配
+  derivativeChoice, // 词形变化：选择正确的词形（名词/动词/形容词等）
 }
 
 class WordExample {
@@ -67,6 +67,7 @@ class Word {
     this.definitions = const [],
     this.englishDefinitions = const [],
     this.malayDefinitions = const [],
+    this.localizedDefinitions = const {},
     this.examples = const [],
     this.collocations = const [],
     this.synonyms = const [],
@@ -99,6 +100,7 @@ class Word {
   final List<String> definitions;
   final List<String> englishDefinitions;
   final List<String> malayDefinitions;
+  final Map<String, List<String>> localizedDefinitions;
   final List<WordExample> examples;
   final List<WordPhrase> collocations;
   final List<String> synonyms;
@@ -110,8 +112,10 @@ class Word {
   // P2a: Japanese fields — empty/''/null for all existing zh data.
   /// Hiragana/katakana reading (Japanese words). Empty for zh/en words.
   final String kana;
+
   /// Romanized reading (Japanese words). Empty for zh/en words.
   final String romaji;
+
   /// Generic exam level (JLPT level number for ja; null for zh where hskLevel is used).
   final int? examLevel;
 
@@ -148,6 +152,8 @@ class Word {
   /// those so callers always have something to show.
   List<String> definitionsFor(String languageCode) {
     final normalizedLanguage = languageCode.toLowerCase();
+    final translated = localizedDefinitions[normalizedLanguage];
+    if (translated != null && translated.isNotEmpty) return translated;
     List<String> nonChinese(Iterable<String> values) {
       return [
         for (final value in values)
@@ -174,6 +180,11 @@ class Word {
             return nonChinese(definitions);
           }
           return [_fallbackDefinitionFor(word, normalizedLanguage)];
+        case 'ja':
+          // Legacy exam books without Japanese translations retain English glosses.
+          return englishDefinitions.isNotEmpty
+              ? englishDefinitions
+              : definitions;
         case 'ms':
           if (nonChinese(malayDefinitions).isNotEmpty) {
             return nonChinese(malayDefinitions);
@@ -250,9 +261,9 @@ class Word {
       meaning: meaning,
       definition: definition,
       partOfSpeech: _string(json['partOfSpeech'], fallback: 'word'),
-      exampleSentence: firstExample.en.isNotEmpty
-          ? firstExample.en
-          : legacyExampleSentence,
+      exampleSentence: legacyExampleSentence.isNotEmpty
+          ? legacyExampleSentence
+          : firstExample.en,
       exampleTranslation: firstExample.cn.isNotEmpty
           ? firstExample.cn
           : legacyExampleTranslation,
@@ -266,6 +277,11 @@ class Word {
       definitions: definitions,
       englishDefinitions: englishDefinitions,
       malayDefinitions: malayDefinitions,
+      localizedDefinitions: {
+        for (final entry
+            in (json['localizedDefinitions'] as Map? ?? {}).entries)
+          entry.key.toString(): _stringList(entry.value),
+      },
       examples: examples,
       collocations: _phrases(json['collocations']),
       synonyms: _stringList(json['synonyms']),
@@ -295,6 +311,7 @@ class Word {
           ? [definition]
           : englishDefinitions,
       'malayDefinitions': malayDefinitions,
+      'localizedDefinitions': localizedDefinitions,
       'exampleSentences': examples.isEmpty
           ? [WordExample(en: exampleSentence, cn: exampleTranslation).toJson()]
           : [for (final example in examples) example.toJson()],
@@ -340,6 +357,7 @@ class WordBook {
     required this.words,
     this.titleEn = '',
     this.titleMs = '',
+    this.titleJa = '',
     // P2a: language code for this wordbook. Default 'zh' for all existing HSK data.
     this.language = 'zh',
   });
@@ -348,6 +366,7 @@ class WordBook {
   final String title;
   final String titleEn;
   final String titleMs;
+  final String titleJa;
   final String category;
   final String examType;
   final String coverUrl;
@@ -357,6 +376,7 @@ class WordBook {
   final List<String> wordIds;
   final DateTime createdAt;
   final List<Word> words;
+
   /// ISO language code for this wordbook ('zh', 'ja', …). Default 'zh'.
   /// All existing HSK JSON (which lacks this field) will parse to 'zh'.
   final String language;
@@ -369,6 +389,10 @@ class WordBook {
   /// Display-only; never use as a map key or id.
   String nameFor(String languageCode) {
     switch (languageCode) {
+      case 'ja':
+        return titleJa.isNotEmpty
+            ? titleJa
+            : (titleEn.isNotEmpty ? titleEn : title);
       case 'en':
         return titleEn.isNotEmpty ? titleEn : title;
       case 'ms':
@@ -390,6 +414,7 @@ class WordBook {
       title: _string(json['title']),
       titleEn: _string(json['titleEn']),
       titleMs: _string(json['titleMs']),
+      titleJa: _string(json['titleJa']),
       category: _string(json['category'], fallback: 'exam'),
       examType: _string(json['examType']),
       coverUrl: _string(json['coverUrl']),
@@ -414,6 +439,7 @@ class WordBook {
       'title': title,
       'titleEn': titleEn,
       'titleMs': titleMs,
+      'titleJa': titleJa,
       'category': category,
       'examType': examType,
       'coverUrl': coverUrl,
@@ -465,8 +491,12 @@ class QuizQuestion {
       explanation: _string(json['explanation']),
       word: Word.fromJson(_questionWordJson(json, wordData)),
       promptEn: json['promptEn'] == null ? null : _string(json['promptEn']),
-      optionsEn: json['optionsEn'] == null ? null : _stringList(json['optionsEn']),
-      explanationEn: json['explanationEn'] == null ? null : _string(json['explanationEn']),
+      optionsEn: json['optionsEn'] == null
+          ? null
+          : _stringList(json['optionsEn']),
+      explanationEn: json['explanationEn'] == null
+          ? null
+          : _string(json['explanationEn']),
     );
   }
 

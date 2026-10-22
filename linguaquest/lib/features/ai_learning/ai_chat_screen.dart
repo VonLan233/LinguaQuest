@@ -29,11 +29,17 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
   bool _isLoading = false;
   String? _errorMessage;
 
+  bool _questionInitialized = false;
+
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_questionInitialized) return;
+    _questionInitialized = true;
     if (widget.word != null && widget.word!.isNotEmpty) {
-      _controller.text = 'What does "${widget.word}" mean?';
+      _controller.text = AppLocalizations.of(
+        context,
+      ).aiUiDefaultQuestion(widget.word ?? '');
     }
   }
 
@@ -58,8 +64,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
         final errMsg = ref.read(appControllerProvider).errorMessage;
         setState(() {
           _isLoading = false;
-          _errorMessage =
-              errMsg ?? AppLocalizations.of(context).aiErrorGeneric;
+          _errorMessage = errMsg ?? AppLocalizations.of(context).aiErrorGeneric;
         });
       } else {
         setState(() {
@@ -81,14 +86,13 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
     );
     final history = ref.watch(
       appControllerProvider.select(
-        (s) =>
-            s.aiHistory.where((e) => e.featureType == 'chat').toList(),
+        (s) => s.aiHistory.where((e) => e.featureType == 'chat').toList(),
       ),
     );
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('AI Q&A'),
+        title: Text(AppLocalizations.of(context).aiUiAiQA),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
@@ -110,7 +114,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Ask a question',
+                    AppLocalizations.of(context).aiUiAskAQuestion,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w700,
                     ),
@@ -126,7 +130,9 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Please enter a question';
+                        return AppLocalizations.of(
+                          context,
+                        ).aiUiPleaseEnterAQuestion;
                       }
                       return null;
                     },
@@ -135,7 +141,9 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: AppPrimaryButton(
-                      label: _isLoading ? 'Asking...' : 'Ask',
+                      label: _isLoading
+                          ? AppLocalizations.of(context).aiUiAsking
+                          : AppLocalizations.of(context).aiUiAsk,
                       onPressed: _isLoading ? null : _submit,
                     ),
                   ),
@@ -159,10 +167,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
             // ERROR state
             if (_errorMessage != null) ...[
               const SizedBox(height: AppTokens.s20),
-              AiErrorCard(
-                message: _errorMessage!,
-                onRetry: _submit,
-              ),
+              AiErrorCard(message: _errorMessage!, onRetry: _submit),
             ],
             // RESULT state
             if (_result != null) ...[
@@ -172,7 +177,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
             if (history.isNotEmpty) ...[
               const SizedBox(height: AppTokens.s24),
               Text(
-                'History',
+                AppLocalizations.of(context).aiUiHistory,
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w700,
                 ),
@@ -221,7 +226,7 @@ class _AiChatResultCard extends StatelessWidget {
               const Icon(Icons.auto_awesome, size: 18),
               const SizedBox(width: AppTokens.s8),
               Text(
-                'Answer',
+                AppLocalizations.of(context).aiUiAnswer,
                 style: theme.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.w700,
                 ),
@@ -233,7 +238,7 @@ class _AiChatResultCard extends StatelessWidget {
           if (cautions.isNotEmpty) ...[
             const SizedBox(height: AppTokens.s12),
             Text(
-              'Cautions',
+              AppLocalizations.of(context).aiUiCautions,
               style: theme.textTheme.labelMedium?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -243,7 +248,7 @@ class _AiChatResultCard extends StatelessWidget {
           if (relatedWords.isNotEmpty) ...[
             const SizedBox(height: AppTokens.s12),
             Text(
-              'Related Words',
+              AppLocalizations.of(context).aiUiRelatedWords,
               style: theme.textTheme.labelMedium?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -252,12 +257,7 @@ class _AiChatResultCard extends StatelessWidget {
               spacing: AppTokens.s8,
               runSpacing: AppTokens.s4,
               children: relatedWords
-                  .map(
-                    (w) => AppPill(
-                      label: w,
-                      variant: PillVariant.primary,
-                    ),
-                  )
+                  .map((w) => AppPill(label: w, variant: PillVariant.primary))
                   .toList(),
             ),
           ],
@@ -280,18 +280,18 @@ class _AiHistoryCard extends StatelessWidget {
       onLongPress: () => showDialog<void>(
         context: context,
         builder: (_) => AlertDialog(
-          title: const Text('Delete history?'),
+          title: Text(AppLocalizations.of(context).aiUiDeleteHistory),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: Text(AppLocalizations.of(context).aiUiCancel),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
                 onDelete();
               },
-              child: const Text('Delete'),
+              child: Text(AppLocalizations.of(context).aiUiDelete),
             ),
           ],
         ),

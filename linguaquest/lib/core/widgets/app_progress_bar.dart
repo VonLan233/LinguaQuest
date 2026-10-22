@@ -11,7 +11,7 @@ class AppProgressBar extends StatelessWidget {
   const AppProgressBar({
     required this.value,
     this.height = 9,
-    this.solid = false,
+    this.solid = true,
     this.solidColor,
     super.key,
   });
@@ -30,16 +30,20 @@ class AppProgressBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final factor = value.clamp(0.0, 1.0);
     return ClipRRect(
-      borderRadius: BorderRadius.circular(AppTokens.radiusPill),
+      borderRadius: BorderRadius.zero,
       child: Container(
         height: height,
-        color: AppTokens.surfaceSunken,
+        color: Theme.of(context).brightness == Brightness.dark
+            ? Theme.of(context).colorScheme.surfaceContainerHighest
+            : AppTokens.surfaceSunken,
         alignment: Alignment.centerLeft,
         child: FractionallySizedBox(
           widthFactor: factor,
           child: Container(
             decoration: BoxDecoration(
-              color: solid ? (solidColor ?? AppTokens.azure) : null,
+              color: solid
+                  ? (solidColor ?? Theme.of(context).colorScheme.primary)
+                  : null,
               gradient: solid ? null : AppTokens.progressGradient,
             ),
           ),

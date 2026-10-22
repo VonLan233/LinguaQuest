@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_en.dart';
+import 'app_localizations_ja.dart';
 import 'app_localizations_ms.dart';
 import 'app_localizations_zh.dart';
 
@@ -96,6 +97,7 @@ abstract class AppLocalizations {
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
+    Locale('ja'),
     Locale('ms'),
     Locale('zh'),
   ];
@@ -2551,7 +2553,7 @@ abstract class AppLocalizations {
   /// No description provided for @trainingSpellingDesc.
   ///
   /// In en, this message translates to:
-  /// **'See Chinese, hear pronunciation, or read sentence cloze, then type the English word.'**
+  /// **'Read a definition, hear pronunciation, or read a sentence, then type the word you are learning.'**
   String get trainingSpellingDesc;
 
   /// No description provided for @trainingSpellingSource.
@@ -2717,7 +2719,7 @@ abstract class AppLocalizations {
   /// No description provided for @trainingPromptChineseChoice.
   ///
   /// In en, this message translates to:
-  /// **'Choose the English word for: {meaning}'**
+  /// **'Choose the word for: {meaning}'**
   String trainingPromptChineseChoice(Object meaning);
 
   /// No description provided for @trainingExplanationChineseChoice.
@@ -4606,7 +4608,7 @@ abstract class AppLocalizations {
   /// No description provided for @searchStartMessage.
   ///
   /// In en, this message translates to:
-  /// **'Search English words, phrases, Chinese meanings, example snippets, and custom words.'**
+  /// **'Search words, definitions, example sentences and your custom words.'**
   String get searchStartMessage;
 
   /// No description provided for @searchNoResultsTitle.
@@ -5020,7 +5022,7 @@ abstract class AppLocalizations {
   /// No description provided for @reviewStudyRecallHint.
   ///
   /// In en, this message translates to:
-  /// **'Recall the Chinese meaning from the English word first. If you remember it, move on; if not, reveal the knowledge card.'**
+  /// **'Recall the meaning of the word first. If you remember it, move on; otherwise reveal the knowledge card.'**
   String get reviewStudyRecallHint;
 
   /// No description provided for @reviewStudyNextReview.
@@ -6216,6 +6218,757 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Practice'**
   String get readingExplainPractice;
+
+  /// No description provided for @explanationLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Explanation language'**
+  String get explanationLanguage;
+
+  /// No description provided for @explanationLanguageHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Read meanings and instructions in your language. Learning language stays separate.'**
+  String get explanationLanguageHint;
+
+  /// No description provided for @dailyEncouragement.
+  ///
+  /// In en, this message translates to:
+  /// **'A little progress, every day.'**
+  String get dailyEncouragement;
+
+  /// No description provided for @homeGreeting.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back'**
+  String get homeGreeting;
+
+  /// No description provided for @dailyTaskTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your next small win'**
+  String get dailyTaskTitle;
+
+  /// No description provided for @dailyTaskHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep going at your own pace.'**
+  String get dailyTaskHint;
+
+  /// No description provided for @continueLearning.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue learning'**
+  String get continueLearning;
+
+  /// No description provided for @aiCenterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your AI study companion'**
+  String get aiCenterTitle;
+
+  /// No description provided for @aiCenterHint.
+  ///
+  /// In en, this message translates to:
+  /// **'A little help when you need it.'**
+  String get aiCenterHint;
+
+  /// No description provided for @aiNetworkNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'AI needs internet. Your downloaded words and basic practice work offline.'**
+  String get aiNetworkNotice;
+
+  /// No description provided for @aiDemoNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Demo responses · connect a server for live AI.'**
+  String get aiDemoNotice;
+
+  /// No description provided for @aiTryThis.
+  ///
+  /// In en, this message translates to:
+  /// **'Try asking about today’s words'**
+  String get aiTryThis;
+
+  /// No description provided for @aiAskWord.
+  ///
+  /// In en, this message translates to:
+  /// **'Explain this word with a simple example.'**
+  String get aiAskWord;
+
+  /// No description provided for @aiScenarioTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What would you like to work on?'**
+  String get aiScenarioTitle;
+
+  /// No description provided for @aiQaShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Understand a word or grammar point'**
+  String get aiQaShort;
+
+  /// No description provided for @aiAnalysisShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Read a tricky sentence together'**
+  String get aiAnalysisShort;
+
+  /// No description provided for @aiClozeShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Practise words in a short passage'**
+  String get aiClozeShort;
+
+  /// No description provided for @aiWritingShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Get feedback on your own writing'**
+  String get aiWritingShort;
+
+  /// No description provided for @aiConfusionShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell similar words apart'**
+  String get aiConfusionShort;
+
+  /// No description provided for @aiSentenceShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Build a natural example sentence'**
+  String get aiSentenceShort;
+
+  /// No description provided for @offlineWordbooks.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline wordbooks'**
+  String get offlineWordbooks;
+
+  /// No description provided for @offlineWordbooksHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Download or update a local copy. Text learning and review work without internet; online audio and AI need a connection.'**
+  String get offlineWordbooksHint;
+
+  /// No description provided for @offlineBuiltIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Included · works offline'**
+  String get offlineBuiltIn;
+
+  /// No description provided for @offlineDownloaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloaded · works offline'**
+  String get offlineDownloaded;
+
+  /// No description provided for @offlineDownload.
+  ///
+  /// In en, this message translates to:
+  /// **'Download update'**
+  String get offlineDownload;
+
+  /// No description provided for @offlineRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove downloaded copy'**
+  String get offlineRemove;
+
+  /// No description provided for @offlineDownloadSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved on this device'**
+  String get offlineDownloadSuccess;
+
+  /// No description provided for @offlineDownloadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Download failed. Your existing local copy is safe.'**
+  String get offlineDownloadFailed;
+
+  /// No description provided for @offlineLocalProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic learning is saved on this device. Pending study records sync on the next online launch.'**
+  String get offlineLocalProgress;
+
+  /// No description provided for @practiceChooseMeaning.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the meaning'**
+  String get practiceChooseMeaning;
+
+  /// No description provided for @practiceNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next word'**
+  String get practiceNext;
+
+  /// No description provided for @practiceCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Check answer'**
+  String get practiceCheck;
+
+  /// No description provided for @practiceCorrect.
+  ///
+  /// In en, this message translates to:
+  /// **'Nice work!'**
+  String get practiceCorrect;
+
+  /// No description provided for @practiceReviewAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Let’s remember this one'**
+  String get practiceReviewAnswer;
+
+  /// No description provided for @practiceExitHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed review records are already saved. Keep a draft to resume the remaining questions.'**
+  String get practiceExitHint;
+
+  /// No description provided for @homeAiHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Need a little help?'**
+  String get homeAiHelp;
+
+  /// No description provided for @homeAiHelpHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask your AI study companion'**
+  String get homeAiHelpHint;
+
+  /// No description provided for @learningLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning Language'**
+  String get learningLanguage;
+
+  /// No description provided for @languageSpanish.
+  ///
+  /// In en, this message translates to:
+  /// **'Spanish (Español)'**
+  String get languageSpanish;
+
+  /// No description provided for @languageFrench.
+  ///
+  /// In en, this message translates to:
+  /// **'French (Français)'**
+  String get languageFrench;
+
+  /// No description provided for @allWordbooks.
+  ///
+  /// In en, this message translates to:
+  /// **'All languages'**
+  String get allWordbooks;
+
+  /// No description provided for @dataSettingsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline content, export and account management'**
+  String get dataSettingsHint;
+
+  /// No description provided for @settingsVibrationLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Vibration'**
+  String get settingsVibrationLabel;
+
+  /// No description provided for @settingsVibrationHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Haptic feedback on answers'**
+  String get settingsVibrationHint;
+
+  /// No description provided for @settingsContrastLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'High contrast'**
+  String get settingsContrastLabel;
+
+  /// No description provided for @settingsContrastHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Stronger contrast for answer feedback'**
+  String get settingsContrastHint;
+
+  /// No description provided for @wordbookTranslationFallback.
+  ///
+  /// In en, this message translates to:
+  /// **'Some entries do not have definitions in your explanation language. Available source definitions are shown.'**
+  String get wordbookTranslationFallback;
+
+  /// No description provided for @offlineRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloaded copy removed. Built-in content and progress are kept.'**
+  String get offlineRemoved;
+
+  /// No description provided for @aiLoginNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'AI requires an account and internet. Downloaded books and basic practice work offline.'**
+  String get aiLoginNotice;
+
+  /// No description provided for @pronunciationAudio.
+  ///
+  /// In en, this message translates to:
+  /// **'Audio'**
+  String get pronunciationAudio;
+
+  /// No description provided for @pronunciationAudioUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Audio unavailable, tap to retry.'**
+  String get pronunciationAudioUnavailable;
+
+  /// No description provided for @aiUiAiQA.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Q&A'**
+  String get aiUiAiQA;
+
+  /// No description provided for @aiUiAskAQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask a question'**
+  String get aiUiAskAQuestion;
+
+  /// No description provided for @aiUiPleaseEnterAQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a question'**
+  String get aiUiPleaseEnterAQuestion;
+
+  /// No description provided for @aiUiAsking.
+  ///
+  /// In en, this message translates to:
+  /// **'Asking...'**
+  String get aiUiAsking;
+
+  /// No description provided for @aiUiAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask'**
+  String get aiUiAsk;
+
+  /// No description provided for @aiUiHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get aiUiHistory;
+
+  /// No description provided for @aiUiAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Answer'**
+  String get aiUiAnswer;
+
+  /// No description provided for @aiUiCautions.
+  ///
+  /// In en, this message translates to:
+  /// **'Cautions'**
+  String get aiUiCautions;
+
+  /// No description provided for @aiUiRelatedWords.
+  ///
+  /// In en, this message translates to:
+  /// **'Related Words'**
+  String get aiUiRelatedWords;
+
+  /// No description provided for @aiUiDeleteHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete history?'**
+  String get aiUiDeleteHistory;
+
+  /// No description provided for @aiUiCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get aiUiCancel;
+
+  /// No description provided for @aiUiDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get aiUiDelete;
+
+  /// No description provided for @aiUiAiSentenceAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Sentence Analysis'**
+  String get aiUiAiSentenceAnalysis;
+
+  /// No description provided for @aiUiEnterASentenceToAnalyze.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a sentence to analyze'**
+  String get aiUiEnterASentenceToAnalyze;
+
+  /// No description provided for @aiUiSentenceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Type or paste a sentence in your learning language...'**
+  String get aiUiSentenceHint;
+
+  /// No description provided for @aiUiPleaseEnterASentence.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a sentence'**
+  String get aiUiPleaseEnterASentence;
+
+  /// No description provided for @aiUiAnalyzing.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing...'**
+  String get aiUiAnalyzing;
+
+  /// No description provided for @aiUiAnalyze.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyze'**
+  String get aiUiAnalyze;
+
+  /// No description provided for @aiUiAnalysisResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Analysis Result'**
+  String get aiUiAnalysisResult;
+
+  /// No description provided for @aiUiMainClause.
+  ///
+  /// In en, this message translates to:
+  /// **'Main Clause'**
+  String get aiUiMainClause;
+
+  /// No description provided for @aiUiClauses.
+  ///
+  /// In en, this message translates to:
+  /// **'Clauses'**
+  String get aiUiClauses;
+
+  /// No description provided for @aiUiModifiers.
+  ///
+  /// In en, this message translates to:
+  /// **'Modifiers'**
+  String get aiUiModifiers;
+
+  /// No description provided for @aiUiTranslation.
+  ///
+  /// In en, this message translates to:
+  /// **'Translation'**
+  String get aiUiTranslation;
+
+  /// No description provided for @aiUiVocabularyNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Vocabulary Notes'**
+  String get aiUiVocabularyNotes;
+
+  /// No description provided for @aiUiAiClozeTest.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Cloze Test'**
+  String get aiUiAiClozeTest;
+
+  /// No description provided for @aiUiEnterAWordForClozeTest.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a word for cloze test'**
+  String get aiUiEnterAWordForClozeTest;
+
+  /// No description provided for @aiUiPleaseEnterAWord.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a word'**
+  String get aiUiPleaseEnterAWord;
+
+  /// No description provided for @aiUiGenerating.
+  ///
+  /// In en, this message translates to:
+  /// **'Generating...'**
+  String get aiUiGenerating;
+
+  /// No description provided for @aiUiGenerate.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate'**
+  String get aiUiGenerate;
+
+  /// No description provided for @aiUiClozeTest.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloze Test'**
+  String get aiUiClozeTest;
+
+  /// No description provided for @aiUiCorrect.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct!'**
+  String get aiUiCorrect;
+
+  /// No description provided for @aiUiConfusableWords.
+  ///
+  /// In en, this message translates to:
+  /// **'Confusable Words'**
+  String get aiUiConfusableWords;
+
+  /// No description provided for @aiUiEnterAWordToCompareWithItsLookAlikes.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a word to compare with its look-alikes'**
+  String get aiUiEnterAWordToCompareWithItsLookAlikes;
+
+  /// No description provided for @aiUiEnterAWordToSeeCommonlyConfusedLookAlikesAndHowToTellThemApart.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a word to see commonly confused look-alikes and how to tell them apart.'**
+  String get aiUiEnterAWordToSeeCommonlyConfusedLookAlikesAndHowToTellThemApart;
+
+  /// No description provided for @aiUiNoConfusableWordsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No confusable words found.'**
+  String get aiUiNoConfusableWordsFound;
+
+  /// No description provided for @aiUiSentenceGeneration.
+  ///
+  /// In en, this message translates to:
+  /// **'Sentence Generation'**
+  String get aiUiSentenceGeneration;
+
+  /// No description provided for @aiUiEnterAWordOrASentence.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a word or a sentence'**
+  String get aiUiEnterAWordOrASentence;
+
+  /// No description provided for @aiUiAWordToBuildSentencesForOrASentenceToRewrite.
+  ///
+  /// In en, this message translates to:
+  /// **'A word to build sentences for, or a sentence to rewrite'**
+  String get aiUiAWordToBuildSentencesForOrASentenceToRewrite;
+
+  /// No description provided for @aiUiPleaseEnterAWordOrSentence.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a word or sentence'**
+  String get aiUiPleaseEnterAWordOrSentence;
+
+  /// No description provided for @aiUiEnterAWordToGenerateExampleSentencesOrASentenceToGetRewriteSuggestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a word to generate example sentences, or a sentence to get rewrite suggestions.'**
+  String
+  get aiUiEnterAWordToGenerateExampleSentencesOrASentenceToGetRewriteSuggestions;
+
+  /// No description provided for @aiUiExampleSentences.
+  ///
+  /// In en, this message translates to:
+  /// **'Example Sentences'**
+  String get aiUiExampleSentences;
+
+  /// No description provided for @aiUiRewrites.
+  ///
+  /// In en, this message translates to:
+  /// **'Rewrites'**
+  String get aiUiRewrites;
+
+  /// No description provided for @aiUiAiWritingReview.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Writing Review'**
+  String get aiUiAiWritingReview;
+
+  /// No description provided for @aiUiNewEssay.
+  ///
+  /// In en, this message translates to:
+  /// **'New Essay'**
+  String get aiUiNewEssay;
+
+  /// No description provided for @aiUiExamType.
+  ///
+  /// In en, this message translates to:
+  /// **'Exam Type'**
+  String get aiUiExamType;
+
+  /// No description provided for @aiUiYourEssay.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Essay'**
+  String get aiUiYourEssay;
+
+  /// No description provided for @aiUiPasteOrTypeYourEssayHere503000Characters.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste or type your essay here (50–3000 characters)...'**
+  String get aiUiPasteOrTypeYourEssayHere503000Characters;
+
+  /// No description provided for @aiUiEssayMustBeAtLeast50Characters.
+  ///
+  /// In en, this message translates to:
+  /// **'Essay must be at least 50 characters'**
+  String get aiUiEssayMustBeAtLeast50Characters;
+
+  /// No description provided for @aiUiSubmitForReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit for Review'**
+  String get aiUiSubmitForReview;
+
+  /// No description provided for @aiUiOverallScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Overall Score'**
+  String get aiUiOverallScore;
+
+  /// No description provided for @aiUiScoreBreakdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Score Breakdown'**
+  String get aiUiScoreBreakdown;
+
+  /// No description provided for @aiUiContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Content'**
+  String get aiUiContent;
+
+  /// No description provided for @aiUiLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get aiUiLanguage;
+
+  /// No description provided for @aiUiStructure.
+  ///
+  /// In en, this message translates to:
+  /// **'Structure'**
+  String get aiUiStructure;
+
+  /// No description provided for @aiUiVocabulary.
+  ///
+  /// In en, this message translates to:
+  /// **'Vocabulary'**
+  String get aiUiVocabulary;
+
+  /// No description provided for @aiUiAccuracy.
+  ///
+  /// In en, this message translates to:
+  /// **'Accuracy'**
+  String get aiUiAccuracy;
+
+  /// No description provided for @aiUiMainIssues.
+  ///
+  /// In en, this message translates to:
+  /// **'Main Issues'**
+  String get aiUiMainIssues;
+
+  /// No description provided for @aiUiGrammarCorrections.
+  ///
+  /// In en, this message translates to:
+  /// **'Grammar Corrections'**
+  String get aiUiGrammarCorrections;
+
+  /// No description provided for @aiUiHighScoreExpressions.
+  ///
+  /// In en, this message translates to:
+  /// **'High-Score Expressions'**
+  String get aiUiHighScoreExpressions;
+
+  /// No description provided for @aiUiCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied!'**
+  String get aiUiCopied;
+
+  /// No description provided for @aiUiParagraphSuggestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Paragraph Suggestions'**
+  String get aiUiParagraphSuggestions;
+
+  /// No description provided for @aiUiRewrittenSample.
+  ///
+  /// In en, this message translates to:
+  /// **'Rewritten Sample'**
+  String get aiUiRewrittenSample;
+
+  /// No description provided for @aiUiDefaultQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What does \"{word}\" mean?'**
+  String aiUiDefaultQuestion(String word);
+
+  /// No description provided for @aiUiClozePrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate cloze for: {word}'**
+  String aiUiClozePrompt(String word);
+
+  /// No description provided for @aiUiComparePrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Distinguish words confusable with: {word}'**
+  String aiUiComparePrompt(String word);
+
+  /// No description provided for @aiUiSentencePrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate example sentences and rewrites for: {word}'**
+  String aiUiSentencePrompt(String word);
+
+  /// No description provided for @aiUiBlank.
+  ///
+  /// In en, this message translates to:
+  /// **'Blank {number}'**
+  String aiUiBlank(int number);
+
+  /// No description provided for @aiUiWrongAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong! Answer: {word}'**
+  String aiUiWrongAnswer(String word);
+
+  /// No description provided for @aiUiCharacterCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{number} / 3000 characters'**
+  String aiUiCharacterCount(int number);
+
+  /// No description provided for @aiUiParagraph.
+  ///
+  /// In en, this message translates to:
+  /// **'Paragraph {number}: {text}'**
+  String aiUiParagraph(String number, String text);
+
+  /// No description provided for @aiUiGeneral.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get aiUiGeneral;
+
+  /// No description provided for @aiUiAcademic.
+  ///
+  /// In en, this message translates to:
+  /// **'Academic'**
+  String get aiUiAcademic;
+
+  /// No description provided for @aiUiBusiness.
+  ///
+  /// In en, this message translates to:
+  /// **'Business'**
+  String get aiUiBusiness;
+
+  /// No description provided for @aiUiCasual.
+  ///
+  /// In en, this message translates to:
+  /// **'Casual'**
+  String get aiUiCasual;
 }
 
 class _AppLocalizationsDelegate
@@ -6229,7 +6982,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'ms', 'zh'].contains(locale.languageCode);
+      <String>['en', 'ja', 'ms', 'zh'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -6240,6 +6993,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   switch (locale.languageCode) {
     case 'en':
       return AppLocalizationsEn();
+    case 'ja':
+      return AppLocalizationsJa();
     case 'ms':
       return AppLocalizationsMs();
     case 'zh':

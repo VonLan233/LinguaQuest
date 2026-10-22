@@ -122,7 +122,7 @@ void main() {
       expect(find.text('English'), findsOneWidget);
       expect(find.text('Spanish (Español)'), findsOneWidget);
       expect(find.text('French (Français)'), findsOneWidget);
-      expect(find.text('Malay (Bahasa Melayu)'), findsOneWidget);
+      expect(find.text('Bahasa Melayu'), findsOneWidget);
       // All six languages are active now; no "Coming Soon" pill renders.
       expect(find.text('Coming Soon'), findsNothing);
     });

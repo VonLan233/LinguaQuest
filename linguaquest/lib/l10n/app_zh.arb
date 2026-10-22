@@ -1,15 +1,12 @@
 {
   "@@locale": "zh",
-
   "appTitle": "LinguaQuest",
   "appSubtitle": "用短课节和智能复习积累词汇",
-
   "tabHome": "首页",
   "tabTraining": "训练场",
   "tabAiLearning": "AI 学习",
   "tabDiscover": "发现",
   "tabProfile": "我的",
-
   "commonRegister": "注册",
   "commonLogin": "登录",
   "commonSettings": "设置",
@@ -53,7 +50,6 @@
   "commonTimesSuffix": " 次",
   "commonViewAll": "查看全部",
   "commonView": "查看",
-
   "authRegisterTitle": "注册",
   "authLoginTitle": "登录",
   "authCreateProfile": "创建学习档案",
@@ -76,11 +72,9 @@
   "authWelcomeBack": "欢迎回来",
   "authWelcomeBackSubtitle": "继续今天的学习路径，顺手清空到期复习卡。",
   "authRegisterNew": "注册新账号",
-
   "onboardingTitle": "LinguaQuest",
   "onboardingSubtitle": "短课节、视觉记忆卡和智能复习，帮你稳定积累英语词汇。",
   "onboardingTagline": "像游戏闯关一样完成每日学习",
-  "onboardingSubtitle": "短课节、视觉记忆卡和智能复习，帮你稳定积累英语词汇。",
   "onboardingTagWorld": "词境星球",
   "onboardingTagStreak": "连续打卡",
   "splashTagline": "单词卡、清晰路径、智能复习。",
@@ -140,7 +134,7 @@
   "questCenterSubtitle": "完成学习动作后领取积分，也可以查看排名、分析和班级学习。",
   "questDailyTask": "每日任务",
   "questDailyTaskBody": "完成一节课程，并复习 5 个到期词。",
-  "questAchievements": "成就徽章",
+  "questAchievements": "成就",
   "questAchievementsBody": "连续 7 天、已学 100 词、首次满分课程等成就。",
   "questAchievementsValue": "3 个",
   "questLeaderboard": "排行榜",
@@ -177,7 +171,6 @@
   "onboardingTagPillStreak": "连续打卡",
   "onboardingTagPillPlanet": "词境星球",
   "onboardingRegisterButton": "注册账号",
-
   "goalSetupTitle": "目标设置",
   "goalSetupSelectPlan": "选择学习计划",
   "goalSetupSelectPlanSubtitle": "系统自动规划每日新学和复习任务",
@@ -197,7 +190,6 @@
   "goalSetupReviewLimit": "复习上限",
   "goalSetupReviewLimitCount": "复习上限 {count} 词",
   "goalSetupViewWordbook": "查看完整词汇表",
-
   "homePersonalSpace": "个人空间",
   "homeSearchHint": "搜索单词、短语或例句",
   "homeNotifications": "消息通知",
@@ -225,7 +217,6 @@
   "homeWeakWordsEmptyHint": "完成学习后这里显示重点词",
   "homePlanPaused": "计划已暂停",
   "homeTodayCompleted": "今天完成",
-
   "profileLearner": "探索者",
   "profileNoEmail": "未设置邮箱",
   "publicProfileNotFoundTitle": "无法查看该资料",
@@ -262,7 +253,6 @@
   "profileWeaknessAnalysis": "弱项分析",
   "profileNoWeakness": "暂无弱项，继续学习即可",
   "profileMostWrongWord": "最常错词",
-
   "settingsAppBar": "设置",
   "settingsSoundFeedback": "答题音效反馈",
   "settingsSoundFeedbackSubtitle": "用于提醒答题结果和练习节奏",
@@ -279,7 +269,6 @@
   "settingsReminderOff": "提醒已关闭",
   "settingsReminderDisabled": "不会安排本地提醒",
   "settingsReminderDescription": "按时提醒你开始每日学习和打卡",
-
   "discoverTitle": "发现",
   "discoverSubtitle": "签到、积分任务和社区",
   "discoverTaskCenter": "任务中心",
@@ -316,19 +305,25 @@
   "communityTimeMinutesAgo": "{count} 分钟前",
   "@communityTimeMinutesAgo": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "communityTimeHoursAgo": "{count} 小时前",
   "@communityTimeHoursAgo": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "communityTimeDaysAgo": "{count} 天前",
   "@communityTimeDaysAgo": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "discoverXpUsage": "XP 用途",
@@ -374,7 +369,6 @@
   "discoverConditionMet": "已完成条件，点击领取奖励。",
   "discoverProcessing": "处理中",
   "discoverRecordInteraction": "记录互动",
-
   "quizNoLesson": "没有找到这节课",
   "quizNoQuestions": "这节课还没有测验。",
   "quizTimedTest": "限时测试",
@@ -415,7 +409,6 @@
   "quizXpEarned": "已入账 +{xp} XP",
   "quizTotalXp": "总积分 {xp} XP",
   "quizMistakeCount": "{count} 个错题",
-
   "trainingTitle": "训练场",
   "trainingSubtitle": "限时测试、专项训练、排行榜",
   "trainingPageSubtitle": "限时测试、专项训练和排行榜放在这里。",
@@ -436,7 +429,7 @@
   "trainingSurvivorDesc": "从简单到困难连续答题，错词会进入弱项词和错词本。",
   "trainingSurvivorSource": "当前词书 + 弱项词",
   "trainingSpelling": "单词拼写",
-  "trainingSpellingDesc": "看中文、听发音或看例句空格后输入英文，强化可产出能力。",
+  "trainingSpellingDesc": "根据释义、发音或例句，拼写正在学习的单词。",
   "trainingSpellingSource": "拼写弱项词",
   "trainingPassageCloze": "文章挖词",
   "trainingPassageClozeDesc": "用今日词汇生成短文并挖空，连接背词和阅读理解。",
@@ -463,7 +456,7 @@
   "trainingExit": "离开",
   "trainingPromptWordRush": "抢答“{word}”的中文释义",
   "trainingExplanationWordRush": "“{word}”表示{meaning}。{example}",
-  "trainingPromptChineseChoice": "根据中文释义选择英文：{meaning}",
+  "trainingPromptChineseChoice": "请选择对应的单词：{meaning}",
   "trainingExplanationChineseChoice": "{meaning} 对应 “{word}”。",
   "trainingPromptContextChoice": "结合例句选择释义：{example}",
   "trainingPromptMeaningChoice": "选择“{word}”的中文释义",
@@ -486,7 +479,6 @@
   "trainingCorrectFeedback": "回答正确，连击继续！",
   "trainingPromptListening": "听音频，选择你听到的词",
   "trainingListeningRevealHint": "先播放音频，随后显示选项。",
-
   "learningPathTitle": "学习路径",
   "learningPathBackToHome": "回到首页",
   "learningPathBookPath": "词书路径",
@@ -503,7 +495,6 @@
   "learningPathLessonCompleted": "已完成",
   "learningPathLessonPreview": "预览",
   "learningPathLessonQuiz": "测验",
-
   "lessonPreviewTitle": "新学词卡",
   "lessonPreviewNoLesson": "没有找到这节课",
   "lessonPreviewPrevious": "上一张",
@@ -528,7 +519,6 @@
   "lessonPreviewLeave": "离开",
   "lessonPreviewAssessFirst": "先判断熟悉度",
   "lessonPreviewContextExample": "语境例句",
-
   "reviewCenterTitle": "复习",
   "reviewCenterCardsDuePrefix": "{count} 张卡片待复习",
   "reviewCenterDailyCapPrefix": "今日复习上限 ",
@@ -577,7 +567,6 @@
   "reviewCenterReviewQueue": "复习队列",
   "reviewCenterStartReview": "开始复习",
   "reviewCenterEmpty": "今日复习已完成！",
-
   "mistakeBookTitle": "错词本",
   "mistakeBookNoMistakes": "暂时没有课程错题",
   "mistakeBookMistakes": "{count} 个课程错题",
@@ -592,7 +581,6 @@
   "mistakeBookWeakWords": "弱项生词",
   "mistakeBookNoLessonMistakes": "最近一课没有答错的题。",
   "mistakeBookNoWeakWords": "还没有弱项生词。",
-
   "labelTargetCET4": "四级核心词汇",
   "labelTargetCET6": "六级核心词汇",
   "labelTargetKaoyan": "考研英语核心词汇",
@@ -639,7 +627,6 @@
   "labelWordTagTravel": "旅行",
   "labelWordTagWriting": "写作",
   "labelWordTagDefault": "目标词",
-
   "wordbookTitle": "单词本",
   "wordbookSearchHint": "搜索单词...",
   "wordbookNoResults": "没有匹配的单词。",
@@ -676,7 +663,9 @@
   "pickerSwitchSuccess": "已切换到{wordbook}",
   "@pickerSwitchSuccess": {
     "placeholders": {
-      "wordbook": { "type": "String" }
+      "wordbook": {
+        "type": "String"
+      }
     }
   },
   "pickerSwitchFailed": "暂时无法切换词书",
@@ -723,13 +712,11 @@
   "osNotificationReviewDueBody": "先清掉复习队列，再开始今天的新词。",
   "osNotificationChannelName": "学习提醒",
   "osNotificationChannelDescription": "学习提醒、复习到期和打卡提醒",
-
   "studyNewStudy": "新学",
   "studyReviewOnly": "复习",
   "studyStartSession": "开始学习",
   "studySessionComplete": "学习完成",
   "studyWordsLeft": "还剩 {count} 词",
-
   "studyPlanLoginRequired": "请先登录后再设置学习计划。",
   "studyPlanSave": "保存学习计划",
   "studyPlanSettings": "学习计划设置",
@@ -757,7 +744,6 @@
   "studyPlanDaysLeft": "剩余 {count} 天",
   "studyPlanActive": "进行中",
   "studyPlanPausedLabel": "已暂停",
-
   "aiLearningTitle": "AI 学习",
   "aiLearningSubtitle": "阅读、写作和练习",
   "aiLearningComingSoon": "AI 学习功能即将上线。",
@@ -783,19 +769,15 @@
   "aiLearningStatusSoon": "暂未开放",
   "aiLearningStatusLater": "待开放",
   "aiLearningStatusPlanning": "规划中",
-
   "questTitle": "任务",
   "questDailyQuests": "每日任务",
-  "questAchievements": "成就",
-  "questLeaderboard": "排行榜",
   "questProgress": "进度",
-
   "searchTitle": "搜索",
   "searchHint": "搜索单词、短语、例句...",
   "searchNoResults": "没有找到结果。",
   "searchRecent": "最近搜索",
   "searchStartTitle": "输入关键词开始搜索",
-  "searchStartMessage": "可以搜索英文单词、词组、中文释义、例句片段和生词本。",
+  "searchStartMessage": "搜索单词、释义、例句和自建词条。",
   "searchNoResultsTitle": "没有找到结果",
   "searchNoResultsMessage": "切到全词库再试，或添加一张个人词卡。",
   "searchFieldLabel": "搜索单词、短语、中文释义或例句片段",
@@ -803,7 +785,6 @@
   "searchCurrentWordbookScope": "当前词书",
   "searchAllWordbooksScope": "全词库",
   "searchCurrentPlan": "当前计划",
-
   "customWordsMyCards": "我的词卡",
   "customWordsMyCardsSubtitle": "创建、搜索、筛选、编辑并复习你的个人词库。",
   "customWordsCardCount": "{count} 张",
@@ -829,7 +810,6 @@
   "commonRequired": "必填",
   "customWordsDeleteFailed": "暂时无法删除 {word}",
   "customWordsDeleted": "已删除 {word}",
-
   "wordbookWordNotFound": "没有找到这个词",
   "wordbookFavorite": "收藏",
   "wordbookFavorited": "已收藏",
@@ -854,7 +834,6 @@
   "wordbookHighFrequency": "高频",
   "wordbookContextExamples": "语境例句",
   "wordbookMasteryLevel": "掌握 {level}/5",
-
   "reviewStudyManageQueue": "管理复习队列",
   "reviewStudyTodayTitle": "今日复习",
   "reviewStudyTodaySubtitle": "先回想，再翻开答案；答错会回到本轮稍后巩固。",
@@ -867,13 +846,11 @@
   "reviewStudyReinforce": "加入巩固队列",
   "reviewStudyCompleteTitle": "今日复习完成",
   "reviewStudyCompleteMessage": "已更新本轮词卡的下次复习时间。",
-  "reviewStudyRecallHint": "看英文先回想中文释义。记得就直接进入下一张，忘了再展开知识卡。",
+  "reviewStudyRecallHint": "先回想单词的含义。记得就继续，不记得可以查看知识卡片。",
   "reviewStudyNextReview": "下次复习：{due}",
   "reviewStudyHiddenHint": "答对不打断；答错才展示知识卡，并在本轮稍后再出现。",
-
   "aiWordSupportDesc": "围绕 {word} 提问用法、语法、近义词区别和例句拆解。",
   "aiWordSupportWithExampleDesc": "携带 {word} 和当前例句，提问用法、语法、近义词区别和例句拆解。",
-
   "helpFaqReviewScheduleQ": "复习时间如何安排？",
   "helpFaqReviewScheduleA": "每个词会在 0-5 的掌握度之间变化，掌握度越高，下次复习间隔越长。",
   "helpFaqCustomWordsQ": "可以添加自己的单词吗？",
@@ -881,7 +858,6 @@
   "helpFaqAiTutorQ": "AI 助教可以做什么？",
   "helpFaqAiTutorA": "可以解释单词、语法和错题，并给出适合继续练习的例句。",
   "helpContactSupport": "联系支持",
-
   "aboutVersion": "词境星球 · 版本 {version}",
   "aboutIntro": "LinguaQuest 将单词卡、学习路径、间隔复习、XP、连续打卡和个人生词卡整合到一个移动优先的英语学习应用中。",
   "aboutGoalTitle": "项目目标",
@@ -892,17 +868,14 @@
   "aboutCoreSubtitle": "目标规划、词汇学习、测验练习、复习排程和个人词卡。",
   "aboutPrivacyTitle": "隐私",
   "aboutPrivacySubtitle": "生词本和学习记录仅归属于当前登录用户。",
-
   "communityPostCheckinTitle": "今日打卡：用 12 分钟复习了 18 个词",
   "communityPostCheckinTag": "今日打卡",
   "communityPostCheckinBody": "错词集中在近义辨析，明天准备从训练场的易混词挑战开始。",
   "communityPostAbstractTitle": "怎么记住 abstract 这个词？",
   "communityPostMistakeTag": "错题讨论",
   "communityPostAbstractBody": "abstract 在论文和阅读文章里经常不是“抽象”的意思，要结合语境判断。",
-
   "notificationsTitle": "消息通知",
   "notificationsEmpty": "暂无通知。",
-
   "languageSetting": "语言",
   "luckyDrawCostLine": "消耗 {cost} XP 抽一次",
   "luckyDrawBalanceHint": "当前余额 {xp} XP；奖品包含头像框、主页背景、徽章、称号、卡片皮肤和安慰碎片。",
@@ -934,8 +907,8 @@
   "lotteryRarityCommon": "普通",
   "lotteryRarityComfort": "安慰",
   "languageChinese": "中文",
-  "languageMalay": "Bahasa Melayu",
-  "languageEnglish": "English",
+  "languageMalay": "马来语",
+  "languageEnglish": "英语",
   "wordKnowledgeTitle": "词汇全解",
   "wordKnowledgeCollocations": "词组搭配",
   "wordKnowledgeSynAnt": "近义 / 反义",
@@ -953,7 +926,6 @@
   "dueInDays": "{count} 天后",
   "dueInHours": "{count} 小时后",
   "dueInMinutes": "{count} 分钟后",
-
   "languageMapTitle": "选择学习语言",
   "languageMapSelectPrompt": "点击国家选择你想学习的语言。",
   "languageMapChinese": "中文",
@@ -963,7 +935,6 @@
   "aboutCompanyName": "LinguaQuest",
   "aboutCompanyAddress": "厦门大学马来西亚分校，雪兰莪州雪邦 43900（虚拟地址）",
   "aboutCompanyDescription": "我们打造 LinguaQuest 的虚拟园区。",
-
   "aiLearningStatusAvailable": "可用",
   "aiExplainWithAi": "用 AI 讲解",
   "aiErrorGeneric": "出错了，请重试。",
@@ -972,18 +943,20 @@
   "aiEmptyAnalysis": "粘贴一个{language}句子，查看它的结构拆解。",
   "aiEmptyCloze": "输入一个词，生成填空练习。",
   "aiEmptyWriting": "粘贴你的作文并选择考试类型，获取评分反馈。",
-
   "achievementsScreenTitle": "成就",
   "achievementsHeaderTitle": "我的成就",
   "@achievementsUnlockedCount": {
     "placeholders": {
-      "unlocked": { "type": "int" },
-      "total": { "type": "int" }
+      "unlocked": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "achievementsUnlockedCount": "{unlocked} / {total} 已解锁",
   "achievementUnlockedLabel": "已解锁",
-
   "achievementLearn100Title": "词汇百人斩",
   "achievementLearn100Desc": "掌握 100 个单词",
   "achievementQuizPerfectTitle": "完美发挥",
@@ -992,29 +965,33 @@
   "achievementFirstListeningDesc": "完成第一次听力练习",
   "achievementFirstMapLanguageTitle": "探图者",
   "achievementFirstMapLanguageDesc": "在语言地图中选择一门语言",
-
   "assetInventoryTitle": "我的资产",
   "assetInventoryEmpty": "暂无资产，快去幸运抽奖试试手气！",
   "@assetInventoryTotalOwned": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "assetInventoryTotalOwned": "拥有 {count} 件",
   "@assetInventoryTotalFragments": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "assetInventoryTotalFragments": "{count} 碎片",
   "@assetInventoryQuantityBadge": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "assetInventoryQuantityBadge": "×{count}",
   "luckyDrawViewMyAssets": "查看我的资产",
-
   "analyticsReportTitle": "学习报告",
   "analyticsReportSubtitle": "你的进度、图表与重点",
   "analyticsScopeLabel": "范围：{scope}",
@@ -1051,7 +1028,13 @@
   "readingFilterTheme": "主题",
   "readingFilterAll": "全部",
   "readingMinutes": "{count} 分钟",
-  "@readingMinutes": { "placeholders": { "count": { "type": "int" } } },
+  "@readingMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "readingEmpty": "该筛选下暂无文章。",
   "readingProgressInProgress": "阅读中",
   "readingProgressDone": "已读",
@@ -1080,14 +1063,38 @@
   "readingComprehensionStart": "开始做题",
   "readingComprehensionTitle": "阅读理解",
   "readingComprehensionQuestion": "第 {current} / {total} 题",
-  "@readingComprehensionQuestion": { "placeholders": { "current": { "type": "int" }, "total": { "type": "int" } } },
+  "@readingComprehensionQuestion": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "readingComprehensionNext": "下一题",
   "readingComprehensionFinish": "完成",
   "readingComprehensionResultTitle": "阅读理解完成",
   "readingComprehensionScore": "答对 {correct} / {total}",
-  "@readingComprehensionScore": { "placeholders": { "correct": { "type": "int" }, "total": { "type": "int" } } },
+  "@readingComprehensionScore": {
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "readingComprehensionAccuracy": "正确率 {pct}%",
-  "@readingComprehensionAccuracy": { "placeholders": { "pct": { "type": "int" } } },
+  "@readingComprehensionAccuracy": {
+    "placeholders": {
+      "pct": {
+        "type": "int"
+      }
+    }
+  },
   "readingComprehensionDone": "完成",
   "readingComprehensionEmpty": "本篇暂无理解题。",
   "readingAnalyticsTitle": "阅读",
@@ -1103,5 +1110,138 @@
   "readingExplainGrammar": "语法点",
   "readingExplainStructure": "句子结构",
   "readingExplainTranslation": "翻译",
-  "readingExplainPractice": "练习"
+  "readingExplainPractice": "练习",
+  "explanationLanguage": "讲解语言",
+  "explanationLanguageHint": "用熟悉的语言阅读释义和说明，可独立选择学习语言。",
+  "dailyEncouragement": "每天一点，离目标更近。",
+  "homeGreeting": "欢迎回来",
+  "dailyTaskTitle": "今天的小目标",
+  "dailyTaskHint": "按自己的节奏，继续就很好。",
+  "continueLearning": "继续学习",
+  "aiCenterTitle": "AI 学习伙伴",
+  "aiCenterHint": "卡住的时候，一起想明白。",
+  "aiNetworkNotice": "AI 功能需要联网，已下载词书和基础练习可离线使用。",
+  "aiDemoNotice": "当前为演示回答，连接服务后可使用真实 AI。",
+  "aiTryThis": "从今天的单词开始问",
+  "aiAskWord": "用简单的例子解释这个词。",
+  "aiScenarioTitle": "今天想解决什么？",
+  "aiQaShort": "理解词义与语法",
+  "aiAnalysisShort": "一起读懂长句",
+  "aiClozeShort": "把单词放进短文里练",
+  "aiWritingShort": "修改自己的表达",
+  "aiConfusionShort": "分清容易混淆的词",
+  "aiSentenceShort": "写出自然的例句",
+  "offlineWordbooks": "离线词书",
+  "offlineWordbooksHint": "下载或更新本地副本。断网仍可学习和复习文字内容；在线音频与 AI 需要联网。",
+  "offlineBuiltIn": "内置 · 可离线",
+  "offlineDownloaded": "已下载 · 可离线",
+  "offlineDownload": "下载更新",
+  "offlineRemove": "移除下载副本",
+  "offlineDownloadSuccess": "已保存到本机",
+  "offlineDownloadFailed": "下载失败，原有本地词书已保留。",
+  "offlineLocalProgress": "基础学习记录保存在本机，待同步记录会在下次联网启动时上传。",
+  "practiceChooseMeaning": "选择正确的释义",
+  "practiceNext": "下一个",
+  "practiceCheck": "确认答案",
+  "practiceCorrect": "答对了！",
+  "practiceReviewAnswer": "一起记住这个词",
+  "practiceExitHint": "已完成的复习记录已保存。保留草稿后可继续剩余题目。",
+  "homeAiHelp": "有一点卡住了？",
+  "homeAiHelpHint": "问问 AI 学习伙伴",
+  "learningLanguage": "学习语言",
+  "languageSpanish": "西班牙语",
+  "languageFrench": "法语",
+  "allWordbooks": "全部语言",
+  "dataSettingsHint": "离线内容、数据导出与账户管理",
+  "settingsVibrationLabel": "振动反馈",
+  "settingsVibrationHint": "答题时提供触感反馈",
+  "settingsContrastLabel": "高对比度",
+  "settingsContrastHint": "增强答题反馈的颜色对比",
+  "wordbookTranslationFallback": "部分词条尚无当前解释语言的释义，将显示词书中已有的释义。",
+  "offlineRemoved": "已移除下载副本，内置内容和学习进度仍保留。",
+  "aiLoginNotice": "AI 需要登录并联网；已下载词书和基础练习可离线使用。",
+  "pronunciationAudio": "发音",
+  "pronunciationAudioUnavailable": "暂时无法播放，点击重试。",
+  "aiUiAiQA": "AI 知识问答",
+  "aiUiAskAQuestion": "提出问题",
+  "aiUiPleaseEnterAQuestion": "请输入问题",
+  "aiUiAsking": "正在提问…",
+  "aiUiAsk": "提问",
+  "aiUiHistory": "历史记录",
+  "aiUiAnswer": "回答",
+  "aiUiCautions": "注意事项",
+  "aiUiRelatedWords": "相关词语",
+  "aiUiDeleteHistory": "删除这条记录？",
+  "aiUiCancel": "取消",
+  "aiUiDelete": "删除",
+  "aiUiAiSentenceAnalysis": "AI 句子分析",
+  "aiUiEnterASentenceToAnalyze": "输入要分析的句子",
+  "aiUiSentenceHint": "输入或粘贴正在学习的语言的句子…",
+  "aiUiPleaseEnterASentence": "请输入句子",
+  "aiUiAnalyzing": "正在分析…",
+  "aiUiAnalyze": "分析",
+  "aiUiAnalysisResult": "分析结果",
+  "aiUiMainClause": "主句",
+  "aiUiClauses": "从句",
+  "aiUiModifiers": "修饰成分",
+  "aiUiTranslation": "翻译",
+  "aiUiVocabularyNotes": "词汇说明",
+  "aiUiAiClozeTest": "AI 情景填空",
+  "aiUiEnterAWordForClozeTest": "输入用于填空练习的单词",
+  "aiUiPleaseEnterAWord": "请输入单词",
+  "aiUiGenerating": "正在生成…",
+  "aiUiGenerate": "生成",
+  "aiUiClozeTest": "填空练习",
+  "aiUiCorrect": "答对了！",
+  "aiUiConfusableWords": "易混词辨析",
+  "aiUiEnterAWordToCompareWithItsLookAlikes": "输入要辨析的单词",
+  "aiUiEnterAWordToSeeCommonlyConfusedLookAlikesAndHowToTellThemApart": "输入单词，了解容易混淆的词语及区别。",
+  "aiUiNoConfusableWordsFound": "未找到易混词。",
+  "aiUiSentenceGeneration": "例句与改写",
+  "aiUiEnterAWordOrASentence": "输入单词或句子",
+  "aiUiAWordToBuildSentencesForOrASentenceToRewrite": "输入要造句的单词，或需要改写的句子",
+  "aiUiPleaseEnterAWordOrSentence": "请输入单词或句子",
+  "aiUiEnterAWordToGenerateExampleSentencesOrASentenceToGetRewriteSuggestions": "输入单词生成例句，或输入句子获取改写建议。",
+  "aiUiExampleSentences": "例句",
+  "aiUiRewrites": "改写建议",
+  "aiUiAiWritingReview": "AI 写作批改",
+  "aiUiNewEssay": "新作文",
+  "aiUiExamType": "写作类型",
+  "aiUiYourEssay": "你的作文",
+  "aiUiPasteOrTypeYourEssayHere503000Characters": "在这里输入或粘贴作文（50–3000 字符）…",
+  "aiUiEssayMustBeAtLeast50Characters": "作文至少需要 50 个字符",
+  "aiUiSubmitForReview": "提交批改",
+  "aiUiOverallScore": "总分",
+  "aiUiScoreBreakdown": "分项评分",
+  "aiUiContent": "内容",
+  "aiUiLanguage": "语言表达",
+  "aiUiStructure": "结构",
+  "aiUiVocabulary": "词汇",
+  "aiUiAccuracy": "准确性",
+  "aiUiMainIssues": "主要问题",
+  "aiUiGrammarCorrections": "语法修改",
+  "aiUiHighScoreExpressions": "推荐表达",
+  "aiUiCopied": "已复制",
+  "aiUiParagraphSuggestions": "分段建议",
+  "aiUiRewrittenSample": "改写示例",
+  "aiUiDefaultQuestion": "“{word}”是什么意思？",
+  "@aiUiDefaultQuestion": {"placeholders": {"word": {"type": "String"}}},
+  "aiUiClozePrompt": "生成情景填空：{word}",
+  "@aiUiClozePrompt": {"placeholders": {"word": {"type": "String"}}},
+  "aiUiComparePrompt": "辨析与以下单词容易混淆的词语：{word}",
+  "@aiUiComparePrompt": {"placeholders": {"word": {"type": "String"}}},
+  "aiUiSentencePrompt": "生成例句与改写：{word}",
+  "@aiUiSentencePrompt": {"placeholders": {"word": {"type": "String"}}},
+  "aiUiBlank": "第 {number} 空",
+  "@aiUiBlank": {"placeholders": {"number": {"type": "int"}}},
+  "aiUiWrongAnswer": "还不对，答案是：{word}",
+  "@aiUiWrongAnswer": {"placeholders": {"word": {"type": "String"}}},
+  "aiUiCharacterCount": "{number} / 3000 字符",
+  "@aiUiCharacterCount": {"placeholders": {"number": {"type": "int"}}},
+  "aiUiParagraph": "第 {number} 段：{text}",
+  "@aiUiParagraph": {"placeholders": {"number": {"type": "String"}, "text": {"type": "String"}}},
+  "aiUiGeneral": "通用",
+  "aiUiAcademic": "学术",
+  "aiUiBusiness": "商务",
+  "aiUiCasual": "日常"
 }

@@ -9,7 +9,6 @@ import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/app_pill.dart';
 import '../../core/widgets/compact_entry_card.dart';
-import '../../core/widgets/learning_badges.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 class TrainingScreen extends ConsumerWidget {
@@ -27,12 +26,17 @@ class TrainingScreen extends ConsumerWidget {
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(
-        AppTokens.s16,
-        AppTokens.s20,
-        AppTokens.s16,
-        88,
+        AppTokens.s24,
+        AppTokens.s24,
+        AppTokens.s24,
+        32,
       ),
       children: [
+        Text(
+          l10n.tabTraining,
+          style: Theme.of(context).textTheme.headlineLarge,
+        ),
+        const SizedBox(height: 28),
         _TrainingGoalHeader(
           weeklyXp: user?.xp ?? 0,
           dailyAvailable: l10n.trainingDailyXpAvailable,
@@ -113,43 +117,19 @@ class _TrainingGoalHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return AppCard(
-      padding: const EdgeInsets.fromLTRB(
-        AppTokens.s20,
-        AppTokens.s16,
-        AppTokens.s20,
-        AppTokens.s20,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const IconCueBadge(icon: AppIcons.bolt, color: AppTokens.mango),
-              const Spacer(),
-              AppPill(
-                label: '$streak $streakLabel',
-                variant: PillVariant.streak,
-                icon: AppIcons.localFireDepartment,
-              ),
-            ],
-          ),
-          const SizedBox(height: AppTokens.s16),
-          Text(
-            '$weeklyPrefix $weeklyXp XP',
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-          const SizedBox(height: AppTokens.s4),
-          Text(
-            dailyAvailable,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(weeklyPrefix, style: theme.textTheme.bodySmall),
+        const SizedBox(height: 6),
+        Text('$weeklyXp XP', style: theme.textTheme.displayMedium),
+        const SizedBox(height: 12),
+        Text(dailyAvailable, style: theme.textTheme.bodyMedium),
+        const SizedBox(height: 12),
+        Text('$streak $streakLabel', style: theme.textTheme.bodySmall),
+        const SizedBox(height: 24),
+        const Divider(),
+      ],
     );
   }
 }

@@ -43,7 +43,7 @@ class _AiConfusableWordsScreenState
         .read(appControllerProvider.notifier)
         .askAi(
           featureType: 'confusion',
-          prompt: 'Distinguish words confusable with: $input',
+          prompt: AppLocalizations.of(context).aiUiComparePrompt(input),
           targetWord: input,
         );
     if (!mounted) return;
@@ -64,7 +64,7 @@ class _AiConfusableWordsScreenState
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Confusable Words'),
+        title: Text(AppLocalizations.of(context).aiUiConfusableWords),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
@@ -86,7 +86,9 @@ class _AiConfusableWordsScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Enter a word to compare with its look-alikes',
+                    AppLocalizations.of(
+                      context,
+                    ).aiUiEnterAWordToCompareWithItsLookAlikes,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w700,
                     ),
@@ -95,19 +97,23 @@ class _AiConfusableWordsScreenState
                   TextFormField(
                     controller: _controller,
                     maxLength: 100,
-                    decoration: const InputDecoration(
-                      hintText: 'e.g. affect / effect, there / their...',
+                    decoration: InputDecoration(
+                      hintText: AppLocalizations.of(
+                        context,
+                      ).aiUiPleaseEnterAWord,
                       border: OutlineInputBorder(),
                     ),
                     validator: (v) => (v == null || v.trim().isEmpty)
-                        ? 'Please enter a word'
+                        ? AppLocalizations.of(context).aiUiPleaseEnterAWord
                         : null,
                   ),
                   const SizedBox(height: AppTokens.s12),
                   SizedBox(
                     width: double.infinity,
                     child: AppPrimaryButton(
-                      label: _isLoading ? 'Analyzing...' : 'Analyze',
+                      label: _isLoading
+                          ? AppLocalizations.of(context).aiUiAnalyzing
+                          : AppLocalizations.of(context).aiUiAnalyze,
                       onPressed: _isLoading ? null : _analyze,
                     ),
                   ),
@@ -119,7 +125,9 @@ class _AiConfusableWordsScreenState
               AppCard(
                 padding: const EdgeInsets.all(AppTokens.s16),
                 child: Text(
-                  'Enter a word to see commonly confused look-alikes and how to tell them apart.',
+                  AppLocalizations.of(
+                    context,
+                  ).aiUiEnterAWordToSeeCommonlyConfusedLookAlikesAndHowToTellThemApart,
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
@@ -155,7 +163,7 @@ class _ConfusionResult extends StatelessWidget {
       return AppCard(
         padding: const EdgeInsets.all(AppTokens.s16),
         child: Text(
-          'No confusable words found.',
+          AppLocalizations.of(context).aiUiNoConfusableWordsFound,
           style: theme.textTheme.bodyMedium,
         ),
       );

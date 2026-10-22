@@ -61,12 +61,17 @@ import '../../features/map/language_map_screen.dart';
 import '../../features/map/study_map_screen.dart';
 import '../../features/map/study_spots_list_screen.dart';
 import '../../features/wordbook/wordbook_screen.dart';
+import '../../features/wordbook/offline_wordbooks_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/',
     overridePlatformDefaultLocation: true,
     routes: [
+      GoRoute(
+        path: '/offline-wordbooks',
+        builder: (context, state) => const OfflineWordbooksScreen(),
+      ),
       GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
       GoRoute(
         path: '/onboarding',

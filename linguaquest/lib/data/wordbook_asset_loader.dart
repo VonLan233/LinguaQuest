@@ -27,7 +27,12 @@ class WordBookAssetLoader {
     'es_basic',
     'fr_basic',
     'ms_basic',
+    'zh_starter',
+    'ja_starter',
+    'en_starter',
   ];
+
+  static bool isBundled(String bookId) => _bookIds.contains(bookId);
 
   final AssetBundle _bundle;
   Future<List<WordBook>>? _loadFuture;

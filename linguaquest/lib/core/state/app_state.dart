@@ -278,7 +278,7 @@ class AppState {
       .where((word) => word.status != 'Ignored' && !word.isIgnored)
       .length;
 
-  int get masteredReviewWords => reviewWords
+  int get masteredReviewWords => scopedReviewWords
       .where((word) => word.masteryLevel >= 4 || word.status == 'Mastered')
       .length;
 
@@ -308,9 +308,27 @@ class AppState {
 
   List<CustomWord> get reviewWords => _reviewWords;
 
+  /// Keep history global, but choose daily practice before deduplication so an
+  /// identical headword in two books keeps each book's own schedule.
+  List<CustomWord> get scopedReviewWords {
+    bool belongs(String? id) =>
+        id == null ||
+        id.trim().isEmpty ||
+        normalizedStudyBookId(id) == normalizedStudyBookId(currentWordBookId);
+    if (userWords.isEmpty) {
+      return reviewWords.where((word) => belongs(word.wordBookId)).toList();
+    }
+    return _buildReviewWords(
+      userWords.where((word) => belongs(word.wordBookId)).toList(),
+      // Legacy personal cards without a source book remain general practice.
+      customWords.where((word) => belongs(word.wordBookId)).toList(),
+      wordBooks.where((book) => book.id == currentWordBookId).toList(),
+    );
+  }
+
   List<CustomWord> get dueWords {
     final now = DateTime.now();
-    final due = reviewWords.where((word) => word.isDue(now)).toList()
+    final due = scopedReviewWords.where((word) => word.isDue(now)).toList()
       ..sort((a, b) => a.nextReviewAt.compareTo(b.nextReviewAt));
     return due;
   }
@@ -336,7 +354,7 @@ class AppState {
   }
 
   List<CustomWord> get weakWords {
-    final weak = reviewWords.where((word) => word.isWeak).toList()
+    final weak = scopedReviewWords.where((word) => word.isWeak).toList()
       ..sort((a, b) => b.wrongCount.compareTo(a.wrongCount));
     return weak;
   }

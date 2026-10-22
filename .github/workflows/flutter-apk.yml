@@ -54,8 +54,9 @@ jobs:
         run: flutter test
 
   test-server:
-    name: Test Dart server
+    name: Test and compile Dart server
     runs-on: ubuntu-latest
+    container: dart:stable
 
     defaults:
       run:
@@ -65,16 +66,27 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Set up Dart SDK
-        uses: dart-lang/setup-dart@v1
-        with:
-          sdk: stable
-
       - name: Install dependencies
         run: dart pub get
 
       - name: Run server tests
         run: dart test
+
+      - name: Compile server and package matching runtime
+        run: |
+          mkdir -p build/runtime
+          dart compile exe bin/server.dart -o build/server
+          cp -a /runtime/. build/runtime/
+
+      - name: Upload server artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linguaquest-linux-server
+          path: |
+            server/build/server
+            server/build/runtime/
+          retention-days: 7
+
 
   build-android-apk:
     name: Build Android APK
@@ -108,12 +120,22 @@ jobs:
         run: flutter pub get
 
       - name: Build release APK
-        run: flutter build apk --release
+        run: |
+          mkdir -p build/delivery
+          flutter build apk --release --dart-define=API_BASE_URL=https://api.vonlan233.top
+          cp build/app/outputs/flutter-apk/app-release.apk build/delivery/linguaquest.apk
+
+      - name: Build side-by-side Swiss preview APK
+        env:
+          ORG_GRADLE_PROJECT_lqApplicationIdSuffix: .swiss
+        run: |
+          flutter build apk --release --dart-define=API_BASE_URL=https://api.vonlan233.top
+          cp build/app/outputs/flutter-apk/app-release.apk build/delivery/linguaquest-swiss.apk
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: linguaquest-release-apk
-          path: linguaquest/build/app/outputs/flutter-apk/*.apk
+          path: linguaquest/build/delivery/*.apk
           if-no-files-found: error
           retention-days: 14

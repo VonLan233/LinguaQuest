@@ -54,6 +54,7 @@ class CustomWord {
     this.definitions = const [],
     this.englishDefinitions = const [],
     this.malayDefinitions = const [],
+    this.localizedDefinitions = const {},
   });
 
   final String id;
@@ -95,6 +96,7 @@ class CustomWord {
   final List<String> definitions;
   final List<String> englishDefinitions;
   final List<String> malayDefinitions;
+  final Map<String, List<String>> localizedDefinitions;
 
   factory CustomWord.create({
     required String id,
@@ -182,6 +184,10 @@ class CustomWord {
       definitions: _stringList(json['definitions']),
       englishDefinitions: _stringList(json['englishDefinitions']),
       malayDefinitions: _stringList(json['malayDefinitions']),
+      localizedDefinitions: {
+        for (final e in (json['localizedDefinitions'] as Map? ?? {}).entries)
+          e.key.toString(): _stringList(e.value),
+      },
     );
   }
 
@@ -222,6 +228,7 @@ class CustomWord {
       'definitions': definitions,
       'englishDefinitions': englishDefinitions,
       'malayDefinitions': malayDefinitions,
+      'localizedDefinitions': localizedDefinitions,
     };
   }
 
@@ -387,6 +394,7 @@ class CustomWord {
       definitions: definitions ?? this.definitions,
       englishDefinitions: englishDefinitions ?? this.englishDefinitions,
       malayDefinitions: malayDefinitions ?? this.malayDefinitions,
+      localizedDefinitions: localizedDefinitions,
     );
   }
 

@@ -57,7 +57,9 @@ class _AiClozeScreenState extends ConsumerState<AiClozeScreen> {
         .read(appControllerProvider.notifier)
         .askAi(
           featureType: 'cloze',
-          prompt: 'Generate cloze for: ${_controller.text.trim()}',
+          prompt: AppLocalizations.of(
+            context,
+          ).aiUiClozePrompt(_controller.text.trim()),
           targetWord: _controller.text.trim(),
         );
     if (mounted) {
@@ -65,8 +67,7 @@ class _AiClozeScreenState extends ConsumerState<AiClozeScreen> {
         final errMsg = ref.read(appControllerProvider).errorMessage;
         setState(() {
           _isLoading = false;
-          _errorMessage =
-              errMsg ?? AppLocalizations.of(context).aiErrorGeneric;
+          _errorMessage = errMsg ?? AppLocalizations.of(context).aiErrorGeneric;
         });
       } else {
         setState(() {
@@ -91,14 +92,13 @@ class _AiClozeScreenState extends ConsumerState<AiClozeScreen> {
     final l10n = AppLocalizations.of(context);
     final history = ref.watch(
       appControllerProvider.select(
-        (s) =>
-            s.aiHistory.where((e) => e.featureType == 'cloze').toList(),
+        (s) => s.aiHistory.where((e) => e.featureType == 'cloze').toList(),
       ),
     );
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('AI Cloze Test'),
+        title: Text(AppLocalizations.of(context).aiUiAiClozeTest),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
@@ -120,7 +120,7 @@ class _AiClozeScreenState extends ConsumerState<AiClozeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Enter a word for cloze test',
+                    AppLocalizations.of(context).aiUiEnterAWordForClozeTest,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w700,
                     ),
@@ -129,13 +129,17 @@ class _AiClozeScreenState extends ConsumerState<AiClozeScreen> {
                   TextFormField(
                     controller: _controller,
                     maxLength: 100,
-                    decoration: const InputDecoration(
-                      hintText: 'e.g. abundant, curious...',
+                    decoration: InputDecoration(
+                      hintText: AppLocalizations.of(
+                        context,
+                      ).aiUiPleaseEnterAWord,
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Please enter a word';
+                        return AppLocalizations.of(
+                          context,
+                        ).aiUiPleaseEnterAWord;
                       }
                       return null;
                     },
@@ -144,7 +148,9 @@ class _AiClozeScreenState extends ConsumerState<AiClozeScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: AppPrimaryButton(
-                      label: _isLoading ? 'Generating...' : 'Generate',
+                      label: _isLoading
+                          ? AppLocalizations.of(context).aiUiGenerating
+                          : AppLocalizations.of(context).aiUiGenerate,
                       onPressed: _isLoading ? null : _generate,
                     ),
                   ),
@@ -168,10 +174,7 @@ class _AiClozeScreenState extends ConsumerState<AiClozeScreen> {
             // ERROR state
             if (_errorMessage != null) ...[
               const SizedBox(height: AppTokens.s20),
-              AiErrorCard(
-                message: _errorMessage!,
-                onRetry: _generate,
-              ),
+              AiErrorCard(message: _errorMessage!, onRetry: _generate),
             ],
             // RESULT state
             if (_result != null) ...[
@@ -186,7 +189,7 @@ class _AiClozeScreenState extends ConsumerState<AiClozeScreen> {
             if (history.isNotEmpty) ...[
               const SizedBox(height: AppTokens.s24),
               Text(
-                'History',
+                AppLocalizations.of(context).aiUiHistory,
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w700,
                 ),
@@ -238,7 +241,7 @@ class _ClozeCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Cloze Test',
+            AppLocalizations.of(context).aiUiClozeTest,
             style: theme.textTheme.titleSmall?.copyWith(
               fontWeight: FontWeight.w700,
             ),
@@ -259,7 +262,7 @@ class _ClozeCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Blank ${index + 1}',
+                  AppLocalizations.of(context).aiUiBlank(index + 1),
                   style: theme.textTheme.labelMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -300,10 +303,9 @@ class _ClozeCard extends StatelessWidget {
                 if (isCorrect != null) ...[
                   AppPill(
                     label: isCorrect
-                        ? 'Correct!'
-                        : 'Wrong! Answer: $correct',
-                    variant:
-                        isCorrect ? PillVariant.success : PillVariant.xp,
+                        ? AppLocalizations.of(context).aiUiCorrect
+                        : AppLocalizations.of(context).aiUiWrongAnswer(correct),
+                    variant: isCorrect ? PillVariant.success : PillVariant.xp,
                   ),
                   const SizedBox(height: AppTokens.s12),
                 ],
@@ -330,18 +332,18 @@ class _ClozeHistoryCard extends StatelessWidget {
       onLongPress: () => showDialog<void>(
         context: context,
         builder: (_) => AlertDialog(
-          title: const Text('Delete history?'),
+          title: Text(AppLocalizations.of(context).aiUiDeleteHistory),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: Text(AppLocalizations.of(context).aiUiCancel),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
                 onDelete();
               },
-              child: const Text('Delete'),
+              child: Text(AppLocalizations.of(context).aiUiDelete),
             ),
           ],
         ),

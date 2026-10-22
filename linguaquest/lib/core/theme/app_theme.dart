@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'app_tokens.dart';
 
@@ -45,7 +46,7 @@ class AppTheme {
           surfaceContainerLow: AppTokens.bgLight,
           surfaceContainer: AppTokens.chipLight,
           surfaceContainerHigh: AppTokens.surfaceSunken,
-          surfaceContainerHighest: const Color(0xFFE8E2D9),
+          surfaceContainerHighest: const Color(0xFFE3E7ED),
           onSurface: AppTokens.textPrimaryLight,
           onSurfaceVariant: AppTokens.textSecondaryLight,
           outline: AppTokens.hairline,
@@ -69,13 +70,13 @@ class AppTheme {
         ).copyWith(
           onPrimary: const Color(0xFF10254B),
           surfaceContainerLowest: AppTokens.bgDark,
-          surfaceContainerLow: const Color(0xFF121E33),
+          surfaceContainerLow: const Color(0xFF14181E),
           surfaceContainer: darkSurfaceHigh,
-          surfaceContainerHigh: const Color(0xFF24365A),
+          surfaceContainerHigh: const Color(0xFF282F39),
           surfaceContainerHighest: darkSurfaceHighest,
           onSurface: AppTokens.textPrimaryDark,
           onSurfaceVariant: AppTokens.textSecondaryDark,
-          outline: const Color(0xFF7E97B8),
+          outline: const Color(0xFF91A0B4),
           outlineVariant: AppTokens.outlineDark,
           primaryContainer: deepTeal,
           onPrimaryContainer: mint,
@@ -119,8 +120,8 @@ class AppTheme {
     // `Typography.material2021().black/white` carries colour only — its label
     // styles have a null fontSize (geometry is merged elsewhere). Pin the M3
     // chip label size (14) so the style is complete and its colour applies.
-    final chipBaseStyle =
-        (baseTextTheme.labelLarge ?? const TextStyle()).copyWith(fontSize: 14);
+    final chipBaseStyle = (baseTextTheme.labelLarge ?? const TextStyle())
+        .copyWith(fontSize: 14);
     // 普通 TextStyle（非 WidgetStateTextStyle）：ChoiceChip 不会 resolve
     // WidgetStateTextStyle，会导致 label color 解析为 null、在 light 下白底白字。
     // 这里直接给 onSurface，light/dark 都可读；选中态靠 selectedColor 背景区分。
@@ -131,30 +132,113 @@ class AppTheme {
 
     return ThemeData(
       useMaterial3: true,
-      colorScheme: scheme,
-      fontFamily: 'Avenir',
-      iconTheme: IconThemeData(color: scheme.onSurface, weight: 400, grade: 0, opticalSize: 24, fill: 0),
+      colorScheme: scheme.copyWith(
+        primaryContainer: isDark
+            ? const Color(0xFF1E3159)
+            : const Color(0xFFEAF2FF),
+        onPrimaryContainer: scheme.onSurface,
+      ),
+      iconTheme: IconThemeData(
+        color: scheme.onSurface,
+        weight: 400,
+        grade: 0,
+        opticalSize: 24,
+        fill: 0,
+      ),
       textTheme: baseTextTheme.copyWith(
-        displayMedium: baseTextTheme.displayMedium?.copyWith(
-          fontWeight: FontWeight.w800,
-          letterSpacing: 0,
+        displayLarge: TextStyle(
+          fontSize: 56,
+          height: 1.05,
+          letterSpacing: -1.5,
+          fontWeight: FontWeight.w500,
+          color: scheme.onSurface,
         ),
-        headlineMedium: baseTextTheme.headlineMedium?.copyWith(
-          fontWeight: FontWeight.w800,
-          letterSpacing: 0,
+        displayMedium: TextStyle(
+          fontSize: 48,
+          height: 1.1,
+          letterSpacing: -1.2,
+          fontWeight: FontWeight.w500,
+          color: scheme.onSurface,
         ),
-        headlineSmall: baseTextTheme.headlineSmall?.copyWith(
-          fontWeight: FontWeight.w800,
-          letterSpacing: 0,
+        headlineLarge: TextStyle(
+          fontSize: 32,
+          height: 1.2,
+          letterSpacing: -.6,
+          fontWeight: FontWeight.w600,
+          color: scheme.onSurface,
         ),
-        titleLarge: baseTextTheme.titleLarge?.copyWith(
-          fontWeight: FontWeight.w800,
+        headlineMedium: TextStyle(
+          fontSize: 28,
+          height: 1.2,
+          letterSpacing: -.4,
+          fontWeight: FontWeight.w600,
+          color: scheme.onSurface,
         ),
-        titleMedium: baseTextTheme.titleMedium?.copyWith(
-          fontWeight: FontWeight.w700,
+        headlineSmall: TextStyle(
+          fontSize: 24,
+          height: 1.25,
+          letterSpacing: -.3,
+          fontWeight: FontWeight.w600,
+          color: scheme.onSurface,
+        ),
+        titleLarge: TextStyle(
+          fontSize: 20,
+          height: 1.3,
+          fontWeight: FontWeight.w600,
+          color: scheme.onSurface,
+        ),
+        titleMedium: TextStyle(
+          fontSize: 16,
+          height: 1.4,
+          fontWeight: FontWeight.w600,
+          color: scheme.onSurface,
+        ),
+        titleSmall: TextStyle(
+          fontSize: 14,
+          height: 1.4,
+          fontWeight: FontWeight.w600,
+          color: scheme.onSurface,
+        ),
+        bodyLarge: TextStyle(
+          fontSize: 16,
+          height: 1.5,
+          color: scheme.onSurface,
+        ),
+        bodyMedium: TextStyle(
+          fontSize: 14,
+          height: 1.5,
+          color: scheme.onSurface,
+        ),
+        bodySmall: TextStyle(
+          fontSize: 12,
+          height: 1.5,
+          color: scheme.onSurfaceVariant,
+        ),
+        labelLarge: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+          color: scheme.onSurface,
+        ),
+        labelMedium: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+          color: scheme.onSurface,
+        ),
+        labelSmall: TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w500,
+          color: scheme.onSurfaceVariant,
         ),
       ),
+      dividerTheme: DividerThemeData(
+        color: scheme.outlineVariant,
+        thickness: 1,
+        space: 1,
+      ),
       appBarTheme: AppBarTheme(
+        systemOverlayStyle: isDark
+            ? SystemUiOverlayStyle.light
+            : SystemUiOverlayStyle.dark,
         centerTitle: false,
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -220,7 +304,7 @@ class AppTheme {
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
         side: BorderSide(color: scheme.outlineVariant),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppTokens.radiusPill),
+          borderRadius: BorderRadius.circular(AppTokens.radiusChip),
         ),
       ),
       filledButtonTheme: FilledButtonThemeData(
@@ -228,7 +312,7 @@ class AppTheme {
           minimumSize: const Size(48, 54),
           backgroundColor: scheme.primary,
           foregroundColor: scheme.onPrimary,
-          textStyle: const TextStyle(fontWeight: FontWeight.w800),
+          textStyle: const TextStyle(fontWeight: FontWeight.w600),
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppTokens.radiusButton),
@@ -238,7 +322,7 @@ class AppTheme {
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           minimumSize: const Size(48, 54),
-          textStyle: const TextStyle(fontWeight: FontWeight.w800),
+          textStyle: const TextStyle(fontWeight: FontWeight.w600),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppTokens.radiusButton),
           ),

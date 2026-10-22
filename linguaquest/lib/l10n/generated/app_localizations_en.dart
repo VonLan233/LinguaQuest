@@ -1379,7 +1379,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get trainingSpellingDesc =>
-      'See Chinese, hear pronunciation, or read sentence cloze, then type the English word.';
+      'Read a definition, hear pronunciation, or read a sentence, then type the word you are learning.';
 
   @override
   String get trainingSpellingSource => 'Spelling weak words';
@@ -1474,7 +1474,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String trainingPromptChineseChoice(Object meaning) {
-    return 'Choose the English word for: $meaning';
+    return 'Choose the word for: $meaning';
   }
 
   @override
@@ -2548,7 +2548,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get searchStartMessage =>
-      'Search English words, phrases, Chinese meanings, example snippets, and custom words.';
+      'Search words, definitions, example sentences and your custom words.';
 
   @override
   String get searchNoResultsTitle => 'No results found';
@@ -2785,7 +2785,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reviewStudyRecallHint =>
-      'Recall the Chinese meaning from the English word first. If you remember it, move on; if not, reveal the knowledge card.';
+      'Recall the meaning of the word first. If you remember it, move on; otherwise reveal the knowledge card.';
 
   @override
   String reviewStudyNextReview(Object due) {
@@ -3489,4 +3489,416 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get readingExplainPractice => 'Practice';
+
+  @override
+  String get explanationLanguage => 'Explanation language';
+
+  @override
+  String get explanationLanguageHint =>
+      'Read meanings and instructions in your language. Learning language stays separate.';
+
+  @override
+  String get dailyEncouragement => 'A little progress, every day.';
+
+  @override
+  String get homeGreeting => 'Welcome back';
+
+  @override
+  String get dailyTaskTitle => 'Your next small win';
+
+  @override
+  String get dailyTaskHint => 'Keep going at your own pace.';
+
+  @override
+  String get continueLearning => 'Continue learning';
+
+  @override
+  String get aiCenterTitle => 'Your AI study companion';
+
+  @override
+  String get aiCenterHint => 'A little help when you need it.';
+
+  @override
+  String get aiNetworkNotice =>
+      'AI needs internet. Your downloaded words and basic practice work offline.';
+
+  @override
+  String get aiDemoNotice => 'Demo responses · connect a server for live AI.';
+
+  @override
+  String get aiTryThis => 'Try asking about today’s words';
+
+  @override
+  String get aiAskWord => 'Explain this word with a simple example.';
+
+  @override
+  String get aiScenarioTitle => 'What would you like to work on?';
+
+  @override
+  String get aiQaShort => 'Understand a word or grammar point';
+
+  @override
+  String get aiAnalysisShort => 'Read a tricky sentence together';
+
+  @override
+  String get aiClozeShort => 'Practise words in a short passage';
+
+  @override
+  String get aiWritingShort => 'Get feedback on your own writing';
+
+  @override
+  String get aiConfusionShort => 'Tell similar words apart';
+
+  @override
+  String get aiSentenceShort => 'Build a natural example sentence';
+
+  @override
+  String get offlineWordbooks => 'Offline wordbooks';
+
+  @override
+  String get offlineWordbooksHint =>
+      'Download or update a local copy. Text learning and review work without internet; online audio and AI need a connection.';
+
+  @override
+  String get offlineBuiltIn => 'Included · works offline';
+
+  @override
+  String get offlineDownloaded => 'Downloaded · works offline';
+
+  @override
+  String get offlineDownload => 'Download update';
+
+  @override
+  String get offlineRemove => 'Remove downloaded copy';
+
+  @override
+  String get offlineDownloadSuccess => 'Saved on this device';
+
+  @override
+  String get offlineDownloadFailed =>
+      'Download failed. Your existing local copy is safe.';
+
+  @override
+  String get offlineLocalProgress =>
+      'Basic learning is saved on this device. Pending study records sync on the next online launch.';
+
+  @override
+  String get practiceChooseMeaning => 'Choose the meaning';
+
+  @override
+  String get practiceNext => 'Next word';
+
+  @override
+  String get practiceCheck => 'Check answer';
+
+  @override
+  String get practiceCorrect => 'Nice work!';
+
+  @override
+  String get practiceReviewAnswer => 'Let’s remember this one';
+
+  @override
+  String get practiceExitHint =>
+      'Completed review records are already saved. Keep a draft to resume the remaining questions.';
+
+  @override
+  String get homeAiHelp => 'Need a little help?';
+
+  @override
+  String get homeAiHelpHint => 'Ask your AI study companion';
+
+  @override
+  String get learningLanguage => 'Learning Language';
+
+  @override
+  String get languageSpanish => 'Spanish (Español)';
+
+  @override
+  String get languageFrench => 'French (Français)';
+
+  @override
+  String get allWordbooks => 'All languages';
+
+  @override
+  String get dataSettingsHint =>
+      'Offline content, export and account management';
+
+  @override
+  String get settingsVibrationLabel => 'Vibration';
+
+  @override
+  String get settingsVibrationHint => 'Haptic feedback on answers';
+
+  @override
+  String get settingsContrastLabel => 'High contrast';
+
+  @override
+  String get settingsContrastHint => 'Stronger contrast for answer feedback';
+
+  @override
+  String get wordbookTranslationFallback =>
+      'Some entries do not have definitions in your explanation language. Available source definitions are shown.';
+
+  @override
+  String get offlineRemoved =>
+      'Downloaded copy removed. Built-in content and progress are kept.';
+
+  @override
+  String get aiLoginNotice =>
+      'AI requires an account and internet. Downloaded books and basic practice work offline.';
+
+  @override
+  String get pronunciationAudio => 'Audio';
+
+  @override
+  String get pronunciationAudioUnavailable =>
+      'Audio unavailable, tap to retry.';
+
+  @override
+  String get aiUiAiQA => 'AI Q&A';
+
+  @override
+  String get aiUiAskAQuestion => 'Ask a question';
+
+  @override
+  String get aiUiPleaseEnterAQuestion => 'Please enter a question';
+
+  @override
+  String get aiUiAsking => 'Asking...';
+
+  @override
+  String get aiUiAsk => 'Ask';
+
+  @override
+  String get aiUiHistory => 'History';
+
+  @override
+  String get aiUiAnswer => 'Answer';
+
+  @override
+  String get aiUiCautions => 'Cautions';
+
+  @override
+  String get aiUiRelatedWords => 'Related Words';
+
+  @override
+  String get aiUiDeleteHistory => 'Delete history?';
+
+  @override
+  String get aiUiCancel => 'Cancel';
+
+  @override
+  String get aiUiDelete => 'Delete';
+
+  @override
+  String get aiUiAiSentenceAnalysis => 'AI Sentence Analysis';
+
+  @override
+  String get aiUiEnterASentenceToAnalyze => 'Enter a sentence to analyze';
+
+  @override
+  String get aiUiSentenceHint =>
+      'Type or paste a sentence in your learning language...';
+
+  @override
+  String get aiUiPleaseEnterASentence => 'Please enter a sentence';
+
+  @override
+  String get aiUiAnalyzing => 'Analyzing...';
+
+  @override
+  String get aiUiAnalyze => 'Analyze';
+
+  @override
+  String get aiUiAnalysisResult => 'Analysis Result';
+
+  @override
+  String get aiUiMainClause => 'Main Clause';
+
+  @override
+  String get aiUiClauses => 'Clauses';
+
+  @override
+  String get aiUiModifiers => 'Modifiers';
+
+  @override
+  String get aiUiTranslation => 'Translation';
+
+  @override
+  String get aiUiVocabularyNotes => 'Vocabulary Notes';
+
+  @override
+  String get aiUiAiClozeTest => 'AI Cloze Test';
+
+  @override
+  String get aiUiEnterAWordForClozeTest => 'Enter a word for cloze test';
+
+  @override
+  String get aiUiPleaseEnterAWord => 'Please enter a word';
+
+  @override
+  String get aiUiGenerating => 'Generating...';
+
+  @override
+  String get aiUiGenerate => 'Generate';
+
+  @override
+  String get aiUiClozeTest => 'Cloze Test';
+
+  @override
+  String get aiUiCorrect => 'Correct!';
+
+  @override
+  String get aiUiConfusableWords => 'Confusable Words';
+
+  @override
+  String get aiUiEnterAWordToCompareWithItsLookAlikes =>
+      'Enter a word to compare with its look-alikes';
+
+  @override
+  String
+  get aiUiEnterAWordToSeeCommonlyConfusedLookAlikesAndHowToTellThemApart =>
+      'Enter a word to see commonly confused look-alikes and how to tell them apart.';
+
+  @override
+  String get aiUiNoConfusableWordsFound => 'No confusable words found.';
+
+  @override
+  String get aiUiSentenceGeneration => 'Sentence Generation';
+
+  @override
+  String get aiUiEnterAWordOrASentence => 'Enter a word or a sentence';
+
+  @override
+  String get aiUiAWordToBuildSentencesForOrASentenceToRewrite =>
+      'A word to build sentences for, or a sentence to rewrite';
+
+  @override
+  String get aiUiPleaseEnterAWordOrSentence =>
+      'Please enter a word or sentence';
+
+  @override
+  String
+  get aiUiEnterAWordToGenerateExampleSentencesOrASentenceToGetRewriteSuggestions =>
+      'Enter a word to generate example sentences, or a sentence to get rewrite suggestions.';
+
+  @override
+  String get aiUiExampleSentences => 'Example Sentences';
+
+  @override
+  String get aiUiRewrites => 'Rewrites';
+
+  @override
+  String get aiUiAiWritingReview => 'AI Writing Review';
+
+  @override
+  String get aiUiNewEssay => 'New Essay';
+
+  @override
+  String get aiUiExamType => 'Exam Type';
+
+  @override
+  String get aiUiYourEssay => 'Your Essay';
+
+  @override
+  String get aiUiPasteOrTypeYourEssayHere503000Characters =>
+      'Paste or type your essay here (50–3000 characters)...';
+
+  @override
+  String get aiUiEssayMustBeAtLeast50Characters =>
+      'Essay must be at least 50 characters';
+
+  @override
+  String get aiUiSubmitForReview => 'Submit for Review';
+
+  @override
+  String get aiUiOverallScore => 'Overall Score';
+
+  @override
+  String get aiUiScoreBreakdown => 'Score Breakdown';
+
+  @override
+  String get aiUiContent => 'Content';
+
+  @override
+  String get aiUiLanguage => 'Language';
+
+  @override
+  String get aiUiStructure => 'Structure';
+
+  @override
+  String get aiUiVocabulary => 'Vocabulary';
+
+  @override
+  String get aiUiAccuracy => 'Accuracy';
+
+  @override
+  String get aiUiMainIssues => 'Main Issues';
+
+  @override
+  String get aiUiGrammarCorrections => 'Grammar Corrections';
+
+  @override
+  String get aiUiHighScoreExpressions => 'High-Score Expressions';
+
+  @override
+  String get aiUiCopied => 'Copied!';
+
+  @override
+  String get aiUiParagraphSuggestions => 'Paragraph Suggestions';
+
+  @override
+  String get aiUiRewrittenSample => 'Rewritten Sample';
+
+  @override
+  String aiUiDefaultQuestion(String word) {
+    return 'What does \"$word\" mean?';
+  }
+
+  @override
+  String aiUiClozePrompt(String word) {
+    return 'Generate cloze for: $word';
+  }
+
+  @override
+  String aiUiComparePrompt(String word) {
+    return 'Distinguish words confusable with: $word';
+  }
+
+  @override
+  String aiUiSentencePrompt(String word) {
+    return 'Generate example sentences and rewrites for: $word';
+  }
+
+  @override
+  String aiUiBlank(int number) {
+    return 'Blank $number';
+  }
+
+  @override
+  String aiUiWrongAnswer(String word) {
+    return 'Wrong! Answer: $word';
+  }
+
+  @override
+  String aiUiCharacterCount(int number) {
+    return '$number / 3000 characters';
+  }
+
+  @override
+  String aiUiParagraph(String number, String text) {
+    return 'Paragraph $number: $text';
+  }
+
+  @override
+  String get aiUiGeneral => 'General';
+
+  @override
+  String get aiUiAcademic => 'Academic';
+
+  @override
+  String get aiUiBusiness => 'Business';
+
+  @override
+  String get aiUiCasual => 'Casual';
 }

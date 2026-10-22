@@ -115,7 +115,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
                   variant: PillVariant.primary,
                 ),
                 AppPill(
-                  label: displayTarget(currentTarget, l10n: l10n),
+                  label: currentBookName,
                   icon: AppIcons.flag,
                   variant: PillVariant.neutral,
                 ),
@@ -128,7 +128,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
             ),
             const SizedBox(height: 16),
             _PlanSnapshotLine(
-              target: displayTarget(currentTarget, l10n: l10n),
+              target: currentBookName,
               totalWords: totalWords,
               completedWords: completedWords,
               dailyWords: dailyWords,

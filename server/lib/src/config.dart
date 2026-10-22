@@ -14,8 +14,10 @@ class AppConfig {
     this.mailFrom = 'no-reply@linguaquest.app',
     this.aiProvider = 'mock',
     this.aiApiKey = '',
-    this.aiApiBaseUrl = 'https://opencode.ai/zen/v1',
-    this.aiModel = 'deepseek-v4-flash',
+    this.aiApiBaseUrl = 'https://opencode.ai/inference/openai/v1',
+    this.aiModel = 'deepseek-v4.1-flash-free',
+    this.opencodeServerUrl = 'http://opencode:4096',
+    this.opencodeServerPassword = '',
     this.aiClozeModel = '',
     this.aiDailyLimitPerUser = 20,
     this.ttsServiceUrl = 'http://tts:5002',
@@ -36,6 +38,8 @@ class AppConfig {
   final String aiApiKey;
   final String aiApiBaseUrl;
   final String aiModel;
+  final String opencodeServerUrl;
+  final String opencodeServerPassword;
 
   /// Optional model used only for `cloze`. Empty → fall back to [aiModel].
   final String aiClozeModel;
@@ -60,8 +64,13 @@ class AppConfig {
       mailFrom: _env('MAIL_FROM', 'no-reply@linguaquest.app'),
       aiProvider: _env('AI_PROVIDER', 'mock'),
       aiApiKey: _env('AI_API_KEY', ''),
-      aiApiBaseUrl: _env('AI_API_BASE_URL', 'https://opencode.ai/zen/v1'),
-      aiModel: _env('AI_MODEL', 'deepseek-v4-flash'),
+      aiApiBaseUrl: _env(
+        'AI_API_BASE_URL',
+        'https://opencode.ai/inference/openai/v1',
+      ),
+      aiModel: _env('AI_MODEL', 'deepseek-v4.1-flash-free'),
+      opencodeServerUrl: _env('OPENCODE_SERVER_URL', 'http://opencode:4096'),
+      opencodeServerPassword: _env('OPENCODE_SERVER_PASSWORD', ''),
       aiClozeModel: _env('AI_CLOZE_MODEL', ''),
       aiDailyLimitPerUser:
           int.tryParse(_env('AI_DAILY_LIMIT_PER_USER', '20')) ?? 20,
@@ -85,6 +94,8 @@ class AppConfig {
     String? aiApiKey,
     String? aiApiBaseUrl,
     String? aiModel,
+    String? opencodeServerUrl,
+    String? opencodeServerPassword,
     String? aiClozeModel,
     int? aiDailyLimitPerUser,
     String? ttsServiceUrl,
@@ -105,6 +116,9 @@ class AppConfig {
       aiApiKey: aiApiKey ?? this.aiApiKey,
       aiApiBaseUrl: aiApiBaseUrl ?? this.aiApiBaseUrl,
       aiModel: aiModel ?? this.aiModel,
+      opencodeServerUrl: opencodeServerUrl ?? this.opencodeServerUrl,
+      opencodeServerPassword:
+          opencodeServerPassword ?? this.opencodeServerPassword,
       aiClozeModel: aiClozeModel ?? this.aiClozeModel,
       aiDailyLimitPerUser: aiDailyLimitPerUser ?? this.aiDailyLimitPerUser,
       ttsServiceUrl: ttsServiceUrl ?? this.ttsServiceUrl,

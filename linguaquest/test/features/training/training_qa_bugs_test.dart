@@ -260,10 +260,7 @@ void main() {
     await tester.tap(find.text('to love'));
     await tester.pump(const Duration(milliseconds: 600));
 
-    expect(
-      find.textContaining('Choose the English word for: eight'),
-      findsOneWidget,
-    );
+    expect(find.textContaining('Choose the word for: eight'), findsOneWidget);
     final badge = tester.widget<ImageCueBadge>(find.byType(ImageCueBadge));
     expect(badge.icon, isNotNull);
   });

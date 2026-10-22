@@ -6,9 +6,7 @@ import 'package:linguaquest/features/shell/app_drawer.dart';
 import 'package:linguaquest/l10n/generated/app_localizations.dart';
 
 void main() {
-  testWidgets('AppDrawer lists Language and About entries', (
-    tester,
-  ) async {
+  testWidgets('AppDrawer lists Language and About entries', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -21,7 +19,7 @@ void main() {
     tester.state<ScaffoldState>(find.byType(Scaffold)).openDrawer();
     await tester.pumpAndSettle();
     expect(find.text('Language'), findsOneWidget);
-    expect(find.text('About'), findsOneWidget);
+    expect(find.text('About Us'), findsOneWidget);
   });
 
   // Task 7.4: the Language entry must go through l10n, not a hardcoded

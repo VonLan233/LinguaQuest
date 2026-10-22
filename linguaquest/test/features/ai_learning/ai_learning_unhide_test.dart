@@ -22,7 +22,8 @@ void main() {
         ),
         GoRoute(
           path: '/ai-analysis',
-          builder: (context, state) => const Scaffold(body: Text('ai-analysis')),
+          builder: (context, state) =>
+              const Scaffold(body: Text('ai-analysis')),
         ),
         GoRoute(
           path: '/ai-cloze',
@@ -51,7 +52,7 @@ void main() {
   }
 
   testWidgets(
-    'aiLearningStatusSoon and In Planning absent; Available appears for all tools',
+    'AI tools have clear labels without repeated availability badges',
     (tester) async {
       final l10n = await loadL10n();
 
@@ -75,7 +76,8 @@ void main() {
 
       // aiLearningStatusAvailable ("Available") should appear now that all six
       // tools (incl. Confusable Words + Sentence Generation) are enabled.
-      expect(find.text(l10n.aiLearningStatusAvailable), findsWidgets);
+      expect(find.text(l10n.aiLearningStatusAvailable), findsNothing);
+      expect(find.text(l10n.aiSentenceShort), findsOneWidget);
 
       // "In Planning" must no longer appear — both planned tools are shipped.
       expect(find.text(l10n.aiLearningStatusPlanning), findsNothing);

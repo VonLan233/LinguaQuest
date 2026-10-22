@@ -9,6 +9,7 @@ import '../services/pronunciation_service.dart';
 import '../services/tts_completion.dart';
 import '../theme/app_icons.dart';
 import '../theme/app_theme.dart';
+import '../theme/app_tokens.dart';
 
 enum _PronunciationAccent { uk, us }
 
@@ -102,6 +103,7 @@ class _PronunciationControlsState extends State<PronunciationControls> {
   @override
   Widget build(BuildContext context) {
     final failedAccent = _failedAccent;
+    final l10n = AppLocalizations.of(context);
 
     // Every word has a single pronunciation button: dictionary audio (English)
     // or TTS (Chinese HSK / Japanese) both play through one "Audio" control.
@@ -119,14 +121,14 @@ class _PronunciationControlsState extends State<PronunciationControls> {
               isLoading: _loadingAccent != null,
               hasFailed: failedAccent != null,
               onPressed: () => _play(_PronunciationAccent.us),
-              labelOverride: 'Audio',
+              labelOverride: l10n.pronunciationAudio,
             ),
           ],
         ),
         if (failedAccent != null) ...[
           const SizedBox(height: 6),
           Text(
-            'Audio unavailable, tap to retry.',
+            l10n.pronunciationAudioUnavailable,
             style: TextStyle(
               color: Theme.of(context).colorScheme.error,
               fontWeight: FontWeight.w800,
@@ -142,7 +144,7 @@ class _PronunciationControlsState extends State<PronunciationControls> {
     widget.onPlayed?.call();
     final view = View.of(context);
     final l10n = AppLocalizations.of(context);
-    final accentLabel = _accentLabel(l10n, accent);
+    final accentLabel = l10n.pronunciationAudio;
     setState(() {
       _loadingAccent = accent;
       _failedAccent = null;
@@ -205,7 +207,9 @@ class _PronunciationButton extends StatelessWidget {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
     final accentLabel = _accentLabel(l10n, accent);
-    final color = hasFailed ? theme.colorScheme.error : AppTheme.teal;
+    final color = hasFailed
+        ? theme.colorScheme.error
+        : theme.colorScheme.primary;
     return OutlinedButton.icon(
       key: ValueKey('pronunciation-${accent.name}'),
       onPressed: isLoading ? null : onPressed,
@@ -219,7 +223,7 @@ class _PronunciationButton extends StatelessWidget {
             : Colors.transparent,
         side: BorderSide(color: theme.colorScheme.outlineVariant),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(compact ? 12 : 14),
+          borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
         ),
       ),
       icon: isLoading
@@ -235,11 +239,11 @@ class _PronunciationButton extends StatelessWidget {
         isLoading
             ? (labelOverride == null
                   ? l10n.pronunciationLoading(accentLabel)
-                  : 'Loading…')
+                  : l10n.discoverLoading)
             : hasFailed
             ? (labelOverride == null
                   ? l10n.pronunciationRetry(accentLabel)
-                  : 'Retry')
+                  : l10n.commonRetry)
             : (labelOverride ?? accentLabel),
       ),
     );

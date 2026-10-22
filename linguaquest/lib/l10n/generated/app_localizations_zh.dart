@@ -1293,7 +1293,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get trainingSpelling => '单词拼写';
 
   @override
-  String get trainingSpellingDesc => '看中文、听发音或看例句空格后输入英文，强化可产出能力。';
+  String get trainingSpellingDesc => '根据释义、发音或例句，拼写正在学习的单词。';
 
   @override
   String get trainingSpellingSource => '拼写弱项词';
@@ -1384,7 +1384,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String trainingPromptChineseChoice(Object meaning) {
-    return '根据中文释义选择英文：$meaning';
+    return '请选择对应的单词：$meaning';
   }
 
   @override
@@ -2415,7 +2415,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get searchStartTitle => '输入关键词开始搜索';
 
   @override
-  String get searchStartMessage => '可以搜索英文单词、词组、中文释义、例句片段和生词本。';
+  String get searchStartMessage => '搜索单词、释义、例句和自建词条。';
 
   @override
   String get searchNoResultsTitle => '没有找到结果';
@@ -2638,7 +2638,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get reviewStudyCompleteMessage => '已更新本轮词卡的下次复习时间。';
 
   @override
-  String get reviewStudyRecallHint => '看英文先回想中文释义。记得就直接进入下一张，忘了再展开知识卡。';
+  String get reviewStudyRecallHint => '先回想单词的含义。记得就继续，不记得可以查看知识卡片。';
 
   @override
   String reviewStudyNextReview(Object due) {
@@ -2845,10 +2845,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get languageChinese => '中文';
 
   @override
-  String get languageMalay => 'Bahasa Melayu';
+  String get languageMalay => '马来语';
 
   @override
-  String get languageEnglish => 'English';
+  String get languageEnglish => '英语';
 
   @override
   String get wordKnowledgeTitle => '词汇全解';
@@ -3310,4 +3310,401 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get readingExplainPractice => '练习';
+
+  @override
+  String get explanationLanguage => '讲解语言';
+
+  @override
+  String get explanationLanguageHint => '用熟悉的语言阅读释义和说明，可独立选择学习语言。';
+
+  @override
+  String get dailyEncouragement => '每天一点，离目标更近。';
+
+  @override
+  String get homeGreeting => '欢迎回来';
+
+  @override
+  String get dailyTaskTitle => '今天的小目标';
+
+  @override
+  String get dailyTaskHint => '按自己的节奏，继续就很好。';
+
+  @override
+  String get continueLearning => '继续学习';
+
+  @override
+  String get aiCenterTitle => 'AI 学习伙伴';
+
+  @override
+  String get aiCenterHint => '卡住的时候，一起想明白。';
+
+  @override
+  String get aiNetworkNotice => 'AI 功能需要联网，已下载词书和基础练习可离线使用。';
+
+  @override
+  String get aiDemoNotice => '当前为演示回答，连接服务后可使用真实 AI。';
+
+  @override
+  String get aiTryThis => '从今天的单词开始问';
+
+  @override
+  String get aiAskWord => '用简单的例子解释这个词。';
+
+  @override
+  String get aiScenarioTitle => '今天想解决什么？';
+
+  @override
+  String get aiQaShort => '理解词义与语法';
+
+  @override
+  String get aiAnalysisShort => '一起读懂长句';
+
+  @override
+  String get aiClozeShort => '把单词放进短文里练';
+
+  @override
+  String get aiWritingShort => '修改自己的表达';
+
+  @override
+  String get aiConfusionShort => '分清容易混淆的词';
+
+  @override
+  String get aiSentenceShort => '写出自然的例句';
+
+  @override
+  String get offlineWordbooks => '离线词书';
+
+  @override
+  String get offlineWordbooksHint => '下载或更新本地副本。断网仍可学习和复习文字内容；在线音频与 AI 需要联网。';
+
+  @override
+  String get offlineBuiltIn => '内置 · 可离线';
+
+  @override
+  String get offlineDownloaded => '已下载 · 可离线';
+
+  @override
+  String get offlineDownload => '下载更新';
+
+  @override
+  String get offlineRemove => '移除下载副本';
+
+  @override
+  String get offlineDownloadSuccess => '已保存到本机';
+
+  @override
+  String get offlineDownloadFailed => '下载失败，原有本地词书已保留。';
+
+  @override
+  String get offlineLocalProgress => '基础学习记录保存在本机，待同步记录会在下次联网启动时上传。';
+
+  @override
+  String get practiceChooseMeaning => '选择正确的释义';
+
+  @override
+  String get practiceNext => '下一个';
+
+  @override
+  String get practiceCheck => '确认答案';
+
+  @override
+  String get practiceCorrect => '答对了！';
+
+  @override
+  String get practiceReviewAnswer => '一起记住这个词';
+
+  @override
+  String get practiceExitHint => '已完成的复习记录已保存。保留草稿后可继续剩余题目。';
+
+  @override
+  String get homeAiHelp => '有一点卡住了？';
+
+  @override
+  String get homeAiHelpHint => '问问 AI 学习伙伴';
+
+  @override
+  String get learningLanguage => '学习语言';
+
+  @override
+  String get languageSpanish => '西班牙语';
+
+  @override
+  String get languageFrench => '法语';
+
+  @override
+  String get allWordbooks => '全部语言';
+
+  @override
+  String get dataSettingsHint => '离线内容、数据导出与账户管理';
+
+  @override
+  String get settingsVibrationLabel => '振动反馈';
+
+  @override
+  String get settingsVibrationHint => '答题时提供触感反馈';
+
+  @override
+  String get settingsContrastLabel => '高对比度';
+
+  @override
+  String get settingsContrastHint => '增强答题反馈的颜色对比';
+
+  @override
+  String get wordbookTranslationFallback => '部分词条尚无当前解释语言的释义，将显示词书中已有的释义。';
+
+  @override
+  String get offlineRemoved => '已移除下载副本，内置内容和学习进度仍保留。';
+
+  @override
+  String get aiLoginNotice => 'AI 需要登录并联网；已下载词书和基础练习可离线使用。';
+
+  @override
+  String get pronunciationAudio => '发音';
+
+  @override
+  String get pronunciationAudioUnavailable => '暂时无法播放，点击重试。';
+
+  @override
+  String get aiUiAiQA => 'AI 知识问答';
+
+  @override
+  String get aiUiAskAQuestion => '提出问题';
+
+  @override
+  String get aiUiPleaseEnterAQuestion => '请输入问题';
+
+  @override
+  String get aiUiAsking => '正在提问…';
+
+  @override
+  String get aiUiAsk => '提问';
+
+  @override
+  String get aiUiHistory => '历史记录';
+
+  @override
+  String get aiUiAnswer => '回答';
+
+  @override
+  String get aiUiCautions => '注意事项';
+
+  @override
+  String get aiUiRelatedWords => '相关词语';
+
+  @override
+  String get aiUiDeleteHistory => '删除这条记录？';
+
+  @override
+  String get aiUiCancel => '取消';
+
+  @override
+  String get aiUiDelete => '删除';
+
+  @override
+  String get aiUiAiSentenceAnalysis => 'AI 句子分析';
+
+  @override
+  String get aiUiEnterASentenceToAnalyze => '输入要分析的句子';
+
+  @override
+  String get aiUiSentenceHint => '输入或粘贴正在学习的语言的句子…';
+
+  @override
+  String get aiUiPleaseEnterASentence => '请输入句子';
+
+  @override
+  String get aiUiAnalyzing => '正在分析…';
+
+  @override
+  String get aiUiAnalyze => '分析';
+
+  @override
+  String get aiUiAnalysisResult => '分析结果';
+
+  @override
+  String get aiUiMainClause => '主句';
+
+  @override
+  String get aiUiClauses => '从句';
+
+  @override
+  String get aiUiModifiers => '修饰成分';
+
+  @override
+  String get aiUiTranslation => '翻译';
+
+  @override
+  String get aiUiVocabularyNotes => '词汇说明';
+
+  @override
+  String get aiUiAiClozeTest => 'AI 情景填空';
+
+  @override
+  String get aiUiEnterAWordForClozeTest => '输入用于填空练习的单词';
+
+  @override
+  String get aiUiPleaseEnterAWord => '请输入单词';
+
+  @override
+  String get aiUiGenerating => '正在生成…';
+
+  @override
+  String get aiUiGenerate => '生成';
+
+  @override
+  String get aiUiClozeTest => '填空练习';
+
+  @override
+  String get aiUiCorrect => '答对了！';
+
+  @override
+  String get aiUiConfusableWords => '易混词辨析';
+
+  @override
+  String get aiUiEnterAWordToCompareWithItsLookAlikes => '输入要辨析的单词';
+
+  @override
+  String
+  get aiUiEnterAWordToSeeCommonlyConfusedLookAlikesAndHowToTellThemApart =>
+      '输入单词，了解容易混淆的词语及区别。';
+
+  @override
+  String get aiUiNoConfusableWordsFound => '未找到易混词。';
+
+  @override
+  String get aiUiSentenceGeneration => '例句与改写';
+
+  @override
+  String get aiUiEnterAWordOrASentence => '输入单词或句子';
+
+  @override
+  String get aiUiAWordToBuildSentencesForOrASentenceToRewrite =>
+      '输入要造句的单词，或需要改写的句子';
+
+  @override
+  String get aiUiPleaseEnterAWordOrSentence => '请输入单词或句子';
+
+  @override
+  String
+  get aiUiEnterAWordToGenerateExampleSentencesOrASentenceToGetRewriteSuggestions =>
+      '输入单词生成例句，或输入句子获取改写建议。';
+
+  @override
+  String get aiUiExampleSentences => '例句';
+
+  @override
+  String get aiUiRewrites => '改写建议';
+
+  @override
+  String get aiUiAiWritingReview => 'AI 写作批改';
+
+  @override
+  String get aiUiNewEssay => '新作文';
+
+  @override
+  String get aiUiExamType => '写作类型';
+
+  @override
+  String get aiUiYourEssay => '你的作文';
+
+  @override
+  String get aiUiPasteOrTypeYourEssayHere503000Characters =>
+      '在这里输入或粘贴作文（50–3000 字符）…';
+
+  @override
+  String get aiUiEssayMustBeAtLeast50Characters => '作文至少需要 50 个字符';
+
+  @override
+  String get aiUiSubmitForReview => '提交批改';
+
+  @override
+  String get aiUiOverallScore => '总分';
+
+  @override
+  String get aiUiScoreBreakdown => '分项评分';
+
+  @override
+  String get aiUiContent => '内容';
+
+  @override
+  String get aiUiLanguage => '语言表达';
+
+  @override
+  String get aiUiStructure => '结构';
+
+  @override
+  String get aiUiVocabulary => '词汇';
+
+  @override
+  String get aiUiAccuracy => '准确性';
+
+  @override
+  String get aiUiMainIssues => '主要问题';
+
+  @override
+  String get aiUiGrammarCorrections => '语法修改';
+
+  @override
+  String get aiUiHighScoreExpressions => '推荐表达';
+
+  @override
+  String get aiUiCopied => '已复制';
+
+  @override
+  String get aiUiParagraphSuggestions => '分段建议';
+
+  @override
+  String get aiUiRewrittenSample => '改写示例';
+
+  @override
+  String aiUiDefaultQuestion(String word) {
+    return '“$word”是什么意思？';
+  }
+
+  @override
+  String aiUiClozePrompt(String word) {
+    return '生成情景填空：$word';
+  }
+
+  @override
+  String aiUiComparePrompt(String word) {
+    return '辨析与以下单词容易混淆的词语：$word';
+  }
+
+  @override
+  String aiUiSentencePrompt(String word) {
+    return '生成例句与改写：$word';
+  }
+
+  @override
+  String aiUiBlank(int number) {
+    return '第 $number 空';
+  }
+
+  @override
+  String aiUiWrongAnswer(String word) {
+    return '还不对，答案是：$word';
+  }
+
+  @override
+  String aiUiCharacterCount(int number) {
+    return '$number / 3000 字符';
+  }
+
+  @override
+  String aiUiParagraph(String number, String text) {
+    return '第 $number 段：$text';
+  }
+
+  @override
+  String get aiUiGeneral => '通用';
+
+  @override
+  String get aiUiAcademic => '学术';
+
+  @override
+  String get aiUiBusiness => '商务';
+
+  @override
+  String get aiUiCasual => '日常';
 }

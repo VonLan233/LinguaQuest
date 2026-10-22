@@ -2,92 +2,58 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_tokens.dart';
 
-/// Primary action button: azure fill, white label, soft 3D bottom edge that
-/// sinks 2px on press.
-class AppPrimaryButton extends StatefulWidget {
+/// Flat primary action. Native Material owns keyboard, focus and disabled states.
+class AppPrimaryButton extends StatelessWidget {
   const AppPrimaryButton({
     required this.label,
     required this.onPressed,
     this.icon,
     super.key,
   });
-
   final String label;
   final VoidCallback? onPressed;
   final IconData? icon;
 
   @override
-  State<AppPrimaryButton> createState() => _AppPrimaryButtonState();
-}
-
-class _AppPrimaryButtonState extends State<AppPrimaryButton> {
-  bool _down = false;
-
-  bool get _enabled => widget.onPressed != null;
-
-  @override
   Widget build(BuildContext context) {
-    final radius = BorderRadius.circular(AppTokens.radiusButton);
-    final sink = _down ? 2.0 : 0.0;
-    // Muted label/icon on the disabled (hairline) fill so it reads as inactive
-    // instead of low-contrast white-on-beige.
-    final contentColor = _enabled ? Colors.white : AppTokens.textHintLight;
-    return Semantics(
-      button: true,
-      enabled: _enabled,
-      label: widget.label,
-      child: GestureDetector(
-        onTap: widget.onPressed,
-        onTapDown: _enabled ? (_) => setState(() => _down = true) : null,
-        onTapUp: _enabled ? (_) => setState(() => _down = false) : null,
-        onTapCancel: _enabled ? () => setState(() => _down = false) : null,
-        child: AnimatedContainer(
-          duration: AppTokens.fast,
-          transform: Matrix4.translationValues(0, sink, 0),
-          decoration: BoxDecoration(
-            color: _enabled ? AppTokens.azure : AppTokens.hairline,
-            borderRadius: radius,
-            boxShadow: _enabled
-                ? [
-                    BoxShadow(
-                      color: AppTokens.azurePressed,
-                      offset: Offset(0, 4 - sink),
-                      blurRadius: 0,
-                    ),
-                  ]
-                : const [],
-          ),
-          padding: const EdgeInsets.symmetric(vertical: AppTokens.s16),
-          alignment: Alignment.center,
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (widget.icon != null) ...[
-                Icon(widget.icon, size: 20, color: contentColor),
-                const SizedBox(width: AppTokens.s8),
-              ],
-              Flexible(
-                child: Text(
-                  widget.label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: contentColor,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 15,
-                  ),
-                ),
-              ),
-            ],
-          ),
+    final colors = Theme.of(context).colorScheme;
+    final enabled = onPressed != null;
+    return FilledButton(
+      onPressed: onPressed,
+      style: FilledButton.styleFrom(
+        minimumSize: const Size(48, 54),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppTokens.radiusButton),
         ),
+        backgroundColor: colors.primary,
+        foregroundColor: colors.onPrimary,
+        disabledBackgroundColor: colors.surfaceContainerHighest,
+        disabledForegroundColor: colors.onSurfaceVariant,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (icon != null) ...[Icon(icon, size: 20), const SizedBox(width: 8)],
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: enabled ? colors.onPrimary : colors.onSurfaceVariant,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-/// Secondary action: white fill, azure label, soft outline. Optional leading
+/// Secondary action: flat surface, semantic label and outline. Optional leading
 /// [icon] (mirrors [AppPrimaryButton]).
 class AppSecondaryButton extends StatelessWidget {
   const AppSecondaryButton({
@@ -105,9 +71,9 @@ class AppSecondaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final style = OutlinedButton.styleFrom(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      foregroundColor: AppTokens.azure,
+      foregroundColor: Theme.of(context).colorScheme.primary,
       padding: const EdgeInsets.symmetric(horizontal: AppTokens.s12),
-      side: const BorderSide(color: AppTokens.primarySoftText, width: 2),
+      side: BorderSide(color: Theme.of(context).colorScheme.primary, width: 1),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppTokens.radiusButton),
       ),
@@ -117,7 +83,7 @@ class AppSecondaryButton extends StatelessWidget {
         label,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: const TextStyle(fontWeight: FontWeight.w800),
+        style: const TextStyle(fontWeight: FontWeight.w600),
       ),
     );
     return OutlinedButton(

@@ -21,6 +21,7 @@ import 'lesson_catalog.dart';
 import 'lottery_policy.dart';
 import 'moderation_policy.dart';
 import 'notification_policy.dart';
+import 'opencode_ai_provider.dart';
 import 'privacy_policy.dart';
 import 'reward_policy.dart';
 import 'reward_task_policy.dart';
@@ -989,6 +990,14 @@ Router buildRouter(
   // ── AI 路由 ──────────────────────────────────────────────────────────────
 
   AiProvider _buildAiProvider() {
+    if (config.aiProvider == 'opencode') {
+      return OpenCodeAiProvider(
+        client: client,
+        baseUrl: config.opencodeServerUrl,
+        password: config.opencodeServerPassword,
+        model: config.aiModel,
+      );
+    }
     if (config.aiProvider == 'remote' && config.aiApiKey.isNotEmpty) {
       return RemoteAiProvider(
         client: client,
@@ -1025,6 +1034,7 @@ Router buildRouter(
       prompt: prompt,
       targetWord: targetWord,
       targetLanguage: targetLanguage,
+      helperLanguage: body['helperLanguage'] as String? ?? 'en',
       modelOverride: featureType == 'cloze' && config.aiClozeModel.isNotEmpty
           ? config.aiClozeModel
           : null,
@@ -1402,6 +1412,7 @@ Router buildRouter(
         userId: uid,
         prompt: aiPrompt,
         targetLanguage: targetLanguage,
+        helperLanguage: body['helperLanguage'] as String? ?? 'en',
       );
       final response = await effectiveAiPolicy.handle(aiRequest);
       if (!response.success) {
@@ -1620,6 +1631,7 @@ List<File> _wordBookDataFiles() {
     'wordbooks_p0.json',
     'wordbooks_jlpt.json',
     'wordbooks_extra.json',
+    'wordbooks_starter.json',
   ]) {
     final serverRelative = File('data/$name');
     final repoRelative = File('server/data/$name');
@@ -2073,7 +2085,7 @@ String _targetExamForWordBook(String wordBookId) {
     case 'daily-english':
       return 'Daily English';
   }
-  return 'HSK 1';
+  return wordBookId;
 }
 
 String _dateKey(DateTime date) {

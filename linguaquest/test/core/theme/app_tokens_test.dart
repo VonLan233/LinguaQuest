@@ -23,14 +23,17 @@ Future<T> _readWithBrightness<T>(
 }
 
 void main() {
-  test('neutral tokens are locked (cool off-white page bg)', () {
-    expect(AppTokens.bgLight, const Color(0xFFF4F6FA)); // cool off-white page bg
+  test('neutral tokens are locked (neutral Swiss page background)', () {
+    expect(
+      AppTokens.bgLight,
+      const Color(0xFFFAFBFC),
+    ); // neutral Swiss page background
     expect(AppTokens.surfaceLight, const Color(0xFFFFFFFF)); // cards stay white
-    expect(AppTokens.surfaceSunken, const Color(0xFFF2EFEA));
-    expect(AppTokens.hairline, const Color(0xFFECE7E0));
-    expect(AppTokens.textPrimaryLight, const Color(0xFF233A66));
-    expect(AppTokens.textSecondaryLight, const Color(0xFF6B6B73));
-    expect(AppTokens.textHintLight, const Color(0xFFA59B8C));
+    expect(AppTokens.surfaceSunken, const Color(0xFFEEF0F3));
+    expect(AppTokens.hairline, const Color(0xFFDDE1E6));
+    expect(AppTokens.textPrimaryLight, const Color(0xFF171B22));
+    expect(AppTokens.textSecondaryLight, const Color(0xFF535E6B));
+    expect(AppTokens.textHintLight, const Color(0xFF626E7D));
   });
 
   test('semantic soft tokens exist', () {
@@ -46,10 +49,10 @@ void main() {
   });
 
   test('radii match spec', () {
-    expect(AppTokens.radiusCard, 22);
-    expect(AppTokens.radiusButton, 18);
-    expect(AppTokens.radiusTile, 18);
-    expect(AppTokens.radiusChip, 12);
+    expect(AppTokens.radiusCard, 4);
+    expect(AppTokens.radiusButton, 4);
+    expect(AppTokens.radiusTile, 4);
+    expect(AppTokens.radiusChip, 4);
   });
 
   test('progressGradient runs mango -> success', () {
@@ -57,20 +60,32 @@ void main() {
     expect(AppTokens.progressGradient.colors.last, AppTokens.success);
   });
 
-  testWidgets('cardShadow present in light, empty in dark', (tester) async {
+  testWidgets('flat surfaces have no shadow in either theme', (tester) async {
     final light = await _readWithBrightness(
-      tester, Brightness.light, AppTokens.cardShadow);
+      tester,
+      Brightness.light,
+      AppTokens.cardShadow,
+    );
     final dark = await _readWithBrightness(
-      tester, Brightness.dark, AppTokens.cardShadow);
-    expect(light, isNotEmpty);
+      tester,
+      Brightness.dark,
+      AppTokens.cardShadow,
+    );
+    expect(light, isEmpty);
     expect(dark, isEmpty);
   });
 
   testWidgets('semantic accents brighten on dark', (tester) async {
     final light = await _readWithBrightness(
-      tester, Brightness.light, AppTokens.successColor);
+      tester,
+      Brightness.light,
+      AppTokens.successColor,
+    );
     final dark = await _readWithBrightness(
-      tester, Brightness.dark, AppTokens.successColor);
+      tester,
+      Brightness.dark,
+      AppTokens.successColor,
+    );
     expect(light, isNot(equals(dark)));
   });
 }

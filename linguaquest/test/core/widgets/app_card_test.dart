@@ -7,26 +7,27 @@ void main() {
   testWidgets('AppCard renders child and applies card radius', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(
-        home: Scaffold(
-          body: AppCard(child: Text('hello')),
-        ),
+        home: Scaffold(body: AppCard(child: Text('hello'))),
       ),
     );
 
     expect(find.text('hello'), findsOneWidget);
 
     final container = tester.widget<Container>(
-      find.descendant(
-        of: find.byType(AppCard),
-        matching: find.byType(Container),
-      ).first,
+      find
+          .descendant(
+            of: find.byType(AppCard),
+            matching: find.byType(Container),
+          )
+          .first,
     );
     final decoration = container.decoration as BoxDecoration;
     expect(
       decoration.borderRadius,
       BorderRadius.circular(AppTokens.radiusCard),
     );
-    expect(decoration.boxShadow, isNotEmpty);
+    expect(decoration.boxShadow, isNull);
+    expect(decoration.border, isNotNull);
   });
 
   testWidgets('AppCard fires onTap when tapped', (tester) async {
@@ -52,10 +53,7 @@ void main() {
       ),
     );
     expect(
-      find.descendant(
-        of: find.byType(AppCard),
-        matching: find.byType(InkWell),
-      ),
+      find.descendant(of: find.byType(AppCard), matching: find.byType(InkWell)),
       findsNothing,
     );
 
@@ -67,10 +65,7 @@ void main() {
       ),
     );
     expect(
-      find.descendant(
-        of: find.byType(AppCard),
-        matching: find.byType(InkWell),
-      ),
+      find.descendant(of: find.byType(AppCard), matching: find.byType(InkWell)),
       findsOneWidget,
     );
   });

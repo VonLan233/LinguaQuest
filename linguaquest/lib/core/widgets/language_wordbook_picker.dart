@@ -19,10 +19,7 @@ import 'app_pill.dart';
 /// P2d will flip `ja` to `hasBooks: true` when Japanese books land — the picker
 /// then surfaces the language and its books automatically with no other change.
 class SupportedLanguage {
-  const SupportedLanguage({
-    required this.code,
-    required this.hasBooks,
-  });
+  const SupportedLanguage({required this.code, required this.hasBooks});
 
   final String code;
   final bool hasBooks;
@@ -65,6 +62,14 @@ String languageLabel(String code, AppLocalizations l10n) {
       return l10n.pickerLanguageChinese;
     case 'ja':
       return l10n.pickerLanguageJapanese;
+    case 'en':
+      return l10n.languageEnglish;
+    case 'es':
+      return l10n.languageSpanish;
+    case 'fr':
+      return l10n.languageFrench;
+    case 'ms':
+      return l10n.languageMalay;
     default:
       return languageLabelRaw(code);
   }
@@ -132,6 +137,7 @@ class _LanguageWordbookPickerSheetState
   }
 
   Future<void> _onBookSelected(String bookId) async {
+    if (ref.read(appControllerProvider).isLoading) return;
     final l10n = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
     final localeCode = Localizations.localeOf(context).languageCode;
@@ -165,9 +171,7 @@ class _LanguageWordbookPickerSheetState
         SnackBar(content: Text(l10n.pickerSwitchSuccess(label))),
       );
     } else {
-      messenger.showSnackBar(
-        SnackBar(content: Text(l10n.pickerSwitchFailed)),
-      );
+      messenger.showSnackBar(SnackBar(content: Text(l10n.pickerSwitchFailed)));
     }
   }
 
@@ -219,26 +223,27 @@ class _LanguageWordbookPickerSheetState
                         color: Theme.of(context).colorScheme.onSurface,
                         onPressed: () =>
                             setState(() => _selectedLanguage = null),
-                        tooltip:
-                            MaterialLocalizations.of(context).backButtonTooltip,
+                        tooltip: MaterialLocalizations.of(
+                          context,
+                        ).backButtonTooltip,
                       ),
                     Expanded(
                       child: Text(
                         _selectedLanguage == null
                             ? l10n.pickerChooseLanguage
                             : l10n.pickerChooseWordbook,
-                        style:
-                            Theme.of(context).textTheme.titleLarge?.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                ),
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                     IconButton(
                       icon: const Icon(AppIcons.close),
                       color: Theme.of(context).colorScheme.onSurface,
                       onPressed: widget.onDismiss,
-                      tooltip:
-                          MaterialLocalizations.of(context).closeButtonLabel,
+                      tooltip: MaterialLocalizations.of(
+                        context,
+                      ).closeButtonLabel,
                     ),
                   ],
                 ),
@@ -255,8 +260,9 @@ class _LanguageWordbookPickerSheetState
                           scrollController: scrollController,
                           l10n: l10n,
                           onLanguageSelected: (code) {
-                            final entry = kSupportedLanguages
-                                .firstWhere((e) => e.code == code);
+                            final entry = kSupportedLanguages.firstWhere(
+                              (e) => e.code == code,
+                            );
                             if (entry.hasBooks) {
                               setState(() => _selectedLanguage = code);
                             }
@@ -266,9 +272,16 @@ class _LanguageWordbookPickerSheetState
                         )
                       : _WordbookList(
                           key: ValueKey('book-list-$_selectedLanguage'),
-                          books: state.wordBooks
-                              .where((b) => b.language == _selectedLanguage)
-                              .toList(),
+                          books:
+                              state.wordBooks
+                                  .where((b) => b.language == _selectedLanguage)
+                                  .toList()
+                                ..sort(
+                                  (a, b) => (b.id.endsWith('_starter') ? 1 : 0)
+                                      .compareTo(
+                                        a.id.endsWith('_starter') ? 1 : 0,
+                                      ),
+                                ),
                           currentWordBookId: state.currentWordBookId,
                           scrollController: scrollController,
                           l10n: l10n,
@@ -364,11 +377,11 @@ class _LanguageRow extends StatelessWidget {
             child: Text(
               label,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: isActive
-                        ? Theme.of(context).colorScheme.onSurface
-                        : Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+                fontWeight: FontWeight.w600,
+                color: isActive
+                    ? Theme.of(context).colorScheme.onSurface
+                    : Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
           ),
           if (isCurrent)
@@ -378,10 +391,7 @@ class _LanguageRow extends StatelessWidget {
               icon: AppIcons.checkCircle,
             )
           else if (!isActive)
-            AppPill(
-              label: comingSoonLabel,
-              variant: PillVariant.neutral,
-            ),
+            AppPill(label: comingSoonLabel, variant: PillVariant.neutral),
           if (isActive && !isCurrent)
             Padding(
               padding: const EdgeInsets.only(left: AppTokens.s8),
@@ -436,8 +446,8 @@ class _WordbookList extends StatelessWidget {
             Text(
               l10n.pickerComingSoon,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
           ],
         ),

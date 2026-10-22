@@ -215,6 +215,7 @@ class UserWord {
       meaning: meaning,
       definitions: source?.definitions ?? const [],
       englishDefinitions: source?.englishDefinitions ?? const [],
+      localizedDefinitions: source?.localizedDefinitions ?? const {},
       malayDefinitions: source?.malayDefinitions ?? const [],
       exampleSentence: exampleSentence,
       note: 'Target word · $wordBookId',

@@ -4,7 +4,7 @@ import '../theme/app_tokens.dart';
 
 /// A programmatic, styled book-cover card (no network image, no mascot).
 ///
-/// Renders a rounded card with an exam-themed gradient, a small exam badge /
+/// Renders a flat typographic cover with a series color, a small exam badge /
 /// abbreviation (e.g. IELTS / TOEFL / GRE), and the book title. The hue varies
 /// deterministically by the book's exam type / id so each series reads as a
 /// distinct "cover".
@@ -31,23 +31,23 @@ class WordbookCoverCard extends StatelessWidget {
   final double width;
   final double height;
 
-  /// Deterministic gradient for a given exam/book key.
+  /// Deterministic series colors for a given exam/book key.
   static WordbookCoverPalette paletteFor(String examType, String bookId) {
     final key = (examType.isNotEmpty ? examType : bookId).toLowerCase();
     switch (key) {
       case 'ielts':
         return const WordbookCoverPalette(Color(0xFF3A6FE0), Color(0xFF2453C4));
       case 'toefl':
-        return const WordbookCoverPalette(Color(0xFF2BB6A8), Color(0xFF1C8C86));
+        return const WordbookCoverPalette(Color(0xFF087C73), Color(0xFF1C8C86));
       case 'gre':
         return const WordbookCoverPalette(Color(0xFF7A5AE0), Color(0xFF5733B8));
       case 'cet4':
       case 'cet6':
-        return const WordbookCoverPalette(Color(0xFFE07A3A), Color(0xFFC4541F));
+        return const WordbookCoverPalette(Color(0xFFA94A17), Color(0xFFC4541F));
       case 'beginner':
-        return const WordbookCoverPalette(Color(0xFF3FB45C), Color(0xFF2C8A43));
+        return const WordbookCoverPalette(Color(0xFF26753F), Color(0xFF2C8A43));
       case 'kaoyan':
-        return const WordbookCoverPalette(Color(0xFFE05A7A), Color(0xFFB83356));
+        return const WordbookCoverPalette(Color(0xFFAD3155), Color(0xFFB83356));
       default:
         return const WordbookCoverPalette(Color(0xFF3A6FE0), Color(0xFF2453C4));
     }
@@ -56,7 +56,10 @@ class WordbookCoverCard extends StatelessWidget {
   /// Short badge label: the exam type if present, else the upper-cased id.
   String get _badge {
     final raw = examType.isNotEmpty ? examType : bookId;
-    return raw.toUpperCase();
+    if (raw.endsWith('_starter') || raw.endsWith('_basic')) {
+      return raw.split('_').first.toUpperCase();
+    }
+    return raw.replaceAll('_', ' ').toUpperCase();
   }
 
   @override
@@ -69,24 +72,9 @@ class WordbookCoverCard extends StatelessWidget {
       width: width,
       height: height,
       clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        borderRadius: radius,
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [palette.top, palette.bottom],
-        ),
-      ),
+      decoration: BoxDecoration(borderRadius: radius, color: palette.top),
       child: Stack(
         children: [
-          // Decorative spine highlight on the left edge.
-          Positioned(
-            left: 0,
-            top: 0,
-            bottom: 0,
-            width: 6,
-            child: Container(color: Colors.white.withValues(alpha: 0.18)),
-          ),
           Padding(
             padding: EdgeInsets.all(compact ? AppTokens.s8 : AppTokens.s12),
             child: Column(

@@ -7,12 +7,12 @@ import 'core/theme/app_theme.dart';
 import 'l10n/generated/app_localizations.dart';
 import 'services/local_notification_service.dart';
 
-/// The app is locked to English. The target language being *learned* (Chinese,
-/// etc.) is a separate concept (see AppState.targetLanguage); the UI itself is
-/// English-only. The `zh`/`ms` ARB files and updateLocale() infra are kept
-/// dormant for a future re-enable.
+/// Explanation language is independent from the selected learning wordbook.
 Locale resolveAppLocale(Locale? deviceLocale, Iterable<Locale> supported) {
-  return const Locale('en');
+  return supported.firstWhere(
+    (locale) => locale.languageCode == deviceLocale?.languageCode,
+    orElse: () => const Locale('en'),
+  );
 }
 
 class LinguaQuestApp extends ConsumerWidget {
@@ -37,12 +37,10 @@ class LinguaQuestApp extends ConsumerWidget {
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
       themeMode: themeMode,
-      // Hard-locked to English regardless of device or persisted locale.
-      locale: const Locale('en'),
+      locale: ref.watch(appControllerProvider.select((s) => s.locale)),
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      localeResolutionCallback: (deviceLocale, supportedLocales) =>
-          const Locale('en'),
+      localeResolutionCallback: resolveAppLocale,
       routerConfig: router,
     );
   }

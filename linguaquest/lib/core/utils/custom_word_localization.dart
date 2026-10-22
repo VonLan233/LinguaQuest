@@ -15,6 +15,13 @@ import 'text_language.dart';
 /// that embed the Chinese gloss, which must not surface in a Latin-script UI.
 String customWordMeaningFor(CustomWord word, String languageCode) {
   final normalizedLanguage = languageCode.toLowerCase();
+  final localized = _firstNonEmpty(
+    word.localizedDefinitions[normalizedLanguage] ?? [],
+  );
+  if (localized != null) return localized;
+  if (normalizedLanguage == 'ja') {
+    return _firstNonEmpty(word.englishDefinitions) ?? word.meaning;
+  }
   final meaning = word.meaning.trim();
   final fallback = meaning.isEmpty ? word.word.trim() : meaning;
 
@@ -52,6 +59,7 @@ Word wordFromCustomWord(CustomWord word) {
   final chineseMeaning = customWordMeaningFor(word, 'zh');
   return Word(
     id: word.id,
+    localizedDefinitions: word.localizedDefinitions,
     word: word.word,
     phonetic: '',
     meaning: chineseMeaning,

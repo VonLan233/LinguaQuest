@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../../core/constants/app_constants.dart';
+import 'offline_study_store.dart';
 
 class ApiClient {
   ApiClient()
@@ -16,12 +17,20 @@ class ApiClient {
           receiveTimeout: const Duration(seconds: 20),
           headers: {'Content-Type': 'application/json'},
         ),
-      );
+      ) {
+    offlineStore = OfflineStudyStore(dio);
+    dio.interceptors.add(offlineStore);
+  }
 
   final Dio dio;
+  String helperLanguage = 'en';
+  late final OfflineStudyStore offlineStore;
 
   void setToken(String? token) {
     if (token == null || token.isEmpty) {
+      offlineStore.localOnly = false;
+      offlineStore.userId = null;
+      offlineStore.offline = false;
       dio.options.headers.remove('Authorization');
       return;
     }

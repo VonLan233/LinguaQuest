@@ -37,6 +37,22 @@ services:
       timeout: 5s
       retries: 5
 
+  opencode:
+    image: ghcr.io/anomalyco/opencode:1.19.3
+    restart: unless-stopped
+    mem_limit: 640m
+    memswap_limit: 640m
+    working_dir: /workspace
+    command: ["serve", "--hostname", "0.0.0.0", "--port", "4096"]
+    environment:
+      OPENCODE_CONFIG: /etc/opencode/opencode.json
+      OPENCODE_SERVER_PASSWORD: ${OPENCODE_SERVER_PASSWORD:?Set OPENCODE_SERVER_PASSWORD in .env and .env.prod}
+    volumes:
+      - ./opencode/opencode.json:/etc/opencode/opencode.json:ro
+    # Internal only: no published port, source checkout, or production env_file.
+    expose:
+      - "4096"
+
   tts:
     build: ./tts
     restart: unless-stopped

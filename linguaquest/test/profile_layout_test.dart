@@ -8,38 +8,33 @@ import 'package:linguaquest/l10n/generated/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  testWidgets('profile setting values align to the right edge', (tester) async {
-    SharedPreferences.setMockInitialValues({});
-    final container = ProviderContainer();
-    addTearDown(container.dispose);
-    await container.read(appControllerProvider.notifier).bootstrap();
+  testWidgets(
+    'profile setting values align with their labels on the left grid',
+    (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      await container.read(appControllerProvider.notifier).bootstrap();
 
-    await tester.pumpWidget(
-      UncontrolledProviderScope(
-        container: container,
-        child: const MaterialApp(
-          locale: Locale('en'),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: Scaffold(body: ProfileScreen()),
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: const MaterialApp(
+            locale: Locale('en'),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(body: ProfileScreen()),
+          ),
         ),
-      ),
-    );
-    await tester.pumpAndSettle();
+      );
+      await tester.pumpAndSettle();
 
-    final wordbookRight = tester.getTopRight(find.text('490 words'));
-    final customWordsRight = tester.getTopRight(find.text('0').last);
-    final chevrons = find.byIcon(AppIcons.chevronRight);
-    final wordbookChevronRight = tester.getTopRight(chevrons.at(2));
-    final customWordsChevronRight = tester.getTopRight(chevrons.at(4));
-
-    expect(
-      (wordbookChevronRight.dx - wordbookRight.dx).abs(),
-      lessThanOrEqualTo(56),
-    );
-    expect(
-      (customWordsChevronRight.dx - customWordsRight.dx).abs(),
-      lessThanOrEqualTo(56),
-    );
-  });
+      final wordbookValue = tester.getTopLeft(find.text('490 words'));
+      final wordbookTitle = tester.getTopLeft(find.text('Wordbook'));
+      expect(wordbookValue.dx, closeTo(wordbookTitle.dx, .1));
+      expect(wordbookValue.dy, greaterThan(wordbookTitle.dy));
+      expect(find.byIcon(AppIcons.chevronRight), findsWidgets);
+      expect(tester.takeException(), isNull);
+    },
+  );
 }

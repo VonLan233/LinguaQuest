@@ -1,6 +1,12 @@
 const allowedStudyPlanStatuses = {'active', 'paused'};
 const allowedLanguages = {'zh', 'ja', 'en', 'es', 'fr', 'ms'};
 const allowedWordBookIds = {
+  'zh_starter',
+  'ja_starter',
+  'en_starter',
+  'cet4',
+  'cet6',
+  'kaoyan',
   'hsk1',
   'hsk2',
   'hsk3',

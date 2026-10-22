@@ -21,8 +21,13 @@ class StudySessionDraft {
     required this.answerLogs,
     required this.wrongItemIds,
     required this.scheduledWrongIds,
+    this.checked = false,
+    this.lastCorrect = false,
+    this.wrongTries = const {},
   });
 
+  final bool checked, lastCorrect;
+  final Set<String> wrongTries;
   final String uid;
   final StudySessionEntryMode mode;
   final String lessonId;
@@ -55,6 +60,9 @@ class StudySessionDraft {
   Map<String, dynamic> toJson() {
     return {
       'uid': uid,
+      'checked': checked,
+      'lastCorrect': lastCorrect,
+      'wrongTries': wrongTries.toList(),
       'mode': mode.name,
       'lessonId': lessonId,
       'startedAt': startedAt.toIso8601String(),
@@ -77,6 +85,11 @@ class StudySessionDraft {
   factory StudySessionDraft.fromJson(Map<String, dynamic> json) {
     return StudySessionDraft(
       uid: json['uid'] as String? ?? '',
+      checked: json['checked'] as bool? ?? false,
+      lastCorrect: json['lastCorrect'] as bool? ?? false,
+      wrongTries: (json['wrongTries'] as List? ?? [])
+          .whereType<String>()
+          .toSet(),
       mode: _mode(json['mode']),
       lessonId: json['lessonId'] as String? ?? '',
       startedAt:

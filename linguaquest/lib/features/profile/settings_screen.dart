@@ -28,11 +28,43 @@ class SettingsScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.all(AppTokens.s20),
           children: [
+            AppCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.explanationLanguage,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(l10n.explanationLanguageHint),
+                  const SizedBox(height: 12),
+                  DropdownButtonFormField<String>(
+                    initialValue: ['zh', 'ja', 'en'].contains(l10n.localeName)
+                        ? l10n.localeName
+                        : 'en',
+                    items: const [
+                      DropdownMenuItem(value: 'zh', child: Text('中文')),
+                      DropdownMenuItem(value: 'ja', child: Text('日本語')),
+                      DropdownMenuItem(value: 'en', child: Text('English')),
+                    ],
+                    onChanged: (code) {
+                      if (code != null) {
+                        ref
+                            .read(appControllerProvider.notifier)
+                            .updateLocale(Locale(code));
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: AppTokens.s12),
             _SettingsAction(
               icon: AppIcons.flag,
               title: l10n.commonStudyPlan,
               subtitle:
-                  '${state.currentStudyBook.name} · ${l10n.commonNew} ${state.dailyNewTarget} · ${l10n.commonReview} ${state.dailyReviewLimit}',
+                  '${state.currentWordBook?.nameFor(l10n.localeName) ?? state.currentStudyBook.name} · ${l10n.commonNew} ${state.dailyNewTarget} · ${l10n.commonReview} ${state.dailyReviewLimit}',
               route: '/settings/study-plan',
             ),
             const SizedBox(height: AppTokens.s12),
@@ -40,7 +72,9 @@ class SettingsScreen extends ConsumerWidget {
               icon: AppIcons.notifications,
               title: l10n.commonDailyReminder,
               subtitle: state.reminderSettings.enabled
-                  ? l10n.settingsReminderDisplay(state.reminderSettings.formattedTime)
+                  ? l10n.settingsReminderDisplay(
+                      state.reminderSettings.formattedTime,
+                    )
                   : l10n.settingsReminderOff,
               route: '/settings/reminder',
             ),
@@ -64,15 +98,15 @@ class SettingsScreen extends ConsumerWidget {
             const SizedBox(height: AppTokens.s12),
             _SettingsAction(
               icon: AppIcons.lock,
-              title: 'Privacy Settings',
-              subtitle: 'Control what others can see about you',
+              title: l10n.aboutPrivacyTitle,
+              subtitle: l10n.aboutPrivacySubtitle,
               route: '/profile/privacy',
             ),
             const SizedBox(height: AppTokens.s12),
             _SettingsAction(
               icon: AppIcons.person,
               title: l10n.dataAccountTitle,
-              subtitle: 'Cache, export, and account deletion',
+              subtitle: l10n.dataSettingsHint,
               route: '/profile/data',
             ),
           ],
@@ -182,8 +216,7 @@ class _LearningLanguageSetting extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final localeCode = Localizations.localeOf(context).languageCode;
     final langLabel = languageLabel(currentLanguage, l10n);
-    final bookLabel =
-        currentWordBook?.nameFor(localeCode) ?? currentWordBookId;
+    final bookLabel = currentWordBook?.nameFor(localeCode) ?? currentWordBookId;
     return AppCard(
       onTap: () => context.push('/language-map'),
       child: Row(
@@ -194,7 +227,7 @@ class _LearningLanguageSetting extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Learning Language', style: theme.textTheme.titleMedium),
+                Text(l10n.learningLanguage, style: theme.textTheme.titleMedium),
                 Text(
                   '$langLabel · $bookLabel',
                   style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
@@ -251,10 +284,7 @@ class _SettingsAction extends StatelessWidget {
 }
 
 class _ThemeSettingCard extends StatelessWidget {
-  const _ThemeSettingCard({
-    required this.themeMode,
-    required this.onChanged,
-  });
+  const _ThemeSettingCard({required this.themeMode, required this.onChanged});
 
   final ThemeMode themeMode;
   final ValueChanged<ThemeMode> onChanged;
@@ -276,7 +306,9 @@ class _ThemeSettingCard extends StatelessWidget {
           ),
           RadioGroup<ThemeMode>(
             groupValue: themeMode,
-            onChanged: (m) { if (m != null) onChanged(m); },
+            onChanged: (m) {
+              if (m != null) onChanged(m);
+            },
             child: Column(
               children: [
                 RadioListTile<ThemeMode>(
@@ -318,6 +350,7 @@ class _SensorySettingsCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     void update(SensorySettings updated) =>
         ref.read(appControllerProvider.notifier).updateSensorySettings(updated);
 
@@ -327,18 +360,17 @@ class _SensorySettingsCard extends ConsumerWidget {
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
             secondary: const Icon(AppIcons.volumeUp),
-            title: const Text('Sound Effects'),
-            subtitle: const Text('Play sounds during quizzes'),
+            title: Text(l10n.settingsSoundFeedback),
+            subtitle: Text(l10n.settingsSoundFeedbackSubtitle),
             value: sensorySettings.soundEnabled,
-            onChanged: (v) =>
-                update(sensorySettings.copyWith(soundEnabled: v)),
+            onChanged: (v) => update(sensorySettings.copyWith(soundEnabled: v)),
           ),
           const Divider(height: AppTokens.s16),
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
             secondary: const Icon(AppIcons.vibration),
-            title: const Text('Vibration'),
-            subtitle: const Text('Haptic feedback on answers'),
+            title: Text(l10n.settingsVibrationLabel),
+            subtitle: Text(l10n.settingsVibrationHint),
             value: sensorySettings.vibrationEnabled,
             onChanged: (v) =>
                 update(sensorySettings.copyWith(vibrationEnabled: v)),
@@ -347,8 +379,8 @@ class _SensorySettingsCard extends ConsumerWidget {
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
             secondary: const Icon(AppIcons.contrastCircle),
-            title: const Text('High Contrast'),
-            subtitle: const Text('Enhanced color contrast for answer feedback'),
+            title: Text(l10n.settingsContrastLabel),
+            subtitle: Text(l10n.settingsContrastHint),
             value: sensorySettings.highContrastMode,
             onChanged: (v) =>
                 update(sensorySettings.copyWith(highContrastMode: v)),
@@ -358,4 +390,3 @@ class _SensorySettingsCard extends ConsumerWidget {
     );
   }
 }
-
